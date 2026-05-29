@@ -388,10 +388,10 @@
             document.getElementById('continue-shopping-btn').addEventListener('click', () => cartDrawer.classList.remove('active'));
 
             document.getElementById('checkout-btn').addEventListener('click', () => {
-                if (cart.length === 0) return alert('Your bag is empty.');
+                if (cart.length === 0) return window.showToast('Your bag is empty.', 'error');
                 const token = localStorage.getItem('token');
                 if (!token) {
-                    alert('Please log in to finalize your order.');
+                    window.showToast('Please log in to finalize your order.', 'error');
                     window.location.href = 'login.html?redirect=store.html';
                     return;
                 }
@@ -424,12 +424,12 @@
                     currency: 'NGN', 
                     ref: ''+Math.floor((Math.random() * 1000000000) + 1),
                     onClose: function(){
-                        alert('Payment window closed.');
+                        window.showToast('Payment window closed.', 'error');
                         btn.textContent = 'Pay Now';
                         btn.disabled = false;
                     },
                     callback: function(response){
-                        alert('Payment complete! Reference: ' + response.reference);
+                        window.showToast('Payment complete! Reference: ' + response.reference, 'success');
                         
                         const orderPromises = cart.map(item => {
                             const order = {
@@ -463,7 +463,7 @@
                         })
                         .catch(err => {
                             console.error(err);
-                            alert('Payment successful, but failed to save order to server.');
+                            window.showToast('Payment successful, but failed to save order to server.', 'error');
                         });
                     }
                 });

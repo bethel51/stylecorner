@@ -10,14 +10,14 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            /* Requested: White Background, Lighter Blue Icons/Features, Black Wordings */
-            --dash-bg: #ffffff;
+            /* Warm Editorial Aesthetic */
+            --dash-bg: #FDFBF7;
             --dash-surface: #ffffff;
-            --dash-accent: #60a5fa; /* Lighter Blue */
-            --dash-accent-soft: rgba(96, 165, 250, 0.1);
-            --dash-text: #000000; /* Black text */
-            --dash-muted: #4b5563; 
-            --dash-border: #e2e8f0;
+            --dash-accent: #1A1A1A; /* Charcoal */
+            --dash-accent-soft: rgba(26, 26, 26, 0.05);
+            --dash-text: #1A1A1A; /* Charcoal text */
+            --dash-muted: #4A4A4A; 
+            --dash-border: rgba(0,0,0,0.08);
         }
 
         body.page-dashboard {
@@ -438,7 +438,7 @@
                     reloadUI(); 
                     window.showToast("Info Saved.", "success");
                 } catch (error) {
-                    alert(error.message);
+                    window.showToast(error.message, 'error');
                 } finally {
                     btn.textContent = origText;
                     btn.disabled = false;

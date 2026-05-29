@@ -252,18 +252,18 @@
                 const user = JSON.parse(localStorage.getItem('mockUser') || '{}');
 
                 if (!token) {
-                    alert('Please sign in to book a service.');
+                    window.showToast('Please sign in to book a service.', 'error');
                     window.location.href = 'login.html?redirect=booking.html';
                     return;
                 }
 
                 if (!select1.value && !select2.value) {
-                    alert('Please select at least one architectural service.');
+                    window.showToast('Please select at least one architectural service.', 'error');
                     return;
                 }
 
                 if (select1.value && select1.value === select2.value) {
-                    alert('Please select two distinct services or a single one.');
+                    window.showToast('Please select two distinct services or a single one.', 'error');
                     return;
                 }
 
@@ -318,7 +318,7 @@
                     })
                     .catch(err => {
                         console.error(err);
-                        alert(err.message || 'Error connecting to booking server.');
+                        window.showToast(err.message || 'Error connecting to booking server.', 'error');
                         btn.textContent = 'Confirm Booking';
                         btn.disabled = false;
                     });

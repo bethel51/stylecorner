@@ -95,7 +95,7 @@
                             window.location.href = `verify.html?email=${encodeURIComponent(data.email)}${redirectParam}`;
                             return;
                         }
-                        alert(result.error || 'Login failed');
+                        window.showToast(result.error || 'Login failed', 'error');
                         btn.disabled = false;
                         btn.textContent = 'Log In';
                         return;
@@ -113,7 +113,7 @@
                     }
                 } catch (error) {
                     console.error(error);
-                    alert('Server error during login');
+                    window.showToast('Server error during login', 'error');
                     btn.disabled = false;
                     btn.textContent = 'Log In';
                 }

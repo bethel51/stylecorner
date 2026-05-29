@@ -10,14 +10,14 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            /* Requested: White Background, Lighter Blue Icons/Features, Black Wordings */
-            --exp-bg: #ffffff;
+            /* Warm Editorial Aesthetic */
+            --exp-bg: #FDFBF7;
             --exp-surface: #ffffff;
-            --exp-accent: #60a5fa; /* Lighter Blue */
-            --exp-accent-soft: rgba(96, 165, 250, 0.1);
-            --exp-text: #000000; /* Black typed words */
-            --exp-muted: #6b7280;
-            --exp-border: #e5e7eb;
+            --exp-accent: #1A1A1A; /* Charcoal */
+            --exp-accent-soft: rgba(26, 26, 26, 0.05);
+            --exp-text: #1A1A1A; /* Charcoal text */
+            --exp-muted: #4A4A4A;
+            --exp-border: rgba(0,0,0,0.08);
         }
 
         body.page-dashboard {
@@ -522,7 +522,7 @@
                     refreshWorkspace(); 
                     window.showToast("Info Saved.", "success");
                 } catch (error) {
-                    alert(error.message);
+                    window.showToast(error.message, 'error');
                 } finally {
                     btn.textContent = origText;
                     btn.disabled = false;

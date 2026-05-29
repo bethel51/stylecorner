@@ -131,7 +131,7 @@
                 const selectedServices = Array.from(document.querySelectorAll('input[name="services"]:checked')).map(cb => cb.value).join(',');
 
                 if (role === 'staff' && !selectedServices) {
-                    alert('Please select at least one specialty.');
+                    window.showToast('Please select at least one specialty.', 'error');
                     return;
                 }
 
@@ -158,18 +158,18 @@
                     const result = await res.json();
 
                     if (!res.ok) {
-                        alert(result.error || 'Registration failed');
+                        btn.innerHTML = 'Create Account';
                         btn.disabled = false;
-                        btn.textContent = 'Create Account';
+                        window.showToast(result.error || 'Registration failed', 'error');
                         return;
                     }
 
                     window.location.href = `verify.html?email=${encodeURIComponent(data.email)}`;
                 } catch (error) {
                     console.error(error);
-                    alert('Server error during registration');
+                    btn.innerHTML = 'Create Account';
                     btn.disabled = false;
-                    btn.textContent = 'Create Account';
+                    window.showToast('Server error during registration', 'error');
                 }
             });
         });
