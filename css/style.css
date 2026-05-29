@@ -771,17 +771,20 @@ textarea:focus {
 .page-auth input,
 .page-auth select,
 .page-auth textarea {
-  background: rgba(255, 255, 255, 0.03) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  color: #fff !important;
+  background: #ffffff !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text) !important;
   padding: 1rem 1.25rem !important;
   border-radius: 12px !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
 
-.page-auth input:focus {
+.page-auth input:focus,
+.page-auth select:focus,
+.page-auth textarea:focus {
   border-color: var(--dash-accent) !important;
-  background: rgba(255, 255, 255, 0.05) !important;
-  box-shadow: 0 0 15px var(--dash-accent-glow);
+  background: #ffffff !important;
+  box-shadow: 0 0 0 4px var(--dash-accent-glow);
   outline: none;
 }
 
