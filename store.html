@@ -282,6 +282,23 @@
                     cart.push(newItem);
                     localStorage.setItem('style_corner_cart', JSON.stringify(cart));
                     refreshCartUI();
+                    
+                    // Button Feedback
+                    const originalText = btn.textContent;
+                    btn.innerHTML = '<i class="fas fa-check"></i> Added';
+                    btn.style.background = '#10b981';
+                    btn.style.color = 'white';
+                    btn.style.borderColor = '#10b981';
+                    
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.style.background = '';
+                        btn.style.color = '';
+                        btn.style.borderColor = '';
+                    }, 1500);
+
+                    // Show toast and open drawer
+                    if(window.showToast) window.showToast(newItem.name + " added to bag", "success");
                     cartDrawer.classList.add('active');
                 });
             });

@@ -3580,3 +3580,94 @@ footer ul li a:hover {
     right: -100%;
   }
 }
+
+/* --- Premium UI Enhancements --- */
+
+/* Services Interactive Cards */
+.service-interactive-card {
+  transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease, border-color 0.4s ease;
+}
+.service-interactive-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+  border-color: var(--accent);
+}
+
+/* Store Products */
+.product-grid-store {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.store-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.store-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  border-color: var(--accent);
+}
+
+.store-card-img {
+  height: 180px;
+  background: #f8fafc;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  font-size: 4rem;
+  color: var(--accent);
+  transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.store-card:hover .store-card-img {
+  transform: scale(1.08);
+}
+
+/* Modal Enhancements */
+.modal {
+  transition: opacity 0.3s ease;
+}
+.modal .glass-card {
+  animation: modalEnter 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes modalEnter {
+  0% { opacity: 0; transform: translateY(60px) scale(0.95); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Button Click Animation */
+.btn {
+  transition: transform 0.15s ease, background 0.3s ease, box-shadow 0.3s ease;
+}
+.btn:active {
+  transform: scale(0.95) !important;
+}
+
+/* Form Focus Animations */
+.form-group input, 
+.form-group select, 
+.form-group textarea {
+  transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.form-group input:focus, 
+.form-group select:focus, 
+.form-group textarea:focus {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.15) !important;
+  background: #fff !important;
+  transform: translateY(-1px);
+}

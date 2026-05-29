@@ -1,12 +1,21 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. Authentication Status (Static Stub)
+  // 1. Authentication Status
   const token = localStorage.getItem('token');
   const loginLinks = document.querySelectorAll('a[href="login.html"]');
+  const signupLinks = document.querySelectorAll('a[href="role-selection.html"]');
+  
   if (token) {
     loginLinks.forEach(link => {
       link.textContent = 'My Dashboard';
-      const mockUser = JSON.parse(localStorage.getItem('mockUser') || '{"firstname": "stylists", "role": "staff"}');
+      // Attempt to route properly based on stored user
+      const mockUser = JSON.parse(localStorage.getItem('mockUser') || '{"role": "customer"}');
       link.href = mockUser.role === 'staff' ? 'expert-dashboard.html' : 'customer-dashboard.html';
+    });
+
+    signupLinks.forEach(link => {
+      link.textContent = 'Logout';
+      link.href = '#';
+      link.classList.add('logout-link');
     });
   }
 

@@ -203,12 +203,37 @@
                     stylistSelect.innerHTML = '<option value="">Error loading specialists. Try again.</option>';
                 });
 
+            let currentPrice = 0;
             const updatePrice = () => {
                 const s1 = select1.options[select1.selectedIndex];
                 const s2 = select2.options[select2.selectedIndex];
                 const price1 = parseInt(s1.getAttribute('data-price')) || 0;
                 const price2 = parseInt(s2.getAttribute('data-price')) || 0;
-                priceDisplay.textContent = '₦' + (price1 + price2).toLocaleString();
+                const targetPrice = price1 + price2;
+                
+                // Count animation
+                const duration = 500;
+                const frameRate = 1000/60;
+                const totalFrames = Math.round(duration/frameRate);
+                let frame = 0;
+                const startPrice = currentPrice;
+                const diff = targetPrice - startPrice;
+
+                const counter = setInterval(() => {
+                    frame++;
+                    const progress = frame / totalFrames;
+                    // Ease out expo
+                    const easeProgress = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+                    currentPrice = Math.floor(startPrice + (diff * easeProgress));
+                    
+                    priceDisplay.textContent = '₦' + currentPrice.toLocaleString();
+                    
+                    if(frame >= totalFrames) {
+                        clearInterval(counter);
+                        currentPrice = targetPrice;
+                        priceDisplay.textContent = '₦' + targetPrice.toLocaleString();
+                    }
+                }, frameRate);
             };
 
             [select1, select2].forEach(s => s.addEventListener('change', updatePrice));
