@@ -19,6 +19,28 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // 1.5. Route Guards (Authentication Gates)
+  const page = window.location.pathname.split('/').pop() || 'index.html';
+  const authPages = ['login.html', 'signup.html', 'role-selection.html'];
+  const protectedPages = ['customer-dashboard.html', 'expert-dashboard.html'];
+
+  if (token) {
+    if (authPages.includes(page)) {
+      const user = JSON.parse(localStorage.getItem('mockUser') || '{}');
+      window.location.replace(user.role === 'staff' ? 'expert-dashboard.html' : 'customer-dashboard.html');
+    }
+    if (page === 'expert-dashboard.html') {
+      const user = JSON.parse(localStorage.getItem('mockUser') || '{}');
+      if (user.role !== 'staff') {
+        window.location.replace('customer-dashboard.html');
+      }
+    }
+  } else {
+    if (protectedPages.includes(page)) {
+      window.location.replace('login.html');
+    }
+  }
+
   // 2. Sign-out logic
   const logoutEls = document.querySelectorAll('.logout-link');
   logoutEls.forEach(el => el.addEventListener('click', (e) => {
