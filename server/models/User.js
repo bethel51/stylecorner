@@ -8,6 +8,9 @@ const userSchema = new mongoose.Schema({
   phone: { type: String },
   role: { type: String, enum: ['customer', 'staff'], default: 'customer' },
   specialties: [{ type: String }], // e.g. ["Hair Cut", "Braids"] - used if staff
+  isVerified: { type: Boolean, default: false },
+  otpCode: { type: String },
+  otpExpiresAt: { type: Date },
   createdAt: { type: Date, default: Date.now }
 });
 

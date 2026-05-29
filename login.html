@@ -88,6 +88,10 @@
                     const result = await res.json();
 
                     if (!res.ok) {
+                        if (result.error === 'unverified') {
+                            window.location.href = `verify.html?email=${encodeURIComponent(data.email)}`;
+                            return;
+                        }
                         alert(result.error || 'Login failed');
                         btn.disabled = false;
                         btn.textContent = 'Log In';

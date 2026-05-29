@@ -164,7 +164,7 @@
                         return;
                     }
 
-                    window.location.href = 'login.html?signup=success';
+                    window.location.href = `verify.html?email=${encodeURIComponent(data.email)}`;
                 } catch (error) {
                     console.error(error);
                     alert('Server error during registration');

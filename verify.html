@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Account | Style Corner</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+    <style>
+        .otp-inputs {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        
+        .otp-inputs input {
+            width: 3rem;
+            height: 4rem;
+            font-size: 2rem;
+            text-align: center;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: #f8fafc;
+        }
+
+        .otp-inputs input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+        }
+    </style>
+</head>
+
+<body class="page-auth">
+    <div class="split-page-container">
+        <!-- Visual Side -->
+        <div class="split-side split-side-image image-side-text"
+            style="background-image: url('https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1200&q=70&fm=webp');">
+            <div class="side-content fade-up">
+                <span class="side-sub">Secure Access</span>
+                <h2>Security First.</h2>
+                <p>We need to verify your email to ensure the highest level of privacy and security.</p>
+            </div>
+            <div class="side-bg-overlay"></div>
+        </div>
+
+        <!-- Form Side -->
+        <div class="split-side split-side-form">
+            <div class="form-wrapper-minimal fade-up" style="animation-delay: 0.3s; text-align: center;">
+                <a href="index.html" class="logo mb-5" style="display: inline-block;">STYLE<span>CORNER</span></a>
+                <h1 style="margin-bottom: 0.5rem;">Verify Email</h1>
+                <p class="subtitle" style="margin-bottom: 2rem;">We sent a 6-digit code to <br><strong id="display-email">your email</strong>.</p>
+
+                <form id="verify-form">
+                    <input type="hidden" id="email" required>
+                    
+                    <div class="otp-inputs" id="otp-container">
+                        <input type="text" maxlength="1" pattern="[0-9]" required>
+                        <input type="text" maxlength="1" pattern="[0-9]" required>
+                        <input type="text" maxlength="1" pattern="[0-9]" required>
+                        <input type="text" maxlength="1" pattern="[0-9]" required>
+                        <input type="text" maxlength="1" pattern="[0-9]" required>
+                        <input type="text" maxlength="1" pattern="[0-9]" required>
+                    </div>
+
+                    <p id="error-msg" style="color: #ef4444; font-size: 0.85rem; margin-bottom: 1.5rem; display: none;"></p>
+
+                    <button type="submit" class="btn btn-premium w-full mt-2">Verify Account</button>
+                </form>
+
+                <div class="auth-footer mt-5" style="border-top: 1px solid var(--border); padding-top: 2rem;">
+                    <p style="font-size: 0.9rem; color: var(--text-muted);"><a href="login.html"
+                            style="color: var(--accent); font-weight: 600;">Back to Sign In</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/common.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const emailParam = params.get('email');
+            
+            if (!emailParam) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            document.getElementById('email').value = emailParam;
+            document.getElementById('display-email').textContent = emailParam;
+
+            // OTP Input UX logic
+            const inputs = document.querySelectorAll('.otp-inputs input');
+            
+            inputs.forEach((input, index) => {
+                input.addEventListener('input', (e) => {
+                    // Move to next input if valid number
+                    if (e.target.value.match(/[0-9]/) && index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    }
+                });
+
+                input.addEventListener('keydown', (e) => {
+                    // Move back on backspace if empty
+                    if (e.key === 'Backspace' && e.target.value === '' && index > 0) {
+                        inputs[index - 1].focus();
+                    }
+                });
+            });
+
+            // Handle Paste
+            document.getElementById('otp-container').addEventListener('paste', (e) => {
+                e.preventDefault();
+                const pastedData = (e.clipboardData || window.clipboardData).getData('text').trim();
+                
+                if (pastedData.length === 6 && /^\d+$/.test(pastedData)) {
+                    const digits = pastedData.split('');
+                    inputs.forEach((input, i) => {
+                        input.value = digits[i];
+                    });
+                    inputs[5].focus();
+                }
+            });
+
+            const form = document.getElementById('verify-form');
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const errorMsg = document.getElementById('error-msg');
+                errorMsg.style.display = 'none';
+
+                // Combine 6 inputs
+                let code = '';
+                inputs.forEach(input => code += input.value);
+                
+                if (code.length !== 6) {
+                    errorMsg.textContent = "Please enter all 6 digits.";
+                    errorMsg.style.display = 'block';
+                    return;
+                }
+
+                const btn = form.querySelector('button');
+                btn.disabled = true;
+                btn.textContent = 'Verifying...';
+
+                try {
+                    const res = await fetch('/api/auth/verify', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            email: emailParam,
+                            code: code 
+                        })
+                    });
+                    
+                    const result = await res.json();
+
+                    if (!res.ok) {
+                        errorMsg.textContent = result.error || 'Verification failed.';
+                        errorMsg.style.display = 'block';
+                        btn.disabled = false;
+                        btn.textContent = 'Verify Account';
+                        return;
+                    }
+
+                    // Success! Store token and user data
+                    localStorage.setItem('token', result.token);
+                    localStorage.setItem('mockUser', JSON.stringify(result.user));
+
+                    // Route based on role
+                    if (result.user.role === 'staff') {
+                        window.location.href = 'expert-dashboard.html';
+                    } else {
+                        window.location.href = 'customer-dashboard.html';
+                    }
+                } catch (error) {
+                    console.error(error);
+                    errorMsg.textContent = "Server error during verification.";
+                    errorMsg.style.display = 'block';
+                    btn.disabled = false;
+                    btn.textContent = 'Verify Account';
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

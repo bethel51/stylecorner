@@ -93,6 +93,10 @@ app.post('/api/auth/register', async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
+    // Generate OTP
+    const otpCode = Math.floor(100000 + Math.random() * 900000).toString(); // 6 digit code
+    const otpExpiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
+
     const user = new User({
       firstname,
       lastname,
@@ -100,17 +104,56 @@ app.post('/api/auth/register', async (req, res) => {
       phone,
       password: hashedPassword,
       role: role || 'customer',
-      specialties: services ? services.split(',') : []
+      specialties: services ? services.split(',') : [],
+      isVerified: false,
+      otpCode,
+      otpExpiresAt
     });
 
     const savedUser = await user.save();
-    await sendNotification(savedUser.email, "Welcome to Style Corner!", `Hi ${savedUser.firstname},\n\nWelcome to Style Corner! Your account has been created successfully as a ${savedUser.role}.`);
     
-    // Create JWT
-    const token = jwt.sign({ id: savedUser._id, role: savedUser.role }, JWT_SECRET, { expiresIn: '7d' });
-    res.status(201).json({ user: savedUser, token });
+    // Send OTP Email
+    await sendNotification(
+      savedUser.email, 
+      "Style Corner - Verify Your Account", 
+      `Hi ${savedUser.firstname},\n\nYour verification code is: ${otpCode}\n\nThis code will expire in 15 minutes.`
+    );
+    
+    // Do NOT return token yet. Require verification.
+    res.status(201).json({ message: 'Registration successful. Please verify your email.', email: savedUser.email });
   } catch (error) {
     res.status(500).json({ error: 'Registration failed' });
+  }
+});
+
+// Verify OTP
+app.post('/api/auth/verify', async (req, res) => {
+  try {
+    const { email, code } = req.body;
+    
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    if (user.isVerified) return res.status(400).json({ error: 'User already verified' });
+
+    if (user.otpCode !== code) {
+      return res.status(400).json({ error: 'Invalid verification code' });
+    }
+    
+    if (new Date() > user.otpExpiresAt) {
+      return res.status(400).json({ error: 'Verification code expired' });
+    }
+
+    // Code is valid
+    user.isVerified = true;
+    user.otpCode = undefined;
+    user.otpExpiresAt = undefined;
+    await user.save();
+
+    // Issue token
+    const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
+    res.status(200).json({ message: 'Verification successful', user, token });
+  } catch (error) {
+    res.status(500).json({ error: 'Verification failed' });
   }
 });
 
@@ -124,6 +167,10 @@ app.post('/api/auth/login', async (req, res) => {
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ error: 'Invalid email or password' });
+
+    if (!user.isVerified) {
+      return res.status(403).json({ error: 'unverified', message: 'Please verify your email address before logging in.', email: user.email });
+    }
 
     const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
     res.status(200).json({ user, token });
