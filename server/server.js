@@ -20,7 +20,10 @@ if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
         auth: {
             user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_PASS
-        }
+        },
+        connectionTimeout: 5000, // 5 seconds
+        greetingTimeout: 5000,
+        socketTimeout: 5000
     });
     console.log('Live Gmail Transporter configured.');
 } else {
@@ -53,9 +56,12 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, '../')));
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI)
+mongoose.set('bufferCommands', false); // Disable command buffering so queries fail fast if not connected
+mongoose.connect(process.env.MONGODB_URI, {
+  serverSelectionTimeoutMS: 5000 // Timeout after 5s instead of hanging
+})
   .then(() => console.log('Connected to MongoDB Atlas'))
-  .catch(err => console.error('MongoDB connection error:', err));
+  .catch(err => console.error('MongoDB connection error. Check your network or IP whitelist:', err.message));
 
 // --- API ROUTES ---
 
