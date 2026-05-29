@@ -16,6 +16,51 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap">
+    <style>
+        .premium-heading { font-family: 'Playfair Display', serif; letter-spacing: -0.02em; }
+        
+        .split-side-form {
+            background: #faf9f6 !important;
+        }
+        .form-wrapper-minimal {
+            background: #ffffff;
+            border: 1px solid rgba(0,0,0,0.05);
+            border-radius: 28px;
+            padding: 4rem 3rem !important;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.04);
+            margin: 2rem 0;
+        }
+        .service-dropdown, input[type="date"], input[type="time"], textarea {
+            background: #faf9f6 !important;
+            border: 1px solid #e5e5e5 !important;
+            color: #171717 !important;
+            transition: all 0.3s;
+        }
+        .service-dropdown:focus, input[type="date"]:focus, input[type="time"]:focus, textarea:focus {
+            border-color: #d4af37 !important;
+            background: #ffffff !important;
+            box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1) !important;
+            outline: none;
+        }
+        .btn-premium {
+            background: linear-gradient(135deg, #171717, #333333) !important;
+            color: #d4af37 !important;
+            border: none !important;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+        .btn-premium:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        #display-price {
+            background: linear-gradient(135deg, #171717, #4A4A4A);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-family: 'Playfair Display', serif;
+        }
+    </style>
 </head>
 
 <body class="page-auth">
@@ -41,8 +86,8 @@
             <div class="split-side split-side-image image-side-text"
                 style="background-image: url('https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1200&q=70&fm=webp'); flex: 0.4;">
                 <div class="side-content fade-up">
-                    <span class="side-sub">Salon Team</span>
-                    <h2>Send a <br>Message.</h2>
+                    <span class="side-sub" style="color: #d4af37; letter-spacing: 2px;">Salon Team</span>
+                    <h2 class="premium-heading" style="font-size: clamp(2.5rem, 4vw, 3.5rem);">Send a <br>Message.</h2>
                     <p>For custom styles and photo work, our team is ready to help you.</p>
                     <div style="margin-top: 2rem;">
                         <div style="margin-bottom: 2rem;">
@@ -63,8 +108,8 @@
             <!-- Booking Form Side -->
             <div class="split-side split-side-form" style="flex: 1; align-items: flex-start; text-align: left;">
                 <div class="form-wrapper-minimal fade-up" style="max-width: 600px; padding: 4rem 0; animation-delay: 0.3s;">
-                    <span class="side-sub" style="color: var(--accent);">Visit Details</span>
-                    <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Confirm Appointment</h1>
+                    <span class="side-sub" style="color: #d4af37; letter-spacing: 2px;">Visit Details</span>
+                    <h1 class="premium-heading" style="font-size: 2.75rem; margin-bottom: 0.5rem; color: #171717;">Confirm Appointment</h1>
                     <p class="subtitle" style="margin-bottom: 3rem; color: #64748b;">Choose your options to finish your booking.
                     </p>
 

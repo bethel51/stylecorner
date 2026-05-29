@@ -16,9 +16,109 @@
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap">
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 	<link rel="preload" as="image" href="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1920&q=80&fm=webp">
+    <style>
+        .premium-heading {
+            font-family: 'Playfair Display', serif;
+            letter-spacing: -0.02em;
+        }
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 100%);
+            z-index: 1;
+        }
+        .editorial-hero-content {
+            z-index: 2;
+            position: relative;
+            text-align: left;
+            max-width: 600px;
+            margin-left: 5%;
+        }
+        .editorial-hero-content h1 {
+            color: #ffffff;
+            font-size: clamp(3.5rem, 6vw, 5.5rem);
+            line-height: 1.05;
+            margin-bottom: 1.5rem;
+        }
+        .editorial-hero-content p {
+            color: #e5e5e5;
+            font-size: 1.25rem;
+        }
+        .btn-gold {
+            background: linear-gradient(135deg, #d4af37, #b5952f);
+            color: #fff;
+            border: none;
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .btn-gold:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(212, 175, 55, 0.3);
+            color: #fff;
+        }
+        .glass-stats {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+            transform: translateY(-50%);
+        }
+        .stat-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #171717, #4A4A4A);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .premium-card {
+            background: #ffffff;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            border: 1px solid rgba(0,0,0,0.05);
+            position: relative;
+        }
+        .premium-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; width: 100%; height: 4px;
+            background: #d4af37;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+        .premium-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            border-color: rgba(212, 175, 55, 0.3);
+        }
+        .premium-card:hover::after {
+            transform: scaleX(1);
+        }
+        .premium-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+        .premium-card-content {
+            padding: 2.5rem 2rem;
+            text-align: center;
+        }
+        .premium-card-content h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.75rem;
+            color: #171717;
+            margin-bottom: 0.5rem;
+        }
+    </style>
 </head>
 
 <body class="page-home">
@@ -48,61 +148,62 @@
 	</header>
 
 	<main>
-		<!-- Editorial Hero -->
-		<section class="editorial-hero">
+		<!-- Premium Editorial Hero -->
+		<section class="editorial-hero" style="background-image: url('https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1920&q=80&fm=webp'); justify-content: flex-start; padding-top: 15rem; padding-bottom: 12rem;">
+            <div class="hero-overlay"></div>
 			<div class="editorial-hero-content fade-up">
-				<h1>Elevate Your Style.</h1>
-				<p>A high-end editorial approach to hair, nails, and personal grooming. Step into the new standard of beauty.</p>
-				<a href="role-selection.html" class="btn btn-premium" style="background: #1A1A1A; color: #FDFBF7; border: none; padding: 1rem 2rem;">Experience Style Corner</a>
+				<h1 class="premium-heading">Elevate Your<br>Signature Style.</h1>
+				<p>A high-end editorial approach to hair, nails, and personal grooming. Step into the new standard of modern beauty.</p>
+				<a href="role-selection.html" class="btn btn-gold" style="padding: 1.25rem 2.5rem; font-size: 1.05rem; letter-spacing: 1px; text-transform: uppercase;">Experience The Atelier</a>
 			</div>
 		</section>
 
-		<!-- Statistics Bar (Minimal) -->
-		<div id="home-stats-container" class="container" style="margin-top: -2rem; position: relative; z-index: 10;">
-			<div class="glass-card stats-summary-bar fade-up" style="background: #FDFBF7; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: none; padding: 1.5rem;">
+		<!-- Glassmorphism Statistics Bar -->
+		<div class="container" style="position: relative; z-index: 10;">
+			<div class="glass-stats fade-up stats-summary-bar">
 				<div class="stat-item">
-					<p class="side-sub" style="margin-bottom: 0.5rem; color: #4A4A4A;">Happy Clients</p>
-					<h3 id="stat-bookings" style="font-size: 2rem; font-weight: 300; font-style: italic; color: #1A1A1A;">1.2k+</h3>
+					<p class="side-sub" style="margin-bottom: 0.5rem; color: #6b7280; letter-spacing: 2px;">Happy Clients</p>
+					<h3 class="stat-value">1.2k+</h3>
 				</div>
 				<div class="stat-item">
-					<p class="side-sub" style="margin-bottom: 0.5rem; color: #4A4A4A;">Service Rating</p>
-					<h3 id="stat-rating" style="font-size: 2rem; font-weight: 300; font-style: italic; color: #1A1A1A;">A+ Quality</h3>
+					<p class="side-sub" style="margin-bottom: 0.5rem; color: #6b7280; letter-spacing: 2px;">Service Rating</p>
+					<h3 class="stat-value">A+ Quality</h3>
 				</div>
 				<div class="stat-item">
-					<p class="side-sub" style="margin-bottom: 0.5rem; color: #4A4A4A;">Expert Stylists</p>
-					<h3 style="font-size: 2rem; font-weight: 300; font-style: italic; color: #1A1A1A;">20+</h3>
+					<p class="side-sub" style="margin-bottom: 0.5rem; color: #6b7280; letter-spacing: 2px;">Expert Stylists</p>
+					<h3 class="stat-value">20+</h3>
 				</div>
 			</div>
 		</div>
 
-		<!-- Editorial Services Grid -->
-		<section class="section-padding" style="margin-top: 5rem;">
+		<!-- Premium Services Grid -->
+		<section class="section-padding" style="margin-top: 1rem;">
 			<div class="container fade-up">
 				<div class="section-header text-center">
-					<p>Our Specialities</p>
-					<h2>Signature Services</h2>
+					<p style="color: #d4af37; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; margin-bottom: 1rem;">Our Specialities</p>
+					<h2 class="premium-heading" style="font-size: 3.5rem; color: #171717;">Signature Services</h2>
 				</div>
 
-				<div class="editorial-grid">
-					<a href="services.html" class="editorial-card">
+				<div class="editorial-grid" style="grid-template-columns: repeat(3, 1fr); gap: 3rem;">
+					<a href="services.html" class="premium-card">
 						<img src="images/gallery-barber.jpg" alt="Premium Hair Cuts" loading="lazy">
-						<div class="editorial-card-content">
+						<div class="premium-card-content">
 							<h3>Premium Cuts</h3>
-							<span style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent);">Learn More</span>
+							<span style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; color: #d4af37; font-weight: 700;">Discover More &rarr;</span>
 						</div>
 					</a>
-					<a href="services.html" class="editorial-card">
+					<a href="services.html" class="premium-card">
 						<img src="images/gallery-braids.jpg" alt="Expert Braiding" loading="lazy">
-						<div class="editorial-card-content">
+						<div class="premium-card-content">
 							<h3>Expert Braiding</h3>
-							<span style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent);">Learn More</span>
+							<span style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; color: #d4af37; font-weight: 700;">Discover More &rarr;</span>
 						</div>
 					</a>
-					<a href="services.html" class="editorial-card">
+					<a href="services.html" class="premium-card">
 						<img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=600&q=70&fm=webp" alt="Lash & Nails Combo" loading="lazy">
-						<div class="editorial-card-content">
-							<h3>Lash & Nails Combo</h3>
-							<span style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent);">Learn More</span>
+						<div class="premium-card-content">
+							<h3>Lash & Nails</h3>
+							<span style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; color: #d4af37; font-weight: 700;">Discover More &rarr;</span>
 						</div>
 					</a>
 				</div>
