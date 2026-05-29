@@ -34,12 +34,12 @@ async function sendNotification(to, subject, text) {
   if (!transporter) return;
   try {
       const info = await transporter.sendMail({
-          from: '"Style Corner" <noreply@stylecorner.com>',
+          from: `"Style Corner" <${process.env.EMAIL_USER}>`,
           to: to,
           subject: subject,
           text: text
       });
-      console.log('Email sent: %s', nodemailer.getTestMessageUrl(info));
+      console.log('Email successfully sent to:', to);
   } catch (err) {
       console.error('Error sending email:', err);
   }
