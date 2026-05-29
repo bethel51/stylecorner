@@ -18,7 +18,7 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-	<link rel="preload" as="image" href="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?auto=format&fit=crop&w=1200&q=70&fm=webp">
+	<link rel="preload" as="image" href="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1920&q=80&fm=webp">
 </head>
 
 <body class="page-home">
@@ -48,275 +48,130 @@
 	</header>
 
 	<main>
-		<!-- Immersive Split Hero -->
-		<section id="home" class="split-page-container" style="height: 90vh; ">
-			<!-- Left: Our Story -->
-			<div class="split-side split-side-image image-side-text"
-				style="background-image: url('https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?auto=format&fit=crop&w=1200&q=70&fm=webp');">
-				<div class="side-content fade-up">
-					<span class="side-sub">Est. MMXXVI — The Salon</span>
-					<h1 style="color: white;">Looking <br><span
-							style="color: var(--accent); font-style: normal; font-weight: 500;">Your Best.</span></h1>
-					<p>We help you look great through personalized styling.</p>
-					<div class="hero-buttons mt-5">
-						<a href="login.html" class="btn btn-premium">Sign In</a>
-						<a href="role-selection.html" class="btn btn-premium">Sign Up Now</a>
-					</div>
-				</div>
-				<div class="side-bg-overlay" style="background: rgba(0,0,0,0.65);"></div>
-			</div>
-
-			<!-- Right: Our Team -->
-			<div class="split-side split-side-image image-side-text"
-				style="background-image: url('https://images.unsplash.com/photo-1618077360395-f3068be8e001?auto=format&fit=crop&w=1200&q=70&fm=webp'); background-position: top center;">
-				<div class="side-content fade-up" style="animation-delay: 0.3s;">
-					<span class="side-sub">Expert Skill</span>
-					<h2>Julian <br>Reed.</h2>
-					<p>Lead Stylist and professional Barber. 15 years of great styles.</p>
-					<a href="experts.html" class="btn btn-premium"
-						style="background: #000; color: #fff; border: 1px solid rgba(255,255,255,0.1);">Meet Our
-						Team</a>
-				</div>
-				<div class="side-bg-overlay" style="background: rgba(0,0,0,0.65);"></div>
+		<!-- Editorial Hero -->
+		<section class="editorial-hero">
+			<div class="editorial-hero-content fade-up">
+				<h1>Elevate Your Style.</h1>
+				<p>A high-end editorial approach to hair, nails, and personal grooming. Step into the new standard of beauty.</p>
+				<a href="role-selection.html" class="btn btn-premium" style="background: #1A1A1A; color: #FDFBF7; border: none; padding: 1.5rem 3rem;">Experience Style Corner</a>
 			</div>
 		</section>
 
 		<!-- Statistics Bar (Minimal) -->
-		<div id="home-stats-container" class="container"
-			style="margin-top: 10rem; margin-bottom: 10rem; position: relative; z-index: 10;">
-			<div class="glass-card stats-summary-bar fade-up">
+		<div id="home-stats-container" class="container" style="margin-top: -3rem; position: relative; z-index: 10;">
+			<div class="glass-card stats-summary-bar fade-up" style="background: #FDFBF7; box-shadow: 0 20px 40px rgba(0,0,0,0.05); border: none;">
 				<div class="stat-item">
-					<p class="side-sub" style="margin-bottom: 0.5rem;">Happy Clients</p>
-					<h3 id="stat-bookings" style="font-size: 2rem; font-weight: 300; font-style: italic;">1.2k+</h3>
+					<p class="side-sub" style="margin-bottom: 0.5rem; color: #4A4A4A;">Happy Clients</p>
+					<h3 id="stat-bookings" style="font-size: 2rem; font-weight: 300; font-style: italic; color: #1A1A1A;">1.2k+</h3>
 				</div>
 				<div class="stat-item">
-					<p class="side-sub" style="margin-bottom: 0.5rem;">Service Rating</p>
-					<h3 id="stat-rating" style="font-size: 2rem; font-weight: 300; font-style: italic;">A+ Quality</h3>
+					<p class="side-sub" style="margin-bottom: 0.5rem; color: #4A4A4A;">Service Rating</p>
+					<h3 id="stat-rating" style="font-size: 2rem; font-weight: 300; font-style: italic; color: #1A1A1A;">A+ Quality</h3>
 				</div>
 				<div class="stat-item">
-					<p class="side-sub" style="margin-bottom: 0.5rem;">Expert stylists</p>
-					<h3 style="font-size: 2rem; font-weight: 300; font-style: italic;">20+</h3>
+					<p class="side-sub" style="margin-bottom: 0.5rem; color: #4A4A4A;">Expert Stylists</p>
+					<h3 style="font-size: 2rem; font-weight: 300; font-style: italic; color: #1A1A1A;">20+</h3>
 				</div>
 			</div>
 		</div>
 
-		<!-- Services Hub (Teaser) -->
-		<section class="section-padding">
+		<!-- Editorial Services Grid -->
+		<section class="section-padding" style="margin-top: 5rem;">
 			<div class="container fade-up">
-				<div class="section-header">
-					<p>Our Best Services</p>
-					<h2>What we do best</h2>
+				<div class="section-header text-center">
+					<p>Our Specialities</p>
+					<h2>Signature Services</h2>
 				</div>
 
-				<div class="services-detailed-grid">
-					<div class="service-item-card" style="padding: 2rem;">
-						<i class="fas fa-cut mb-3" style="font-size: 2.5rem; color: var(--accent);"></i>
-						<div class="service-item-content p-0 mt-3">
-							<span class="service-price">Premium</span>
-							<h3 class="mb-2">Hair Cut Services</h3>
-							<p>Tailored cuts and precise fades for all hair types.</p>
-							<a href="services.html" class="btn btn-secondary btn-sm mt-4">Learn More</a>
+				<div class="editorial-grid">
+					<a href="services.html" class="editorial-card">
+						<img src="images/gallery-barber.jpg" alt="Premium Hair Cuts" loading="lazy">
+						<div class="editorial-card-content">
+							<h3>Premium Cuts</h3>
+							<span style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent);">Learn More</span>
 						</div>
-					</div>
-					<div class="service-item-card" style="padding: 2rem;">
-						<i class="fas fa-hand-sparkles mb-3" style="font-size: 2.5rem; color: var(--accent);"></i>
-						<div class="service-item-content p-0 mt-3">
-							<span class="service-price">Styling</span>
-							<h3 class="mb-2">Hair Braiding Services</h3>
-							<p>Expert box braids, cornrows, and intricate protective styles.</p>
-							<a href="services.html" class="btn btn-secondary btn-sm mt-4">Learn More</a>
+					</a>
+					<a href="services.html" class="editorial-card">
+						<img src="images/gallery-braids.jpg" alt="Expert Braiding" loading="lazy">
+						<div class="editorial-card-content">
+							<h3>Expert Braiding</h3>
+							<span style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent);">Learn More</span>
 						</div>
-					</div>
-					<div class="service-item-card" style="padding: 2rem;">
-						<i class="fas fa-star mb-3" style="font-size: 2.5rem; color: var(--accent);"></i>
-						<div class="service-item-content p-0 mt-3">
-							<span class="service-price">Combos</span>
-							<h3 class="mb-2">Lash & Nails Combo</h3>
-							<p>Full acrylic sets and volume lashes done simultaneously.</p>
-							<a href="services.html" class="btn btn-secondary btn-sm mt-4">Learn More</a>
+					</a>
+					<a href="services.html" class="editorial-card">
+						<img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=600&q=70&fm=webp" alt="Lash & Nails Combo" loading="lazy">
+						<div class="editorial-card-content">
+							<h3>Lash & Nails Combo</h3>
+							<span style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent);">Learn More</span>
 						</div>
-					</div>
-				</div>
-				<div class="text-center mt-5">
-					<a href="services.html" class="btn btn-primary">View All 10 Services</a>
-				</div>
-		</section>
-
-		<!-- Store CTA Section -->
-		<section class="section-padding mt-5" style="background: var(--text); color: var(--surface);">
-			<div class="container hero-grid">
-				<div>
-					<span
-						style="color: var(--accent); text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem; margin-bottom: 1rem; display: block;">Official
-						Store</span>
-					<h2 style="font-size: 3rem; margin-bottom: 1.5rem; color: var(--surface);">Personal Grooming Tools
-					</h2>
-					<p style="color: #94a3b8; font-size: 1.1rem; margin-bottom: 2rem;">Maintain your style
-						from home. Order our professional-grade personal clippers straight to your door. Real-time Naira
-						pricing available.</p>
-					<a href="store.html" class="btn btn-primary"
-						style="background: var(--accent); border-color: var(--accent);">Shop Now in ₦</a>
-				</div>
-				<div class="store-preview"
-					style="background: var(--surface); height: 350px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-					<i class="fas fa-bolt" style="font-size: 6rem; color: var(--text);"></i>
+					</a>
 				</div>
 			</div>
 		</section>
 
-		<!-- Gallery Hub (Teaser) -->
-		<section class="section-padding" style="background: #ffffff;">
-			<div class="container">
-				<div class="section-header">
-					<p>Our Recent Work</p>
-					<h2>Gallery</h2>
+		<!-- Editorial Store CTA -->
+		<section class="section-padding" style="background: #F4F1E9; margin-top: 5rem;">
+			<div class="container hero-grid" style="align-items: center;">
+				<div class="fade-up">
+					<span style="color: var(--accent); text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem; margin-bottom: 1rem; display: block;">The Collection</span>
+					<h2 style="font-size: 3.5rem; font-weight: 300; letter-spacing: -2px; line-height: 1.1; margin-bottom: 1.5rem; color: #1A1A1A;">Curated Grooming Essentials.</h2>
+					<p style="color: #4A4A4A; font-size: 1.1rem; margin-bottom: 2rem; font-weight: 300;">Bring the luxury of Style Corner into your home. Professional-grade tools and products, carefully selected by our lead stylists.</p>
+					<a href="store.html" class="btn btn-premium" style="background: transparent; color: #1A1A1A; border: 1px solid #1A1A1A;">Explore the Store</a>
 				</div>
-
-				<div class="gallery-grid">
-					<div class="gallery-item">
-						<img src="images/gallery-fashion.jpg" alt="Signature Look 1" loading="lazy" decoding="async" width="1200" height="800">
-						<div class="gallery-overlay">
-							<div>
-								<h4>Editorial</h4>
-								<p>Hair Styling</p>
-							</div>
-						</div>
-					</div>
-					<div class="gallery-item">
-						<img src="images/gallery-barber.jpg" alt="Modern Barbering" loading="lazy" decoding="async">
-						<div class="gallery-overlay">
-							<div>
-								<h4>The Fade</h4>
-								<p>Clean Cut</p>
-							</div>
-						</div>
-					</div>
-					<div class="gallery-item">
-						<img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=600&q=70&fm=webp"
-							alt="Signature Look 3" loading="lazy" decoding="async">
-						<div class="gallery-overlay">
-							<div>
-								<h4>Minimalist</h4>
-								<p>Nail Artistry</p>
-							</div>
-						</div>
-					</div>
-					<div class="gallery-item">
-						<img src="images/gallery-braids.jpg" alt="Signature Look 4" loading="lazy" decoding="async">
-						<div class="gallery-overlay">
-							<div>
-								<h4>Heritage</h4>
-								<p>Traditional Braiding</p>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="text-center mt-4">
-					<a href="gallery.html" class="btn btn-primary">View Full Collection</a>
-				</div>
-			</div>
-		</section>
-
-		<!-- experts Hub (Teaser) -->
-		<section class="section-padding mt-5">
-			<div class="container">
-				<div class="section-header">
-					<p>Meet Our Experts</p>
-					<h2>The Lead Experts</h2>
-				</div>
-
-				<div class="experts-grid">
-					<div class="expert-item-card">
-						<div class="expert-avatar-large">
-							<img src="https://images.unsplash.com/photo-1618077360395-f3068be8e001?auto=format&fit=crop&w=400&q=70&fm=webp"
-								alt="Julian Reed" loading="lazy" decoding="async">
-						</div>
-						<h3>Julian Reed</h3>
-						<p
-							style="color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem;">
-							Creative Director</p>
-					</div>
-					<div class="expert-item-card">
-						<div class="expert-avatar-large">
-							<img src="https://images.unsplash.com/photo-1580618672591-eb180b1a973f?auto=format&fit=crop&w=400&q=70&fm=webp"
-								alt="Elena Thorne" loading="lazy" decoding="async">
-						</div>
-						<h3>Elena Thorne</h3>
-						<p
-							style="color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem;">
-							Lead Colorist</p>
-					</div>
-					<div class="expert-item-card">
-						<div class="expert-avatar-large">
-							<img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=70&fm=webp"
-								alt="Marcus Grey" loading="lazy" decoding="async">
-						</div>
-						<h3>Marcus Grey</h3>
-						<p
-							style="color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem;">
-							experts Barber</p>
-					</div>
-				</div>
-				<div class="text-center mt-4">
-					<a href="experts.html" class="btn btn-primary">Meet the Team</a>
+				<div class="fade-up" style="animation-delay: 0.2s;">
+					<img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=800&q=80&fm=webp" alt="Grooming Products" style="width: 100%; height: auto; border-radius: 4px; box-shadow: 0 20px 40px rgba(0,0,0,0.1);">
 				</div>
 			</div>
 		</section>
 
 		<!-- Simple Contact Call to Action -->
-		<section class="section-padding mt-5" style="background: var(--dash-bg);">
+		<section class="section-padding" style="margin-top: 5rem; margin-bottom: 5rem;">
 			<div class="container text-center">
-				<div class="glass-card" style="max-width: 800px; margin: 0 auto; padding: 4rem;">
-					<h2 class="mb-3" style="color: white; font-size: 3rem;">Start Your <span
-							style="color: var(--dash-accent);">Style Journey.</span>
-					</h2>
-					<p class="mb-5"
-						style="color: var(--dash-text-muted); font-size: 1.1rem; max-width: 600px; margin-inline: auto;">
-						Our team is ready to help you book a visit at our salon.
-					</p>
-					<a href="contact.html" class="btn btn-premium">Talk to us</a>
+				<div style="max-width: 800px; margin: 0 auto;">
+					<h2 class="mb-3" style="color: #1A1A1A; font-size: 3.5rem; font-weight: 300; letter-spacing: -2px;">Ready for a change?</h2>
+					<p class="mb-5" style="color: #4A4A4A; font-size: 1.25rem; font-weight: 300;">Our expert team is waiting to help you discover your signature look.</p>
+					<a href="role-selection.html" class="btn btn-premium" style="background: #1A1A1A; color: #FDFBF7; border: none; padding: 1.5rem 3rem;">Book an Appointment</a>
 				</div>
 			</div>
 		</section>
 
-		<footer>
+		<footer style="background: #1A1A1A; color: #FDFBF7; padding-top: 5rem;">
 			<div class="container">
 				<div class="footer-grid">
 					<div>
-						<a href="index.html" class="logo" style="margin-bottom: 2rem; display: block;">
-							STYLE<span>CORNER</span>
+						<a href="index.html" class="logo" style="margin-bottom: 2rem; display: block; color: #FDFBF7;">
+							STYLE<span style="color: var(--accent);">CORNER</span>
 						</a>
-						<p>Luxury styling and expert care for everyone.</p>
+						<p style="color: #A0A0A0; font-weight: 300;">Luxury styling and expert care for everyone.</p>
 						<div style="display: flex; gap: 1.5rem; margin-top: 3rem;">
-							<a href="#" style="font-size: 1.1rem; opacity: 0.6;"><i class="fab fa-instagram"></i></a>
-							<a href="#" style="font-size: 1.1rem; opacity: 0.6;"><i class="fab fa-facebook-f"></i></a>
-							<a href="#" style="font-size: 1.1rem; opacity: 0.6;"><i class="fab fa-twitter"></i></a>
+							<a href="#" style="font-size: 1.1rem; color: #FDFBF7; opacity: 0.6;"><i class="fab fa-instagram"></i></a>
+							<a href="#" style="font-size: 1.1rem; color: #FDFBF7; opacity: 0.6;"><i class="fab fa-facebook-f"></i></a>
+							<a href="#" style="font-size: 1.1rem; color: #FDFBF7; opacity: 0.6;"><i class="fab fa-twitter"></i></a>
 						</div>
 					</div>
 					<div>
-						<h4>Quick Links</h4>
+						<h4 style="color: #FDFBF7;">Quick Links</h4>
 						<ul style="list-style: none; display: flex; flex-direction: column; gap: 1rem;">
-							<li><a href="index.html">Home</a></li>
-							<li><a href="services.html">Services</a></li>
-							<li><a href="gallery.html">Gallery</a></li>
-							<li><a href="experts.html">Our Team</a></li>
-							<li><a href="store.html">Store</a></li>
-							<li><a href="about.html">About</a></li>
+							<li><a href="index.html" style="color: #A0A0A0;">Home</a></li>
+							<li><a href="services.html" style="color: #A0A0A0;">Services</a></li>
+							<li><a href="gallery.html" style="color: #A0A0A0;">Gallery</a></li>
+							<li><a href="experts.html" style="color: #A0A0A0;">Our Team</a></li>
+							<li><a href="store.html" style="color: #A0A0A0;">Store</a></li>
+							<li><a href="about.html" style="color: #A0A0A0;">About</a></li>
 							<li><a href="role-selection.html" style="color: var(--accent);">Sign Up</a></li>
-							<li><a href="login.html">Sign In</a></li>
+							<li><a href="login.html" style="color: #A0A0A0;">Sign In</a></li>
 						</ul>
 					</div>
 					<div>
-						<h4>Legal</h4>
+						<h4 style="color: #FDFBF7;">Legal</h4>
 						<ul style="list-style: none; display: flex; flex-direction: column; gap: 1rem;">
-							<li><a href="privacy-policy.html">Privacy Policy</a></li>
-							<li><a href="terms-of-service.html">Terms of Service</a></li>
-							<li><a href="cancellation-policy.html">Cancellation Policy</a></li>
+							<li><a href="privacy-policy.html" style="color: #A0A0A0;">Privacy Policy</a></li>
+							<li><a href="terms-of-service.html" style="color: #A0A0A0;">Terms of Service</a></li>
+							<li><a href="cancellation-policy.html" style="color: #A0A0A0;">Cancellation Policy</a></li>
 						</ul>
 					</div>
 				</div>
-				<div
-					style="border-top: 1px solid var(--border); padding-top: 3rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 2rem; font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase;">
+				<div style="border-top: 1px solid rgba(255,255,255,0.1); margin-top: 4rem; padding-top: 3rem; padding-bottom: 3rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 2rem; font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase; color: #A0A0A0;">
 					<p>&copy; <span id="copyright-year">2026</span> STYLE CORNER.</p>
 					<p>All Rights Reserved.</p>
 				</div>
@@ -328,6 +183,16 @@
 	<script>
 		// Update Copyright
 		document.getElementById('copyright-year').textContent = new Date().getFullYear();
+
+		// Header scroll effect for editorial theme
+		window.addEventListener('scroll', () => {
+			const header = document.querySelector('header');
+			if (window.scrollY > 50) {
+				header.classList.add('scrolled');
+			} else {
+				header.classList.remove('scrolled');
+			}
+		});
 	</script>
 </body>
 
