@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="60" viewBox="0 0 240 60" role="img" aria-labelledby="title">
+  <title id="title">Style Corner</title>
+  <rect width="240" height="60" rx="8" fill="#ce1126" />
+  <text x="20" y="36" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="20" fill="#ffffff">STYLE</text>
+  <text x="110" y="36" font-family="Inter, Arial, sans-serif" font-weight="600" font-size="20" fill="#ffffff">CORNER</text>
+  <circle cx="210" cy="30" r="8" fill="#ffffff" />
+</svg>

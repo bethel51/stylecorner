@@ -1,0 +1,7 @@
+/* Page Specific Backgrounds */
+body.page-home,
+body.page-services,
+body.page-about,
+body {
+    background: #f8fafc;
+}

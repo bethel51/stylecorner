@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boutique Store | Premium Grooming & Styling Products | Style Corner</title>
+    <meta name="description"
+        content="Shop the Style Corner boutique for professional-grade grooming products, luxury hair care, and artisanal styling tools used by our experts.">
+    <meta name="keywords"
+        content="grooming products, luxury hair care, salon products, Style Corner store, professional styling tools">
+    <meta property="og:title" content="Style Corner | Luxury Boutique">
+    <meta property="og:description"
+        content="Professional-grade products for the modern individual. Elevate your daily routine.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+</head>
+
+<body class="page-store">
+
+    <header>
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+            <a href="index.html" class="logo">
+                <svg class="logo-icon" viewBox="0 0 100 100">
+                    <path d="M30 20 H70 L80 50 L70 80 H30 L20 50 Z" fill="none" stroke="currentColor"
+                        stroke-width="4" />
+                    <path d="M35 35 H65 L70 50 L65 65 H35 L30 50 Z" fill="currentColor" opacity="0.2" />
+                    <circle cx="50" cy="50" r="5" fill="currentColor" />
+                </svg>
+                STYLE<span>CORNER</span>
+            </a>
+            <nav class="nav">
+                <a href="index.html">Home</a>
+                <a href="services.html">Services</a>
+                <a href="gallery.html">Gallery</a>
+                <a href="experts.html">Our Team</a>
+                <a href="store.html" class="active">Store</a>
+                <a href="about.html">About</a>
+                <a href="role-selection.html" class="cta">Sign Up</a>
+                <a href="login.html">Sign In</a>
+            </nav>
+            <div id="cart-trigger" class="cart-toggle-btn">
+                <i class="fas fa-shopping-bag"></i>
+                <span>Bag</span>
+                <span id="cart-count" class="cart-count-badge">0</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Featured Product Heritage -->
+        <section class="split-page-container" style="min-height: 80vh;">
+            <div class="split-side split-side-image image-side-text"
+                style="background-image: url('https://images.unsplash.com/photo-1621605815971-fbc98d665033?auto=format&fit=crop&w=1200&q=80'); flex: 0.5;">
+                <div class="side-content fade-up">
+                    <span class="side-sub">Featured Architecture</span>
+                    <h2>SC Pro<br>Clipper.</h2>
+                    <p>Designed for the expert specialists. Industrial precision in every stroke.</p>
+                </div>
+                <div class="side-bg-overlay" style="background: rgba(0,0,0,0.5);"></div>
+            </div>
+
+            <div class="split-side"
+                style="flex: 1; align-items: flex-start; text-align: left; background: #fff; padding: 6rem 5%;">
+                <div class="form-wrapper-minimal fade-up" style="max-width: 600px; animation-delay: 0.3s;">
+                    <span class="side-sub" style="color: var(--accent);">Limited Release</span>
+                    <h1 style="font-size: 3rem; color: #000; margin-bottom: 1rem;">SC Pro Personal Clipper</h1>
+                    <p style="color: #64748b; line-height: 1.8; margin-bottom: 2rem; font-weight: 300;">
+                        Our flagship grooming tool. Featuring titanium zero-gap blades and a hyper-torque motor system.
+                    </p>
+                    <div style="display: flex; align-items: baseline; gap: 1rem; margin-bottom: 3rem;">
+                        <span style="font-size: 2.5rem; font-weight: 300; color: #000;">₦35,000</span>
+                        <span style="text-decoration: line-through; color: #94a3b8; font-size: 1.2rem;">₦45,000</span>
+                    </div>
+                    <button class="btn btn-premium add-to-cart-btn" data-id="1" data-name="SC Pro Clipper"
+                        data-price="35000" data-icon="fa-cut" style="padding: 1.5rem 3rem;">Add to Bag</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Product Collection Grid -->
+        <section class="section-padding" style="background: #f8fafc;">
+            <div class="container">
+                <div class="section-header fade-up">
+                    <p>Curated Tools</p>
+                    <h2>The Collection</h2>
+                </div>
+
+                <div class="product-grid-store fade-up" style="animation-delay: 0.2s;">
+                    <!-- Product 2 -->
+                    <div class="store-card">
+                        <div class="store-card-img">
+                            <i class="fas fa-pump-soap"></i>
+                        </div>
+                        <h3 style="color: #000; font-size: 1.1rem; margin-bottom: 0.5rem;">Artisanal Styling Gel</h3>
+                        <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 1.5rem;">High hold, natural shine,
+                            and heritage cedarwood scent.</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-weight: 700; color: #000;">₦8,500</span>
+                            <button class="btn btn-secondary add-to-cart-btn" data-id="2" data-name="Styling Gel"
+                                data-price="8500" data-icon="fa-pump-soap"
+                                style="padding: 0.5rem 1rem; font-size: 0.8rem;">+ Add</button>
+                        </div>
+                    </div>
+
+                    <!-- Product 3 -->
+                    <div class="store-card">
+                        <div class="store-card-img">
+                            <i class="fas fa-brush"></i>
+                        </div>
+                        <h3 style="color: #000; font-size: 1.1rem; margin-bottom: 0.5rem;">Sanctuary Beard Oil</h3>
+                        <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 1.5rem;">Organic jojoba blend for
+                            deep hydration and architectural softness.</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-weight: 700; color: #000;">₦6,000</span>
+                            <button class="btn btn-secondary add-to-cart-btn" data-id="3" data-name="Beard Oil"
+                                data-price="6000" data-icon="fa-brush"
+                                style="padding: 0.5rem 1rem; font-size: 0.8rem;">+ Add</button>
+                        </div>
+                    </div>
+
+                    <!-- Product 4 -->
+                    <div class="store-card">
+                        <div class="store-card-img">
+                            <i class="fas fa-spray-can"></i>
+                        </div>
+                        <h3 style="color: #000; font-size: 1.1rem; margin-bottom: 0.5rem;">Matte Texture Spray</h3>
+                        <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 1.5rem;">Architectural volume with
+                            a non-greasy, invisible finish.</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-weight: 700; color: #000;">₦7,200</span>
+                            <button class="btn btn-secondary add-to-cart-btn" data-id="4" data-name="Texture Spray"
+                                data-price="7200" data-icon="fa-spray-can"
+                                style="padding: 0.5rem 1rem; font-size: 0.8rem;">+ Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Cart Drawer -->
+    <div id="cart-drawer" class="cart-drawer">
+        <div class="cart-header">
+            <h2 style="font-size: 1.25rem; color: #000;">Your Selection</h2>
+            <button id="close-cart"
+                style="background:none; border:none; font-size: 1.5rem; cursor:pointer; color: #94a3b8;"><i
+                    class="fas fa-times"></i></button>
+        </div>
+        <div id="cart-items" class="cart-items-container">
+            <!-- Items injected via JS -->
+            <div style="text-align: center; margin-top: 5rem; color: #94a3b8;">
+                <i class="fas fa-shopping-bag" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.2;"></i>
+                <p>Your bag is empty</p>
+            </div>
+        </div>
+        <div class="cart-footer">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 2rem;">
+                <span style="color: #64748b;">Subtotal</span>
+                <span id="cart-total" style="font-weight: 700; color: #000; font-size: 1.25rem;">₦0</span>
+            </div>
+            <button id="checkout-btn" class="btn btn-premium w-full" style="padding: 1.25rem;">Secure Checkout</button>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkout-modal" class="modal"
+        style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 3000; align-items: center; justify-content: center; backdrop-filter: blur(5px);">
+        <div class="glass-card"
+            style="max-width: 500px; width: 95%; background: white; padding: 3rem; border-radius: 24px;">
+            <h2 style="color: #000; margin-bottom: 1.5rem;">Finalize Order</h2>
+            <form id="purchase-form">
+                <div class="form-group mb-4">
+                    <label style="font-size: 0.7rem; color: #64748b; text-transform: uppercase;">Delivery
+                        Address</label>
+                    <input type="text" id="delivery-address" required
+                        style="width:100%; padding:1rem; border:1px solid #e2e8f0; border-radius:8px;">
+                </div>
+                <div class="form-group mb-5">
+                    <label style="font-size: 0.7rem; color: #64748b; text-transform: uppercase;">Phone Number</label>
+                    <input type="tel" id="delivery-phone" required
+                        style="width:100%; padding:1rem; border:1px solid #e2e8f0; border-radius:8px;">
+                </div>
+                <button type="submit" class="btn btn-premium w-full" style="padding: 1.25rem;">Pay Now</button>
+                <button type="button" id="cancel-checkout"
+                    style="width:100%; margin-top:1rem; background:none; border:none; color:#64748b; cursor:pointer;">Go
+                    Back</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <a href="index.html" class="logo" style="margin-bottom: 2rem; display: block;">
+                        STYLE<span>CORNER</span>
+                    </a>
+                    <p>Redefining the modern luxury experience through professional styling and expert care.</p>
+                </div>
+                <div>
+                    <h4>Quick Links</h4>
+                    <ul style="list-style: none; display: flex; flex-direction: column; gap: 1rem;">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="store.html">Store</a></li>
+                        <li><a href="login.html">Sign In</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div
+                style="border-top: 1px solid var(--border); padding-top: 3rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 2rem; font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase;">
+                <p>&copy; <span id="copyright-year-footer">2026</span> STYLE CORNER.</p>
+                <p>All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <script src="js/common.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('copyright-year-footer').textContent = new Date().getFullYear();
+
+            let cart = JSON.parse(localStorage.getItem('style_corner_cart') || '[]');
+
+            const cartDrawer = document.getElementById('cart-drawer');
+            const cartTrigger = document.getElementById('cart-trigger');
+            const closeCart = document.getElementById('close-cart');
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartCountLabel = document.getElementById('cart-count');
+            const cartTotalLabel = document.getElementById('cart-total');
+            const checkoutModal = document.getElementById('checkout-modal');
+
+            const refreshCartUI = () => {
+                cartCountLabel.textContent = cart.length;
+
+                if (cart.length === 0) {
+                    cartItemsContainer.innerHTML = `
+                        <div style="text-align: center; margin-top: 5rem; color: #94a3b8;">
+                            <i class="fas fa-shopping-bag" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.2;"></i>
+                            <p>Your bag is empty</p>
+                        </div>
+                    `;
+                    cartTotalLabel.textContent = '₦0';
+                    return;
+                }
+
+                let total = 0;
+                cartItemsContainer.innerHTML = cart.map((item, index) => {
+                    total += item.price;
+                    return `
+                        <div class="cart-item">
+                            <div class="cart-item-img"><i class="fas ${item.icon}"></i></div>
+                            <div class="cart-item-info">
+                                <div class="cart-item-title">${item.name}</div>
+                                <div class="cart-item-price">₦${item.price.toLocaleString()}</div>
+                            </div>
+                            <button onclick="removeFromCart(${index})" style="background:none; border:none; color:#ef4444; cursor:pointer;"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    `;
+                }).join('');
+                cartTotalLabel.textContent = '₦' + total.toLocaleString();
+            };
+
+            window.removeFromCart = (index) => {
+                cart.splice(index, 1);
+                localStorage.setItem('style_corner_cart', JSON.stringify(cart));
+                refreshCartUI();
+            };
+
+            document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const newItem = {
+                        id: btn.dataset.id,
+                        name: btn.dataset.name,
+                        price: parseInt(btn.dataset.price),
+                        icon: btn.dataset.icon
+                    };
+                    cart.push(newItem);
+                    localStorage.setItem('style_corner_cart', JSON.stringify(cart));
+                    refreshCartUI();
+                    cartDrawer.classList.add('active');
+                });
+            });
+
+            cartTrigger.addEventListener('click', () => cartDrawer.classList.add('active'));
+            closeCart.addEventListener('click', () => cartDrawer.classList.remove('active'));
+
+            document.getElementById('checkout-btn').addEventListener('click', () => {
+                if (cart.length === 0) return alert('Your bag is empty.');
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    alert('Please log in to finalize your order.');
+                    window.location.href = 'login.html?redirect=store.html';
+                    return;
+                }
+                checkoutModal.style.display = 'flex';
+            });
+
+            document.getElementById('cancel-checkout').addEventListener('click', () => {
+                checkoutModal.style.display = 'none';
+            });
+
+            const purchaseForm = document.getElementById('purchase-form');
+            purchaseForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const btn = purchaseForm.querySelector('button');
+                const user = JSON.parse(localStorage.getItem('mockUser') || '{}');
+                const address = document.getElementById('delivery-address').value;
+                const phone = document.getElementById('delivery-phone').value;
+                
+                let totalAmount = 0;
+                cart.forEach(item => totalAmount += item.price);
+                const amountInKobo = totalAmount * 100;
+
+                btn.textContent = 'Initializing Paystack...';
+                btn.disabled = true;
+
+                let handler = PaystackPop.setup({
+                    key: 'pk_test_YOUR_PAYSTACK_PUBLIC_KEY', // TODO: Replace with your actual Paystack public key
+                    email: user.email || 'customer@example.com',
+                    amount: amountInKobo,
+                    currency: 'NGN', 
+                    ref: ''+Math.floor((Math.random() * 1000000000) + 1),
+                    onClose: function(){
+                        alert('Payment window closed.');
+                        btn.textContent = 'Pay Now';
+                        btn.disabled = false;
+                    },
+                    callback: function(response){
+                        alert('Payment complete! Reference: ' + response.reference);
+                        
+                        const orderPromises = cart.map(item => {
+                            const order = {
+                                item: item.name,
+                                price: item.price,
+                                address: address,
+                                phone: phone,
+                                status: 'paid',
+                                paymentRef: response.reference
+                            };
+                            return fetch('/api/orders', {
+                                method: 'POST',
+                                headers: { 
+                                    'Content-Type': 'application/json',
+                                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                                },
+                                body: JSON.stringify(order)
+                            }).then(res => {
+                                if (!res.ok) throw new Error('Failed to save order');
+                                return res.json();
+                            });
+                        });
+
+                        Promise.all(orderPromises)
+                        .then(() => {
+                            // Clear cart
+                            cart = [];
+                            localStorage.removeItem('style_corner_cart');
+                            refreshCartUI();
+                            window.location.href = 'customer-dashboard.html';
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            alert('Payment successful, but failed to save order to server.');
+                        });
+                    }
+                });
+                handler.openIframe();
+            });
+
+            refreshCartUI();
+        });
+    </script>
+</body>
+
+</html>

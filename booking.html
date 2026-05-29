@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book a Visit | Style Corner</title>
+    <meta name="description"
+        content="Book your next hair, nail, or styling visit at Style Corner. Our team is ready for you.">
+    <meta name="keywords"
+        content="book salon, hair appointment, Style Corner booking">
+    <meta property="og:title" content="Style Corner | Easy Booking">
+    <meta property="og:description"
+        content="Choose your style session. We are ready when you are.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+</head>
+
+<body class="page-auth">
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo">STYLE<span>CORNER</span></a>
+            <nav class="nav">
+                <a href="index.html">Home</a>
+                <a href="services.html">Services</a>
+                <a href="gallery.html">Gallery</a>
+                <a href="experts.html">Our Team</a>
+                <a href="store.html">Store</a>
+                <a href="about.html">About</a>
+                <a href="login.html">Sign In</a>
+                <a href="role-selection.html" class="cta">Sign Up</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="split-page-container">
+            <!-- Salon Team Side -->
+            <div class="split-side split-side-image image-side-text"
+                style="background-image: url('https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1200&q=80'); flex: 0.4;">
+                <div class="side-content fade-up">
+                    <span class="side-sub">Salon Team</span>
+                    <h2>Send a <br>Message.</h2>
+                    <p>For custom styles and photo work, our team is ready to help you.</p>
+                    <div style="margin-top: 2rem;">
+                        <div style="margin-bottom: 2rem;">
+                            <span class="side-sub" style="font-size: 0.6rem; color: white; opacity: 0.6;">The
+                                Salon</span>
+                            <p style="font-size: 0.85rem;">12 Style Lane, Fashion District<br>New York, NY 10001</p>
+                        </div>
+                        <div>
+                            <span class="side-sub" style="font-size: 0.6rem; color: white; opacity: 0.6;">Call
+                                Us</span>
+                            <p style="font-size: 0.85rem;">+1 (555) Style</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="side-bg-overlay" style="background: rgba(15, 23, 42, 0.7);"></div>
+            </div>
+
+            <!-- Booking Form Side -->
+            <div class="split-side split-side-form" style="flex: 1; align-items: flex-start; text-align: left;">
+                <div class="form-wrapper-minimal fade-up" style="max-width: 600px; padding: 4rem 0; animation-delay: 0.3s;">
+                    <span class="side-sub" style="color: var(--accent);">Visit Details</span>
+                    <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Confirm Appointment</h1>
+                    <p class="subtitle" style="margin-bottom: 3rem; color: #64748b;">Choose your options to finish your booking.
+                    </p>
+
+                    <form id="booking-form">
+                        <div class="form-group mb-4">
+                            <label
+                                style="font-size: 0.75rem; color: #475569; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Select
+                                Stylist</label>
+                            <select id="stylist-select" required class="service-dropdown w-full"
+                                style="padding: 1.2rem; border: 1px solid #e2e8f0; border-radius: 12px; background: #fff; color: #000; font-family: 'Inter', sans-serif;">
+                                <option value="">Loading specialists...</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label
+                                style="font-size: 0.75rem; color: #475569; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Primary
+                                Service</label>
+                            <select id="service-select-1" required class="service-dropdown w-full"
+                                style="padding: 1.2rem; border: 1px solid #e2e8f0; border-radius: 12px; background: #fff; color: #000; font-family: 'Inter', sans-serif;">
+                                <option value="" data-price="0">Choose Service 1...</option>
+                                <option value="Hair Cut Services" data-price="5000">Hair Cut Services - ₦5,000</option>
+                                <option value="Hair Braiding Services" data-price="15000">Hair Braiding Services -
+                                    ₦15,000</option>
+                                <option value="Nails" data-price="7000">Nails - ₦7,000</option>
+                                <option value="Fixing Nails & Braids Combo" data-price="20000">Fixing Nails & Braids
+                                    Combo - ₦20,000</option>
+                                <option value="Wig Installation" data-price="12000">Wig Installation - ₦12,000</option>
+                                <option value="Pedicure" data-price="5000">Pedicure - ₦5,000</option>
+                                <option value="Manicure" data-price="4000">Manicure - ₦4,000</option>
+                                <option value="Lash Installation" data-price="8000">Lash Installation - ₦8,000</option>
+                                <option value="Lash & Nails Combo" data-price="13000">Lash & Nails Combo - ₦13,000
+                                </option>
+                                <option value="Braids & Lash Combo" data-price="22000">Braids & Lash Combo - ₦22,000
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-4" id="service-2-container">
+                            <label
+                                style="font-size: 0.75rem; color: #475569; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Secondary
+                                Service (Optional)</label>
+                            <select id="service-select-2" class="service-dropdown w-full"
+                                style="padding: 1.2rem; border: 1px solid #e2e8f0; border-radius: 12px; background: #fff; color: #000; font-family: 'Inter', sans-serif;">
+                                <option value="" data-price="0">Choose Service 2...</option>
+                                <option value="Hair Cut Services" data-price="5000">Hair Cut Services - ₦5,000</option>
+                                <option value="Hair Braiding Services" data-price="15000">Hair Braiding Services -
+                                    ₦15,000</option>
+                                <option value="Nails" data-price="7000">Nails - ₦7,000</option>
+                                <option value="Fixing Nails & Braids Combo" data-price="20000">Fixing Nails & Braids
+                                    Combo - ₦20,000</option>
+                                <option value="Wig Installation" data-price="12000">Wig Installation - ₦12,000</option>
+                                <option value="Pedicure" data-price="5000">Pedicure - ₦5,000</option>
+                                <option value="Manicure" data-price="4000">Manicure - ₦4,000</option>
+                                <option value="Lash Installation" data-price="8000">Lash Installation - ₦8,000</option>
+                                <option value="Lash & Nails Combo" data-price="13000">Lash & Nails Combo - ₦13,000
+                                </option>
+                                <option value="Braids & Lash Combo" data-price="22000">Braids & Lash Combo - ₦22,000
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="form-row"
+                            style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                            <div class="form-group">
+                                <label
+                                    style="font-size: 0.75rem; color: #475569; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Session
+                                    Date</label>
+                                <input type="date" id="booking-date" required
+                                    style="width: 100%; padding: 1.2rem; border: 1px solid #e2e8f0; border-radius: 12px; background: #fff; color: #000;">
+                            </div>
+                            <div class="form-group">
+                                <label
+                                    style="font-size: 0.75rem; color: #475569; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Time</label>
+                                <input type="time" id="booking-time" required
+                                    style="width: 100%; padding: 1.2rem; border: 1px solid #e2e8f0; border-radius: 12px; background: #fff; color: #000;">
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-5">
+                            <label
+                                style="font-size: 0.75rem; color: #475569; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Extra
+                                Notes</label>
+                            <textarea id="booking-notes"
+                                placeholder="Any specific requirements regarding your appointment?" rows="3"
+                                style="width: 100%; padding: 1.2rem; border: 1px solid #e2e8f0; border-radius: 12px; background: #fff; color: #000; font-family: 'Inter', sans-serif;"></textarea>
+                        </div>
+
+                        <div class="payment-summary mb-5" style="border-top: 1px solid #e2e8f0; padding-top: 2rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span
+                                    style="color: #64748b; text-transform: uppercase; letter-spacing: 2px; font-size: 0.7rem; font-weight: 700;">Estimated
+                                    Total</span>
+                                <span id="display-price"
+                                    style="font-weight: 300; color: #000; font-size: 2.2rem; font-style: italic;">₦0</span>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-premium w-full"
+                            style="padding: 1.5rem; font-size: 1rem; letter-spacing: 2px;">Confirm Booking</button>
+                        <p id="booking-status"
+                            style="color: #10b981; text-align: center; margin-top: 1.5rem; display: none; font-size: 0.9rem; font-weight: 600;">
+                            <i class="fas fa-check-circle"></i> Booking Sent! Redirecting...
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/common.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const select1 = document.getElementById('service-select-1');
+            const select2 = document.getElementById('service-select-2');
+            const priceDisplay = document.getElementById('display-price');
+            const stylistSelect = document.getElementById('stylist-select');
+
+            // Fetch dynamic specialists
+            fetch('/api/specialists')
+                .then(res => res.json())
+                .then(specialists => {
+                    stylistSelect.innerHTML = '<option value="">Choose your stylist...</option>';
+                    specialists.forEach(sp => {
+                        const option = document.createElement('option');
+                        option.value = sp.firstname;
+                        option.textContent = `${sp.firstname} ${sp.lastname} (${sp.specialties.join(', ') || 'Specialist'})`;
+                        stylistSelect.appendChild(option);
+                    });
+                    const anyOption = document.createElement('option');
+                    anyOption.value = 'Any Specialist';
+                    anyOption.textContent = 'Assign Any Available Stylist';
+                    stylistSelect.appendChild(anyOption);
+                })
+                .catch(err => {
+                    stylistSelect.innerHTML = '<option value="">Error loading specialists. Try again.</option>';
+                });
+
+            const updatePrice = () => {
+                const s1 = select1.options[select1.selectedIndex];
+                const s2 = select2.options[select2.selectedIndex];
+                const price1 = parseInt(s1.getAttribute('data-price')) || 0;
+                const price2 = parseInt(s2.getAttribute('data-price')) || 0;
+                priceDisplay.textContent = '₦' + (price1 + price2).toLocaleString();
+            };
+
+            [select1, select2].forEach(s => s.addEventListener('change', updatePrice));
+
+            const params = new URLSearchParams(window.location.search);
+            const initialService = params.get('service');
+            if (initialService) {
+                select1.value = initialService;
+            }
+            updatePrice();
+
+            const form = document.getElementById('booking-form');
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const token = localStorage.getItem('token');
+                const user = JSON.parse(localStorage.getItem('mockUser') || '{}');
+
+                if (!token) {
+                    alert('Please sign in to book a service.');
+                    window.location.href = 'login.html?redirect=booking.html';
+                    return;
+                }
+
+                if (!select1.value && !select2.value) {
+                    alert('Please select at least one architectural service.');
+                    return;
+                }
+
+                if (select1.value && select1.value === select2.value) {
+                    alert('Please select two distinct services or a single one.');
+                    return;
+                }
+
+                const btn = form.querySelector('button');
+                btn.disabled = true;
+                btn.textContent = 'Contacting Specialist Hub...';
+
+                setTimeout(() => {
+                    const s1 = select1.options[select1.selectedIndex];
+                    const s2 = select2.options[select2.selectedIndex];
+
+                    const services = [];
+                    if (select1.value) services.push(select1.value);
+                    if (select2.value) services.push(select2.value);
+
+                    const totalPrice = (parseInt(s1.getAttribute('data-price')) || 0) + (parseInt(s2.getAttribute('data-price')) || 0);
+
+                    const booking = {
+                        clientName: user.firstname || 'Guest',
+                        clientEmail: user.email,
+                        clientPhone: user.phone || 'N/A',
+                        stylist: document.getElementById('stylist-select').value,
+                        service: services.join(' + '),
+                        price: totalPrice,
+                        date: document.getElementById('booking-date').value,
+                        time: document.getElementById('booking-time').value,
+                        status: 'pending'
+                    };
+
+                    fetch('/api/bookings', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify(booking)
+                    })
+                    .then(async res => {
+                        if (!res.ok) {
+                            const errData = await res.json();
+                            throw new Error(errData.error || 'Failed to save booking');
+                        }
+                        return res.json();
+                    })
+                    .then(data => {
+                        document.getElementById('booking-status').style.display = 'block';
+                        btn.textContent = 'Signal Sent!';
+
+                        setTimeout(() => {
+                            window.location.href = 'customer-dashboard.html';
+                        }, 2000);
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        alert(err.message || 'Error connecting to booking server.');
+                        btn.textContent = 'Confirm Booking';
+                        btn.disabled = false;
+                    });
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+
+</html>

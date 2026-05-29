@@ -1,0 +1,17 @@
+{
+	"name": "style-corner-frontend",
+	"version": "1.0.0",
+	"description": "Style Corner Static Store & Booking UI - Shopify & Vercel Ready",
+	"scripts": {
+		"dev": "npx -y serve .",
+		"start": "npx -y serve .",
+		"build": "echo 'Ready for Vercel/Shopify Deployment'"
+	},
+	"dependencies": {
+		"mongodb": "^7.2.0",
+		"serve": "^14.2.0"
+	},
+	"engines": {
+		"node": ">=18.0.0"
+	}
+}

@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expert Workspace | Style Corner</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            /* Requested: White Background, Lighter Blue Icons/Features, Black Wordings */
+            --exp-bg: #ffffff;
+            --exp-surface: #ffffff;
+            --exp-accent: #60a5fa; /* Lighter Blue */
+            --exp-accent-soft: rgba(96, 165, 250, 0.1);
+            --exp-text: #000000; /* Black typed words */
+            --exp-muted: #6b7280;
+            --exp-border: #e5e7eb;
+        }
+
+        body.page-dashboard {
+            background-color: var(--exp-bg);
+            color: var(--exp-text);
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Spaced equally, no overlays */
+        .workspace-layout {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 4rem;
+            margin: 4rem 0;
+            min-height: 80vh;
+            align-items: start;
+        }
+
+        .side-panel {
+            background: var(--exp-surface);
+            border: 2px solid var(--exp-border);
+            border-radius: 24px;
+            padding: 3.5rem 2.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+        }
+
+        .expert-id-box {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding-bottom: 3rem;
+            border-bottom: 2px dashed var(--exp-border);
+        }
+
+        .expert-avatar {
+            width: 90px;
+            height: 90px;
+            background: var(--exp-accent-soft);
+            color: var(--exp-accent);
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin: 0 auto 1.5rem;
+            border: 2px solid var(--exp-accent);
+        }
+
+        .panel-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .panel-nav-link {
+            padding: 1.25rem 1.75rem;
+            border-radius: 16px;
+            color: var(--exp-text);
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            transition: all 0.25s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.9rem;
+            border: 2px solid transparent;
+        }
+
+        .panel-nav-link i { color: var(--exp-accent); }
+
+        .panel-nav-link:hover, .panel-nav-link.active {
+            background: var(--exp-accent-soft);
+            border-color: var(--exp-accent);
+        }
+
+        .main-workspace {
+            display: flex;
+            flex-direction: column;
+            gap: 4rem;
+        }
+
+        .header-unit {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .header-unit h2 {
+            font-size: 2.75rem;
+            font-weight: 900;
+            margin: 0;
+            line-height: 1;
+            color: var(--exp-text);
+        }
+
+        .system-status {
+            padding: 0.85rem 2rem;
+            border-radius: 50px;
+            background: var(--exp-accent-soft);
+            color: var(--exp-accent);
+            font-weight: 800;
+            font-size: 0.8rem;
+            border: 2px solid var(--exp-accent);
+        }
+
+        /* Metric Grid */
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .metric-card {
+            background: var(--exp-surface);
+            border: 2px solid var(--exp-border);
+            padding: 3rem 2rem;
+            border-radius: 24px;
+            text-align: center;
+            transition: all 0.25s;
+        }
+
+        .metric-card .title {
+            color: var(--exp-accent);
+            font-size: 0.75rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .metric-card .digit {
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--exp-text);
+            line-height: 1;
+        }
+
+        /* Action Rows */
+        .action-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2.25rem;
+            background: #fff;
+            border: 2px solid var(--exp-border);
+            border-radius: 20px;
+            margin-bottom: 1.5rem;
+            transition: all 0.2s;
+        }
+
+        .action-row:hover { border-color: var(--exp-accent); transform: translateX(5px); }
+
+        /* Configuration Layer */
+        .config-layer {
+            background: var(--exp-surface);
+            border: 2px solid var(--exp-border);
+            border-radius: 32px;
+            padding: 5rem;
+            max-width: 900px;
+        }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+        .input-group { display: flex; flex-direction: column; gap: 1rem; }
+        .input-group label { color: var(--exp-text); font-weight: 900; font-size: 0.9rem; text-transform: uppercase; }
+
+        .form-input {
+            width: 100%;
+            padding: 1.5rem;
+            background: #fff;
+            border: 2px solid var(--exp-border);
+            border-radius: 16px;
+            color: var(--exp-text);
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .form-input:focus { outline: none; border-color: var(--exp-accent); }
+        .form-input:disabled { background: #f9fafb; opacity: 0.5; }
+
+        .btn {
+            padding: 1.25rem 3rem;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 0.95rem;
+            cursor: pointer;
+            border: none;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+
+        .btn-blue { background: var(--exp-accent); color: #fff; }
+        .btn-black { background: #000; color: #fff; }
+
+        @media (max-width: 1100px) {
+            .workspace-layout { grid-template-columns: 1fr; }
+            .metric-grid { grid-template-columns: 1fr; }
+            .form-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body class="page-dashboard">
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <svg class="logo-icon" viewBox="0 0 100 100">
+                    <path d="M30 20 H70 L80 50 L70 80 H30 L20 50 Z" fill="none" stroke="currentColor" stroke-width="4" />
+                    <circle cx="50" cy="50" r="5" fill="currentColor" />
+                </svg>
+                STYLE<span>CORNER</span>
+            </a>
+            <nav class="nav">
+                <a href="index.html">Home</a>
+                <a href="store.html">Store</a>
+                <a href="#" class="cta logout-link" style="background: transparent; border: 2px solid var(--exp-accent); color: var(--exp-accent);">Logout</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="workspace-layout">
+            <!-- Sidebar Panel -->
+            <aside class="side-panel fade-up">
+                <div class="expert-id-box">
+                    <div class="expert-avatar">E</div>
+                    <h3 id="sidebar-user-name" style="font-weight: 900; margin: 0;">Staff</h3>
+                    <p style="color: var(--exp-accent); font-weight: 800; font-size: 0.8rem; margin-top: 5px; text-transform: uppercase;">Worker</p>
+                </div>
+                <nav class="panel-nav">
+                    <a href="#" class="panel-nav-link active" data-tab="live-hub"><i class="fas fa-list"></i> My Work</a>
+                    <a href="#" class="panel-nav-link" data-tab="history"><i class="fas fa-history"></i> Past Jobs</a>
+                    <a href="#" class="panel-nav-link" data-tab="settings"><i class="fas fa-cog"></i> My Skills</a>
+                </nav>
+            </aside>
+
+            <!-- Workspace Area -->
+            <div class="main-workspace">
+                <div class="header-unit fade-up" style="animation-delay: 0.2s;">
+                    <div>
+                        <p style="color: var(--exp-accent); font-weight: 900; font-size: 0.85rem; text-transform: uppercase;">Work Page</p>
+                        <h2>Current <span style="font-weight: 300; font-style: italic;">Tasks.</span></h2>
+                    </div>
+                    <div class="system-status">
+                         System Ready
+                    </div>
+                </div>
+
+                <!-- Tab: My Work -->
+                <div id="tab-live-hub" class="tab-content fade-up" style="animation-delay: 0.3s;">
+                    <div class="metric-grid">
+                        <div class="metric-card">
+                            <span class="title">New Bookings</span>
+                            <span class="digit" id="pending-services-count">0</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="title">To Ship</span>
+                            <span class="digit" id="alert-count" style="color: #ef4444;">0</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="title">My Rating</span>
+                            <span class="digit" style="font-size: 2rem;">98.4%</span>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 4rem;">
+                        <h3 style="font-size: 1.5rem; font-weight: 900; margin-bottom: 2rem;">Coming Appointments</h3>
+                        <div id="live-bookings-list">
+                            <!-- JS Injected -->
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 4rem;">
+                        <h3 style="font-size: 1.5rem; font-weight: 900; margin-bottom: 2rem;">Orders to Ship</h3>
+                        <div id="live-alerts-list">
+                            <!-- JS Injected -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: Past Jobs -->
+                <div id="tab-history" class="tab-content" style="display: none;">
+                    <div class="metric-card" style="text-align: left; padding: 4rem;">
+                        <h3 style="margin-bottom: 3rem; font-weight: 900;">History List</h3>
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="border-bottom: 3px solid var(--exp-border);">
+                                    <th style="padding: 1.5rem 0; font-weight: 900; text-transform: uppercase; font-size: 0.75rem;">Type</th>
+                                    <th style="padding: 1.5rem 0; font-weight: 900; text-transform: uppercase; font-size: 0.75rem;">Who / What</th>
+                                    <th style="padding: 1.5rem 0; font-weight: 900; text-transform: uppercase; font-size: 0.75rem; text-align: right;">When</th>
+                                </tr>
+                            </thead>
+                            <tbody id="history-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tab: My Skills -->
+                <div id="tab-settings" class="tab-content" style="display: none;">
+                    <div class="config-layer">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4rem;">
+                            <h3 style="font-size: 1.75rem; font-weight: 900;">My Info</h3>
+                            <button id="edit-mat-btn" class="btn btn-black"><i class="fas fa-edit"></i> Edit Info</button>
+                        </div>
+                        <form id="expert-matrix-form">
+                            <div class="form-grid">
+                                <div class="input-group">
+                                    <label>First Name</label>
+                                    <input type="text" id="set-firstname" class="form-input prof-in" disabled>
+                                </div>
+                                <div class="input-group">
+                                    <label>Last Name</label>
+                                    <input type="text" id="set-lastname" class="form-input prof-in" disabled>
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 4rem;">
+                                <label style="display: block; margin-bottom: 2rem; color: var(--exp-accent); font-weight: 900; font-size: 0.85rem; letter-spacing: 2px;">What I Do</label>
+                                <div style="display: flex; flex-wrap: wrap; gap: 1.5rem;">
+                                    <label style="padding: 1.25rem 2rem; border: 2px solid var(--exp-border); border-radius: 12px; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 1rem;">
+                                        <input type="checkbox" disabled checked style="accent-color: var(--exp-accent); transform: scale(1.5);"> Hair Cut
+                                    </label>
+                                    <label style="padding: 1.25rem 2rem; border: 2px solid var(--exp-border); border-radius: 12px; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 1rem;">
+                                        <input type="checkbox" disabled checked style="accent-color: var(--exp-accent); transform: scale(1.5);"> Braids
+                                    </label>
+                                    <label style="padding: 1.25rem 2rem; border: 2px solid var(--exp-border); border-radius: 12px; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 1rem;">
+                                        <input type="checkbox" disabled checked style="accent-color: var(--exp-accent); transform: scale(1.5);"> Nails
+                                    </label>
+                                </div>
+                            </div>
+                            <div id="save-layer" style="display: none; gap: 1.5rem; border-top: 2px dashed var(--exp-border); padding-top: 3rem;">
+                                <button type="submit" class="btn btn-blue">Save Info</button>
+                                <button type="button" id="discard-mat-btn" class="btn btn-black" style="background:#fff; color:#000; border: 2px solid #000;">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer style="margin-top: auto; border-top: 2px solid var(--exp-border); padding: 4rem 0;">
+        <div class="container text-center">
+            <p style="color: var(--exp-text); font-weight: 900; font-size: 0.85rem; letter-spacing: 3px;">STYLE CORNER WORKER PAGE • 2026</p>
+        </div>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+            let user = JSON.parse(localStorage.getItem('mockUser')) || { firstname: 'Staff', lastname: 'User', role: 'staff' };
+
+            const refreshWorkspace = async () => {
+                document.getElementById('sidebar-user-name').textContent = `${user.firstname} ${user.lastname}`;
+                document.querySelectorAll('.expert-avatar').forEach(el => el.textContent = user.firstname.charAt(0));
+                document.getElementById('set-firstname').value = user.firstname || '';
+                document.getElementById('set-lastname').value = user.lastname || '';
+
+                let bks = [];
+                let ords = [];
+                try {
+                    const token = localStorage.getItem('token');
+                    const bksRes = await fetch('/api/bookings', { headers: { 'Authorization': `Bearer ${token}` } });
+                    const ordsRes = await fetch('/api/orders', { headers: { 'Authorization': `Bearer ${token}` } });
+                    bks = await bksRes.json();
+                    ords = await ordsRes.json();
+                } catch (e) {
+                    console.error('Error fetching data', e);
+                }
+
+                const pendingBks = bks.filter(b => b.status === 'pending');
+                const pendingOrds = ords.filter(o => o.status === 'paid' || o.status === 'pending');
+
+                document.getElementById('pending-services-count').textContent = pendingBks.length;
+                document.getElementById('alert-count').textContent = pendingOrds.length;
+
+                const sList = document.getElementById('live-bookings-list');
+                if (pendingBks.length > 0) {
+                    sList.innerHTML = pendingBks.map(b => `
+                    <div class="action-row">
+                        <div>
+                            <h4 style="margin: 0; font-weight: 900; font-size: 1.35rem;">${b.clientName} <span style="font-weight: 300; font-size: 1rem; color: var(--exp-muted);">| ${b.service}</span></h4>
+                            <p style="margin: 5px 0 0; color: var(--exp-muted); font-weight: 700;">📍 ${b.date} • ${b.time}</p>
+                        </div>
+                        <button class="btn btn-blue accept-btn" data-id="${b._id}" style="font-size: 0.8rem; padding: 1rem 2rem;">ACCEPT</button>
+                    </div>`).join('');
+                } else { sList.innerHTML = '<p style="color: var(--exp-muted); font-weight: 700;">No jobs right now.</p>'; }
+
+                const aList = document.getElementById('live-alerts-list');
+                if (pendingOrds.length > 0) {
+                    aList.innerHTML = pendingOrds.map(o => `
+                    <div class="action-row" style="border-left: 6px solid #ef4444;">
+                        <div>
+                            <h4 style="margin: 0; font-weight: 900; font-size: 1.35rem;">Order <span style="font-weight: 300; font-size: 1rem; color: var(--exp-muted);">| ${o.item}</span></h4>
+                            <p style="margin: 5px 0 0; color: var(--exp-muted); font-weight: 700;">🚚 SHIP TO: ${o.address}</p>
+                        </div>
+                        <button class="btn btn-black ship-btn" data-id="${o._id}" style="font-size: 0.8rem; padding: 1rem 2rem; border: 2px solid #ef4444; background: none; color: #ef4444;">SHIP NOW</button>
+                    </div>`).join('');
+                } else { aList.innerHTML = '<p style="color: var(--exp-muted); font-weight: 700;">No orders to ship.</p>'; }
+
+                const hBody = document.getElementById('history-tbody');
+                const done = [
+                    ...bks.filter(b => b.status === 'accepted' || b.status === 'paid').map(b => ({ cat: 'Appointment', detail: b.clientName, time: b.date })),
+                    ...ords.filter(o => o.status === 'shipped').map(o => ({ cat: 'Order Sent', detail: o.item, time: 'Done' }))
+                ];
+                if (done.length > 0) {
+                    hBody.innerHTML = done.map(t => `
+                        <tr>
+                            <td style="padding: 2rem 0; border-bottom: 2px solid var(--exp-border); font-weight: 900;">${t.cat}</td>
+                            <td style="padding: 2rem 0; border-bottom: 2px solid var(--exp-border); font-weight: 700;">${t.detail}</td>
+                            <td style="padding: 2rem 0; border-bottom: 2px solid var(--exp-border); text-align: right; color: var(--exp-accent); font-weight: 900;">${t.time}</td>
+                        </tr>`).join('');
+                } else { hBody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 4rem 0;">No history yet.</td></tr>'; }
+
+                addEvents();
+            };
+
+            const addEvents = () => {
+                document.querySelectorAll('.accept-btn').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const id = btn.dataset.id;
+                        await fetch(`/api/bookings/${id}`, {
+                            method: 'PUT',
+                            headers: { 
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                            },
+                            body: JSON.stringify({ status: 'accepted', staff: user.firstname })
+                        });
+                        window.showToast("Job Accepted.", "success"); refreshWorkspace();
+                    });
+                });
+                document.querySelectorAll('.ship-btn').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const id = btn.dataset.id;
+                        await fetch(`/api/orders/${id}`, {
+                            method: 'PUT',
+                            headers: { 
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                            },
+                            body: JSON.stringify({ status: 'shipped' })
+                        });
+                        window.showToast("Order Shipped.", "success"); refreshWorkspace();
+                    });
+                });
+            };
+
+            document.querySelectorAll('.panel-nav-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const target = link.dataset.tab;
+                    document.querySelectorAll('.panel-nav-link').forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                    document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
+                    document.getElementById(`tab-${target}`).style.display = 'block';
+                    refreshWorkspace();
+                });
+            });
+
+            document.querySelector('.logout-link').addEventListener('click', (e) => {
+                e.preventDefault(); localStorage.removeItem('token'); localStorage.removeItem('mockUser'); window.location.href = 'index.html';
+            });
+
+            const editM = document.getElementById('edit-mat-btn'); const discM = document.getElementById('discard-mat-btn');
+            const saveL = document.getElementById('save-layer'); const profI = document.querySelectorAll('.prof-in');
+
+            editM.addEventListener('click', () => { profI.forEach(i => i.disabled = false); saveL.style.display = 'flex'; editM.style.display = 'none'; });
+            discM.addEventListener('click', () => { profI.forEach(i => i.disabled = true); saveL.style.display = 'none'; editM.style.display = 'inline-flex'; refreshWorkspace(); });
+
+            document.getElementById('expert-matrix-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                user.firstname = document.getElementById('set-firstname').value;
+                user.lastname = document.getElementById('set-lastname').value;
+                localStorage.setItem('mockUser', JSON.stringify(user));
+                profI.forEach(i => i.disabled = true); saveL.style.display = 'none'; editM.style.display = 'inline-flex';
+                refreshWorkspace(); window.showToast("Info Saved.", "success");
+            });
+
+            refreshWorkspace();
+        });
+    </script>
+</body>
+</html>

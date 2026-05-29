@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Dashboard | Style Corner</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            /* Requested: White Background, Lighter Blue Icons/Features, Black Wordings */
+            --dash-bg: #ffffff;
+            --dash-surface: #ffffff;
+            --dash-accent: #60a5fa; /* Lighter Blue */
+            --dash-accent-soft: rgba(96, 165, 250, 0.1);
+            --dash-text: #000000; /* Black text */
+            --dash-muted: #4b5563; 
+            --dash-border: #e2e8f0;
+        }
+
+        body.page-dashboard {
+            background-color: var(--dash-bg);
+            color: var(--dash-text);
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Equal spacing, no overlays */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 3rem;
+            margin: 4rem 0;
+            align-items: start;
+        }
+
+        .dash-sidebar {
+            background: var(--dash-surface);
+            border: 1px solid var(--dash-border);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+        .user-header-unit {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .user-id-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--dash-accent-soft);
+            color: var(--dash-accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.25rem;
+            font-weight: 800;
+            margin: 0 auto 1.5rem;
+            border: 2px solid var(--dash-accent);
+        }
+
+        .dash-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .dash-nav-link {
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            color: var(--dash-muted);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
+        }
+
+        .dash-nav-link i { color: var(--dash-accent); }
+
+        .dash-nav-link:hover, .dash-nav-link.active {
+            background: var(--dash-accent-soft);
+            color: var(--dash-text);
+        }
+
+        .content-main {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        .heading-group h2 {
+            font-size: 2.75rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            color: var(--dash-text);
+        }
+
+        /* Stat Boxes */
+        .stat-lineup {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .stat-card {
+            background: var(--dash-surface);
+            border: 1px solid var(--dash-border);
+            padding: 2.5rem;
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        .stat-card .label {
+            color: var(--dash-accent);
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .stat-card .value {
+            font-size: 3.5rem;
+            font-weight: 300;
+            color: var(--dash-text);
+        }
+
+        /* Profile Editor */
+        .profile-container {
+            background: var(--dash-surface);
+            border: 1px solid var(--dash-border);
+            border-radius: 24px;
+            padding: 4rem;
+            max-width: 800px;
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .field-box {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .field-box label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--dash-text);
+        }
+
+        .field-input {
+            padding: 1.25rem;
+            border: 2px solid var(--dash-border);
+            border-radius: 12px;
+            font-size: 1rem;
+            color: var(--dash-text);
+            background: #fff;
+            transition: border-color 0.2s;
+        }
+
+        .field-input:focus {
+            outline: none;
+            border-color: var(--dash-accent);
+        }
+
+        .field-input:disabled {
+            background: #f8fafc;
+            opacity: 0.6;
+        }
+
+        .btn-action {
+            padding: 1.15rem 2.5rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.2s;
+        }
+
+        .btn-lblue {
+            background: var(--dash-accent);
+            color: #fff;
+            border: none;
+        }
+
+        .btn-dark {
+            background: #000;
+            color: #fff;
+            border: none;
+        }
+
+        .btn-action:hover { opacity: 0.9; transform: translateY(-2px); }
+
+        @media (max-width: 900px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .stat-lineup { grid-template-columns: 1fr; }
+            .input-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body class="page-dashboard">
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <svg class="logo-icon" viewBox="0 0 100 100">
+                    <path d="M30 20 H70 L80 50 L70 80 H30 L20 50 Z" fill="none" stroke="currentColor" stroke-width="4" />
+                    <circle cx="50" cy="50" r="5" fill="currentColor" />
+                </svg>
+                STYLE<span>CORNER</span>
+            </a>
+            <nav class="nav">
+                <a href="index.html">Home</a>
+                <a href="services.html">Services</a>
+                <a href="store.html">Store</a>
+                <a href="#" class="cta logout-link" style="background: transparent; border: 2px solid var(--dash-accent); color: var(--dash-accent);">Logout</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="dashboard-grid">
+            <!-- Sidebar -->
+            <aside class="dash-sidebar fade-up">
+                <div class="user-header-unit">
+                    <div class="user-id-icon">U</div>
+                    <h3 id="sidebar-user-name" style="color: var(--dash-text); font-weight: 800;">User</h3>
+                    <p style="color: var(--dash-accent); font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">Customer</p>
+                </div>
+                <nav class="dash-nav">
+                    <a href="#" class="dash-nav-link active" data-tab="overview"><i class="fas fa-grid"></i> Main Page</a>
+                    <a href="#" class="dash-nav-link" data-tab="history"><i class="fas fa-history"></i> My Bookings</a>
+                    <a href="#" class="dash-nav-link" data-tab="profile"><i class="fas fa-user"></i> My Profile</a>
+                </nav>
+            </aside>
+
+            <!-- Main Content -->
+            <div class="content-main">
+                <div class="heading-group fade-up" style="animation-delay: 0.2s;">
+                    <h2>Welcome, <span id="user-display-name">User</span></h2>
+                    <p style="color: var(--dash-muted);">Manage your account and appointments here.</p>
+                </div>
+
+                <!-- Tab: Main Page -->
+                <div id="tab-overview" class="tab-content fade-up" style="animation-delay: 0.3s;">
+                    <div class="stat-lineup">
+                        <div class="stat-card">
+                            <span class="label">Total Bookings</span>
+                            <span class="value" id="stat-bookings">0</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="label">Orders Made</span>
+                            <span class="value" id="stat-orders">0</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="label">Status</span>
+                            <span class="value" style="font-size: 1.75rem; font-weight: 800; color: #10b981;"><i class="fas fa-check"></i> READY</span>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem;">
+                        <div class="stat-card" style="text-align: left; padding: 2rem;">
+                            <h4 style="margin-bottom: 1.5rem; color: var(--dash-accent); font-size: 0.9rem; text-transform: uppercase;">Next Service</h4>
+                            <div id="overview-booking-preview">Checking your next visit...</div>
+                        </div>
+                        <div class="stat-card" style="text-align: left; padding: 2rem;">
+                            <h4 style="margin-bottom: 1.5rem; color: var(--dash-accent); font-size: 0.9rem; text-transform: uppercase;">Order Help</h4>
+                            <div id="overview-order-preview">Tracking your items...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: My Bookings -->
+                <div id="tab-history" class="tab-content" style="display: none;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                        <div class="stat-card">
+                            <h4 style="margin-bottom: 2rem;">Visit Records</h4>
+                            <canvas id="client-history-chart" height="200"></canvas>
+                        </div>
+                        <div class="stat-card">
+                            <h4 style="margin-bottom: 2rem;">Money Spent</h4>
+                            <canvas id="client-spending-chart" height="200"></canvas>
+                        </div>
+                    </div>
+                    <div class="stat-card" style="text-align: left;">
+                        <h4 style="margin-bottom: 2rem;">Past Appointments</h4>
+                        <div id="appointments-list" style="display: flex; flex-direction: column; gap: 1rem;"></div>
+                    </div>
+                </div>
+
+                <!-- Tab: My Profile -->
+                <div id="tab-profile" class="tab-content" style="display: none;">
+                    <div class="profile-container">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3.5rem;">
+                            <h3 style="font-size: 1.5rem; font-weight: 800;">Your Details</h3>
+                            <button id="edit-profile-btn" class="btn-action btn-dark"><i class="fas fa-pen"></i> Edit Info</button>
+                        </div>
+                        <form id="profile-form">
+                            <div class="input-row">
+                                <div class="field-box">
+                                    <label>First Name</label>
+                                    <input type="text" id="cust-firstname" class="field-input prof-in" disabled>
+                                </div>
+                                <div class="input-row-sub">
+                                    <div class="field-box">
+                                        <label>Last Name</label>
+                                        <input type="text" id="cust-lastname" class="field-input prof-in" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="field-box" style="margin-bottom: 2rem;">
+                                <label>Email</label>
+                                <input type="email" id="cust-email" class="field-input" disabled style="background: #f1f5f9;">
+                            </div>
+                            <div class="field-box" style="margin-bottom: 3.5rem;">
+                                <label>Phone Number</label>
+                                <input type="tel" id="cust-phone" class="field-input prof-in" disabled>
+                            </div>
+                            <div id="update-actions" style="display: none; gap: 1rem; padding-top: 2rem; border-top: 1px solid var(--dash-border);">
+                                <button type="submit" class="btn-action btn-lblue">Save Now</button>
+                                <button type="button" id="discard-btn" class="btn-action btn-dark" style="background:#fff; border: 1px solid #000; color:#000;">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer style="margin-top: auto; border-top: 1px solid var(--dash-border); padding: 4rem 0;">
+        <div class="container text-center">
+            <p style="color: var(--dash-text); font-weight: 800; font-size: 0.8rem; letter-spacing: 2px;">&copy; 2026 STYLE CORNER DASHBOARD</p>
+        </div>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+            let user = JSON.parse(localStorage.getItem('mockUser')) || { firstname: 'User', lastname: 'Customer', email: 'user@stylecorner.com' };
+
+            const reloadUI = () => {
+                document.getElementById('sidebar-user-name').textContent = `${user.firstname} ${user.lastname}`;
+                document.getElementById('user-display-name').textContent = user.firstname;
+                document.querySelectorAll('.user-id-icon').forEach(el => el.textContent = user.firstname.charAt(0));
+                document.getElementById('cust-firstname').value = user.firstname || '';
+                document.getElementById('cust-lastname').value = user.lastname || '';
+                document.getElementById('cust-email').value = user.email || '';
+                document.getElementById('cust-phone').value = user.phone || '';
+            };
+
+            let historyChart = null;
+            let spendingChart = null;
+
+            const initCharts = () => {
+                if (historyChart || spendingChart) return;
+                const historyCtx = document.getElementById('client-history-chart').getContext('2d');
+                const spendingCtx = document.getElementById('client-spending-chart').getContext('2d');
+                Chart.defaults.color = '#000000';
+                Chart.defaults.font.weight = 600;
+                historyChart = new Chart(historyCtx, { type: 'bar', data: { labels: ['Jan', 'Feb', 'Mar', 'Apr'], datasets: [{ label: 'Visits', data: [2, 3, 1, 4], backgroundColor: '#60a5fa' }] } });
+                spendingChart = new Chart(spendingCtx, { type: 'line', data: { labels: ['Jan', 'Feb', 'Mar', 'Apr'], datasets: [{ label: 'Spent', data: [15000, 25000, 12000, 45000], borderColor: '#60a5fa', tension: 0.4 }] } });
+            };
+
+            document.querySelectorAll('.dash-nav-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const target = link.dataset.tab;
+                    document.querySelectorAll('.dash-nav-link').forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                    document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
+                    document.getElementById(`tab-${target}`).style.display = 'block';
+                    if (target === 'history') initCharts();
+                    fetchData();
+                });
+            });
+
+            const editB = document.getElementById('edit-profile-btn');
+            const discB = document.getElementById('discard-btn');
+            const actionU = document.getElementById('update-actions');
+            const profI = document.querySelectorAll('.prof-in');
+
+            editB.addEventListener('click', () => { profI.forEach(i => i.disabled = false); actionU.style.display = 'flex'; editB.style.display = 'none'; });
+            discB.addEventListener('click', () => { profI.forEach(i => i.disabled = true); actionU.style.display = 'none'; editB.style.display = 'inline-flex'; reloadUI(); });
+
+            document.getElementById('profile-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                user.firstname = document.getElementById('cust-firstname').value;
+                user.lastname = document.getElementById('cust-lastname').value;
+                user.phone = document.getElementById('cust-phone').value;
+                localStorage.setItem('mockUser', JSON.stringify(user));
+                profI.forEach(i => i.disabled = true); actionU.style.display = 'none'; editB.style.display = 'inline-flex';
+                reloadUI(); window.showToast("Info Saved.", "success");
+            });
+
+            const fetchData = async () => {
+                let bks = [];
+                let ords = [];
+                try {
+                    const token = localStorage.getItem('token');
+                    const bksRes = await fetch('/api/bookings', { headers: { 'Authorization': `Bearer ${token}` } });
+                    const ordsRes = await fetch('/api/orders', { headers: { 'Authorization': `Bearer ${token}` } });
+                    bks = await bksRes.json();
+                    ords = await ordsRes.json();
+                } catch (e) {
+                    console.error('Error fetching data', e);
+                }
+                const uBks = bks.filter(b => b.clientName.includes(user.firstname) || b.clientName === 'Sample Client');
+
+                document.getElementById('stat-bookings').textContent = uBks.length;
+                document.getElementById('stat-orders').textContent = ords.length;
+
+                const apptsL = document.getElementById('appointments-list');
+                if (uBks.length > 0) {
+                    apptsL.innerHTML = uBks.reverse().map(b => `
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border: 2px solid var(--dash-border); border-radius: 12px;">
+                            <div>
+                                <h4 style="margin: 0; font-weight: 800;">${b.service}</h4>
+                                <p style="margin: 3px 0 0; color: var(--dash-muted); font-size: 0.9rem;">📍 ${b.date} • ${b.time}</p>
+                            </div>
+                            <span style="color: var(--dash-accent); font-weight: 800; font-size: 0.8rem; text-transform: uppercase;">${b.status}</span>
+                        </div>`).join('');
+                } else { apptsL.innerHTML = '<p style="color: var(--dash-muted); text-align: center;">No bookings yet.</p>'; }
+
+                const lB = uBks[0]; const lO = ords[0];
+                if (lB) { 
+                    document.getElementById('overview-booking-preview').innerHTML = `<h4 style="margin: 0; font-weight: 800;">${lB.service}</h4><p style="margin: 5px 0 0; font-weight: 800;">${lB.date} at ${lB.time}</p>`; 
+                }
+                if (lO) {
+                    document.getElementById('overview-order-preview').innerHTML = `<h4 style="margin: 0; font-weight: 800;">Order #${lO.id}</h4><p style="margin: 5px 0 0; font-weight: 800; color: var(--dash-accent);">${lO.status.toUpperCase()}</p>`;
+                }
+            };
+
+            document.querySelector('.logout-link').addEventListener('click', (e) => {
+                e.preventDefault(); localStorage.removeItem('token'); localStorage.removeItem('mockUser'); window.location.href = 'index.html';
+            });
+            reloadUI(); fetchData();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In | Style Corner</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+</head>
+
+<body class="page-auth">
+    <div class="split-page-container">
+        <!-- Visual Side -->
+        <div class="split-side split-side-image image-side-text"
+            style="background-image: url('https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1200&q=80');">
+            <div class="side-content fade-up">
+                <span class="side-sub">Login</span>
+                <h2>Welcome Back</h2>
+                <p>Enter the center of style and access your account.</p>
+            </div>
+            <div class="side-bg-overlay"></div>
+        </div>
+
+        <!-- Form Side -->
+        <div class="split-side split-side-form">
+            <div class="form-wrapper-minimal fade-up" style="animation-delay: 0.3s;">
+                <a href="index.html" class="logo mb-5" style="display: inline-block;">STYLE<span>CORNER</span></a>
+                <h1>Sign In</h1>
+                <p class="subtitle">Enter your details to access your account.</p>
+
+                <form id="login-form">
+                    <div class="form-group mb-4">
+                        <label>Email Address</label>
+                        <input type="email" id="email" placeholder="email@example.com" required>
+                    </div>
+                    <div class="form-group mb-4">
+                        <label>Phone Number</label>
+                        <input type="tel" id="phone" placeholder="+234..." required>
+                    </div>
+                    <div class="form-group mb-5">
+                        <label>Password</label>
+                        <input type="password" id="password" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn btn-premium w-full mt-4">Log In</button>
+                </form>
+
+                <div class="auth-footer mt-5" style="border-top: 1px solid var(--border); padding-top: 2rem;">
+                    <p style="font-size: 0.9rem; color: var(--text-muted);">New to Style Corner? <a
+                            href="role-selection.html" style="color: var(--accent); font-weight: 600;">Join Now</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/common.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('signup') === 'success') {
+                const subtitle = document.querySelector('.subtitle');
+                subtitle.textContent = "Account created successfully! Please sign in to continue.";
+                subtitle.style.color = "var(--dash-accent)";
+                subtitle.style.fontWeight = "600";
+            }
+
+            const form = document.getElementById('login-form');
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = form.querySelector('button');
+                btn.disabled = true;
+                btn.textContent = 'Logging In...';
+
+                const data = {
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    password: document.getElementById('password').value
+                };
+
+                try {
+                    const res = await fetch('/api/auth/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: data.email, password: data.password })
+                    });
+                    const result = await res.json();
+
+                    if (!res.ok) {
+                        alert(result.error || 'Login failed');
+                        btn.disabled = false;
+                        btn.textContent = 'Log In';
+                        return;
+                    }
+
+                    localStorage.setItem('mockUser', JSON.stringify(result.user));
+                    localStorage.setItem('token', result.token);
+
+                    if (result.user.role === 'staff') {
+                        window.location.href = 'expert-dashboard.html';
+                    } else {
+                        window.location.href = 'customer-dashboard.html';
+                    }
+                } catch (error) {
+                    console.error(error);
+                    alert('Server error during login');
+                    btn.disabled = false;
+                    btn.textContent = 'Log In';
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
