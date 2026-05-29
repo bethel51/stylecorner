@@ -99,7 +99,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
-            const role = params.get('role') || 'user';
+            const role = params.get('role') || 'customer';
             const indicator = document.getElementById('role-indicator');
             indicator.textContent = role === 'staff' ? 'Staff Account' : 'Client Account';
 

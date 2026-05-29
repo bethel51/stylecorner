@@ -85,7 +85,8 @@
         document.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
             const emailParam = params.get('email');
-            
+            const redirectUrl = params.get('redirect');
+
             if (!emailParam) {
                 window.location.href = 'login.html';
                 return;
@@ -172,7 +173,9 @@
                     localStorage.setItem('mockUser', JSON.stringify(result.user));
 
                     // Route based on role
-                    if (result.user.role === 'staff') {
+                    if (redirectUrl) {
+                        window.location.href = redirectUrl;
+                    } else if (result.user.role === 'staff') {
                         window.location.href = 'expert-dashboard.html';
                     } else {
                         window.location.href = 'customer-dashboard.html';

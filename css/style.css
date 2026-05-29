@@ -184,11 +184,11 @@ section+section {
   .split-side-image {
     display: none !important; /* Hide image side on mobile for speed/focus unless it's hero */
   }
-  
-  .page-home .split-side-image {
-    display: flex !important;
-    height: 60vh;
-  }
+    .page-home .split-side-image,
+    .page-auth .split-side-image {
+      display: flex !important;
+      height: 60vh;
+    }
 }
 
 /* --- Layout --- */

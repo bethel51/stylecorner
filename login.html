@@ -58,8 +58,10 @@
     <script src="js/common.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const params = new URLSearchParams(window.location.search);
-            if (params.get('signup') === 'success') {
+            const urlParams = new URLSearchParams(window.location.search);
+            const redirectUrl = urlParams.get('redirect');
+
+            if (urlParams.get('signup') === 'success') {
                 const subtitle = document.querySelector('.subtitle');
                 subtitle.textContent = "Account created successfully! Please sign in to continue.";
                 subtitle.style.color = "var(--dash-accent)";
@@ -89,7 +91,8 @@
 
                     if (!res.ok) {
                         if (result.error === 'unverified') {
-                            window.location.href = `verify.html?email=${encodeURIComponent(data.email)}`;
+                            const redirectParam = redirectUrl ? `&redirect=${encodeURIComponent(redirectUrl)}` : '';
+                            window.location.href = `verify.html?email=${encodeURIComponent(data.email)}${redirectParam}`;
                             return;
                         }
                         alert(result.error || 'Login failed');
@@ -101,7 +104,9 @@
                     localStorage.setItem('mockUser', JSON.stringify(result.user));
                     localStorage.setItem('token', result.token);
 
-                    if (result.user.role === 'staff') {
+                    if (redirectUrl) {
+                        window.location.href = redirectUrl;
+                    } else if (result.user.role === 'staff') {
                         window.location.href = 'expert-dashboard.html';
                     } else {
                         window.location.href = 'customer-dashboard.html';
