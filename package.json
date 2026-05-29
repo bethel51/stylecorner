@@ -3,8 +3,8 @@
 	"version": "1.0.0",
 	"description": "Style Corner Static Store & Booking UI - Shopify & Vercel Ready",
 	"scripts": {
-		"dev": "npx -y serve .",
-		"start": "npx -y serve .",
+		"dev": "cd server && node server.js",
+		"start": "cd server && node server.js",
 		"build": "echo 'Ready for Vercel/Shopify Deployment'"
 	},
 	"dependencies": {
