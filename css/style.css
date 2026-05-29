@@ -86,6 +86,7 @@
   }
 }
 
+:root {
   /* Dashboard Premium Tokens */
   --dash-bg: #faf9f6;
   --dash-surface: #ffffff;
@@ -95,13 +96,6 @@
   --dash-accent-glow: rgba(212, 175, 55, 0.3);
   --dash-text: #171717;
   --dash-text-muted: #6b7280;
-}
-
-@media (max-width: 1024px) {
-  :root {
-    --section-gap: 3rem;
-    --sidebar-width: 0px;
-  }
 }
 
 * {
