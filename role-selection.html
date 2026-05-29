@@ -9,43 +9,221 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+    <style>
+        .role-selection-page {
+            background-color: #FDFBF7;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Minimal Header for Auth */
+        .auth-header {
+            padding: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .auth-header .logo {
+            font-weight: 700;
+            color: #1A1A1A;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+        }
+
+        .auth-header .logo span {
+            color: #d4af37;
+        }
+
+        .auth-header .logo-icon {
+            width: 24px;
+            height: 24px;
+            stroke: #1A1A1A;
+            fill: none;
+        }
+
+        .auth-header .logo-icon path[fill="currentColor"] {
+            fill: #1A1A1A;
+        }
+
+        .role-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .role-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .role-header h1 {
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 300;
+            color: #1A1A1A;
+            letter-spacing: -1px;
+            margin-bottom: 1rem;
+        }
+
+        .role-header p {
+            color: #4A4A4A;
+            font-size: 1.1rem;
+            font-weight: 300;
+        }
+
+        .role-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            width: 100%;
+        }
+
+        .role-card {
+            background: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .role-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+        }
+
+        .role-card-image {
+            height: 250px;
+            background-size: cover;
+            background-position: center 20%;
+            position: relative;
+        }
+
+        .role-card-body {
+            padding: 2.5rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .role-card-body h3 {
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: #1A1A1A;
+            margin-bottom: 1rem;
+        }
+
+        .role-card-body p {
+            color: #64748b;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            flex: 1;
+        }
+
+        .btn-role {
+            background: transparent;
+            color: #1A1A1A;
+            border: 1px solid #1A1A1A;
+            padding: 1rem 2rem;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
+        }
+
+        .role-card:hover .btn-role {
+            background: #1A1A1A;
+            color: #FDFBF7;
+        }
+
+        .auth-footer {
+            text-align: center;
+            padding: 2rem;
+            color: #4A4A4A;
+        }
+
+        .auth-footer a {
+            color: #1A1A1A;
+            font-weight: 500;
+            text-decoration: none;
+            border-bottom: 1px solid #1A1A1A;
+            padding-bottom: 2px;
+        }
+        
+        .auth-footer a:hover {
+            color: #d4af37;
+            border-bottom-color: #d4af37;
+        }
+    </style>
 </head>
 
-<body class="page-auth">
-    <div class="split-page-container">
-        <!-- Client Path -->
-        <div class="split-side split-side-image image-side-text"
-            style="background-image: url('https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?auto=format&fit=crop&w=1200&q=70&fm=webp');">
-            <div class="side-content fade-up">
-                <span class="side-sub">Find Your Style</span>
-                <h2>The Client</h2>
-                <p>Get professional styling and care made just for you.</p>
-                <a href="signup.html?role=customer" class="btn btn-premium">Sign Up</a>
-            </div>
-            <div class="side-bg-overlay"></div>
+<body class="role-selection-page">
+
+    <header class="auth-header">
+        <a href="index.html" class="logo">
+            <svg class="logo-icon" viewBox="0 0 100 100">
+                <path d="M30 20 H70 L80 50 L70 80 H30 L20 50 Z" stroke-width="4" />
+                <path d="M35 35 H65 L70 50 L65 65 H35 L30 50 Z" opacity="0.2" />
+                <circle cx="50" cy="50" r="5" />
+            </svg>
+            STYLE<span>CORNER</span>
+        </a>
+    </header>
+
+    <main class="role-container">
+        <div class="role-header fade-up">
+            <h1>Choose your path.</h1>
+            <p>Join Style Corner to book luxury services or offer your expert skills.</p>
         </div>
 
-        <!-- Expert Path -->
-        <div class="split-side split-side-image image-side-text"
-            style="background-image: url('https://images.unsplash.com/photo-1618077360395-f3068be8e001?auto=format&fit=crop&w=1200&q=70&fm=webp');">
-            <div class="side-content fade-up" style="animation-delay: 0.3s;">
-                <span class="side-sub">Our Team</span>
-                <h2>The Expert</h2>
-                <p>Join our group of great experts and show your skills.</p>
-                <a href="signup.html?role=staff" class="btn btn-premium">Sign Up as Expert</a>
-            </div>
-            <div class="side-bg-overlay"></div>
-        </div>
+        <div class="role-grid">
+            <!-- Client Card -->
+            <a href="signup.html?role=customer" class="role-card fade-up" style="animation-delay: 0.1s;">
+                <div class="role-card-image" style="background-image: url('https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?auto=format&fit=crop&w=800&q=80&fm=webp');">
+                </div>
+                <div class="role-card-body">
+                    <h3>The Client</h3>
+                    <p>Get professional styling, exclusive grooming products, and personalized care tailored to your signature look.</p>
+                    <div class="btn-role">Join as Client</div>
+                </div>
+            </a>
 
-        <!-- Branding & Navigation -->
-        <div class="floating-brand">
-            <a href="index.html" class="logo">STYLE<span>CORNER</span></a>
+            <!-- Expert Card -->
+            <a href="signup.html?role=staff" class="role-card fade-up" style="animation-delay: 0.2s;">
+                <div class="role-card-image" style="background-image: url('https://images.unsplash.com/photo-1618077360395-f3068be8e001?auto=format&fit=crop&w=800&q=80&fm=webp');">
+                </div>
+                <div class="role-card-body">
+                    <h3>The Expert</h3>
+                    <p>Join our elite group of master stylists and barbers. Manage your bookings, build your clientele, and showcase your artistry.</p>
+                    <div class="btn-role">Join as Expert</div>
+                </div>
+            </a>
         </div>
+    </main>
 
-        <div class="absolute-footer">
-            <p>Already have an account? <a href="login.html">Sign In</a></p>
-        </div>
-    </div>
+    <footer class="auth-footer">
+        <p>Already have an account? <a href="login.html">Sign In</a></p>
+    </footer>
 
     <script src="js/common.js"></script>
 </body>
