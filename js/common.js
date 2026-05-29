@@ -20,26 +20,50 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 1.5. Route Guards (Authentication Gates)
+  // 1.5. True Server-Verified Route Guards
   const page = window.location.pathname.split('/').pop() || 'index.html';
   const authPages = ['login.html', 'signup.html', 'role-selection.html'];
   const protectedPages = ['customer-dashboard.html', 'expert-dashboard.html'];
 
-  if (token) {
-    if (authPages.includes(page)) {
-      const user = JSON.parse(localStorage.getItem('mockUser') || '{}');
-      window.location.replace(user.role === 'staff' ? 'expert-dashboard.html' : 'customer-dashboard.html');
+  if (protectedPages.includes(page)) {
+    // Hide body immediately to prevent flicker before verification
+    document.body.style.display = 'none';
+    
+    if (!token) {
+      window.location.replace('login.html?redirect=' + page);
+    } else {
+      // Verify token with backend
+      fetch('/api/auth/me', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.error) {
+          // Token invalid or expired
+          localStorage.removeItem('token');
+          localStorage.removeItem('mockUser');
+          window.location.replace('login.html?expired=true');
+        } else {
+          // User verified, check roles
+          if (page === 'expert-dashboard.html' && data.role !== 'staff') {
+            window.location.replace('customer-dashboard.html');
+          } else {
+            // Safe to show page
+            document.body.style.display = 'block';
+            // Sync local storage with fresh user data
+            localStorage.setItem('mockUser', JSON.stringify(data));
+          }
+        }
+      })
+      .catch(err => {
+        console.error('Auth verification failed', err);
+        window.location.replace('login.html');
+      });
     }
-    if (page === 'expert-dashboard.html') {
-      const user = JSON.parse(localStorage.getItem('mockUser') || '{}');
-      if (user.role !== 'staff') {
-        window.location.replace('customer-dashboard.html');
-      }
-    }
-  } else {
-    if (protectedPages.includes(page)) {
-      window.location.replace('login.html');
-    }
+  } else if (token && authPages.includes(page)) {
+    // Prevent logged-in users from accessing login/signup pages
+    const user = JSON.parse(localStorage.getItem('mockUser') || '{}');
+    window.location.replace(user.role === 'staff' ? 'expert-dashboard.html' : 'customer-dashboard.html');
   }
 
   // 2. Sign-out logic
