@@ -132,6 +132,34 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
+// Get current user profile
+app.get('/api/auth/me', authenticateToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select('-password');
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch user profile' });
+  }
+});
+
+// Update user profile
+app.put('/api/users/profile', authenticateToken, async (req, res) => {
+  try {
+    const { firstname, lastname, phone } = req.body;
+    
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user._id,
+      { $set: { firstname, lastname, phone } },
+      { new: true, runValidators: true }
+    ).select('-password');
+    
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update profile' });
+  }
+});
+
 // Get all specialists (staff)
 app.get('/api/specialists', async (req, res) => {
   try {

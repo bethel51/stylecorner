@@ -9,7 +9,12 @@ const bookingSchema = new mongoose.Schema({
   price: { type: Number, required: true },
   date: { type: String, required: true },
   time: { type: String, required: true },
-  status: { type: String, default: 'pending' },
+  staff: { type: String }, // Expert who accepted the booking
+  status: { 
+    type: String, 
+    enum: ['pending', 'accepted', 'completed', 'cancelled'], 
+    default: 'pending' 
+  },
   createdAt: { type: Date, default: Date.now }
 });
 

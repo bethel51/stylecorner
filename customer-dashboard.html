@@ -355,17 +355,23 @@
                 window.location.href = 'login.html';
                 return;
             }
-            let user = JSON.parse(localStorage.getItem('mockUser')) || { firstname: 'User', lastname: 'Customer', email: 'user@stylecorner.com' };
+            let user = {};
 
             const reloadUI = () => {
-                document.getElementById('sidebar-user-name').textContent = `${user.firstname} ${user.lastname}`;
-                document.getElementById('user-display-name').textContent = user.firstname;
-                document.querySelectorAll('.user-id-icon').forEach(el => el.textContent = user.firstname.charAt(0));
+                document.getElementById('sidebar-user-name').textContent = `${user.firstname || 'User'} ${user.lastname || ''}`;
+                document.getElementById('user-display-name').textContent = user.firstname || 'User';
+                document.querySelectorAll('.user-id-icon').forEach(el => el.textContent = (user.firstname ? user.firstname.charAt(0) : 'U'));
                 document.getElementById('cust-firstname').value = user.firstname || '';
                 document.getElementById('cust-lastname').value = user.lastname || '';
                 document.getElementById('cust-email').value = user.email || '';
                 document.getElementById('cust-phone').value = user.phone || '';
             };
+
+            // Fetch real user
+            fetch('/api/auth/me', { headers: { 'Authorization': `Bearer ${token}` } })
+                .then(res => res.ok ? res.json() : Promise.reject('Not authenticated'))
+                .then(data => { user = data; reloadUI(); fetchData(); })
+                .catch(err => { console.error(err); localStorage.removeItem('token'); window.location.href = 'login.html'; });
 
             let historyChart = null;
             let spendingChart = null;
@@ -401,14 +407,42 @@
             editB.addEventListener('click', () => { profI.forEach(i => i.disabled = false); actionU.style.display = 'flex'; editB.style.display = 'none'; });
             discB.addEventListener('click', () => { profI.forEach(i => i.disabled = true); actionU.style.display = 'none'; editB.style.display = 'inline-flex'; reloadUI(); });
 
-            document.getElementById('profile-form').addEventListener('submit', (e) => {
+            document.getElementById('profile-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
-                user.firstname = document.getElementById('cust-firstname').value;
-                user.lastname = document.getElementById('cust-lastname').value;
-                user.phone = document.getElementById('cust-phone').value;
-                localStorage.setItem('mockUser', JSON.stringify(user));
-                profI.forEach(i => i.disabled = true); actionU.style.display = 'none'; editB.style.display = 'inline-flex';
-                reloadUI(); window.showToast("Info Saved.", "success");
+                const btn = actionU.querySelector('button[type="submit"]');
+                const origText = btn.textContent;
+                btn.textContent = 'Saving...';
+                btn.disabled = true;
+
+                try {
+                    const res = await fetch('/api/users/profile', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({
+                            firstname: document.getElementById('cust-firstname').value,
+                            lastname: document.getElementById('cust-lastname').value,
+                            phone: document.getElementById('cust-phone').value
+                        })
+                    });
+                    
+                    if (!res.ok) throw new Error('Failed to update profile');
+                    
+                    user = await res.json();
+                    
+                    profI.forEach(i => i.disabled = true); 
+                    actionU.style.display = 'none'; 
+                    editB.style.display = 'inline-flex';
+                    reloadUI(); 
+                    window.showToast("Info Saved.", "success");
+                } catch (error) {
+                    alert(error.message);
+                } finally {
+                    btn.textContent = origText;
+                    btn.disabled = false;
+                }
             });
 
             const fetchData = async () => {
@@ -423,7 +457,7 @@
                 } catch (e) {
                     console.error('Error fetching data', e);
                 }
-                const uBks = bks.filter(b => b.clientName.includes(user.firstname) || b.clientName === 'Sample Client');
+                const uBks = bks;
 
                 document.getElementById('stat-bookings').textContent = uBks.length;
                 document.getElementById('stat-orders').textContent = ords.length;
@@ -452,7 +486,6 @@
             document.querySelector('.logout-link').addEventListener('click', (e) => {
                 e.preventDefault(); localStorage.removeItem('token'); localStorage.removeItem('mockUser'); window.location.href = 'index.html';
             });
-            reloadUI(); fetchData();
         });
     </script>
 </body>

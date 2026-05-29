@@ -372,11 +372,11 @@
                 window.location.href = 'login.html';
                 return;
             }
-            let user = JSON.parse(localStorage.getItem('mockUser')) || { firstname: 'Staff', lastname: 'User', role: 'staff' };
+            let user = {};
 
             const refreshWorkspace = async () => {
-                document.getElementById('sidebar-user-name').textContent = `${user.firstname} ${user.lastname}`;
-                document.querySelectorAll('.expert-avatar').forEach(el => el.textContent = user.firstname.charAt(0));
+                document.getElementById('sidebar-user-name').textContent = `${user.firstname || 'Staff'} ${user.lastname || ''}`;
+                document.querySelectorAll('.expert-avatar').forEach(el => el.textContent = (user.firstname ? user.firstname.charAt(0) : 'S'));
                 document.getElementById('set-firstname').value = user.firstname || '';
                 document.getElementById('set-lastname').value = user.lastname || '';
 
@@ -492,16 +492,48 @@
             editM.addEventListener('click', () => { profI.forEach(i => i.disabled = false); saveL.style.display = 'flex'; editM.style.display = 'none'; });
             discM.addEventListener('click', () => { profI.forEach(i => i.disabled = true); saveL.style.display = 'none'; editM.style.display = 'inline-flex'; refreshWorkspace(); });
 
-            document.getElementById('expert-matrix-form').addEventListener('submit', (e) => {
+            document.getElementById('expert-matrix-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
-                user.firstname = document.getElementById('set-firstname').value;
-                user.lastname = document.getElementById('set-lastname').value;
-                localStorage.setItem('mockUser', JSON.stringify(user));
-                profI.forEach(i => i.disabled = true); saveL.style.display = 'none'; editM.style.display = 'inline-flex';
-                refreshWorkspace(); window.showToast("Info Saved.", "success");
+                const btn = saveL.querySelector('button[type="submit"]');
+                const origText = btn.textContent;
+                btn.textContent = 'Saving...';
+                btn.disabled = true;
+
+                try {
+                    const res = await fetch('/api/users/profile', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({
+                            firstname: document.getElementById('set-firstname').value,
+                            lastname: document.getElementById('set-lastname').value
+                        })
+                    });
+                    
+                    if (!res.ok) throw new Error('Failed to update profile');
+                    
+                    user = await res.json();
+                    
+                    profI.forEach(i => i.disabled = true); 
+                    saveL.style.display = 'none'; 
+                    editM.style.display = 'inline-flex';
+                    refreshWorkspace(); 
+                    window.showToast("Info Saved.", "success");
+                } catch (error) {
+                    alert(error.message);
+                } finally {
+                    btn.textContent = origText;
+                    btn.disabled = false;
+                }
             });
 
-            refreshWorkspace();
+            // Fetch real user initially
+            fetch('/api/auth/me', { headers: { 'Authorization': `Bearer ${token}` } })
+                .then(res => res.ok ? res.json() : Promise.reject('Not authenticated'))
+                .then(data => { user = data; refreshWorkspace(); })
+                .catch(err => { console.error(err); localStorage.removeItem('token'); window.location.href = 'login.html'; });
         });
     </script>
 </body>
