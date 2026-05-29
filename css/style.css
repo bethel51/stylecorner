@@ -3715,3 +3715,67 @@ footer ul li a:hover {
     padding: 2rem 1rem !important;
   }
 }
+
+/* --- Dark Premium Homepage Overrides --- */
+.page-home {
+  background: #050505;
+  color: #e2e8f0;
+}
+
+.page-home .side-content p {
+  color: #94a3b8;
+}
+
+.page-home .section-header p {
+  color: var(--accent);
+}
+
+.page-home .section-header h2 {
+  color: #ffffff;
+}
+
+.page-home .glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.page-home .service-item-card {
+  background: #111111;
+  border-right: 1px solid rgba(255,255,255,0.05) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+  transition: all 0.3s ease;
+}
+
+.page-home .service-item-card:hover {
+  background: #151515;
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(212, 175, 55, 0.05);
+}
+
+.page-home .service-item-content h3 {
+  color: #ffffff;
+}
+
+.page-home .service-item-content p {
+  color: #94a3b8;
+}
+
+.page-home .nav a,
+.page-home .logo {
+  color: #ffffff;
+}
+
+.page-home .nav a:hover,
+.page-home .nav a.active {
+  color: var(--accent);
+}
+
+.page-home .logo-icon {
+  stroke: #ffffff;
+}
+
+.page-home .logo-icon path[fill="currentColor"] {
+  fill: #ffffff;
+}
