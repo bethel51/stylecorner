@@ -5,7 +5,8 @@
 	"scripts": {
 		"dev": "cd server && node server.js",
 		"start": "cd server && node server.js",
-		"build": "echo 'Ready for Vercel/Shopify Deployment'"
+		"postinstall": "cd server && npm install",
+		"build": "echo 'Ready for Deployment'"
 	},
 	"dependencies": {
 		"mongodb": "^7.2.0",
