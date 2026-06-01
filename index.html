@@ -106,7 +106,7 @@
         }
         .premium-card img {
             width: 100%;
-            height: 400px;
+            aspect-ratio: 1 / 1;
             object-fit: cover;
         }
         .premium-card-content {
@@ -185,7 +185,7 @@
 					<h2 class="premium-heading" style="font-size: 3.5rem; color: #171717;">Signature Services</h2>
 				</div>
 
-				<div class="editorial-grid">
+				<div class="editorial-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 280px)); justify-content: center; gap: 2rem;">
 					<a href="services.html" class="premium-card">
 						<img src="images/gallery-barber.jpg" alt="Premium Hair Cuts" loading="lazy">
 						<div class="premium-card-content">
