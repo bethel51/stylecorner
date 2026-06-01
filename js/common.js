@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 1.5. True Server-Verified Route Guards
   const page = window.location.pathname.split('/').pop() || 'index.html';
-  const authPages = ['login.html', 'signup.html', 'role-selection.html'];
+  const authPages = ['login.html', 'signup.html', 'role-selection.html', 'verify.html'];
   const protectedPages = ['customer-dashboard.html', 'expert-dashboard.html'];
 
   if (protectedPages.includes(page)) {
@@ -47,6 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
           // User verified, check roles
           if (page === 'expert-dashboard.html' && data.role !== 'staff') {
             window.location.replace('customer-dashboard.html');
+          } else if (page === 'customer-dashboard.html' && data.role === 'staff') {
+            window.location.replace('expert-dashboard.html');
           } else {
             // Safe to show page
             document.body.style.display = 'block';
