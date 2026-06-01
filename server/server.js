@@ -14,18 +14,33 @@ const jwt = require('jsonwebtoken');
 const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-prototype-key-12345';
 
 let transporter;
-if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+if (process.env.BREVO_SMTP_HOST && process.env.BREVO_SMTP_KEY) {
+    transporter = nodemailer.createTransport({
+        host: process.env.BREVO_SMTP_HOST,
+        port: parseInt(process.env.BREVO_SMTP_PORT) || 587,
+        secure: false, // use STARTTLS
+        auth: {
+            user: process.env.BREVO_SMTP_LOGIN,
+            pass: process.env.BREVO_SMTP_KEY
+        },
+        connectionTimeout: 10000,
+        greetingTimeout: 10000,
+        socketTimeout: 10000
+    });
+    console.log('Brevo SMTP Transporter configured.');
+} else if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+    // Fallback to Gmail (works locally, blocked on cloud hosting)
     transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
             user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_PASS
         },
-        connectionTimeout: 5000, // 5 seconds
+        connectionTimeout: 5000,
         greetingTimeout: 5000,
         socketTimeout: 5000
     });
-    console.log('Live Gmail Transporter configured.');
+    console.log('Gmail SMTP Transporter configured (fallback).');
 } else {
     console.log('Email credentials not found in .env');
 }
@@ -34,8 +49,9 @@ async function sendNotification(to, subject, text) {
   if (!transporter) {
     throw new Error('Email transporter is not configured. Please check your .env credentials.');
   }
+  const fromAddress = process.env.EMAIL_USER || process.env.BREVO_SMTP_LOGIN;
   const info = await transporter.sendMail({
-      from: `"Style Corner" <${process.env.EMAIL_USER}>`,
+      from: `"Style Corner" <${fromAddress}>`,
       to: to,
       subject: subject,
       text: text
