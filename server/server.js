@@ -141,19 +141,16 @@ app.post('/api/auth/register', async (req, res) => {
 
     const savedUser = await user.save();
     
-    // Send OTP Email
-    try {
-      await sendNotification(
-        savedUser.email, 
-        "Style Corner - Verify Your Account", 
-        `Hi ${savedUser.firstname},\n\nYour verification code is: ${otpCode}\n\nThis code will expire in 15 minutes.`
-      );
-    } catch (mailError) {
-      console.error('Mail delivery failed during registration:', mailError);
+    // Send OTP Email in the background so it doesn't block the UI
+    sendNotification(
+      savedUser.email, 
+      "Style Corner - Verify Your Account", 
+      `Hi ${savedUser.firstname},\n\nYour verification code is: ${otpCode}\n\nThis code will expire in 15 minutes.`
+    ).catch(async (mailError) => {
+      console.error('Mail delivery failed during registration (background):', mailError);
       // Rollback: delete the unverified user from DB so they can try again
       await User.findByIdAndDelete(savedUser._id);
-      return res.status(500).json({ error: 'Verification email could not be delivered. Please verify your email address is correct.' });
-    }
+    });
     
     // Do NOT return token yet. Require verification.
     res.status(201).json({ message: 'Registration successful. Please verify your email.', email: savedUser.email });
