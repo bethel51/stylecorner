@@ -458,10 +458,17 @@
                 document.getElementById('cust-phone').value = user.phone || '';
             };
 
-            // Fetch real user
+            // Fetch real user and enforce role gate
             fetch('/api/auth/me', { headers: { 'Authorization': `Bearer ${token}` } })
                 .then(res => res.ok ? res.json() : Promise.reject('Not authenticated'))
-                .then(data => { user = data; reloadUI(); fetchData(); })
+                .then(data => {
+                    // Role gate: staff users must go to expert dashboard
+                    if (data.role === 'staff') {
+                        window.location.href = 'expert-dashboard.html';
+                        return;
+                    }
+                    user = data; reloadUI(); fetchData();
+                })
                 .catch(err => { console.error(err); localStorage.removeItem('token'); window.location.href = 'login.html'; });
 
             let historyChart = null;

@@ -641,10 +641,17 @@
                 }
             });
 
-            // Fetch real user initially
+            // Fetch real user initially and enforce role gate
             fetch('/api/auth/me', { headers: { 'Authorization': `Bearer ${token}` } })
                 .then(res => res.ok ? res.json() : Promise.reject('Not authenticated'))
-                .then(data => { user = data; refreshWorkspace(); })
+                .then(data => {
+                    // Role gate: customer users must go to customer dashboard
+                    if (data.role === 'customer') {
+                        window.location.href = 'customer-dashboard.html';
+                        return;
+                    }
+                    user = data; refreshWorkspace();
+                })
                 .catch(err => { console.error(err); localStorage.removeItem('token'); window.location.href = 'login.html'; });
         });
     </script>
