@@ -143,12 +143,15 @@ app.post('/api/auth/register', async (req, res) => {
     
     // Send OTP Email in the background so it doesn't block the UI
     sendNotification(
-      savedUser.email, 
-      "Style Corner - Verify Your Account", 
+      savedUser.email,
+      "Style Corner - Verify Your Account",
       `Hi ${savedUser.firstname},\n\nYour verification code is: ${otpCode}\n\nThis code will expire in 15 minutes.`
-    ).catch(async (mailError) => {
-      console.error('Mail delivery failed during registration (background):', mailError);
-      // Rollback: delete the unverified user from DB so they can try again
+    )
+    .then(info => {
+      console.log('✅ OTP e‑mail sent:', info.messageId);
+    })
+    .catch(async (mailError) => {
+      console.error('❌ Mail delivery failed during registration (background):', mailError);
       await User.findByIdAndDelete(savedUser._id);
     });
     
