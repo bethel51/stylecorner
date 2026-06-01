@@ -205,7 +205,19 @@ app.post('/api/auth/login', async (req, res) => {
     if (!isMatch) return res.status(400).json({ error: 'Invalid email or password' });
 
     if (!user.isVerified) {
-      return res.status(403).json({ error: 'unverified', message: 'Please verify your email address before logging in.', email: user.email });
+      // Generate and send a new OTP for unverified users (useful for older accounts or resending)
+      const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+      user.otpCode = otpCode;
+      user.otpExpiresAt = new Date(Date.now() + 15 * 60 * 1000);
+      await user.save();
+      
+      sendNotificationSafe(
+        user.email,
+        "Style Corner - Verify Your Account",
+        `Hi ${user.firstname},\n\nYour verification code is: ${otpCode}\n\nThis code will expire in 15 minutes.`
+      );
+
+      return res.status(403).json({ error: 'unverified', message: 'Please verify your email address before logging in. A new verification code has been sent.', email: user.email });
     }
 
     const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
