@@ -31,17 +31,24 @@ if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
 }
 
 async function sendNotification(to, subject, text) {
-  if (!transporter) return;
+  if (!transporter) {
+    throw new Error('Email transporter is not configured. Please check your .env credentials.');
+  }
+  const info = await transporter.sendMail({
+      from: `"Style Corner" <${process.env.EMAIL_USER}>`,
+      to: to,
+      subject: subject,
+      text: text
+  });
+  console.log('Email successfully sent to:', to);
+  return info;
+}
+
+async function sendNotificationSafe(to, subject, text) {
   try {
-      const info = await transporter.sendMail({
-          from: `"Style Corner" <${process.env.EMAIL_USER}>`,
-          to: to,
-          subject: subject,
-          text: text
-      });
-      console.log('Email successfully sent to:', to);
+    await sendNotification(to, subject, text);
   } catch (err) {
-      console.error('Error sending email:', err);
+    console.error('Non-blocking notification email failed to send:', err.message);
   }
 }
 
@@ -119,11 +126,18 @@ app.post('/api/auth/register', async (req, res) => {
     const savedUser = await user.save();
     
     // Send OTP Email
-    await sendNotification(
-      savedUser.email, 
-      "Style Corner - Verify Your Account", 
-      `Hi ${savedUser.firstname},\n\nYour verification code is: ${otpCode}\n\nThis code will expire in 15 minutes.`
-    );
+    try {
+      await sendNotification(
+        savedUser.email, 
+        "Style Corner - Verify Your Account", 
+        `Hi ${savedUser.firstname},\n\nYour verification code is: ${otpCode}\n\nThis code will expire in 15 minutes.`
+      );
+    } catch (mailError) {
+      console.error('Mail delivery failed during registration:', mailError);
+      // Rollback: delete the unverified user from DB so they can try again
+      await User.findByIdAndDelete(savedUser._id);
+      return res.status(500).json({ error: 'Verification email could not be delivered. Please verify your email address is correct.' });
+    }
     
     // Do NOT return token yet. Require verification.
     res.status(201).json({ message: 'Registration successful. Please verify your email.', email: savedUser.email });
@@ -265,7 +279,7 @@ app.post('/api/bookings', authenticateToken, async (req, res) => {
 
     const booking = new Booking(req.body);
     const savedBooking = await booking.save();
-    await sendNotification(savedBooking.clientEmail, "Booking Confirmed", `Hi ${savedBooking.clientName},\n\nYour booking for ${savedBooking.service} on ${savedBooking.date} at ${savedBooking.time} has been received.`);
+    await sendNotificationSafe(savedBooking.clientEmail, "Booking Confirmed", `Hi ${savedBooking.clientName},\n\nYour booking for ${savedBooking.service} on ${savedBooking.date} at ${savedBooking.time} has been received.`);
     res.status(201).json(savedBooking);
   } catch (error) {
     res.status(500).json({ error: 'Failed to save booking' });
@@ -277,7 +291,7 @@ app.put('/api/bookings/:id', authenticateToken, async (req, res) => {
   try {
     const updated = await Booking.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (req.body.status === 'accepted') {
-      await sendNotification(updated.clientEmail, "Booking Accepted!", `Hi ${updated.clientName},\n\nGreat news! Your booking has been accepted by our staff. See you then!`);
+      await sendNotificationSafe(updated.clientEmail, "Booking Accepted!", `Hi ${updated.clientName},\n\nGreat news! Your booking has been accepted by our staff. See you then!`);
     }
     res.status(200).json(updated);
   } catch (error) {
@@ -304,7 +318,7 @@ app.post('/api/orders', authenticateToken, async (req, res) => {
   try {
     const order = new Order(req.body);
     const savedOrder = await order.save();
-    await sendNotification(savedOrder.email || "customer@example.com", "Order Received", `Thank you for your order! Order #${savedOrder.id} for ${savedOrder.item} has been placed.`);
+    await sendNotificationSafe(savedOrder.email || "customer@example.com", "Order Received", `Thank you for your order! Order #${savedOrder.id} for ${savedOrder.item} has been placed.`);
     res.status(201).json(savedOrder);
   } catch (error) {
     res.status(500).json({ error: 'Failed to save order' });
@@ -316,7 +330,7 @@ app.put('/api/orders/:id', authenticateToken, async (req, res) => {
   try {
     const updated = await Order.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (req.body.status === 'shipped') {
-      await sendNotification(updated.email || "customer@example.com", "Order Shipped!", `Good news! Order #${updated.id} for ${updated.item} has been shipped to ${updated.address}.`);
+      await sendNotificationSafe(updated.email || "customer@example.com", "Order Shipped!", `Good news! Order #${updated.id} for ${updated.item} has been shipped to ${updated.address}.`);
     }
     res.status(200).json(updated);
   } catch (error) {
