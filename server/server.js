@@ -18,7 +18,7 @@ if (process.env.BREVO_SMTP_HOST && process.env.BREVO_SMTP_KEY) {
     transporter = nodemailer.createTransport({
         host: process.env.BREVO_SMTP_HOST,
         port: parseInt(process.env.BREVO_SMTP_PORT) || 587,
-        secure: false, // use STARTTLS
+        secure: parseInt(process.env.BREVO_SMTP_PORT) === 465,
         auth: {
             user: process.env.BREVO_SMTP_LOGIN,
             pass: process.env.BREVO_SMTP_KEY
