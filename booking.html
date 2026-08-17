@@ -198,14 +198,19 @@
                 border-radius: 14px !important;
             }
             .ai-slot-pills { 
-                flex-direction: column !important; 
-                width: 100%;
+                display: grid !important;
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 5px !important;
+                width: 100% !important;
             }
             .ai-slot-pills label {
                 width: 100% !important;
-                text-align: center;
-                box-sizing: border-box;
-                padding: 0.6rem 0.85rem !important;
+                text-align: center !important;
+                justify-content: center !important;
+                box-sizing: border-box !important;
+                padding: 0.5rem 0.15rem !important;
+                font-size: 0.7rem !important;
+                white-space: nowrap !important;
             }
             #apply-ai-match-btn {
                 font-size: 0.8rem !important;

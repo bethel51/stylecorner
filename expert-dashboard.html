@@ -821,22 +821,39 @@
                 if (!Array.isArray(ords)) ords = [];
 
                 const pendingBks = bks.filter(b => b && b.status === 'pending');
+                const activeAcceptedBks = bks.filter(b => b && b.status === 'accepted' && (b.staff === user.firstname || !b.staff));
                 const pendingOrds = ords.filter(o => o && (o.status === 'paid' || o.status === 'pending'));
 
-                document.getElementById('pending-services-count').textContent = pendingBks.length;
+                document.getElementById('pending-services-count').textContent = pendingBks.length + activeAcceptedBks.length;
                 document.getElementById('alert-count').textContent = pendingOrds.length;
 
                 const sList = document.getElementById('live-bookings-list');
-                if (pendingBks.length > 0) {
-                    sList.innerHTML = pendingBks.map(b => `
-                    <div class="action-row">
-                        <div>
-                            <h4>${b.clientName} <span>| ${b.service}</span></h4>
-                            <p><i class="fas fa-calendar-days"></i> ${b.date} • ${b.time}</p>
-                        </div>
-                        <button class="btn btn-blue accept-btn" data-id="${b._id}" style="font-size: 0.8rem; padding: 0.65rem 1.5rem;">ACCEPT</button>
-                    </div>`).join('');
-                } else { sList.innerHTML = '<p style="color: var(--exp-muted); font-weight: 500; font-size: 0.95rem; text-align: center; padding: 1.5rem;">No jobs right now.</p>'; }
+                const allActiveBks = [...activeAcceptedBks, ...pendingBks];
+
+                if (allActiveBks.length > 0) {
+                    sList.innerHTML = allActiveBks.map(b => {
+                        if (b.status === 'accepted') {
+                            return `
+                            <div class="action-row" style="border-left: 4px solid #10b981; background: rgba(16, 185, 129, 0.04);">
+                                <div>
+                                    <span style="font-size: 0.7rem; font-weight: 800; color: #10b981; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 2px;">● ONGOING SESSION</span>
+                                    <h4>${b.clientName} <span>| ${b.service}</span></h4>
+                                    <p><i class="fas fa-calendar-days"></i> ${b.date} • ${b.time}</p>
+                                </div>
+                                <button class="btn complete-btn" data-id="${b._id}" style="font-size: 0.8rem; padding: 0.65rem 1.25rem; background: #10b981; color: white; border: none; font-weight: 700; border-radius: 8px;">FINISH & COMPLETE</button>
+                            </div>`;
+                        } else {
+                            return `
+                            <div class="action-row">
+                                <div>
+                                    <h4>${b.clientName} <span>| ${b.service}</span></h4>
+                                    <p><i class="fas fa-calendar-days"></i> ${b.date} • ${b.time}</p>
+                                </div>
+                                <button class="btn btn-blue accept-btn" data-id="${b._id}" style="font-size: 0.8rem; padding: 0.65rem 1.5rem;">ACCEPT</button>
+                            </div>`;
+                        }
+                    }).join('');
+                } else { sList.innerHTML = '<p style="color: var(--exp-muted); font-weight: 500; font-size: 0.95rem; text-align: center; padding: 1.5rem;">No active jobs or pending requests right now.</p>'; }
 
                 const aList = document.getElementById('live-alerts-list');
                 if (pendingOrds.length > 0) {
@@ -852,7 +869,7 @@
 
                 const hBody = document.getElementById('history-tbody');
                 const done = [
-                    ...bks.filter(b => b.status === 'accepted' || b.status === 'paid').map(b => ({ cat: 'Appointment', detail: `${b.clientName} (${b.service})`, time: b.date })),
+                    ...bks.filter(b => b.status === 'completed').map(b => ({ cat: 'Appointment Completed', detail: `${b.clientName} (${b.service})`, time: b.date })),
                     ...ords.filter(o => o.status === 'shipped').map(o => ({ cat: 'Order Sent', detail: o.item, time: 'Done' }))
                 ];
                 if (done.length > 0) {
@@ -871,15 +888,52 @@
                 document.querySelectorAll('.accept-btn').forEach(btn => {
                     btn.addEventListener('click', async () => {
                         const id = btn.dataset.id;
-                        await fetch(`/api/bookings/${id}`, {
-                            method: 'PUT',
-                            headers: { 
-                                'Content-Type': 'application/json',
-                                'Authorization': `Bearer ${localStorage.getItem('token')}`
-                            },
-                            body: JSON.stringify({ status: 'accepted', staff: user.firstname })
-                        });
-                        window.showToast("Job Accepted.", "success"); refreshWorkspace();
+                        btn.disabled = true;
+                        try {
+                            const res = await fetch(`/api/bookings/${id}`, {
+                                method: 'PUT',
+                                headers: { 
+                                    'Content-Type': 'application/json',
+                                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                                },
+                                body: JSON.stringify({ status: 'accepted', staff: user.firstname })
+                            });
+                            const data = await res.json();
+                            if (!res.ok) {
+                                window.showToast(data.error || 'Cannot accept job.', 'error');
+                                return;
+                            }
+                            window.showToast("Job Accepted. Session is now active!", "success"); 
+                            refreshWorkspace();
+                        } catch (err) {
+                            window.showToast('Network error accepting job', 'error');
+                        } finally {
+                            btn.disabled = false;
+                        }
+                    });
+                });
+
+                document.querySelectorAll('.complete-btn').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const id = btn.dataset.id;
+                        btn.disabled = true;
+                        try {
+                            const res = await fetch(`/api/bookings/${id}`, {
+                                method: 'PUT',
+                                headers: { 
+                                    'Content-Type': 'application/json',
+                                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                                },
+                                body: JSON.stringify({ status: 'completed' })
+                            });
+                            if (!res.ok) throw new Error('Failed to complete session');
+                            window.showToast("Appointment completed! You are now free for new bookings.", "success"); 
+                            refreshWorkspace();
+                        } catch (err) {
+                            window.showToast('Error completing session', 'error');
+                        } finally {
+                            btn.disabled = false;
+                        }
                     });
                 });
                 document.querySelectorAll('.ship-btn').forEach(btn => {

@@ -375,16 +375,7 @@ app.get('/api/bookings', authenticateToken, async (req, res) => {
 // Create a new booking
 app.post('/api/bookings', authenticateToken, async (req, res) => {
   try {
-    // Prevent double booking (one active booking at a time for client)
-    const existingClientBooking = await Booking.findOne({ 
-      clientEmail: req.body.clientEmail, 
-      status: { $in: ['pending', 'accepted'] } 
-    });
-    if (existingClientBooking) {
-      return res.status(400).json({ error: 'You already have an active appointment. Please wait until it is completed or cancelled.' });
-    }
-
-    // Prevent Double Booking Stylist (The Overlapping Expert)
+    // Prevent Double Booking Stylist for exact date and time
     if (req.body.stylist && req.body.stylist !== 'Any Specialist') {
       const existingStylistBooking = await Booking.findOne({
         stylist: req.body.stylist,
@@ -393,7 +384,7 @@ app.post('/api/bookings', authenticateToken, async (req, res) => {
         status: { $in: ['pending', 'accepted'] }
       });
       if (existingStylistBooking) {
-        return res.status(400).json({ error: 'This stylist is already booked for that specific date and time.' });
+        return res.status(400).json({ error: 'This specialist is already booked for that specific date and time.' });
       }
     }
 
@@ -406,12 +397,30 @@ app.post('/api/bookings', authenticateToken, async (req, res) => {
   }
 });
 
-// Update a booking status
+// Update a booking status (Expert Acceptance & Completion Logic)
 app.put('/api/bookings/:id', authenticateToken, async (req, res) => {
   try {
+    // If expert is attempting to ACCEPT a booking:
+    if (req.body.status === 'accepted') {
+      const staffName = req.body.staff || req.user.firstname;
+      // Check if expert already has an active ongoing accepted appointment
+      const activeOngoingBooking = await Booking.findOne({
+        staff: staffName,
+        status: 'accepted',
+        _id: { $ne: req.params.id }
+      });
+      if (activeOngoingBooking) {
+        return res.status(400).json({ 
+          error: `You currently have an active ongoing appointment (${activeOngoingBooking.service} for ${activeOngoingBooking.clientName}). You must complete your active appointment before accepting another request.` 
+        });
+      }
+    }
+
     const updated = await Booking.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (req.body.status === 'accepted') {
       await sendNotificationSafe(updated.clientEmail, "Booking Accepted!", `Hi ${updated.clientName},\n\nGreat news! Your booking has been accepted by our staff. See you then!`);
+    } else if (req.body.status === 'completed') {
+      await sendNotificationSafe(updated.clientEmail, "Service Completed!", `Hi ${updated.clientName},\n\nThank you for visiting Style Corner! Your service ${updated.service} has been completed.`);
     }
     res.status(200).json(updated);
   } catch (error) {
