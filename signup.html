@@ -5,92 +5,486 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Account | Style Corner</title>
+    <meta name="description" content="Sign up for a Style Corner account as a client or expert stylist.">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            background: #faf9f6;
+            display: flex;
+            overflow-x: hidden;
+        }
+
+        /* ── Image Panel ── */
+        .auth-image-panel {
+            flex: 0 0 45%;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .auth-image-panel img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 30%;
+            display: block;
+        }
+
+        .image-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(160deg, rgba(23,23,23,0.75) 0%, rgba(23,23,23,0.4) 60%, rgba(212,175,55,0.2) 100%);
+        }
+
+        .image-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 4rem;
+            z-index: 2;
+        }
+
+        .image-eyebrow {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: #d4af37;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .image-eyebrow::before {
+            content: '';
+            display: block;
+            width: 32px;
+            height: 2px;
+            background: #d4af37;
+        }
+
+        .image-heading {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(2rem, 3.5vw, 3.5rem);
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.25rem;
+        }
+
+        .image-sub {
+            font-size: 1rem;
+            color: rgba(255,255,255,0.75);
+            font-weight: 400;
+            line-height: 1.6;
+            max-width: 380px;
+        }
+
+        /* Floating orbs */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.2;
+            pointer-events: none;
+        }
+        .orb-1 { width: 350px; height: 350px; background: #d4af37; top: -80px; right: -80px; }
+        .orb-2 { width: 250px; height: 250px; background: #4A2C6A; bottom: 80px; left: -60px; }
+
+        /* ── Form Panel ── */
+        .auth-form-panel {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 3rem;
+            background: #faf9f6;
+            overflow-y: auto;
+        }
+
+        .form-card {
+            width: 100%;
+            max-width: 520px;
+        }
+
+        /* Logo */
+        .form-logo {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #171717;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2.5rem;
+        }
+        .form-logo span { color: #d4af37; }
+
+        .role-badge {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            background: rgba(212,175,55,0.1);
+            color: #b5952f;
+            border: 1px solid rgba(212,175,55,0.25);
+            border-radius: 50px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1.25rem;
+        }
+
+        /* Form heading */
+        .form-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(2rem, 3.5vw, 2.5rem);
+            font-weight: 800;
+            color: #171717;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-subtitle {
+            font-size: 0.95rem;
+            color: #6b7280;
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+        }
+
+        /* Form inputs grid */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.25rem;
+        }
+        .form-row .input-group {
+            margin-bottom: 0;
+        }
+
+        .input-label {
+            display: block;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.775rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: #171717;
+            margin-bottom: 0.5rem;
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        .input-wrap i {
+            position: absolute;
+            left: 1.1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+            pointer-events: none;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.9rem 1.1rem 0.9rem 2.8rem;
+            background: #ffffff;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            color: #171717;
+            font-weight: 500;
+            transition: all 0.25s ease;
+            outline: none;
+        }
+
+        .form-input::placeholder { color: #9ca3af; font-weight: 400; }
+
+        .form-input:focus {
+            border-color: #d4af37;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(212,175,55,0.12);
+        }
+
+        .input-wrap:focus-within i { color: #d4af37; }
+
+        /* Specialty Checkboxes (Staff only) */
+        .specialties-container {
+            margin-top: 2rem;
+            border-top: 1px solid #e5e7eb;
+            padding-top: 1.5rem;
+        }
+        .specialties-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: #b5952f;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        .specialties-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+        .specialty-label {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.9rem 1.1rem;
+            background: #ffffff;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            color: #171717;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+        .specialty-label input[type="checkbox"] {
+            accent-color: #d4af37;
+            width: 17px;
+            height: 17px;
+            cursor: pointer;
+        }
+        .specialty-label:hover {
+            border-color: #d4af37;
+            background: rgba(212,175,55,0.02);
+        }
+        .specialty-label.checked {
+            border-color: #d4af37;
+            background: rgba(212,175,55,0.06);
+            font-weight: 600;
+        }
+
+        /* Submit Button */
+        .btn-signup {
+            width: 100%;
+            padding: 1.1rem 2rem;
+            background: #171717;
+            color: #d4af37;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+        }
+
+        .btn-signup::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212,175,55,0.15), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-signup:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(0,0,0,0.18); }
+        .btn-signup:hover::before { left: 100%; }
+        .btn-signup:disabled { opacity: 0.65; transform: none; cursor: not-allowed; }
+
+        /* Divider & Footer */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e5e7eb;
+        }
+        .divider span {
+            font-size: 0.8rem;
+            color: #9ca3af;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+        }
+
+        .form-footer {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+        .form-footer a {
+            color: #d4af37;
+            font-weight: 700;
+            text-decoration: none;
+            font-family: 'Outfit', sans-serif;
+        }
+        .form-footer a:hover { opacity: 0.8; }
+        .role-change-link {
+            display: block;
+            margin-top: 0.8rem;
+            font-size: 0.8rem;
+            color: #9ca3af;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .role-change-link:hover { color: #171717; }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            body { flex-direction: column; }
+            .auth-image-panel { flex: 0 0 35vh; }
+            .image-content { padding: 2rem; }
+            .image-heading { font-size: 2rem; }
+            .auth-form-panel { padding: 3rem 1.5rem; }
+            .form-card { max-width: 100%; }
+        }
+        @media (max-width: 480px) {
+            .form-row { grid-template-columns: 1fr; gap: 0; }
+            .form-row .input-group { margin-bottom: 1.25rem; }
+        }
+    </style>
 </head>
 
-<body class="page-auth">
-    <div class="split-page-container">
-        <!-- Visual Side -->
-        <div class="split-side split-side-image image-side-text"
-            style="background-image: url('https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?auto=format&fit=crop&w=1200&q=70&fm=webp');">
-            <div class="side-content fade-up">
-                <span class="side-sub">Find Your Style</span>
-                <h2>The Client</h2>
-                <p>Get professional styling and care made just for you.</p>
-                <a href="signup.html?role=user" class="btn btn-premium">Sign Up</a>
-            </div>
-            <div class="side-bg-overlay"></div>
+<body>
+    <!-- Image Panel -->
+    <div class="auth-image-panel">
+        <img id="panel-image" src="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?auto=format&fit=crop&w=1200&q=80&fm=webp" alt="Style Corner Salon client styling">
+        <div class="image-overlay"></div>
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="image-content">
+            <p class="image-eyebrow" id="panel-eyebrow">Find Your Style</p>
+            <h2 class="image-heading" id="panel-heading">The Client.</h2>
+            <p class="image-sub" id="panel-sub">Get professional styling, personal care guidance, and expert treatments designed just for you.</p>
         </div>
+    </div>
 
-        <!-- Form Side -->
-        <div class="split-side split-side-form">
-            <div class="form-wrapper-minimal fade-up" style="animation-delay: 0.3s;">
-                <a href="index.html" class="logo mb-5" style="display: inline-block;">STYLE<span>CORNER</span></a>
-                <div id="role-indicator" class="side-sub" style="margin-bottom: 0.5rem; color: var(--accent);">CLIENT
-                    ACCESS</div>
-                <h1>Create Account</h1>
-                <p class="subtitle">Enter your details to create your account.</p>
+    <!-- Form Panel -->
+    <div class="auth-form-panel">
+        <div class="form-card">
+            <a href="index.html" class="form-logo">STYLE<span>CORNER</span></a>
 
-                <form id="signup-form">
-                    <div class="form-row"
-                        style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <label>First Name</label>
-                            <input type="text" id="firstname" placeholder="First Name" required>
+            <div id="role-indicator" class="role-badge">CLIENT ACCESS</div>
+
+            <h1 class="form-title">Create Account</h1>
+            <p class="form-subtitle">Enter your details to create your secure atelier account.</p>
+
+            <form id="signup-form">
+                <div class="form-row">
+                    <div class="input-group">
+                        <label class="input-label" for="firstname">First Name</label>
+                        <div class="input-wrap">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="firstname" class="form-input" placeholder="First Name" required>
                         </div>
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <label>Last Name</label>
-                            <input type="text" id="lastname" placeholder="Last Name" required>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label" for="lastname">Last Name</label>
+                        <div class="input-wrap">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="lastname" class="form-input" placeholder="Last Name" required>
                         </div>
                     </div>
-                    <div class="form-group mb-4">
-                        <label>Email Address</label>
-                        <input type="email" id="email" placeholder="email@example.com" required>
-                    </div>
-                    <div class="form-group mb-4">
-                        <label>Phone Number</label>
-                        <input type="tel" id="phone" placeholder="+234..." required>
-                    </div>
-                    <div class="form-group mb-4">
-                        <label>Password</label>
-                        <input type="password" id="password" placeholder="••••••••" required>
-                    </div>
-
-                    <div class="form-group" id="services-group"
-                        style="display: none; margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 1.5rem;">
-                        <label style="color: var(--accent);">Your Specialties (Max 3)</label>
-                        <div class="services-list"
-                            style="display: grid; grid-template-columns: 1fr; gap: 0.5rem; margin-top: 1rem;">
-                            <!-- JS will inject or existing inputs preserved -->
-                            <label style="display: flex; gap: 0.8rem; font-size: 0.85rem; cursor: pointer;"><input
-                                    type="checkbox" name="services" value="Hair Cut Services"> Cuts / Barbering</label>
-                            <label style="display: flex; gap: 0.8rem; font-size: 0.85rem; cursor: pointer;"><input
-                                    type="checkbox" name="services" value="Hair Braiding Services"> Braiding /
-                                Twists</label>
-                            <label style="display: flex; gap: 0.8rem; font-size: 0.85rem; cursor: pointer;"><input
-                                    type="checkbox" name="services" value="Nails"> Professional Nails</label>
-                            <label style="display: flex; gap: 0.8rem; font-size: 0.85rem; cursor: pointer;"><input
-                                    type="checkbox" name="services" value="Wig Installation"> Wig Artistry</label>
-                            <label style="display: flex; gap: 0.8rem; font-size: 0.85rem; cursor: pointer;"><input
-                                    type="checkbox" name="services" value="Lash & Nails Combo"> Combo Services</label>
-                        </div>
-                        <p id="services-error"
-                            style="color: #ef4444; font-size: 0.75rem; margin-top: 0.8rem; display: none;">Select up to
-                            3 specialties.</p>
-                    </div>
-
-                    <button type="submit" class="btn btn-premium w-full mt-5">Create Account</button>
-                </form>
-
-                <div class="auth-footer mt-5" style="border-top: 1px solid var(--border); padding-top: 2rem;">
-                    <p style="font-size: 0.9rem; color: var(--text-muted);">Already a member? <a href="login.html"
-                            style="color: var(--accent); font-weight: 600;">Sign In</a></p>
-                    <p class="mt-2 text-center"><a href="role-selection.html"
-                            style="font-size: 0.8rem; opacity: 0.6;">Change role registration</a></p>
                 </div>
+
+                <div class="input-group">
+                    <label class="input-label" for="email">Email Address</label>
+                    <div class="input-wrap">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="email" class="form-input" placeholder="email@example.com" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label" for="phone">Phone Number</label>
+                    <div class="input-wrap">
+                        <i class="fas fa-phone"></i>
+                        <input type="tel" id="phone" class="form-input" placeholder="+234..." required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label" for="password">Password</label>
+                    <div class="input-wrap">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" class="form-input" placeholder="••••••••" required>
+                    </div>
+                </div>
+
+                <!-- Specialties (Staff Only) -->
+                <div class="specialties-container" id="services-group" style="display: none;">
+                    <span class="specialties-title">Your Specialties (Select up to 3)</span>
+                    <div class="specialties-grid">
+                        <label class="specialty-label">
+                            <input type="checkbox" name="services" value="Hair Cut Services">
+                            Cuts & Barbering
+                        </label>
+                        <label class="specialty-label">
+                            <input type="checkbox" name="services" value="Hair Braiding Services">
+                            Braiding & Twists
+                        </label>
+                        <label class="specialty-label">
+                            <input type="checkbox" name="services" value="Nails">
+                            Professional Nails
+                        </label>
+                        <label class="specialty-label">
+                            <input type="checkbox" name="services" value="Wig Installation">
+                            Wig Artistry
+                        </label>
+                        <label class="specialty-label">
+                            <input type="checkbox" name="services" value="Lash & Nails Combo">
+                            Combo Services
+                        </label>
+                    </div>
+                    <p id="services-error" style="color: #ef4444; font-size: 0.75rem; margin-top: 0.8rem; display: none; font-weight: 500;">
+                        <i class="fas fa-circle-exclamation"></i> You can select up to 3 specialties.
+                    </p>
+                </div>
+
+                <button type="submit" class="btn-signup" id="signup-btn">
+                    Create Account
+                </button>
+            </form>
+
+            <div class="divider"><span>Already a member?</span></div>
+
+            <div class="form-footer">
+                <p>Have an account? <a href="login.html">Sign In &rarr;</a></p>
+                <a href="role-selection.html" class="role-change-link">Change role registration profile</a>
             </div>
         </div>
     </div>
@@ -100,8 +494,22 @@
         document.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
             const role = params.get('role') || 'customer';
+            
+            // Adjust role UI text and elements
             const indicator = document.getElementById('role-indicator');
             indicator.textContent = role === 'staff' ? 'Staff Account' : 'Client Account';
+
+            const panelImg = document.getElementById('panel-image');
+            const panelEyebrow = document.getElementById('panel-eyebrow');
+            const panelHeading = document.getElementById('panel-heading');
+            const panelSub = document.getElementById('panel-sub');
+
+            if (role === 'staff') {
+                panelImg.src = 'https://images.unsplash.com/photo-1618077360395-f3068be8e001?auto=format&fit=crop&w=1200&q=80&fm=webp';
+                panelEyebrow.textContent = 'Join the Experts';
+                panelHeading.textContent = 'The Master.';
+                panelSub.textContent = 'Manage bookings, show off your signature crafts, and grow your client base with Style Corner.';
+            }
 
             const servicesGroup = document.getElementById('services-group');
             const checkboxes = document.querySelectorAll('input[name="services"]');
@@ -110,12 +518,20 @@
             if (role === 'staff') {
                 servicesGroup.style.display = 'block';
 
-                // Enforce max 3 services logic
+                // Manage style state of labels & max selection of 3
                 checkboxes.forEach(box => {
                     box.addEventListener('change', () => {
+                        const label = box.closest('.specialty-label');
+                        if (box.checked) {
+                            label.classList.add('checked');
+                        } else {
+                            label.classList.remove('checked');
+                        }
+
                         const checkedCount = document.querySelectorAll('input[name="services"]:checked').length;
                         if (checkedCount > 3) {
                             box.checked = false;
+                            label.classList.remove('checked');
                             servicesError.style.display = 'block';
                         } else {
                             servicesError.style.display = 'none';
@@ -135,9 +551,9 @@
                     return;
                 }
 
-                const btn = form.querySelector('button');
+                const btn = document.getElementById('signup-btn');
                 btn.disabled = true;
-                btn.textContent = 'Making Account...';
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Making Account...';
 
                 const data = {
                     role,

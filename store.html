@@ -15,20 +15,91 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap">
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap">
     <link rel="preload" as="image" href="https://images.unsplash.com/photo-1621605815971-fbc98d665033?auto=format&fit=crop&w=1200&q=70&fm=webp">
     <style>
-        .premium-heading { font-family: 'Playfair Display', serif; letter-spacing: -0.02em; }
-        
+        .premium-heading { font-family: 'Outfit', serif; letter-spacing: -0.03em; }
+
+        /* ── Store Layout Adjustments ── */
+        .page-store main {
+            padding-top: 5.5rem;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.85) !important;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+            box-shadow: none !important;
+            height: 5.5rem;
+        }
+        header .logo {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+        }
+        header .nav a {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        /* Cart Trigger */
+        .cart-toggle-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.25rem;
+            border-radius: 50px;
+            background: #171717;
+            color: #d4af37;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .cart-toggle-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(23,23,23,0.15);
+        }
+        .cart-count-badge {
+            background: #d4af37;
+            color: #171717;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 800;
+            margin-left: 0.25rem;
+        }
+
+        /* ── Product Collection Grid ── */
+        .product-grid-store {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
         .store-card {
             background: #ffffff;
             border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.02);
             transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-            border: 1px solid rgba(0,0,0,0.04);
+            border: 1px solid rgba(0,0,0,0.05);
             position: relative;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
         }
         .store-card::after {
             content: '';
@@ -41,55 +112,217 @@
         }
         .store-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
-            border-color: rgba(212, 175, 55, 0.3);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+            border-color: rgba(212, 175, 55, 0.25);
         }
         .store-card:hover::after {
             transform: scaleX(1);
         }
-        .store-card .store-card-img i {
+        .store-card-img {
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #faf9f6;
+            border-radius: 14px;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s;
+        }
+        .store-card-img i {
             color: #171717;
             font-size: 3rem;
             transition: all 0.4s ease;
+        }
+        .store-card:hover .store-card-img {
+            background: rgba(212, 175, 55, 0.05);
         }
         .store-card:hover .store-card-img i {
             transform: scale(1.1);
             color: #d4af37;
         }
         .store-card h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.3rem !important;
-            font-weight: 600;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.2rem !important;
+            font-weight: 700;
+            color: #171717;
+            margin-bottom: 0.5rem;
         }
-        .store-card .btn {
-            background: linear-gradient(135deg, #d4af37, #b5952f) !important;
-            color: #fff !important;
+        .store-card p {
+            color: #6b7280;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+            flex: 1;
+        }
+        .store-card-price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+        .store-card-price-row span {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            color: #171717;
+            font-size: 1.25rem;
+        }
+
+        .btn-add-store {
+            background: #171717 !important;
+            color: #d4af37 !important;
             border: none !important;
-            box-shadow: 0 4px 10px rgba(212, 175, 55, 0.2);
+            padding: 0.6rem 1.2rem !important;
+            font-size: 0.8rem !important;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            border-radius: 8px !important;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+        .btn-add-store:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+            background: #d4af37 !important;
+            color: #171717 !important;
+        }
+
+        /* ── Cart Drawer Makeover ── */
+        .cart-drawer {
+            position: fixed;
+            top: 0;
+            right: -450px;
+            width: 100%;
+            max-width: 440px;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.96) !important;
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-left: 1px solid rgba(0,0,0,0.08);
+            box-shadow: -20px 0 50px rgba(0,0,0,0.08);
+            z-index: 2000;
+            transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+        }
+        .cart-drawer.active {
+            right: 0;
+        }
+        .cart-header {
+            padding: 2rem;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .cart-header h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 800;
+        }
+        .cart-items-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding-bottom: 1.25rem;
+            margin-bottom: 1.25rem;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .cart-item-img {
+            width: 56px;
+            height: 56px;
+            background: #faf9f6;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #d4af37;
+            font-size: 1.25rem;
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+        .cart-item-info {
+            flex: 1;
+        }
+        .cart-item-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            color: #171717;
+            font-size: 0.95rem;
+        }
+        .cart-item-price {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            color: #b5952f;
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+
+        .cart-footer {
+            padding: 2rem;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            background: #ffffff;
+        }
+
+        .btn-premium {
+            background: #171717 !important;
+            color: #d4af37 !important;
+            border: none !important;
+            box-shadow: 0 10px 25px rgba(23,23,23,0.15);
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-radius: 12px !important;
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .store-card .btn:hover {
+        .btn-premium:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 15px rgba(212, 175, 55, 0.3);
+            box-shadow: 0 15px 30px rgba(23,23,23,0.22);
+            color: #ffffff !important;
         }
-        .cart-drawer {
-            background: rgba(255, 255, 255, 0.95) !important;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-left: 1px solid rgba(255,255,255,0.6);
-        }
+
+        /* ── Checkout Modal Glassmorphism ── */
         .modal .glass-card {
             background: rgba(255, 255, 255, 0.95) !important;
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255,255,255,0.6);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+            border-radius: 28px;
+            padding: 3.5rem !important;
         }
-        .btn-premium {
-            background: linear-gradient(135deg, #171717, #333333) !important;
-            color: #d4af37 !important;
-            border: none !important;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        .modal h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+        .modal label {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+        .modal input {
+            background: #faf9f6 !important;
+            border: 1.5px solid #e2e8f0 !important;
+            border-radius: 10px !important;
+            font-family: 'Inter', sans-serif;
+            padding: 0.9rem 1.1rem !important;
+            outline: none;
+            transition: all 0.3s;
+        }
+        .modal input:focus {
+            border-color: #d4af37 !important;
+            background: #ffffff !important;
+            box-shadow: 0 0 0 4px rgba(212,175,55,0.1) !important;
         }
     </style>
 </head>
@@ -97,7 +330,7 @@
 <body class="page-store">
 
     <header>
-        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; height: 100%;">
             <a href="index.html" class="logo">
                 <svg class="logo-icon" viewBox="0 0 100 100">
                     <path d="M30 20 H70 L80 50 L70 80 H30 L20 50 Z" fill="none" stroke="currentColor"
@@ -127,167 +360,161 @@
 
     <main>
         <!-- Featured Product Heritage -->
-        <section class="split-page-container" style="min-height: 50vh;">
+        <section class="split-page-container" style="min-height: 50vh; padding-top: 0;">
             <div class="split-side split-side-image image-side-text"
                 style="background-image: url('https://images.unsplash.com/photo-1621605815971-fbc98d665033?auto=format&fit=crop&w=1200&q=70&fm=webp'); flex: 0.5;">
                 <div class="side-content fade-up">
-                    <span class="side-sub" style="color: #d4af37; letter-spacing: 2px;">Featured Architecture</span>
-                    <h2 class="premium-heading" style="font-size: clamp(2rem, 4vw, 3.5rem); color: #fff;">SC Pro<br>Clipper.</h2>
+                    <span class="side-sub" style="color: #d4af37; letter-spacing: 2px; text-transform: uppercase; font-family: 'Outfit'; font-weight: 800; font-size: 0.75rem;">Featured Architecture</span>
+                    <h2 class="premium-heading" style="font-size: clamp(2rem, 4vw, 3.5rem); color: #fff; font-weight: 800;">SC Pro<br>Clipper.</h2>
                     <p>Designed for the expert specialists. Industrial precision in every stroke.</p>
                 </div>
-                <div class="side-bg-overlay" style="background: rgba(0,0,0,0.5);"></div>
+                <div class="side-bg-overlay" style="background: rgba(0,0,0,0.55);"></div>
             </div>
 
             <div class="split-side"
-                style="flex: 1; align-items: flex-start; text-align: left; background: #fff; padding: 8rem 5% 4rem;">
-                <div class="form-wrapper-minimal fade-up" style="max-width: 600px; animation-delay: 0.3s;">
-                    <span class="side-sub" style="color: #d4af37; letter-spacing: 2px;">Limited Release</span>
-                    <h1 class="premium-heading" style="font-size: clamp(2.5rem, 4vw, 3.5rem); color: #171717; margin-bottom: 1rem;">SC Pro Personal Clipper</h1>
-                    <p style="color: #64748b; line-height: 1.8; margin-bottom: 2rem; font-weight: 300;">
-                        Our flagship grooming tool. Featuring titanium zero-gap blades and a hyper-torque motor system.
+                style="flex: 1; align-items: flex-start; text-align: left; background: #ffffff; padding: 6rem 8% 4rem; display: flex; align-items: center;">
+                <div class="fade-up" style="max-width: 520px; animation-delay: 0.2s;">
+                    <span class="side-sub" style="color: #d4af37; letter-spacing: 2px; text-transform: uppercase; font-family: 'Outfit'; font-weight: 800; font-size: 0.75rem;">Limited Release</span>
+                    <h1 class="premium-heading" style="font-size: clamp(2.25rem, 4vw, 3.25rem); color: #171717; margin-bottom: 1.25rem; font-weight: 800;">SC Pro Personal Clipper</h1>
+                    <p style="color: #6b7280; line-height: 1.75; margin-bottom: 2.25rem; font-size: 1rem; font-weight: 400;">
+                        Our flagship grooming tool. Built for professionals and meticulous groomers. Featuring custom zero-gap titanium blades, an ultra-powerful low-noise torque motor, and custom premium packaging.
                     </p>
-                    <div style="display: flex; align-items: baseline; gap: 1rem; margin-bottom: 3rem;">
-                        <span style="font-size: 2.5rem; font-weight: 300; color: #000;">₦35,000</span>
-                        <span style="text-decoration: line-through; color: #94a3b8; font-size: 1.2rem;">₦45,000</span>
+                    <div style="display: flex; align-items: baseline; gap: 1rem; margin-bottom: 2.5rem;">
+                        <span style="font-size: 2.5rem; font-weight: 800; color: #171717; font-family: 'Outfit';">₦35,000</span>
+                        <span style="text-decoration: line-through; color: #9ca3af; font-size: 1.2rem; font-family: 'Outfit'; font-weight: 500;">₦45,000</span>
                     </div>
                     <button class="btn btn-premium add-to-cart-btn" data-id="1" data-name="SC Pro Clipper"
-                        data-price="35000" data-icon="fa-cut" style="padding: 1.5rem 3rem;">Add to Bag</button>
+                        data-price="35000" data-icon="fa-cut" style="padding: 1.1rem 2.5rem; font-size: 0.9rem;">Add to Bag</button>
                 </div>
             </div>
         </section>
 
         <!-- Product Collection Grid -->
-        <section class="section-padding" style="background: #f8fafc;">
+        <section class="section-padding" style="background: #faf9f6; padding: 6rem 0;">
             <div class="container">
-                <div class="section-header fade-up">
-                    <p style="color: #d4af37; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; margin-bottom: 1rem;">Curated Tools</p>
-                    <h2 class="premium-heading" style="font-size: 3.5rem; color: #171717;">The Collection</h2>
+                <div class="section-header fade-up" style="text-align: center; margin-bottom: 4rem;">
+                    <p style="color: #b5952f; letter-spacing: 0.15em; text-transform: uppercase; font-family: 'Outfit'; font-weight: 800; font-size: 0.8rem; margin-bottom: 0.75rem;">Curated Tools</p>
+                    <h2 class="premium-heading" style="font-size: clamp(2.25rem, 4vw, 3rem); color: #171717; font-weight: 800;">The Collection</h2>
                 </div>
 
                 <div class="product-grid-store fade-up" style="animation-delay: 0.2s;">
                     <!-- Product 2 -->
                     <div class="store-card">
                         <div class="store-card-img">
-                            <i class="fas fa-pump-soap"></i>
+                            <img src="https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=600&q=80" alt="Artisanal Styling Gel" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">
                         </div>
-                        <h3 style="color: #000; font-size: 1.1rem; margin-bottom: 0.5rem;">Artisanal Styling Gel</h3>
-                        <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 1.5rem;">High hold, natural shine,
-                            and heritage cedarwood scent.</p>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="font-weight: 700; color: #000;">₦8,500</span>
-                            <button class="btn btn-secondary add-to-cart-btn" data-id="2" data-name="Styling Gel"
-                                data-price="8500" data-icon="fa-pump-soap"
-                                style="padding: 0.5rem 1rem; font-size: 0.8rem;">+ Add</button>
+                        <h3>Artisanal Styling Gel</h3>
+                        <p>High hold, natural shine, and heritage cedarwood scent. Nourishing flake-free styling base.</p>
+                        <div class="store-card-price-row">
+                            <span>₦8,500</span>
+                            <button class="btn btn-add-store add-to-cart-btn" data-id="2" data-name="Styling Gel"
+                                data-price="8500" data-icon="fa-pump-soap">+ Add to Bag</button>
                         </div>
                     </div>
 
                     <!-- Product 3 -->
                     <div class="store-card">
                         <div class="store-card-img">
-                            <i class="fas fa-brush"></i>
+                            <img src="https://images.unsplash.com/photo-1608248597263-00d984180556?auto=format&fit=crop&w=600&q=80" alt="Sanctuary Beard Oil" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">
                         </div>
-                        <h3 style="color: #000; font-size: 1.1rem; margin-bottom: 0.5rem;">Sanctuary Beard Oil</h3>
-                        <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 1.5rem;">Organic jojoba blend for
-                            deep hydration and architectural softness.</p>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="font-weight: 700; color: #000;">₦6,000</span>
-                            <button class="btn btn-secondary add-to-cart-btn" data-id="3" data-name="Beard Oil"
-                                data-price="6000" data-icon="fa-brush"
-                                style="padding: 0.5rem 1rem; font-size: 0.8rem;">+ Add</button>
+                        <h3>Sanctuary Beard Oil</h3>
+                        <p>Organic jojoba and argan blend for deep hair hydration, conditioning, and signature scent.</p>
+                        <div class="store-card-price-row">
+                            <span>₦6,000</span>
+                            <button class="btn btn-add-store add-to-cart-btn" data-id="3" data-name="Beard Oil"
+                                data-price="6000" data-icon="fa-brush">+ Add to Bag</button>
                         </div>
                     </div>
 
                     <!-- Product 4 -->
                     <div class="store-card">
                         <div class="store-card-img">
-                            <i class="fas fa-spray-can"></i>
+                            <img src="https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?auto=format&fit=crop&w=600&q=80" alt="Matte Texture Spray" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">
                         </div>
-                        <h3 style="color: #000; font-size: 1.1rem; margin-bottom: 0.5rem;">Matte Texture Spray</h3>
-                        <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 1.5rem;">Architectural volume with
-                            a non-greasy, invisible finish.</p>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="font-weight: 700; color: #000;">₦7,200</span>
-                            <button class="btn btn-secondary add-to-cart-btn" data-id="4" data-name="Texture Spray"
-                                data-price="7200" data-icon="fa-spray-can"
-                                style="padding: 0.5rem 1rem; font-size: 0.8rem;">+ Add</button>
+                        <h3>Matte Texture Spray</h3>
+                        <p>Architectural volume with a non-greasy, completely invisible finish for messy styled texturing.</p>
+                        <div class="store-card-price-row">
+                            <span>₦7,200</span>
+                            <button class="btn btn-add-store add-to-cart-btn" data-id="4" data-name="Texture Spray"
+                                data-price="7200" data-icon="fa-spray-can">+ Add to Bag</button>
                         </div>
                     </div>
 
                     <!-- Product 5 -->
                     <div class="store-card">
                         <div class="store-card-img">
-                            <i class="fas fa-magic"></i>
+                            <img src="https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=600&q=80" alt="Silk Press Serum" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">
                         </div>
-                        <h3 style="color: #000; font-size: 1.1rem; margin-bottom: 0.5rem;">Silk Press Serum</h3>
-                        <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 1.5rem;">Lightweight formula for a sleek, glass-hair finish and intense shine.</p>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="font-weight: 700; color: #000;">₦12,500</span>
-                            <button class="btn btn-secondary add-to-cart-btn" data-id="5" data-name="Silk Press Serum" data-price="12500" data-icon="fa-magic" style="padding: 0.5rem 1rem; font-size: 0.8rem;">+ Add</button>
+                        <h3>Silk Press Serum</h3>
+                        <p>Ultra-lightweight formula for a sleek, glass-hair finish, sealing cuticles and adding high shine.</p>
+                        <div class="store-card-price-row">
+                            <span>₦12,500</span>
+                            <button class="btn btn-add-store add-to-cart-btn" data-id="5" data-name="Silk Press Serum" data-price="12500" data-icon="fa-magic">+ Add to Bag</button>
                         </div>
                     </div>
 
                     <!-- Product 6 -->
                     <div class="store-card">
                         <div class="store-card-img">
-                            <i class="fas fa-spa"></i>
+                            <img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80" alt="Curl Defining Custard" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">
                         </div>
-                        <h3 style="color: #000; font-size: 1.1rem; margin-bottom: 0.5rem;">Curl Defining Custard</h3>
-                        <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 1.5rem;">Enhances natural coils with anti-frizz hydration and soft hold.</p>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="font-weight: 700; color: #000;">₦15,000</span>
-                            <button class="btn btn-secondary add-to-cart-btn" data-id="6" data-name="Curl Defining Custard" data-price="15000" data-icon="fa-spa" style="padding: 0.5rem 1rem; font-size: 0.8rem;">+ Add</button>
+                        <h3>Curl Defining Custard</h3>
+                        <p>Enhances natural coils and curls with deep anti-frizz moisture locking and soft touchable hold.</p>
+                        <div class="store-card-price-row">
+                            <span>₦15,000</span>
+                            <button class="btn btn-add-store add-to-cart-btn" data-id="6" data-name="Curl Defining Custard" data-price="15000" data-icon="fa-spa">+ Add to Bag</button>
                         </div>
                     </div>
 
                     <!-- Product 7 -->
                     <div class="store-card">
                         <div class="store-card-img">
-                            <i class="fas fa-fire-extinguisher"></i>
+                            <img src="https://images.unsplash.com/photo-1571781926291-c477ebfd024b?auto=format&fit=crop&w=600&q=80" alt="Heat Protectant Mist" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">
                         </div>
-                        <h3 style="color: #000; font-size: 1.1rem; margin-bottom: 0.5rem;">Heat Protectant Mist</h3>
-                        <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 1.5rem;">Thermal shield up to 450°F to prevent damage from hot tools.</p>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="font-weight: 700; color: #000;">₦9,000</span>
-                            <button class="btn btn-secondary add-to-cart-btn" data-id="7" data-name="Heat Protectant Mist" data-price="9000" data-icon="fa-fire-extinguisher" style="padding: 0.5rem 1rem; font-size: 0.8rem;">+ Add</button>
+                        <h3>Heat Protectant Mist</h3>
+                        <p>Thermal styling spray shielding up to 450°F to fully prevent split ends and hot tool damage.</p>
+                        <div class="store-card-price-row">
+                            <span>₦9,000</span>
+                            <button class="btn btn-add-store add-to-cart-btn" data-id="7" data-name="Heat Protectant Mist" data-price="9000" data-icon="fa-fire-extinguisher">+ Add to Bag</button>
                         </div>
                     </div>
 
                     <!-- Product 8 -->
                     <div class="store-card">
                         <div class="store-card-img">
-                            <i class="fas fa-prescription-bottle-alt"></i>
+                            <img src="https://images.unsplash.com/photo-1526947425960-945c6e72858f?auto=format&fit=crop&w=600&q=80" alt="Deep Conditioner Mask" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">
                         </div>
-                        <h3 style="color: #000; font-size: 1.1rem; margin-bottom: 0.5rem;">Deep Conditioner Mask</h3>
-                        <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 1.5rem;">Intensive restorative treatment for dry, damaged, or color-treated hair.</p>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="font-weight: 700; color: #000;">₦18,000</span>
-                            <button class="btn btn-secondary add-to-cart-btn" data-id="8" data-name="Deep Conditioner Mask" data-price="18000" data-icon="fa-prescription-bottle-alt" style="padding: 0.5rem 1rem; font-size: 0.8rem;">+ Add</button>
+                        <h3>Deep Conditioner Mask</h3>
+                        <p>Intensive restorative treatment rebuilding dry, brittle, color-treated, or damaged locks.</p>
+                        <div class="store-card-price-row">
+                            <span>₦18,000</span>
+                            <button class="btn btn-add-store add-to-cart-btn" data-id="8" data-name="Deep Conditioner Mask" data-price="18000" data-icon="fa-prescription-bottle-alt">+ Add to Bag</button>
                         </div>
                     </div>
 
                     <!-- Product 9 -->
                     <div class="store-card">
                         <div class="store-card-img">
-                            <i class="fas fa-air-freshener"></i>
+                            <img src="https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?auto=format&fit=crop&w=600&q=80" alt="Edge Control Paste" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">
                         </div>
-                        <h3 style="color: #000; font-size: 1.1rem; margin-bottom: 0.5rem;">Edge Control Paste</h3>
-                        <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 1.5rem;">24-hour flake-free smooth hold for perfect baby hairs and sleek styles.</p>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="font-weight: 700; color: #000;">₦5,500</span>
-                            <button class="btn btn-secondary add-to-cart-btn" data-id="9" data-name="Edge Control Paste" data-price="5500" data-icon="fa-air-freshener" style="padding: 0.5rem 1rem; font-size: 0.8rem;">+ Add</button>
+                        <h3>Edge Control Paste</h3>
+                        <p>24-hour non-flaking firm hold lay down paste for clean baby hairs and sleek high ponytails.</p>
+                        <div class="store-card-price-row">
+                            <span>₦5,500</span>
+                            <button class="btn btn-add-store add-to-cart-btn" data-id="9" data-name="Edge Control Paste" data-price="5500" data-icon="fa-air-freshener">+ Add to Bag</button>
                         </div>
                     </div>
 
                     <!-- Product 10 -->
                     <div class="store-card">
                         <div class="store-card-img">
-                            <i class="fas fa-wind"></i>
+                            <img src="https://images.unsplash.com/photo-1585232351009-aa87416fca90?auto=format&fit=crop&w=600&q=80" alt="Volumizing Dry Shampoo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">
                         </div>
-                        <h3 style="color: #000; font-size: 1.1rem; margin-bottom: 0.5rem;">Volumizing Dry Shampoo</h3>
-                        <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 1.5rem;">Absorbs excess oil and instantly revives flat hair with a fresh boost.</p>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="font-weight: 700; color: #000;">₦11,000</span>
-                            <button class="btn btn-secondary add-to-cart-btn" data-id="10" data-name="Dry Shampoo" data-price="11000" data-icon="fa-wind" style="padding: 0.5rem 1rem; font-size: 0.8rem;">+ Add</button>
+                        <h3>Volumizing Dry Shampoo</h3>
+                        <p>Quickly absorbs oil buildup and instantly revives hair roots with a clean freshly washed body.</p>
+                        <div class="store-card-price-row">
+                            <span>₦11,000</span>
+                            <button class="btn btn-add-store add-to-cart-btn" data-id="10" data-name="Dry Shampoo" data-price="11000" data-icon="fa-wind">+ Add to Bag</button>
                         </div>
                     </div>
                 </div>
@@ -298,75 +525,73 @@
     <!-- Cart Drawer -->
     <div id="cart-drawer" class="cart-drawer">
         <div class="cart-header">
-            <h2 style="font-size: 1.25rem; color: #000;">Your Selection</h2>
+            <h2>Your Selection</h2>
             <button id="close-cart"
-                style="background:none; border:none; font-size: 1.5rem; cursor:pointer; color: #94a3b8;"><i
+                style="background:none; border:none; font-size: 1.35rem; cursor:pointer; color: #9ca3af;"><i
                     class="fas fa-times"></i></button>
         </div>
         <div id="cart-items" class="cart-items-container">
             <!-- Items injected via JS -->
-            <div style="text-align: center; margin-top: 5rem; color: #94a3b8;">
-                <i class="fas fa-shopping-bag" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.2;"></i>
+            <div style="text-align: center; margin-top: 5rem; color: #9ca3af;">
+                <i class="fas fa-shopping-bag" style="font-size: 3rem; margin-bottom: 1.25rem; opacity: 0.2;"></i>
                 <p>Your bag is empty</p>
             </div>
         </div>
         <div class="cart-footer">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 2rem;">
-                <span style="color: #64748b;">Subtotal</span>
-                <span id="cart-total" style="font-weight: 700; color: #000; font-size: 1.25rem;">₦0</span>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 1.5rem; align-items: center;">
+                <span style="color: #6b7280; font-family: 'Outfit'; font-weight: 700; font-size: 0.85rem; text-transform: uppercase;">Subtotal</span>
+                <span id="cart-total" style="font-weight: 800; color: #171717; font-size: 1.35rem; font-family: 'Outfit';">₦0</span>
             </div>
-            <button id="checkout-btn" class="btn btn-premium w-full" style="padding: 1.25rem;">Secure Checkout</button>
-            <button id="continue-shopping-btn" class="btn w-full" style="padding: 1.25rem; margin-top: 1rem; background: transparent; color: #000; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">Continue Shopping</button>
+            <button id="checkout-btn" class="btn btn-premium w-full" style="padding: 1.1rem; font-size: 0.9rem;">Secure Checkout</button>
+            <button id="continue-shopping-btn" class="btn w-full" style="padding: 1.1rem; margin-top: 0.75rem; background: transparent; color: #171717; border: 1.5px solid #e5e7eb; border-radius: 12px; cursor: pointer; transition: all 0.3s ease; font-family: 'Outfit'; font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em;">Continue Shopping</button>
         </div>
     </div>
 
     <!-- Checkout Modal -->
     <div id="checkout-modal" class="modal"
-        style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 3000; align-items: center; justify-content: center; backdrop-filter: blur(5px);">
+        style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 3000; align-items: center; justify-content: center; backdrop-filter: blur(8px);">
         <div class="glass-card"
-            style="max-width: 500px; width: 95%; background: white; padding: 3rem; border-radius: 24px;">
-            <h2 style="color: #000; margin-bottom: 1.5rem;">Finalize Order</h2>
+            style="max-width: 480px; width: 92%; background: white; padding: 3rem; border-radius: 24px;">
+            <h2 style="color: #171717; margin-bottom: 1.5rem;">Finalize Order</h2>
             <form id="purchase-form">
                 <div class="form-group mb-4">
-                    <label style="font-size: 0.7rem; color: #64748b; text-transform: uppercase;">Delivery
-                        Address</label>
+                    <label style="display: block; margin-bottom: 0.5rem; text-transform: uppercase; color: #6b7280;">Delivery Address</label>
                     <input type="text" id="delivery-address" required
-                        style="width:100%; padding:1rem; border:1px solid #e2e8f0; border-radius:8px;">
+                        style="width: 100%;">
                 </div>
                 <div class="form-group mb-5">
-                    <label style="font-size: 0.7rem; color: #64748b; text-transform: uppercase;">Phone Number</label>
+                    <label style="display: block; margin-bottom: 0.5rem; text-transform: uppercase; color: #6b7280;">Phone Number</label>
                     <input type="tel" id="delivery-phone" required
-                        style="width:100%; padding:1rem; border:1px solid #e2e8f0; border-radius:8px;">
+                        style="width: 100%;">
                 </div>
-                <button type="submit" class="btn btn-premium w-full" style="padding: 1.25rem;">Pay Now</button>
+                <button type="submit" class="btn btn-premium w-full" style="padding: 1.1rem; font-size: 0.9rem;">Pay Now</button>
                 <button type="button" id="cancel-checkout"
-                    style="width:100%; margin-top:1rem; background:none; border:none; color:#64748b; cursor:pointer;">Go
-                    Back</button>
+                    style="width:100%; margin-top:1.25rem; background:none; border:none; color:#9ca3af; cursor:pointer; font-family:'Outfit'; font-weight:700; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.05em;">Go Back</button>
             </form>
         </div>
     </div>
 
-    <footer>
+    <footer style="background: #ffffff; padding: 4rem 0; border-top: 1px solid rgba(0,0,0,0.05);">
         <div class="container">
-            <div class="footer-grid">
+            <div class="footer-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 3rem; margin-bottom: 3rem;">
                 <div>
-                    <a href="index.html" class="logo" style="margin-bottom: 2rem; display: block;">
+                    <a href="index.html" class="logo" style="margin-bottom: 1.5rem; display: block;">
                         STYLE<span>CORNER</span>
                     </a>
-                    <p>Redefining the modern luxury experience through professional styling and expert care.</p>
+                    <p style="color: #6b7280; font-size: 0.95rem; line-height: 1.65; max-width: 320px;">Redefining the modern luxury experience through professional styling and expert care.</p>
                 </div>
                 <div>
-                    <h4>Quick Links</h4>
-                    <ul style="list-style: none; display: flex; flex-direction: column; gap: 1rem;">
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="services.html">Services</a></li>
-                        <li><a href="store.html">Store</a></li>
-                        <li><a href="login.html">Sign In</a></li>
+                    <h4 style="font-family: 'Outfit'; font-size: 1.1rem; font-weight: 700; margin-bottom: 1.5rem;">Quick Links</h4>
+                    <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.85rem;">
+                        <li><a href="index.html" style="color: #6b7280; font-weight: 500;">Home</a></li>
+                        <li><a href="services.html" style="color: #6b7280; font-weight: 500;">Services</a></li>
+                        <li><a href="store.html" style="color: #6b7280; font-weight: 500;">Store</a></li>
+                        <li><a href="login.html" style="color: #6b7280; font-weight: 500;">Sign In</a></li>
                     </ul>
                 </div>
             </div>
             <div
-                style="border-top: 1px solid var(--border); padding-top: 3rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 2rem; font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase;">
+                style="border-top: 1px solid rgba(0,0,0,0.05); padding-top: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem; font-size: 0.75rem; color: #9ca3af; font-family: 'Outfit'; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;">
                 <p>&copy; <span id="copyright-year-footer">2026</span> STYLE CORNER.</p>
                 <p>All Rights Reserved.</p>
             </div>
@@ -394,8 +619,8 @@
 
                 if (cart.length === 0) {
                     cartItemsContainer.innerHTML = `
-                        <div style="text-align: center; margin-top: 5rem; color: #94a3b8;">
-                            <i class="fas fa-shopping-bag" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.2;"></i>
+                        <div style="text-align: center; margin-top: 5rem; color: #9ca3af;">
+                            <i class="fas fa-shopping-bag" style="font-size: 3rem; margin-bottom: 1.25rem; opacity: 0.2;"></i>
                             <p>Your bag is empty</p>
                         </div>
                     `;
@@ -413,7 +638,7 @@
                                 <div class="cart-item-title">${item.name}</div>
                                 <div class="cart-item-price">₦${item.price.toLocaleString()}</div>
                             </div>
-                            <button onclick="removeFromCart(${index})" style="background:none; border:none; color:#ef4444; cursor:pointer;"><i class="fas fa-trash-alt"></i></button>
+                            <button onclick="removeFromCart(${index})" style="background:none; border:none; color:#ef4444; cursor:pointer;"><i class="fas fa-trash-can"></i></button>
                         </div>
                     `;
                 }).join('');

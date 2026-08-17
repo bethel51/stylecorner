@@ -2,7 +2,9 @@
   Style Corner - The Modern Atelier
   Design: Sophisticated, Timeless, Authentic Luxury
   Palette: Deep Charcoal, Muted Gold, Soft Sand
+  Redesign 2026: Outfit + Inter dual-font system
 */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap');
 @import url('page-backgrounds.css');
@@ -111,14 +113,16 @@ body {
   background-image: var(--page-gradient);
   background-attachment: fixed;
   color: var(--text);
-  line-height: 1.6;
-  font-size: 16px;
+  line-height: 1.65;
+  font-size: 16.5px;
   overflow-x: hidden;
   font-weight: 400;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 h1,
@@ -128,25 +132,33 @@ h4,
 h5,
 h6,
 .logo {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Outfit', system-ui, -apple-system, sans-serif;
   font-weight: 700;
   color: var(--text);
 }
 
 h1 {
-  font-size: clamp(2.5rem, 6vw, 4.5rem);
-  line-height: 1.1;
-  letter-spacing: -0.03em;
+  font-size: clamp(2.8rem, 6vw, 5rem);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  font-weight: 800;
 }
 
 h2 {
-  font-size: clamp(2rem, 4vw, 3rem);
-  line-height: 1.2;
-  letter-spacing: -0.02em;
+  font-size: clamp(2.2rem, 4vw, 3.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  font-weight: 700;
 }
 
 h3 {
-  font-size: 1.5rem;
+  font-size: clamp(1.35rem, 2vw, 1.75rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+h4 {
+  font-size: 1.1rem;
   font-weight: 600;
   letter-spacing: -0.01em;
 }
@@ -255,13 +267,14 @@ header .container {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  font-family: 'Inter', sans-serif;
-  font-size: 1.25rem;
-  letter-spacing: -0.02em;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.3rem;
+  letter-spacing: 0.05em;
   color: var(--text);
   text-decoration: none;
   font-weight: 800;
   transition: var(--transition);
+  text-transform: uppercase;
 }
 
 .logo-icon {

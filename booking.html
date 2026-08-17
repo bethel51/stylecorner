@@ -15,59 +15,148 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap">
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap">
     <style>
-        .premium-heading { font-family: 'Playfair Display', serif; letter-spacing: -0.02em; }
-        
+        .premium-heading { font-family: 'Outfit', serif; letter-spacing: -0.03em; }
+
+        header {
+            background: rgba(255, 255, 255, 0.85) !important;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+            box-shadow: none !important;
+            height: 5.5rem;
+        }
+        header .logo {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+        }
+        header .nav a {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
         .split-side-form {
             background: #faf9f6 !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
         }
+        
         .form-wrapper-minimal {
             background: #ffffff;
             border: 1px solid rgba(0,0,0,0.05);
             border-radius: 28px;
-            padding: 4rem 3rem !important;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.04);
+            padding: 3.5rem 3rem !important;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.03);
             margin: 2rem 0;
+            width: 100%;
+            max-width: 600px;
         }
+
+        .form-group label {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.75rem !important;
+            color: #171717 !important;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 700 !important;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
         .service-dropdown, input[type="date"], input[type="time"], textarea {
             background: #faf9f6 !important;
-            border: 1px solid #e5e5e5 !important;
+            border: 1.5px solid #e5e7eb !important;
             color: #171717 !important;
+            border-radius: 12px !important;
+            padding: 1rem 1.25rem !important;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            outline: none;
             transition: all 0.3s;
+            width: 100%;
         }
+        
         .service-dropdown:focus, input[type="date"]:focus, input[type="time"]:focus, textarea:focus {
             border-color: #d4af37 !important;
             background: #ffffff !important;
             box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1) !important;
-            outline: none;
         }
+
         .btn-premium {
-            background: linear-gradient(135deg, #171717, #333333) !important;
+            background: #171717 !important;
             color: #d4af37 !important;
             border: none !important;
             box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-            transition: all 0.3s;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            border-radius: 12px !important;
+            padding: 1.15rem !important;
+            font-size: 0.95rem !important;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
         }
         .btn-premium:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.18);
+            color: #ffffff !important;
         }
+
         #display-price {
-            background: linear-gradient(135deg, #171717, #4A4A4A);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-family: 'Playfair Display', serif;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            color: #171717;
+            font-size: 2.25rem;
+        }
+
+        .payment-summary {
+            border-top: 1px solid #e5e7eb;
+            padding-top: 1.75rem;
+        }
+
+        /* Split layout container */
+        .booking-split-container {
+            display: flex;
+            min-height: 90vh;
+            margin-top: 5.5rem;
+        }
+
+        @media (max-width: 900px) {
+            .booking-split-container {
+                flex-direction: column;
+            }
+            .split-side-image {
+                display: none !important;
+            }
+            .split-side-form {
+                padding: 2rem 1rem;
+            }
+            .form-wrapper-minimal {
+                padding: 2.5rem 1.5rem !important;
+            }
         }
     </style>
 </head>
 
 <body class="page-auth">
     <header>
-        <div class="container">
-            <a href="index.html" class="logo">STYLE<span>CORNER</span></a>
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; height: 100%;">
+            <a href="index.html" class="logo">
+                <svg class="logo-icon" viewBox="0 0 100 100">
+                    <path d="M30 20 H70 L80 50 L70 80 H30 L20 50 Z" fill="none" stroke="currentColor"
+                        stroke-width="4" />
+                    <path d="M35 35 H65 L70 50 L65 65 H35 L30 50 Z" fill="currentColor" opacity="0.2" />
+                    <circle cx="50" cy="50" r="5" fill="currentColor" />
+                </svg>
+                STYLE<span>CORNER</span>
+            </a>
             <nav class="nav">
                 <a href="index.html">Home</a>
                 <a href="services.html">Services</a>
@@ -82,137 +171,117 @@
     </header>
 
     <main>
-        <div class="split-page-container">
+        <div class="booking-split-container">
             <!-- Salon Team Side -->
             <div class="split-side split-side-image image-side-text"
                 style="background-image: url('https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1200&q=70&fm=webp'); flex: 0.4;">
-                <div class="side-content fade-up">
-                    <span class="side-sub" style="color: #d4af37; letter-spacing: 2px;">Salon Team</span>
-                    <h2 class="premium-heading" style="font-size: clamp(2.5rem, 4vw, 3.5rem);">Send a <br>Message.</h2>
-                    <p>For custom styles and photo work, our team is ready to help you.</p>
-                    <div style="margin-top: 2rem;">
+                <div class="side-content fade-up" style="padding: 4rem;">
+                    <span class="side-sub" style="color: #d4af37; letter-spacing: 2px; text-transform: uppercase; font-family: 'Outfit'; font-weight: 800; font-size: 0.75rem;">Salon Team</span>
+                    <h2 class="premium-heading" style="font-size: clamp(2.25rem, 4vw, 3.25rem); color: #fff; font-weight: 800; line-height: 1.1; margin-bottom: 1rem;">Book an<br>Experience.</h2>
+                    <p style="color: rgba(255,255,255,0.85); line-height: 1.6;">For custom styles and photo work, our team is ready to help you.</p>
+                    <div style="margin-top: 3rem;">
                         <div style="margin-bottom: 2rem;">
-                            <span class="side-sub" style="font-size: 0.6rem; color: white; opacity: 0.6;">The
-                                Salon</span>
-                            <p style="font-size: 0.85rem;">12 Style Lane, Fashion District<br>New York, NY 10001</p>
+                            <span class="side-sub" style="font-size: 0.65rem; color: #d4af37; letter-spacing: 2px; text-transform: uppercase; font-family: 'Outfit'; font-weight: 800; display: block; margin-bottom: 0.25rem;">The Salon</span>
+                            <p style="font-size: 0.9rem; color: rgba(255,255,255,0.75);">12 Style Lane, Fashion District<br>New York, NY 10001</p>
                         </div>
                         <div>
-                            <span class="side-sub" style="font-size: 0.6rem; color: white; opacity: 0.6;">Call
-                                Us</span>
-                            <p style="font-size: 0.85rem;">+1 (555) Style</p>
+                            <span class="side-sub" style="font-size: 0.65rem; color: #d4af37; letter-spacing: 2px; text-transform: uppercase; font-family: 'Outfit'; font-weight: 800; display: block; margin-bottom: 0.25rem;">Call Us</span>
+                            <p style="font-size: 0.9rem; color: rgba(255,255,255,0.75);">+1 (555) Style</p>
                         </div>
                     </div>
                 </div>
-                <div class="side-bg-overlay" style="background: rgba(15, 23, 42, 0.7);"></div>
+                <div class="side-bg-overlay" style="background: rgba(23, 23, 23, 0.7);"></div>
             </div>
 
             <!-- Booking Form Side -->
-            <div class="split-side split-side-form" style="flex: 1; align-items: flex-start; text-align: left;">
-                <div class="form-wrapper-minimal fade-up" style="max-width: 600px; padding: 4rem 0; animation-delay: 0.3s;">
-                    <span class="side-sub" style="color: #d4af37; letter-spacing: 2px;">Visit Details</span>
-                    <h1 class="premium-heading" style="font-size: 2.75rem; margin-bottom: 0.5rem; color: #171717;">Confirm Appointment</h1>
-                    <p class="subtitle" style="margin-bottom: 3rem; color: #64748b;">Choose your options to finish your booking.
-                    </p>
+            <div class="split-side split-side-form">
+                <div class="form-wrapper-minimal fade-up">
+                    <span class="side-sub" style="color: #d4af37; letter-spacing: 2px; text-transform: uppercase; font-family: 'Outfit'; font-weight: 800; font-size: 0.75rem;">Visit Details</span>
+                    <h1 class="premium-heading" style="font-size: clamp(2rem, 4vw, 2.5rem); margin-bottom: 0.75rem; color: #171717; font-weight: 800;">Confirm Appointment</h1>
+                    <p class="subtitle" style="margin-bottom: 2rem; color: #6b7280;">Choose your options to finish your booking.</p>
+
+                    <!-- AI Specialist Matcher Banner -->
+                    <div class="ai-matcher-banner" style="background: linear-gradient(135deg, #171717, #2c261e); color: #fff; padding: 1.25rem 1.5rem; border-radius: 16px; margin-bottom: 2rem; border: 1px solid rgba(212,175,55,0.35); display: flex; align-items: center; justify-content: space-between; gap: 1rem; box-shadow: 0 10px 25px rgba(0,0,0,0.08);">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(212,175,55,0.15); color: #d4af37; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">
+                                <i class="fas fa-wand-magic-sparkles"></i>
+                            </div>
+                            <div>
+                                <h4 style="font-family: 'Outfit'; color: #fff; font-size: 0.95rem; font-weight: 700; margin: 0;">AI Specialist Matcher</h4>
+                                <p style="color: rgba(255,255,255,0.7); font-size: 0.8rem; margin: 2px 0 0;">Match your desired style with the best specialist.</p>
+                            </div>
+                        </div>
+                        <button type="button" id="open-ai-matcher-btn" class="btn" style="background: #d4af37; color: #171717; font-family: 'Outfit'; font-weight: 800; font-size: 0.75rem; padding: 0.65rem 1.25rem; border-radius: 8px; text-transform: uppercase; letter-spacing: 0.05em; border: none; cursor: pointer; white-space: nowrap; transition: all 0.3s ease;">Match Me</button>
+                    </div>
 
                     <form id="booking-form">
                         <div class="form-group mb-4">
-                            <label
-                                style="font-size: 0.75rem; color: #475569; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Select
-                                Stylist</label>
-                            <select id="stylist-select" required class="service-dropdown w-full"
-                                style="padding: 1.2rem; border: 1px solid #e2e8f0; border-radius: 12px; background: #fff; color: #000; font-family: 'Inter', sans-serif;">
+                            <label>Select Stylist</label>
+                            <select id="stylist-select" required class="service-dropdown">
                                 <option value="">Loading specialists...</option>
                             </select>
                         </div>
 
                         <div class="form-group mb-4">
-                            <label
-                                style="font-size: 0.75rem; color: #475569; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Primary
-                                Service</label>
-                            <select id="service-select-1" required class="service-dropdown w-full"
-                                style="padding: 1.2rem; border: 1px solid #e2e8f0; border-radius: 12px; background: #fff; color: #000; font-family: 'Inter', sans-serif;">
+                            <label>Primary Service</label>
+                            <select id="service-select-1" required class="service-dropdown">
                                 <option value="" data-price="0">Choose Service 1...</option>
                                 <option value="Hair Cut Services" data-price="5000">Hair Cut Services - ₦5,000</option>
-                                <option value="Hair Braiding Services" data-price="15000">Hair Braiding Services -
-                                    ₦15,000</option>
+                                <option value="Hair Braiding Services" data-price="15000">Hair Braiding Services - ₦15,000</option>
                                 <option value="Nails" data-price="7000">Nails - ₦7,000</option>
-                                <option value="Fixing Nails & Braids Combo" data-price="20000">Fixing Nails & Braids
-                                    Combo - ₦20,000</option>
+                                <option value="Fixing Nails & Braids Combo" data-price="20000">Fixing Nails & Braids Combo - ₦20,000</option>
                                 <option value="Wig Installation" data-price="12000">Wig Installation - ₦12,000</option>
                                 <option value="Pedicure" data-price="5000">Pedicure - ₦5,000</option>
                                 <option value="Manicure" data-price="4000">Manicure - ₦4,000</option>
                                 <option value="Lash Installation" data-price="8000">Lash Installation - ₦8,000</option>
-                                <option value="Lash & Nails Combo" data-price="13000">Lash & Nails Combo - ₦13,000
-                                </option>
-                                <option value="Braids & Lash Combo" data-price="22000">Braids & Lash Combo - ₦22,000
-                                </option>
+                                <option value="Lash & Nails Combo" data-price="13000">Lash & Nails Combo - ₦13,000</option>
+                                <option value="Braids & Lash Combo" data-price="22000">Braids & Lash Combo - ₦22,000</option>
                             </select>
                         </div>
 
                         <div class="form-group mb-4" id="service-2-container">
-                            <label
-                                style="font-size: 0.75rem; color: #475569; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Secondary
-                                Service (Optional)</label>
-                            <select id="service-select-2" class="service-dropdown w-full"
-                                style="padding: 1.2rem; border: 1px solid #e2e8f0; border-radius: 12px; background: #fff; color: #000; font-family: 'Inter', sans-serif;">
+                            <label>Secondary Service (Optional)</label>
+                            <select id="service-select-2" class="service-dropdown">
                                 <option value="" data-price="0">Choose Service 2...</option>
                                 <option value="Hair Cut Services" data-price="5000">Hair Cut Services - ₦5,000</option>
-                                <option value="Hair Braiding Services" data-price="15000">Hair Braiding Services -
-                                    ₦15,000</option>
+                                <option value="Hair Braiding Services" data-price="15000">Hair Braiding Services - ₦15,000</option>
                                 <option value="Nails" data-price="7000">Nails - ₦7,000</option>
-                                <option value="Fixing Nails & Braids Combo" data-price="20000">Fixing Nails & Braids
-                                    Combo - ₦20,000</option>
+                                <option value="Fixing Nails & Braids Combo" data-price="20000">Fixing Nails & Braids Combo - ₦20,000</option>
                                 <option value="Wig Installation" data-price="12000">Wig Installation - ₦12,000</option>
                                 <option value="Pedicure" data-price="5000">Pedicure - ₦5,000</option>
                                 <option value="Manicure" data-price="4000">Manicure - ₦4,000</option>
                                 <option value="Lash Installation" data-price="8000">Lash Installation - ₦8,000</option>
-                                <option value="Lash & Nails Combo" data-price="13000">Lash & Nails Combo - ₦13,000
-                                </option>
-                                <option value="Braids & Lash Combo" data-price="22000">Braids & Lash Combo - ₦22,000
-                                </option>
+                                <option value="Lash & Nails Combo" data-price="13000">Lash & Nails Combo - ₦13,000</option>
+                                <option value="Braids & Lash Combo" data-price="22000">Braids & Lash Combo - ₦22,000</option>
                             </select>
                         </div>
 
-                        <div class="form-row"
-                            style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                        <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.5rem;">
                             <div class="form-group">
-                                <label
-                                    style="font-size: 0.75rem; color: #475569; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Session
-                                    Date</label>
-                                <input type="date" id="booking-date" required
-                                    style="width: 100%; padding: 1.2rem; border: 1px solid #e2e8f0; border-radius: 12px; background: #fff; color: #000;">
+                                <label>Session Date</label>
+                                <input type="date" id="booking-date" required>
                             </div>
                             <div class="form-group">
-                                <label
-                                    style="font-size: 0.75rem; color: #475569; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Time</label>
-                                <input type="time" id="booking-time" required
-                                    style="width: 100%; padding: 1.2rem; border: 1px solid #e2e8f0; border-radius: 12px; background: #fff; color: #000;">
+                                <label>Time</label>
+                                <input type="time" id="booking-time" required>
                             </div>
                         </div>
 
-                        <div class="form-group mb-5">
-                            <label
-                                style="font-size: 0.75rem; color: #475569; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Extra
-                                Notes</label>
-                            <textarea id="booking-notes"
-                                placeholder="Any specific requirements regarding your appointment?" rows="3"
-                                style="width: 100%; padding: 1.2rem; border: 1px solid #e2e8f0; border-radius: 12px; background: #fff; color: #000; font-family: 'Inter', sans-serif;"></textarea>
+                        <div class="form-group mb-4">
+                            <label>Extra Notes</label>
+                            <textarea id="booking-notes" placeholder="Any specific requirements regarding your appointment?" rows="3"></textarea>
                         </div>
 
-                        <div class="payment-summary mb-5" style="border-top: 1px solid #e2e8f0; padding-top: 2rem;">
+                        <div class="payment-summary mb-5">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span
-                                    style="color: #64748b; text-transform: uppercase; letter-spacing: 2px; font-size: 0.7rem; font-weight: 700;">Estimated
-                                    Total</span>
-                                <span id="display-price"
-                                    style="font-weight: 300; color: #000; font-size: 2.2rem; font-style: italic;">₦0</span>
+                                <span style="color: #6b7280; text-transform: uppercase; letter-spacing: 0.1em; font-family: 'Outfit'; font-weight: 700; font-size: 0.8rem;">Estimated Total</span>
+                                <span id="display-price">₦0</span>
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-premium w-full"
-                            style="padding: 1.5rem; font-size: 1rem; letter-spacing: 2px;">Confirm Booking</button>
+                        <button type="submit" class="btn btn-premium w-full">Confirm Booking</button>
                         <p id="booking-status"
-                            style="color: #10b981; text-align: center; margin-top: 1.5rem; display: none; font-size: 0.9rem; font-weight: 600;">
+                            style="color: #10b981; text-align: center; margin-top: 1.5rem; display: none; font-size: 0.95rem; font-weight: 700; font-family: 'Outfit';">
                             <i class="fas fa-check-circle"></i> Booking Sent! Redirecting...
                         </p>
                     </form>
@@ -370,8 +439,122 @@
                     });
                 }, 2000);
             });
+
+            // ── AI Specialist Matcher Modal Logic ──
+            const aiModal = document.getElementById('ai-matcher-modal');
+            const openAiBtn = document.getElementById('open-ai-matcher-btn');
+            const closeAiBtn = document.getElementById('close-ai-modal');
+            const runAiBtn = document.getElementById('run-ai-match-btn');
+            const applyAiBtn = document.getElementById('apply-ai-match-btn');
+            const aiReqText = document.getElementById('ai-request-text');
+            const aiResultBox = document.getElementById('ai-match-result');
+            let currentMatchedSpecialist = null;
+
+            openAiBtn.addEventListener('click', () => {
+                aiModal.style.display = 'flex';
+            });
+            closeAiBtn.addEventListener('click', () => {
+                aiModal.style.display = 'none';
+            });
+
+            // Check URL param if triggered from another page
+            if (params.get('aiMatch') === 'true') {
+                aiModal.style.display = 'flex';
+            }
+
+            runAiBtn.addEventListener('click', async () => {
+                const reqText = aiReqText.value.trim();
+                const selService = select1.value || select2.value;
+
+                runAiBtn.disabled = true;
+                runAiBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing Specialists & Portfolios...';
+
+                try {
+                    const res = await fetch('/api/ai/match-specialist', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ requestText: reqText, preferredService: selService })
+                    });
+                    const data = await res.json();
+                    
+                    if (data.match) {
+                        currentMatchedSpecialist = data.match;
+                        document.getElementById('ai-matched-name').textContent = data.match.name;
+                        document.getElementById('ai-score-badge').textContent = data.match.matchScore + '% MATCH';
+                        document.getElementById('ai-matched-rationale').textContent = data.match.rationale;
+                        aiResultBox.style.display = 'block';
+                    }
+                } catch (err) {
+                    console.error('AI Match error', err);
+                    window.showToast('AI Matcher fallback error', 'error');
+                } finally {
+                    runAiBtn.disabled = false;
+                    runAiBtn.innerHTML = '<i class="fas fa-wand-magic-sparkles"></i> Re-Analyze Request';
+                }
+            });
+
+            applyAiBtn.addEventListener('click', () => {
+                if (currentMatchedSpecialist) {
+                    // Pre-select specialist in dropdown
+                    const options = Array.from(stylistSelect.options);
+                    const matchedOpt = options.find(o => o.value.toLowerCase().includes(currentMatchedSpecialist.firstname.toLowerCase()));
+                    if (matchedOpt) {
+                        stylistSelect.value = matchedOpt.value;
+                    } else {
+                        const newOpt = document.createElement('option');
+                        newOpt.value = currentMatchedSpecialist.firstname;
+                        newOpt.textContent = currentMatchedSpecialist.name + ' (AI Matched)';
+                        stylistSelect.appendChild(newOpt);
+                        stylistSelect.value = currentMatchedSpecialist.firstname;
+                    }
+
+                    aiModal.style.display = 'none';
+                    if (window.showToast) window.showToast(`Matched with ${currentMatchedSpecialist.name}!`, 'success');
+                }
+            });
         });
     </script>
+
+    <!-- AI Specialist Matcher Modal -->
+    <div id="ai-matcher-modal" class="modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 3500; align-items: center; justify-content: center; backdrop-filter: blur(8px);">
+        <div class="glass-card" style="max-width: 520px; width: 92%; background: #ffffff; padding: 3rem; border-radius: 28px; box-shadow: 0 25px 60px rgba(0,0,0,0.2); border: 1px solid rgba(212,175,55,0.25);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(212,175,55,0.15); color: #d4af37; display: flex; align-items: center; justify-content: center; font-size: 1rem;">
+                        <i class="fas fa-wand-magic-sparkles"></i>
+                    </div>
+                    <h2 style="font-family: 'Outfit'; font-size: 1.5rem; font-weight: 800; color: #171717; margin: 0;">AI Specialist Matcher</h2>
+                </div>
+                <button id="close-ai-modal" style="background: none; border: none; font-size: 1.25rem; color: #9ca3af; cursor: pointer;"><i class="fas fa-times"></i></button>
+            </div>
+
+            <p style="color: #6b7280; font-size: 0.9rem; margin-bottom: 1.5rem; line-height: 1.6;">
+                Describe the style, haircut, braids, or nail artwork you want. Our AI will evaluate staff skillsets and workload to find your ideal match.
+            </p>
+
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; font-family: 'Outfit'; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #171717; margin-bottom: 0.5rem;">Style Request / Requirements</label>
+                <textarea id="ai-request-text" placeholder="e.g. I need a sharp low taper fade with beard detailing for an event..." rows="3" style="width: 100%; padding: 1rem; border: 1.5px solid #e5e7eb; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 0.95rem; outline: none; transition: all 0.3s;"></textarea>
+            </div>
+
+            <button type="button" id="run-ai-match-btn" class="btn btn-premium" style="padding: 1rem; font-size: 0.9rem; width: 100%;">
+                <i class="fas fa-wand-magic-sparkles"></i> Analyze & Find Best Match
+            </button>
+
+            <!-- Result Box -->
+            <div id="ai-match-result" style="display: none; margin-top: 1.75rem; padding: 1.5rem; background: #faf9f6; border: 1.5px solid rgba(212,175,55,0.3); border-radius: 16px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                    <span style="font-family: 'Outfit'; font-size: 0.75rem; font-weight: 800; color: #b5952f; text-transform: uppercase; letter-spacing: 0.05em;">Recommended Artisan</span>
+                    <span id="ai-score-badge" style="background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); font-size: 0.75rem; font-weight: 800; padding: 0.25rem 0.75rem; border-radius: 50px; font-family: 'Outfit';">98% MATCH</span>
+                </div>
+                <h3 id="ai-matched-name" style="font-family: 'Outfit'; font-size: 1.35rem; font-weight: 800; color: #171717; margin-bottom: 0.35rem;">Julian Reed</h3>
+                <p id="ai-matched-rationale" style="color: #4b5563; font-size: 0.85rem; line-height: 1.5; margin-bottom: 1.25rem;"></p>
+                <button type="button" id="apply-ai-match-btn" class="btn" style="background: #171717; color: #d4af37; font-family: 'Outfit'; font-weight: 700; font-size: 0.85rem; padding: 0.85rem 1.5rem; border-radius: 10px; border: none; cursor: pointer; width: 100%; text-transform: uppercase; letter-spacing: 0.05em;">
+                    <i class="fas fa-check"></i> Auto-Select Specialist & Proceed
+                </button>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
