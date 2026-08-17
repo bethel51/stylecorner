@@ -891,19 +891,22 @@
                     
                     if (!res.ok) throw new Error('Failed to update profile');
                     
-                    user = await res.json();
+                    const updatedUser = await res.json();
+                    localStorage.setItem('mockUser', JSON.stringify(updatedUser));
                     
                     profI.forEach(i => i.disabled = true); 
                     actionU.style.display = 'none'; 
                     editB.style.display = 'inline-flex';
-                    reloadUI(); 
-
-                    tabContents.forEach(tab => tab.style.display = 'none');
-                    const targetEl = document.getElementById(`tab-${targetTab}`);
-                    if (targetEl) targetEl.style.display = 'block';
-
-                    refreshData();
-                });
+                    
+                    document.getElementById('user-display-name').textContent = updatedUser.firstname || 'Valued Client';
+                    document.getElementById('sidebar-user-name').textContent = `${updatedUser.firstname || 'User'} ${updatedUser.lastname || ''}`.trim();
+                    if (window.showToast) window.showToast("Credentials updated successfully.", "success");
+                } catch (error) {
+                    if (window.showToast) window.showToast(error.message, 'error');
+                } finally {
+                    btn.textContent = origText;
+                    btn.disabled = false;
+                }
             });
 
             const refreshData = async () => {
