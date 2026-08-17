@@ -739,11 +739,11 @@
                     if (cart.length === 0) return window.showToast('Your bag is empty.', 'error');
                     const token = localStorage.getItem('token');
                     if (!token) {
-                        window.showToast('Please log in to finalize your order.', 'error');
-                        window.location.href = 'login.html?redirect=store.html';
+                        window.showToast('Please log in to finalize your purchase.', 'error');
+                        window.location.href = 'login.html?redirect=payment.html';
                         return;
                     }
-                    checkoutModal.style.display = 'flex';
+                    window.location.href = 'payment.html';
                 });
             }
 

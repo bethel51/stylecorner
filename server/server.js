@@ -397,28 +397,12 @@ app.post('/api/bookings', authenticateToken, async (req, res) => {
   }
 });
 
-// Update a booking status (Expert Acceptance & Completion Logic)
+// Update a booking status
 app.put('/api/bookings/:id', authenticateToken, async (req, res) => {
   try {
-    // If expert is attempting to ACCEPT a booking:
-    if (req.body.status === 'accepted') {
-      const staffName = req.body.staff || req.user.firstname;
-      // Check if expert already has an active ongoing accepted appointment
-      const activeOngoingBooking = await Booking.findOne({
-        staff: staffName,
-        status: 'accepted',
-        _id: { $ne: req.params.id }
-      });
-      if (activeOngoingBooking) {
-        return res.status(400).json({ 
-          error: `You currently have an active ongoing appointment (${activeOngoingBooking.service} for ${activeOngoingBooking.clientName}). You must complete your active appointment before accepting another request.` 
-        });
-      }
-    }
-
     const updated = await Booking.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (req.body.status === 'accepted') {
-      await sendNotificationSafe(updated.clientEmail, "Booking Accepted!", `Hi ${updated.clientName},\n\nGreat news! Your booking has been accepted by our staff. See you then!`);
+      await sendNotificationSafe(updated.clientEmail, "Booking Accepted!", `Hi ${updated.clientName},\n\nGreat news! Your booking for ${updated.service} on ${updated.date} at ${updated.time} has been accepted by our staff. See you then!`);
     } else if (req.body.status === 'completed') {
       await sendNotificationSafe(updated.clientEmail, "Service Completed!", `Hi ${updated.clientName},\n\nThank you for visiting Style Corner! Your service ${updated.service} has been completed.`);
     }
@@ -427,6 +411,56 @@ app.put('/api/bookings/:id', authenticateToken, async (req, res) => {
     res.status(500).json({ error: 'Failed to update booking' });
   }
 });
+
+// ── Automated Appointment Day Reminder Function ──
+const checkAndSendDayReminders = async () => {
+  try {
+    const todayStr = new Date().toISOString().split('T')[0];
+    const bookingsToday = await Booking.find({
+      status: { $in: ['accepted', 'pending'] },
+      reminderSent: { $ne: true }
+    });
+
+    for (const b of bookingsToday) {
+      if (b.date && b.date.includes(todayStr)) {
+        // 1. Send reminder to Customer
+        await sendNotificationSafe(
+          b.clientEmail,
+          "Reminder: Your Style Session is Today! ✂️",
+          `Hi ${b.clientName},\n\nThis is a friendly reminder from Style Corner that your styling visit for ${b.service} is scheduled for TODAY at ${b.time}.\n\nLocation: 12 Style Lane, Fashion District.\nWe look forward to giving you an exceptional experience!`
+        );
+
+        // 2. Send reminder to Expert / Technician
+        if (b.stylist && b.stylist !== 'Any Specialist') {
+          const staffUser = await User.findOne({ firstname: new RegExp(b.stylist, 'i'), role: 'staff' });
+          if (staffUser && staffUser.email) {
+            await sendNotificationSafe(
+              staffUser.email,
+              `Reminder: Client Appointment Today - ${b.clientName}`,
+              `Hi ${staffUser.firstname},\n\nYou have an upcoming appointment scheduled for TODAY at ${b.time} with ${b.clientName} for ${b.service}. Please be ready!`
+            );
+          }
+        }
+
+        // Mark as reminded
+        b.reminderSent = true;
+        await b.save();
+        console.log(`✅ Appointment reminder sent for ${b.clientName} (${b.service})`);
+      }
+    }
+  } catch (err) {
+    console.error('Error running appointment day reminders:', err);
+  }
+};
+
+// Endpoint to manually or externally trigger day reminders
+app.get('/api/cron/send-reminders', async (req, res) => {
+  await checkAndSendDayReminders();
+  res.status(200).json({ message: 'Appointment day reminders checked and sent.' });
+});
+
+// Run reminder check every hour
+setInterval(checkAndSendDayReminders, 60 * 60 * 1000);
 
 // Get all orders (Filtered by Role)
 app.get('/api/orders', authenticateToken, async (req, res) => {
