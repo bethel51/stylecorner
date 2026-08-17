@@ -139,7 +139,45 @@
                 padding: 2rem 1rem;
             }
             .form-wrapper-minimal {
-                padding: 2.5rem 1.5rem !important;
+                padding: 2rem 1.25rem !important;
+            }
+        }
+
+        /* AI Matcher Banner – mobile */
+        .ai-matcher-banner {
+            flex-wrap: wrap;
+        }
+        @media (max-width: 600px) {
+            .ai-matcher-banner {
+                flex-direction: column;
+                align-items: flex-start !important;
+                padding: 1rem 1.1rem;
+                gap: 1rem;
+            }
+            .ai-matcher-banner .ai-banner-text { width: 100%; }
+            .ai-matcher-banner #open-ai-matcher-btn {
+                width: 100%;
+                text-align: center;
+                padding: 0.75rem 1rem;
+            }
+        }
+
+        /* AI Modal – mobile */
+        @media (max-width: 600px) {
+            #ai-matcher-modal > div {
+                padding: 2rem 1.25rem !important;
+                border-radius: 20px !important;
+                width: 96% !important;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+            #ai-matcher-modal h2 {
+                font-size: 1.2rem !important;
+            }
+            .ai-slot-pills { flex-direction: column; }
+            .ai-slot-pills label {
+                width: 100%;
+                text-align: center;
             }
         }
     </style>
@@ -202,16 +240,16 @@
 
                     <!-- AI Specialist Matcher Banner -->
                     <div class="ai-matcher-banner" style="background: linear-gradient(135deg, #171717, #2c261e); color: #fff; padding: 1.25rem 1.5rem; border-radius: 16px; margin-bottom: 2rem; border: 1px solid rgba(212,175,55,0.35); display: flex; align-items: center; justify-content: space-between; gap: 1rem; box-shadow: 0 10px 25px rgba(0,0,0,0.08);">
-                        <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div class="ai-banner-text" style="display: flex; align-items: center; gap: 1rem; flex: 1; min-width: 0;">
                             <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(212,175,55,0.15); color: #d4af37; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">
                                 <i class="fas fa-wand-magic-sparkles"></i>
                             </div>
-                            <div>
-                                <h4 style="font-family: 'Outfit'; color: #fff; font-size: 0.95rem; font-weight: 700; margin: 0;">AI Specialist Matcher</h4>
-                                <p style="color: rgba(255,255,255,0.7); font-size: 0.8rem; margin: 2px 0 0;">Match your desired style with the best specialist.</p>
+                            <div style="min-width: 0;">
+                                <h4 style="font-family: 'Outfit'; color: #fff; font-size: 0.95rem; font-weight: 700; margin: 0; white-space: nowrap;">AI Specialist Matcher</h4>
+                                <p style="color: rgba(255,255,255,0.65); font-size: 0.78rem; margin: 3px 0 0; line-height: 1.4;">Auto-match you with the ideal artisan for your services.</p>
                             </div>
                         </div>
-                        <button type="button" id="open-ai-matcher-btn" class="btn" style="background: #d4af37; color: #171717; font-family: 'Outfit'; font-weight: 800; font-size: 0.75rem; padding: 0.65rem 1.25rem; border-radius: 8px; text-transform: uppercase; letter-spacing: 0.05em; border: none; cursor: pointer; white-space: nowrap; transition: all 0.3s ease;">Match Me</button>
+                        <button type="button" id="open-ai-matcher-btn" class="btn" style="background: #d4af37; color: #171717; font-family: 'Outfit'; font-weight: 800; font-size: 0.75rem; padding: 0.65rem 1.25rem; border-radius: 8px; text-transform: uppercase; letter-spacing: 0.05em; border: none; cursor: pointer; white-space: nowrap; transition: all 0.3s ease; flex-shrink: 0;">Match Me</button>
                     </div>
 
                     <form id="booking-form">
@@ -464,7 +502,10 @@
 
             runAiBtn.addEventListener('click', async () => {
                 const reqText = aiReqText.value.trim();
-                const selService = select1.value || select2.value;
+                // Collect BOTH service selections for better AI matching
+                const svc1 = select1.value;
+                const svc2 = select2.value;
+                const combinedServices = [svc1, svc2].filter(Boolean).join(' + ');
 
                 runAiBtn.disabled = true;
                 runAiBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing Specialists & Portfolios...';
@@ -473,7 +514,7 @@
                     const res = await fetch('/api/ai/match-specialist', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ requestText: reqText, preferredService: selService })
+                        body: JSON.stringify({ requestText: reqText, preferredService: combinedServices })
                     });
                     const data = await res.json();
                     
@@ -483,10 +524,26 @@
                         document.getElementById('ai-score-badge').textContent = data.match.matchScore + '% MATCH';
                         document.getElementById('ai-matched-rationale').textContent = data.match.rationale;
                         aiResultBox.style.display = 'block';
+
+                        // Show or hide service slot selector based on what AI recommends
+                        const specs = Array.isArray(data.match.specialties) ? data.match.specialties : [];
+                        const slotSelector = document.getElementById('ai-slot-selector');
+                        if (slotSelector) slotSelector.style.display = specs.length > 0 ? 'block' : 'none';
+
+                        // Auto-populate service dropdowns if they are empty
+                        if (specs.length > 0) {
+                            const tryFill = (selectEl, serviceVal) => {
+                                const opts = Array.from(selectEl.options);
+                                const match = opts.find(o => o.value.toLowerCase().includes(serviceVal.toLowerCase().split(' ')[0]));
+                                if (match && !selectEl.value) selectEl.value = match.value;
+                            };
+                            if (!select1.value && specs[0]) tryFill(select1, specs[0]);
+                            if (!select2.value && specs[1]) tryFill(select2, specs[1]);
+                        }
                     }
                 } catch (err) {
                     console.error('AI Match error', err);
-                    window.showToast('AI Matcher fallback error', 'error');
+                    window.showToast('AI Matcher connection issue – please try again.', 'error');
                 } finally {
                     runAiBtn.disabled = false;
                     runAiBtn.innerHTML = '<i class="fas fa-wand-magic-sparkles"></i> Re-Analyze Request';
@@ -494,63 +551,104 @@
             });
 
             applyAiBtn.addEventListener('click', () => {
-                if (currentMatchedSpecialist) {
-                    // Pre-select specialist in dropdown
-                    const options = Array.from(stylistSelect.options);
-                    const matchedOpt = options.find(o => o.value.toLowerCase().includes(currentMatchedSpecialist.firstname.toLowerCase()));
-                    if (matchedOpt) {
-                        stylistSelect.value = matchedOpt.value;
-                    } else {
-                        const newOpt = document.createElement('option');
-                        newOpt.value = currentMatchedSpecialist.firstname;
-                        newOpt.textContent = currentMatchedSpecialist.name + ' (AI Matched)';
-                        stylistSelect.appendChild(newOpt);
-                        stylistSelect.value = currentMatchedSpecialist.firstname;
-                    }
+                if (!currentMatchedSpecialist) return;
 
-                    aiModal.style.display = 'none';
-                    if (window.showToast) window.showToast(`Matched with ${currentMatchedSpecialist.name}!`, 'success');
+                // 1. Pre-select specialist
+                const stylistOptions = Array.from(stylistSelect.options);
+                const matchedStylistOpt = stylistOptions.find(o => o.value.toLowerCase().includes(currentMatchedSpecialist.firstname.toLowerCase()));
+                if (matchedStylistOpt) {
+                    stylistSelect.value = matchedStylistOpt.value;
+                } else {
+                    const newOpt = document.createElement('option');
+                    newOpt.value = currentMatchedSpecialist.firstname;
+                    newOpt.textContent = currentMatchedSpecialist.name + ' (AI Matched)';
+                    stylistSelect.appendChild(newOpt);
+                    stylistSelect.value = currentMatchedSpecialist.firstname;
                 }
+
+                // 2. Apply services based on slot choice
+                const slotChoice = document.querySelector('input[name="ai-slot"]:checked');
+                const slot = slotChoice ? slotChoice.value : 'primary';
+                const specs = Array.isArray(currentMatchedSpecialist.specialties) ? currentMatchedSpecialist.specialties : [];
+
+                const applyServiceToSelect = (selectEl, serviceHint) => {
+                    if (!serviceHint) return;
+                    const opts = Array.from(selectEl.options);
+                    const keyword = serviceHint.toLowerCase().split(' ')[0];
+                    const matchOpt = opts.find(o => o.value.toLowerCase().includes(keyword));
+                    if (matchOpt) selectEl.value = matchOpt.value;
+                };
+
+                if (slot === 'primary' || slot === 'both') {
+                    applyServiceToSelect(select1, specs[0]);
+                }
+                if (slot === 'secondary' || slot === 'both') {
+                    applyServiceToSelect(select2, specs[1] || specs[0]);
+                }
+
+                // Trigger price recalculation
+                select1.dispatchEvent(new Event('change'));
+                select2.dispatchEvent(new Event('change'));
+
+                aiModal.style.display = 'none';
+                if (window.showToast) window.showToast(`Matched with ${currentMatchedSpecialist.name}!`, 'success');
             });
         });
     </script>
 
     <!-- AI Specialist Matcher Modal -->
-    <div id="ai-matcher-modal" class="modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 3500; align-items: center; justify-content: center; backdrop-filter: blur(8px);">
-        <div class="glass-card" style="max-width: 520px; width: 92%; background: #ffffff; padding: 3rem; border-radius: 28px; box-shadow: 0 25px 60px rgba(0,0,0,0.2); border: 1px solid rgba(212,175,55,0.25);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <div id="ai-matcher-modal" class="modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 3500; align-items: center; justify-content: center; backdrop-filter: blur(8px); padding: 1rem;">
+        <div class="glass-card" style="max-width: 520px; width: 100%; background: #ffffff; padding: 2.5rem 2rem; border-radius: 24px; box-shadow: 0 25px 60px rgba(0,0,0,0.2); border: 1px solid rgba(212,175,55,0.25); max-height: 90vh; overflow-y: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
                 <div style="display: flex; align-items: center; gap: 0.75rem;">
-                    <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(212,175,55,0.15); color: #d4af37; display: flex; align-items: center; justify-content: center; font-size: 1rem;">
+                    <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(212,175,55,0.15); color: #d4af37; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;">
                         <i class="fas fa-wand-magic-sparkles"></i>
                     </div>
-                    <h2 style="font-family: 'Outfit'; font-size: 1.5rem; font-weight: 800; color: #171717; margin: 0;">AI Specialist Matcher</h2>
+                    <h2 style="font-family: 'Outfit'; font-size: 1.35rem; font-weight: 800; color: #171717; margin: 0;">AI Specialist Matcher</h2>
                 </div>
-                <button id="close-ai-modal" style="background: none; border: none; font-size: 1.25rem; color: #9ca3af; cursor: pointer;"><i class="fas fa-times"></i></button>
+                <button id="close-ai-modal" style="background: none; border: none; font-size: 1.25rem; color: #9ca3af; cursor: pointer; flex-shrink: 0; padding: 0.25rem;"><i class="fas fa-times"></i></button>
             </div>
 
-            <p style="color: #6b7280; font-size: 0.9rem; margin-bottom: 1.5rem; line-height: 1.6;">
-                Describe the style, haircut, braids, or nail artwork you want. Our AI will evaluate staff skillsets and workload to find your ideal match.
+            <p style="color: #6b7280; font-size: 0.875rem; margin-bottom: 1.25rem; line-height: 1.6;">
+                Describe the style you want — haircut, braids, nails, or a combo. AI evaluates every artisan's skillset and finds your best match for <strong>both service slots</strong>.
             </p>
 
-            <div style="margin-bottom: 1.5rem;">
-                <label style="display: block; font-family: 'Outfit'; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #171717; margin-bottom: 0.5rem;">Style Request / Requirements</label>
-                <textarea id="ai-request-text" placeholder="e.g. I need a sharp low taper fade with beard detailing for an event..." rows="3" style="width: 100%; padding: 1rem; border: 1.5px solid #e5e7eb; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 0.95rem; outline: none; transition: all 0.3s;"></textarea>
+            <div style="margin-bottom: 1.25rem;">
+                <label style="display: block; font-family: 'Outfit'; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; color: #171717; margin-bottom: 0.5rem; letter-spacing: 0.05em;">Style Request / Requirements</label>
+                <textarea id="ai-request-text" placeholder="e.g. Box braids + gel nails for a photoshoot — need someone great at both..." rows="3" style="width: 100%; padding: 1rem; border: 1.5px solid #e5e7eb; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 0.9rem; outline: none; transition: border-color 0.3s; resize: none;"></textarea>
             </div>
 
-            <button type="button" id="run-ai-match-btn" class="btn btn-premium" style="padding: 1rem; font-size: 0.9rem; width: 100%;">
+            <button type="button" id="run-ai-match-btn" class="btn btn-premium" style="padding: 1rem; font-size: 0.875rem; width: 100%; border-radius: 12px !important;">
                 <i class="fas fa-wand-magic-sparkles"></i> Analyze & Find Best Match
             </button>
 
             <!-- Result Box -->
-            <div id="ai-match-result" style="display: none; margin-top: 1.75rem; padding: 1.5rem; background: #faf9f6; border: 1.5px solid rgba(212,175,55,0.3); border-radius: 16px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-                    <span style="font-family: 'Outfit'; font-size: 0.75rem; font-weight: 800; color: #b5952f; text-transform: uppercase; letter-spacing: 0.05em;">Recommended Artisan</span>
-                    <span id="ai-score-badge" style="background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); font-size: 0.75rem; font-weight: 800; padding: 0.25rem 0.75rem; border-radius: 50px; font-family: 'Outfit';">98% MATCH</span>
+            <div id="ai-match-result" style="display: none; margin-top: 1.5rem; padding: 1.35rem; background: #faf9f6; border: 1.5px solid rgba(212,175,55,0.3); border-radius: 16px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem; flex-wrap: wrap; gap: 0.5rem;">
+                    <span style="font-family: 'Outfit'; font-size: 0.7rem; font-weight: 800; color: #b5952f; text-transform: uppercase; letter-spacing: 0.06em;">Recommended Artisan</span>
+                    <span id="ai-score-badge" style="background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); font-size: 0.72rem; font-weight: 800; padding: 0.2rem 0.65rem; border-radius: 50px; font-family: 'Outfit';">98% MATCH</span>
                 </div>
-                <h3 id="ai-matched-name" style="font-family: 'Outfit'; font-size: 1.35rem; font-weight: 800; color: #171717; margin-bottom: 0.35rem;">Julian Reed</h3>
-                <p id="ai-matched-rationale" style="color: #4b5563; font-size: 0.85rem; line-height: 1.5; margin-bottom: 1.25rem;"></p>
-                <button type="button" id="apply-ai-match-btn" class="btn" style="background: #171717; color: #d4af37; font-family: 'Outfit'; font-weight: 700; font-size: 0.85rem; padding: 0.85rem 1.5rem; border-radius: 10px; border: none; cursor: pointer; width: 100%; text-transform: uppercase; letter-spacing: 0.05em;">
-                    <i class="fas fa-check"></i> Auto-Select Specialist & Proceed
+                <h3 id="ai-matched-name" style="font-family: 'Outfit'; font-size: 1.25rem; font-weight: 800; color: #171717; margin-bottom: 0.3rem;">Julian Reed</h3>
+                <p id="ai-matched-rationale" style="color: #4b5563; font-size: 0.83rem; line-height: 1.5; margin-bottom: 1.1rem;"></p>
+
+                <!-- Service Slot Selector -->
+                <div id="ai-slot-selector" style="margin-bottom: 1.25rem;">
+                    <label style="display: block; font-family: 'Outfit'; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: #6b7280; margin-bottom: 0.65rem; letter-spacing: 0.05em;">Apply matched services to:</label>
+                    <div class="ai-slot-pills" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        <label style="display: flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1rem; border: 1.5px solid #e5e7eb; border-radius: 8px; cursor: pointer; font-family: 'Outfit'; font-size: 0.78rem; font-weight: 700; color: #374151; flex: 1; justify-content: center; transition: all 0.2s;">
+                            <input type="radio" name="ai-slot" value="primary" checked style="accent-color: #d4af37;"> Primary
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1rem; border: 1.5px solid #e5e7eb; border-radius: 8px; cursor: pointer; font-family: 'Outfit'; font-size: 0.78rem; font-weight: 700; color: #374151; flex: 1; justify-content: center; transition: all 0.2s;">
+                            <input type="radio" name="ai-slot" value="secondary" style="accent-color: #d4af37;"> Secondary
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1rem; border: 1.5px solid #e5e7eb; border-radius: 8px; cursor: pointer; font-family: 'Outfit'; font-size: 0.78rem; font-weight: 700; color: #374151; flex: 1; justify-content: center; transition: all 0.2s;">
+                            <input type="radio" name="ai-slot" value="both" style="accent-color: #d4af37;"> Both Slots
+                        </label>
+                    </div>
+                </div>
+
+                <button type="button" id="apply-ai-match-btn" class="btn" style="background: #171717; color: #d4af37; font-family: 'Outfit'; font-weight: 700; font-size: 0.85rem; padding: 0.9rem 1.5rem; border-radius: 10px; border: none; cursor: pointer; width: 100%; text-transform: uppercase; letter-spacing: 0.05em; transition: opacity 0.2s;">
+                    <i class="fas fa-check"></i> Apply & Book with This Specialist
                 </button>
             </div>
         </div>
