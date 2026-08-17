@@ -648,13 +648,23 @@
                     <a href="#" class="dash-nav-link" data-tab="history"><i class="fas fa-calendar-check"></i> My Bookings</a>
                     <a href="#" class="dash-nav-link" data-tab="profile"><i class="fas fa-user-gear"></i> Settings</a>
                 </nav>
+                <div style="padding: 0 1rem; margin-top: 2rem;">
+                    <a href="booking.html" class="btn" style="background: #d4af37; color: #171717; font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 0.825rem; padding: 0.85rem 1rem; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.05em; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 0.5rem; box-shadow: 0 8px 20px rgba(212,175,55,0.25); transition: transform 0.25s ease;">
+                        <i class="fas fa-calendar-plus"></i> New Booking
+                    </a>
+                </div>
             </aside>
 
             <!-- Main Content Area -->
             <div class="content-main">
-                <div class="heading-group">
-                    <h2>Welcome back, <span id="user-display-name" style="font-weight: 300; font-style: italic;">User</span></h2>
-                    <p>Track your styling appointments and boutique order shipments.</p>
+                <div class="heading-group" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.25rem; margin-bottom: 2rem;">
+                    <div>
+                        <h2 style="margin-bottom: 0.25rem;">Welcome back, <span id="user-display-name" style="font-weight: 300; font-style: italic;">User</span></h2>
+                        <p style="margin: 0;">Track your styling appointments and boutique order shipments.</p>
+                    </div>
+                    <a href="booking.html" class="btn" style="background: #171717; color: #d4af37; font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 0.85rem; padding: 0.85rem 1.5rem; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.06em; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; border: 1.5px solid #d4af37; box-shadow: 0 4px 15px rgba(0,0,0,0.12); transition: all 0.25s ease;">
+                        <i class="fas fa-calendar-plus"></i> Schedule Visit
+                    </a>
                 </div>
 
                 <!-- Tab: Overview -->
@@ -926,7 +936,13 @@
                             </div>
                             <span class="badge-status ${b.status || 'pending'}">${b.status || 'pending'}</span>
                         </div>`).join('');
-                } else { apptsL.innerHTML = '<p style="color: var(--dash-muted); text-align: center;">No bookings yet.</p>'; }
+                } else { 
+                    apptsL.innerHTML = `
+                        <div style="text-align: center; padding: 2rem 1rem;">
+                            <p style="color: var(--dash-muted); margin-bottom: 1rem;">No appointments scheduled yet.</p>
+                            <a href="booking.html" class="btn" style="background: #171717; color: #d4af37; font-family: 'Outfit'; font-weight: 700; font-size: 0.8rem; padding: 0.65rem 1.25rem; border-radius: 8px; text-decoration: none; display: inline-block;">+ Book Your First Visit</a>
+                        </div>`; 
+                }
 
                 const lB = uBks[0]; const lO = ords[0];
                 if (lB) { 
@@ -936,7 +952,11 @@
                             <p><i class="fas fa-clock"></i> Scheduled for ${lB.date} at ${lB.time}</p>
                         </div>`; 
                 } else {
-                    document.getElementById('overview-booking-preview').innerHTML = '<span style="color: var(--dash-muted);">No upcoming styling visits.</span>';
+                    document.getElementById('overview-booking-preview').innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                            <span style="color: var(--dash-muted); font-size: 0.9rem;">No upcoming styling visits.</span>
+                            <a href="booking.html" style="color: var(--dash-accent); font-family: 'Outfit'; font-weight: 800; font-size: 0.8rem; text-decoration: none; text-transform: uppercase;">+ Book Now</a>
+                        </div>`;
                 }
                 if (lO) {
                     document.getElementById('overview-order-preview').innerHTML = `
