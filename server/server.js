@@ -196,7 +196,7 @@ app.post('/api/auth/verify', async (req, res) => {
 // Login User
 app.post('/api/auth/login', async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, role } = req.body;
     
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ error: 'Invalid email or password' });
@@ -204,8 +204,19 @@ app.post('/api/auth/login', async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ error: 'Invalid email or password' });
 
+    // Strict Role Enforcement
+    if (role) {
+      const expectedRole = (role === 'staff' || role === 'expert') ? 'staff' : 'customer';
+      if (user.role !== expectedRole) {
+        const message = expectedRole === 'staff'
+          ? 'Access denied. This is a Customer account. Please select the Customer tab to sign in.'
+          : 'Access denied. This is an Expert account. Please select the Expert tab to sign in.';
+        return res.status(403).json({ error: message });
+      }
+    }
+
     if (!user.isVerified) {
-      // Generate and send a new OTP for unverified users (useful for older accounts or resending)
+      // Generate and send a new OTP for unverified users
       const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
       user.otpCode = otpCode;
       user.otpExpiresAt = new Date(Date.now() + 15 * 60 * 1000);
