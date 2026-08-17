@@ -534,23 +534,120 @@
             .form-grid { grid-template-columns: 1fr; gap: 1.25rem; }
             .config-layer { padding: 2rem; }
             .history-card { padding: 2rem; }
+        /* Dashboard Header Navigation Styling */
+        header {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(0,0,0,0.06) !important;
+            height: 5rem;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+            padding: 0 2rem;
+        }
+
+        .dash-header-nav {
+            display: flex;
+            align-items: center;
+            gap: 1.75rem;
+        }
+
+        .dash-header-nav a {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #171717;
+            text-decoration: none;
+            transition: color 0.25s ease;
+        }
+
+        .dash-header-nav a:hover {
+            color: #d4af37;
+        }
+
+        .dash-header-nav .logout-btn {
+            border: 1.5px solid #d4af37;
+            color: #d4af37 !important;
+            padding: 0.45rem 1.15rem;
+            border-radius: 8px;
+            font-size: 0.825rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+        }
+
+        .dash-header-nav .logout-btn:hover {
+            background: #d4af37;
+            color: #171717 !important;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                height: 4.5rem;
+            }
+            header .container {
+                padding: 0 1rem;
+            }
+            .dash-header-nav {
+                gap: 0.75rem;
+            }
+            .dash-header-nav a {
+                font-size: 0.825rem;
+            }
+            .dash-header-nav .logout-btn {
+                padding: 0.35rem 0.75rem;
+                font-size: 0.75rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header .container {
+                padding: 0 0.75rem;
+            }
+            .logo {
+                font-size: 1.05rem !important;
+            }
+            .logo-icon {
+                width: 22px !important;
+                height: 22px !important;
+            }
+            .dash-header-nav {
+                gap: 0.4rem;
+            }
+            .dash-header-nav a {
+                font-size: 0.78rem;
+                padding: 0.2rem 0.3rem;
+            }
+            .dash-header-nav .logout-btn {
+                padding: 0.3rem 0.6rem;
+                font-size: 0.7rem;
+            }
         }
     </style>
 </head>
 <body class="page-dashboard">
     <header>
-        <div class="container" style="display: flex; justify-content: space-between; align-items: center; height: 100%;">
+        <div class="container">
             <a href="index.html" class="logo">
-                <svg class="logo-icon" viewBox="0 0 100 100" style="width:28px; height:28px; fill:var(--exp-accent);">
+                <svg class="logo-icon" viewBox="0 0 100 100">
                     <path d="M30 20 H70 L80 50 L70 80 H30 L20 50 Z" fill="none" stroke="currentColor" stroke-width="4" />
                     <circle cx="50" cy="50" r="5" fill="currentColor" />
                 </svg>
                 STYLE<span>CORNER</span>
             </a>
-            <nav class="nav" style="display: flex; gap: 1.5rem; flex-direction: row; position: static; background: none; padding: 0; border: none; box-shadow: none; width: auto; height: auto;">
-                <a href="index.html" style="padding: 0; border: none; font-size: 0.9rem;">Home</a>
-                <a href="store.html" style="padding: 0; border: none; font-size: 0.9rem;">Store</a>
-                <a href="#" class="cta logout-link" style="background: transparent; border: 1.5px solid var(--exp-accent); color: var(--exp-accent); padding: 0.5rem 1.25rem; margin-top: 0; border-radius: 8px; font-size: 0.85rem;">Logout</a>
+            <nav class="nav dash-header-nav">
+                <a href="index.html">Home</a>
+                <a href="services.html">Services</a>
+                <a href="store.html">Store</a>
+                <a href="#" class="cta logout-link logout-btn">Logout</a>
             </nav>
         </div>
     </header>
