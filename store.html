@@ -651,29 +651,13 @@
                 refreshCartUI();
             };
 
-            document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const newItem = {
-                        id: btn.dataset.id,
-                        name: btn.dataset.name,
-                        price: parseInt(btn.dataset.price),
-                        icon: btn.dataset.icon
-                    };
-                    cart.push(newItem);
-                    localStorage.setItem('style_corner_cart', JSON.stringify(cart));
-                    refreshCartUI();
-                    
-                    // Button Feedback
-                    const originalText = btn.textContent;
-                    btn.innerHTML = '<i class="fas fa-check"></i> Added';
-                    btn.style.background = '#10b981';
             const processOrderPlacement = async (paymentRef) => {
                 const user = JSON.parse(localStorage.getItem('mockUser') || '{}');
                 const address = document.getElementById('delivery-address').value;
                 const phone = document.getElementById('delivery-phone').value;
                 const token = localStorage.getItem('token');
 
-                window.showToast('Processing order & payment...', 'success');
+                if (window.showToast) window.showToast('Processing order & payment...', 'success');
 
                 const orderPromises = cart.map(item => {
                     const orderData = {

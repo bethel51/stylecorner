@@ -241,6 +241,42 @@
         .btn-signin:hover::before { left: 100%; }
         .btn-signin:disabled { opacity: 0.65; transform: none; cursor: not-allowed; }
 
+        /* Role Tabs */
+        .role-tabs {
+            display: flex;
+            background: #f3f4f6;
+            border-radius: 14px;
+            padding: 5px;
+            margin-bottom: 2.25rem;
+            gap: 4px;
+        }
+        .role-tab {
+            flex: 1;
+            padding: 0.72rem 0.5rem;
+            background: transparent;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: #9ca3af;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+        }
+        .role-tab.active {
+            background: #ffffff;
+            color: #171717;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.09);
+        }
+        .role-tab.active i { color: #d4af37; }
+        .role-tab:hover:not(.active) { color: #6b7280; }
+
         /* Divider */
         .divider {
             display: flex;
@@ -313,6 +349,19 @@
             <h1 class="form-title">Sign In</h1>
             <p class="form-subtitle" id="subtitle-msg">Enter your details to access your account.</p>
 
+            <!-- Role Selector -->
+            <div class="role-tabs" id="role-tabs" role="group" aria-label="Select account type">
+                <button type="button" class="role-tab active" id="tab-customer" data-role="customer">
+                    <i class="fas fa-user"></i> Customer
+                </button>
+                <button type="button" class="role-tab" id="tab-expert" data-role="staff">
+                    <i class="fas fa-scissors"></i> Expert
+                </button>
+                <button type="button" class="role-tab" id="tab-new" data-role="new">
+                    <i class="fas fa-user-plus"></i> New User
+                </button>
+            </div>
+
             <form id="login-form">
                 <div class="input-group">
                     <label class="input-label" for="email">Email Address</label>
@@ -357,24 +406,91 @@
         document.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const redirectUrl = urlParams.get('redirect');
+            let selectedRole = urlParams.get('role') || 'customer';
+
+            // Role tab elements
+            const tabs = document.querySelectorAll('.role-tab');
+            const subtitleMsg = document.getElementById('subtitle-msg');
+            const formTitle = document.querySelector('.form-title');
+            const signinBtn = document.getElementById('signin-btn');
+
+            const roleConfig = {
+                customer: {
+                    title: 'Customer Sign In',
+                    subtitle: 'Welcome back! Access your bookings and boutique orders.',
+                    btnText: '<i class="fas fa-arrow-right-to-bracket"></i> Sign In as Customer',
+                    redirect: 'customer-dashboard.html'
+                },
+                staff: {
+                    title: 'Expert Sign In',
+                    subtitle: 'Access your artisan workspace, appointments, and client orders.',
+                    btnText: '<i class="fas fa-scissors"></i> Sign In as Expert',
+                    redirect: 'expert-dashboard.html'
+                },
+                new: {
+                    title: 'Create Account',
+                    subtitle: 'New to Style Corner? Choose your role to get started.',
+                    btnText: '<i class="fas fa-user-plus"></i> Create My Account',
+                    redirect: 'role-selection.html'
+                }
+            };
+
+            const applyRole = (role) => {
+                selectedRole = role;
+                const cfg = roleConfig[role];
+                formTitle.textContent = cfg.title;
+                subtitleMsg.textContent = cfg.subtitle;
+                subtitleMsg.style.color = '';
+                subtitleMsg.style.fontWeight = '';
+                signinBtn.innerHTML = cfg.btnText;
+
+                tabs.forEach(t => t.classList.toggle('active', t.dataset.role === role));
+
+                // Hide form fields for "new" tab
+                const loginForm = document.getElementById('login-form');
+                const inputGroups = loginForm.querySelectorAll('.input-group');
+                if (role === 'new') {
+                    inputGroups.forEach(g => g.style.display = 'none');
+                } else {
+                    inputGroups.forEach(g => g.style.display = '');
+                }
+            };
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => applyRole(tab.dataset.role));
+            });
+
+            // Apply initial role from URL param or default
+            if (selectedRole === 'staff' || selectedRole === 'expert') {
+                applyRole('staff');
+            } else if (selectedRole === 'new') {
+                applyRole('new');
+            } else {
+                applyRole('customer');
+            }
 
             if (urlParams.get('signup') === 'success') {
-                const subtitle = document.getElementById('subtitle-msg');
-                subtitle.textContent = "Account created! Please sign in to continue.";
-                subtitle.style.color = "#10b981";
-                subtitle.style.fontWeight = "600";
+                subtitleMsg.textContent = "Account created! Please sign in to continue.";
+                subtitleMsg.style.color = "#10b981";
+                subtitleMsg.style.fontWeight = "600";
             }
 
             const form = document.getElementById('login-form');
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const btn = document.getElementById('signin-btn');
+
+                // Handle "New User" tab: redirect to signup
+                if (selectedRole === 'new') {
+                    window.location.href = 'role-selection.html';
+                    return;
+                }
+
                 btn.disabled = true;
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging In...';
 
                 const data = {
                     email: document.getElementById('email').value,
-                    phone: document.getElementById('phone').value,
                     password: document.getElementById('password').value
                 };
 
@@ -394,12 +510,19 @@
                         }
                         window.showToast(result.error || 'Login failed', 'error');
                         btn.disabled = false;
-                        btn.innerHTML = '<i class="fas fa-arrow-right-to-bracket"></i> Log In';
+                        btn.innerHTML = roleConfig[selectedRole].btnText;
                         return;
                     }
 
                     localStorage.setItem('mockUser', JSON.stringify(result.user));
                     localStorage.setItem('token', result.token);
+
+                    // Warn if role mismatch
+                    if (selectedRole === 'customer' && result.user.role === 'staff') {
+                        window.showToast('Detected Expert account. Redirecting to your workspace.', 'accent');
+                    } else if (selectedRole === 'staff' && result.user.role !== 'staff') {
+                        window.showToast('Detected Customer account. Redirecting to your dashboard.', 'accent');
+                    }
 
                     if (redirectUrl) {
                         window.location.href = redirectUrl;
@@ -412,7 +535,7 @@
                     console.error(error);
                     window.showToast('Server error during login', 'error');
                     btn.disabled = false;
-                    btn.innerHTML = '<i class="fas fa-arrow-right-to-bracket"></i> Log In';
+                    btn.innerHTML = roleConfig[selectedRole].btnText;
                 }
             });
         });
