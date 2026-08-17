@@ -799,12 +799,16 @@
                     const token = localStorage.getItem('token');
                     const bksRes = await fetch('/api/bookings', { headers: { 'Authorization': `Bearer ${token}` } });
                     const ordsRes = await fetch('/api/orders', { headers: { 'Authorization': `Bearer ${token}` } });
-                    bks = await bksRes.json();
-                    ords = await ordsRes.json();
+                    if (bksRes.ok) bks = await bksRes.json();
+                    if (ordsRes.ok) ords = await ordsRes.json();
                 } catch (e) {
                     console.error('Error fetching data', e);
                 }
-                const uBks = bks;
+
+                if (!Array.isArray(bks)) bks = [];
+                if (!Array.isArray(ords)) ords = [];
+
+                const uBks = [...bks];
 
                 document.getElementById('stat-bookings').textContent = uBks.length;
                 document.getElementById('stat-orders').textContent = ords.length;

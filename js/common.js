@@ -372,33 +372,23 @@ const AppLayout = {
     `,
 
     init() {
-        const existingHeader = document.querySelector('header');
-        const existingFooter = document.querySelector('footer');
-
-        if (existingHeader && !existingHeader.classList.contains('auth-header')) {
-            existingHeader.outerHTML = this.headerHTML;
-            this.setActiveNavLink();
-        }
-        
-        if (existingFooter && !existingFooter.classList.contains('auth-footer')) {
-            existingFooter.outerHTML = this.footerHTML;
-        }
+        // AppLayout init: Set active nav link without destructive outerHTML replacement
+        this.setActiveNavLink();
     },
 
     setActiveNavLink() {
         const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-        const navLinks = document.querySelectorAll('.nav a[data-page]');
+        const navLinks = document.querySelectorAll('.nav a');
         navLinks.forEach(link => {
-            if (link.getAttribute('data-page') === currentPage) {
+            const href = link.getAttribute('href') || link.getAttribute('data-page');
+            if (href === currentPage) {
                 link.classList.add('active');
-            } else {
-                link.classList.remove('active');
             }
         });
     }
 };
 
-// Initialize before DOMContentLoaded so the layout parses quickly
+// Initialize active nav link on interactive
 document.addEventListener('readystatechange', () => {
     if (document.readyState === 'interactive') {
         AppLayout.init();

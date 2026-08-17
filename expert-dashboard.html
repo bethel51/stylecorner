@@ -706,14 +706,17 @@
                     const token = localStorage.getItem('token');
                     const bksRes = await fetch('/api/bookings', { headers: { 'Authorization': `Bearer ${token}` } });
                     const ordsRes = await fetch('/api/orders', { headers: { 'Authorization': `Bearer ${token}` } });
-                    bks = await bksRes.json();
-                    ords = await ordsRes.json();
+                    if (bksRes.ok) bks = await bksRes.json();
+                    if (ordsRes.ok) ords = await ordsRes.json();
                 } catch (e) {
                     console.error('Error fetching data', e);
                 }
 
-                const pendingBks = bks.filter(b => b.status === 'pending');
-                const pendingOrds = ords.filter(o => o.status === 'paid' || o.status === 'pending');
+                if (!Array.isArray(bks)) bks = [];
+                if (!Array.isArray(ords)) ords = [];
+
+                const pendingBks = bks.filter(b => b && b.status === 'pending');
+                const pendingOrds = ords.filter(o => o && (o.status === 'paid' || o.status === 'pending'));
 
                 document.getElementById('pending-services-count').textContent = pendingBks.length;
                 document.getElementById('alert-count').textContent = pendingOrds.length;
