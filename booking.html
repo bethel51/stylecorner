@@ -163,21 +163,53 @@
         }
 
         /* AI Modal – mobile */
+        #ai-match-result {
+            box-sizing: border-box;
+            width: 100%;
+            overflow-wrap: break-word;
+            word-break: break-word;
+            overflow: hidden;
+        }
+        #ai-matched-rationale, #ai-matched-name {
+            overflow-wrap: break-word;
+            word-break: break-word;
+            hyphens: auto;
+        }
+        #apply-ai-match-btn {
+            white-space: normal !important;
+            word-break: break-word;
+            line-height: 1.4;
+        }
+
         @media (max-width: 600px) {
             #ai-matcher-modal > div {
-                padding: 2rem 1.25rem !important;
+                padding: 1.5rem 1.15rem !important;
                 border-radius: 20px !important;
-                width: 96% !important;
+                width: 95% !important;
                 max-height: 90vh;
                 overflow-y: auto;
+                box-sizing: border-box;
             }
             #ai-matcher-modal h2 {
-                font-size: 1.2rem !important;
+                font-size: 1.15rem !important;
             }
-            .ai-slot-pills { flex-direction: column; }
-            .ai-slot-pills label {
+            #ai-match-result {
+                padding: 1.1rem !important;
+                border-radius: 14px !important;
+            }
+            .ai-slot-pills { 
+                flex-direction: column !important; 
                 width: 100%;
+            }
+            .ai-slot-pills label {
+                width: 100% !important;
                 text-align: center;
+                box-sizing: border-box;
+                padding: 0.6rem 0.85rem !important;
+            }
+            #apply-ai-match-btn {
+                font-size: 0.8rem !important;
+                padding: 0.85rem 1rem !important;
             }
         }
     </style>
