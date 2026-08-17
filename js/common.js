@@ -20,50 +20,37 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 1.5. True Server-Verified Route Guards
+  // 1.5. Server-Verified Route Guards
   const page = window.location.pathname.split('/').pop() || 'index.html';
   const authPages = ['login.html', 'signup.html', 'role-selection.html', 'verify.html'];
   const protectedPages = ['customer-dashboard.html', 'expert-dashboard.html'];
 
   if (protectedPages.includes(page)) {
-    // Hide body immediately to prevent flicker before verification
-    document.body.style.display = 'none';
-    
     if (!token) {
       window.location.replace('login.html?redirect=' + page);
     } else {
-      // Verify token with backend
+      document.body.style.display = 'block';
+      
+      // Verify token in background and enforce role isolation
       fetch('/api/auth/me', {
         headers: { 'Authorization': `Bearer ${token}` }
       })
-      .then(res => res.json())
+      .then(res => res.ok ? res.json() : null)
       .then(data => {
-        if (data.error) {
-          // Token invalid or expired
-          localStorage.removeItem('token');
-          localStorage.removeItem('mockUser');
-          window.location.replace('login.html?expired=true');
-        } else {
-          // User verified, check roles
+        if (data && data.role) {
+          localStorage.setItem('mockUser', JSON.stringify(data));
           if (page === 'expert-dashboard.html' && data.role !== 'staff') {
             window.location.replace('customer-dashboard.html');
           } else if (page === 'customer-dashboard.html' && data.role === 'staff') {
             window.location.replace('expert-dashboard.html');
-          } else {
-            // Safe to show page
-            document.body.style.display = 'block';
-            // Sync local storage with fresh user data
-            localStorage.setItem('mockUser', JSON.stringify(data));
           }
         }
       })
       .catch(err => {
-        console.error('Auth verification failed', err);
-        window.location.replace('login.html');
+        console.warn('Background auth check failed:', err);
       });
     }
   } else if (token && authPages.includes(page)) {
-    // Prevent logged-in users from accessing login/signup pages
     const user = JSON.parse(localStorage.getItem('mockUser') || '{}');
     window.location.replace(user.role === 'staff' ? 'expert-dashboard.html' : 'customer-dashboard.html');
   }

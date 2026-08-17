@@ -786,18 +786,34 @@
                 document.getElementById('cust-phone').value = user.phone || '';
             };
 
-            // Fetch real user and enforce role gate
+            // Load cached user data immediately if present
+            const cachedUserStr = localStorage.getItem('mockUser');
+            if (cachedUserStr) {
+                try {
+                    user = JSON.parse(cachedUserStr);
+                    reloadUI();
+                    refreshData();
+                } catch (e) {}
+            }
+
+            // Sync with backend in background
             fetch('/api/auth/me', { headers: { 'Authorization': `Bearer ${token}` } })
-                .then(res => res.ok ? res.json() : Promise.reject('Not authenticated'))
+                .then(res => res.ok ? res.json() : null)
                 .then(data => {
-                    // Role gate: staff users must go to expert dashboard
-                    if (data.role === 'staff') {
-                        window.location.href = 'expert-dashboard.html';
-                        return;
+                    if (data && data.role) {
+                        if (data.role === 'staff') {
+                            window.location.href = 'expert-dashboard.html';
+                            return;
+                        }
+                        user = data;
+                        localStorage.setItem('mockUser', JSON.stringify(data));
+                        reloadUI();
+                        refreshData();
                     }
-                    user = data; reloadUI(); fetchData();
                 })
-                .catch(err => { console.error(err); localStorage.removeItem('token'); window.location.href = 'login.html'; });
+                .catch(err => {
+                    console.warn('Customer auth check background sync:', err);
+                });
 
             let historyChart = null;
             let spendingChart = null;
@@ -856,7 +872,7 @@
                     document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
                     document.getElementById(`tab-${target}`).style.display = 'block';
                     if (target === 'history') initCharts();
-                    fetchData();
+                    refreshData();
                 });
             });
 

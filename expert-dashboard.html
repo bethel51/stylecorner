@@ -1011,18 +1011,32 @@
                 }
             });
 
-            // Fetch real user initially and enforce role gate
+            // Load cached user data immediately if present
+            const cachedUserStr = localStorage.getItem('mockUser');
+            if (cachedUserStr) {
+                try {
+                    user = JSON.parse(cachedUserStr);
+                    refreshWorkspace();
+                } catch (e) {}
+            }
+
+            // Sync with backend in background
             fetch('/api/auth/me', { headers: { 'Authorization': `Bearer ${token}` } })
-                .then(res => res.ok ? res.json() : Promise.reject('Not authenticated'))
+                .then(res => res.ok ? res.json() : null)
                 .then(data => {
-                    // Role gate: customer users must go to customer dashboard
-                    if (data.role === 'customer') {
-                        window.location.href = 'customer-dashboard.html';
-                        return;
+                    if (data && data.role) {
+                        if (data.role === 'customer') {
+                            window.location.href = 'customer-dashboard.html';
+                            return;
+                        }
+                        user = data;
+                        localStorage.setItem('mockUser', JSON.stringify(data));
+                        refreshWorkspace();
                     }
-                    user = data; refreshWorkspace();
                 })
-                .catch(err => { console.error(err); localStorage.removeItem('token'); window.location.href = 'login.html'; });
+                .catch(err => {
+                    console.warn('Expert auth check background sync:', err);
+                });
         });
     </script>
 </body>
