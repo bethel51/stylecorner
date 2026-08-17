@@ -576,19 +576,25 @@
         }
 
         .dash-header-nav .logout-btn {
-            border: 1.5px solid #d4af37;
-            color: #d4af37 !important;
-            padding: 0.45rem 1.15rem;
+            background: #171717 !important;
+            color: #ffffff !important;
+            border: 1.5px solid #171717 !important;
+            padding: 0.5rem 1.25rem;
             border-radius: 8px;
             font-size: 0.825rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            transition: all 0.3s ease;
+            letter-spacing: 0.06em;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
         }
 
         .dash-header-nav .logout-btn:hover {
-            background: #d4af37;
+            background: #d4af37 !important;
             color: #171717 !important;
+            border-color: #d4af37 !important;
+            box-shadow: 0 6px 16px rgba(212,175,55,0.3);
         }
 
         @media (max-width: 768px) {
@@ -605,7 +611,7 @@
                 font-size: 0.825rem;
             }
             .dash-header-nav .logout-btn {
-                padding: 0.35rem 0.75rem;
+                padding: 0.4rem 0.85rem;
                 font-size: 0.75rem;
             }
         }
