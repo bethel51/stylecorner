@@ -510,6 +510,116 @@
             .input-row { grid-template-columns: 1fr; gap: 1.25rem; }
             .profile-container { padding: 2rem; }
         }
+
+        /* Comprehensive Mobile Sweep - Customer Dashboard */
+        @media (max-width: 768px) {
+            main.container {
+                padding-top: 5.5rem !important;
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr !important;
+                margin-top: 1rem !important;
+                gap: 1.5rem !important;
+            }
+
+            .dash-sidebar {
+                position: static !important;
+                padding: 1.25rem !important;
+                border-radius: 18px !important;
+            }
+
+            .dash-nav {
+                display: flex !important;
+                flex-direction: row !important;
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch;
+                gap: 0.5rem !important;
+                padding-bottom: 0.5rem !important;
+            }
+
+            .dash-nav-link {
+                white-space: nowrap !important;
+                padding: 0.6rem 0.9rem !important;
+                font-size: 0.825rem !important;
+                border-radius: 10px !important;
+                flex-shrink: 0;
+            }
+
+            .heading-group {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 1rem !important;
+                margin-bottom: 1.5rem !important;
+            }
+
+            .heading-group a.btn {
+                width: 100% !important;
+                justify-content: center !important;
+                padding: 0.8rem 1rem !important;
+            }
+
+            .stat-lineup {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 0.85rem !important;
+            }
+
+            .stat-card {
+                padding: 1.15rem 1rem !important;
+            }
+
+            .stat-card .value {
+                font-size: 1.6rem !important;
+            }
+
+            .action-cards-grid {
+                grid-template-columns: 1fr !important;
+                gap: 1.25rem !important;
+            }
+
+            .booking-item-row {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 0.75rem !important;
+                padding: 1.1rem !important;
+            }
+
+            .booking-item-row > div:last-child {
+                text-align: left !important;
+                width: 100% !important;
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+            }
+
+            #completion-notification-banner {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                padding: 1.1rem !important;
+                gap: 0.85rem !important;
+            }
+
+            .profile-container {
+                padding: 1.5rem 1.15rem !important;
+                border-radius: 18px !important;
+            }
+
+            .input-row {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stat-lineup {
+                grid-template-columns: 1fr !important;
+            }
+            .heading-group h2 {
+                font-size: 1.35rem !important;
+            }
+        }
         /* Dashboard Header Navigation Styling */
         header {
             background: rgba(255, 255, 255, 0.95) !important;
