@@ -1062,7 +1062,17 @@
                 if (bannerEl) {
                     if (completedBks.length > 0) {
                         const latestCompleted = completedBks[0];
+                        const isFinal = localStorage.getItem('sc_final_completed_' + latestCompleted._id) === 'true';
                         bannerEl.style.display = 'flex';
+                        
+                        const actionBtnHTML = isFinal
+                            ? `<span style="font-family: 'Outfit'; font-size: 0.78rem; font-weight: 800; background: #065f46; color: #ffffff; border: 1px solid #34d399; padding: 0.45rem 1rem; border-radius: 50px; text-transform: uppercase; letter-spacing: 0.05em; display: inline-flex; align-items: center; gap: 0.4rem; flex-shrink: 0; box-shadow: 0 2px 8px rgba(6,95,70,0.2);">
+                                  <i class="fas fa-circle-check" style="color: #34d399;"></i> COMPLETED FINAL
+                               </span>`
+                            : `<button type="button" class="mark-completed-final-btn" data-id="${latestCompleted._id}" style="font-family: 'Outfit'; font-size: 0.8rem; font-weight: 800; background: #10b981; color: #ffffff; border: none; padding: 0.55rem 1.15rem; border-radius: 50px; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; display: inline-flex; align-items: center; gap: 0.45rem; flex-shrink: 0; box-shadow: 0 4px 14px rgba(16,185,129,0.35); transition: all 0.25s ease;">
+                                  <i class="fas fa-check-double"></i> MARK COMPLETED FINAL
+                               </button>`;
+
                         bannerEl.innerHTML = `
                             <div style="display: flex; align-items: center; gap: 1rem;">
                                 <div style="width: 42px; height: 42px; border-radius: 12px; background: #10b981; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0;">
@@ -1073,8 +1083,33 @@
                                     <p style="color: #047857; font-size: 0.875rem; margin: 0;">Your appointment for <strong>${latestCompleted.service}</strong> ${latestCompleted.staff || latestCompleted.stylist ? 'with <strong>' + (latestCompleted.staff || latestCompleted.stylist) + '</strong>' : ''} has been completed.</p>
                                 </div>
                             </div>
-                            <span style="font-family: 'Outfit'; font-size: 0.75rem; font-weight: 800; background: #10b981; color: white; padding: 0.35rem 0.85rem; border-radius: 50px; text-transform: uppercase; letter-spacing: 0.05em; flex-shrink: 0;">COMPLETED</span>
+                            ${actionBtnHTML}
                         `;
+
+                        // Add click listener for MARK COMPLETED FINAL button
+                        const finalBtn = bannerEl.querySelector('.mark-completed-final-btn');
+                        if (finalBtn) {
+                            finalBtn.addEventListener('click', async () => {
+                                const bId = finalBtn.dataset.id;
+                                localStorage.setItem('sc_final_completed_' + bId, 'true');
+                                if (window.showToast) window.showToast('✓ Service confirmed as Completed Final!', 'success');
+                                
+                                try {
+                                    const token = localStorage.getItem('token');
+                                    await fetch(`/api/bookings/${bId}`, {
+                                        method: 'PUT',
+                                        headers: { 
+                                            'Content-Type': 'application/json',
+                                            'Authorization': `Bearer ${token}`
+                                        },
+                                        body: JSON.stringify({ clientAcknowledged: true, status: 'completed' })
+                                    });
+                                } catch (e) {
+                                    console.log('Background ack error', e);
+                                }
+                                refreshData();
+                            });
+                        }
                     } else {
                         bannerEl.style.display = 'none';
                     }
@@ -1084,8 +1119,9 @@
                 if (uBks.length > 0) {
                     apptsL.innerHTML = uBks.reverse().map(b => {
                         const isCompleted = b.status === 'completed';
+                        const isFinal = localStorage.getItem('sc_final_completed_' + b._id) === 'true';
                         const badgeStyle = isCompleted 
-                            ? 'background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.3); font-weight: 800;'
+                            ? (isFinal ? 'background: #065f46; color: #ffffff; border: 1px solid #34d399; font-weight: 800;' : 'background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.3); font-weight: 800;')
                             : '';
                         return `
                         <div class="booking-item-row" style="${isCompleted ? 'border-left: 4px solid #10b981;' : ''}">
@@ -1094,7 +1130,7 @@
                                 <p style="font-size: 0.85rem; color: #6b7280;"><i class="fas fa-calendar-days"></i> ${b.date} • ${b.time} ${b.staff || b.stylist ? '• Expert: ' + (b.staff || b.stylist) : ''}</p>
                             </div>
                             <span class="badge-status ${b.status || 'pending'}" style="${badgeStyle}">
-                                ${isCompleted ? '<i class="fas fa-check-double"></i> COMPLETED' : (b.status || 'pending')}
+                                ${isCompleted ? (isFinal ? '<i class="fas fa-circle-check" style="color:#34d399;"></i> COMPLETED FINAL' : '<i class="fas fa-check-double"></i> COMPLETED') : (b.status || 'pending')}
                             </span>
                         </div>`;
                     }).join('');
