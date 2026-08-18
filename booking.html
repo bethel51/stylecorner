@@ -181,11 +181,49 @@
             line-height: 1.4;
         }
 
-        .ai-slot-pills label {
-            transition: all 0.25s ease;
+        .ai-slot-selector-group {
+            margin-bottom: 1.25rem;
+            width: 100%;
+            box-sizing: border-box;
         }
-        .ai-slot-pills label:has(input:checked),
-        .ai-slot-pills label.active {
+
+        .ai-slot-pills {
+            display: flex;
+            gap: 0.5rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .ai-slot-pill-option {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.45rem;
+            padding: 0.65rem 0.85rem;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #374151;
+            flex: 1;
+            box-sizing: border-box;
+            background: #ffffff;
+            transition: all 0.25s ease;
+            white-space: nowrap;
+        }
+
+        .ai-slot-pill-option input[type="radio"] {
+            accent-color: #d4af37;
+            margin: 0;
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        .ai-slot-pill-option:has(input:checked),
+        .ai-slot-pill-option.active {
             background: rgba(212,175,55,0.12) !important;
             border-color: #d4af37 !important;
             color: #171717 !important;
@@ -209,36 +247,25 @@
                 border-radius: 14px !important;
             }
             .ai-slot-pills { 
-                display: grid !important;
-                grid-template-columns: repeat(3, 1fr) !important;
-                gap: 0.4rem !important;
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 0.65rem !important;
                 width: 100% !important;
             }
-            .ai-slot-pills label {
+            .ai-slot-pill-option {
                 width: 100% !important;
-                text-align: center !important;
-                justify-content: center !important;
+                flex: none !important;
+                justify-content: flex-start !important;
+                text-align: left !important;
                 box-sizing: border-box !important;
-                padding: 0.65rem 0.35rem !important;
-                font-size: 0.75rem !important;
-                white-space: nowrap !important;
+                padding: 0.8rem 1.1rem !important;
+                font-size: 0.875rem !important;
+                border-radius: 12px !important;
+                white-space: normal !important;
             }
             #apply-ai-match-btn {
                 font-size: 0.8rem !important;
                 padding: 0.85rem 1rem !important;
-            }
-        }
-
-        @media (max-width: 440px) {
-            .ai-slot-pills { 
-                grid-template-columns: 1fr !important;
-                gap: 0.5rem !important;
-            }
-            .ai-slot-pills label {
-                padding: 0.75rem 1rem !important;
-                font-size: 0.825rem !important;
-                justify-content: flex-start !important;
-                text-align: left !important;
             }
         }
     </style>
@@ -701,17 +728,17 @@
                 <p id="ai-matched-rationale" style="color: #4b5563; font-size: 0.83rem; line-height: 1.5; margin-bottom: 1.1rem;"></p>
 
                 <!-- Service Slot Selector -->
-                <div id="ai-slot-selector" style="margin-bottom: 1.25rem;">
-                    <label style="display: block; font-family: 'Outfit'; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: #6b7280; margin-bottom: 0.65rem; letter-spacing: 0.05em;">Apply matched services to:</label>
-                    <div class="ai-slot-pills" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                        <label style="display: flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1rem; border: 1.5px solid #e5e7eb; border-radius: 8px; cursor: pointer; font-family: 'Outfit'; font-size: 0.78rem; font-weight: 700; color: #374151; flex: 1; justify-content: center; transition: all 0.2s;">
-                            <input type="radio" name="ai-slot" value="primary" checked style="accent-color: #d4af37;"> Primary
+                <div id="ai-slot-selector" class="ai-slot-selector-group">
+                    <label style="display: block; font-family: 'Outfit'; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; color: #6b7280; margin-bottom: 0.65rem; letter-spacing: 0.05em;">Apply matched services to:</label>
+                    <div class="ai-slot-pills">
+                        <label class="ai-slot-pill-option active">
+                            <input type="radio" name="ai-slot" value="primary" checked> Primary
                         </label>
-                        <label style="display: flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1rem; border: 1.5px solid #e5e7eb; border-radius: 8px; cursor: pointer; font-family: 'Outfit'; font-size: 0.78rem; font-weight: 700; color: #374151; flex: 1; justify-content: center; transition: all 0.2s;">
-                            <input type="radio" name="ai-slot" value="secondary" style="accent-color: #d4af37;"> Secondary
+                        <label class="ai-slot-pill-option">
+                            <input type="radio" name="ai-slot" value="secondary"> Secondary
                         </label>
-                        <label style="display: flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1rem; border: 1.5px solid #e5e7eb; border-radius: 8px; cursor: pointer; font-family: 'Outfit'; font-size: 0.78rem; font-weight: 700; color: #374151; flex: 1; justify-content: center; transition: all 0.2s;">
-                            <input type="radio" name="ai-slot" value="both" style="accent-color: #d4af37;"> Both Slots
+                        <label class="ai-slot-pill-option">
+                            <input type="radio" name="ai-slot" value="both"> Both Slots
                         </label>
                     </div>
                 </div>
