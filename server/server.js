@@ -257,7 +257,7 @@ app.put('/api/users/profile', authenticateToken, async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       req.user._id,
       { $set: { firstname, lastname, phone } },
-      { new: true, runValidators: true }
+      { returnDocument: 'after', runValidators: true }
     ).select('-password');
     
     res.status(200).json(updatedUser);
@@ -400,7 +400,7 @@ app.post('/api/bookings', authenticateToken, async (req, res) => {
 // Update a booking status
 app.put('/api/bookings/:id', authenticateToken, async (req, res) => {
   try {
-    const updated = await Booking.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const updated = await Booking.findByIdAndUpdate(req.params.id, req.body, { returnDocument: 'after' });
     if (req.body.status === 'accepted') {
       await sendNotificationSafe(updated.clientEmail, "Booking Accepted!", `Hi ${updated.clientName},\n\nGreat news! Your booking for ${updated.service} on ${updated.date} at ${updated.time} has been accepted by our staff. See you then!`);
     } else if (req.body.status === 'completed') {
@@ -491,7 +491,7 @@ app.post('/api/orders', authenticateToken, async (req, res) => {
 // Update an order status
 app.put('/api/orders/:id', authenticateToken, async (req, res) => {
   try {
-    const updated = await Order.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const updated = await Order.findByIdAndUpdate(req.params.id, req.body, { returnDocument: 'after' });
     if (req.body.status === 'shipped') {
       await sendNotificationSafe(updated.email || "customer@example.com", "Order Shipped!", `Good news! Order #${updated.id} for ${updated.item} has been shipped to ${updated.address}.`);
     }
