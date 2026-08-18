@@ -193,6 +193,31 @@ app.post('/api/auth/verify', async (req, res) => {
   }
 });
 
+// Resend OTP Code
+app.post('/api/auth/resend-otp', async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    if (user.isVerified) return res.status(400).json({ error: 'User already verified' });
+
+    const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+    user.otpCode = otpCode;
+    user.otpExpiresAt = new Date(Date.now() + 15 * 60 * 1000);
+    await user.save();
+
+    await sendNotificationSafe(
+      user.email,
+      "Style Corner - Verification Code",
+      `Hi ${user.firstname},\n\nYour new verification code is: ${otpCode}\n\nThis code will expire in 15 minutes.`
+    );
+
+    res.status(200).json({ message: 'A new 6-digit verification code has been sent to your email.' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to resend verification code' });
+  }
+});
+
 // Login User
 app.post('/api/auth/login', async (req, res) => {
   try {

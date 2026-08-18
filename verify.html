@@ -5,32 +5,82 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verify Account | Style Corner</title>
+    <meta name="description" content="Enter your 6-digit verification code to activate your Style Corner account.">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap">
     <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #faf9f6;
+            color: #171717;
+        }
+
         .otp-inputs {
             display: flex;
-            gap: 1rem;
+            gap: 0.75rem;
             justify-content: center;
-            margin-bottom: 2rem;
+            margin: 2rem 0 1.5rem;
         }
         
         .otp-inputs input {
-            width: 3rem;
-            height: 4rem;
-            font-size: 2rem;
+            width: 3.4rem;
+            height: 4.2rem;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
             text-align: center;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            background: #f8fafc;
+            border: 2px solid #e5e7eb;
+            border-radius: 14px;
+            background: #ffffff;
+            color: #171717;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
         }
 
         .otp-inputs input:focus {
             outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+            border-color: #d4af37;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.15), 0 8px 20px rgba(0,0,0,0.05);
+            transform: translateY(-2px);
+        }
+
+        .resend-box {
+            margin-top: 1.5rem;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .resend-btn {
+            background: none;
+            border: none;
+            color: #d4af37;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            cursor: pointer;
+            text-decoration: underline;
+            transition: opacity 0.2s;
+            padding: 0;
+            font-size: 0.875rem;
+        }
+
+        .resend-btn:disabled {
+            color: #9ca3af;
+            cursor: not-allowed;
+            text-decoration: none;
+        }
+
+        @media (max-width: 480px) {
+            .otp-inputs {
+                gap: 0.4rem;
+            }
+            .otp-inputs input {
+                width: 2.75rem;
+                height: 3.5rem;
+                font-size: 1.5rem;
+                border-radius: 10px;
+            }
         }
     </style>
 </head>
@@ -41,40 +91,49 @@
         <div class="split-side split-side-image image-side-text"
             style="background-image: url('https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1200&q=70&fm=webp');">
             <div class="side-content fade-up">
-                <span class="side-sub">Secure Access</span>
+                <span class="side-sub" style="letter-spacing: 0.1em;">AUTHENTICATION</span>
                 <h2>Security First.</h2>
-                <p>We need to verify your email to ensure the highest level of privacy and security.</p>
+                <p>We've sent an exclusive 6-digit verification passkey to your email to guarantee private atelier access.</p>
             </div>
             <div class="side-bg-overlay"></div>
         </div>
 
         <!-- Form Side -->
         <div class="split-side split-side-form">
-            <div class="form-wrapper-minimal fade-up" style="animation-delay: 0.3s; text-align: center;">
+            <div class="form-wrapper-minimal fade-up" style="animation-delay: 0.3s; text-align: center; max-width: 440px; width: 100%;">
                 <a href="index.html" class="logo mb-5" style="display: inline-block;">STYLE<span>CORNER</span></a>
-                <h1 style="margin-bottom: 0.5rem;">Verify Email</h1>
-                <p class="subtitle" style="margin-bottom: 2rem;">We sent a 6-digit code to <br><strong id="display-email">your email</strong>.</p>
+                <h1 style="font-family: 'Outfit'; font-weight: 800; font-size: 1.85rem; margin-bottom: 0.5rem; color: #171717;">Verify Account</h1>
+                <p class="subtitle" style="margin-bottom: 1.5rem; color: #6b7280; font-size: 0.925rem; line-height: 1.5;">
+                    Enter the 6-digit security code sent to<br><strong id="display-email" style="color: #171717;">your email</strong>.
+                </p>
 
                 <form id="verify-form">
                     <input type="hidden" id="email" required>
                     
                     <div class="otp-inputs" id="otp-container">
-                        <input type="text" maxlength="1" pattern="[0-9]" required>
-                        <input type="text" maxlength="1" pattern="[0-9]" required>
-                        <input type="text" maxlength="1" pattern="[0-9]" required>
-                        <input type="text" maxlength="1" pattern="[0-9]" required>
-                        <input type="text" maxlength="1" pattern="[0-9]" required>
-                        <input type="text" maxlength="1" pattern="[0-9]" required>
+                        <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric" autocomplete="one-time-code" required>
+                        <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric" required>
+                        <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric" required>
+                        <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric" required>
+                        <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric" required>
+                        <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric" required>
                     </div>
 
-                    <p id="error-msg" style="color: #ef4444; font-size: 0.85rem; margin-bottom: 1.5rem; display: none;"></p>
+                    <p id="error-msg" style="color: #ef4444; font-weight: 600; font-size: 0.85rem; margin-bottom: 1.25rem; display: none;"></p>
 
-                    <button type="submit" class="btn btn-premium w-full mt-2">Verify Account</button>
+                    <button type="submit" id="submit-btn" class="btn btn-premium w-full mt-2" style="background: #171717; color: #d4af37; font-family: 'Outfit'; font-weight: 800; padding: 1rem; border-radius: 12px; border: none; width: 100%; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.06em; cursor: pointer; transition: all 0.25s ease;">
+                        <i class="fas fa-shield-halved"></i> Verify & Proceed
+                    </button>
                 </form>
 
-                <div class="auth-footer mt-5" style="border-top: 1px solid var(--border); padding-top: 2rem;">
-                    <p style="font-size: 0.9rem; color: var(--text-muted);"><a href="login.html"
-                            style="color: var(--accent); font-weight: 600;">Back to Sign In</a></p>
+                <div class="resend-box">
+                    <span>Didn't receive the code? </span>
+                    <button type="button" id="resend-btn" class="resend-btn">Resend Code</button>
+                    <span id="timer-text" style="display: none; font-size: 0.85rem; color: #9ca3af; margin-left: 0.3rem;">(in <span id="timer-count">60</span>s)</span>
+                </div>
+
+                <div class="auth-footer mt-5" style="border-top: 1px solid rgba(0,0,0,0.06); padding-top: 1.75rem; margin-top: 2rem;">
+                    <p style="font-size: 0.875rem; color: #6b7280;">Wrong email? <a href="login.html" style="color: #d4af37; font-family: 'Outfit'; font-weight: 700; text-decoration: none;">Back to Sign In</a></p>
                 </div>
             </div>
         </div>
@@ -95,19 +154,29 @@
             document.getElementById('email').value = emailParam;
             document.getElementById('display-email').textContent = emailParam;
 
-            // OTP Input UX logic
             const inputs = document.querySelectorAll('.otp-inputs input');
-            
+            const submitBtn = document.getElementById('submit-btn');
+            const form = document.getElementById('verify-form');
+            const errorMsg = document.getElementById('error-msg');
+
+            // Focus first input automatically
+            if (inputs[0]) inputs[0].focus();
+
+            // OTP Input UX logic
             inputs.forEach((input, index) => {
                 input.addEventListener('input', (e) => {
-                    // Move to next input if valid number
-                    if (e.target.value.match(/[0-9]/) && index < inputs.length - 1) {
-                        inputs[index + 1].focus();
+                    const val = e.target.value;
+                    if (val.match(/[0-9]/)) {
+                        if (index < inputs.length - 1) {
+                            inputs[index + 1].focus();
+                        } else {
+                            // Auto-submit when all 6 digits entered
+                            form.dispatchEvent(new Event('submit'));
+                        }
                     }
                 });
 
                 input.addEventListener('keydown', (e) => {
-                    // Move back on backspace if empty
                     if (e.key === 'Backspace' && e.target.value === '' && index > 0) {
                         inputs[index - 1].focus();
                     }
@@ -125,16 +194,61 @@
                         input.value = digits[i];
                     });
                     inputs[5].focus();
+                    form.dispatchEvent(new Event('submit'));
                 }
             });
 
-            const form = document.getElementById('verify-form');
+            // Resend OTP logic
+            const resendBtn = document.getElementById('resend-btn');
+            const timerText = document.getElementById('timer-text');
+            const timerCount = document.getElementById('timer-count');
+            let cooldown = 0;
+
+            const startCooldown = (seconds = 60) => {
+                cooldown = seconds;
+                resendBtn.disabled = true;
+                timerText.style.display = 'inline';
+                timerCount.textContent = cooldown;
+
+                const interval = setInterval(() => {
+                    cooldown--;
+                    timerCount.textContent = cooldown;
+                    if (cooldown <= 0) {
+                        clearInterval(interval);
+                        resendBtn.disabled = false;
+                        timerText.style.display = 'none';
+                    }
+                }, 1000);
+            };
+
+            resendBtn.addEventListener('click', async () => {
+                if (cooldown > 0) return;
+                resendBtn.disabled = true;
+                resendBtn.textContent = 'Sending...';
+
+                try {
+                    const res = await fetch('/api/auth/resend-otp', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: emailParam })
+                    });
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.error || 'Failed to resend code');
+
+                    if (window.showToast) window.showToast('New 6-digit code sent to your email!', 'success');
+                    startCooldown(60);
+                } catch (err) {
+                    if (window.showToast) window.showToast(err.message, 'error');
+                } finally {
+                    resendBtn.textContent = 'Resend Code';
+                }
+            });
+
+            // Verification form submit handler
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const errorMsg = document.getElementById('error-msg');
                 errorMsg.style.display = 'none';
 
-                // Combine 6 inputs
                 let code = '';
                 inputs.forEach(input => code += input.value);
                 
@@ -144,9 +258,8 @@
                     return;
                 }
 
-                const btn = form.querySelector('button');
-                btn.disabled = true;
-                btn.textContent = 'Verifying...';
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying Code...';
 
                 try {
                     const res = await fetch('/api/auth/verify', {
@@ -161,31 +274,33 @@
                     const result = await res.json();
 
                     if (!res.ok) {
-                        errorMsg.textContent = result.error || 'Verification failed.';
+                        errorMsg.textContent = result.error || 'Invalid verification code.';
                         errorMsg.style.display = 'block';
-                        btn.disabled = false;
-                        btn.textContent = 'Verify Account';
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = '<i class="fas fa-shield-halved"></i> Verify & Proceed';
                         return;
                     }
 
-                    // Success! Store token and user data
+                    // Success! Store token & profile
                     localStorage.setItem('token', result.token);
                     localStorage.setItem('mockUser', JSON.stringify(result.user));
+                    if (window.showToast) window.showToast('Account verified! Welcome to Style Corner.', 'success');
 
-                    // Route based on role
-                    if (redirectUrl) {
-                        window.location.href = redirectUrl;
-                    } else if (result.user.role === 'staff') {
-                        window.location.href = 'expert-dashboard.html';
-                    } else {
-                        window.location.href = 'customer-dashboard.html';
-                    }
+                    setTimeout(() => {
+                        if (redirectUrl) {
+                            window.location.href = redirectUrl;
+                        } else if (result.user.role === 'staff') {
+                            window.location.href = 'expert-dashboard.html';
+                        } else {
+                            window.location.href = 'customer-dashboard.html';
+                        }
+                    }, 600);
                 } catch (error) {
                     console.error(error);
-                    errorMsg.textContent = "Server error during verification.";
+                    errorMsg.textContent = "Network error during verification. Please try again.";
                     errorMsg.style.display = 'block';
-                    btn.disabled = false;
-                    btn.textContent = 'Verify Account';
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-shield-halved"></i> Verify & Proceed';
                 }
             });
         });
