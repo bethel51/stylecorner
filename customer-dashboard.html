@@ -1195,11 +1195,14 @@
                 }
                 if (lO) {
                     document.getElementById('overview-order-preview').innerHTML = `
-                        <div class="card-preview-content">
-                            <span style="font-weight: 700; font-size: 1.1rem; color: #171717;">${lO.item}</span>
-                            <p style="color: var(--dash-accent); font-weight: 700; text-transform: uppercase; font-size: 0.8rem; margin-top: 0.25rem;">
-                                <i class="fas fa-truck"></i> Status: ${lO.status}
-                            </p>
+                        <div class="card-preview-content" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                            <div>
+                                <span style="font-weight: 800; font-size: 1.1rem; color: #171717; font-family: 'Outfit'; display: block;">${lO.item}</span>
+                                <p style="color: #10b981; font-weight: 700; text-transform: uppercase; font-size: 0.8rem; margin-top: 0.2rem;">
+                                    <i class="fas fa-truck"></i> Status: ${lO.status}
+                                </p>
+                            </div>
+                            <span style="font-family: 'Outfit'; font-size: 1.1rem; font-weight: 800; color: #171717;">₦${(lO.price || 0).toLocaleString()}</span>
                         </div>`;
                 } else {
                     document.getElementById('overview-order-preview').innerHTML = '<span style="color: var(--dash-muted);">No recent boutique orders.</span>';

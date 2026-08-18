@@ -386,7 +386,8 @@ app.get('/api/bookings', authenticateToken, async (req, res) => {
   try {
     let query = {};
     if (req.user.role === 'customer') {
-      query = { clientEmail: req.user.email };
+      const userEmail = (req.user.email || '').trim();
+      query = { clientEmail: new RegExp('^' + userEmail + '$', 'i') };
     } else if (req.user.role === 'staff') {
       query = { $or: [{ status: 'pending' }, { staff: req.user.firstname }] };
     }
@@ -492,7 +493,8 @@ app.get('/api/orders', authenticateToken, async (req, res) => {
   try {
     let query = {};
     if (req.user.role === 'customer') {
-      query = { email: req.user.email };
+      const userEmail = (req.user.email || '').trim();
+      query = { email: new RegExp('^' + userEmail + '$', 'i') };
     }
     const orders = await Order.find(query).sort({ createdAt: -1 });
     res.status(200).json(orders);
@@ -504,9 +506,10 @@ app.get('/api/orders', authenticateToken, async (req, res) => {
 // Create a new order (from store checkout)
 app.post('/api/orders', authenticateToken, async (req, res) => {
   try {
+    const userEmail = (req.body.email || req.user.email || '').trim();
     const orderData = {
       ...req.body,
-      email: req.body.email || req.user.email
+      email: userEmail
     };
     const order = new Order(orderData);
     const savedOrder = await order.save();
