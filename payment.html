@@ -325,6 +325,7 @@
                                 'Authorization': `Bearer ${token}`
                             },
                             body: JSON.stringify({
+                                email: email,
                                 item: item.name,
                                 price: item.price,
                                 address: address,

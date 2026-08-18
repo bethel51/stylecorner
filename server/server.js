@@ -504,11 +504,16 @@ app.get('/api/orders', authenticateToken, async (req, res) => {
 // Create a new order (from store checkout)
 app.post('/api/orders', authenticateToken, async (req, res) => {
   try {
-    const order = new Order(req.body);
+    const orderData = {
+      ...req.body,
+      email: req.body.email || req.user.email
+    };
+    const order = new Order(orderData);
     const savedOrder = await order.save();
-    await sendNotificationSafe(savedOrder.email || "customer@example.com", "Order Received", `Thank you for your order! Order #${savedOrder.id} for ${savedOrder.item} has been placed.`);
+    await sendNotificationSafe(savedOrder.email, "Order Received", `Thank you for your order! Order #${savedOrder._id} for ${savedOrder.item} has been placed.`);
     res.status(201).json(savedOrder);
   } catch (error) {
+    console.error('Order creation error:', error);
     res.status(500).json({ error: 'Failed to save order' });
   }
 });
