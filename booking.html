@@ -181,6 +181,17 @@
             line-height: 1.4;
         }
 
+        .ai-slot-pills label {
+            transition: all 0.25s ease;
+        }
+        .ai-slot-pills label:has(input:checked),
+        .ai-slot-pills label.active {
+            background: rgba(212,175,55,0.12) !important;
+            border-color: #d4af37 !important;
+            color: #171717 !important;
+            box-shadow: 0 4px 12px rgba(212,175,55,0.15);
+        }
+
         @media (max-width: 600px) {
             #ai-matcher-modal > div {
                 padding: 1.5rem 1.15rem !important;
@@ -200,7 +211,7 @@
             .ai-slot-pills { 
                 display: grid !important;
                 grid-template-columns: repeat(3, 1fr) !important;
-                gap: 5px !important;
+                gap: 0.4rem !important;
                 width: 100% !important;
             }
             .ai-slot-pills label {
@@ -208,13 +219,26 @@
                 text-align: center !important;
                 justify-content: center !important;
                 box-sizing: border-box !important;
-                padding: 0.5rem 0.15rem !important;
-                font-size: 0.7rem !important;
+                padding: 0.65rem 0.35rem !important;
+                font-size: 0.75rem !important;
                 white-space: nowrap !important;
             }
             #apply-ai-match-btn {
                 font-size: 0.8rem !important;
                 padding: 0.85rem 1rem !important;
+            }
+        }
+
+        @media (max-width: 440px) {
+            .ai-slot-pills { 
+                grid-template-columns: 1fr !important;
+                gap: 0.5rem !important;
+            }
+            .ai-slot-pills label {
+                padding: 0.75rem 1rem !important;
+                font-size: 0.825rem !important;
+                justify-content: flex-start !important;
+                text-align: left !important;
             }
         }
     </style>
@@ -585,6 +609,14 @@
                     runAiBtn.disabled = false;
                     runAiBtn.innerHTML = '<i class="fas fa-wand-magic-sparkles"></i> Re-Analyze Request';
                 }
+            });
+
+            // Active slot pill visual feedback
+            document.querySelectorAll('input[name="ai-slot"]').forEach(radio => {
+                radio.addEventListener('change', () => {
+                    document.querySelectorAll('.ai-slot-pills label').forEach(lbl => lbl.classList.remove('active'));
+                    if (radio.checked && radio.closest('label')) radio.closest('label').classList.add('active');
+                });
             });
 
             applyAiBtn.addEventListener('click', () => {
