@@ -315,27 +315,35 @@ export const ExpertDashboard = () => {
           </div>
 
           {/* Specialties Badges */}
-          {user?.specialties && user.specialties.length > 0 && (
-            <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', marginBottom: '1.25rem', paddingTop: '0.5rem', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-              {user.specialties.map((s, idx) => (
-                <span
-                  key={idx}
-                  style={{
-                    background: 'rgba(255,255,255,0.08)',
-                    color: '#e5e7eb',
-                    fontSize: '0.72rem',
-                    fontFamily: 'Outfit',
-                    fontWeight: 700,
-                    padding: '0.2rem 0.6rem',
-                    borderRadius: '50px',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                  }}
-                >
-                  {s}
-                </span>
-              ))}
-            </div>
-          )}
+          {(() => {
+            const specs = Array.isArray(user?.specialties)
+              ? user.specialties
+              : (typeof user?.specialties === 'string' && user.specialties.trim())
+                ? user.specialties.split(',').map(s => s.trim())
+                : [];
+            if (specs.length === 0) return null;
+            return (
+              <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', marginBottom: '1.25rem', paddingTop: '0.5rem', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+                {specs.map((s, idx) => (
+                  <span
+                    key={idx}
+                    style={{
+                      background: 'rgba(255,255,255,0.08)',
+                      color: '#e5e7eb',
+                      fontSize: '0.72rem',
+                      fontFamily: 'Outfit',
+                      fontWeight: 700,
+                      padding: '0.2rem 0.6rem',
+                      borderRadius: '50px',
+                      border: '1px solid rgba(255,255,255,0.1)',
+                    }}
+                  >
+                    {s}
+                  </span>
+                ))}
+              </div>
+            );
+          })()}
 
             <div style={{ marginTop: '1rem' }}>
                 <button

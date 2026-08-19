@@ -130,7 +130,7 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
                   borderRadius: '50%',
                 }}
               />
-            ) : user?.firstname ? (
+            ) : (user?.firstname && typeof user.firstname === 'string') ? (
               <span
                 style={{
                   fontFamily: 'Outfit',
@@ -140,7 +140,7 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
                   textTransform: 'uppercase',
                 }}
               >
-                {user.firstname[0]}
+                {user.firstname.charAt(0)}
               </span>
             ) : (
               <User size={18} />
