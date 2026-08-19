@@ -2,12 +2,12 @@ const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
   firstname: { type: String, required: true },
-  lastname: { type: String, required: true },
+  lastname: { type: String, default: '' },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  phone: { type: String },
+  phone: { type: String, default: '' },
   role: { type: String, enum: ['customer', 'staff'], default: 'customer' },
-  specialties: [{ type: String }], // e.g. ["Hair Cut", "Braids"] - used if staff
+  specialties: [{ type: String }],
   isVerified: { type: Boolean, default: false },
   otpCode: { type: String },
   otpExpiresAt: { type: Date },

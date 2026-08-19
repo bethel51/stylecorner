@@ -1,6 +1,6 @@
-require('dotenv').config();
-const express = require('express');
 const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
+const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
@@ -74,9 +74,6 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(cors());
 app.use(express.json());
-
-// Serve static frontend files from parent directory
-app.use(express.static(path.join(__dirname, '../')));
 
 // MongoDB Connection
 mongoose.set('bufferCommands', false); // Disable command buffering so queries fail fast if not connected
@@ -158,7 +155,8 @@ app.post('/api/auth/register', async (req, res) => {
     // Do NOT return token yet. Require verification.
     res.status(201).json({ message: 'Registration successful. Please verify your email.', email: savedUser.email });
   } catch (error) {
-    res.status(500).json({ error: 'Registration failed' });
+    console.error('Registration backend error:', error);
+    res.status(500).json({ error: error.message || 'Registration failed' });
   }
 });
 
@@ -189,7 +187,8 @@ app.post('/api/auth/verify', async (req, res) => {
     const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
     res.status(200).json({ message: 'Verification successful', user, token });
   } catch (error) {
-    res.status(500).json({ error: 'Verification failed' });
+    console.error('Verification error:', error);
+    res.status(500).json({ error: error.message || 'Verification failed' });
   }
 });
 
@@ -214,7 +213,8 @@ app.post('/api/auth/resend-otp', async (req, res) => {
 
     res.status(200).json({ message: 'A new 6-digit verification code has been sent to your email.' });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to resend verification code' });
+    console.error('Resend OTP error:', error);
+    res.status(500).json({ error: error.message || 'Failed to resend verification code' });
   }
 });
 
@@ -259,7 +259,8 @@ app.post('/api/auth/login', async (req, res) => {
     const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
     res.status(200).json({ user, token });
   } catch (error) {
-    res.status(500).json({ error: 'Login failed' });
+    console.error('Login error:', error);
+    res.status(500).json({ error: error.message || 'Login failed' });
   }
 });
 
@@ -534,6 +535,21 @@ app.put('/api/orders/:id', authenticateToken, async (req, res) => {
   }
 });
 
+// Serve dist directory if built
+const distPath = path.join(__dirname, '../dist');
+app.use(express.static(distPath));
+
+// SPA Catch-all Route for client-side routing (Express v5 compatible)
+app.use((req, res, next) => {
+  if (req.path.startsWith('/api')) return next();
+  if (req.method !== 'GET') return next();
+  const indexFile = require('fs').existsSync(path.join(distPath, 'index.html'))
+    ? path.join(distPath, 'index.html')
+    : path.join(__dirname, '../index.html');
+  res.sendFile(indexFile);
+});
+
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Style Corner server is live on port ${PORT}`);
 });
+
