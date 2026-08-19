@@ -252,4 +252,24 @@ export const api = {
     if (!res.ok) throw new Error(data?.error || 'Failed to update order');
     return data;
   },
+
+  // Admin User Management
+  getAdminUsers: async () => {
+    const res = await fetchWithTimeout(`${API_BASE}/admin/users`, {
+      headers: getAuthHeaders(),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Failed to fetch user accounts');
+    return data;
+  },
+
+  deleteAdminUser: async (userId) => {
+    const res = await fetchWithTimeout(`${API_BASE}/admin/users/${userId}`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Failed to delete user account');
+    return data;
+  },
 };

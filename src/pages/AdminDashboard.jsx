@@ -22,6 +22,9 @@ import {
   ChevronRight,
   Menu,
   X,
+  Trash2,
+  AlertTriangle,
+  UserCheck,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
@@ -31,16 +34,20 @@ export const AdminDashboard = () => {
   const navigate = useNavigate();
   const { user, logout, showToast } = useAuth();
 
-  const [activeTab, setActiveTab] = useState('orders');
+  const [activeTab, setActiveTab] = useState('orders'); // 'orders' | 'bookings' | 'users'
   const [bookings, setBookings] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [usersList, setUsersList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState(null);
 
+  // Filters
   const [orderStatusFilter, setOrderStatusFilter] = useState('all');
   const [bookingStatusFilter, setBookingStatusFilter] = useState('all');
+  const [userRoleFilter, setUserRoleFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [userToDelete, setUserToDelete] = useState(null);
 
   // Mobile sidebar state
   const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -63,12 +70,14 @@ export const AdminDashboard = () => {
   const fetchAdminData = async () => {
     setLoading(true);
     try {
-      const [bookingsData, ordersData] = await Promise.all([
+      const [bookingsData, ordersData, usersData] = await Promise.all([
         api.getBookings().catch(() => []),
         api.getOrders().catch(() => []),
+        api.getAdminUsers().catch(() => []),
       ]);
       setBookings(Array.isArray(bookingsData) ? bookingsData : []);
       setOrders(Array.isArray(ordersData) ? ordersData : []);
+      setUsersList(Array.isArray(usersData) ? usersData : []);
     } catch (err) {
       showToast('Failed to load admin data', 'error');
     } finally {
@@ -103,9 +112,26 @@ export const AdminDashboard = () => {
     }
   };
 
+  const handleDeleteUserAccount = async (targetUser) => {
+    if (!targetUser?._id) return;
+    setUpdatingId(targetUser._id);
+    try {
+      await api.deleteAdminUser(targetUser._id);
+      setUsersList(prev => prev.filter(u => u._id !== targetUser._id));
+      setUserToDelete(null);
+      showToast(`Account for ${targetUser.firstname || targetUser.email} deleted`, 'success');
+    } catch (err) {
+      showToast(err.message || 'Failed to delete user account', 'error');
+    } finally {
+      setUpdatingId(null);
+    }
+  };
+
   const totalRevenue = orders.reduce((sum, o) => sum + (o.totalPrice || 0), 0);
   const pendingOrdersCount = orders.filter(o => o.status === 'pending' || o.status === 'processing').length;
   const pendingBookingsCount = bookings.filter(b => b.status === 'pending').length;
+  const customerCount = usersList.filter(u => u.role !== 'staff').length;
+  const expertCount = usersList.filter(u => u.role === 'staff').length;
 
   const filteredOrders = orders.filter(o => {
     const matchesStatus = orderStatusFilter === 'all' || o.status === orderStatusFilter;
@@ -127,15 +153,29 @@ export const AdminDashboard = () => {
     return matchesStatus && matchesSearch;
   });
 
+  const filteredUsers = usersList.filter(u => {
+    const matchesRole = userRoleFilter === 'all' ||
+      (userRoleFilter === 'staff' ? u.role === 'staff' : u.role !== 'staff');
+    const q = searchQuery.toLowerCase();
+    const fullName = `${u.firstname || ''} ${u.lastname || ''}`.toLowerCase();
+    const matchesSearch = !q ||
+      fullName.includes(q) ||
+      (u.email || '').toLowerCase().includes(q) ||
+      (u.phone || '').toLowerCase().includes(q);
+    return matchesRole && matchesSearch;
+  });
+
   const kpiCards = [
     { label: 'Store Revenue', value: `$${totalRevenue.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, icon: DollarSign, color: '#d4af37', bg: 'rgba(212,175,55,0.1)' },
     { label: 'Total Orders', value: orders.length, sub: `${pendingOrdersCount} pending`, icon: ShoppingBag, color: '#3b82f6', bg: 'rgba(59,130,246,0.1)' },
     { label: 'Bookings Queue', value: bookings.length, sub: `${pendingBookingsCount} pending`, icon: Calendar, color: '#10b981', bg: 'rgba(16,185,129,0.1)' },
+    { label: 'User Accounts', value: usersList.length, sub: `${customerCount} clients · ${expertCount} experts`, icon: Users, color: '#a855f7', bg: 'rgba(168,85,247,0.1)' },
   ];
 
   const navItems = [
     { id: 'orders', label: 'Store Orders', icon: ShoppingBag, count: orders.length },
     { id: 'bookings', label: 'Salon Bookings', icon: Calendar, count: bookings.length },
+    { id: 'users', label: 'User Accounts', icon: Users, count: usersList.length },
   ];
 
   return (
@@ -318,10 +358,10 @@ export const AdminDashboard = () => {
             )}
             <div>
               <h1 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: isMobile ? '1.1rem' : '1.3rem', color: '#ffffff', margin: 0 }}>
-                {activeTab === 'orders' ? 'Store Orders' : 'Salon Bookings'}
+                {activeTab === 'orders' ? 'Store Orders' : activeTab === 'bookings' ? 'Salon Bookings' : 'User Accounts'}
               </h1>
               <p style={{ color: '#6b7280', fontSize: '0.75rem', margin: '0.1rem 0 0 0', display: isMobile ? 'none' : 'block' }}>
-                Manage and update {activeTab === 'orders' ? 'customer orders' : 'appointment bookings'} in real-time
+                {activeTab === 'orders' ? 'Manage customer orders in real-time' : activeTab === 'bookings' ? 'Manage appointment bookings' : 'Manage registered client and expert accounts'}
               </p>
             </div>
           </div>
@@ -351,7 +391,7 @@ export const AdminDashboard = () => {
           {/* KPI Metrics Cards Grid */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: isMobile ? 'repeat(auto-fit, minmax(130px, 1fr))' : 'repeat(auto-fit, minmax(200px, 1fr))',
+            gridTemplateColumns: isMobile ? 'repeat(auto-fit, minmax(130px, 1fr))' : 'repeat(auto-fit, minmax(180px, 1fr))',
             gap: isMobile ? '0.65rem' : '1rem',
             marginBottom: '1.5rem',
           }}>
@@ -380,7 +420,13 @@ export const AdminDashboard = () => {
               <Search size={15} style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: '#6b7280' }} />
               <input
                 type="text"
-                placeholder={activeTab === 'orders' ? 'Search name, email, order ID...' : 'Search client, service, stylist...'}
+                placeholder={
+                  activeTab === 'orders'
+                    ? 'Search name, email, order ID...'
+                    : activeTab === 'bookings'
+                    ? 'Search client, service, stylist...'
+                    : 'Search name, email, phone...'
+                }
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 style={{
@@ -396,13 +442,25 @@ export const AdminDashboard = () => {
             <div style={{ display: 'flex', gap: '0.4rem', overflowX: 'auto', paddingBottom: '0.2rem', WebkitOverflowScrolling: 'touch' }}>
               {(activeTab === 'orders'
                 ? ['all', 'pending', 'processing', 'shipped', 'completed']
-                : ['all', 'pending', 'confirmed', 'completed', 'cancelled']
+                : activeTab === 'bookings'
+                ? ['all', 'pending', 'confirmed', 'completed', 'cancelled']
+                : ['all', 'customer', 'staff']
               ).map(status => {
-                const active = activeTab === 'orders' ? orderStatusFilter === status : bookingStatusFilter === status;
+                const active =
+                  activeTab === 'orders'
+                    ? orderStatusFilter === status
+                    : activeTab === 'bookings'
+                    ? bookingStatusFilter === status
+                    : userRoleFilter === status;
+                const labelDisplay = status === 'staff' ? 'experts' : status;
                 return (
                   <button
                     key={status}
-                    onClick={() => activeTab === 'orders' ? setOrderStatusFilter(status) : setBookingStatusFilter(status)}
+                    onClick={() => {
+                      if (activeTab === 'orders') setOrderStatusFilter(status);
+                      else if (activeTab === 'bookings') setBookingStatusFilter(status);
+                      else setUserRoleFilter(status);
+                    }}
                     style={{
                       padding: '0.45rem 0.85rem', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 600,
                       textTransform: 'capitalize', cursor: 'pointer', flexShrink: 0,
@@ -412,7 +470,7 @@ export const AdminDashboard = () => {
                       fontFamily: 'Outfit', transition: 'all 0.15s ease',
                     }}
                   >
-                    {status}
+                    {labelDisplay}
                   </button>
                 );
               })}
@@ -499,7 +557,7 @@ export const AdminDashboard = () => {
                 ))}
               </div>
             )
-          ) : (
+          ) : activeTab === 'bookings' ? (
             filteredBookings.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '3rem 1.5rem', backgroundColor: '#111111', borderRadius: '18px', border: '1px dashed rgba(255,255,255,0.08)' }}>
                 <Calendar size={40} color="#374151" style={{ marginBottom: '0.75rem' }} />
@@ -563,11 +621,83 @@ export const AdminDashboard = () => {
                 ))}
               </div>
             )
+          ) : (
+            /* --- TAB 3: USER ACCOUNTS MANAGEMENT --- */
+            filteredUsers.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '3rem 1.5rem', backgroundColor: '#111111', borderRadius: '18px', border: '1px dashed rgba(255,255,255,0.08)' }}>
+                <Users size={40} color="#374151" style={{ marginBottom: '0.75rem' }} />
+                <h3 style={{ color: '#ffffff', fontFamily: 'Outfit', margin: '0 0 0.25rem', fontSize: '1.05rem' }}>No Accounts Found</h3>
+                <p style={{ color: '#6b7280', fontSize: '0.8rem' }}>{searchQuery || userRoleFilter !== 'all' ? 'Try clearing your search or role filter.' : 'Registered user accounts will appear here.'}</p>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+                {filteredUsers.map(u => {
+                  const isStaff = u.role === 'staff';
+                  const fullName = `${u.firstname || ''} ${u.lastname || ''}`.trim() || 'User Account';
+                  return (
+                    <div key={u._id} style={{
+                      backgroundColor: '#111111', borderRadius: '16px', padding: isMobile ? '1rem' : '1.25rem',
+                      border: '1px solid rgba(255,255,255,0.06)',
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                          <div style={{
+                            width: '46px', height: '46px', borderRadius: '50%', flexShrink: 0,
+                            background: u.avatarUrl ? `url(${u.avatarUrl}) center/cover no-repeat` : (isStaff ? 'linear-gradient(135deg, #d4af37, #8a6d1c)' : 'linear-gradient(135deg, #374151, #1f2937)'),
+                            border: isStaff ? '2px solid #d4af37' : '1px solid rgba(255,255,255,0.15)',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          }}>
+                            {!u.avatarUrl && <span style={{ fontSize: '1rem', fontWeight: 800, color: isStaff ? '#000' : '#fff' }}>{u.firstname?.charAt(0) || 'U'}</span>}
+                          </div>
+                          <div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
+                              <h4 style={{ color: '#ffffff', fontFamily: 'Outfit', fontWeight: 800, margin: 0, fontSize: '0.98rem' }}>
+                                {fullName}
+                              </h4>
+                              <span style={{
+                                fontSize: '0.65rem', fontWeight: 800, padding: '0.15rem 0.5rem', borderRadius: '50px',
+                                textTransform: 'uppercase', letterSpacing: '0.5px',
+                                backgroundColor: isStaff ? 'rgba(212,175,55,0.2)' : 'rgba(59,130,246,0.15)',
+                                color: isStaff ? '#d4af37' : '#60a5fa',
+                                border: isStaff ? '1px solid rgba(212,175,55,0.3)' : '1px solid rgba(59,130,246,0.3)',
+                              }}>
+                                {isStaff ? 'Expert Stylist' : 'Customer'}
+                              </span>
+                              {u.isVerified && (
+                                <span style={{ fontSize: '0.65rem', color: '#22c55e', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+                                  <UserCheck size={11} /> Verified
+                                </span>
+                              )}
+                            </div>
+                            <div style={{ fontSize: '0.78rem', color: '#9ca3af', marginTop: '0.15rem' }}>
+                              {u.email || 'No email'} {u.phone ? `· ${u.phone}` : ''}
+                            </div>
+                          </div>
+                        </div>
+
+                        <button
+                          onClick={() => setUserToDelete(u)}
+                          style={{
+                            padding: '0.5rem 0.85rem', borderRadius: '10px',
+                            backgroundColor: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.25)',
+                            color: '#ef4444', fontWeight: 700, fontSize: '0.78rem',
+                            cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
+                            fontFamily: 'Outfit', transition: 'all 0.15s ease',
+                          }}
+                        >
+                          <Trash2 size={13} /> Delete Account
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )
           )}
         </div>
       </main>
 
-      {/* Responsive Order Details Modal */}
+      {/* Order Details Modal */}
       {selectedOrder && (
         <div
           onClick={() => setSelectedOrder(null)}
@@ -630,6 +760,47 @@ export const AdminDashboard = () => {
                 style={{ padding: '0.6rem 0.85rem', borderRadius: '10px', backgroundColor: 'rgba(255,255,255,0.06)', color: '#9ca3af', fontWeight: 600, fontSize: '0.8rem', border: '1px solid rgba(255,255,255,0.08)', cursor: 'pointer', fontFamily: 'Outfit' }}
               >
                 Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Admin Delete User Confirmation Modal */}
+      {userToDelete && (
+        <div
+          onClick={() => setUserToDelete(null)}
+          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}
+        >
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{ backgroundColor: '#111111', borderRadius: '20px', border: '1px solid rgba(239,68,68,0.4)', width: '100%', maxWidth: '420px', padding: '1.5rem', textAlign: 'center' }}
+          >
+            <div style={{ width: '50px', height: '50px', borderRadius: '50%', backgroundColor: 'rgba(239,68,68,0.15)', color: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
+              <AlertTriangle size={26} />
+            </div>
+
+            <h3 style={{ color: '#ffffff', fontFamily: 'Outfit', fontWeight: 800, margin: '0 0 0.5rem', fontSize: '1.1rem' }}>
+              Delete User Account?
+            </h3>
+
+            <p style={{ color: '#9ca3af', fontSize: '0.85rem', lineHeight: 1.5, marginBottom: '1.25rem' }}>
+              Are you sure you want to delete <strong style={{ color: '#ffffff' }}>{userToDelete.firstname} ({userToDelete.email})</strong>? All their profile data and bookings will be wiped.
+            </p>
+
+            <div style={{ display: 'flex', gap: '0.65rem' }}>
+              <button
+                onClick={() => setUserToDelete(null)}
+                style={{ flex: 1, padding: '0.65rem', borderRadius: '10px', backgroundColor: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.1)', color: '#ffffff', fontWeight: 600, fontSize: '0.82rem', cursor: 'pointer', fontFamily: 'Outfit' }}
+              >
+                Cancel
+              </button>
+              <button
+                disabled={updatingId === userToDelete._id}
+                onClick={() => handleDeleteUserAccount(userToDelete)}
+                style={{ flex: 1, padding: '0.65rem', borderRadius: '10px', backgroundColor: '#ef4444', border: 'none', color: '#ffffff', fontWeight: 700, fontSize: '0.82rem', cursor: 'pointer', fontFamily: 'Outfit' }}
+              >
+                {updatingId === userToDelete._id ? 'Deleting...' : 'Delete Permanently'}
               </button>
             </div>
           </div>

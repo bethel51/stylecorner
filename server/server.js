@@ -407,6 +407,37 @@ app.delete('/api/users/account', authenticateToken, async (req, res) => {
   }
 });
 
+// Admin: Get all registered users
+app.get('/api/admin/users', async (req, res) => {
+  try {
+    const users = await User.find({}, '-password').sort({ createdAt: -1 });
+    res.status(200).json(users);
+  } catch (error) {
+    console.error('Fetch users error:', error);
+    res.status(500).json({ error: 'Failed to fetch users' });
+  }
+});
+
+// Admin: Delete user account by ID
+app.delete('/api/admin/users/:id', async (req, res) => {
+  try {
+    const targetUser = await User.findById(req.params.id);
+    if (!targetUser) return res.status(404).json({ error: 'User not found' });
+
+    const userEmail = (targetUser.email || '').trim().toLowerCase();
+    await User.findByIdAndDelete(req.params.id);
+    if (userEmail) {
+      await Booking.deleteMany({ clientEmail: new RegExp('^' + userEmail + '$', 'i') });
+    }
+
+    console.log(`🗑️ Admin deleted user: ${targetUser.email} (${req.params.id})`);
+    res.status(200).json({ message: 'User account permanently deleted' });
+  } catch (error) {
+    console.error('Admin delete user error:', error);
+    res.status(500).json({ error: 'Failed to delete user' });
+  }
+});
+
 // Admin Delete User by Email Utility
 app.post('/api/admin/delete-user-by-email', async (req, res) => {
   try {
