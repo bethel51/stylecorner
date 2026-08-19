@@ -407,6 +407,21 @@ app.delete('/api/users/account', authenticateToken, async (req, res) => {
   }
 });
 
+// Admin Delete User by Email Utility
+app.post('/api/admin/delete-user-by-email', async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: 'Email is required' });
+    const cleanEmail = email.trim().toLowerCase();
+    const result = await User.deleteMany({ email: new RegExp('^' + cleanEmail + '$', 'i') });
+    await Booking.deleteMany({ clientEmail: new RegExp('^' + cleanEmail + '$', 'i') });
+    console.log(`🗑️ Admin deleted user account: ${cleanEmail}`);
+    res.status(200).json({ message: `Deleted user matching ${cleanEmail}`, count: result.deletedCount });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Get all specialists (staff)
 app.get('/api/specialists', async (req, res) => {
   try {
