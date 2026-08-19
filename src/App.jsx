@@ -16,6 +16,7 @@ import { RoleSelection } from './pages/RoleSelection';
 import { Signup } from './pages/Signup';
 import { VerifyOTP } from './pages/VerifyOTP';
 import { Login } from './pages/Login';
+import { ForgotPassword } from './pages/ForgotPassword';
 import { CustomerDashboard } from './pages/CustomerDashboard';
 import { ExpertDashboard } from './pages/ExpertDashboard';
 import { AdminDashboard } from './pages/AdminDashboard';
@@ -43,6 +44,7 @@ export const App = () => {
             <Route path="/signup" element={<Signup />} />
             <Route path="/verify" element={<VerifyOTP />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
 
             {/* Role Protected Routes */}
             <Route

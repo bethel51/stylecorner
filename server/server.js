@@ -264,6 +264,102 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
+// Request Password Reset OTP
+app.post('/api/auth/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: 'Email address is required' });
+
+    const user = await User.findOne({ email: email.trim().toLowerCase() });
+    if (!user) {
+      return res.status(200).json({ message: 'If an account exists with this email, a reset code has been sent.' });
+    }
+
+    const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+    user.otpCode = otpCode;
+    user.otpExpiresAt = new Date(Date.now() + 15 * 60 * 1000);
+    await user.save();
+
+    await sendNotificationSafe(
+      user.email,
+      "Style Corner - Password Reset Code",
+      `Hi ${user.firstname},\n\nYour password reset code is: ${otpCode}\n\nThis code will expire in 15 minutes.\nIf you did not request a password reset, please ignore this email.`
+    );
+
+    res.status(200).json({ message: 'Password reset code sent to your email.' });
+  } catch (error) {
+    console.error('Forgot password error:', error);
+    res.status(500).json({ error: 'Failed to process request. Please try again.' });
+  }
+});
+
+// Verify Password Reset OTP
+app.post('/api/auth/verify-reset-otp', async (req, res) => {
+  try {
+    const { email, otpCode } = req.body;
+    if (!email || !otpCode) return res.status(400).json({ error: 'Email and OTP code are required.' });
+
+    const user = await User.findOne({ email: email.trim().toLowerCase() });
+    if (!user) return res.status(400).json({ error: 'User not found.' });
+
+    if (!user.otpCode || user.otpCode !== otpCode.toString().trim()) {
+      return res.status(400).json({ error: 'Invalid verification code.' });
+    }
+
+    if (user.otpExpiresAt && new Date(user.otpExpiresAt) < new Date()) {
+      return res.status(400).json({ error: 'Verification code has expired. Please request a new one.' });
+    }
+
+    res.status(200).json({ message: 'OTP verified successfully.' });
+  } catch (error) {
+    console.error('Verify reset OTP error:', error);
+    res.status(500).json({ error: 'Failed to verify code.' });
+  }
+});
+
+// Complete Password Reset
+app.post('/api/auth/reset-password', async (req, res) => {
+  try {
+    const { email, otpCode, newPassword } = req.body;
+    if (!email || !otpCode || !newPassword) {
+      return res.status(400).json({ error: 'All fields are required.' });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ error: 'Password must be at least 6 characters.' });
+    }
+
+    const user = await User.findOne({ email: email.trim().toLowerCase() });
+    if (!user) return res.status(400).json({ error: 'User not found.' });
+
+    if (!user.otpCode || user.otpCode !== otpCode.toString().trim()) {
+      return res.status(400).json({ error: 'Invalid or expired verification session.' });
+    }
+
+    if (user.otpExpiresAt && new Date(user.otpExpiresAt) < new Date()) {
+      return res.status(400).json({ error: 'Verification code has expired. Please restart process.' });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(newPassword, salt);
+    user.otpCode = undefined;
+    user.otpExpiresAt = undefined;
+    user.isVerified = true;
+    await user.save();
+
+    sendNotificationSafe(
+      user.email,
+      "Style Corner - Password Reset Successful",
+      `Hi ${user.firstname},\n\nYour Style Corner account password has been successfully reset.\n\nYou can now log in using your new password.`
+    );
+
+    res.status(200).json({ message: 'Password reset successful! You can now log in.' });
+  } catch (error) {
+    console.error('Reset password error:', error);
+    res.status(500).json({ error: 'Failed to reset password.' });
+  }
+});
+
 // Get current user profile
 app.get('/api/auth/me', authenticateToken, async (req, res) => {
   try {

@@ -75,6 +75,39 @@ export const api = {
     return data;
   },
 
+  forgotPassword: async (email) => {
+    const res = await fetchWithTimeout(`${API_BASE}/auth/forgot-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Failed to send reset code');
+    return data;
+  },
+
+  verifyResetOtp: async (email, otpCode) => {
+    const res = await fetchWithTimeout(`${API_BASE}/auth/verify-reset-otp`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, otpCode }),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Invalid verification code');
+    return data;
+  },
+
+  resetPassword: async (email, otpCode, newPassword) => {
+    const res = await fetchWithTimeout(`${API_BASE}/auth/reset-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, otpCode, newPassword }),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Failed to reset password');
+    return data;
+  },
+
   login: async (credentials) => {
     const res = await fetchWithTimeout(`${API_BASE}/auth/login`, {
       method: 'POST',

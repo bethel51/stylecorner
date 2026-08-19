@@ -159,7 +159,21 @@ export const Login = () => {
           </div>
 
           <div className="app-input-group">
-            <label className="app-label">Password</label>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <label className="app-label">Password</label>
+              <span
+                onClick={() => navigate('/forgot-password')}
+                style={{
+                  fontSize: '0.78rem',
+                  color: '#d4af37',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  marginBottom: '0.35rem',
+                }}
+              >
+                Forgot Password?
+              </span>
+            </div>
             <input
               type="password"
               value={password}
