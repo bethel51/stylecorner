@@ -8,6 +8,8 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('token') || null);
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState(null);
+  // Tracks if user was set directly (login/verifyOtp) so we skip redundant fetchUser
+  const userSetDirectly = React.useRef(false);
 
   const showToast = (message, type = 'accent') => {
     setToast({ message, type });
@@ -19,6 +21,12 @@ export const AuthProvider = ({ children }) => {
   const fetchUser = async () => {
     if (!token) {
       setUser(null);
+      setLoading(false);
+      return;
+    }
+    // Skip fetch if user was set directly by login/verifyOtp to prevent race condition
+    if (userSetDirectly.current) {
+      userSetDirectly.current = false;
       setLoading(false);
       return;
     }
@@ -40,11 +48,12 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password, role) => {
     const data = await api.login({ email, password, role });
+    userSetDirectly.current = true;
     localStorage.setItem('token', data.token);
     localStorage.setItem('mockUser', JSON.stringify(data.user));
     setToken(data.token);
     setUser(data.user);
-    showToast(`Welcome back, ${data.user.firstname || 'Stylist'}!`, 'success');
+    showToast(`Welcome back, ${data.user?.firstname || 'User'}!`, 'success');
     return data.user;
   };
 
@@ -64,6 +73,7 @@ export const AuthProvider = ({ children }) => {
 
   const verifyOtp = async (email, code) => {
     const data = await api.verifyOtp(email, code);
+    userSetDirectly.current = true;
     localStorage.setItem('token', data.token);
     localStorage.setItem('mockUser', JSON.stringify(data.user));
     setToken(data.token);
