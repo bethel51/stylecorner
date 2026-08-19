@@ -390,7 +390,14 @@ app.get('/api/bookings', authenticateToken, async (req, res) => {
       const userEmail = (req.user.email || '').trim();
       query = { clientEmail: new RegExp('^' + userEmail + '$', 'i') };
     } else if (req.user.role === 'staff') {
-      query = { $or: [{ status: 'pending' }, { staff: req.user.firstname }] };
+      const staffName = (req.user.firstname || '').trim();
+      query = {
+        $or: [
+          { status: 'pending' },
+          { stylist: new RegExp(staffName, 'i') },
+          { stylist: 'Any Specialist' },
+        ],
+      };
     }
     const bookings = await Booking.find(query).sort({ createdAt: -1 });
     res.status(200).json(bookings);
@@ -429,9 +436,11 @@ app.put('/api/bookings/:id', authenticateToken, async (req, res) => {
   try {
     const updated = await Booking.findByIdAndUpdate(req.params.id, req.body, { returnDocument: 'after' });
     if (req.body.status === 'accepted') {
-      await sendNotificationSafe(updated.clientEmail, "Booking Accepted!", `Hi ${updated.clientName},\n\nGreat news! Your booking for ${updated.service} on ${updated.date} at ${updated.time} has been accepted by our staff. See you then!`);
+      await sendNotificationSafe(updated.clientEmail, "Booking Accepted!", `Hi ${updated.clientName},\n\nGreat news! Your booking for ${updated.service} on ${updated.date} at ${updated.time} has been accepted by your expert!`);
     } else if (req.body.status === 'completed') {
-      await sendNotificationSafe(updated.clientEmail, "Service Completed!", `Hi ${updated.clientName},\n\nThank you for visiting Style Corner! Your service ${updated.service} has been completed.`);
+      await sendNotificationSafe(updated.clientEmail, "Service Completed!", `Hi ${updated.clientName},\n\nYour scheduled services have been rendered. Thanks for using Style Corner!`);
+    } else if (req.body.status === 'rejected') {
+      await sendNotificationSafe(updated.clientEmail, "Booking Request Update", `Hi ${updated.clientName},\n\nYour request was rejected. Try booking again with another specialist.`);
     }
     res.status(200).json(updated);
   } catch (error) {
