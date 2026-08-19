@@ -786,12 +786,18 @@ export const AdminDashboard = () => {
 
             <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '0.85rem', marginBottom: '0.85rem' }}>
               <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#d4af37', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '0.5rem' }}>Items Ordered</div>
-              {(selectedOrder.items || []).map((item, i) => (
-                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.35rem 0', fontSize: '0.8rem', color: '#d1d5db', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                  <span>{item.name || item.title} × {item.quantity}</span>
-                  <span style={{ color: '#ffffff', fontWeight: 600 }}>${((item.price || 0) * item.quantity).toFixed(2)}</span>
+              {Array.isArray(selectedOrder.items) && selectedOrder.items.length > 0 ? (
+                selectedOrder.items.map((item, i) => (
+                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.35rem 0', fontSize: '0.8rem', color: '#d1d5db', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+                    <span>{item.name || item.title} × {item.quantity || 1}</span>
+                    <span style={{ color: '#ffffff', fontWeight: 600 }}>${((item.price || 0) * (item.quantity || 1)).toFixed(2)}</span>
+                  </div>
+                ))
+              ) : (
+                <div style={{ padding: '0.35rem 0', fontSize: '0.82rem', color: '#ffffff' }}>
+                  {selectedOrder.item || 'Grooming Products'}
                 </div>
-              ))}
+              )}
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.95rem', fontWeight: 800, color: '#ffffff', paddingTop: '0.65rem', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
