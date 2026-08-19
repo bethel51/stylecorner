@@ -432,7 +432,20 @@ app.post('/api/bookings', authenticateToken, async (req, res) => {
 
     const booking = new Booking(req.body);
     const savedBooking = await booking.save();
+    
+    // 1. Notify Customer
     await sendNotificationSafe(savedBooking.clientEmail, "Booking Confirmed", `Hi ${savedBooking.clientName},\n\nYour booking for ${savedBooking.service} on ${savedBooking.date} at ${savedBooking.time} has been received.`);
+    
+    // 2. Notify Salon Admin / Manager
+    const adminEmail = process.env.ADMIN_EMAIL || process.env.EMAIL_USER || process.env.BREVO_SMTP_LOGIN;
+    if (adminEmail && adminEmail !== savedBooking.clientEmail) {
+      await sendNotificationSafe(
+        adminEmail,
+        `🔔 New Salon Booking Alert: ${savedBooking.clientName}`,
+        `ADMIN NOTIFICATION\n\nNew Booking Details:\n- Client: ${savedBooking.clientName} (${savedBooking.clientEmail})\n- Phone: ${savedBooking.clientPhone || 'N/A'}\n- Service: ${savedBooking.service}\n- Specialist: ${savedBooking.stylist}\n- Date & Time: ${savedBooking.date} at ${savedBooking.time}\n- Price: $${savedBooking.price}`
+      );
+    }
+
     res.status(201).json(savedBooking);
   } catch (error) {
     res.status(500).json({ error: 'Failed to save booking' });
@@ -541,7 +554,20 @@ app.post('/api/orders', authenticateToken, async (req, res) => {
     };
     const order = new Order(orderData);
     const savedOrder = await order.save();
+    
+    // 1. Send confirmation to Customer
     await sendNotificationSafe(savedOrder.email, "Order Received", `Thank you for your order! Order #${savedOrder._id} for ${savedOrder.item} has been placed.`);
+    
+    // 2. Send instant alert email to Store Admin / Manager
+    const adminEmail = process.env.ADMIN_EMAIL || process.env.EMAIL_USER || process.env.BREVO_SMTP_LOGIN;
+    if (adminEmail && adminEmail !== savedOrder.email) {
+      await sendNotificationSafe(
+        adminEmail,
+        `📦 New Store Order Alert: Order #${savedOrder._id}`,
+        `ADMIN NOTIFICATION\n\nA new order has been placed on the Atelier Store!\n\nOrder Details:\n- Order ID: #${savedOrder._id}\n- Items: ${savedOrder.item}\n- Customer: ${savedOrder.name || 'Customer'} (${savedOrder.email})\n- Phone: ${savedOrder.phone || 'N/A'}\n- Delivery Address: ${savedOrder.address || 'N/A'}\n- Total Price: $${savedOrder.totalPrice || savedOrder.price}`
+      );
+    }
+
     res.status(201).json(savedOrder);
   } catch (error) {
     console.error('Order creation error:', error);
