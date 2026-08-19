@@ -117,6 +117,16 @@ export const api = {
     return data;
   },
 
+  deleteAccount: async () => {
+    const res = await fetchWithTimeout(`${API_BASE}/users/account`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Failed to delete account');
+    return data;
+  },
+
   // Specialists & AI Matcher
   getSpecialists: async () => {
     const res = await fetchWithTimeout(`${API_BASE}/specialists`);
@@ -125,11 +135,11 @@ export const api = {
     return data;
   },
 
-  matchAiSpecialist: async (requestText, preferredService) => {
+  matchAiSpecialist: async (requestText, primaryService, secondaryService) => {
     const res = await fetchWithTimeout(`${API_BASE}/ai/match-specialist`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ requestText, preferredService }),
+      body: JSON.stringify({ requestText, primaryService, secondaryService }),
     });
     const data = await safeJson(res);
     if (!res.ok) throw new Error(data?.error || 'AI Matcher failed');

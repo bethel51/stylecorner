@@ -313,7 +313,9 @@ export const Booking = () => {
         onClose={() => setShowAiSheet(false)}
         onApplyMatch={(match) => {
           if (match?.firstname) setStylist(match.firstname);
-          showToast(`Pre-selected specialist: ${match.name}`, 'success');
+          if (match?.primaryService) setService1(match.primaryService);
+          if (match?.secondaryService) setService2(match.secondaryService);
+          showToast(`Matched with ${match.name}! Form pre-filled.`, 'success');
         }}
       />
     </PageContainer>

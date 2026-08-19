@@ -7,20 +7,31 @@ import { useAuth } from '../../context/AuthContext';
 export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
   const { showToast } = useAuth();
   const [requestText, setRequestText] = useState('');
-  const [preferredService, setPreferredService] = useState('');
+  const [primaryService, setPrimaryService] = useState('Precision Skin Fade & Cut');
+  const [secondaryService, setSecondaryService] = useState('');
   const [loading, setLoading] = useState(false);
   const [matchResult, setMatchResult] = useState(null);
 
+  const servicesList = [
+    'Precision Skin Fade & Cut',
+    'Beard Trim & Sculpting',
+    'Knotless Box Braids',
+    'Cornrows & Custom Pattern',
+    'Full Gel Nail Architecture',
+    'Luxury Pedicure Session',
+    'Full Atelier Grooming Combo',
+  ];
+
   const handleRunMatch = async (e) => {
     e.preventDefault();
-    if (!requestText.trim()) {
-      showToast('Please enter a description of the style or service you want.', 'error');
+    if (!requestText.trim() && !primaryService) {
+      showToast('Please select a service or enter a style description.', 'error');
       return;
     }
 
     setLoading(true);
     try {
-      const data = await api.matchAiSpecialist(requestText, preferredService);
+      const data = await api.matchAiSpecialist(requestText, primaryService, secondaryService);
       if (data.match) {
         setMatchResult(data.match);
       }
@@ -33,7 +44,11 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
 
   const handleApply = () => {
     if (matchResult && onApplyMatch) {
-      onApplyMatch(matchResult);
+      onApplyMatch({
+        ...matchResult,
+        primaryService: primaryService || matchResult.primaryService,
+        secondaryService: secondaryService || matchResult.secondaryService,
+      });
       onClose();
     }
   };
@@ -42,17 +57,47 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
     <BottomSheet isOpen={isOpen} onClose={onClose} title="AI Specialist Matcher">
       <div>
         <p style={{ color: '#6b7280', fontSize: '0.85rem', marginBottom: '1rem', lineHeight: 1.5 }}>
-          Describe your desired hairstyle, fade, braids, nails, or combo. AI will evaluate specialist portfolios and find your ideal match.
+          Select your primary & optional secondary service, or describe your desired look. AI will find the best specialist for your exact combo.
         </p>
 
         <form onSubmit={handleRunMatch}>
+          {/* Primary Service Dropdown */}
           <div className="app-input-group">
-            <label className="app-label">Style Request / Requirements</label>
+            <label className="app-label">Primary Service</label>
+            <select
+              value={primaryService}
+              onChange={(e) => setPrimaryService(e.target.value)}
+              className="app-select"
+            >
+              {servicesList.map((s) => (
+                <option key={s} value={s}>{s}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Secondary Service Dropdown */}
+          <div className="app-input-group">
+            <label className="app-label">Secondary Combo Service (Optional)</label>
+            <select
+              value={secondaryService}
+              onChange={(e) => setSecondaryService(e.target.value)}
+              className="app-select"
+            >
+              <option value="">-- None --</option>
+              {servicesList.map((s) => (
+                <option key={s} value={s}>{s}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Request Text Area */}
+          <div className="app-input-group">
+            <label className="app-label">Custom Style Notes / Requests</label>
             <textarea
-              rows={3}
+              rows={2}
               value={requestText}
               onChange={(e) => setRequestText(e.target.value)}
-              placeholder="e.g. Skin fade with textured crop top + beard trim for a photoshoot..."
+              placeholder="e.g. Low skin fade with textured crop top + beard trim for a photoshoot..."
               className="app-textarea"
             />
           </div>
@@ -64,7 +109,7 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
             style={{ marginBottom: '1.25rem' }}
           >
             {loading ? (
-              <span>Analyzing Portfolios...</span>
+              <span>Matching Specialist...</span>
             ) : (
               <>
                 <Wand2 size={18} />

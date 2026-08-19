@@ -78,6 +78,20 @@ export const AuthProvider = ({ children }) => {
     return updated;
   };
 
+  const deleteAccount = async () => {
+    try {
+      await api.deleteAccount();
+      localStorage.removeItem('token');
+      localStorage.removeItem('mockUser');
+      setToken(null);
+      setUser(null);
+      showToast('Your account has been permanently deleted.', 'accent');
+    } catch (err) {
+      showToast(err.message || 'Failed to delete account', 'error');
+      throw err;
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -89,6 +103,7 @@ export const AuthProvider = ({ children }) => {
         register,
         verifyOtp,
         updateProfile,
+        deleteAccount,
         showToast,
         isAuthenticated: !!user,
         role: user?.role || 'customer',

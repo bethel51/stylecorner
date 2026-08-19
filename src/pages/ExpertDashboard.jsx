@@ -18,20 +18,40 @@ import {
   Phone,
   Check,
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import { PageContainer } from '../components/common/PageContainer';
 import { StatusBadge } from '../components/common/StatusBadge';
 import { SkeletonList } from '../components/common/SkeletonLoader';
+import { PopupModal } from '../components/common/PopupModal';
+import { Trash2, AlertTriangle } from 'lucide-react';
 
 export const ExpertDashboard = () => {
-  const { user, logout, showToast } = useAuth();
+  const navigate = useNavigate();
+  const { user, logout, deleteAccount, showToast } = useAuth();
 
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState(null);
   const [isAvailable, setIsAvailable] = useState(true);
   const [filterStatus, setFilterStatus] = useState('all'); // 'all' | 'pending' | 'accepted' | 'completed'
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deletingAccount, setDeletingAccount] = useState(false);
+
+  const handleDeleteAccount = async () => {
+    setDeletingAccount(true);
+    try {
+      await deleteAccount();
+      setShowDeleteModal(false);
+      navigate('/', { replace: true });
+    } catch (err) {
+      showToast(err.message || 'Failed to delete account', 'error');
+    } finally {
+      setDeletingAccount(false);
+    }
+  };
 
   const fetchBookings = async () => {
     setLoading(true);
@@ -385,6 +405,75 @@ export const ExpertDashboard = () => {
           )}
         </div>
       </div>
+
+      {/* ── Account Management ── */}
+      <div className="app-card" style={{ margin: '1.5rem 1rem', background: '#ffffff', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
+        <h4 style={{ fontFamily: 'Outfit', fontSize: '0.98rem', fontWeight: 800, color: '#171717', marginBottom: '0.85rem' }}>
+          Account Settings
+        </h4>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+          <button
+            onClick={logout}
+            className="app-btn app-btn-outline"
+            style={{ justifyContent: 'center', gap: '0.5rem', minHeight: '44px' }}
+          >
+            <LogOut size={16} /> Sign Out of Account
+          </button>
+
+          <button
+            onClick={() => setShowDeleteModal(true)}
+            className="app-btn"
+            style={{
+              background: 'rgba(239, 68, 68, 0.08)',
+              color: '#ef4444',
+              border: '1px solid rgba(239, 68, 68, 0.25)',
+              justifyContent: 'center',
+              gap: '0.5rem',
+              minHeight: '44px',
+            }}
+          >
+            <Trash2 size={16} /> Delete Account Permanently
+          </button>
+        </div>
+      </div>
+
+      {/* Delete Account Confirmation Modal */}
+      <PopupModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        title="Delete Account?"
+      >
+        <div style={{ textAlign: 'center', padding: '0.5rem 0' }}>
+          <div style={{
+            width: '54px', height: '54px', borderRadius: '50%',
+            background: 'rgba(239, 68, 68, 0.12)', color: '#ef4444',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            margin: '0 auto 1rem',
+          }}>
+            <AlertTriangle size={28} />
+          </div>
+          <h4 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: '#171717', marginBottom: '0.5rem' }}>
+            Permanent Account Deletion
+          </h4>
+          <p style={{ color: '#6b7280', fontSize: '0.85rem', lineHeight: 1.5, marginBottom: '1.5rem' }}>
+            Are you sure? This will permanently delete your expert account and all your data. This cannot be undone.
+          </p>
+          <div style={{ display: 'flex', gap: '0.65rem' }}>
+            <button onClick={() => setShowDeleteModal(false)} className="app-btn app-btn-outline" style={{ flex: 1 }}>
+              Cancel
+            </button>
+            <button
+              onClick={handleDeleteAccount}
+              disabled={deletingAccount}
+              className="app-btn"
+              style={{ flex: 1, background: '#ef4444', color: '#ffffff', border: 'none' }}
+            >
+              {deletingAccount ? 'Deleting...' : 'Delete Permanently'}
+            </button>
+          </div>
+        </div>
+      </PopupModal>
+
     </PageContainer>
   );
 };

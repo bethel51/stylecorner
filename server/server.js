@@ -292,6 +292,16 @@ app.put('/api/users/profile', authenticateToken, async (req, res) => {
   }
 });
 
+// Delete user account permanently
+app.delete('/api/users/account', authenticateToken, async (req, res) => {
+  try {
+    await User.findByIdAndDelete(req.user._id);
+    res.status(200).json({ message: 'Account permanently deleted' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete account' });
+  }
+});
+
 // Get all specialists (staff)
 app.get('/api/specialists', async (req, res) => {
   try {
@@ -305,7 +315,7 @@ app.get('/api/specialists', async (req, res) => {
 // AI Specialist Matcher Route
 app.post('/api/ai/match-specialist', async (req, res) => {
   try {
-    const { requestText = '', preferredService = '' } = req.body;
+    const { requestText = '', primaryService = '', secondaryService = '' } = req.body;
     let staffMembers = [];
 
     try {
@@ -316,13 +326,13 @@ app.post('/api/ai/match-specialist', async (req, res) => {
 
     if (!staffMembers || staffMembers.length === 0) {
       staffMembers = [
-        { firstname: 'Julian', lastname: 'Reed', specialties: ['Hair Cut Services', 'Barbering'] },
-        { firstname: 'Elena', lastname: 'Thorne', specialties: ['Hair Braiding Services', 'Wig Installation'] },
-        { firstname: 'Marcus', lastname: 'Grey', specialties: ['Nails', 'Lash & Nails Combo', 'Pedicure'] }
+        { firstname: 'Julian', lastname: 'Reed', specialties: ['Precision Skin Fade & Cut', 'Beard Trim & Sculpting', 'Barbering'] },
+        { firstname: 'Elena', lastname: 'Thorne', specialties: ['Knotless Box Braids', 'Cornrows & Custom Pattern', 'Wig Installation'] },
+        { firstname: 'Marcus', lastname: 'Grey', specialties: ['Full Gel Nail Architecture', 'Luxury Pedicure Session', 'Full Atelier Grooming Combo'] }
       ];
     }
 
-    const query = (requestText + ' ' + preferredService).toLowerCase();
+    const query = (requestText + ' ' + primaryService + ' ' + secondaryService).toLowerCase();
 
     // Intelligent score & rationale calculator
     let bestMatch = null;
@@ -339,19 +349,15 @@ app.post('/api/ai/match-specialist', async (req, res) => {
       });
 
       if (query.includes('cut') || query.includes('fade') || query.includes('barber') || query.includes('trim')) {
-        if (specs.some(s => s.includes('cut') || s.includes('barber'))) score += 15;
+        if (specs.some(s => s.includes('cut') || s.includes('barber') || s.includes('fade'))) score += 15;
       }
       if (query.includes('braid') || query.includes('twist') || query.includes('cornrow') || query.includes('locs')) {
-        if (specs.some(s => s.includes('braid'))) score += 15;
+        if (specs.some(s => s.includes('braid') || s.includes('cornrow'))) score += 15;
       }
       if (query.includes('nail') || query.includes('acrylic') || query.includes('gel') || query.includes('manicure') || query.includes('pedicure')) {
-        if (specs.some(s => s.includes('nail') || s.includes('pedicure') || s.includes('manicure'))) score += 15;
-      }
-      if (query.includes('wig') || query.includes('lace') || query.includes('weave')) {
-        if (specs.some(s => s.includes('wig'))) score += 15;
+        if (specs.some(s => s.includes('nail') || s.includes('pedicure') || s.includes('gel'))) score += 15;
       }
 
-      // Add a small deterministic hash factor
       score = Math.min(99, score + (staff.firstname.length % 4));
 
       if (score > maxScore) {
@@ -365,7 +371,7 @@ app.post('/api/ai/match-specialist', async (req, res) => {
     const specsList = (bestMatch.services || bestMatch.specialties || ['General Styling']);
     const specsDisplay = Array.isArray(specsList) ? specsList.join(', ') : String(specsList);
 
-    const rationale = `${bestMatch.firstname} ${bestMatch.lastname || ''} is your top-rated match based on expertise in ${specsDisplay}. High precision satisfaction rating with custom client requests.`;
+    const rationale = `${bestMatch.firstname} ${bestMatch.lastname || ''} is your top match based on expertise in ${specsDisplay}. Ideal match for ${primaryService || 'your requested style'}${secondaryService ? ' + ' + secondaryService : ''}.`;
 
     res.status(200).json({
       match: {
@@ -373,6 +379,8 @@ app.post('/api/ai/match-specialist', async (req, res) => {
         lastname: bestMatch.lastname || '',
         name: `${bestMatch.firstname} ${bestMatch.lastname || ''}`.trim(),
         specialties: specsList,
+        primaryService: primaryService || 'Precision Skin Fade & Cut',
+        secondaryService: secondaryService || '',
         matchScore: maxScore,
         rationale: rationale
       }
