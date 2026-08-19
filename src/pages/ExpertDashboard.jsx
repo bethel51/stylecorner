@@ -209,27 +209,29 @@ export const ExpertDashboard = () => {
             </div>
           )}
 
-          <button
-            onClick={logout}
-            style={{
-              width: '100%',
-              background: 'rgba(239, 68, 68, 0.15)',
-              border: '1px solid rgba(239, 68, 68, 0.3)',
-              color: '#ef4444',
-              padding: '0.6rem',
-              borderRadius: '12px',
-              fontSize: '0.8rem',
-              fontFamily: 'Outfit',
-              fontWeight: 800,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '0.4rem',
-            }}
-          >
-            <LogOut size={14} /> Sign Out
-          </button>
+            <div style={{ marginTop: '1rem' }}>
+              <button
+                onClick={logout}
+                style={{
+                  width: '100%',
+                  background: 'rgba(239, 68, 68, 0.15)',
+                  border: '1px solid rgba(239, 68, 68, 0.3)',
+                  color: '#ef4444',
+                  padding: '0.6rem',
+                  borderRadius: '12px',
+                  fontSize: '0.8rem',
+                  fontFamily: 'Outfit',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.4rem',
+                }}
+              >
+                <LogOut size={14} /> Sign Out
+              </button>
+            </div>
         </div>
 
         {/* ── Metric Cards Grid ── */}
@@ -321,7 +323,7 @@ export const ExpertDashboard = () => {
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
               {filteredList.map((b) => (
-                <div key={b._id} className="app-card" style={{ marginBottom: 0, padding: '1.25rem' }}>
+                <div key={b._id} className="app-card" style={{ marginBottom: 0, padding: '1.25rem', borderRadius: '14px', border: '1px solid rgba(0,0,0,0.06)', position: 'relative' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
                     <div>
                       <h4 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: '#171717' }}>
@@ -338,7 +340,9 @@ export const ExpertDashboard = () => {
                         )}
                       </div>
                     </div>
-                    <StatusBadge status={b.status} />
+                    <div style={{ alignSelf: 'flex-start' }}>
+                      <StatusBadge status={b.status} />
+                    </div>
                   </div>
 
                   {/* Service Detail Card */}

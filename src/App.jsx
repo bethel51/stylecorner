@@ -63,7 +63,14 @@ export const App = () => {
             />
 
             {/* Checkout & Policy Routes */}
-            <Route path="/payment" element={<Payment />} />
+            <Route
+              path="/payment"
+              element={
+                <ProtectedRoute>
+                  <Payment />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/policies" element={<Policies />} />
 
             {/* Fallback Catch-all */}

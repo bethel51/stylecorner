@@ -28,10 +28,10 @@ export const Login = () => {
       const user = await login(email, password, activeRole);
       if (user.role === 'staff') {
         navigate('/expert-dashboard');
-      } else if (redirectPath && redirectPath !== 'booking' && redirectPath !== 'expert-dashboard') {
-        navigate(`/${redirectPath}`);
       } else {
-        navigate('/customer-dashboard');
+        // Decode the full redirect path (e.g. /booking, /booking?expert=123)
+        const decoded = redirectPath ? decodeURIComponent(redirectPath) : null;
+        navigate(decoded && decoded.startsWith('/') ? decoded : '/customer-dashboard');
       }
     } catch (err) {
       if (err.isUnverified && err.email) {
