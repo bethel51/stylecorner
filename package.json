@@ -4,6 +4,7 @@
   "description": "Style Corner Mobile-First React/Vite Web Application",
   "type": "module",
   "scripts": {
+    "start": "node server/server.js",
     "dev": "vite",
     "server": "node server/server.js",
     "dev:all": "concurrently --kill-others-on-fail -n \"VITE,EXPRESS\" -c \"cyan,yellow\" \"vite\" \"node server/server.js\"",
