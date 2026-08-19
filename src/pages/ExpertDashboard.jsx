@@ -63,15 +63,25 @@ export const ExpertDashboard = () => {
   const handleExpertPhotoChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      showToast('Please select a valid image file.', 'error');
+      return;
+    }
+
+    const previewUrl = URL.createObjectURL(file);
+    setAvatarInput(previewUrl);
     setUploadingPhoto(true);
+
     try {
       const url = await uploadToCloudinary(file);
       setAvatarInput(url);
       await updateProfile({ avatarUrl: url });
       showToast('Profile picture updated!', 'success');
-      setShowAvatarSheet(false);
+      setTimeout(() => setShowAvatarSheet(false), 500);
     } catch (err) {
       showToast(err.message || 'Failed to upload photo. Please try again.', 'error');
+      setAvatarInput(user?.avatarUrl || '');
     } finally {
       setUploadingPhoto(false);
     }
@@ -764,30 +774,44 @@ export const ExpertDashboard = () => {
         <div>
           {/* Live Preview */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
-            <div
+            <label
+              htmlFor="expert-avatar-upload"
               style={{
-                width: '90px',
-                height: '90px',
-                borderRadius: '50%',
-                background: avatarInput
-                  ? `url(${avatarInput}) center/cover no-repeat`
-                  : 'linear-gradient(135deg, #d4af37, #b5952f)',
-                border: '3px solid #d4af37',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 6px 18px rgba(212,175,55,0.25)',
+                cursor: uploadingPhoto ? 'wait' : 'pointer',
                 position: 'relative',
-                overflow: 'hidden',
+                display: 'inline-block',
               }}
             >
-              {!avatarInput && <Scissors size={36} color="#ffffff" />}
-              {uploadingPhoto && (
-                <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.55)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <span style={{ color: '#d4af37', fontSize: '0.7rem', fontFamily: 'Outfit', fontWeight: 800 }}>Uploading...</span>
-                </div>
-              )}
-            </div>
+              <div
+                style={{
+                  width: '94px',
+                  height: '94px',
+                  borderRadius: '50%',
+                  background: avatarInput
+                    ? `url(${avatarInput}) center/cover no-repeat`
+                    : 'linear-gradient(135deg, #d4af37, #b5952f)',
+                  border: '3px solid #d4af37',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 6px 20px rgba(212,175,55,0.3)',
+                  position: 'relative',
+                  overflow: 'hidden',
+                }}
+              >
+                {!avatarInput && <Scissors size={36} color="#ffffff" />}
+                {uploadingPhoto ? (
+                  <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(2px)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '0.2rem' }}>
+                    <RefreshCw size={18} color="#d4af37" style={{ animation: 'spin 1s linear infinite' }} />
+                    <span style={{ color: '#d4af37', fontSize: '0.65rem', fontFamily: 'Outfit', fontWeight: 800 }}>Saving...</span>
+                  </div>
+                ) : (
+                  <div style={{ position: 'absolute', bottom: 0, insetX: 0, background: 'rgba(0,0,0,0.45)', padding: '2px 0', display: 'flex', justifyContent: 'center' }}>
+                    <Edit size={12} color="#ffffff" />
+                  </div>
+                )}
+              </div>
+            </label>
 
             <label
               htmlFor="expert-avatar-upload"
@@ -804,6 +828,7 @@ export const ExpertDashboard = () => {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.4rem',
+                transition: 'all 0.2s ease',
               }}
             >
               <Edit size={14} />

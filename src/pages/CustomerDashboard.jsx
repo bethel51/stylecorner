@@ -57,13 +57,26 @@ export const CustomerDashboard = () => {
   const handlePhotoChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      showToast('Please select a valid image file (PNG, JPG, WEBP).', 'error');
+      return;
+    }
+
+    // Instant local preview
+    const previewUrl = URL.createObjectURL(file);
+    setProfileForm((prev) => ({ ...prev, avatarUrl: previewUrl }));
     setUploadingPhoto(true);
+
     try {
       const url = await uploadToCloudinary(file);
       setProfileForm((prev) => ({ ...prev, avatarUrl: url }));
-      showToast('Photo uploaded! Save your profile to apply it.', 'success');
+      await updateProfile({ avatarUrl: url });
+      showToast('Profile photo updated & saved!', 'success');
     } catch (err) {
       showToast(err.message || 'Failed to upload photo. Please try again.', 'error');
+      // Reset back to user's saved avatar if upload failed
+      setProfileForm((prev) => ({ ...prev, avatarUrl: user?.avatarUrl || '' }));
     } finally {
       setUploadingPhoto(false);
     }
@@ -637,34 +650,50 @@ export const CustomerDashboard = () => {
         <form onSubmit={handleProfileSubmit}>
           {/* Avatar upload */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '1.25rem', gap: '0.75rem' }}>
-            <div
+            <label
+              htmlFor="customer-avatar-upload"
               style={{
-                width: '90px',
-                height: '90px',
-                borderRadius: '50%',
-                background: profileForm.avatarUrl
-                  ? `url(${profileForm.avatarUrl}) center/cover no-repeat`
-                  : 'linear-gradient(135deg, #d4af37, #b5952f)',
-                border: '3px solid #d4af37',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '2.2rem',
-                fontFamily: 'Outfit',
-                fontWeight: 900,
-                color: '#ffffff',
-                boxShadow: '0 6px 18px rgba(212,175,55,0.25)',
+                cursor: uploadingPhoto ? 'wait' : 'pointer',
                 position: 'relative',
-                overflow: 'hidden',
+                display: 'inline-block',
               }}
             >
-              {!profileForm.avatarUrl && (profileForm.firstname ? profileForm.firstname[0].toUpperCase() : 'C')}
-              {uploadingPhoto && (
-                <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <span style={{ color: '#d4af37', fontSize: '0.7rem', fontFamily: 'Outfit', fontWeight: 800 }}>Uploading...</span>
-                </div>
-              )}
-            </div>
+              <div
+                style={{
+                  width: '94px',
+                  height: '94px',
+                  borderRadius: '50%',
+                  background: profileForm.avatarUrl
+                    ? `url(${profileForm.avatarUrl}) center/cover no-repeat`
+                    : 'linear-gradient(135deg, #d4af37, #b5952f)',
+                  border: '3px solid #d4af37',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '2.2rem',
+                  fontFamily: 'Outfit',
+                  fontWeight: 900,
+                  color: '#ffffff',
+                  boxShadow: '0 6px 20px rgba(212,175,55,0.3)',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  transition: 'transform 0.2s ease, filter 0.2s ease',
+                }}
+              >
+                {!profileForm.avatarUrl && (profileForm.firstname ? profileForm.firstname[0].toUpperCase() : 'C')}
+                {uploadingPhoto ? (
+                  <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(2px)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '0.2rem' }}>
+                    <RefreshCw size={18} color="#d4af37" className="spin-animation" style={{ animation: 'spin 1s linear infinite' }} />
+                    <span style={{ color: '#d4af37', fontSize: '0.65rem', fontFamily: 'Outfit', fontWeight: 800 }}>Saving...</span>
+                  </div>
+                ) : (
+                  <div style={{ position: 'absolute', bottom: 0, insetX: 0, background: 'rgba(0,0,0,0.45)', padding: '2px 0', display: 'flex', justifyContent: 'center' }}>
+                    <Edit size={12} color="#ffffff" />
+                  </div>
+                )}
+              </div>
+            </label>
+
             <label
               htmlFor="customer-avatar-upload"
               style={{
@@ -680,6 +709,7 @@ export const CustomerDashboard = () => {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.4rem',
+                transition: 'all 0.2s ease',
               }}
             >
               <Edit size={13} />
