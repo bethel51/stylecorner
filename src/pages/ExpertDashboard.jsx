@@ -24,11 +24,13 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
+import { uploadToCloudinary } from '../services/cloudinary';
 import { PageContainer } from '../components/common/PageContainer';
 import { StatusBadge } from '../components/common/StatusBadge';
 import { SkeletonList } from '../components/common/SkeletonLoader';
 import { PopupModal } from '../components/common/PopupModal';
 import { BottomSheet } from '../components/common/BottomSheet';
+import { ImagePreviewModal } from '../components/common/ImagePreviewModal';
 import { Trash2, AlertTriangle } from 'lucide-react';
 
 export const ExpertDashboard = () => {
@@ -44,6 +46,7 @@ export const ExpertDashboard = () => {
   const [activeTab, setActiveTab] = useState('bookings'); // 'bookings' | 'orders'
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showEnlargedAvatar, setShowEnlargedAvatar] = useState(false);
   const [deletingAccount, setDeletingAccount] = useState(false);
 
   // Avatar edit state
@@ -56,19 +59,6 @@ export const ExpertDashboard = () => {
     if (user) setAvatarInput(user.avatarUrl || '');
   }, [user]);
 
-  const uploadToCloudinary = async (file) => {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', 'nmep3opt');
-    const res = await fetch('https://api.cloudinary.com/v1_1/NM/image/upload', {
-      method: 'POST',
-      body: formData,
-    });
-    if (!res.ok) throw new Error('Image upload failed');
-    const data = await res.json();
-    return data.secure_url;
-  };
-
   const handleExpertPhotoChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -80,7 +70,7 @@ export const ExpertDashboard = () => {
       showToast('Profile picture updated!', 'success');
       setShowAvatarSheet(false);
     } catch (err) {
-      showToast('Failed to upload photo. Please try again.', 'error');
+      showToast(err.message || 'Failed to upload photo. Please try again.', 'error');
     } finally {
       setUploadingPhoto(false);
     }
@@ -211,9 +201,15 @@ export const ExpertDashboard = () => {
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.25rem' }}>
             {/* Avatar */}
             <div
-              onClick={() => setShowAvatarSheet(true)}
+              onClick={() => {
+                if (user?.avatarUrl) {
+                  setShowEnlargedAvatar(true);
+                } else {
+                  setShowAvatarSheet(true);
+                }
+              }}
               style={{ position: 'relative', flexShrink: 0, cursor: 'pointer' }}
-              title="Click to edit profile picture"
+              title={user?.avatarUrl ? "Click to view full size picture" : "Click to upload profile picture"}
             >
               <div
                 style={{
@@ -818,6 +814,13 @@ export const ExpertDashboard = () => {
         </div>
       </BottomSheet>
 
+      {/* Profile Picture Full Size Modal */}
+      <ImagePreviewModal
+        isOpen={showEnlargedAvatar}
+        onClose={() => setShowEnlargedAvatar(false)}
+        imageUrl={user?.avatarUrl}
+        title={`${user?.firstname || 'Expert'}'s Profile Picture`}
+      />
     </PageContainer>
   );
 };

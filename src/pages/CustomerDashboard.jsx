@@ -20,13 +20,15 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
+import { uploadToCloudinary } from '../services/cloudinary';
 import { PageContainer } from '../components/common/PageContainer';
 import { StatusBadge } from '../components/common/StatusBadge';
 import { SkeletonList } from '../components/common/SkeletonLoader';
 import { BottomSheet } from '../components/common/BottomSheet';
 import { PopupModal } from '../components/common/PopupModal';
 import { AISpecialistMatcherSheet } from '../components/booking/AISpecialistMatcherSheet';
-import { Trash2, AlertTriangle } from 'lucide-react';
+import { ImagePreviewModal } from '../components/common/ImagePreviewModal';
+import { Trash2, AlertTriangle, Eye } from 'lucide-react';
 
 export const CustomerDashboard = () => {
   const navigate = useNavigate();
@@ -40,6 +42,7 @@ export const CustomerDashboard = () => {
   const [showProfileSheet, setShowProfileSheet] = useState(false);
   const [showAiSheet, setShowAiSheet] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showEnlargedAvatar, setShowEnlargedAvatar] = useState(false);
   const [deletingAccount, setDeletingAccount] = useState(false);
 
   const [profileForm, setProfileForm] = useState({
@@ -51,19 +54,6 @@ export const CustomerDashboard = () => {
   const [savingProfile, setSavingProfile] = useState(false);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
 
-  const uploadToCloudinary = async (file) => {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', 'nmep3opt');
-    const res = await fetch('https://api.cloudinary.com/v1_1/NM/image/upload', {
-      method: 'POST',
-      body: formData,
-    });
-    if (!res.ok) throw new Error('Image upload failed');
-    const data = await res.json();
-    return data.secure_url;
-  };
-
   const handlePhotoChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -73,7 +63,7 @@ export const CustomerDashboard = () => {
       setProfileForm((prev) => ({ ...prev, avatarUrl: url }));
       showToast('Photo uploaded! Save your profile to apply it.', 'success');
     } catch (err) {
-      showToast('Failed to upload photo. Please try again.', 'error');
+      showToast(err.message || 'Failed to upload photo. Please try again.', 'error');
     } finally {
       setUploadingPhoto(false);
     }
@@ -167,9 +157,15 @@ export const CustomerDashboard = () => {
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.25rem' }}>
             {/* Avatar */}
             <div
-              onClick={() => setShowProfileSheet(true)}
+              onClick={() => {
+                if (user?.avatarUrl) {
+                  setShowEnlargedAvatar(true);
+                } else {
+                  setShowProfileSheet(true);
+                }
+              }}
               style={{ position: 'relative', flexShrink: 0, cursor: 'pointer' }}
-              title="Click to edit profile picture"
+              title={user?.avatarUrl ? "Click to view full size picture" : "Click to upload profile picture"}
             >
               <div
                 style={{
@@ -801,6 +797,14 @@ export const CustomerDashboard = () => {
           setShowAiSheet(false);
           navigate(`/booking?stylist=${encodeURIComponent(match.firstname)}`);
         }}
+      />
+
+      {/* Profile Picture Full Size Modal */}
+      <ImagePreviewModal
+        isOpen={showEnlargedAvatar}
+        onClose={() => setShowEnlargedAvatar(false)}
+        imageUrl={user?.avatarUrl}
+        title={`${user?.firstname || 'User'}'s Profile Picture`}
       />
     </PageContainer>
   );
