@@ -108,11 +108,16 @@ function authenticateToken(req, res, next) {
 app.post('/api/auth/register', async (req, res) => {
   try {
     const { firstname, lastname, email, password, phone, role, services } = req.body;
+    const cleanEmail = (email || '').trim().toLowerCase();
+
+    if (!cleanEmail || !password || !firstname) {
+      return res.status(400).json({ error: 'Firstname, email, and password are required.' });
+    }
     
-    // Check if user exists
-    const existingUser = await User.findOne({ email });
+    // Check if user exists (case-insensitive)
+    const existingUser = await User.findOne({ email: cleanEmail });
     if (existingUser) {
-      return res.status(400).json({ error: 'Email already exists' });
+      return res.status(400).json({ error: 'An account with this email address already exists.' });
     }
 
     // Hash password
@@ -124,13 +129,13 @@ app.post('/api/auth/register', async (req, res) => {
     const otpExpiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
 
     const user = new User({
-      firstname,
-      lastname,
-      email,
-      phone,
+      firstname: firstname.trim(),
+      lastname: (lastname || '').trim(),
+      email: cleanEmail,
+      phone: (phone || '').trim(),
       password: hashedPassword,
-      role: role || 'customer',
-      specialties: services ? services.split(',') : [],
+      role: (role === 'staff' || role === 'expert') ? 'staff' : 'customer',
+      specialties: services ? (Array.isArray(services) ? services : services.split(',').map(s => s.trim())) : [],
       isVerified: false,
       otpCode,
       otpExpiresAt
@@ -138,21 +143,13 @@ app.post('/api/auth/register', async (req, res) => {
 
     const savedUser = await user.save();
     
-    // Send OTP Email in the background so it doesn't block the UI
-    sendNotification(
+    // Send OTP Email safely without deleting the account if SMTP fails
+    sendNotificationSafe(
       savedUser.email,
       "Style Corner - Verify Your Account",
       `Hi ${savedUser.firstname},\n\nYour verification code is: ${otpCode}\n\nThis code will expire in 15 minutes.`
-    )
-    .then(info => {
-      console.log('✅ OTP e‑mail sent:', info.messageId);
-    })
-    .catch(async (mailError) => {
-      console.error('❌ Mail delivery failed during registration (background):', mailError);
-      await User.findByIdAndDelete(savedUser._id);
-    });
+    );
     
-    // Do NOT return token yet. Require verification.
     res.status(201).json({ message: 'Registration successful. Please verify your email.', email: savedUser.email });
   } catch (error) {
     console.error('Registration backend error:', error);
@@ -164,17 +161,19 @@ app.post('/api/auth/register', async (req, res) => {
 app.post('/api/auth/verify', async (req, res) => {
   try {
     const { email, code } = req.body;
+    const cleanEmail = (email || '').trim().toLowerCase();
+    const cleanCode = (code || '').toString().trim();
     
-    const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ error: 'User not found' });
-    if (user.isVerified) return res.status(400).json({ error: 'User already verified' });
+    const user = await User.findOne({ email: cleanEmail });
+    if (!user) return res.status(404).json({ error: 'Account not found. Please register.' });
+    if (user.isVerified) return res.status(400).json({ error: 'Account is already verified. You can log in.' });
 
-    if (user.otpCode !== code) {
-      return res.status(400).json({ error: 'Invalid verification code' });
+    if (user.otpCode !== cleanCode) {
+      return res.status(400).json({ error: 'Invalid verification code.' });
     }
     
-    if (new Date() > user.otpExpiresAt) {
-      return res.status(400).json({ error: 'Verification code expired' });
+    if (user.otpExpiresAt && new Date() > new Date(user.otpExpiresAt)) {
+      return res.status(400).json({ error: 'Verification code has expired. Please request a new code.' });
     }
 
     // Code is valid
@@ -196,9 +195,10 @@ app.post('/api/auth/verify', async (req, res) => {
 app.post('/api/auth/resend-otp', async (req, res) => {
   try {
     const { email } = req.body;
-    const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ error: 'User not found' });
-    if (user.isVerified) return res.status(400).json({ error: 'User already verified' });
+    const cleanEmail = (email || '').trim().toLowerCase();
+    const user = await User.findOne({ email: cleanEmail });
+    if (!user) return res.status(404).json({ error: 'Account not found.' });
+    if (user.isVerified) return res.status(400).json({ error: 'Account is already verified.' });
 
     const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
     user.otpCode = otpCode;
@@ -222,12 +222,13 @@ app.post('/api/auth/resend-otp', async (req, res) => {
 app.post('/api/auth/login', async (req, res) => {
   try {
     const { email, password, role } = req.body;
+    const cleanEmail = (email || '').trim().toLowerCase();
     
-    const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ error: 'Invalid email or password' });
+    const user = await User.findOne({ email: cleanEmail });
+    if (!user) return res.status(400).json({ error: 'Invalid email or password.' });
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ error: 'Invalid email or password' });
+    if (!isMatch) return res.status(400).json({ error: 'Invalid email or password.' });
 
     // Strict Role Enforcement
     if (role) {
@@ -391,9 +392,17 @@ app.put('/api/users/profile', authenticateToken, async (req, res) => {
 // Delete user account permanently
 app.delete('/api/users/account', authenticateToken, async (req, res) => {
   try {
+    const userEmail = (req.user.email || '').trim().toLowerCase();
+    await Booking.deleteMany({
+      $or: [
+        { clientEmail: new RegExp('^' + userEmail + '$', 'i') },
+        { user: req.user._id }
+      ]
+    });
     await User.findByIdAndDelete(req.user._id);
     res.status(200).json({ message: 'Account permanently deleted' });
   } catch (error) {
+    console.error('Delete account error:', error);
     res.status(500).json({ error: 'Failed to delete account' });
   }
 });

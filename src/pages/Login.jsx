@@ -26,7 +26,7 @@ export const Login = () => {
     setSubmitting(true);
     try {
       const user = await login(email, password, activeRole);
-      if (user.role === 'staff') {
+      if (user?.role === 'staff') {
         navigate('/expert-dashboard');
       } else {
         // Decode the full redirect path (e.g. /booking, /booking?expert=123)

@@ -64,18 +64,21 @@ export const uploadToCloudinary = async (file) => {
     console.warn('Canvas compression skipped, uploading original file:', err);
   }
 
+  const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'nmep3opt';
+  const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || 'nmep3opt';
+
   const formData = new FormData();
   formData.append('file', fileToUpload);
-  formData.append('upload_preset', 'nmep3opt');
+  formData.append('upload_preset', uploadPreset);
 
-  const res = await fetch('https://api.cloudinary.com/v1_1/NM/image/upload', {
+  const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
     method: 'POST',
     body: formData,
   });
 
   const data = await res.json();
   if (!res.ok) {
-    throw new Error(data?.error?.message || 'Image upload failed');
+    throw new Error(data?.error?.message || 'Image upload failed. Please verify your Cloudinary Cloud Name and Unsigned Upload Preset.');
   }
 
   return data.secure_url;

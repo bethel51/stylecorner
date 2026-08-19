@@ -27,7 +27,7 @@ export const VerifyOTP = () => {
     setSubmitting(true);
     try {
       const user = await verifyOtp(email, code);
-      if (user.role === 'staff') {
+      if (user?.role === 'staff') {
         navigate('/expert-dashboard');
       } else {
         navigate('/customer-dashboard');
