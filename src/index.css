@@ -1,24 +1,25 @@
-:root {
+:root, [data-theme="dark"] {
   --color-primary: #121212;
   --color-primary-light: #1f1f1f;
   --color-accent: #d4af37;
   --color-accent-hover: #b5952f;
-  --color-accent-soft: rgba(212, 175, 55, 0.12);
-  --color-bg: #faf9f6;
-  --color-surface: #ffffff;
-  --color-text-primary: #171717;
-  --color-text-secondary: #6b7280;
-  --color-border: rgba(0, 0, 0, 0.08);
-  --color-border-accent: rgba(212, 175, 55, 0.3);
+  --color-accent-soft: rgba(212, 175, 55, 0.15);
+  --color-bg: #0d0d0d;
+  --color-surface: #171717;
+  --color-card-bg: #18181b;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #9ca3af;
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-border-accent: rgba(212, 175, 55, 0.35);
   
   --radius-sm: 8px;
   --radius-md: 16px;
   --radius-lg: 24px;
   --radius-pill: 9999px;
 
-  --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.03);
-  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.12);
+  --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.7);
   --shadow-accent: 0 10px 25px rgba(212, 175, 55, 0.25);
 
   --header-height: 60px;
@@ -26,6 +27,31 @@
   --sidebar-width: 240px;
   --font-heading: 'Outfit', sans-serif;
   --font-body: 'Inter', sans-serif;
+}
+
+[data-theme="light"] {
+  --color-primary: #ffffff;
+  --color-primary-light: #f3f4f6;
+  --color-accent: #b58d19;
+  --color-accent-hover: #8f6e10;
+  --color-accent-soft: rgba(181, 141, 25, 0.12);
+  --color-bg: #faf9f6;
+  --color-surface: #ffffff;
+  --color-card-bg: #ffffff;
+  --color-text-primary: #171717;
+  --color-text-secondary: #6b7280;
+  --color-border: rgba(0, 0, 0, 0.08);
+  --color-border-accent: rgba(181, 141, 25, 0.3);
+
+  --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.03);
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.12);
+  --shadow-accent: 0 10px 25px rgba(181, 141, 25, 0.25);
+}
+
+/* Smooth Theme Transitions */
+.app-viewport, .app-header, .bottom-nav, .app-card, .app-input, .app-select, .app-textarea, .bottom-sheet-content, aside, main {
+  transition: background-color 0.25s ease-in-out, color 0.25s ease-in-out, border-color 0.25s ease-in-out, box-shadow 0.25s ease-in-out;
 }
 
 * {
@@ -39,7 +65,7 @@ html, body {
   width: 100%;
   min-height: 100vh;
   font-family: var(--font-body);
-  background-color: #0d0d0d;
+  background-color: var(--color-bg);
   color: var(--color-text-primary);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
