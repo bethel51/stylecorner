@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import {
   Scissors,
   Sparkles,
@@ -19,6 +20,7 @@ import { AISpecialistMatcherSheet } from '../components/booking/AISpecialistMatc
 
 export const Home = () => {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const [showAiSheet, setShowAiSheet] = useState(false);
 
   const signatureServices = [
@@ -149,7 +151,13 @@ export const Home = () => {
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
             <button
-              onClick={() => navigate('/booking')}
+              onClick={() => {
+  if (isAuthenticated) {
+    navigate('/booking');
+  } else {
+    navigate(`/login?redirect=${encodeURIComponent('/booking')}`);
+  }
+}}
               className="app-btn app-btn-accent"
               style={{
                 padding: '0.9rem 1.5rem',
