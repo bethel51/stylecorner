@@ -98,7 +98,7 @@ export const Home = () => {
               border: '1px solid rgba(212,175,55,0.4)',
             }}
           >
-            <Sparkles size={13} /> The Modern Atelier
+            <Sparkles size={13} /> Style Corner
           </span>
 
           <h1
@@ -112,8 +112,8 @@ export const Home = () => {
               marginBottom: '1rem',
             }}
           >
-            Elevate Your<br />
-            <span style={{ color: '#d4af37', fontStyle: 'italic', fontWeight: 700 }}>Signature Style.</span>
+            Look Good,<br />
+            <span style={{ color: '#d4af37', fontStyle: 'italic', fontWeight: 700 }}>Feel Great.</span>
           </h1>
 
           <p
@@ -126,7 +126,7 @@ export const Home = () => {
               fontWeight: 400,
             }}
           >
-            A high-end editorial approach to hair, braids, nails, and personal grooming. Step into the new standard of modern beauty.
+            Hair cuts, braids, nails, and grooming — all in one place. Book fast, get styled.
           </p>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
@@ -143,7 +143,7 @@ export const Home = () => {
               }}
             >
               <Calendar size={18} />
-              <span>Experience The Atelier</span>
+              <span>Book a Session</span>
             </button>
 
             <button
@@ -157,7 +157,7 @@ export const Home = () => {
               }}
             >
               <Sparkles size={18} color="#d4af37" />
-              <span>Try AI Specialist Matcher</span>
+              <span>AI Stylist Finder</span>
             </button>
           </div>
         </div>
@@ -213,7 +213,7 @@ export const Home = () => {
             OUR SPECIALITIES
           </span>
           <h2 style={{ fontFamily: 'Outfit', fontSize: '1.6rem', fontWeight: 900, color: '#171717' }}>
-            Signature Services
+            Our Services
           </h2>
         </div>
 
@@ -239,6 +239,7 @@ export const Home = () => {
               <img
                 src={item.image}
                 alt={item.title}
+                loading="lazy"
                 style={{
                   position: 'absolute',
                   inset: 0,
@@ -319,10 +320,10 @@ export const Home = () => {
         </div>
         <div style={{ flex: 1 }}>
           <h4 style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 800, color: '#171717' }}>
-            Unsure which stylist to choose?
+            Not sure which stylist to pick?
           </h4>
           <p style={{ color: '#6b7280', fontSize: '0.82rem', marginTop: '0.15rem' }}>
-            Match your style request instantly with our AI artisan finder.
+            Tell us your style and our AI will match you with the right expert — instantly.
           </p>
         </div>
         <ChevronRight size={18} color="#d4af37" />
@@ -342,13 +343,13 @@ export const Home = () => {
         }}
       >
         <span style={{ color: '#d4af37', textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 800, display: 'block', marginBottom: '0.4rem' }}>
-          THE COLLECTION
+          Grooming Products
         </span>
         <h3 style={{ fontSize: '1.35rem', fontFamily: 'Outfit', fontWeight: 900, color: '#1A1A1A', marginBottom: '0.5rem', lineHeight: 1.2 }}>
-          Curated Grooming Essentials
+          Products for Home Use
         </h3>
         <p style={{ color: '#4A4A4A', fontSize: '0.85rem', lineHeight: 1.55, marginBottom: '1.15rem' }}>
-          Bring the luxury of Style Corner into your home. Professional-grade tools, waxes, and beard oils selected by lead stylists.
+          Shop the same products our stylists use. Hair oils, beard kits, wax, and more — delivered to your door.
         </p>
 
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -374,7 +375,7 @@ export const Home = () => {
       <div style={{ marginBottom: '1.5rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
           <h3 style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 800, color: '#171717' }}>
-            Master Stylists
+            Our Stylists
           </h3>
           <button
             onClick={() => navigate('/experts')}
@@ -425,17 +426,17 @@ export const Home = () => {
         }}
       >
         <h3 style={{ fontFamily: 'Outfit', fontSize: '1.5rem', fontWeight: 900, color: '#ffffff', marginBottom: '0.35rem' }}>
-          Ready for a change?
+          Ready to book?
         </h3>
         <p style={{ color: '#a1a1aa', fontSize: '0.85rem', marginBottom: '1.25rem' }}>
-          Our expert team is waiting to help you discover your signature look.
+          Pick a stylist, choose a service, and get it done.
         </p>
         <button
           onClick={() => navigate('/booking')}
           className="app-btn app-btn-accent"
           style={{ maxWidth: '240px', margin: '0 auto' }}
         >
-          <Calendar size={16} /> Book an Appointment
+          <Calendar size={16} /> Book Now
         </button>
       </div>
 

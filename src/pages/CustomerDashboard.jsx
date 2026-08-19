@@ -105,8 +105,8 @@ export const CustomerDashboard = () => {
   const pointsToNextReward = 1000 - (rewardPoints % 1000);
 
   return (
-    <PageContainer title="Client Command Center" onOpenAiMatcher={() => setShowAiSheet(true)}>
-      <div style={{ maxWidth: '480px', margin: '0 auto' }}>
+    <PageContainer title="My Dashboard" onOpenAiMatcher={() => setShowAiSheet(true)}>
+      <div>
 
         {/* ── Executive Profile Header Card ── */}
         <div
@@ -198,7 +198,7 @@ export const CustomerDashboard = () => {
                   letterSpacing: '0.05em',
                 }}
               >
-                ATELIER VIP CLIENT
+                STYLE CORNER VIP
               </span>
             </div>
           </div>
@@ -267,9 +267,9 @@ export const CustomerDashboard = () => {
               </div>
               <div>
                 <h4 style={{ fontFamily: 'Outfit', fontSize: '0.95rem', fontWeight: 800, color: '#171717' }}>
-                  Atelier Rewards Program
+                  Loyalty Rewards
                 </h4>
-                <span style={{ fontSize: '0.75rem', color: '#6b7280' }}>Earn points on every session & order</span>
+                <span style={{ fontSize: '0.75rem', color: '#6b7280' }}>Earn points on every booking and order</span>
               </div>
             </div>
 
@@ -293,7 +293,7 @@ export const CustomerDashboard = () => {
             />
           </div>
           <p style={{ fontSize: '0.75rem', color: '#6b7280', textAlign: 'right' }}>
-            {pointsToNextReward} pts until next $25 Atelier Reward Voucher
+            {pointsToNextReward} pts to your next $25 reward voucher
           </p>
         </div>
 
@@ -393,7 +393,7 @@ export const CustomerDashboard = () => {
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
               <h3 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: '#171717' }}>
-                Your Styling Sessions
+                My Bookings
               </h3>
               <button
                 onClick={() => navigate('/booking')}
@@ -409,13 +409,13 @@ export const CustomerDashboard = () => {
               <div className="app-card" style={{ textAlign: 'center', padding: '2.5rem 1rem', color: '#6b7280' }}>
                 <Calendar size={36} style={{ opacity: 0.3, marginBottom: '0.75rem' }} />
                 <h4 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: '#171717', marginBottom: '0.25rem' }}>
-                  No Appointments Scheduled
+                  No Bookings Yet
                 </h4>
                 <p style={{ fontSize: '0.85rem', marginBottom: '1.25rem' }}>
-                  Book your next haircut, braids, or nail session in seconds.
+                  Book your first visit — hair cut, braids, or nails.
                 </p>
                 <button onClick={() => navigate('/booking')} className="app-btn app-btn-primary" style={{ maxWidth: '220px', margin: '0 auto' }}>
-                  Book First Session
+                  Book Now
                 </button>
               </div>
             ) : (
@@ -450,7 +450,7 @@ export const CustomerDashboard = () => {
                         className="app-btn app-btn-outline"
                         style={{ minHeight: '34px', fontSize: '0.78rem', padding: '0.4rem' }}
                       >
-                        <RefreshCw size={13} /> Re-book Session
+                        <RefreshCw size={13} /> Book Again
                       </button>
                     </div>
                   </div>
@@ -465,7 +465,7 @@ export const CustomerDashboard = () => {
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
               <h3 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: '#171717' }}>
-                Store Orders History
+                My Orders
               </h3>
               <button
                 onClick={() => navigate('/store')}
@@ -481,10 +481,10 @@ export const CustomerDashboard = () => {
               <div className="app-card" style={{ textAlign: 'center', padding: '2.5rem 1rem', color: '#6b7280' }}>
                 <ShoppingBag size={36} style={{ opacity: 0.3, marginBottom: '0.75rem' }} />
                 <h4 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: '#171717', marginBottom: '0.25rem' }}>
-                  No Grooming Orders Yet
+                  No Orders Yet
                 </h4>
                 <p style={{ fontSize: '0.85rem', marginBottom: '1.25rem' }}>
-                  Explore pomades, beard oils, and luxury scalp care products.
+                  Shop hair products, beard kits, and more.
                 </p>
                 <button onClick={() => navigate('/store')} className="app-btn app-btn-accent" style={{ maxWidth: '200px', margin: '0 auto' }}>
                   Browse Store
@@ -524,11 +524,10 @@ export const CustomerDashboard = () => {
 
       </div>
 
-      {/* Edit Profile Bottom Sheet */}
       <BottomSheet
         isOpen={showProfileSheet}
         onClose={() => setShowProfileSheet(false)}
-        title="Edit Client Profile"
+        title="Edit Profile"
       >
         <form onSubmit={handleProfileSubmit}>
           <div className="app-input-group">
@@ -563,7 +562,7 @@ export const CustomerDashboard = () => {
           </div>
 
           <button type="submit" disabled={savingProfile} className="app-btn app-btn-primary" style={{ marginTop: '0.5rem' }}>
-            {savingProfile ? 'Saving Changes...' : 'Save Profile Changes'}
+            {savingProfile ? 'Saving...' : 'Save Changes'}
           </button>
         </form>
       </BottomSheet>

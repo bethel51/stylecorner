@@ -77,8 +77,8 @@ export const ExpertDashboard = () => {
   });
 
   return (
-    <PageContainer title="Expert Command Center">
-      <div style={{ maxWidth: '480px', margin: '0 auto' }}>
+    <PageContainer title="Expert Dashboard">
+      <div>
 
         {/* ── Executive Stylist Header Card ── */}
         <div
@@ -126,7 +126,7 @@ export const ExpertDashboard = () => {
               </div>
 
               <p style={{ color: '#d4af37', fontSize: '0.82rem', fontFamily: 'Outfit', fontWeight: 700, margin: '0.15rem 0 0.4rem' }}>
-                ATELIER MASTER TECHNICIAN
+                MASTER STYLIST
               </p>
 
               {/* Shift Availability Toggle */}
@@ -153,7 +153,7 @@ export const ExpertDashboard = () => {
                 }}
               >
                 <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: isAvailable ? '#10b981' : '#ef4444' }} />
-                <span>{isAvailable ? 'AVAILABLE FOR AI MATCHING' : 'ON BREAK'}</span>
+                <span>{isAvailable ? 'AVAILABLE — TAKING BOOKINGS' : 'ON BREAK'}</span>
               </button>
             </div>
           </div>
@@ -200,7 +200,7 @@ export const ExpertDashboard = () => {
               gap: '0.4rem',
             }}
           >
-            <LogOut size={14} /> Sign Out of Command Center
+            <LogOut size={14} /> Sign Out
           </button>
         </div>
 
@@ -235,7 +235,7 @@ export const ExpertDashboard = () => {
         </div>
 
         {/* ── Status Filter Pills ── */}
-        <div style={{ display: 'flex', gap: '0.4rem', overflowX: 'auto', paddingBottom: '0.25rem', marginBottom: '1.25rem' }}>
+        <div className="filter-pills-scroll" style={{ marginBottom: '1.25rem' }}>
           {[
             { id: 'all', label: `All (${bookings.length})` },
             { id: 'pending', label: `Pending (${pendingBookings.length})` },
@@ -268,7 +268,7 @@ export const ExpertDashboard = () => {
         <div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
             <h3 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: '#171717' }}>
-              Client Appointments Queue
+              All Bookings
             </h3>
             <button
               onClick={fetchBookings}
@@ -284,10 +284,10 @@ export const ExpertDashboard = () => {
             <div className="app-card" style={{ textAlign: 'center', padding: '2.5rem 1rem', color: '#6b7280' }}>
               <Calendar size={36} style={{ opacity: 0.3, marginBottom: '0.75rem' }} />
               <h4 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: '#171717', marginBottom: '0.25rem' }}>
-                No Appointments in this Filter
+                No Bookings Found
               </h4>
               <p style={{ fontSize: '0.85rem' }}>
-                All scheduled client requests will appear live in your command queue.
+                New bookings will show up here as customers book.
               </p>
             </div>
           ) : (
@@ -340,7 +340,7 @@ export const ExpertDashboard = () => {
                           className="app-btn app-btn-primary"
                           style={{ flex: 1, minHeight: '38px', padding: '0.5rem', fontSize: '0.82rem' }}
                         >
-                          <CheckCircle size={15} /> Accept Visit
+                          <CheckCircle size={15} /> Accept
                         </button>
 
                         <button
@@ -361,7 +361,7 @@ export const ExpertDashboard = () => {
                         className="app-btn app-btn-accent"
                         style={{ width: '100%', minHeight: '38px', padding: '0.5rem', fontSize: '0.85rem' }}
                       >
-                        <CheckCircle size={15} /> Mark Service Completed
+                        <CheckCircle size={15} /> Mark as Done
                       </button>
                     )}
 
