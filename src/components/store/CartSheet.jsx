@@ -39,6 +39,7 @@ export const CartSheet = ({ isOpen, onClose }) => {
       const orderPayload = {
         name: `${user.firstname || ''} ${user.lastname || ''}`.trim() || 'Customer',
         email: user.email,
+        phone: user.phone || '',
         item: itemsList,
         price: subtotal,
         totalPrice: subtotal,

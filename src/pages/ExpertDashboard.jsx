@@ -97,6 +97,23 @@ export const ExpertDashboard = () => {
   const acceptedBookings = bookings.filter((b) => b.status === 'accepted');
   const completedBookings = bookings.filter((b) => b.status === 'completed');
 
+  // Clear all booking history handler
+  const handleClearHistory = async () => {
+    if (!window.confirm('Are you sure you want to clear all booking history?')) return;
+    try {
+      setLoading(true);
+      const data = await api.getBookings();
+      const ids = Array.isArray(data) ? data.map(b => b._id) : [];
+      await Promise.all(ids.map(id => api.deleteBooking(id)));
+      setBookings([]);
+      showToast('All booking history cleared.', 'success');
+    } catch (err) {
+      showToast(err.message || 'Failed to clear history', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const totalRevenue = completedBookings.reduce((sum, b) => sum + (Number(b.price) || 0), 0);
 
   const filteredList = bookings.filter((b) => {
@@ -210,32 +227,50 @@ export const ExpertDashboard = () => {
           )}
 
             <div style={{ marginTop: '1rem' }}>
-              <button
-                onClick={logout}
-                style={{
-                  width: '100%',
-                  background: 'rgba(239, 68, 68, 0.15)',
-                  border: '1px solid rgba(239, 68, 68, 0.3)',
-                  color: '#ef4444',
-                  padding: '0.6rem',
-                  borderRadius: '12px',
-                  fontSize: '0.8rem',
-                  fontFamily: 'Outfit',
-                  fontWeight: 800,
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.4rem',
-                }}
-              >
-                <LogOut size={14} /> Sign Out
-              </button>
-            </div>
+                <button
+                  onClick={logout}
+                  style={{
+                    width: '100%',
+                    background: 'rgba(239, 68, 68, 0.15)',
+                    border: '1px solid rgba(239, 68, 68, 0.3)',
+                    color: '#ef4444',
+                    padding: '0.6rem',
+                    borderRadius: '12px',
+                    fontSize: '0.8rem',
+                    fontFamily: 'Outfit',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.4rem',
+                  }}
+                >
+                  <LogOut size={14} /> Sign Out
+                </button>
+                <button
+                  onClick={handleClearHistory}
+                  style={{
+                    width: '100%',
+                    marginTop: '0.6rem',
+                    background: 'rgba(212, 175, 55, 0.15)',
+                    border: '1px solid rgba(212, 175, 55, 0.3)',
+                    color: '#d4af37',
+                    padding: '0.6rem',
+                    borderRadius: '12px',
+                    fontSize: '0.8rem',
+                    fontFamily: 'Outfit',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                  }}
+                >
+                  Clear All Booking History
+                </button>
+              </div>
         </div>
 
         {/* ── Metric Cards Grid ── */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.75rem', marginBottom: '1.25rem' }}>
+        <div className="metrics-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.75rem', marginBottom: '1.25rem' }}>
           <div className="app-card" style={{ textAlign: 'center', padding: '1.1rem 0.5rem', marginBottom: 0 }}>
             <div style={{ fontFamily: 'Outfit', fontSize: '1.6rem', fontWeight: 900, color: '#d97706' }}>
               {pendingBookings.length}
@@ -334,7 +369,7 @@ export const ExpertDashboard = () => {
                           <Mail size={12} /> {b.clientEmail}
                         </span>
                         {b.clientPhone && (
-                          <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                          <span className="phone-number" style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                             <Phone size={12} /> {b.clientPhone}
                           </span>
                         )}

@@ -647,3 +647,25 @@ img {
 .filter-pills-scroll::-webkit-scrollbar {
   display: none;
 }
+
+/* Responsive adjustments for Expert Dashboard cards */
+@media (max-width: 480px) {
+  /* Ensure status badges fit within card */
+  .status-badge {
+    font-size: 0.6rem;
+    padding: 0.2rem 0.6rem;
+  }
+  /* Phone number text should wrap/truncate gracefully */
+  .phone-number {
+    font-size: 0.6rem;
+    flex-wrap: wrap;
+    word-break: break-all;
+  }
+  /* Booking card header flex layout for small screens */
+  .booking-card-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+}
