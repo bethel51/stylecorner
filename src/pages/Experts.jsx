@@ -14,6 +14,7 @@ export const Experts = () => {
       rating: 4.9,
       specialties: ['Skin Fades', 'Hot Towel Razor Shave', 'Textured Crops'],
       bio: 'Specializing in precision hair geometry and classic tailored cuts for executive clients.',
+      image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80',
     },
     {
       name: 'Elena Thorne',
@@ -22,6 +23,7 @@ export const Experts = () => {
       rating: 5.0,
       specialties: ['Knotless Box Braids', 'Wig Installation', 'Scalp Care'],
       bio: 'Renowned for gentle tension-free knotless braiding techniques and protective styling.',
+      image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80',
     },
     {
       name: 'Marcus Grey',
@@ -30,6 +32,7 @@ export const Experts = () => {
       rating: 4.8,
       specialties: ['Gel Sculpting', 'Luxury Foot Spa', 'Nail Artistry'],
       bio: 'Creating immaculate nail shapes, custom color gels, and soothing therapeutic foot treatments.',
+      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
     },
   ];
 
@@ -39,24 +42,19 @@ export const Experts = () => {
         {team.map((m, idx) => (
           <div key={idx} className="app-card" style={{ marginBottom: 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginBottom: '0.85rem' }}>
-              <div
+              <img
+                src={m.image}
+                alt={m.name}
+                loading="lazy"
                 style={{
                   width: '56px',
                   height: '56px',
                   borderRadius: '16px',
-                  background: 'linear-gradient(135deg, #1f1f1f, #121212)',
-                  color: '#d4af37',
+                  objectFit: 'cover',
                   border: '1.5px solid rgba(212, 175, 55, 0.4)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontFamily: 'Outfit',
-                  fontWeight: 900,
-                  fontSize: '1.4rem',
+                  boxShadow: '0 6px 16px rgba(0,0,0,0.12)',
                 }}
-              >
-                {m.name[0]}
-              </div>
+              />
 
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>

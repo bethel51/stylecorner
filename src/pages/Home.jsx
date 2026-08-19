@@ -46,9 +46,27 @@ export const Home = () => {
   ];
 
   const specialists = [
-    { name: 'Julian Reed', role: 'Master Barber & Cut Specialist', rating: 4.9, specialty: 'Skin Fades & Razor Work' },
-    { name: 'Elena Thorne', role: 'Braids & Extension Artisan', rating: 5.0, specialty: 'Knotless Braids & Scalp Care' },
-    { name: 'Marcus Grey', role: 'Nail Architect & Pedicure Tech', rating: 4.8, specialty: 'Gel Sets & Foot Spa' },
+    {
+      name: 'Julian Reed',
+      role: 'Master Barber & Cut Specialist',
+      rating: 4.9,
+      specialty: 'Skin Fades & Razor Work',
+      image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80',
+    },
+    {
+      name: 'Elena Thorne',
+      role: 'Braids & Extension Artisan',
+      rating: 5.0,
+      specialty: 'Knotless Braids & Scalp Care',
+      image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80',
+    },
+    {
+      name: 'Marcus Grey',
+      role: 'Nail Architect & Pedicure Tech',
+      rating: 4.8,
+      specialty: 'Gel Sets & Foot Spa',
+      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
+    },
   ];
 
   return (
@@ -394,9 +412,19 @@ export const Home = () => {
               style={{ marginBottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-                <div style={{ width: '46px', height: '46px', borderRadius: '50%', background: 'linear-gradient(135deg, #1f1f1f, #121212)', color: '#d4af37', border: '1.5px solid rgba(212,175,55,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.15rem' }}>
-                  {sp.name[0]}
-                </div>
+                <img
+                  src={sp.image}
+                  alt={sp.name}
+                  loading="lazy"
+                  style={{
+                    width: '48px',
+                    height: '48px',
+                    borderRadius: '50%',
+                    objectFit: 'cover',
+                    border: '1.5px solid rgba(212,175,55,0.4)',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                  }}
+                />
                 <div>
                   <h4 style={{ fontFamily: 'Outfit', fontSize: '0.98rem', fontWeight: 700, color: '#171717' }}>{sp.name}</h4>
                   <p style={{ color: '#d4af37', fontSize: '0.75rem', fontWeight: 700, fontFamily: 'Outfit' }}>{sp.specialty}</p>
