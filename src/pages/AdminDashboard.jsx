@@ -41,12 +41,14 @@ export const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState(null);
 
-  // Filters
+  // Filters & Modals
   const [orderStatusFilter, setOrderStatusFilter] = useState('all');
   const [bookingStatusFilter, setBookingStatusFilter] = useState('all');
   const [userRoleFilter, setUserRoleFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [selectedBooking, setSelectedBooking] = useState(null);
   const [userToDelete, setUserToDelete] = useState(null);
 
   // Mobile sidebar state
@@ -85,10 +87,11 @@ export const AdminDashboard = () => {
     }
   };
 
-  const handleUpdateOrderStatus = async (orderId, newStatus) => {
+  const handleUpdateOrderStatus = async (orderId, newStatus, e) => {
+    if (e) e.stopPropagation();
     setUpdatingId(orderId);
     try {
-      await api.updateOrderStatus(orderId, newStatus);
+      await api.updateOrderStatus(orderId, { status: newStatus });
       setOrders(prev => prev.map(o => o._id === orderId ? { ...o, status: newStatus } : o));
       if (selectedOrder?._id === orderId) setSelectedOrder(prev => ({ ...prev, status: newStatus }));
       showToast(`Order marked as ${newStatus}`, 'success');
@@ -99,11 +102,13 @@ export const AdminDashboard = () => {
     }
   };
 
-  const handleUpdateBookingStatus = async (bookingId, newStatus) => {
+  const handleUpdateBookingStatus = async (bookingId, newStatus, e) => {
+    if (e) e.stopPropagation();
     setUpdatingId(bookingId);
     try {
-      await api.updateBookingStatus(bookingId, newStatus);
+      await api.updateBookingStatus(bookingId, { status: newStatus });
       setBookings(prev => prev.map(b => b._id === bookingId ? { ...b, status: newStatus } : b));
+      if (selectedBooking?._id === bookingId) setSelectedBooking(prev => ({ ...prev, status: newStatus }));
       showToast(`Booking marked as ${newStatus}`, 'success');
     } catch (err) {
       showToast(err.message || 'Failed to update booking', 'error');
@@ -127,36 +132,70 @@ export const AdminDashboard = () => {
     }
   };
 
-  const totalRevenue = orders.reduce((sum, o) => sum + (o.totalPrice || 0), 0);
-  const pendingOrdersCount = orders.filter(o => o.status === 'pending' || o.status === 'processing').length;
-  const pendingBookingsCount = bookings.filter(b => b.status === 'pending').length;
+  const totalRevenue = orders.reduce((sum, o) => sum + (o.totalPrice || o.price || 0), 0);
+  const pendingOrdersCount = orders.filter(o => {
+    const st = (o.status || 'pending').toLowerCase();
+    return st === 'pending' || st === 'processing';
+  }).length;
+  const pendingBookingsCount = bookings.filter(b => (b.status || 'pending').toLowerCase() === 'pending').length;
   const customerCount = usersList.filter(u => u.role !== 'staff').length;
   const expertCount = usersList.filter(u => u.role === 'staff').length;
 
   const filteredOrders = orders.filter(o => {
-    const matchesStatus = orderStatusFilter === 'all' || o.status === orderStatusFilter;
-    const q = searchQuery.toLowerCase();
+    const orderStatus = (o.status || 'pending').toLowerCase();
+    const matchesStatus = orderStatusFilter === 'all' || orderStatus === orderStatusFilter.toLowerCase();
+    const q = searchQuery.trim().toLowerCase();
+    const nameStr = (o.name || o.customerInfo?.name || '').toLowerCase();
+    const emailStr = (o.email || o.customerInfo?.email || '').toLowerCase();
+    const itemStr = (o.item || (Array.isArray(o.items) ? o.items.map(i => i.name || i.title).join(' ') : '')).toLowerCase();
+    const phoneStr = (o.phone || o.customerInfo?.phone || '').toLowerCase();
+    const idStr = (o._id || '').toLowerCase();
+
     const matchesSearch = !q ||
-      (o.customerInfo?.name || '').toLowerCase().includes(q) ||
-      (o.customerInfo?.email || '').toLowerCase().includes(q) ||
-      (o._id || '').toLowerCase().includes(q);
+      nameStr.includes(q) ||
+      emailStr.includes(q) ||
+      itemStr.includes(q) ||
+      phoneStr.includes(q) ||
+      idStr.includes(q);
+
     return matchesStatus && matchesSearch;
   });
 
   const filteredBookings = bookings.filter(b => {
-    const matchesStatus = bookingStatusFilter === 'all' || b.status === bookingStatusFilter;
-    const q = searchQuery.toLowerCase();
+    const bookingStatus = (b.status || 'pending').toLowerCase();
+    let matchesStatus = bookingStatusFilter === 'all';
+    if (!matchesStatus) {
+      if (bookingStatusFilter === 'confirmed') {
+        matchesStatus = bookingStatus === 'confirmed' || bookingStatus === 'accepted';
+      } else if (bookingStatusFilter === 'cancelled') {
+        matchesStatus = bookingStatus === 'cancelled' || bookingStatus === 'rejected';
+      } else {
+        matchesStatus = bookingStatus === bookingStatusFilter.toLowerCase();
+      }
+    }
+    const q = searchQuery.trim().toLowerCase();
+    const nameStr = (b.clientName || b.user?.firstname || '').toLowerCase();
+    const emailStr = (b.clientEmail || b.email || '').toLowerCase();
+    const serviceStr = (b.serviceName || b.service || '').toLowerCase();
+    const stylistStr = (b.stylist || '').toLowerCase();
+    const phoneStr = (b.phone || b.clientPhone || '').toLowerCase();
+    const idStr = (b._id || '').toLowerCase();
+
     const matchesSearch = !q ||
-      (b.clientName || b.user?.firstname || '').toLowerCase().includes(q) ||
-      (b.serviceName || '').toLowerCase().includes(q) ||
-      (b.stylist || '').toLowerCase().includes(q);
+      nameStr.includes(q) ||
+      emailStr.includes(q) ||
+      serviceStr.includes(q) ||
+      stylistStr.includes(q) ||
+      phoneStr.includes(q) ||
+      idStr.includes(q);
+
     return matchesStatus && matchesSearch;
   });
 
   const filteredUsers = usersList.filter(u => {
     const matchesRole = userRoleFilter === 'all' ||
       (userRoleFilter === 'staff' ? u.role === 'staff' : u.role !== 'staff');
-    const q = searchQuery.toLowerCase();
+    const q = searchQuery.trim().toLowerCase();
     const fullName = `${u.firstname || ''} ${u.lastname || ''}`.toLowerCase();
     const matchesSearch = !q ||
       fullName.includes(q) ||
@@ -494,44 +533,55 @@ export const AdminDashboard = () => {
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
                 {filteredOrders.map(order => (
-                  <div key={order._id} style={{
-                    backgroundColor: '#111111', borderRadius: '16px', padding: isMobile ? '1rem' : '1.25rem',
-                    border: '1px solid rgba(255,255,255,0.06)',
-                  }}>
+                  <div
+                    key={order._id}
+                    onClick={() => setSelectedOrder(order)}
+                    style={{
+                      backgroundColor: '#111111', borderRadius: '16px', padding: isMobile ? '1rem' : '1.25rem',
+                      border: '1px solid rgba(255,255,255,0.06)', cursor: 'pointer',
+                      transition: 'border-color 0.2s ease, transform 0.15s ease',
+                    }}
+                  >
                     <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
                       <div>
                         <div style={{ fontSize: '0.7rem', color: '#6b7280', fontFamily: 'monospace', marginBottom: '0.15rem' }}>
                           ORDER #{(order._id || '').slice(-6).toUpperCase()}
                         </div>
                         <div style={{ fontSize: '0.98rem', fontWeight: 700, color: '#ffffff', fontFamily: 'Outfit' }}>
-                          {order.customerInfo?.name || 'Store Customer'}
+                          {order.name || order.customerInfo?.name || 'Store Customer'}
                         </div>
                         <div style={{ fontSize: '0.75rem', color: '#9ca3af', marginTop: '0.1rem' }}>
-                          {order.customerInfo?.email || ''} {order.customerInfo?.phone ? `· ${order.customerInfo.phone}` : ''}
+                          {order.email || order.customerInfo?.email || ''} {(order.phone || order.customerInfo?.phone) ? `· ${order.phone || order.customerInfo?.phone}` : ''}
                         </div>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
                         <span style={{ fontSize: '1.05rem', fontWeight: 800, color: '#d4af37', fontFamily: 'Outfit' }}>
-                          ${(order.totalPrice || 0).toFixed(2)}
+                          ${(order.totalPrice || order.price || 0).toFixed(2)}
                         </span>
                         <StatusBadge status={order.status || 'pending'} />
                       </div>
                     </div>
 
                     <div style={{ fontSize: '0.76rem', color: '#6b7280', marginBottom: '0.85rem' }}>
-                      {(order.items || []).slice(0, 3).map((item, idx) => (
-                        <span key={idx} style={{ marginRight: '0.6rem', display: 'inline-block' }}>
-                          • {item.name || item.title || 'Product'} ×{item.quantity || 1}
-                        </span>
-                      ))}
-                      {(order.items || []).length > 3 && <span style={{ color: '#d4af37' }}>+{order.items.length - 3} more</span>}
+                      {Array.isArray(order.items) && order.items.length > 0 ? (
+                        <>
+                          {order.items.slice(0, 3).map((item, idx) => (
+                            <span key={idx} style={{ marginRight: '0.6rem', display: 'inline-block' }}>
+                              • {item.name || item.title || 'Product'} ×{item.quantity || 1}
+                            </span>
+                          ))}
+                          {order.items.length > 3 && <span style={{ color: '#d4af37' }}>+{order.items.length - 3} more</span>}
+                        </>
+                      ) : (
+                        <span>• {order.item || 'Store Item'}</span>
+                      )}
                     </div>
 
                     <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', paddingTop: '0.65rem', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
                       {order.status !== 'shipped' && order.status !== 'completed' && (
                         <button
                           disabled={updatingId === order._id}
-                          onClick={() => handleUpdateOrderStatus(order._id, 'shipped')}
+                          onClick={(e) => handleUpdateOrderStatus(order._id, 'shipped', e)}
                           style={{ flex: 1, padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: '#d4af37', color: '#000', fontWeight: 700, fontSize: '0.78rem', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
                         >
                           <Truck size={13} /> Mark Shipped
@@ -540,17 +590,17 @@ export const AdminDashboard = () => {
                       {order.status === 'shipped' && (
                         <button
                           disabled={updatingId === order._id}
-                          onClick={() => handleUpdateOrderStatus(order._id, 'completed')}
+                          onClick={(e) => handleUpdateOrderStatus(order._id, 'completed', e)}
                           style={{ flex: 1, padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: '#22c55e', color: '#fff', fontWeight: 700, fontSize: '0.78rem', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
                         >
                           <CheckCircle size={13} /> Mark Completed
                         </button>
                       )}
                       <button
-                        onClick={() => setSelectedOrder(order)}
+                        onClick={(e) => { e.stopPropagation(); setSelectedOrder(order); }}
                         style={{ padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: 'rgba(255,255,255,0.06)', color: '#d1d5db', fontWeight: 600, fontSize: '0.78rem', border: '1px solid rgba(255,255,255,0.08)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
                       >
-                        <Eye size={13} /> Details
+                        <Eye size={13} /> View Details
                       </button>
                     </div>
                   </div>
@@ -567,17 +617,22 @@ export const AdminDashboard = () => {
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
                 {filteredBookings.map(b => (
-                  <div key={b._id} style={{
-                    backgroundColor: '#111111', borderRadius: '16px', padding: isMobile ? '1rem' : '1.25rem',
-                    border: '1px solid rgba(255,255,255,0.06)',
-                  }}>
+                  <div
+                    key={b._id}
+                    onClick={() => setSelectedBooking(b)}
+                    style={{
+                      backgroundColor: '#111111', borderRadius: '16px', padding: isMobile ? '1rem' : '1.25rem',
+                      border: '1px solid rgba(255,255,255,0.06)', cursor: 'pointer',
+                      transition: 'border-color 0.2s ease, transform 0.15s ease',
+                    }}
+                  >
                     <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '0.65rem', flexWrap: 'wrap', gap: '0.5rem' }}>
                       <div>
                         <div style={{ fontSize: '0.98rem', fontWeight: 700, color: '#ffffff', fontFamily: 'Outfit' }}>
                           {b.serviceName || b.service || 'Grooming Service'}
                         </div>
                         <div style={{ fontSize: '0.76rem', color: '#d4af37', marginTop: '0.15rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                          <Users size={12} /> {b.clientName || b.user?.firstname || 'Guest'} {b.phone ? `· ${b.phone}` : ''}
+                          <Users size={12} /> {b.clientName || b.user?.firstname || 'Guest'} {b.phone || b.clientPhone ? `· ${b.phone || b.clientPhone}` : ''}
                         </div>
                       </div>
                       <StatusBadge status={b.status || 'pending'} />
@@ -592,7 +647,7 @@ export const AdminDashboard = () => {
                       {b.status !== 'confirmed' && b.status !== 'completed' && b.status !== 'cancelled' && (
                         <button
                           disabled={updatingId === b._id}
-                          onClick={() => handleUpdateBookingStatus(b._id, 'confirmed')}
+                          onClick={(e) => handleUpdateBookingStatus(b._id, 'confirmed', e)}
                           style={{ flex: 1, padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: '#d4af37', color: '#000', fontWeight: 700, fontSize: '0.78rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit' }}
                         >
                           Confirm
@@ -601,7 +656,7 @@ export const AdminDashboard = () => {
                       {b.status === 'confirmed' && (
                         <button
                           disabled={updatingId === b._id}
-                          onClick={() => handleUpdateBookingStatus(b._id, 'completed')}
+                          onClick={(e) => handleUpdateBookingStatus(b._id, 'completed', e)}
                           style={{ flex: 1, padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: '#22c55e', color: '#fff', fontWeight: 700, fontSize: '0.78rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit' }}
                         >
                           Complete
@@ -610,12 +665,18 @@ export const AdminDashboard = () => {
                       {b.status !== 'cancelled' && b.status !== 'completed' && (
                         <button
                           disabled={updatingId === b._id}
-                          onClick={() => handleUpdateBookingStatus(b._id, 'cancelled')}
+                          onClick={(e) => handleUpdateBookingStatus(b._id, 'cancelled', e)}
                           style={{ padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: 'rgba(239,68,68,0.1)', color: '#ef4444', fontWeight: 600, fontSize: '0.78rem', border: '1px solid rgba(239,68,68,0.2)', cursor: 'pointer', fontFamily: 'Outfit' }}
                         >
                           Cancel
                         </button>
                       )}
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setSelectedBooking(b); }}
+                        style={{ padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: 'rgba(255,255,255,0.06)', color: '#d1d5db', fontWeight: 600, fontSize: '0.78rem', border: '1px solid rgba(255,255,255,0.08)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
+                      >
+                        <Eye size={13} /> View Details
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -717,10 +778,10 @@ export const AdminDashboard = () => {
             </div>
 
             <div style={{ display: 'grid', gap: '0.4rem', fontSize: '0.82rem', color: '#d1d5db', marginBottom: '1rem' }}>
-              <div><span style={{ color: '#9ca3af' }}>Customer: </span>{selectedOrder.customerInfo?.name || 'N/A'}</div>
-              <div><span style={{ color: '#9ca3af' }}>Email: </span>{selectedOrder.customerInfo?.email || 'N/A'}</div>
-              <div><span style={{ color: '#9ca3af' }}>Phone: </span>{selectedOrder.customerInfo?.phone || 'N/A'}</div>
-              <div><span style={{ color: '#9ca3af' }}>Address: </span>{selectedOrder.customerInfo?.address || 'N/A'}</div>
+              <div><span style={{ color: '#9ca3af' }}>Customer: </span>{selectedOrder.customerInfo?.name || selectedOrder.name || 'N/A'}</div>
+              <div><span style={{ color: '#9ca3af' }}>Email: </span>{selectedOrder.customerInfo?.email || selectedOrder.email || 'N/A'}</div>
+              <div><span style={{ color: '#9ca3af' }}>Phone: </span>{selectedOrder.customerInfo?.phone || selectedOrder.phone || 'N/A'}</div>
+              <div><span style={{ color: '#9ca3af' }}>Address: </span>{selectedOrder.customerInfo?.address || selectedOrder.address || 'N/A'}</div>
             </div>
 
             <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '0.85rem', marginBottom: '0.85rem' }}>
@@ -735,13 +796,13 @@ export const AdminDashboard = () => {
 
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.95rem', fontWeight: 800, color: '#ffffff', paddingTop: '0.65rem', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
               <span>Total Paid</span>
-              <span style={{ color: '#d4af37' }}>${(selectedOrder.totalPrice || 0).toFixed(2)}</span>
+              <span style={{ color: '#d4af37' }}>${(selectedOrder.totalPrice || selectedOrder.price || 0).toFixed(2)}</span>
             </div>
 
             <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1.1rem' }}>
               {selectedOrder.status !== 'shipped' && selectedOrder.status !== 'completed' && (
                 <button
-                  onClick={() => handleUpdateOrderStatus(selectedOrder._id, 'shipped')}
+                  onClick={(e) => handleUpdateOrderStatus(selectedOrder._id, 'shipped', e)}
                   style={{ flex: 1, padding: '0.6rem', borderRadius: '10px', backgroundColor: '#d4af37', color: '#000', fontWeight: 700, fontSize: '0.8rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit' }}
                 >
                   Mark Shipped
@@ -749,7 +810,7 @@ export const AdminDashboard = () => {
               )}
               {selectedOrder.status === 'shipped' && (
                 <button
-                  onClick={() => handleUpdateOrderStatus(selectedOrder._id, 'completed')}
+                  onClick={(e) => handleUpdateOrderStatus(selectedOrder._id, 'completed', e)}
                   style={{ flex: 1, padding: '0.6rem', borderRadius: '10px', backgroundColor: '#22c55e', color: '#fff', fontWeight: 700, fontSize: '0.8rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit' }}
                 >
                   Mark Completed
@@ -757,6 +818,63 @@ export const AdminDashboard = () => {
               )}
               <button
                 onClick={() => setSelectedOrder(null)}
+                style={{ padding: '0.6rem 0.85rem', borderRadius: '10px', backgroundColor: 'rgba(255,255,255,0.06)', color: '#9ca3af', fontWeight: 600, fontSize: '0.8rem', border: '1px solid rgba(255,255,255,0.08)', cursor: 'pointer', fontFamily: 'Outfit' }}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Booking Details Modal */}
+      {selectedBooking && (
+        <div
+          onClick={() => setSelectedBooking(null)}
+          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}
+        >
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{ backgroundColor: '#111111', borderRadius: '20px', border: '1px solid rgba(212,175,55,0.35)', width: '100%', maxWidth: '480px', maxHeight: '85vh', overflowY: 'auto', padding: '1.25rem' }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <h3 style={{ color: '#ffffff', fontFamily: 'Outfit', fontWeight: 800, margin: 0, fontSize: '1.1rem' }}>Booking Details</h3>
+              <button onClick={() => setSelectedBooking(null)} style={{ background: 'none', border: 'none', color: '#6b7280', cursor: 'pointer', fontSize: '1.2rem', lineHeight: 1 }}>✕</button>
+            </div>
+
+            <div style={{ fontSize: '0.7rem', color: '#6b7280', fontFamily: 'monospace', marginBottom: '0.85rem' }}>
+              BOOKING #{(selectedBooking._id || '').slice(-6).toUpperCase()}
+            </div>
+
+            <div style={{ display: 'grid', gap: '0.45rem', fontSize: '0.83rem', color: '#d1d5db', marginBottom: '1rem' }}>
+              <div><span style={{ color: '#9ca3af' }}>Service: </span><strong style={{ color: '#ffffff' }}>{selectedBooking.serviceName || selectedBooking.service}</strong></div>
+              <div><span style={{ color: '#9ca3af' }}>Client Name: </span>{selectedBooking.clientName || selectedBooking.user?.firstname || 'Guest'}</div>
+              <div><span style={{ color: '#9ca3af' }}>Client Email: </span>{selectedBooking.clientEmail || selectedBooking.email || 'N/A'}</div>
+              <div><span style={{ color: '#9ca3af' }}>Phone: </span>{selectedBooking.phone || selectedBooking.clientPhone || 'N/A'}</div>
+              <div><span style={{ color: '#9ca3af' }}>Assigned Stylist: </span><span style={{ color: '#d4af37', fontWeight: 600 }}>{selectedBooking.stylist || 'Any Specialist'}</span></div>
+              <div><span style={{ color: '#9ca3af' }}>Date & Time: </span>{selectedBooking.date || 'TBD'} at {selectedBooking.time || 'TBD'}</div>
+              <div><span style={{ color: '#9ca3af' }}>Status: </span><StatusBadge status={selectedBooking.status || 'pending'} /></div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1.25rem', paddingTop: '0.85rem', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+              {selectedBooking.status !== 'confirmed' && selectedBooking.status !== 'completed' && selectedBooking.status !== 'cancelled' && (
+                <button
+                  onClick={(e) => handleUpdateBookingStatus(selectedBooking._id, 'confirmed', e)}
+                  style={{ flex: 1, padding: '0.6rem', borderRadius: '10px', backgroundColor: '#d4af37', color: '#000', fontWeight: 700, fontSize: '0.8rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit' }}
+                >
+                  Confirm Booking
+                </button>
+              )}
+              {selectedBooking.status === 'confirmed' && (
+                <button
+                  onClick={(e) => handleUpdateBookingStatus(selectedBooking._id, 'completed', e)}
+                  style={{ flex: 1, padding: '0.6rem', borderRadius: '10px', backgroundColor: '#22c55e', color: '#fff', fontWeight: 700, fontSize: '0.8rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit' }}
+                >
+                  Complete Service
+                </button>
+              )}
+              <button
+                onClick={() => setSelectedBooking(null)}
                 style={{ padding: '0.6rem 0.85rem', borderRadius: '10px', backgroundColor: 'rgba(255,255,255,0.06)', color: '#9ca3af', fontWeight: 600, fontSize: '0.8rem', border: '1px solid rgba(255,255,255,0.08)', cursor: 'pointer', fontFamily: 'Outfit' }}
               >
                 Close

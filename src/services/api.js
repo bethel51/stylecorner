@@ -201,10 +201,11 @@ export const api = {
   },
 
   updateBookingStatus: async (id, updateData) => {
+    const payload = typeof updateData === 'string' ? { status: updateData } : updateData;
     const res = await fetchWithTimeout(`${API_BASE}/bookings/${id}`, {
       method: 'PUT',
       headers: getAuthHeaders(),
-      body: JSON.stringify(updateData),
+      body: JSON.stringify(payload),
     });
     const data = await safeJson(res);
     if (!res.ok) throw new Error(data?.error || 'Failed to update booking');
@@ -243,10 +244,11 @@ export const api = {
   },
 
   updateOrderStatus: async (id, updateData) => {
+    const payload = typeof updateData === 'string' ? { status: updateData } : updateData;
     const res = await fetchWithTimeout(`${API_BASE}/orders/${id}`, {
       method: 'PUT',
       headers: getAuthHeaders(),
-      body: JSON.stringify(updateData),
+      body: JSON.stringify(payload),
     });
     const data = await safeJson(res);
     if (!res.ok) throw new Error(data?.error || 'Failed to update order');

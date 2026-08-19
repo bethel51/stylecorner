@@ -606,16 +606,29 @@ app.post('/api/bookings', authenticateToken, async (req, res) => {
 // Update a booking status
 app.put('/api/bookings/:id', authenticateToken, async (req, res) => {
   try {
-    const updated = await Booking.findByIdAndUpdate(req.params.id, req.body, { returnDocument: 'after' });
-    if (req.body.status === 'accepted') {
-      await sendNotificationSafe(updated.clientEmail, "Booking Accepted!", `Hi ${updated.clientName},\n\nGreat news! Your booking for ${updated.service} on ${updated.date} at ${updated.time} has been accepted by your expert!`);
-    } else if (req.body.status === 'completed') {
-      await sendNotificationSafe(updated.clientEmail, "Service Completed!", `Hi ${updated.clientName},\n\nYour scheduled services have been rendered. Thanks for using Style Corner!`);
-    } else if (req.body.status === 'rejected') {
-      await sendNotificationSafe(updated.clientEmail, "Booking Request Update", `Hi ${updated.clientName},\n\nYour request was rejected. Try booking again with another specialist.`);
+    const updateObj = typeof req.body === 'string' ? { status: req.body } : req.body;
+    const updated = await Booking.findByIdAndUpdate(req.params.id, updateObj, { new: true });
+    if (!updated) {
+      return res.status(404).json({ error: 'Booking not found' });
+    }
+
+    const newStatus = updateObj.status || updated.status;
+    if (newStatus === 'confirmed' || newStatus === 'accepted') {
+      if (updated.clientEmail) {
+        await sendNotificationSafe(updated.clientEmail, "Booking Confirmed!", `Hi ${updated.clientName || 'Client'},\n\nGreat news! Your booking for ${updated.service} on ${updated.date} at ${updated.time} has been confirmed!`);
+      }
+    } else if (newStatus === 'completed') {
+      if (updated.clientEmail) {
+        await sendNotificationSafe(updated.clientEmail, "Service Completed!", `Hi ${updated.clientName || 'Client'},\n\nYour scheduled service (${updated.service}) has been completed. Thanks for choosing Style Corner!`);
+      }
+    } else if (newStatus === 'cancelled' || newStatus === 'rejected') {
+      if (updated.clientEmail) {
+        await sendNotificationSafe(updated.clientEmail, "Booking Request Update", `Hi ${updated.clientName || 'Client'},\n\nYour booking request status has been updated to ${newStatus}.`);
+      }
     }
     res.status(200).json(updated);
   } catch (error) {
+    console.error('Failed to update booking status:', error);
     res.status(500).json({ error: 'Failed to update booking' });
   }
 });
@@ -729,12 +742,29 @@ app.post('/api/orders', authenticateToken, async (req, res) => {
 // Update an order status
 app.put('/api/orders/:id', authenticateToken, async (req, res) => {
   try {
-    const updated = await Order.findByIdAndUpdate(req.params.id, req.body, { returnDocument: 'after' });
-    if (req.body.status === 'shipped') {
-      await sendNotificationSafe(updated.email || "customer@example.com", "Order Shipped!", `Good news! Order #${updated.id} for ${updated.item} has been shipped to ${updated.address}.`);
+    const updateObj = typeof req.body === 'string' ? { status: req.body } : req.body;
+    const updated = await Order.findByIdAndUpdate(req.params.id, updateObj, { new: true });
+    if (!updated) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+
+    const newStatus = updateObj.status || updated.status;
+    if (newStatus === 'shipped') {
+      const recipient = updated.email || updated.customerInfo?.email;
+      if (recipient) {
+        const itemNames = Array.isArray(updated.items)
+          ? updated.items.map(i => i.name || i.title).join(', ')
+          : (updated.items || 'your store items');
+        await sendNotificationSafe(
+          recipient,
+          "Order Shipped! 📦",
+          `Good news! Order #${updated._id} for ${itemNames} has been shipped to ${updated.address || updated.customerInfo?.address || 'your address'}.`
+        );
+      }
     }
     res.status(200).json(updated);
   } catch (error) {
+    console.error('Failed to update order status:', error);
     res.status(500).json({ error: 'Failed to update order' });
   }
 });
