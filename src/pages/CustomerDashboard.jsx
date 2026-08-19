@@ -434,7 +434,7 @@ export const CustomerDashboard = () => {
                       <StatusBadge status={b.status} />
                     </div>
 
-                    <div style={{ background: '#faf9f6', padding: '0.75rem', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ background: '#faf9f6', padding: '0.75rem', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.65rem' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.82rem', color: '#171717', fontWeight: 700 }}>
                         <Clock size={15} color="#d4af37" />
                         <span>{b.date} at {b.time}</span>
@@ -444,15 +444,51 @@ export const CustomerDashboard = () => {
                       </span>
                     </div>
 
-                    <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.75rem' }}>
-                      <button
-                        onClick={() => navigate(`/booking?stylist=${encodeURIComponent(b.stylist)}&service=${encodeURIComponent(b.service)}`)}
-                        className="app-btn app-btn-outline"
-                        style={{ minHeight: '34px', fontSize: '0.78rem', padding: '0.4rem' }}
-                      >
-                        <RefreshCw size={13} /> Book Again
-                      </button>
-                    </div>
+                    {/* Status Specific Helper Banner */}
+                    {b.status === 'accepted' && (
+                      <div style={{ padding: '0.6rem 0.75rem', background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)', borderRadius: '10px', fontSize: '0.8rem', color: '#065f46', fontFamily: 'Outfit', fontWeight: 700, marginBottom: '0.5rem' }}>
+                        ✓ Your booking request has been accepted by {b.stylist}!
+                      </div>
+                    )}
+
+                    {b.status === 'rejected' && (
+                      <div style={{ padding: '0.65rem 0.75rem', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: '10px', fontSize: '0.82rem', color: '#991b1b', marginBottom: '0.55rem' }}>
+                        <p style={{ fontWeight: 700, marginBottom: '0.4rem' }}>
+                          Your request was rejected. Try booking again with another specialist.
+                        </p>
+                        <button
+                          onClick={() => navigate(`/booking?service=${encodeURIComponent(b.service)}`)}
+                          className="app-btn app-btn-accent"
+                          style={{ minHeight: '34px', fontSize: '0.78rem', padding: '0.35rem 0.75rem' }}
+                        >
+                          <RefreshCw size={13} /> Book Again with Another Expert
+                        </button>
+                      </div>
+                    )}
+
+                    {b.status === 'completed' && (
+                      <div style={{ padding: '0.6rem 0.75rem', background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)', borderRadius: '10px', fontSize: '0.8rem', color: '#065f46', fontFamily: 'Outfit', fontWeight: 700, marginBottom: '0.5rem' }}>
+                        ✓ Your scheduled services have been rendered. Thanks for using Style Corner!
+                      </div>
+                    )}
+
+                    {b.status === 'pending' && (
+                      <div style={{ padding: '0.5rem 0.75rem', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.25)', borderRadius: '10px', fontSize: '0.78rem', color: '#92400e', marginBottom: '0.5rem' }}>
+                        ⏳ Pending confirmation from {b.stylist}.
+                      </div>
+                    )}
+
+                    {b.status !== 'rejected' && (
+                      <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
+                        <button
+                          onClick={() => navigate(`/booking?stylist=${encodeURIComponent(b.stylist)}&service=${encodeURIComponent(b.service)}`)}
+                          className="app-btn app-btn-outline"
+                          style={{ minHeight: '34px', fontSize: '0.78rem', padding: '0.4rem' }}
+                        >
+                          <RefreshCw size={13} /> Book Again
+                        </button>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

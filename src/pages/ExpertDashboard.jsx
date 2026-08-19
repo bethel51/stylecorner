@@ -56,7 +56,15 @@ export const ExpertDashboard = () => {
       setBookings((prev) =>
         prev.map((item) => (item._id === id ? { ...item, status: newStatus } : item))
       );
-      showToast(`Appointment marked as ${newStatus}!`, 'success');
+      if (newStatus === 'accepted') {
+        showToast('Booking request accepted!', 'success');
+      } else if (newStatus === 'rejected') {
+        showToast('Booking request rejected.', 'accent');
+      } else if (newStatus === 'completed') {
+        showToast('Your scheduled services have been rendered. Thanks for using Style Corner!', 'success');
+      } else {
+        showToast(`Status updated to ${newStatus}`, 'success');
+      }
     } catch (err) {
       showToast(err.message || 'Failed to update status', 'error');
     } finally {
@@ -361,7 +369,7 @@ export const ExpertDashboard = () => {
                         className="app-btn app-btn-accent"
                         style={{ width: '100%', minHeight: '38px', padding: '0.5rem', fontSize: '0.85rem' }}
                       >
-                        <CheckCircle size={15} /> Mark as Done
+                        <CheckCircle size={15} /> Finish Request
                       </button>
                     )}
 

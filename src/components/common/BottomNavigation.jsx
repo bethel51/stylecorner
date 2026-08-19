@@ -6,17 +6,26 @@ import { useAuth } from '../../context/AuthContext';
 export const BottomNavigation = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAuthenticated, role } = useAuth();
+  const { isAuthenticated, role, showToast } = useAuth();
 
   const getDashboardPath = () => {
     if (!isAuthenticated) return '/login';
     return role === 'staff' ? '/expert-dashboard' : '/customer-dashboard';
   };
 
+  const handleBookClick = () => {
+    if (isAuthenticated && role === 'staff') {
+      showToast('Experts cannot book services.', 'error');
+      navigate('/expert-dashboard');
+      return;
+    }
+    navigate('/booking');
+  };
+
   const navItems = [
     { label: 'Home', path: '/', icon: Home },
     { label: 'Services', path: '/services', icon: Scissors },
-    { label: 'Book', path: '/booking', icon: CalendarPlus, isCTA: true },
+    { label: 'Book', path: '/booking', icon: CalendarPlus, isCTA: true, onClick: handleBookClick },
     { label: 'Store', path: '/store', icon: ShoppingBag },
     {
       label: isAuthenticated ? (role === 'staff' ? 'Dashboard' : 'Profile') : 'Sign In',
@@ -37,7 +46,7 @@ export const BottomNavigation = () => {
           return (
             <button
               key={item.path}
-              onClick={() => navigate(item.path)}
+              onClick={item.onClick || (() => navigate(item.path))}
               style={{
                 background: 'linear-gradient(135deg, #d4af37, #b5952f)',
                 border: 'none',

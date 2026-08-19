@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Calendar, Clock, Scissors, Sparkles, User, CheckCircle2 } from 'lucide-react';
+import { Calendar, Clock, Scissors, Sparkles, User, CheckCircle2, ShieldAlert } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import { PageContainer } from '../components/common/PageContainer';
@@ -12,7 +12,14 @@ export const Booking = () => {
   const initialService = searchParams.get('service') || '';
   const initialStylist = searchParams.get('stylist') || 'Any Specialist';
 
-  const { user, isAuthenticated, showToast } = useAuth();
+  const { user, isAuthenticated, showToast, role } = useAuth();
+
+  useEffect(() => {
+    if (isAuthenticated && role === 'staff') {
+      showToast('Experts cannot book services. Redirected to Expert Dashboard.', 'error');
+      navigate('/expert-dashboard', { replace: true });
+    }
+  }, [isAuthenticated, role, navigate]);
 
   const servicesData = [
     { title: 'Precision Skin Fade & Cut', price: 45 },
@@ -52,6 +59,12 @@ export const Booking = () => {
     if (!isAuthenticated) {
       showToast('Please sign in before booking a session.', 'error');
       navigate('/login?redirect=booking');
+      return;
+    }
+
+    if (role === 'staff') {
+      showToast('Experts cannot book services.', 'error');
+      navigate('/expert-dashboard');
       return;
     }
 

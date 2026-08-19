@@ -26,10 +26,10 @@ export const Login = () => {
     setSubmitting(true);
     try {
       const user = await login(email, password, activeRole);
-      if (redirectPath) {
-        navigate(`/${redirectPath}`);
-      } else if (user.role === 'staff') {
+      if (user.role === 'staff') {
         navigate('/expert-dashboard');
+      } else if (redirectPath && redirectPath !== 'booking' && redirectPath !== 'expert-dashboard') {
+        navigate(`/${redirectPath}`);
       } else {
         navigate('/customer-dashboard');
       }
