@@ -74,20 +74,47 @@ html, body {
   }
 }
 
+/* Real Mobile Devices (iPhone / Android Phone) */
+@media (max-width: 768px) {
+  html, body, #root {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  .app-viewport {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-shadow: none !important;
+    min-height: 100vh;
+    height: auto;
+  }
+
+  .app-header {
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    transform: none !important;
+  }
+
+  .bottom-nav {
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    transform: none !important;
+    padding-left: 0.25rem !important;
+    padding-right: 0.25rem !important;
+  }
+}
+
 /* Page Container & Scroll Region */
 .page-scroll-container {
   flex: 1;
   width: 100%;
   padding-top: calc(var(--header-height) + env(safe-area-inset-top) + 8px);
-  padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom) + 12px);
+  padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom) + 16px);
   overflow-y: visible;
-}
-
-@media (max-width: 1024px) {
-  .app-viewport {
-    min-height: 100vh;
-    height: auto;
-  }
 }
 
 .page-content {
@@ -99,9 +126,10 @@ html, body {
 .app-header {
   position: fixed;
   top: 0;
-  left: 0;
-  right: 0;
+  left: 50%;
+  transform: translateX(-50%);
   width: 100%;
+  max-width: 480px;
   height: calc(var(--header-height) + env(safe-area-inset-top));
   background: rgba(255, 255, 255, 0.96);
   backdrop-filter: blur(16px);
@@ -119,6 +147,8 @@ html, body {
 @media (min-width: 1025px) {
   .app-viewport.desktop-expanded .app-header {
     max-width: 100%;
+    left: 0;
+    transform: none;
     padding: 0 2rem;
     height: var(--header-height);
   }
