@@ -263,6 +263,27 @@ export const ExpertDashboard = () => {
                 MASTER STYLIST
               </p>
 
+              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.35rem' }}>
+                <button
+                  onClick={() => navigate('/admin')}
+                  style={{
+                    backgroundColor: '#d4af37',
+                    color: '#000000',
+                    fontWeight: 800,
+                    fontSize: '0.72rem',
+                    fontFamily: 'Outfit',
+                    padding: '0.3rem 0.75rem',
+                    borderRadius: '50px',
+                    border: 'none',
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.3rem',
+                  }}
+                >
+                  <Shield size={12} /> Open Admin Page
+                </button>
+
               {/* Shift Availability Toggle */}
               <button
                 type="button"
@@ -289,6 +310,7 @@ export const ExpertDashboard = () => {
                 <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: isAvailable ? '#10b981' : '#ef4444' }} />
                 <span>{isAvailable ? 'AVAILABLE — TAKING BOOKINGS' : 'ON BREAK'}</span>
               </button>
+              </div>
             </div>
           </div>
 

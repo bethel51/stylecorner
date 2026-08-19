@@ -18,6 +18,7 @@ import { VerifyOTP } from './pages/VerifyOTP';
 import { Login } from './pages/Login';
 import { CustomerDashboard } from './pages/CustomerDashboard';
 import { ExpertDashboard } from './pages/ExpertDashboard';
+import { AdminDashboard } from './pages/AdminDashboard';
 import { Payment } from './pages/Payment';
 import { Policies } from './pages/Policies';
 
@@ -58,6 +59,15 @@ export const App = () => {
               element={
                 <ProtectedRoute requiredRole="staff">
                   <ExpertDashboard />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute requiredRole="staff">
+                  <AdminDashboard />
                 </ProtectedRoute>
               }
             />
