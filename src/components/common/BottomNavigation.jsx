@@ -47,21 +47,7 @@ export const BottomNavigation = () => {
             <button
               key={item.path}
               onClick={item.onClick || (() => navigate(item.path))}
-              style={{
-                background: 'linear-gradient(135deg, #d4af37, #b5952f)',
-                border: 'none',
-                width: '46px',
-                height: '46px',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#ffffff',
-                boxShadow: '0 6px 16px rgba(212, 175, 55, 0.4)',
-                cursor: 'pointer',
-                transform: 'translateY(-10px)',
-                transition: 'all 0.25s ease',
-              }}
+              className="bottom-nav-cta"
               title="Book Visit"
             >
               <Icon size={22} />
