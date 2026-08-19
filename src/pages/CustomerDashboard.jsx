@@ -46,8 +46,38 @@ export const CustomerDashboard = () => {
     firstname: user?.firstname || '',
     lastname: user?.lastname || '',
     phone: user?.phone || '',
+    avatarUrl: user?.avatarUrl || '',
   });
   const [savingProfile, setSavingProfile] = useState(false);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+
+  const uploadToCloudinary = async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', 'nmep3opt');
+    const res = await fetch('https://api.cloudinary.com/v1_1/NM/image/upload', {
+      method: 'POST',
+      body: formData,
+    });
+    if (!res.ok) throw new Error('Image upload failed');
+    const data = await res.json();
+    return data.secure_url;
+  };
+
+  const handlePhotoChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setUploadingPhoto(true);
+    try {
+      const url = await uploadToCloudinary(file);
+      setProfileForm((prev) => ({ ...prev, avatarUrl: url }));
+      showToast('Photo uploaded! Save your profile to apply it.', 'success');
+    } catch (err) {
+      showToast('Failed to upload photo. Please try again.', 'error');
+    } finally {
+      setUploadingPhoto(false);
+    }
+  };
 
   const handleDeleteAccount = async () => {
     setDeletingAccount(true);
@@ -61,9 +91,6 @@ export const CustomerDashboard = () => {
       setDeletingAccount(false);
     }
   };
-
-  const auraKey = `dashboard_aura_customer_${user?._id || 'guest'}`;
-  const [auraImage, setAuraImage] = useState(localStorage.getItem(auraKey) || '');
 
   const fetchData = async () => {
     setLoading(true);
@@ -89,19 +116,17 @@ export const CustomerDashboard = () => {
     fetchData();
   }, []);
 
-  const handleAuraUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const result = event.target.result;
-        setAuraImage(result);
-        localStorage.setItem(auraKey, result);
-        showToast('Profile photo updated!', 'success');
-      };
-      reader.readAsDataURL(file);
+  // Sync profileForm when user data loads from server
+  useEffect(() => {
+    if (user) {
+      setProfileForm({
+        firstname: user.firstname || '',
+        lastname: user.lastname || '',
+        phone: user.phone || '',
+        avatarUrl: user.avatarUrl || '',
+      });
     }
-  };
+  }, [user]);
 
   const handleProfileSubmit = async (e) => {
     e.preventDefault();
@@ -140,14 +165,20 @@ export const CustomerDashboard = () => {
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.25rem' }}>
-            {/* Avatar with Edit Badge */}
-            <div style={{ position: 'relative', flexShrink: 0 }}>
+            {/* Avatar */}
+            <div
+              onClick={() => setShowProfileSheet(true)}
+              style={{ position: 'relative', flexShrink: 0, cursor: 'pointer' }}
+              title="Click to edit profile picture"
+            >
               <div
                 style={{
                   width: '72px',
                   height: '72px',
                   borderRadius: '50%',
-                  background: auraImage ? `url(${auraImage}) center/cover` : 'linear-gradient(135deg, #d4af37, #b5952f)',
+                  background: user?.avatarUrl
+                    ? `url(${user.avatarUrl}) center/cover no-repeat`
+                    : 'linear-gradient(135deg, #d4af37, #b5952f)',
                   border: '2.5px solid #d4af37',
                   display: 'flex',
                   alignItems: 'center',
@@ -159,10 +190,9 @@ export const CustomerDashboard = () => {
                   boxShadow: '0 6px 18px rgba(212,175,55,0.3)',
                 }}
               >
-                {!auraImage && (user?.firstname ? user.firstname[0].toUpperCase() : 'C')}
+                {!user?.avatarUrl && (user?.firstname ? user.firstname[0].toUpperCase() : 'C')}
               </div>
-              <label
-                htmlFor="aura-input"
+              <div
                 style={{
                   position: 'absolute',
                   bottom: -2,
@@ -175,19 +205,11 @@ export const CustomerDashboard = () => {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  cursor: 'pointer',
                   boxShadow: '0 2px 6px rgba(0,0,0,0.4)',
                 }}
               >
                 <Edit size={12} />
-              </label>
-              <input
-                id="aura-input"
-                type="file"
-                accept="image/*"
-                style={{ display: 'none' }}
-                onChange={handleAuraUpload}
-              />
+              </div>
             </div>
 
             {/* Client Info */}
@@ -617,6 +639,66 @@ export const CustomerDashboard = () => {
         title="Edit Profile"
       >
         <form onSubmit={handleProfileSubmit}>
+          {/* Avatar upload */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '1.25rem', gap: '0.75rem' }}>
+            <div
+              style={{
+                width: '90px',
+                height: '90px',
+                borderRadius: '50%',
+                background: profileForm.avatarUrl
+                  ? `url(${profileForm.avatarUrl}) center/cover no-repeat`
+                  : 'linear-gradient(135deg, #d4af37, #b5952f)',
+                border: '3px solid #d4af37',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '2.2rem',
+                fontFamily: 'Outfit',
+                fontWeight: 900,
+                color: '#ffffff',
+                boxShadow: '0 6px 18px rgba(212,175,55,0.25)',
+                position: 'relative',
+                overflow: 'hidden',
+              }}
+            >
+              {!profileForm.avatarUrl && (profileForm.firstname ? profileForm.firstname[0].toUpperCase() : 'C')}
+              {uploadingPhoto && (
+                <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <span style={{ color: '#d4af37', fontSize: '0.7rem', fontFamily: 'Outfit', fontWeight: 800 }}>Uploading...</span>
+                </div>
+              )}
+            </div>
+            <label
+              htmlFor="customer-avatar-upload"
+              style={{
+                cursor: uploadingPhoto ? 'not-allowed' : 'pointer',
+                background: uploadingPhoto ? 'rgba(212,175,55,0.3)' : 'rgba(212,175,55,0.15)',
+                border: '1px solid rgba(212,175,55,0.4)',
+                color: '#d4af37',
+                padding: '0.45rem 1.1rem',
+                borderRadius: '50px',
+                fontSize: '0.8rem',
+                fontFamily: 'Outfit',
+                fontWeight: 800,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+              }}
+            >
+              <Edit size={13} />
+              {uploadingPhoto ? 'Uploading...' : profileForm.avatarUrl ? 'Change Photo' : 'Upload Photo'}
+            </label>
+            <input
+              id="customer-avatar-upload"
+              type="file"
+              accept="image/*"
+              style={{ display: 'none' }}
+              disabled={uploadingPhoto}
+              onChange={handlePhotoChange}
+            />
+          </div>
+
           <div className="app-input-group">
             <label className="app-label">First Name *</label>
             <input

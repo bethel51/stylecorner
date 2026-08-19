@@ -79,17 +79,25 @@ export const AuthProvider = ({ children }) => {
   };
 
   const deleteAccount = async () => {
-    try {
-      await api.deleteAccount();
-      localStorage.removeItem('token');
-      localStorage.removeItem('mockUser');
-      setToken(null);
-      setUser(null);
-      showToast('Your account has been permanently deleted.', 'accent');
-    } catch (err) {
-      showToast(err.message || 'Failed to delete account', 'error');
-      throw err;
+    // Grab the token BEFORE we clear state so the API call is authenticated
+    const currentToken = localStorage.getItem('token');
+    const res = await fetch('/api/users/account', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(currentToken ? { Authorization: `Bearer ${currentToken}` } : {}),
+      },
+    });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error(data?.error || 'Failed to delete account');
     }
+    // Only clear state after confirmed server deletion
+    localStorage.removeItem('token');
+    localStorage.removeItem('mockUser');
+    setToken(null);
+    setUser(null);
+    showToast('Your account has been permanently deleted.', 'accent');
   };
 
   return (

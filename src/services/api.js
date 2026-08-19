@@ -178,6 +178,16 @@ export const api = {
     return data;
   },
 
+  deleteBooking: async (id) => {
+    const res = await fetchWithTimeout(`${API_BASE}/bookings/${id}`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Failed to delete booking');
+    return data;
+  },
+
   // Orders
   getOrders: async () => {
     const res = await fetchWithTimeout(`${API_BASE}/orders`, {

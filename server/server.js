@@ -278,11 +278,11 @@ app.get('/api/auth/me', authenticateToken, async (req, res) => {
 // Update user profile
 app.put('/api/users/profile', authenticateToken, async (req, res) => {
   try {
-    const { firstname, lastname, phone } = req.body;
+    const { firstname, lastname, phone, avatarUrl } = req.body;
     
     const updatedUser = await User.findByIdAndUpdate(
       req.user._id,
-      { $set: { firstname, lastname, phone } },
+      { $set: { firstname, lastname, phone, avatarUrl } },
       { returnDocument: 'after', runValidators: true }
     ).select('-password');
     
@@ -453,6 +453,16 @@ app.put('/api/bookings/:id', authenticateToken, async (req, res) => {
     res.status(200).json(updated);
   } catch (error) {
     res.status(500).json({ error: 'Failed to update booking' });
+  }
+});
+
+// Delete a booking by ID
+app.delete('/api/bookings/:id', authenticateToken, async (req, res) => {
+  try {
+    await Booking.findByIdAndDelete(req.params.id);
+    res.status(200).json({ message: 'Booking deleted' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete booking' });
   }
 });
 

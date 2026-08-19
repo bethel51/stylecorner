@@ -17,6 +17,7 @@ import {
   Mail,
   Phone,
   Check,
+  Edit,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -25,20 +26,62 @@ import { PageContainer } from '../components/common/PageContainer';
 import { StatusBadge } from '../components/common/StatusBadge';
 import { SkeletonList } from '../components/common/SkeletonLoader';
 import { PopupModal } from '../components/common/PopupModal';
+import { BottomSheet } from '../components/common/BottomSheet';
 import { Trash2, AlertTriangle } from 'lucide-react';
 
 export const ExpertDashboard = () => {
   const navigate = useNavigate();
-  const { user, logout, deleteAccount, showToast } = useAuth();
+  const { user, logout, updateProfile, deleteAccount, showToast } = useAuth();
 
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState(null);
   const [isAvailable, setIsAvailable] = useState(true);
-  const [filterStatus, setFilterStatus] = useState('all'); // 'all' | 'pending' | 'accepted' | 'completed'
+  const [filterStatus, setFilterStatus] = useState('all');
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deletingAccount, setDeletingAccount] = useState(false);
+
+  // Avatar edit state
+  const [showAvatarSheet, setShowAvatarSheet] = useState(false);
+  const [avatarInput, setAvatarInput] = useState(user?.avatarUrl || '');
+  const [savingAvatar, setSavingAvatar] = useState(false);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+
+  useEffect(() => {
+    if (user) setAvatarInput(user.avatarUrl || '');
+  }, [user]);
+
+  const uploadToCloudinary = async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', 'nmep3opt');
+    const res = await fetch('https://api.cloudinary.com/v1_1/NM/image/upload', {
+      method: 'POST',
+      body: formData,
+    });
+    if (!res.ok) throw new Error('Image upload failed');
+    const data = await res.json();
+    return data.secure_url;
+  };
+
+  const handleExpertPhotoChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setUploadingPhoto(true);
+    try {
+      const url = await uploadToCloudinary(file);
+      setAvatarInput(url);
+      // Auto-save immediately
+      await updateProfile({ avatarUrl: url });
+      showToast('Profile picture updated!', 'success');
+      setShowAvatarSheet(false);
+    } catch (err) {
+      showToast('Failed to upload photo. Please try again.', 'error');
+    } finally {
+      setUploadingPhoto(false);
+    }
+  };
 
   const handleDeleteAccount = async () => {
     setDeletingAccount(true);
@@ -140,24 +183,48 @@ export const ExpertDashboard = () => {
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.25rem' }}>
+            {/* Avatar */}
             <div
-              style={{
-                width: '72px',
-                height: '72px',
-                borderRadius: '50%',
-                background: 'linear-gradient(135deg, #d4af37, #b5952f)',
-                color: '#ffffff',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '2rem',
-                fontFamily: 'Outfit',
-                fontWeight: 900,
-                boxShadow: '0 8px 20px rgba(212,175,55,0.3)',
-                flexShrink: 0,
-              }}
+              onClick={() => setShowAvatarSheet(true)}
+              style={{ position: 'relative', flexShrink: 0, cursor: 'pointer' }}
+              title="Click to edit profile picture"
             >
-              <Scissors size={32} />
+              <div
+                style={{
+                  width: '72px',
+                  height: '72px',
+                  borderRadius: '50%',
+                  background: user?.avatarUrl
+                    ? `url(${user.avatarUrl}) center/cover no-repeat`
+                    : 'linear-gradient(135deg, #d4af37, #b5952f)',
+                  border: '2.5px solid #d4af37',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 8px 20px rgba(212,175,55,0.3)',
+                  flexShrink: 0,
+                }}
+              >
+                {!user?.avatarUrl && <Scissors size={32} color="#ffffff" />}
+              </div>
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: -2,
+                  right: -2,
+                  width: '24px',
+                  height: '24px',
+                  borderRadius: '50%',
+                  background: '#d4af37',
+                  color: '#121212',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.4)',
+                }}
+              >
+                <Edit size={12} />
+              </div>
             </div>
 
             <div style={{ flex: 1 }}>
@@ -512,6 +579,76 @@ export const ExpertDashboard = () => {
           </div>
         </div>
       </PopupModal>
+
+      {/* Avatar Edit Sheet */}
+      <BottomSheet
+        isOpen={showAvatarSheet}
+        onClose={() => setShowAvatarSheet(false)}
+        title="Edit Profile Picture"
+      >
+        <div>
+          {/* Live Preview */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
+            <div
+              style={{
+                width: '90px',
+                height: '90px',
+                borderRadius: '50%',
+                background: avatarInput
+                  ? `url(${avatarInput}) center/cover no-repeat`
+                  : 'linear-gradient(135deg, #d4af37, #b5952f)',
+                border: '3px solid #d4af37',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 6px 18px rgba(212,175,55,0.25)',
+                position: 'relative',
+                overflow: 'hidden',
+              }}
+            >
+              {!avatarInput && <Scissors size={36} color="#ffffff" />}
+              {uploadingPhoto && (
+                <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.55)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <span style={{ color: '#d4af37', fontSize: '0.7rem', fontFamily: 'Outfit', fontWeight: 800 }}>Uploading...</span>
+                </div>
+              )}
+            </div>
+
+            <label
+              htmlFor="expert-avatar-upload"
+              style={{
+                cursor: uploadingPhoto ? 'not-allowed' : 'pointer',
+                background: uploadingPhoto ? 'rgba(212,175,55,0.3)' : 'rgba(212,175,55,0.15)',
+                border: '1px solid rgba(212,175,55,0.4)',
+                color: '#d4af37',
+                padding: '0.5rem 1.25rem',
+                borderRadius: '50px',
+                fontSize: '0.82rem',
+                fontFamily: 'Outfit',
+                fontWeight: 800,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+              }}
+            >
+              <Edit size={14} />
+              {uploadingPhoto ? 'Uploading...' : avatarInput ? 'Change Photo' : 'Upload Photo'}
+            </label>
+            <input
+              id="expert-avatar-upload"
+              type="file"
+              accept="image/*"
+              style={{ display: 'none' }}
+              disabled={uploadingPhoto}
+              onChange={handleExpertPhotoChange}
+            />
+
+            <p style={{ fontSize: '0.75rem', color: '#9ca3af', textAlign: 'center', fontFamily: 'Outfit' }}>
+              Photo uploads automatically and saves to your profile
+            </p>
+          </div>
+        </div>
+      </BottomSheet>
 
     </PageContainer>
   );
