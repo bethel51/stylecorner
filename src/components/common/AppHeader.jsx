@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ArrowLeft, ShoppingBag, Bell, User, Sparkles, Shield } from 'lucide-react';
+import { ArrowLeft, ShoppingBag, User, Sparkles } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
 import { ImagePreviewModal } from './ImagePreviewModal';
@@ -75,16 +75,7 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          {isAuthenticated && role === 'staff' && (
-            <button
-              className="app-header-btn"
-              onClick={() => navigate('/admin')}
-              title="Admin Dashboard"
-              style={{ color: '#d4af37', borderColor: 'rgba(212,175,55,0.4)', backgroundColor: 'rgba(212,175,55,0.1)' }}
-            >
-              <Shield size={18} />
-            </button>
-          )}
+
 
           {onOpenAiMatcher && (
             <button
