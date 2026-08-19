@@ -1,40 +1,71 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Scissors, Star, Calendar, Award } from 'lucide-react';
 import { PageContainer } from '../components/common/PageContainer';
+import { api } from '../services/api';
+
+const DEFAULT_TEAM = [
+  {
+    name: 'Julian Reed',
+    role: 'Master Barber & Haircut Architect',
+    experience: '12+ Years Experience',
+    rating: 4.9,
+    specialties: ['Precision Skin Fade & Cut', 'Beard Trim & Sculpting'],
+    bio: 'Specializing in precision hair geometry and classic tailored cuts for executive clients.',
+    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80',
+  },
+  {
+    name: 'Elena Thorne',
+    role: 'Braiding & Extensions Artisan',
+    experience: '9+ Years Experience',
+    rating: 5.0,
+    specialties: ['Knotless Box Braids', 'Cornrows & Custom Pattern'],
+    bio: 'Renowned for gentle tension-free knotless braiding techniques and protective styling.',
+    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80',
+  },
+  {
+    name: 'Marcus Grey',
+    role: 'Nail Architect & Pedicure Tech',
+    experience: '7+ Years Experience',
+    rating: 4.8,
+    specialties: ['Full Gel Nail Architecture', 'Luxury Pedicure Session'],
+    bio: 'Creating immaculate nail shapes, custom color gels, and soothing therapeutic foot treatments.',
+    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
+  },
+];
 
 export const Experts = () => {
   const navigate = useNavigate();
+  const [team, setTeam] = useState(DEFAULT_TEAM);
 
-  const team = [
-    {
-      name: 'Julian Reed',
-      role: 'Master Barber & Haircut Architect',
-      experience: '12+ Years Experience',
-      rating: 4.9,
-      specialties: ['Skin Fades', 'Hot Towel Razor Shave', 'Textured Crops'],
-      bio: 'Specializing in precision hair geometry and classic tailored cuts for executive clients.',
-      image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80',
-    },
-    {
-      name: 'Elena Thorne',
-      role: 'Braiding & Extensions Artisan',
-      experience: '9+ Years Experience',
-      rating: 5.0,
-      specialties: ['Knotless Box Braids', 'Wig Installation', 'Scalp Care'],
-      bio: 'Renowned for gentle tension-free knotless braiding techniques and protective styling.',
-      image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80',
-    },
-    {
-      name: 'Marcus Grey',
-      role: 'Nail Architect & Pedicure Tech',
-      experience: '7+ Years Experience',
-      rating: 4.8,
-      specialties: ['Gel Sculpting', 'Luxury Foot Spa', 'Nail Artistry'],
-      bio: 'Creating immaculate nail shapes, custom color gels, and soothing therapeutic foot treatments.',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
-    },
-  ];
+  useEffect(() => {
+    api.getSpecialists()
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          const registeredTeam = data.map((spec) => {
+            const fullName = `${spec.firstname || ''} ${spec.lastname || ''}`.trim() || 'Style Specialist';
+            const specialtiesList = Array.isArray(spec.services)
+              ? spec.services
+              : (spec.services ? String(spec.services).split(',').map((s) => s.trim()) : ['Custom Styling']);
+            return {
+              name: fullName,
+              role: 'Certified Style Specialist',
+              experience: 'Verified Atelier Expert',
+              rating: 5.0,
+              specialties: specialtiesList,
+              bio: `Expert stylist specialized in ${specialtiesList.join(', ')}.`,
+              image: spec.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
+            };
+          });
+
+          // Avoid duplicating default team members if registered with same name
+          const existingNames = new Set(registeredTeam.map((t) => t.name.toLowerCase()));
+          const filteredDefault = DEFAULT_TEAM.filter((d) => !existingNames.has(d.name.toLowerCase()));
+          setTeam([...registeredTeam, ...filteredDefault]);
+        }
+      })
+      .catch((err) => console.warn('Could not fetch dynamic specialists:', err.message));
+  }, []);
 
   return (
     <PageContainer title="Our Expert Team">

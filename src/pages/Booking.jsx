@@ -31,12 +31,12 @@ export const Booking = () => {
     { title: 'Full Atelier Grooming Combo', price: 110 },
   ];
 
-  const stylistsList = [
+  const [stylistsList, setStylistsList] = useState([
     'Any Specialist',
     'Julian Reed',
     'Elena Thorne',
     'Marcus Grey',
-  ];
+  ]);
 
   const [service1, setService1] = useState(initialService || servicesData[0].title);
   const [service2, setService2] = useState('');
@@ -45,6 +45,18 @@ export const Booking = () => {
   const [time, setTime] = useState('10:00 AM');
   const [submitting, setSubmitting] = useState(false);
   const [showAiSheet, setShowAiSheet] = useState(false);
+
+  useEffect(() => {
+    api.getSpecialists()
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          const fetchedNames = data.map((s) => `${s.firstname || ''} ${s.lastname || ''}`.trim()).filter(Boolean);
+          const combined = Array.from(new Set(['Any Specialist', ...fetchedNames, 'Julian Reed', 'Elena Thorne', 'Marcus Grey']));
+          setStylistsList(combined);
+        }
+      })
+      .catch((err) => console.warn('Could not load dynamic specialists list:', err.message));
+  }, []);
 
   const getPrice = (title) => {
     const match = servicesData.find((s) => s.title === title);
