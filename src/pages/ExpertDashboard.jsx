@@ -20,6 +20,7 @@ import {
   Edit,
   ShoppingBag,
   Truck,
+  Shield,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';

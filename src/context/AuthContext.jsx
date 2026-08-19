@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('mockUser', JSON.stringify(userData));
     } catch (err) {
       console.warn('Auth token invalid or expired:', err.message);
-      logout();
+      logout(true);
     } finally {
       setLoading(false);
     }
@@ -48,12 +48,14 @@ export const AuthProvider = ({ children }) => {
     return data.user;
   };
 
-  const logout = () => {
+  const logout = (silent = false) => {
     localStorage.removeItem('token');
     localStorage.removeItem('mockUser');
     setToken(null);
     setUser(null);
-    showToast('Signed out successfully', 'accent');
+    if (!silent) {
+      showToast('Signed out successfully', 'accent');
+    }
   };
 
   const register = async (userData) => {
