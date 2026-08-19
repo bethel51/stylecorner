@@ -8,6 +8,25 @@ const getAuthHeaders = () => {
   };
 };
 
+const fetchWithTimeout = async (url, options = {}, timeoutMs = 8000) => {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    });
+    clearTimeout(timer);
+    return res;
+  } catch (err) {
+    clearTimeout(timer);
+    if (err.name === 'AbortError') {
+      throw new Error('Connection timed out. Please check your internet connection.');
+    }
+    throw err;
+  }
+};
+
 // Safe JSON parser — returns null for empty/non-JSON responses
 const safeJson = async (res) => {
   const text = await res.text();
@@ -24,7 +43,7 @@ const safeJson = async (res) => {
 export const api = {
   // Authentication
   register: async (userData) => {
-    const res = await fetch(`${API_BASE}/auth/register`, {
+    const res = await fetchWithTimeout(`${API_BASE}/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData),
@@ -35,7 +54,7 @@ export const api = {
   },
 
   verifyOtp: async (email, code) => {
-    const res = await fetch(`${API_BASE}/auth/verify`, {
+    const res = await fetchWithTimeout(`${API_BASE}/auth/verify`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, code }),
@@ -46,7 +65,7 @@ export const api = {
   },
 
   resendOtp: async (email) => {
-    const res = await fetch(`${API_BASE}/auth/resend-otp`, {
+    const res = await fetchWithTimeout(`${API_BASE}/auth/resend-otp`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email }),
@@ -57,7 +76,7 @@ export const api = {
   },
 
   login: async (credentials) => {
-    const res = await fetch(`${API_BASE}/auth/login`, {
+    const res = await fetchWithTimeout(`${API_BASE}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(credentials),
@@ -79,7 +98,7 @@ export const api = {
   },
 
   getMe: async () => {
-    const res = await fetch(`${API_BASE}/auth/me`, {
+    const res = await fetchWithTimeout(`${API_BASE}/auth/me`, {
       headers: getAuthHeaders(),
     });
     const data = await safeJson(res);
@@ -88,7 +107,7 @@ export const api = {
   },
 
   updateProfile: async (profileData) => {
-    const res = await fetch(`${API_BASE}/users/profile`, {
+    const res = await fetchWithTimeout(`${API_BASE}/users/profile`, {
       method: 'PUT',
       headers: getAuthHeaders(),
       body: JSON.stringify(profileData),
@@ -100,14 +119,14 @@ export const api = {
 
   // Specialists & AI Matcher
   getSpecialists: async () => {
-    const res = await fetch(`${API_BASE}/specialists`);
+    const res = await fetchWithTimeout(`${API_BASE}/specialists`);
     const data = await safeJson(res);
     if (!res.ok) throw new Error(data?.error || 'Failed to fetch specialists');
     return data;
   },
 
   matchAiSpecialist: async (requestText, preferredService) => {
-    const res = await fetch(`${API_BASE}/ai/match-specialist`, {
+    const res = await fetchWithTimeout(`${API_BASE}/ai/match-specialist`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ requestText, preferredService }),
@@ -119,7 +138,7 @@ export const api = {
 
   // Bookings
   getBookings: async () => {
-    const res = await fetch(`${API_BASE}/bookings`, {
+    const res = await fetchWithTimeout(`${API_BASE}/bookings`, {
       headers: getAuthHeaders(),
     });
     const data = await safeJson(res);
@@ -128,7 +147,7 @@ export const api = {
   },
 
   createBooking: async (bookingData) => {
-    const res = await fetch(`${API_BASE}/bookings`, {
+    const res = await fetchWithTimeout(`${API_BASE}/bookings`, {
       method: 'POST',
       headers: getAuthHeaders(),
       body: JSON.stringify(bookingData),
@@ -139,7 +158,7 @@ export const api = {
   },
 
   updateBookingStatus: async (id, updateData) => {
-    const res = await fetch(`${API_BASE}/bookings/${id}`, {
+    const res = await fetchWithTimeout(`${API_BASE}/bookings/${id}`, {
       method: 'PUT',
       headers: getAuthHeaders(),
       body: JSON.stringify(updateData),
@@ -151,7 +170,7 @@ export const api = {
 
   // Orders
   getOrders: async () => {
-    const res = await fetch(`${API_BASE}/orders`, {
+    const res = await fetchWithTimeout(`${API_BASE}/orders`, {
       headers: getAuthHeaders(),
     });
     const data = await safeJson(res);
@@ -160,7 +179,7 @@ export const api = {
   },
 
   createOrder: async (orderData) => {
-    const res = await fetch(`${API_BASE}/orders`, {
+    const res = await fetchWithTimeout(`${API_BASE}/orders`, {
       method: 'POST',
       headers: getAuthHeaders(),
       body: JSON.stringify(orderData),
@@ -171,7 +190,7 @@ export const api = {
   },
 
   updateOrderStatus: async (id, updateData) => {
-    const res = await fetch(`${API_BASE}/orders/${id}`, {
+    const res = await fetchWithTimeout(`${API_BASE}/orders/${id}`, {
       method: 'PUT',
       headers: getAuthHeaders(),
       body: JSON.stringify(updateData),

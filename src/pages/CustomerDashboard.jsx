@@ -51,12 +51,16 @@ export const CustomerDashboard = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [bookingsData, ordersData] = await Promise.all([
+      const [bookingsResult, ordersResult] = await Promise.allSettled([
         api.getBookings(),
         api.getOrders(),
       ]);
-      setBookings(Array.isArray(bookingsData) ? bookingsData : []);
-      setOrders(Array.isArray(ordersData) ? ordersData : []);
+      if (bookingsResult.status === 'fulfilled') {
+        setBookings(Array.isArray(bookingsResult.value) ? bookingsResult.value : []);
+      }
+      if (ordersResult.status === 'fulfilled') {
+        setOrders(Array.isArray(ordersResult.value) ? ordersResult.value : []);
+      }
     } catch (err) {
       console.error('Failed to load dashboard data:', err);
     } finally {
