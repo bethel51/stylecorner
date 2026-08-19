@@ -548,14 +548,22 @@ app.put('/api/orders/:id', authenticateToken, async (req, res) => {
 const distPath = path.join(__dirname, '../dist');
 app.use(express.static(distPath));
 
-// SPA Catch-all Route for client-side routing (Express v5 compatible)
+// SPA Catch-all Route for client-side routing
 app.use((req, res, next) => {
   if (req.path.startsWith('/api')) return next();
   if (req.method !== 'GET') return next();
-  const indexFile = require('fs').existsSync(path.join(distPath, 'index.html'))
-    ? path.join(distPath, 'index.html')
-    : path.join(__dirname, '../index.html');
-  res.sendFile(indexFile);
+
+  const compiledIndex = path.join(distPath, 'index.html');
+  if (require('fs').existsSync(compiledIndex)) {
+    return res.sendFile(compiledIndex);
+  }
+
+  const rootIndex = path.join(__dirname, '../index.html');
+  if (require('fs').existsSync(rootIndex)) {
+    return res.sendFile(rootIndex);
+  }
+
+  res.status(500).send('Application build in progress. Please refresh in a moment.');
 });
 
 app.listen(PORT, '0.0.0.0', () => {

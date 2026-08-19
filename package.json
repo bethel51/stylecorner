@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "node server/server.js",
+    "postinstall": "npm run build",
     "dev": "vite",
     "server": "node server/server.js",
     "dev:all": "concurrently --kill-others-on-fail -n \"VITE,EXPRESS\" -c \"cyan,yellow\" \"vite\" \"node server/server.js\"",
