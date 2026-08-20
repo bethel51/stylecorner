@@ -25,18 +25,14 @@ import {
   Trash2,
   AlertTriangle,
   UserCheck,
-  Sun,
-  Moon,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../context/ThemeContext';
 import { api } from '../services/api';
 import { StatusBadge } from '../components/common/StatusBadge';
 
 export const AdminDashboard = () => {
   const navigate = useNavigate();
   const { user, logout, showToast } = useAuth();
-  const { theme, toggleTheme, isDark } = useTheme();
 
   const [activeTab, setActiveTab] = useState('orders'); // 'orders' | 'bookings' | 'users'
   const [bookings, setBookings] = useState([]);
@@ -410,18 +406,6 @@ export const AdminDashboard = () => {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <button
-              onClick={toggleTheme}
-              title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
-              style={{
-                background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
-                color: isDark ? '#f59e0b' : '#3b82f6', padding: '0.45rem', borderRadius: '10px', cursor: 'pointer',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                transition: 'transform 0.3s ease, color 0.3s ease',
-              }}
-            >
-              {isDark ? <Sun size={15} /> : <Moon size={15} />}
-            </button>
             <button
               onClick={fetchAdminData}
               title="Refresh"

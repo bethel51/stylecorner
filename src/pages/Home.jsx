@@ -193,7 +193,7 @@ export const Home = () => {
       <div
         className="app-card"
         style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: t.cardBg,
           backdropFilter: 'blur(20px)',
           border: '1px solid rgba(212, 175, 55, 0.3)',
           borderRadius: '20px',
@@ -207,7 +207,7 @@ export const Home = () => {
             <span style={{ fontSize: '0.68rem', color: '#6b7280', fontFamily: 'Outfit', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', display: 'block', marginBottom: '0.2rem' }}>
               Happy Clients
             </span>
-            <div style={{ fontFamily: 'Outfit', fontSize: '1.5rem', fontWeight: 900, color: '#171717' }}>
+            <div style={{ fontFamily: 'Outfit', fontSize: '1.5rem', fontWeight: 900, color: t.text }}>
               1.2k+
             </div>
           </div>
@@ -225,7 +225,7 @@ export const Home = () => {
             <span style={{ fontSize: '0.68rem', color: '#6b7280', fontFamily: 'Outfit', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', display: 'block', marginBottom: '0.2rem' }}>
               Master Stylists
             </span>
-            <div style={{ fontFamily: 'Outfit', fontSize: '1.5rem', fontWeight: 900, color: '#171717' }}>
+            <div style={{ fontFamily: 'Outfit', fontSize: '1.5rem', fontWeight: 900, color: t.text }}>
               20+
             </div>
           </div>
@@ -238,7 +238,7 @@ export const Home = () => {
           <span style={{ color: '#d4af37', fontSize: '0.75rem', fontFamily: 'Outfit', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.12em', display: 'block', marginBottom: '0.25rem' }}>
             OUR SPECIALITIES
           </span>
-          <h2 style={{ fontFamily: 'Outfit', fontSize: '1.6rem', fontWeight: 900, color: '#171717' }}>
+          <h2 style={{ fontFamily: 'Outfit', fontSize: '1.6rem', fontWeight: 900, color: t.text }}>
             Our Services
           </h2>
         </div>
@@ -345,7 +345,7 @@ export const Home = () => {
           <Sparkles size={24} />
         </div>
         <div style={{ flex: 1 }}>
-          <h4 style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 800, color: '#171717' }}>
+          <h4 style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 800, color: t.text }}>
             Not sure which stylist to pick?
           </h4>
           <p style={{ color: '#6b7280', fontSize: '0.82rem', marginTop: '0.15rem' }}>
@@ -371,7 +371,7 @@ export const Home = () => {
         <span style={{ color: '#d4af37', textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 800, display: 'block', marginBottom: '0.4rem' }}>
           Grooming Products
         </span>
-        <h3 style={{ fontSize: '1.35rem', fontFamily: 'Outfit', fontWeight: 900, color: '#1A1A1A', marginBottom: '0.5rem', lineHeight: 1.2 }}>
+        <h3 style={{ fontSize: '1.35rem', fontFamily: 'Outfit', fontWeight: 900, color: t.text, marginBottom: '0.5rem', lineHeight: 1.2 }}>
           Products for Home Use
         </h3>
         <p style={{ color: '#4A4A4A', fontSize: '0.85rem', lineHeight: 1.55, marginBottom: '1.15rem' }}>
@@ -400,7 +400,7 @@ export const Home = () => {
       {/* ── Master Stylists Showcase ── */}
       <div style={{ marginBottom: '1.5rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
-          <h3 style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 800, color: '#171717' }}>
+          <h3 style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 800, color: t.text }}>
             Our Stylists
           </h3>
           <button
@@ -434,7 +434,7 @@ export const Home = () => {
                   }}
                 />
                 <div>
-                  <h4 style={{ fontFamily: 'Outfit', fontSize: '0.98rem', fontWeight: 700, color: '#171717' }}>{sp.name}</h4>
+                  <h4 style={{ fontFamily: 'Outfit', fontSize: '0.98rem', fontWeight: 700, color: t.text }}>{sp.name}</h4>
                   <p style={{ color: '#d4af37', fontSize: '0.75rem', fontWeight: 700, fontFamily: 'Outfit' }}>{sp.specialty}</p>
                 </div>
               </div>

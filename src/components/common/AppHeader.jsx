@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ArrowLeft, ShoppingBag, User, Sparkles, Sun, Moon } from 'lucide-react';
+import { ArrowLeft, ShoppingBag, User, Sparkles } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
-import { useTheme } from '../../context/ThemeContext';
 import { ImagePreviewModal } from './ImagePreviewModal';
 
 export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
@@ -11,7 +10,6 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
   const location = useLocation();
   const { user, isAuthenticated, role } = useAuth();
   const { itemCount } = useCart();
-  const { theme, toggleTheme, isDark } = useTheme();
   const [showImagePreview, setShowImagePreview] = useState(false);
 
   const isHome = location.pathname === '/';
@@ -77,21 +75,6 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-
-
-          <button
-            className="app-header-btn"
-            onClick={toggleTheme}
-            title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
-            aria-label="Toggle Theme"
-            style={{
-              transition: 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s ease',
-              color: isDark ? '#f59e0b' : '#3b82f6',
-            }}
-          >
-            {isDark ? <Sun size={18} /> : <Moon size={18} />}
-          </button>
-
           {onOpenAiMatcher && (
             <button
               className="app-header-btn"

@@ -23,14 +23,11 @@ import { AdminDashboard } from './pages/AdminDashboard';
 import { Payment } from './pages/Payment';
 import { Policies } from './pages/Policies';
 
-import { ThemeProvider } from './context/ThemeContext';
-
 export const App = () => {
   return (
-    <ThemeProvider>
-      <AuthProvider>
-        <CartProvider>
-          <BrowserRouter>
+    <AuthProvider>
+      <CartProvider>
+        <BrowserRouter>
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Home />} />
@@ -94,6 +91,5 @@ export const App = () => {
         </BrowserRouter>
       </CartProvider>
     </AuthProvider>
-    </ThemeProvider>
   );
 };
