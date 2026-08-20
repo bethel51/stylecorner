@@ -131,11 +131,11 @@ export const Services = () => {
                 >
                   {s.category}
                 </span>
-                <h3 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: t.text, marginTop: '0.2rem' }}>
+                <h3 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: '#171717', marginTop: '0.2rem' }}>
                   {s.title}
                 </h3>
               </div>
-              <div style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 900, color: t.text }}>
+              <div style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 900, color: '#171717' }}>
                 ${s.price}
               </div>
             </div>

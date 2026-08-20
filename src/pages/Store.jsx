@@ -156,7 +156,7 @@ export const Store = () => {
                 )}
               </div>
 
-              <h3 style={{ fontFamily: 'Outfit', fontSize: '0.95rem', fontWeight: 800, color: t.text, lineHeight: 1.3 }}>
+              <h3 style={{ fontFamily: 'Outfit', fontSize: '0.95rem', fontWeight: 800, color: '#171717', lineHeight: 1.3 }}>
                 {p.title}
               </h3>
 
@@ -167,7 +167,7 @@ export const Store = () => {
 
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.55rem' }}>
-                <span style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 900, color: t.text }}>
+                <span style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 900, color: '#171717' }}>
                   ${p.price}
                 </span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#d4af37', fontSize: '0.75rem', fontWeight: 800 }}>
