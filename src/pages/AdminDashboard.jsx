@@ -218,14 +218,14 @@ export const AdminDashboard = () => {
   ];
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#0a0a0a', display: 'flex', fontFamily: 'Outfit, sans-serif', color: '#ffffff' }}>
+    <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc', display: 'flex', fontFamily: 'Outfit, sans-serif', color: '#0f172a' }}>
 
       {/* Mobile Drawer Backdrop */}
       {isMobile && isMobileOpen && (
         <div
           onClick={() => setIsMobileOpen(false)}
           style={{
-            position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(4px)',
+            position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)',
             zIndex: 40, transition: 'opacity 0.2s ease',
           }}
         />
@@ -235,8 +235,8 @@ export const AdminDashboard = () => {
       <aside style={{
         width: '260px',
         flexShrink: 0,
-        backgroundColor: '#111111',
-        borderRight: '1px solid rgba(212,175,55,0.15)',
+        backgroundColor: '#ffffff',
+        borderRight: '1px solid rgba(0,0,0,0.08)',
         display: 'flex',
         flexDirection: 'column',
         position: 'fixed',
@@ -246,27 +246,27 @@ export const AdminDashboard = () => {
         zIndex: 50,
         transform: isMobile && !isMobileOpen ? 'translateX(-100%)' : 'translateX(0)',
         transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-        boxShadow: isMobile && isMobileOpen ? '0 0 30px rgba(0,0,0,0.8)' : 'none',
+        boxShadow: isMobile && isMobileOpen ? '0 0 30px rgba(0,0,0,0.15)' : 'none',
       }}>
         {/* Brand Header */}
-        <div style={{ padding: '1.25rem 1.25rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ padding: '1.25rem 1.25rem 1rem', borderBottom: '1px solid rgba(0,0,0,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
             <div style={{
               width: '36px', height: '36px', borderRadius: '10px',
-              background: 'linear-gradient(135deg, #d4af37, #8a6d1c)',
+              background: 'linear-gradient(135deg, #d4af37, #b5952f)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
-              <Shield size={18} color="#000" />
+              <Shield size={18} color="#fff" />
             </div>
             <div>
-              <div style={{ fontSize: '0.95rem', fontWeight: 800, color: '#ffffff', lineHeight: 1 }}>Style Corner</div>
-              <div style={{ fontSize: '0.65rem', color: '#d4af37', fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase' }}>Admin Portal</div>
+              <div style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', lineHeight: 1 }}>Style Corner</div>
+              <div style={{ fontSize: '0.65rem', color: '#b5952f', fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase' }}>Admin Portal</div>
             </div>
           </div>
           {isMobile && (
             <button
               onClick={() => setIsMobileOpen(false)}
-              style={{ background: 'none', border: 'none', color: '#9ca3af', padding: '0.25rem', cursor: 'pointer' }}
+              style={{ background: 'none', border: 'none', color: '#64748b', padding: '0.25rem', cursor: 'pointer' }}
             >
               <X size={20} />
             </button>
@@ -274,21 +274,21 @@ export const AdminDashboard = () => {
         </div>
 
         {/* Admin User Card */}
-        <div style={{ padding: '1rem 1.25rem', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+        <div style={{ padding: '1rem 1.25rem', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <div style={{
               width: '40px', height: '40px', borderRadius: '50%', flexShrink: 0,
-              background: user?.avatarUrl ? `url(${user.avatarUrl}) center/cover no-repeat` : 'linear-gradient(135deg, #d4af37, #8a6d1c)',
+              background: user?.avatarUrl ? `url(${user.avatarUrl}) center/cover no-repeat` : 'linear-gradient(135deg, #d4af37, #b5952f)',
               border: '2px solid rgba(212,175,55,0.4)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
-              {!user?.avatarUrl && <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#000' }}>{user?.firstname?.charAt(0) || 'A'}</span>}
+              {!user?.avatarUrl && <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#fff' }}>{user?.firstname?.charAt(0) || 'A'}</span>}
             </div>
             <div style={{ overflow: 'hidden' }}>
-              <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#ffffff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#0f172a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {user?.firstname || 'Admin'} {user?.lastname || ''}
               </div>
-              <div style={{ fontSize: '0.68rem', color: '#22c55e', fontWeight: 600 }}>● System Admin</div>
+              <div style={{ fontSize: '0.68rem', color: '#16a34a', fontWeight: 600 }}>● System Admin</div>
             </div>
           </div>
         </div>
@@ -306,8 +306,8 @@ export const AdminDashboard = () => {
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                 padding: '0.75rem 0.85rem', borderRadius: '12px', width: '100%',
                 border: activeTab === item.id ? '1px solid rgba(212,175,55,0.35)' : '1px solid transparent',
-                backgroundColor: activeTab === item.id ? 'rgba(212,175,55,0.1)' : 'transparent',
-                color: activeTab === item.id ? '#d4af37' : '#9ca3af',
+                backgroundColor: activeTab === item.id ? 'rgba(212,175,55,0.12)' : 'transparent',
+                color: activeTab === item.id ? '#b5952f' : '#64748b',
                 cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s ease',
                 fontFamily: 'Outfit', fontWeight: activeTab === item.id ? 700 : 500, fontSize: '0.88rem',
               }}
@@ -318,8 +318,8 @@ export const AdminDashboard = () => {
               </div>
               <span style={{
                 fontSize: '0.72rem', fontWeight: 700, padding: '0.1rem 0.5rem',
-                borderRadius: '50px', backgroundColor: activeTab === item.id ? '#d4af37' : 'rgba(255,255,255,0.08)',
-                color: activeTab === item.id ? '#000' : '#9ca3af',
+                borderRadius: '50px', backgroundColor: activeTab === item.id ? '#d4af37' : 'rgba(0,0,0,0.06)',
+                color: activeTab === item.id ? '#fff' : '#64748b',
               }}>
                 {item.count}
               </span>
@@ -328,14 +328,14 @@ export const AdminDashboard = () => {
         </nav>
 
         {/* Sidebar Footer Controls */}
-        <div style={{ padding: '0.75rem', borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+        <div style={{ padding: '0.75rem', borderTop: '1px solid rgba(0,0,0,0.06)', display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
           <button
             onClick={() => { fetchAdminData(); if (isMobile) setIsMobileOpen(false); }}
             style={{
               display: 'flex', alignItems: 'center', gap: '0.6rem',
               padding: '0.65rem 0.85rem', borderRadius: '10px', width: '100%',
-              backgroundColor: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
-              color: '#9ca3af', cursor: 'pointer', fontFamily: 'Outfit', fontSize: '0.82rem', fontWeight: 500,
+              backgroundColor: 'rgba(0,0,0,0.03)', border: '1px solid rgba(0,0,0,0.06)',
+              color: '#64748b', cursor: 'pointer', fontFamily: 'Outfit', fontSize: '0.82rem', fontWeight: 500,
             }}
           >
             <RefreshCw size={14} /> Refresh Data
@@ -345,8 +345,8 @@ export const AdminDashboard = () => {
             style={{
               display: 'flex', alignItems: 'center', gap: '0.6rem',
               padding: '0.65rem 0.85rem', borderRadius: '10px', width: '100%',
-              backgroundColor: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
-              color: '#9ca3af', cursor: 'pointer', fontFamily: 'Outfit', fontSize: '0.82rem', fontWeight: 500,
+              backgroundColor: 'rgba(0,0,0,0.03)', border: '1px solid rgba(0,0,0,0.06)',
+              color: '#64748b', cursor: 'pointer', fontFamily: 'Outfit', fontSize: '0.82rem', fontWeight: 500,
             }}
           >
             <Home size={14} /> Public Site
@@ -377,8 +377,8 @@ export const AdminDashboard = () => {
         {/* Top Header Bar */}
         <div style={{
           position: 'sticky', top: 0, zIndex: 10,
-          backgroundColor: 'rgba(10,10,10,0.95)', backdropFilter: 'blur(12px)',
-          borderBottom: '1px solid rgba(255,255,255,0.06)',
+          backgroundColor: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(12px)',
+          borderBottom: '1px solid rgba(0,0,0,0.08)',
           padding: isMobile ? '0.85rem 1rem' : '1rem 2rem',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         }}>
@@ -387,8 +387,8 @@ export const AdminDashboard = () => {
               <button
                 onClick={() => setIsMobileOpen(true)}
                 style={{
-                  background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
-                  color: '#d4af37', padding: '0.45rem', borderRadius: '10px', cursor: 'pointer',
+                  background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.08)',
+                  color: '#b5952f', padding: '0.45rem', borderRadius: '10px', cursor: 'pointer',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}
               >
@@ -396,10 +396,10 @@ export const AdminDashboard = () => {
               </button>
             )}
             <div>
-              <h1 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: isMobile ? '1.1rem' : '1.3rem', color: '#ffffff', margin: 0 }}>
+              <h1 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: isMobile ? '1.1rem' : '1.3rem', color: '#0f172a', margin: 0 }}>
                 {activeTab === 'orders' ? 'Store Orders' : activeTab === 'bookings' ? 'Salon Bookings' : 'User Accounts'}
               </h1>
-              <p style={{ color: '#6b7280', fontSize: '0.75rem', margin: '0.1rem 0 0 0', display: isMobile ? 'none' : 'block' }}>
+              <p style={{ color: '#64748b', fontSize: '0.75rem', margin: '0.1rem 0 0 0', display: isMobile ? 'none' : 'block' }}>
                 {activeTab === 'orders' ? 'Manage customer orders in real-time' : activeTab === 'bookings' ? 'Manage appointment bookings' : 'Manage registered client and expert accounts'}
               </p>
             </div>
@@ -410,8 +410,8 @@ export const AdminDashboard = () => {
               onClick={fetchAdminData}
               title="Refresh"
               style={{
-                background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
-                color: '#ffffff', padding: '0.45rem', borderRadius: '10px', cursor: 'pointer',
+                background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.08)',
+                color: '#0f172a', padding: '0.45rem', borderRadius: '10px', cursor: 'pointer',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}
             >
@@ -419,7 +419,7 @@ export const AdminDashboard = () => {
             </button>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', backgroundColor: 'rgba(34,197,94,0.1)', padding: '0.3rem 0.6rem', borderRadius: '50px', border: '1px solid rgba(34,197,94,0.2)' }}>
               <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#22c55e', boxShadow: '0 0 6px #22c55e' }} />
-              <span style={{ fontSize: '0.7rem', color: '#22c55e', fontWeight: 700 }}>Live</span>
+              <span style={{ fontSize: '0.7rem', color: '#16a34a', fontWeight: 700 }}>Live</span>
             </div>
           </div>
         </div>
@@ -436,19 +436,19 @@ export const AdminDashboard = () => {
           }}>
             {kpiCards.map((card, i) => (
               <div key={i} style={{
-                backgroundColor: '#111111', borderRadius: isMobile ? '14px' : '16px',
+                backgroundColor: '#ffffff', borderRadius: isMobile ? '14px' : '16px',
                 padding: isMobile ? '0.85rem' : '1.25rem',
-                border: '1px solid rgba(255,255,255,0.06)',
-                boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
+                border: '1px solid rgba(0,0,0,0.08)',
+                boxShadow: '0 4px 16px rgba(0,0,0,0.03)',
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                  <span style={{ fontSize: isMobile ? '0.68rem' : '0.75rem', color: '#9ca3af', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{card.label}</span>
+                  <span style={{ fontSize: isMobile ? '0.68rem' : '0.75rem', color: '#64748b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{card.label}</span>
                   <div style={{ width: isMobile ? '26px' : '32px', height: isMobile ? '26px' : '32px', borderRadius: '8px', backgroundColor: card.bg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <card.icon size={isMobile ? 14 : 16} color={card.color} />
                   </div>
                 </div>
-                <div style={{ fontSize: isMobile ? '1.25rem' : '1.6rem', fontWeight: 800, color: card.color, fontFamily: 'Outfit', lineHeight: 1 }}>{card.value}</div>
-                {card.sub && <div style={{ fontSize: '0.68rem', color: '#6b7280', marginTop: '0.2rem' }}>{card.sub}</div>}
+                <div style={{ fontSize: isMobile ? '1.25rem' : '1.6rem', fontWeight: 800, color: card.color === '#d4af37' ? '#b5952f' : card.color, fontFamily: 'Outfit', lineHeight: 1 }}>{card.value}</div>
+                {card.sub && <div style={{ fontSize: '0.68rem', color: '#94a3b8', marginTop: '0.2rem' }}>{card.sub}</div>}
               </div>
             ))}
           </div>
@@ -456,7 +456,7 @@ export const AdminDashboard = () => {
           {/* Search Bar + Filter Chips Row */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.25rem' }}>
             <div style={{ position: 'relative', width: '100%' }}>
-              <Search size={15} style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: '#6b7280' }} />
+              <Search size={15} style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
               <input
                 type="text"
                 placeholder={
@@ -470,8 +470,8 @@ export const AdminDashboard = () => {
                 onChange={e => setSearchQuery(e.target.value)}
                 style={{
                   width: '100%', padding: '0.65rem 0.85rem 0.65rem 2.5rem', borderRadius: '10px',
-                  backgroundColor: '#111111', border: '1px solid rgba(255,255,255,0.08)',
-                  color: '#ffffff', fontSize: '0.83rem', outline: 'none', fontFamily: 'Outfit',
+                  backgroundColor: '#ffffff', border: '1px solid rgba(0,0,0,0.12)',
+                  color: '#0f172a', fontSize: '0.83rem', outline: 'none', fontFamily: 'Outfit',
                   boxSizing: 'border-box',
                 }}
               />
@@ -503,9 +503,9 @@ export const AdminDashboard = () => {
                     style={{
                       padding: '0.45rem 0.85rem', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 600,
                       textTransform: 'capitalize', cursor: 'pointer', flexShrink: 0,
-                      backgroundColor: active ? '#d4af37' : 'rgba(255,255,255,0.05)',
-                      color: active ? '#000' : '#9ca3af',
-                      border: active ? '1px solid #d4af37' : '1px solid rgba(255,255,255,0.08)',
+                      backgroundColor: active ? '#171717' : '#ffffff',
+                      color: active ? '#ffffff' : '#64748b',
+                      border: active ? '1px solid #171717' : '1px solid rgba(0,0,0,0.1)',
                       fontFamily: 'Outfit', transition: 'all 0.15s ease',
                     }}
                   >
@@ -520,15 +520,15 @@ export const AdminDashboard = () => {
           {loading ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
               {[1, 2, 3].map(i => (
-                <div key={i} style={{ backgroundColor: '#111111', borderRadius: '14px', height: '110px', border: '1px solid rgba(255,255,255,0.05)' }} />
+                <div key={i} style={{ backgroundColor: '#ffffff', borderRadius: '14px', height: '110px', border: '1px solid rgba(0,0,0,0.06)' }} />
               ))}
             </div>
           ) : activeTab === 'orders' ? (
             filteredOrders.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '3rem 1.5rem', backgroundColor: '#111111', borderRadius: '18px', border: '1px dashed rgba(255,255,255,0.08)' }}>
-                <Package size={40} color="#374151" style={{ marginBottom: '0.75rem' }} />
-                <h3 style={{ color: '#ffffff', fontFamily: 'Outfit', margin: '0 0 0.25rem', fontSize: '1.05rem' }}>No Orders Found</h3>
-                <p style={{ color: '#6b7280', fontSize: '0.8rem' }}>{searchQuery || orderStatusFilter !== 'all' ? 'Try clearing your filters.' : 'Store orders will appear here once placed.'}</p>
+              <div style={{ textAlign: 'center', padding: '3rem 1.5rem', backgroundColor: '#ffffff', borderRadius: '18px', border: '1px dashed rgba(0,0,0,0.12)' }}>
+                <Package size={40} color="#94a3b8" style={{ marginBottom: '0.75rem' }} />
+                <h3 style={{ color: '#0f172a', fontFamily: 'Outfit', margin: '0 0 0.25rem', fontSize: '1.05rem' }}>No Orders Found</h3>
+                <p style={{ color: '#64748b', fontSize: '0.8rem' }}>{searchQuery || orderStatusFilter !== 'all' ? 'Try clearing your filters.' : 'Store orders will appear here once placed.'}</p>
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
@@ -537,32 +537,33 @@ export const AdminDashboard = () => {
                     key={order._id}
                     onClick={() => setSelectedOrder(order)}
                     style={{
-                      backgroundColor: '#111111', borderRadius: '16px', padding: isMobile ? '1rem' : '1.25rem',
-                      border: '1px solid rgba(255,255,255,0.06)', cursor: 'pointer',
+                      backgroundColor: '#ffffff', borderRadius: '16px', padding: isMobile ? '1rem' : '1.25rem',
+                      border: '1px solid rgba(0,0,0,0.08)', cursor: 'pointer',
+                      boxShadow: '0 2px 10px rgba(0,0,0,0.02)',
                       transition: 'border-color 0.2s ease, transform 0.15s ease',
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
                       <div>
-                        <div style={{ fontSize: '0.7rem', color: '#6b7280', fontFamily: 'monospace', marginBottom: '0.15rem' }}>
+                        <div style={{ fontSize: '0.7rem', color: '#64748b', fontFamily: 'monospace', marginBottom: '0.15rem' }}>
                           ORDER #{(order._id || '').slice(-6).toUpperCase()}
                         </div>
-                        <div style={{ fontSize: '0.98rem', fontWeight: 700, color: '#ffffff', fontFamily: 'Outfit' }}>
+                        <div style={{ fontSize: '0.98rem', fontWeight: 700, color: '#0f172a', fontFamily: 'Outfit' }}>
                           {order.name || order.customerInfo?.name || 'Store Customer'}
                         </div>
-                        <div style={{ fontSize: '0.75rem', color: '#9ca3af', marginTop: '0.1rem' }}>
+                        <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.1rem' }}>
                           {order.email || order.customerInfo?.email || ''} {(order.phone || order.customerInfo?.phone) ? `· ${order.phone || order.customerInfo?.phone}` : ''}
                         </div>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                        <span style={{ fontSize: '1.05rem', fontWeight: 800, color: '#d4af37', fontFamily: 'Outfit' }}>
+                        <span style={{ fontSize: '1.05rem', fontWeight: 800, color: '#b5952f', fontFamily: 'Outfit' }}>
                           ${(order.totalPrice || order.price || 0).toFixed(2)}
                         </span>
                         <StatusBadge status={order.status || 'pending'} />
                       </div>
                     </div>
 
-                    <div style={{ fontSize: '0.76rem', color: '#6b7280', marginBottom: '0.85rem' }}>
+                    <div style={{ fontSize: '0.76rem', color: '#64748b', marginBottom: '0.85rem' }}>
                       {Array.isArray(order.items) && order.items.length > 0 ? (
                         <>
                           {order.items.slice(0, 3).map((item, idx) => (
@@ -570,19 +571,19 @@ export const AdminDashboard = () => {
                               • {item.name || item.title || 'Product'} ×{item.quantity || 1}
                             </span>
                           ))}
-                          {order.items.length > 3 && <span style={{ color: '#d4af37' }}>+{order.items.length - 3} more</span>}
+                          {order.items.length > 3 && <span style={{ color: '#b5952f' }}>+{order.items.length - 3} more</span>}
                         </>
                       ) : (
                         <span>• {order.item || 'Store Item'}</span>
                       )}
                     </div>
 
-                    <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', paddingTop: '0.65rem', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                    <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', paddingTop: '0.65rem', borderTop: '1px solid rgba(0,0,0,0.06)' }}>
                       {order.status !== 'shipped' && order.status !== 'completed' && (
                         <button
                           disabled={updatingId === order._id}
                           onClick={(e) => handleUpdateOrderStatus(order._id, 'shipped', e)}
-                          style={{ flex: 1, padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: '#d4af37', color: '#000', fontWeight: 700, fontSize: '0.78rem', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
+                          style={{ flex: 1, padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: '#d4af37', color: '#fff', fontWeight: 700, fontSize: '0.78rem', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
                         >
                           <Truck size={13} /> Mark Shipped
                         </button>
@@ -591,14 +592,14 @@ export const AdminDashboard = () => {
                         <button
                           disabled={updatingId === order._id}
                           onClick={(e) => handleUpdateOrderStatus(order._id, 'completed', e)}
-                          style={{ flex: 1, padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: '#22c55e', color: '#fff', fontWeight: 700, fontSize: '0.78rem', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
+                          style={{ flex: 1, padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: '#16a34a', color: '#fff', fontWeight: 700, fontSize: '0.78rem', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
                         >
                           <CheckCircle size={13} /> Mark Completed
                         </button>
                       )}
                       <button
                         onClick={(e) => { e.stopPropagation(); setSelectedOrder(order); }}
-                        style={{ padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: 'rgba(255,255,255,0.06)', color: '#d1d5db', fontWeight: 600, fontSize: '0.78rem', border: '1px solid rgba(255,255,255,0.08)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
+                        style={{ padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: 'rgba(0,0,0,0.04)', color: '#334155', fontWeight: 600, fontSize: '0.78rem', border: '1px solid rgba(0,0,0,0.08)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
                       >
                         <Eye size={13} /> View Details
                       </button>
@@ -609,10 +610,10 @@ export const AdminDashboard = () => {
             )
           ) : activeTab === 'bookings' ? (
             filteredBookings.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '3rem 1.5rem', backgroundColor: '#111111', borderRadius: '18px', border: '1px dashed rgba(255,255,255,0.08)' }}>
-                <Calendar size={40} color="#374151" style={{ marginBottom: '0.75rem' }} />
-                <h3 style={{ color: '#ffffff', fontFamily: 'Outfit', margin: '0 0 0.25rem', fontSize: '1.05rem' }}>No Bookings Found</h3>
-                <p style={{ color: '#6b7280', fontSize: '0.8rem' }}>{searchQuery || bookingStatusFilter !== 'all' ? 'Try clearing your filters.' : 'Customer appointments will appear here.'}</p>
+              <div style={{ textAlign: 'center', padding: '3rem 1.5rem', backgroundColor: '#ffffff', borderRadius: '18px', border: '1px dashed rgba(0,0,0,0.12)' }}>
+                <Calendar size={40} color="#94a3b8" style={{ marginBottom: '0.75rem' }} />
+                <h3 style={{ color: '#0f172a', fontFamily: 'Outfit', margin: '0 0 0.25rem', fontSize: '1.05rem' }}>No Bookings Found</h3>
+                <p style={{ color: '#64748b', fontSize: '0.8rem' }}>{searchQuery || bookingStatusFilter !== 'all' ? 'Try clearing your filters.' : 'Customer appointments will appear here.'}</p>
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
@@ -621,34 +622,35 @@ export const AdminDashboard = () => {
                     key={b._id}
                     onClick={() => setSelectedBooking(b)}
                     style={{
-                      backgroundColor: '#111111', borderRadius: '16px', padding: isMobile ? '1rem' : '1.25rem',
-                      border: '1px solid rgba(255,255,255,0.06)', cursor: 'pointer',
+                      backgroundColor: '#ffffff', borderRadius: '16px', padding: isMobile ? '1rem' : '1.25rem',
+                      border: '1px solid rgba(0,0,0,0.08)', cursor: 'pointer',
+                      boxShadow: '0 2px 10px rgba(0,0,0,0.02)',
                       transition: 'border-color 0.2s ease, transform 0.15s ease',
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '0.65rem', flexWrap: 'wrap', gap: '0.5rem' }}>
                       <div>
-                        <div style={{ fontSize: '0.98rem', fontWeight: 700, color: '#ffffff', fontFamily: 'Outfit' }}>
+                        <div style={{ fontSize: '0.98rem', fontWeight: 700, color: '#0f172a', fontFamily: 'Outfit' }}>
                           {b.serviceName || b.service || 'Grooming Service'}
                         </div>
-                        <div style={{ fontSize: '0.76rem', color: '#d4af37', marginTop: '0.15rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                        <div style={{ fontSize: '0.76rem', color: '#b5952f', marginTop: '0.15rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
                           <Users size={12} /> {b.clientName || b.user?.firstname || 'Guest'} {b.phone || b.clientPhone ? `· ${b.phone || b.clientPhone}` : ''}
                         </div>
                       </div>
                       <StatusBadge status={b.status || 'pending'} />
                     </div>
 
-                    <div style={{ display: 'flex', gap: '1rem', fontSize: '0.76rem', color: '#6b7280', marginBottom: '0.85rem', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', gap: '1rem', fontSize: '0.76rem', color: '#64748b', marginBottom: '0.85rem', flexWrap: 'wrap' }}>
                       <span><Clock size={12} style={{ verticalAlign: 'middle', marginRight: '3px' }} />{b.date || 'TBD'} at {b.time || 'TBD'}</span>
                       <span><Sparkles size={12} style={{ verticalAlign: 'middle', marginRight: '3px' }} />Stylist: {b.stylist || 'Any'}</span>
                     </div>
 
-                    <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', paddingTop: '0.65rem', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                    <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', paddingTop: '0.65rem', borderTop: '1px solid rgba(0,0,0,0.06)' }}>
                       {b.status !== 'confirmed' && b.status !== 'completed' && b.status !== 'cancelled' && (
                         <button
                           disabled={updatingId === b._id}
                           onClick={(e) => handleUpdateBookingStatus(b._id, 'confirmed', e)}
-                          style={{ flex: 1, padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: '#d4af37', color: '#000', fontWeight: 700, fontSize: '0.78rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit' }}
+                          style={{ flex: 1, padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: '#d4af37', color: '#fff', fontWeight: 700, fontSize: '0.78rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit' }}
                         >
                           Confirm
                         </button>
@@ -657,7 +659,7 @@ export const AdminDashboard = () => {
                         <button
                           disabled={updatingId === b._id}
                           onClick={(e) => handleUpdateBookingStatus(b._id, 'completed', e)}
-                          style={{ flex: 1, padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: '#22c55e', color: '#fff', fontWeight: 700, fontSize: '0.78rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit' }}
+                          style={{ flex: 1, padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: '#16a34a', color: '#fff', fontWeight: 700, fontSize: '0.78rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit' }}
                         >
                           Complete
                         </button>
@@ -673,7 +675,7 @@ export const AdminDashboard = () => {
                       )}
                       <button
                         onClick={(e) => { e.stopPropagation(); setSelectedBooking(b); }}
-                        style={{ padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: 'rgba(255,255,255,0.06)', color: '#d1d5db', fontWeight: 600, fontSize: '0.78rem', border: '1px solid rgba(255,255,255,0.08)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
+                        style={{ padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: 'rgba(0,0,0,0.04)', color: '#334155', fontWeight: 600, fontSize: '0.78rem', border: '1px solid rgba(0,0,0,0.08)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
                       >
                         <Eye size={13} /> View Details
                       </button>
@@ -685,10 +687,10 @@ export const AdminDashboard = () => {
           ) : (
             /* --- TAB 3: USER ACCOUNTS MANAGEMENT --- */
             filteredUsers.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '3rem 1.5rem', backgroundColor: '#111111', borderRadius: '18px', border: '1px dashed rgba(255,255,255,0.08)' }}>
-                <Users size={40} color="#374151" style={{ marginBottom: '0.75rem' }} />
-                <h3 style={{ color: '#ffffff', fontFamily: 'Outfit', margin: '0 0 0.25rem', fontSize: '1.05rem' }}>No Accounts Found</h3>
-                <p style={{ color: '#6b7280', fontSize: '0.8rem' }}>{searchQuery || userRoleFilter !== 'all' ? 'Try clearing your search or role filter.' : 'Registered user accounts will appear here.'}</p>
+              <div style={{ textAlign: 'center', padding: '3rem 1.5rem', backgroundColor: '#ffffff', borderRadius: '18px', border: '1px dashed rgba(0,0,0,0.12)' }}>
+                <Users size={40} color="#94a3b8" style={{ marginBottom: '0.75rem' }} />
+                <h3 style={{ color: '#0f172a', fontFamily: 'Outfit', margin: '0 0 0.25rem', fontSize: '1.05rem' }}>No Accounts Found</h3>
+                <p style={{ color: '#64748b', fontSize: '0.8rem' }}>{searchQuery || userRoleFilter !== 'all' ? 'Try clearing your search or role filter.' : 'Registered user accounts will appear here.'}</p>
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
@@ -697,40 +699,40 @@ export const AdminDashboard = () => {
                   const fullName = `${u.firstname || ''} ${u.lastname || ''}`.trim() || 'User Account';
                   return (
                     <div key={u._id} style={{
-                      backgroundColor: '#111111', borderRadius: '16px', padding: isMobile ? '1rem' : '1.25rem',
-                      border: '1px solid rgba(255,255,255,0.06)',
+                      backgroundColor: '#ffffff', borderRadius: '16px', padding: isMobile ? '1rem' : '1.25rem',
+                      border: '1px solid rgba(0,0,0,0.08)', boxShadow: '0 2px 10px rgba(0,0,0,0.02)',
                     }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
                           <div style={{
                             width: '46px', height: '46px', borderRadius: '50%', flexShrink: 0,
-                            background: u.avatarUrl ? `url(${u.avatarUrl}) center/cover no-repeat` : (isStaff ? 'linear-gradient(135deg, #d4af37, #8a6d1c)' : 'linear-gradient(135deg, #374151, #1f2937)'),
-                            border: isStaff ? '2px solid #d4af37' : '1px solid rgba(255,255,255,0.15)',
+                            background: u.avatarUrl ? `url(${u.avatarUrl}) center/cover no-repeat` : (isStaff ? 'linear-gradient(135deg, #d4af37, #b5952f)' : 'linear-gradient(135deg, #cbd5e1, #94a3b8)'),
+                            border: isStaff ? '2px solid #d4af37' : '1px solid rgba(0,0,0,0.1)',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
                           }}>
-                            {!u.avatarUrl && <span style={{ fontSize: '1rem', fontWeight: 800, color: isStaff ? '#000' : '#fff' }}>{u.firstname?.charAt(0) || 'U'}</span>}
+                            {!u.avatarUrl && <span style={{ fontSize: '1rem', fontWeight: 800, color: '#fff' }}>{u.firstname?.charAt(0) || 'U'}</span>}
                           </div>
                           <div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
-                              <h4 style={{ color: '#ffffff', fontFamily: 'Outfit', fontWeight: 800, margin: 0, fontSize: '0.98rem' }}>
+                              <h4 style={{ color: '#0f172a', fontFamily: 'Outfit', fontWeight: 800, margin: 0, fontSize: '0.98rem' }}>
                                 {fullName}
                               </h4>
                               <span style={{
                                 fontSize: '0.65rem', fontWeight: 800, padding: '0.15rem 0.5rem', borderRadius: '50px',
                                 textTransform: 'uppercase', letterSpacing: '0.5px',
-                                backgroundColor: isStaff ? 'rgba(212,175,55,0.2)' : 'rgba(59,130,246,0.15)',
-                                color: isStaff ? '#d4af37' : '#60a5fa',
+                                backgroundColor: isStaff ? 'rgba(212,175,55,0.18)' : 'rgba(59,130,246,0.12)',
+                                color: isStaff ? '#b5952f' : '#2563eb',
                                 border: isStaff ? '1px solid rgba(212,175,55,0.3)' : '1px solid rgba(59,130,246,0.3)',
                               }}>
                                 {isStaff ? 'Expert Stylist' : 'Customer'}
                               </span>
                               {u.isVerified && (
-                                <span style={{ fontSize: '0.65rem', color: '#22c55e', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+                                <span style={{ fontSize: '0.65rem', color: '#16a34a', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
                                   <UserCheck size={11} /> Verified
                                 </span>
                               )}
                             </div>
-                            <div style={{ fontSize: '0.78rem', color: '#9ca3af', marginTop: '0.15rem' }}>
+                            <div style={{ fontSize: '0.78rem', color: '#64748b', marginTop: '0.15rem' }}>
                               {u.email || 'No email'} {u.phone ? `· ${u.phone}` : ''}
                             </div>
                           </div>
@@ -740,7 +742,7 @@ export const AdminDashboard = () => {
                           onClick={() => setUserToDelete(u)}
                           style={{
                             padding: '0.5rem 0.85rem', borderRadius: '10px',
-                            backgroundColor: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.25)',
+                            backgroundColor: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)',
                             color: '#ef4444', fontWeight: 700, fontSize: '0.78rem',
                             cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
                             fontFamily: 'Outfit', transition: 'all 0.15s ease',
@@ -762,54 +764,54 @@ export const AdminDashboard = () => {
       {selectedOrder && (
         <div
           onClick={() => setSelectedOrder(null)}
-          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}
+          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(6px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}
         >
           <div
             onClick={e => e.stopPropagation()}
-            style={{ backgroundColor: '#111111', borderRadius: '20px', border: '1px solid rgba(212,175,55,0.35)', width: '100%', maxWidth: '480px', maxHeight: '85vh', overflowY: 'auto', padding: '1.25rem' }}
+            style={{ backgroundColor: '#ffffff', borderRadius: '20px', border: '1px solid rgba(0,0,0,0.1)', width: '100%', maxWidth: '480px', maxHeight: '85vh', overflowY: 'auto', padding: '1.25rem', boxShadow: '0 20px 40px rgba(0,0,0,0.15)' }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <h3 style={{ color: '#ffffff', fontFamily: 'Outfit', fontWeight: 800, margin: 0, fontSize: '1.1rem' }}>Order Details</h3>
-              <button onClick={() => setSelectedOrder(null)} style={{ background: 'none', border: 'none', color: '#6b7280', cursor: 'pointer', fontSize: '1.2rem', lineHeight: 1 }}>✕</button>
+              <h3 style={{ color: '#0f172a', fontFamily: 'Outfit', fontWeight: 800, margin: 0, fontSize: '1.1rem' }}>Order Details</h3>
+              <button onClick={() => setSelectedOrder(null)} style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', fontSize: '1.2rem', lineHeight: 1 }}>✕</button>
             </div>
 
-            <div style={{ fontSize: '0.7rem', color: '#6b7280', fontFamily: 'monospace', marginBottom: '0.85rem' }}>
+            <div style={{ fontSize: '0.7rem', color: '#64748b', fontFamily: 'monospace', marginBottom: '0.85rem' }}>
               ORDER #{(selectedOrder._id || '').slice(-6).toUpperCase()}
             </div>
 
-            <div style={{ display: 'grid', gap: '0.4rem', fontSize: '0.82rem', color: '#d1d5db', marginBottom: '1rem' }}>
-              <div><span style={{ color: '#9ca3af' }}>Customer: </span>{selectedOrder.customerInfo?.name || selectedOrder.name || 'N/A'}</div>
-              <div><span style={{ color: '#9ca3af' }}>Email: </span>{selectedOrder.customerInfo?.email || selectedOrder.email || 'N/A'}</div>
-              <div><span style={{ color: '#9ca3af' }}>Phone: </span>{selectedOrder.customerInfo?.phone || selectedOrder.phone || 'N/A'}</div>
-              <div><span style={{ color: '#9ca3af' }}>Address: </span>{selectedOrder.customerInfo?.address || selectedOrder.address || 'N/A'}</div>
+            <div style={{ display: 'grid', gap: '0.4rem', fontSize: '0.82rem', color: '#334155', marginBottom: '1rem' }}>
+              <div><span style={{ color: '#64748b' }}>Customer: </span>{selectedOrder.customerInfo?.name || selectedOrder.name || 'N/A'}</div>
+              <div><span style={{ color: '#64748b' }}>Email: </span>{selectedOrder.customerInfo?.email || selectedOrder.email || 'N/A'}</div>
+              <div><span style={{ color: '#64748b' }}>Phone: </span>{selectedOrder.customerInfo?.phone || selectedOrder.phone || 'N/A'}</div>
+              <div><span style={{ color: '#64748b' }}>Address: </span>{selectedOrder.customerInfo?.address || selectedOrder.address || 'N/A'}</div>
             </div>
 
-            <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '0.85rem', marginBottom: '0.85rem' }}>
-              <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#d4af37', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '0.5rem' }}>Items Ordered</div>
+            <div style={{ borderTop: '1px solid rgba(0,0,0,0.08)', paddingTop: '0.85rem', marginBottom: '0.85rem' }}>
+              <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#b5952f', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '0.5rem' }}>Items Ordered</div>
               {Array.isArray(selectedOrder.items) && selectedOrder.items.length > 0 ? (
                 selectedOrder.items.map((item, i) => (
-                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.35rem 0', fontSize: '0.8rem', color: '#d1d5db', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.35rem 0', fontSize: '0.8rem', color: '#334155', borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
                     <span>{item.name || item.title} × {item.quantity || 1}</span>
-                    <span style={{ color: '#ffffff', fontWeight: 600 }}>${((item.price || 0) * (item.quantity || 1)).toFixed(2)}</span>
+                    <span style={{ color: '#0f172a', fontWeight: 600 }}>${((item.price || 0) * (item.quantity || 1)).toFixed(2)}</span>
                   </div>
                 ))
               ) : (
-                <div style={{ padding: '0.35rem 0', fontSize: '0.82rem', color: '#ffffff' }}>
+                <div style={{ padding: '0.35rem 0', fontSize: '0.82rem', color: '#0f172a' }}>
                   {selectedOrder.item || 'Grooming Products'}
                 </div>
               )}
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.95rem', fontWeight: 800, color: '#ffffff', paddingTop: '0.65rem', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', paddingTop: '0.65rem', borderTop: '1px solid rgba(0,0,0,0.08)' }}>
               <span>Total Paid</span>
-              <span style={{ color: '#d4af37' }}>${(selectedOrder.totalPrice || selectedOrder.price || 0).toFixed(2)}</span>
+              <span style={{ color: '#b5952f' }}>${(selectedOrder.totalPrice || selectedOrder.price || 0).toFixed(2)}</span>
             </div>
 
             <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1.1rem' }}>
               {selectedOrder.status !== 'shipped' && selectedOrder.status !== 'completed' && (
                 <button
                   onClick={(e) => handleUpdateOrderStatus(selectedOrder._id, 'shipped', e)}
-                  style={{ flex: 1, padding: '0.6rem', borderRadius: '10px', backgroundColor: '#d4af37', color: '#000', fontWeight: 700, fontSize: '0.8rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit' }}
+                  style={{ flex: 1, padding: '0.6rem', borderRadius: '10px', backgroundColor: '#d4af37', color: '#fff', fontWeight: 700, fontSize: '0.8rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit' }}
                 >
                   Mark Shipped
                 </button>
@@ -817,14 +819,14 @@ export const AdminDashboard = () => {
               {selectedOrder.status === 'shipped' && (
                 <button
                   onClick={(e) => handleUpdateOrderStatus(selectedOrder._id, 'completed', e)}
-                  style={{ flex: 1, padding: '0.6rem', borderRadius: '10px', backgroundColor: '#22c55e', color: '#fff', fontWeight: 700, fontSize: '0.8rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit' }}
+                  style={{ flex: 1, padding: '0.6rem', borderRadius: '10px', backgroundColor: '#16a34a', color: '#fff', fontWeight: 700, fontSize: '0.8rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit' }}
                 >
                   Mark Completed
                 </button>
               )}
               <button
                 onClick={() => setSelectedOrder(null)}
-                style={{ padding: '0.6rem 0.85rem', borderRadius: '10px', backgroundColor: 'rgba(255,255,255,0.06)', color: '#9ca3af', fontWeight: 600, fontSize: '0.8rem', border: '1px solid rgba(255,255,255,0.08)', cursor: 'pointer', fontFamily: 'Outfit' }}
+                style={{ padding: '0.6rem 0.85rem', borderRadius: '10px', backgroundColor: 'rgba(0,0,0,0.04)', color: '#64748b', fontWeight: 600, fontSize: '0.8rem', border: '1px solid rgba(0,0,0,0.08)', cursor: 'pointer', fontFamily: 'Outfit' }}
               >
                 Close
               </button>
@@ -837,36 +839,36 @@ export const AdminDashboard = () => {
       {selectedBooking && (
         <div
           onClick={() => setSelectedBooking(null)}
-          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}
+          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(6px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}
         >
           <div
             onClick={e => e.stopPropagation()}
-            style={{ backgroundColor: '#111111', borderRadius: '20px', border: '1px solid rgba(212,175,55,0.35)', width: '100%', maxWidth: '480px', maxHeight: '85vh', overflowY: 'auto', padding: '1.25rem' }}
+            style={{ backgroundColor: '#ffffff', borderRadius: '20px', border: '1px solid rgba(0,0,0,0.1)', width: '100%', maxWidth: '480px', maxHeight: '85vh', overflowY: 'auto', padding: '1.25rem', boxShadow: '0 20px 40px rgba(0,0,0,0.15)' }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <h3 style={{ color: '#ffffff', fontFamily: 'Outfit', fontWeight: 800, margin: 0, fontSize: '1.1rem' }}>Booking Details</h3>
-              <button onClick={() => setSelectedBooking(null)} style={{ background: 'none', border: 'none', color: '#6b7280', cursor: 'pointer', fontSize: '1.2rem', lineHeight: 1 }}>✕</button>
+              <h3 style={{ color: '#0f172a', fontFamily: 'Outfit', fontWeight: 800, margin: 0, fontSize: '1.1rem' }}>Booking Details</h3>
+              <button onClick={() => setSelectedBooking(null)} style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', fontSize: '1.2rem', lineHeight: 1 }}>✕</button>
             </div>
 
-            <div style={{ fontSize: '0.7rem', color: '#6b7280', fontFamily: 'monospace', marginBottom: '0.85rem' }}>
+            <div style={{ fontSize: '0.7rem', color: '#64748b', fontFamily: 'monospace', marginBottom: '0.85rem' }}>
               BOOKING #{(selectedBooking._id || '').slice(-6).toUpperCase()}
             </div>
 
-            <div style={{ display: 'grid', gap: '0.45rem', fontSize: '0.83rem', color: '#d1d5db', marginBottom: '1rem' }}>
-              <div><span style={{ color: '#9ca3af' }}>Service: </span><strong style={{ color: '#ffffff' }}>{selectedBooking.serviceName || selectedBooking.service}</strong></div>
-              <div><span style={{ color: '#9ca3af' }}>Client Name: </span>{selectedBooking.clientName || selectedBooking.user?.firstname || 'Guest'}</div>
-              <div><span style={{ color: '#9ca3af' }}>Client Email: </span>{selectedBooking.clientEmail || selectedBooking.email || 'N/A'}</div>
-              <div><span style={{ color: '#9ca3af' }}>Phone: </span>{selectedBooking.phone || selectedBooking.clientPhone || 'N/A'}</div>
-              <div><span style={{ color: '#9ca3af' }}>Assigned Stylist: </span><span style={{ color: '#d4af37', fontWeight: 600 }}>{selectedBooking.stylist || 'Any Specialist'}</span></div>
-              <div><span style={{ color: '#9ca3af' }}>Date & Time: </span>{selectedBooking.date || 'TBD'} at {selectedBooking.time || 'TBD'}</div>
-              <div><span style={{ color: '#9ca3af' }}>Status: </span><StatusBadge status={selectedBooking.status || 'pending'} /></div>
+            <div style={{ display: 'grid', gap: '0.45rem', fontSize: '0.83rem', color: '#334155', marginBottom: '1rem' }}>
+              <div><span style={{ color: '#64748b' }}>Service: </span><strong style={{ color: '#0f172a' }}>{selectedBooking.serviceName || selectedBooking.service}</strong></div>
+              <div><span style={{ color: '#64748b' }}>Client Name: </span>{selectedBooking.clientName || selectedBooking.user?.firstname || 'Guest'}</div>
+              <div><span style={{ color: '#64748b' }}>Client Email: </span>{selectedBooking.clientEmail || selectedBooking.email || 'N/A'}</div>
+              <div><span style={{ color: '#64748b' }}>Phone: </span>{selectedBooking.phone || selectedBooking.clientPhone || 'N/A'}</div>
+              <div><span style={{ color: '#64748b' }}>Assigned Stylist: </span><span style={{ color: '#b5952f', fontWeight: 600 }}>{selectedBooking.stylist || 'Any Specialist'}</span></div>
+              <div><span style={{ color: '#64748b' }}>Date & Time: </span>{selectedBooking.date || 'TBD'} at {selectedBooking.time || 'TBD'}</div>
+              <div><span style={{ color: '#64748b' }}>Status: </span><StatusBadge status={selectedBooking.status || 'pending'} /></div>
             </div>
 
-            <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1.25rem', paddingTop: '0.85rem', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+            <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1.25rem', paddingTop: '0.85rem', borderTop: '1px solid rgba(0,0,0,0.08)' }}>
               {selectedBooking.status !== 'confirmed' && selectedBooking.status !== 'completed' && selectedBooking.status !== 'cancelled' && (
                 <button
                   onClick={(e) => handleUpdateBookingStatus(selectedBooking._id, 'confirmed', e)}
-                  style={{ flex: 1, padding: '0.6rem', borderRadius: '10px', backgroundColor: '#d4af37', color: '#000', fontWeight: 700, fontSize: '0.8rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit' }}
+                  style={{ flex: 1, padding: '0.6rem', borderRadius: '10px', backgroundColor: '#d4af37', color: '#fff', fontWeight: 700, fontSize: '0.8rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit' }}
                 >
                   Confirm Booking
                 </button>
@@ -874,14 +876,14 @@ export const AdminDashboard = () => {
               {selectedBooking.status === 'confirmed' && (
                 <button
                   onClick={(e) => handleUpdateBookingStatus(selectedBooking._id, 'completed', e)}
-                  style={{ flex: 1, padding: '0.6rem', borderRadius: '10px', backgroundColor: '#22c55e', color: '#fff', fontWeight: 700, fontSize: '0.8rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit' }}
+                  style={{ flex: 1, padding: '0.6rem', borderRadius: '10px', backgroundColor: '#16a34a', color: '#fff', fontWeight: 700, fontSize: '0.8rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit' }}
                 >
                   Complete Service
                 </button>
               )}
               <button
                 onClick={() => setSelectedBooking(null)}
-                style={{ padding: '0.6rem 0.85rem', borderRadius: '10px', backgroundColor: 'rgba(255,255,255,0.06)', color: '#9ca3af', fontWeight: 600, fontSize: '0.8rem', border: '1px solid rgba(255,255,255,0.08)', cursor: 'pointer', fontFamily: 'Outfit' }}
+                style={{ padding: '0.6rem 0.85rem', borderRadius: '10px', backgroundColor: 'rgba(0,0,0,0.04)', color: '#64748b', fontWeight: 600, fontSize: '0.8rem', border: '1px solid rgba(0,0,0,0.08)', cursor: 'pointer', fontFamily: 'Outfit' }}
               >
                 Close
               </button>
@@ -894,28 +896,28 @@ export const AdminDashboard = () => {
       {userToDelete && (
         <div
           onClick={() => setUserToDelete(null)}
-          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}
+          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(6px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}
         >
           <div
             onClick={e => e.stopPropagation()}
-            style={{ backgroundColor: '#111111', borderRadius: '20px', border: '1px solid rgba(239,68,68,0.4)', width: '100%', maxWidth: '420px', padding: '1.5rem', textAlign: 'center' }}
+            style={{ backgroundColor: '#ffffff', borderRadius: '20px', border: '1px solid rgba(239,68,68,0.3)', width: '100%', maxWidth: '420px', padding: '1.5rem', textAlign: 'center', boxShadow: '0 20px 40px rgba(0,0,0,0.15)' }}
           >
-            <div style={{ width: '50px', height: '50px', borderRadius: '50%', backgroundColor: 'rgba(239,68,68,0.15)', color: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
+            <div style={{ width: '50px', height: '50px', borderRadius: '50%', backgroundColor: 'rgba(239,68,68,0.1)', color: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
               <AlertTriangle size={26} />
             </div>
 
-            <h3 style={{ color: '#ffffff', fontFamily: 'Outfit', fontWeight: 800, margin: '0 0 0.5rem', fontSize: '1.1rem' }}>
+            <h3 style={{ color: '#0f172a', fontFamily: 'Outfit', fontWeight: 800, margin: '0 0 0.5rem', fontSize: '1.1rem' }}>
               Delete User Account?
             </h3>
 
-            <p style={{ color: '#9ca3af', fontSize: '0.85rem', lineHeight: 1.5, marginBottom: '1.25rem' }}>
-              Are you sure you want to delete <strong style={{ color: '#ffffff' }}>{userToDelete.firstname} ({userToDelete.email})</strong>? All their profile data and bookings will be wiped.
+            <p style={{ color: '#64748b', fontSize: '0.85rem', lineHeight: 1.5, marginBottom: '1.25rem' }}>
+              Are you sure you want to delete <strong style={{ color: '#0f172a' }}>{userToDelete.firstname} ({userToDelete.email})</strong>? All their profile data and bookings will be wiped.
             </p>
 
             <div style={{ display: 'flex', gap: '0.65rem' }}>
               <button
                 onClick={() => setUserToDelete(null)}
-                style={{ flex: 1, padding: '0.65rem', borderRadius: '10px', backgroundColor: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.1)', color: '#ffffff', fontWeight: 600, fontSize: '0.82rem', cursor: 'pointer', fontFamily: 'Outfit' }}
+                style={{ flex: 1, padding: '0.65rem', borderRadius: '10px', backgroundColor: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.08)', color: '#64748b', fontWeight: 600, fontSize: '0.82rem', cursor: 'pointer', fontFamily: 'Outfit' }}
               >
                 Cancel
               </button>
