@@ -7,6 +7,7 @@ const cors = require('cors');
 const Booking = require('./models/Booking');
 const Order = require('./models/Order');
 const User = require('./models/User');
+const Product = require('./models/Product');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -766,6 +767,130 @@ app.put('/api/orders/:id', authenticateToken, async (req, res) => {
   } catch (error) {
     console.error('Failed to update order status:', error);
     res.status(500).json({ error: 'Failed to update order' });
+  }
+});
+
+// --- PRODUCT ROUTES ---
+const INITIAL_PRODUCTS = [
+  {
+    title: 'Atelier Gold Pomade',
+    price: 28,
+    rating: 4.9,
+    desc: 'Medium-hold matte finish pomade infused with organic argan oil.',
+    badge: 'Bestseller',
+    image: 'https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?auto=format&fit=crop&w=500&q=80',
+  },
+  {
+    title: 'Botanical Beard Elixir',
+    price: 24,
+    rating: 4.8,
+    desc: 'Nourishing oil blend with jojoba and cedarwood fragrance.',
+    badge: 'Popular',
+    image: 'https://images.unsplash.com/photo-1626285861696-9f0bf5a49c6d?auto=format&fit=crop&w=500&q=80',
+  },
+  {
+    title: 'Sculpting Clay Wax',
+    price: 26,
+    rating: 4.9,
+    desc: 'High-hold textured clay wax for textured crops and modern fades.',
+    badge: 'New',
+    image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=500&q=80',
+  },
+  {
+    title: 'Scalp Revitalizing Shampoo',
+    price: 32,
+    rating: 4.7,
+    desc: 'Sulfate-free tea tree shampoo for deep scalp hydration.',
+    image: 'https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=500&q=80',
+  },
+  {
+    title: 'Wooden Comb Set',
+    price: 18,
+    rating: 4.9,
+    desc: 'Anti-static sandalwood comb set for precise hair and beard styling.',
+    image: 'https://images.unsplash.com/photo-1590159763121-7c9fd312190d?auto=format&fit=crop&w=500&q=80',
+  },
+  {
+    title: 'Silk Edge Wrap Scarf',
+    price: 15,
+    rating: 5.0,
+    desc: '100% mulberry silk wrap for protecting braid edges and locs.',
+    image: 'https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?auto=format&fit=crop&w=500&q=80',
+  },
+];
+
+// Fetch all products (seed default if empty)
+app.get('/api/products', async (req, res) => {
+  try {
+    let products = await Product.find({}).sort({ createdAt: -1 });
+    if (products.length === 0) {
+      products = await Product.insertMany(INITIAL_PRODUCTS);
+    }
+    res.status(200).json(products);
+  } catch (error) {
+    console.error('Fetch products error:', error);
+    res.status(500).json({ error: 'Failed to fetch products' });
+  }
+});
+
+// Create product (Admin)
+app.post('/api/products', authenticateToken, async (req, res) => {
+  try {
+    const { title, price, rating, desc, badge, image } = req.body;
+    if (!title || price === undefined || !image) {
+      return res.status(400).json({ error: 'Title, price, and image URL are required.' });
+    }
+    const product = new Product({
+      title,
+      price: Number(price),
+      rating: rating ? Number(rating) : 4.8,
+      desc: desc || '',
+      badge: badge || '',
+      image
+    });
+    const saved = await product.save();
+    res.status(201).json(saved);
+  } catch (error) {
+    console.error('Create product error:', error);
+    res.status(500).json({ error: 'Failed to create product' });
+  }
+});
+
+// Update product (Admin)
+app.put('/api/products/:id', authenticateToken, async (req, res) => {
+  try {
+    const { title, price, rating, desc, badge, image } = req.body;
+    const updated = await Product.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: {
+          title,
+          price: Number(price),
+          rating: rating ? Number(rating) : 4.8,
+          desc: desc || '',
+          badge: badge || '',
+          image
+        }
+      },
+      { new: true, runValidators: true }
+    );
+    if (!updated) return res.status(404).json({ error: 'Product not found' });
+    res.status(200).json(updated);
+  } catch (error) {
+    console.error('Update product error:', error);
+    res.status(500).json({ error: 'Failed to update product' });
+  }
+});
+
+// Delete product (Admin)
+app.delete('/api/products/:id', authenticateToken, async (req, res) => {
+  try {
+    const deleted = await Product.findByIdAndDelete(req.params.id);
+    if (!deleted) return res.status(404).json({ error: 'Product not found' });
+    res.status(200).json({ message: 'Product deleted successfully' });
+  } catch (error) {
+    console.error('Delete product error:', error);
+    res.status(500).json({ error: 'Failed to delete product' });
   }
 });
 

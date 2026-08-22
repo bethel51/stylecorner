@@ -25,19 +25,26 @@ import {
   Trash2,
   AlertTriangle,
   UserCheck,
+  Tag,
+  Plus,
+  Edit3,
+  Star,
+  Upload,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
+import { uploadToCloudinary } from '../services/cloudinary';
 import { StatusBadge } from '../components/common/StatusBadge';
 
 export const AdminDashboard = () => {
   const navigate = useNavigate();
   const { user, logout, showToast } = useAuth();
 
-  const [activeTab, setActiveTab] = useState('orders'); // 'orders' | 'bookings' | 'users'
+  const [activeTab, setActiveTab] = useState('orders'); // 'orders' | 'bookings' | 'users' | 'products'
   const [bookings, setBookings] = useState([]);
   const [orders, setOrders] = useState([]);
   const [usersList, setUsersList] = useState([]);
+  const [productsList, setProductsList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState(null);
 
@@ -50,6 +57,20 @@ export const AdminDashboard = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [userToDelete, setUserToDelete] = useState(null);
+
+  // Product Modals State
+  const [showProductModal, setShowProductModal] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null);
+  const [productToDelete, setProductToDelete] = useState(null);
+  const [uploadingProductImage, setUploadingProductImage] = useState(false);
+  const [productForm, setProductForm] = useState({
+    title: '',
+    price: '',
+    rating: 4.8,
+    desc: '',
+    badge: '',
+    image: '',
+  });
 
   // Mobile sidebar state
   const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -72,14 +93,16 @@ export const AdminDashboard = () => {
   const fetchAdminData = async () => {
     setLoading(true);
     try {
-      const [bookingsData, ordersData, usersData] = await Promise.all([
+      const [bookingsData, ordersData, usersData, productsData] = await Promise.all([
         api.getBookings().catch(() => []),
         api.getOrders().catch(() => []),
         api.getAdminUsers().catch(() => []),
+        api.getProducts().catch(() => []),
       ]);
       setBookings(Array.isArray(bookingsData) ? bookingsData : []);
       setOrders(Array.isArray(ordersData) ? ordersData : []);
       setUsersList(Array.isArray(usersData) ? usersData : []);
+      setProductsList(Array.isArray(productsData) ? productsData : []);
     } catch (err) {
       showToast('Failed to load admin data', 'error');
     } finally {
@@ -127,6 +150,98 @@ export const AdminDashboard = () => {
       showToast(`Account for ${targetUser.firstname || targetUser.email} deleted`, 'success');
     } catch (err) {
       showToast(err.message || 'Failed to delete user account', 'error');
+    } finally {
+      setUpdatingId(null);
+    }
+  };
+
+  // Product Actions
+  const handleOpenAddProduct = () => {
+    setEditingProduct(null);
+    setProductForm({
+      title: '',
+      price: '',
+      rating: 4.8,
+      desc: '',
+      badge: '',
+      image: '',
+    });
+    setShowProductModal(true);
+  };
+
+  const handleOpenEditProduct = (prod) => {
+    setEditingProduct(prod);
+    setProductForm({
+      title: prod.title || '',
+      price: prod.price !== undefined ? prod.price : '',
+      rating: prod.rating || 4.8,
+      desc: prod.desc || '',
+      badge: prod.badge || '',
+      image: prod.image || '',
+    });
+    setShowProductModal(true);
+  };
+
+  const handleProductImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setUploadingProductImage(true);
+    try {
+      const url = await uploadToCloudinary(file);
+      setProductForm(prev => ({ ...prev, image: url }));
+      showToast('Product photo uploaded successfully!', 'success');
+    } catch (err) {
+      showToast(err.message || 'Failed to upload photo', 'error');
+    } finally {
+      setUploadingProductImage(false);
+    }
+  };
+
+  const handleProductSubmit = async (e) => {
+    e.preventDefault();
+    if (!productForm.title || productForm.price === '' || !productForm.image) {
+      showToast('Title, price, and product image are required.', 'error');
+      return;
+    }
+
+    setUpdatingId('product_submit');
+    try {
+      const payload = {
+        title: productForm.title.trim(),
+        price: Number(productForm.price),
+        rating: Number(productForm.rating || 4.8),
+        desc: productForm.desc.trim(),
+        badge: productForm.badge.trim(),
+        image: productForm.image.trim(),
+      };
+
+      if (editingProduct) {
+        const updated = await api.updateProduct(editingProduct._id, payload);
+        setProductsList(prev => prev.map(p => p._id === editingProduct._id ? updated : p));
+        showToast(`Product "${updated.title}" updated!`, 'success');
+      } else {
+        const created = await api.createProduct(payload);
+        setProductsList(prev => [created, ...prev]);
+        showToast(`Product "${created.title}" added to store!`, 'success');
+      }
+      setShowProductModal(false);
+    } catch (err) {
+      showToast(err.message || 'Failed to save product', 'error');
+    } finally {
+      setUpdatingId(null);
+    }
+  };
+
+  const handleDeleteProduct = async (product) => {
+    if (!product?._id) return;
+    setUpdatingId(product._id);
+    try {
+      await api.deleteProduct(product._id);
+      setProductsList(prev => prev.filter(p => p._id !== product._id));
+      setProductToDelete(null);
+      showToast(`Product "${product.title}" removed from store`, 'success');
+    } catch (err) {
+      showToast(err.message || 'Failed to delete product', 'error');
     } finally {
       setUpdatingId(null);
     }
@@ -204,17 +319,26 @@ export const AdminDashboard = () => {
     return matchesRole && matchesSearch;
   });
 
+  const filteredProducts = productsList.filter(p => {
+    const q = searchQuery.trim().toLowerCase();
+    return !q ||
+      (p.title || '').toLowerCase().includes(q) ||
+      (p.desc || '').toLowerCase().includes(q) ||
+      (p.badge || '').toLowerCase().includes(q);
+  });
+
   const kpiCards = [
     { label: 'Store Revenue', value: `$${totalRevenue.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, icon: DollarSign, color: '#d4af37', bg: 'rgba(212,175,55,0.1)' },
     { label: 'Total Orders', value: orders.length, sub: `${pendingOrdersCount} pending`, icon: ShoppingBag, color: '#3b82f6', bg: 'rgba(59,130,246,0.1)' },
     { label: 'Bookings Queue', value: bookings.length, sub: `${pendingBookingsCount} pending`, icon: Calendar, color: '#10b981', bg: 'rgba(16,185,129,0.1)' },
-    { label: 'User Accounts', value: usersList.length, sub: `${customerCount} clients · ${expertCount} experts`, icon: Users, color: '#a855f7', bg: 'rgba(168,85,247,0.1)' },
+    { label: 'Store Products', value: productsList.length, sub: 'Active in store', icon: Tag, color: '#a855f7', bg: 'rgba(168,85,247,0.1)' },
   ];
 
   const navItems = [
     { id: 'orders', label: 'Store Orders', icon: ShoppingBag, count: orders.length },
     { id: 'bookings', label: 'Salon Bookings', icon: Calendar, count: bookings.length },
     { id: 'users', label: 'User Accounts', icon: Users, count: usersList.length },
+    { id: 'products', label: 'Manage Products', icon: Tag, count: productsList.length },
   ];
 
   return (
@@ -397,15 +521,29 @@ export const AdminDashboard = () => {
             )}
             <div>
               <h1 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: isMobile ? '1.1rem' : '1.3rem', color: '#0f172a', margin: 0 }}>
-                {activeTab === 'orders' ? 'Store Orders' : activeTab === 'bookings' ? 'Salon Bookings' : 'User Accounts'}
+                {activeTab === 'orders' ? 'Store Orders' : activeTab === 'bookings' ? 'Salon Bookings' : activeTab === 'users' ? 'User Accounts' : 'Manage Store Products'}
               </h1>
               <p style={{ color: '#64748b', fontSize: '0.75rem', margin: '0.1rem 0 0 0', display: isMobile ? 'none' : 'block' }}>
-                {activeTab === 'orders' ? 'Manage customer orders in real-time' : activeTab === 'bookings' ? 'Manage appointment bookings' : 'Manage registered client and expert accounts'}
+                {activeTab === 'orders' ? 'Manage customer orders in real-time' : activeTab === 'bookings' ? 'Manage appointment bookings' : activeTab === 'users' ? 'Manage registered client and expert accounts' : 'Upload and manage products displayed on the public store page'}
               </p>
             </div>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            {activeTab === 'products' && (
+              <button
+                onClick={handleOpenAddProduct}
+                style={{
+                  backgroundColor: '#d4af37', border: 'none', color: '#ffffff',
+                  padding: '0.45rem 0.85rem', borderRadius: '10px', fontWeight: 800,
+                  fontSize: '0.8rem', fontFamily: 'Outfit', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', gap: '0.35rem',
+                  boxShadow: '0 4px 12px rgba(212,175,55,0.3)'
+                }}
+              >
+                <Plus size={15} /> Add Product
+              </button>
+            )}
             <button
               onClick={fetchAdminData}
               title="Refresh"
@@ -464,7 +602,9 @@ export const AdminDashboard = () => {
                     ? 'Search name, email, order ID...'
                     : activeTab === 'bookings'
                     ? 'Search client, service, stylist...'
-                    : 'Search name, email, phone...'
+                    : activeTab === 'users'
+                    ? 'Search name, email, phone...'
+                    : 'Search product title, badge, desc...'
                 }
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
@@ -478,42 +618,44 @@ export const AdminDashboard = () => {
             </div>
 
             {/* Scrollable Filter Chips */}
-            <div style={{ display: 'flex', gap: '0.4rem', overflowX: 'auto', paddingBottom: '0.2rem', WebkitOverflowScrolling: 'touch' }}>
-              {(activeTab === 'orders'
-                ? ['all', 'pending', 'processing', 'shipped', 'completed']
-                : activeTab === 'bookings'
-                ? ['all', 'pending', 'confirmed', 'completed', 'cancelled']
-                : ['all', 'customer', 'staff']
-              ).map(status => {
-                const active =
-                  activeTab === 'orders'
-                    ? orderStatusFilter === status
-                    : activeTab === 'bookings'
-                    ? bookingStatusFilter === status
-                    : userRoleFilter === status;
-                const labelDisplay = status === 'staff' ? 'experts' : status;
-                return (
-                  <button
-                    key={status}
-                    onClick={() => {
-                      if (activeTab === 'orders') setOrderStatusFilter(status);
-                      else if (activeTab === 'bookings') setBookingStatusFilter(status);
-                      else setUserRoleFilter(status);
-                    }}
-                    style={{
-                      padding: '0.45rem 0.85rem', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 600,
-                      textTransform: 'capitalize', cursor: 'pointer', flexShrink: 0,
-                      backgroundColor: active ? '#171717' : '#ffffff',
-                      color: active ? '#ffffff' : '#64748b',
-                      border: active ? '1px solid #171717' : '1px solid rgba(0,0,0,0.1)',
-                      fontFamily: 'Outfit', transition: 'all 0.15s ease',
-                    }}
-                  >
-                    {labelDisplay}
-                  </button>
-                );
-              })}
-            </div>
+            {activeTab !== 'products' && (
+              <div style={{ display: 'flex', gap: '0.4rem', overflowX: 'auto', paddingBottom: '0.2rem', WebkitOverflowScrolling: 'touch' }}>
+                {(activeTab === 'orders'
+                  ? ['all', 'pending', 'processing', 'shipped', 'completed']
+                  : activeTab === 'bookings'
+                  ? ['all', 'pending', 'confirmed', 'completed', 'cancelled']
+                  : ['all', 'customer', 'staff']
+                ).map(status => {
+                  const active =
+                    activeTab === 'orders'
+                      ? orderStatusFilter === status
+                      : activeTab === 'bookings'
+                      ? bookingStatusFilter === status
+                      : userRoleFilter === status;
+                  const labelDisplay = status === 'staff' ? 'experts' : status;
+                  return (
+                    <button
+                      key={status}
+                      onClick={() => {
+                        if (activeTab === 'orders') setOrderStatusFilter(status);
+                        else if (activeTab === 'bookings') setBookingStatusFilter(status);
+                        else setUserRoleFilter(status);
+                      }}
+                      style={{
+                        padding: '0.45rem 0.85rem', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 600,
+                        textTransform: 'capitalize', cursor: 'pointer', flexShrink: 0,
+                        backgroundColor: active ? '#171717' : '#ffffff',
+                        color: active ? '#ffffff' : '#64748b',
+                        border: active ? '1px solid #171717' : '1px solid rgba(0,0,0,0.1)',
+                        fontFamily: 'Outfit', transition: 'all 0.15s ease',
+                      }}
+                    >
+                      {labelDisplay}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
           {/* Dynamic Content List */}
@@ -684,7 +826,7 @@ export const AdminDashboard = () => {
                 ))}
               </div>
             )
-          ) : (
+          ) : activeTab === 'users' ? (
             /* --- TAB 3: USER ACCOUNTS MANAGEMENT --- */
             filteredUsers.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '3rem 1.5rem', backgroundColor: '#ffffff', borderRadius: '18px', border: '1px dashed rgba(0,0,0,0.12)' }}>
@@ -756,6 +898,126 @@ export const AdminDashboard = () => {
                 })}
               </div>
             )
+          ) : (
+            /* --- TAB 4: STORE PRODUCTS MANAGEMENT --- */
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                <div>
+                  <h3 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '1.1rem', color: '#0f172a', margin: 0 }}>
+                    Manage Store Products ({filteredProducts.length})
+                  </h3>
+                  <p style={{ fontSize: '0.78rem', color: '#64748b', margin: '0.15rem 0 0' }}>
+                    Products added here are live on the public store page.
+                  </p>
+                </div>
+                <button
+                  onClick={handleOpenAddProduct}
+                  style={{
+                    backgroundColor: '#d4af37', border: 'none', color: '#ffffff',
+                    padding: '0.6rem 1.1rem', borderRadius: '10px', fontWeight: 800,
+                    fontSize: '0.82rem', fontFamily: 'Outfit', cursor: 'pointer',
+                    display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
+                    boxShadow: '0 4px 14px rgba(212,175,55,0.35)'
+                  }}
+                >
+                  <Plus size={16} /> Add Product
+                </button>
+              </div>
+
+              {filteredProducts.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '3.5rem 1.5rem', backgroundColor: '#ffffff', borderRadius: '18px', border: '1px dashed rgba(0,0,0,0.12)' }}>
+                  <Tag size={42} color="#94a3b8" style={{ marginBottom: '0.75rem' }} />
+                  <h3 style={{ color: '#0f172a', fontFamily: 'Outfit', margin: '0 0 0.25rem', fontSize: '1.05rem', fontWeight: 800 }}>No Products Found</h3>
+                  <p style={{ color: '#64748b', fontSize: '0.8rem', marginBottom: '1.25rem' }}>{searchQuery ? 'Try clearing your search term.' : 'Click below to upload products to your public store page.'}</p>
+                  <button
+                    onClick={handleOpenAddProduct}
+                    style={{ backgroundColor: '#d4af37', color: '#fff', border: 'none', padding: '0.65rem 1.25rem', borderRadius: '10px', fontWeight: 800, fontSize: '0.85rem', fontFamily: 'Outfit', cursor: 'pointer' }}
+                  >
+                    + Add Product Now
+                  </button>
+                </div>
+              ) : (
+                <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
+                  {filteredProducts.map(p => (
+                    <div
+                      key={p._id || p.id}
+                      style={{
+                        backgroundColor: '#ffffff', borderRadius: '16px', padding: '1rem',
+                        border: '1px solid rgba(0,0,0,0.08)', boxShadow: '0 2px 10px rgba(0,0,0,0.02)',
+                        display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+                      }}
+                    >
+                      <div>
+                        {/* Product Image preview */}
+                        <div style={{ position: 'relative', width: '100%', height: '140px', borderRadius: '12px', overflow: 'hidden', marginBottom: '0.75rem', backgroundColor: '#f1f5f9' }}>
+                          <img src={p.image} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          {p.badge && (
+                            <span style={{
+                              position: 'absolute', top: '8px', left: '8px',
+                              backgroundColor: 'rgba(15,23,42,0.85)', backdropFilter: 'blur(4px)',
+                              color: '#d4af37', fontSize: '0.65rem', fontWeight: 800,
+                              padding: '0.15rem 0.55rem', borderRadius: '50px',
+                              border: '1px solid rgba(212,175,55,0.3)', fontFamily: 'Outfit'
+                            }}>
+                              {p.badge}
+                            </span>
+                          )}
+                          <span style={{
+                            position: 'absolute', bottom: '8px', right: '8px',
+                            backgroundColor: '#ffffff', color: '#0f172a', fontWeight: 900,
+                            fontSize: '0.95rem', padding: '0.2rem 0.6rem', borderRadius: '8px',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.15)', fontFamily: 'Outfit'
+                          }}>
+                            ${p.price}
+                          </span>
+                        </div>
+
+                        <h4 style={{ fontFamily: 'Outfit', fontWeight: 800, color: '#0f172a', fontSize: '0.98rem', margin: '0 0 0.25rem' }}>
+                          {p.title}
+                        </h4>
+
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: '#d4af37', fontSize: '0.75rem', fontWeight: 700, marginBottom: '0.4rem' }}>
+                          <Star size={12} fill="#d4af37" />
+                          <span>{p.rating || 4.8}</span>
+                        </div>
+
+                        <p style={{ color: '#64748b', fontSize: '0.78rem', margin: '0 0 0.85rem', lineHeight: 1.35, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                          {p.desc || 'No description provided.'}
+                        </p>
+                      </div>
+
+                      {/* Action buttons */}
+                      <div style={{ display: 'flex', gap: '0.5rem', paddingTop: '0.65rem', borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+                        <button
+                          onClick={() => handleOpenEditProduct(p)}
+                          style={{
+                            flex: 1, padding: '0.5rem', borderRadius: '8px',
+                            backgroundColor: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)',
+                            color: '#b5952f', fontWeight: 700, fontSize: '0.78rem',
+                            cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem',
+                            fontFamily: 'Outfit'
+                          }}
+                        >
+                          <Edit3 size={13} /> Edit Details
+                        </button>
+                        <button
+                          onClick={() => setProductToDelete(p)}
+                          style={{
+                            padding: '0.5rem 0.75rem', borderRadius: '8px',
+                            backgroundColor: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)',
+                            color: '#ef4444', fontWeight: 700, fontSize: '0.78rem',
+                            cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem',
+                            fontFamily: 'Outfit'
+                          }}
+                        >
+                          <Trash2 size={13} /> Delete
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           )}
         </div>
       </main>
@@ -927,6 +1189,192 @@ export const AdminDashboard = () => {
                 style={{ flex: 1, padding: '0.65rem', borderRadius: '10px', backgroundColor: '#ef4444', border: 'none', color: '#ffffff', fontWeight: 700, fontSize: '0.82rem', cursor: 'pointer', fontFamily: 'Outfit' }}
               >
                 {updatingId === userToDelete._id ? 'Deleting...' : 'Delete Permanently'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Product Add/Edit Modal */}
+      {showProductModal && (
+        <div
+          onClick={() => setShowProductModal(false)}
+          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(6px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}
+        >
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{ backgroundColor: '#ffffff', borderRadius: '20px', border: '1px solid rgba(0,0,0,0.1)', width: '100%', maxWidth: '480px', maxHeight: '90vh', overflowY: 'auto', padding: '1.5rem', boxShadow: '0 20px 40px rgba(0,0,0,0.15)' }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <h3 style={{ color: '#0f172a', fontFamily: 'Outfit', fontWeight: 800, margin: 0, fontSize: '1.15rem' }}>
+                {editingProduct ? 'Edit Product' : 'Add New Product'}
+              </h3>
+              <button onClick={() => setShowProductModal(false)} style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', fontSize: '1.2rem', lineHeight: 1 }}>✕</button>
+            </div>
+
+            <form onSubmit={handleProductSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#334155', marginBottom: '0.35rem', fontFamily: 'Outfit' }}>
+                  Product Image *
+                </label>
+
+                {productForm.image && (
+                  <div style={{ position: 'relative', width: '100%', height: '120px', borderRadius: '10px', overflow: 'hidden', marginBottom: '0.5rem', border: '1px solid rgba(0,0,0,0.1)' }}>
+                    <img src={productForm.image} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </div>
+                )}
+
+                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                  <input
+                    type="url"
+                    placeholder="https://images.unsplash.com/..."
+                    value={productForm.image}
+                    onChange={e => setProductForm({ ...productForm, image: e.target.value })}
+                    style={{ flex: 1, padding: '0.55rem 0.75rem', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.12)', fontSize: '0.8rem', fontFamily: 'Outfit', outline: 'none' }}
+                  />
+                  <label
+                    htmlFor="product-image-upload"
+                    style={{
+                      cursor: uploadingProductImage ? 'not-allowed' : 'pointer',
+                      backgroundColor: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)',
+                      color: '#b5952f', padding: '0.55rem 0.75rem', borderRadius: '8px',
+                      fontSize: '0.78rem', fontWeight: 700, fontFamily: 'Outfit',
+                      display: 'inline-flex', alignItems: 'center', gap: '0.3rem', flexShrink: 0
+                    }}
+                  >
+                    <Upload size={13} />
+                    {uploadingProductImage ? 'Uploading...' : 'Upload'}
+                  </label>
+                  <input
+                    id="product-image-upload"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleProductImageUpload}
+                    disabled={uploadingProductImage}
+                    style={{ display: 'none' }}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#334155', marginBottom: '0.3rem', fontFamily: 'Outfit' }}>Product Title *</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Atelier Gold Pomade"
+                  value={productForm.title}
+                  onChange={e => setProductForm({ ...productForm, title: e.target.value })}
+                  required
+                  style={{ width: '100%', padding: '0.6rem 0.75rem', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.12)', fontSize: '0.82rem', fontFamily: 'Outfit', outline: 'none', boxSizing: 'border-box' }}
+                />
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#334155', marginBottom: '0.3rem', fontFamily: 'Outfit' }}>Price ($) *</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    placeholder="28"
+                    value={productForm.price}
+                    onChange={e => setProductForm({ ...productForm, price: e.target.value })}
+                    required
+                    style={{ width: '100%', padding: '0.6rem 0.75rem', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.12)', fontSize: '0.82rem', fontFamily: 'Outfit', outline: 'none', boxSizing: 'border-box' }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#334155', marginBottom: '0.3rem', fontFamily: 'Outfit' }}>Badge (Optional)</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Bestseller / New"
+                    value={productForm.badge}
+                    onChange={e => setProductForm({ ...productForm, badge: e.target.value })}
+                    style={{ width: '100%', padding: '0.6rem 0.75rem', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.12)', fontSize: '0.82rem', fontFamily: 'Outfit', outline: 'none', boxSizing: 'border-box' }}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#334155', marginBottom: '0.3rem', fontFamily: 'Outfit' }}>Rating (1.0 - 5.0)</label>
+                <input
+                  type="number"
+                  step="0.1"
+                  min="1"
+                  max="5"
+                  value={productForm.rating}
+                  onChange={e => setProductForm({ ...productForm, rating: e.target.value })}
+                  style={{ width: '100%', padding: '0.6rem 0.75rem', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.12)', fontSize: '0.82rem', fontFamily: 'Outfit', outline: 'none', boxSizing: 'border-box' }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#334155', marginBottom: '0.3rem', fontFamily: 'Outfit' }}>Description</label>
+                <textarea
+                  rows="3"
+                  placeholder="Short product description..."
+                  value={productForm.desc}
+                  onChange={e => setProductForm({ ...productForm, desc: e.target.value })}
+                  style={{ width: '100%', padding: '0.6rem 0.75rem', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.12)', fontSize: '0.82rem', fontFamily: 'Outfit', outline: 'none', boxSizing: 'border-box', resize: 'vertical' }}
+                />
+              </div>
+
+              <div style={{ display: 'flex', gap: '0.65rem', marginTop: '0.5rem' }}>
+                <button
+                  type="button"
+                  onClick={() => setShowProductModal(false)}
+                  style={{ flex: 1, padding: '0.65rem', borderRadius: '10px', backgroundColor: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.08)', color: '#64748b', fontWeight: 600, fontSize: '0.82rem', cursor: 'pointer', fontFamily: 'Outfit' }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={updatingId === 'product_submit'}
+                  style={{ flex: 1, padding: '0.65rem', borderRadius: '10px', backgroundColor: '#d4af37', border: 'none', color: '#ffffff', fontWeight: 800, fontSize: '0.82rem', cursor: 'pointer', fontFamily: 'Outfit' }}
+                >
+                  {updatingId === 'product_submit' ? 'Saving...' : editingProduct ? 'Save Changes' : 'Upload Product'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Product Modal */}
+      {productToDelete && (
+        <div
+          onClick={() => setProductToDelete(null)}
+          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(6px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}
+        >
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{ backgroundColor: '#ffffff', borderRadius: '20px', border: '1px solid rgba(239,68,68,0.3)', width: '100%', maxWidth: '420px', padding: '1.5rem', textAlign: 'center', boxShadow: '0 20px 40px rgba(0,0,0,0.15)' }}
+          >
+            <div style={{ width: '50px', height: '50px', borderRadius: '50%', backgroundColor: 'rgba(239,68,68,0.1)', color: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
+              <AlertTriangle size={26} />
+            </div>
+
+            <h3 style={{ color: '#0f172a', fontFamily: 'Outfit', fontWeight: 800, margin: '0 0 0.5rem', fontSize: '1.1rem' }}>
+              Delete Product?
+            </h3>
+
+            <p style={{ color: '#64748b', fontSize: '0.85rem', lineHeight: 1.5, marginBottom: '1.25rem' }}>
+              Are you sure you want to remove <strong style={{ color: '#0f172a' }}>"{productToDelete.title}"</strong> from the public store page?
+            </p>
+
+            <div style={{ display: 'flex', gap: '0.65rem' }}>
+              <button
+                onClick={() => setProductToDelete(null)}
+                style={{ flex: 1, padding: '0.65rem', borderRadius: '10px', backgroundColor: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.08)', color: '#64748b', fontWeight: 600, fontSize: '0.82rem', cursor: 'pointer', fontFamily: 'Outfit' }}
+              >
+                Cancel
+              </button>
+              <button
+                disabled={updatingId === productToDelete._id}
+                onClick={() => handleDeleteProduct(productToDelete)}
+                style={{ flex: 1, padding: '0.65rem', borderRadius: '10px', backgroundColor: '#ef4444', border: 'none', color: '#ffffff', fontWeight: 700, fontSize: '0.82rem', cursor: 'pointer', fontFamily: 'Outfit' }}
+              >
+                {updatingId === productToDelete._id ? 'Deleting...' : 'Delete Permanently'}
               </button>
             </div>
           </div>

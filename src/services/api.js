@@ -274,4 +274,44 @@ export const api = {
     if (!res.ok) throw new Error(data?.error || 'Failed to delete user account');
     return data;
   },
+
+  // Products
+  getProducts: async () => {
+    const res = await fetchWithTimeout(`${API_BASE}/products`);
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Failed to fetch products');
+    return data;
+  },
+
+  createProduct: async (productData) => {
+    const res = await fetchWithTimeout(`${API_BASE}/products`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(productData),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Failed to create product');
+    return data;
+  },
+
+  updateProduct: async (id, productData) => {
+    const res = await fetchWithTimeout(`${API_BASE}/products/${id}`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(productData),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Failed to update product');
+    return data;
+  },
+
+  deleteProduct: async (id) => {
+    const res = await fetchWithTimeout(`${API_BASE}/products/${id}`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Failed to delete product');
+    return data;
+  },
 };

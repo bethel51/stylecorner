@@ -462,78 +462,95 @@ export const CustomerDashboard = () => {
                 <p style={{ fontSize: '0.85rem', marginBottom: '1.25rem' }}>
                   Book your first visit — hair cut, braids, or nails.
                 </p>
-                <button onClick={() => navigate('/booking')} className="app-btn app-btn-primary" style={{ maxWidth: '220px', margin: '0 auto' }}>
+                <button onClick={() => navigate('/booking')} className="app-btn app-btn-primary" style={{ maxWidth: '180px', margin: '0 auto', minHeight: '38px', fontSize: '0.82rem' }}>
                   Book Now
                 </button>
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
                 {bookings.map((b) => (
-                  <div key={b._id} className="app-card" style={{ marginBottom: 0, padding: '1.15rem' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.65rem' }}>
+                  <div
+                    key={b._id}
+                    className="app-card"
+                    style={{
+                      marginBottom: 0,
+                      padding: '1.15rem',
+                      borderRadius: '18px',
+                      border: '1px solid rgba(0,0,0,0.07)',
+                      boxShadow: '0 4px 14px rgba(0,0,0,0.03)',
+                      transition: 'all 0.2s ease',
+                    }}
+                  >
+                    {/* Header: Service + Price + Status */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem', gap: '0.5rem', flexWrap: 'wrap' }}>
                       <div>
-                        <h4 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: '#171717' }}>
+                        <h4 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: '#171717', lineHeight: 1.2 }}>
                           {b.service}
                         </h4>
-                        <p style={{ color: '#6b7280', fontSize: '0.82rem', marginTop: '0.15rem' }}>
-                          Specialist: <strong style={{ color: '#171717' }}>{b.stylist}</strong>
-                        </p>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginTop: '0.3rem', fontSize: '0.78rem', color: '#6b7280' }}>
+                          <Sparkles size={13} color="#d4af37" />
+                          <span>Specialist: <strong style={{ color: '#171717' }}>{b.stylist}</strong></span>
+                        </div>
                       </div>
-                      <StatusBadge status={b.status} />
+
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                        <span style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 900, color: '#b5952f' }}>
+                          ${b.price}
+                        </span>
+                        <StatusBadge status={b.status} />
+                      </div>
                     </div>
 
-                    <div style={{ background: '#faf9f6', padding: '0.75rem', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.65rem' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.82rem', color: '#171717', fontWeight: 700 }}>
+                    {/* Date & Time Badge */}
+                    <div style={{ background: '#faf9f5', padding: '0.65rem 0.85rem', borderRadius: '12px', border: '1px solid rgba(212,175,55,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', fontSize: '0.82rem', color: '#171717', fontWeight: 700 }}>
                         <Clock size={15} color="#d4af37" />
                         <span>{b.date} at {b.time}</span>
                       </div>
-                      <span style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 900, color: '#171717' }}>
-                        ${b.price}
-                      </span>
+                      <span style={{ fontSize: '0.7rem', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: 600 }}>Schedule</span>
                     </div>
 
-                    {/* Status Specific Helper Banner */}
+                    {/* Status Helper Banner */}
                     {b.status === 'accepted' && (
-                      <div style={{ padding: '0.6rem 0.75rem', background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)', borderRadius: '10px', fontSize: '0.8rem', color: '#065f46', fontFamily: 'Outfit', fontWeight: 700, marginBottom: '0.5rem' }}>
-                        ✓ Your booking request has been accepted by {b.stylist}!
+                      <div style={{ padding: '0.55rem 0.75rem', background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.25)', borderRadius: '10px', fontSize: '0.78rem', color: '#065f46', fontFamily: 'Outfit', fontWeight: 700, marginBottom: '0.5rem' }}>
+                        ✓ Request accepted by {b.stylist}
                       </div>
                     )}
 
                     {b.status === 'rejected' && (
-                      <div style={{ padding: '0.65rem 0.75rem', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: '10px', fontSize: '0.82rem', color: '#991b1b', marginBottom: '0.55rem' }}>
-                        <p style={{ fontWeight: 700, marginBottom: '0.4rem' }}>
-                          Your request was rejected. Try booking again with another specialist.
-                        </p>
+                      <div style={{ padding: '0.6rem 0.75rem', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: '10px', fontSize: '0.8rem', color: '#991b1b', marginBottom: '0.6rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.4rem' }}>
+                        <span style={{ fontWeight: 600 }}>Request unavailable. Try another expert.</span>
                         <button
                           onClick={() => navigate(`/booking?service=${encodeURIComponent(b.service)}`)}
                           className="app-btn app-btn-accent"
-                          style={{ minHeight: '34px', fontSize: '0.78rem', padding: '0.35rem 0.75rem' }}
+                          style={{ minHeight: '32px', width: 'auto', fontSize: '0.75rem', padding: '0.35rem 0.75rem', borderRadius: '8px' }}
                         >
-                          <RefreshCw size={13} /> Book Again with Another Expert
+                          <RefreshCw size={12} /> Rebook
                         </button>
                       </div>
                     )}
 
                     {b.status === 'completed' && (
-                      <div style={{ padding: '0.6rem 0.75rem', background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)', borderRadius: '10px', fontSize: '0.8rem', color: '#065f46', fontFamily: 'Outfit', fontWeight: 700, marginBottom: '0.5rem' }}>
-                        ✓ Your scheduled services have been rendered. Thanks for using Style Corner!
+                      <div style={{ padding: '0.55rem 0.75rem', background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.25)', borderRadius: '10px', fontSize: '0.78rem', color: '#065f46', fontFamily: 'Outfit', fontWeight: 700, marginBottom: '0.5rem' }}>
+                        ✓ Service rendered successfully
                       </div>
                     )}
 
                     {b.status === 'pending' && (
                       <div style={{ padding: '0.5rem 0.75rem', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.25)', borderRadius: '10px', fontSize: '0.78rem', color: '#92400e', marginBottom: '0.5rem' }}>
-                        ⏳ Pending confirmation from {b.stylist}.
+                        ⏳ Pending confirmation from {b.stylist}
                       </div>
                     )}
 
+                    {/* Neat Action Buttons */}
                     {b.status !== 'rejected' && (
-                      <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
+                      <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.4rem', justifyContent: 'flex-end' }}>
                         <button
                           onClick={() => navigate(`/booking?stylist=${encodeURIComponent(b.stylist)}&service=${encodeURIComponent(b.service)}`)}
                           className="app-btn app-btn-outline"
-                          style={{ minHeight: '34px', fontSize: '0.78rem', padding: '0.4rem' }}
+                          style={{ minHeight: '34px', width: 'auto', fontSize: '0.78rem', padding: '0.4rem 0.85rem', borderRadius: '10px' }}
                         >
-                          <RefreshCw size={13} /> Book Again
+                          <RefreshCw size={13} /> Rebook
                         </button>
                       </div>
                     )}
@@ -570,14 +587,14 @@ export const CustomerDashboard = () => {
                 <p style={{ fontSize: '0.85rem', marginBottom: '1.25rem' }}>
                   Shop hair products, beard kits, and more.
                 </p>
-                <button onClick={() => navigate('/store')} className="app-btn app-btn-accent" style={{ maxWidth: '200px', margin: '0 auto' }}>
+                <button onClick={() => navigate('/store')} className="app-btn app-btn-accent" style={{ maxWidth: '180px', margin: '0 auto', minHeight: '38px', fontSize: '0.82rem' }}>
                   Browse Store
                 </button>
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
                 {orders.map((o) => (
-                  <div key={o._id} className="app-card" style={{ marginBottom: 0, padding: '1.15rem' }}>
+                  <div key={o._id} className="app-card" style={{ marginBottom: 0, padding: '1.15rem', borderRadius: '18px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                       <div>
                         <h4 style={{ fontFamily: 'Outfit', fontSize: '0.98rem', fontWeight: 800, color: '#171717' }}>
@@ -607,35 +624,38 @@ export const CustomerDashboard = () => {
         )}
 
         {/* ── Account Management Card ── */}
-        <div className="app-card" style={{ marginTop: '1.5rem', background: '#ffffff', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
+        <div className="app-card" style={{ marginTop: '1.5rem', background: '#ffffff', border: '1px solid rgba(239, 68, 68, 0.2)', borderRadius: '18px', padding: '1.15rem' }}>
           <h4 style={{ fontFamily: 'Outfit', fontSize: '0.98rem', fontWeight: 800, color: '#171717', marginBottom: '0.85rem' }}>
             Account Settings
           </h4>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+          <div style={{ display: 'flex', gap: '0.65rem' }}>
             <button
               onClick={logout}
               className="app-btn app-btn-outline"
-              style={{ justifyContent: 'center', gap: '0.5rem', minHeight: '44px' }}
+              style={{ flex: 1, justifyContent: 'center', gap: '0.4rem', minHeight: '40px', fontSize: '0.82rem', borderRadius: '12px' }}
             >
-              <LogOut size={16} />
-              <span>Sign Out of Account</span>
+              <LogOut size={15} />
+              <span>Sign Out</span>
             </button>
 
             <button
               onClick={() => setShowDeleteModal(true)}
               className="app-btn"
               style={{
+                flex: 1,
                 background: 'rgba(239, 68, 68, 0.08)',
                 color: '#ef4444',
                 border: '1px solid rgba(239, 68, 68, 0.25)',
                 justifyContent: 'center',
-                gap: '0.5rem',
-                minHeight: '44px',
+                gap: '0.4rem',
+                minHeight: '40px',
+                fontSize: '0.82rem',
+                borderRadius: '12px',
               }}
             >
-              <Trash2 size={16} />
-              <span>Delete Account Permanently</span>
+              <Trash2 size={15} />
+              <span>Delete Account</span>
             </button>
           </div>
         </div>
