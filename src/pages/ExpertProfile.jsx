@@ -197,13 +197,24 @@ export const ExpertProfile = () => {
   const handleUploadCover = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+    
+    // Instant 0ms local preview
+    const previewUrl = URL.createObjectURL(file);
+    setEditForm(prev => ({ ...prev, coverImage: previewUrl }));
+    setExpert(prev => ({ ...prev, coverImage: previewUrl }));
+    showToast('Cover photo updated!', 'success');
+
     setUploadingCover(true);
     try {
       const url = await uploadToCloudinary(file);
       setEditForm(prev => ({ ...prev, coverImage: url }));
-      showToast('Cover photo uploaded!', 'success');
+      setExpert(prev => {
+        const updated = { ...prev, coverImage: url };
+        if (prev?.id) localStorage.setItem(`expert_profile_custom_${prev.id}`, JSON.stringify(updated));
+        return updated;
+      });
     } catch (err) {
-      showToast(err.message || 'Failed to upload cover photo', 'error');
+      console.warn('Cloudinary cover upload warning:', err.message);
     } finally {
       setUploadingCover(false);
     }
@@ -212,13 +223,29 @@ export const ExpertProfile = () => {
   const handleUploadAvatar = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+
+    // Instant 0ms local preview
+    const previewUrl = URL.createObjectURL(file);
+    setEditForm(prev => ({ ...prev, avatar: previewUrl }));
+    setExpert(prev => ({ ...prev, avatar: previewUrl }));
+    showToast('Profile photo updated!', 'success');
+
     setUploadingAvatar(true);
     try {
       const url = await uploadToCloudinary(file);
       setEditForm(prev => ({ ...prev, avatar: url }));
-      showToast('Avatar photo uploaded!', 'success');
+      setExpert(prev => {
+        const updated = { ...prev, avatar: url };
+        if (prev?.id) localStorage.setItem(`expert_profile_custom_${prev.id}`, JSON.stringify(updated));
+        return updated;
+      });
+
+      // Sync with user account in database if logged in
+      if (user) {
+        api.updateProfile({ avatarUrl: url }).catch(() => {});
+      }
     } catch (err) {
-      showToast(err.message || 'Failed to upload avatar photo', 'error');
+      console.warn('Cloudinary avatar upload warning:', err.message);
     } finally {
       setUploadingAvatar(false);
     }
@@ -242,7 +269,7 @@ export const ExpertProfile = () => {
     setEditForm(prev => ({ ...prev, services: prev.services.filter((_, idx) => idx !== index) }));
   };
 
-  const handleSaveProfile = (e) => {
+  const handleSaveProfile = async (e) => {
     e.preventDefault();
     setSavingProfile(true);
     try {
@@ -260,10 +287,23 @@ export const ExpertProfile = () => {
       setExpert(updatedProfile);
       if (updatedProfile.services.length > 0) setSelectedService(updatedProfile.services[0]);
 
-      // Save to localStorage for persistence
+      // Save to localStorage for instant client persistence
       localStorage.setItem(`expert_profile_custom_${expert.id}`, JSON.stringify(updatedProfile));
+
+      // Save to database backend
+      if (user) {
+        await api.updateProfile({
+          firstname: editForm.name.split(' ')[0] || user.firstname,
+          lastname: editForm.name.split(' ').slice(1).join(' ') || user.lastname,
+          title: editForm.role,
+          location: editForm.location,
+          bio: editForm.bio,
+          avatarUrl: editForm.avatar,
+        }).catch(() => {});
+      }
+
       setShowEditSheet(false);
-      showToast('Your professional profile has been updated & published!', 'success');
+      showToast('Your professional page has been updated & published!', 'success');
     } catch (err) {
       showToast('Failed to save profile changes', 'error');
     } finally {
@@ -383,8 +423,7 @@ export const ExpertProfile = () => {
               borderRadius: '0 0 24px 24px',
             }} />
 
-            <button
-              onClick={handleOpenEditSheet}
+            <label
               style={{
                 position: 'absolute',
                 top: '12px',
@@ -400,16 +439,18 @@ export const ExpertProfile = () => {
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.3rem'
+                gap: '0.3rem',
+                zIndex: 2
               }}
             >
-              <Edit size={12} /> Change Banner
-            </button>
+              <Upload size={12} />
+              <span>{uploadingCover ? 'Updating...' : 'Change Banner'}</span>
+              <input type="file" accept="image/*" onChange={handleUploadCover} style={{ display: 'none' }} />
+            </label>
           </div>
 
-          {/* Floating Avatar Circle */}
-          <div
-            onClick={handleOpenEditSheet}
+          {/* Floating Avatar Circle with 1-Tap Photo Input */}
+          <label
             style={{
               position: 'absolute',
               bottom: '-36px',
@@ -420,26 +461,30 @@ export const ExpertProfile = () => {
               background: `url(${expert.avatar}) center/cover no-repeat`,
               border: '4px solid #ffffff',
               boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              display: 'block'
             }}
+            title="Tap to change profile picture"
           >
+            <input type="file" accept="image/*" onChange={handleUploadAvatar} style={{ display: 'none' }} />
             <div style={{
               position: 'absolute',
               bottom: 0,
               right: 0,
-              width: '24px',
-              height: '24px',
+              width: '26px',
+              height: '26px',
               borderRadius: '50%',
               background: '#d4af37',
               color: '#111',
               border: '2px solid #fff',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center'
+              justifyContent: 'center',
+              boxShadow: '0 2px 6px rgba(0,0,0,0.2)'
             }}>
-              <Edit size={10} />
+              <Upload size={11} />
             </div>
-          </div>
+          </label>
         </div>
 
         {/* ── EXPERT HEADER METADATA ── */}
