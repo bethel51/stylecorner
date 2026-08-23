@@ -47,27 +47,9 @@ const DEFAULT_EXPERT_PROFILES = [
     ]
   },
   {
-    id: 'julian-reed',
-    name: 'Julian Reed',
-    role: 'Master Barber & Cut Architect',
-    rating: 4.9,
-    reviewsCount: 112,
-    location: 'Abuja, Nigeria',
-    experience: '12+ Years Experience',
-    bio: 'Specializing in precision hair geometry, skin fades, and classic tailored cuts for executive clients.',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80',
-    coverImage: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=800&q=80',
-    services: [
-      { name: 'Precision Skin Fade & Cut', price: '₦12,000' },
-      { name: 'Executive Beard Trim & Sculpting', price: '₦8,000' },
-      { name: 'Scalp & Hair Treatment Combo', price: '₦15,000' },
-      { name: 'Hot Towel Royal Shave', price: '₦10,000' },
-    ]
-  },
-  {
-    id: 'elena-thorne',
-    name: 'Elena Thorne',
-    role: 'Braiding & Extensions Artisan',
+    id: 'amina-bello',
+    name: 'Amina Bello',
+    role: 'Knotless Braids & Extensions Artisan',
     rating: 5.0,
     reviewsCount: 94,
     location: 'Lagos, Nigeria',
@@ -83,21 +65,21 @@ const DEFAULT_EXPERT_PROFILES = [
     ]
   },
   {
-    id: 'marcus-grey',
-    name: 'Marcus Grey',
-    role: 'Nail Architect & Pedicure Tech',
-    rating: 4.8,
-    reviewsCount: 76,
-    location: 'Port Harcourt, Nigeria',
-    experience: '7+ Years Experience',
-    bio: 'Creating immaculate nail shapes, custom color gel architecture, and soothing therapeutic foot treatments.',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
-    coverImage: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&w=800&q=80',
+    id: 'tunde-adebayo',
+    name: 'Tunde Adebayo',
+    role: 'Master Barber & Cut Architect',
+    rating: 4.9,
+    reviewsCount: 112,
+    location: 'Abuja, Nigeria',
+    experience: '12+ Years Experience',
+    bio: 'Specializing in precision hair geometry, skin fades, and classic tailored cuts for executive clients.',
+    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80',
+    coverImage: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=800&q=80',
     services: [
-      { name: 'Full Gel Nail Architecture', price: '₦15,000' },
-      { name: 'Luxury Spa Pedicure Session', price: '₦12,000' },
-      { name: 'Acrylic Full Set Extension', price: '₦18,000' },
-      { name: 'Custom Nail Art (Per Hand)', price: '₦6,000' },
+      { name: 'Precision Skin Fade & Cut', price: '₦12,000' },
+      { name: 'Executive Beard Trim & Sculpting', price: '₦8,000' },
+      { name: 'Scalp & Hair Treatment Combo', price: '₦15,000' },
+      { name: 'Hot Towel Royal Shave', price: '₦10,000' },
     ]
   }
 ];

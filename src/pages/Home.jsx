@@ -49,25 +49,25 @@ export const Home = () => {
 
   const specialists = [
     {
-      name: 'Julian Reed',
-      role: 'Master Barber & Cut Specialist',
+      name: 'Stella Hair',
+      role: 'Wig Installer & Hair Artisan',
       rating: 4.9,
-      specialty: 'Skin Fades & Razor Work',
-      image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80',
+      specialty: 'Luxury Wigs & Frontals',
+      image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
     },
     {
-      name: 'Elena Thorne',
-      role: 'Braids & Extension Artisan',
+      name: 'Amina Bello',
+      role: 'Knotless Braids & Locs Specialist',
       rating: 5.0,
-      specialty: 'Knotless Braids & Scalp Care',
+      specialty: 'Tension-Free Box Braids',
       image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80',
     },
     {
-      name: 'Marcus Grey',
-      role: 'Nail Architect & Pedicure Tech',
-      rating: 4.8,
-      specialty: 'Gel Sets & Foot Spa',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
+      name: 'Tunde Adebayo',
+      role: 'Master Barber & Cut Architect',
+      rating: 4.9,
+      specialty: 'Precision Skin Fades & Beard Trim',
+      image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80',
     },
   ];
 

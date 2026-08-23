@@ -6,17 +6,17 @@ import { api } from '../services/api';
 
 const DEFAULT_TEAM = [
   {
-    name: 'Julian Reed',
-    role: 'Master Barber & Haircut Architect',
-    experience: '12+ Years Experience',
+    name: 'Stella Hair',
+    role: 'Wig Installer & Hair Artisan',
+    experience: '8+ Years Experience',
     rating: 4.9,
-    specialties: ['Precision Skin Fade & Cut', 'Beard Trim & Sculpting'],
-    bio: 'Specializing in precision hair geometry and classic tailored cuts for executive clients.',
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80',
+    specialties: ['Frontal Wig Install', 'Closure Wig Install', 'Wig Revamp'],
+    bio: 'Specialized in luxury wigs, closures, frontals, and custom wig customization. Flawless melting & scalp-matching lace.',
+    image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
   },
   {
-    name: 'Elena Thorne',
-    role: 'Braiding & Extensions Artisan',
+    name: 'Amina Bello',
+    role: 'Knotless Braids & Extensions Artisan',
     experience: '9+ Years Experience',
     rating: 5.0,
     specialties: ['Knotless Box Braids', 'Cornrows & Custom Pattern'],
@@ -24,13 +24,13 @@ const DEFAULT_TEAM = [
     image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80',
   },
   {
-    name: 'Marcus Grey',
-    role: 'Nail Architect & Pedicure Tech',
-    experience: '7+ Years Experience',
-    rating: 4.8,
-    specialties: ['Full Gel Nail Architecture', 'Luxury Pedicure Session'],
-    bio: 'Creating immaculate nail shapes, custom color gels, and soothing therapeutic foot treatments.',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
+    name: 'Tunde Adebayo',
+    role: 'Master Barber & Cut Architect',
+    experience: '12+ Years Experience',
+    rating: 4.9,
+    specialties: ['Precision Skin Fade & Cut', 'Beard Trim & Sculpting'],
+    bio: 'Specializing in precision hair geometry and classic tailored cuts for executive clients.',
+    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80',
   },
 ];
 

@@ -33,9 +33,9 @@ export const Booking = () => {
 
   const [stylistsList, setStylistsList] = useState([
     'Any Specialist',
-    'Julian Reed',
-    'Elena Thorne',
-    'Marcus Grey',
+    'Stella Hair',
+    'Amina Bello',
+    'Tunde Adebayo',
   ]);
 
   const [service1, setService1] = useState(initialService || servicesData[0].title);
@@ -51,7 +51,7 @@ export const Booking = () => {
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
           const fetchedNames = data.map((s) => `${s.firstname || ''} ${s.lastname || ''}`.trim()).filter(Boolean);
-          const combined = Array.from(new Set(['Any Specialist', ...fetchedNames, 'Julian Reed', 'Elena Thorne', 'Marcus Grey']));
+          const combined = Array.from(new Set(['Any Specialist', ...fetchedNames, 'Stella Hair', 'Amina Bello', 'Tunde Adebayo']));
           setStylistsList(combined);
         }
       })
