@@ -305,7 +305,7 @@ export const CustomerDashboard = () => {
               }} />
             </div>
             <p style={{ fontSize: '0.7rem', color: '#6b7280', margin: 0 }}>
-              {pointsToNextReward} pts to your next $25 reward voucher
+              {pointsToNextReward} pts to your next ₦25,000 reward voucher
             </p>
           </div>
 
@@ -612,7 +612,7 @@ export const CustomerDashboard = () => {
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.3rem', flexShrink: 0 }}>
                           <StatusBadge status={b.status} />
                           <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1rem', color: '#b5952f' }}>
-                            ${b.price}
+                            ₦{Number(b.price).toLocaleString()}
                           </span>
                         </div>
                       </div>
@@ -699,7 +699,7 @@ export const CustomerDashboard = () => {
                         <div style={{ textAlign: 'right', flexShrink: 0 }}>
                           <StatusBadge status={o.trackingStatus || o.status || 'processing'} />
                           <div style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.05rem', color: '#171717', marginTop: '0.3rem' }}>
-                            ${o.totalPrice || o.price || 0}
+                            ₦{Number(o.totalPrice || o.price || 0).toLocaleString()}
                           </div>
                         </div>
                       </div>
@@ -750,7 +750,7 @@ export const CustomerDashboard = () => {
                 ...orders.map(o => ({
                   type: 'order', icon: <ShoppingBag size={16} />,
                   title: o.item || `Store Order #${String(o._id).slice(-6).toUpperCase()}`,
-                  sub: `Total: $${o.totalPrice || o.price || 0} · Tracking: ${o.trackingStatus || o.status || 'Processing'}`,
+                  sub: `Total: ₦${Number(o.totalPrice || o.price || 0).toLocaleString()} · Tracking: ${o.trackingStatus || o.status || 'Processing'}`,
                   status: o.status || 'processing', date: o.createdAt || new Date().toISOString(),
                   iconBg: 'rgba(16,185,129,0.12)', iconColor: '#10b981',
                 })),

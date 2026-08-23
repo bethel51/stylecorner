@@ -22,13 +22,13 @@ export const Booking = () => {
   }, [isAuthenticated, role, navigate]);
 
   const servicesData = [
-    { title: 'Precision Skin Fade & Cut', price: 45 },
-    { title: 'Beard Trim & Sculpting', price: 30 },
-    { title: 'Knotless Box Braids', price: 120 },
-    { title: 'Cornrows & Custom Pattern', price: 85 },
-    { title: 'Full Gel Nail Architecture', price: 55 },
-    { title: 'Luxury Pedicure Session', price: 50 },
-    { title: 'Full Atelier Grooming Combo', price: 110 },
+    { title: 'Precision Skin Fade & Cut', price: 15000 },
+    { title: 'Beard Trim & Sculpting', price: 10000 },
+    { title: 'Knotless Box Braids', price: 45000 },
+    { title: 'Cornrows & Custom Pattern', price: 25000 },
+    { title: 'Full Gel Nail Architecture', price: 18000 },
+    { title: 'Luxury Pedicure Session', price: 15000 },
+    { title: 'Full Atelier Grooming Combo', price: 35000 },
   ];
 
   const [stylistsList, setStylistsList] = useState([
@@ -196,7 +196,7 @@ export const Booking = () => {
             >
               {servicesData.map((s) => (
                 <option key={s.title} value={s.title}>
-                  {s.title} (${s.price})
+                  {s.title} (₦{Number(s.price).toLocaleString()})
                 </option>
               ))}
             </select>
@@ -213,7 +213,7 @@ export const Booking = () => {
               <option value="">-- None (Single Service) --</option>
               {servicesData.map((s) => (
                 <option key={s.title} value={s.title}>
-                  {s.title} (${s.price})
+                  {s.title} (₦{Number(s.price).toLocaleString()})
                 </option>
               ))}
             </select>
@@ -297,7 +297,7 @@ export const Booking = () => {
                 ESTIMATED TOTAL
               </span>
               <div style={{ fontFamily: 'Outfit', fontSize: '1.75rem', fontWeight: 900, color: '#171717' }}>
-                ${totalPrice}
+                ₦{Number(totalPrice).toLocaleString()}
               </div>
             </div>
 

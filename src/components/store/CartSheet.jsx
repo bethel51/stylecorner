@@ -101,7 +101,7 @@ export const CartSheet = ({ isOpen, onClose }) => {
                     {item.title}
                   </h4>
                   <span style={{ fontSize: '0.82rem', color: '#d4af37', fontWeight: 800 }}>
-                    ${item.price}
+                    ₦{Number(item.price).toLocaleString()}
                   </span>
                 </div>
 
@@ -164,7 +164,7 @@ export const CartSheet = ({ isOpen, onClose }) => {
                 SUBTOTAL:
               </span>
               <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.4rem', color: '#171717' }}>
-                ${subtotal}
+                ₦{Number(subtotal).toLocaleString()}
               </span>
             </div>
 
@@ -174,7 +174,7 @@ export const CartSheet = ({ isOpen, onClose }) => {
               ) : (
                 <>
                   <CheckCircle2 size={18} />
-                  <span>Place Order (${subtotal})</span>
+                  <span>Place Order (₦{Number(subtotal).toLocaleString()})</span>
                 </>
               )}
             </button>

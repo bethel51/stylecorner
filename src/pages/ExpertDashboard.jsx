@@ -406,7 +406,7 @@ export const ExpertDashboard = () => {
               }}
             >
               <div style={{ fontFamily: 'Outfit', fontSize: '1.7rem', fontWeight: 900, color: '#b5952f', lineHeight: 1 }}>
-                ${totalRevenue}
+                ₦{Number(totalRevenue).toLocaleString()}
               </div>
               <div style={{ fontSize: '0.7rem', fontFamily: 'Outfit', fontWeight: 800, color: '#6b7280', marginTop: '0.3rem', textTransform: 'uppercase' }}>
                 Earnings
@@ -786,7 +786,7 @@ export const ExpertDashboard = () => {
                         {b.service}
                       </span>
                       <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.15rem', color: '#b5952f' }}>
-                        ${b.price}
+                        ₦{Number(b.price).toLocaleString()}
                       </span>
                     </div>
 
@@ -886,7 +886,7 @@ export const ExpertDashboard = () => {
                           {item.clientName || 'Client'} — {item.service || 'Service'}
                         </div>
                         <div style={{ fontSize: '0.72rem', color: '#6b7280', marginTop: '0.15rem' }}>
-                          📅 {item.date || ''} @ {item.time || ''} · Amount: ${item.price || 0}
+                          📅 {item.date || ''} @ {item.time || ''} · Amount: ₦{Number(item.price || 0).toLocaleString()}
                         </div>
                       </div>
                     </div>

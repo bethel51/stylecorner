@@ -13,7 +13,7 @@ export const downloadBookingHistoryCSV = (bookings, filename = 'StyleCorner_Book
     'Client Phone',
     'Date',
     'Time',
-    'Price ($)',
+    'Price (₦)',
     'Status',
     'Created At'
   ];
@@ -66,7 +66,7 @@ export const printBookingHistoryReport = (bookings, userTitle = 'Booking History
       <td style="padding: 10px 12px; font-size: 0.85rem; color: #4b5563;">${b.stylist || 'Specialist'}</td>
       <td style="padding: 10px 12px; font-size: 0.85rem; color: #4b5563;">${b.clientName || b.clientEmail || 'Client'}</td>
       <td style="padding: 10px 12px; font-size: 0.85rem; color: #4b5563;">${b.date || ''} @ ${b.time || ''}</td>
-      <td style="padding: 10px 12px; font-size: 0.9rem; font-weight: bold; color: #b5952f;">$${b.price || 0}</td>
+      <td style="padding: 10px 12px; font-size: 0.9rem; font-weight: bold; color: #b5952f;">₦${Number(b.price || 0).toLocaleString()}</td>
       <td style="padding: 10px 12px;">
         <span style="display: inline-block; padding: 3px 8px; border-radius: 50px; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; 
           background: ${b.status === 'completed' ? '#d1fae5' : b.status === 'accepted' ? '#dbeafe' : b.status === 'pending' ? '#fef3c7' : '#fee2e2'};
@@ -130,7 +130,7 @@ export const printBookingHistoryReport = (bookings, userTitle = 'Booking History
 
         <div class="summary">
           <div><strong>Total Records:</strong> ${bookings.length} Bookings</div>
-          <div><strong>Total Value:</strong> <span style="font-size: 1.2rem; color: #d4af37; font-weight: 900;">$${totalSpent}</span></div>
+          <div><strong>Total Value:</strong> <span style="font-size: 1.2rem; color: #d4af37; font-weight: 900;">₦${Number(totalSpent).toLocaleString()}</span></div>
         </div>
       </body>
     </html>

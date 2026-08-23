@@ -14,7 +14,7 @@ export const Services = () => {
       id: 'h1',
       title: 'Precision Skin Fade & Cut',
       category: 'Hair',
-      price: 45,
+      price: 15000,
       duration: '45 mins',
       desc: 'Master barber haircut including sharp hot towel finish and scalp massage.',
     },
@@ -22,7 +22,7 @@ export const Services = () => {
       id: 'h2',
       title: 'Beard Trim & Sculpting',
       category: 'Grooming',
-      price: 30,
+      price: 10000,
       duration: '30 mins',
       desc: 'Precision razor edging, organic beard oil conditioning, and thermal hot towel.',
     },
@@ -30,7 +30,7 @@ export const Services = () => {
       id: 'b1',
       title: 'Knotless Box Braids',
       category: 'Braids',
-      price: 120,
+      price: 45000,
       duration: '120 mins',
       desc: 'Lightweight tension-free knotless box braids customized to your length preference.',
     },
@@ -38,7 +38,7 @@ export const Services = () => {
       id: 'b2',
       title: 'Cornrows & Custom Pattern',
       category: 'Braids',
-      price: 85,
+      price: 25000,
       duration: '90 mins',
       desc: 'Intricate scalp braid art and custom geometry styling by expert braiding tech.',
     },
@@ -46,7 +46,7 @@ export const Services = () => {
       id: 'n1',
       title: 'Full Gel Nail Architecture',
       category: 'Nails',
-      price: 55,
+      price: 18000,
       duration: '60 mins',
       desc: 'Nail shape sculpting, cuticle care, custom gel shade and high-gloss top coat.',
     },
@@ -54,7 +54,7 @@ export const Services = () => {
       id: 'n2',
       title: 'Luxury Pedicure Session',
       category: 'Nails',
-      price: 50,
+      price: 15000,
       duration: '45 mins',
       desc: 'Exfoliating foot soak, deep massage, nail shaping and polish finish.',
     },
@@ -62,7 +62,7 @@ export const Services = () => {
       id: 'g1',
       title: 'Full Atelier Grooming Combo',
       category: 'Grooming',
-      price: 110,
+      price: 35000,
       duration: '105 mins',
       desc: 'The complete executive session: Haircut, beard treatment, and mini facial treatment.',
     },
@@ -136,7 +136,7 @@ export const Services = () => {
                 </h3>
               </div>
               <div style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 900, color: '#171717' }}>
-                ${s.price}
+                ₦{Number(s.price).toLocaleString()}
               </div>
             </div>
 

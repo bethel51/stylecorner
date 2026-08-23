@@ -10,7 +10,7 @@ const DEFAULT_PRODUCTS = [
   {
     id: 'p1',
     title: 'Atelier Gold Pomade',
-    price: 28,
+    price: 12000,
     rating: 4.9,
     desc: 'Medium-hold matte finish pomade infused with organic argan oil.',
     badge: 'Bestseller',
@@ -19,7 +19,7 @@ const DEFAULT_PRODUCTS = [
   {
     id: 'p2',
     title: 'Botanical Beard Elixir',
-    price: 24,
+    price: 8500,
     rating: 4.8,
     desc: 'Nourishing oil blend with jojoba and cedarwood fragrance.',
     badge: 'Popular',
@@ -28,7 +28,7 @@ const DEFAULT_PRODUCTS = [
   {
     id: 'p3',
     title: 'Sculpting Clay Wax',
-    price: 26,
+    price: 9500,
     rating: 4.9,
     desc: 'High-hold textured clay wax for textured crops and modern fades.',
     badge: 'New',
@@ -37,7 +37,7 @@ const DEFAULT_PRODUCTS = [
   {
     id: 'p4',
     title: 'Scalp Revitalizing Shampoo',
-    price: 32,
+    price: 11000,
     rating: 4.7,
     desc: 'Sulfate-free tea tree shampoo for deep scalp hydration.',
     image: 'https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=500&q=80',
@@ -45,7 +45,7 @@ const DEFAULT_PRODUCTS = [
   {
     id: 'p5',
     title: 'Wooden Comb Set',
-    price: 18,
+    price: 6500,
     rating: 4.9,
     desc: 'Anti-static sandalwood comb set for precise hair and beard styling.',
     image: 'https://images.unsplash.com/photo-1590159763121-7c9fd312190d?auto=format&fit=crop&w=500&q=80',
@@ -53,7 +53,7 @@ const DEFAULT_PRODUCTS = [
   {
     id: 'p6',
     title: 'Silk Edge Wrap Scarf',
-    price: 15,
+    price: 5000,
     rating: 5.0,
     desc: '100% mulberry silk wrap for protecting braid edges and locs.',
     image: 'https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?auto=format&fit=crop&w=500&q=80',
@@ -266,7 +266,7 @@ export const Store = () => {
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.55rem' }}>
                   <span style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 900, color: '#171717' }}>
-                    ${p.price}
+                    ₦{Number(p.price).toLocaleString()}
                   </span>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#d4af37', fontSize: '0.75rem', fontWeight: 800 }}>
                     <Star size={12} fill="#d4af37" />

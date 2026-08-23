@@ -110,7 +110,7 @@ export const OrderTrackingSheet = ({ isOpen, onClose, order, onOrderUpdated, isA
             </div>
             <div style={{ textAlign: 'right' }}>
               <span style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 900, color: '#d4af37' }}>
-                ${order.totalPrice || order.price || 0}
+                ₦{Number(order.totalPrice || order.price || 0).toLocaleString()}
               </span>
             </div>
           </div>
