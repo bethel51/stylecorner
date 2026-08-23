@@ -35,7 +35,7 @@ import { PopupModal } from '../components/common/PopupModal';
 import { AISpecialistMatcherSheet } from '../components/booking/AISpecialistMatcherSheet';
 import { ImagePreviewModal } from '../components/common/ImagePreviewModal';
 import { OrderTrackingSheet } from '../components/store/OrderTrackingSheet';
-import { downloadBookingHistoryCSV } from '../utils/bookingHistoryExport';
+import { downloadBookingHistoryCSV, printBookingHistoryReport } from '../utils/bookingHistoryExport';
 
 export const CustomerDashboard = () => {
   const navigate = useNavigate();
@@ -104,7 +104,8 @@ export const CustomerDashboard = () => {
       return;
     }
     const success = downloadBookingHistoryCSV(bookings, `Customer_Booking_History_${user?.firstname || 'VIP'}.csv`);
-    if (success) showToast('Booking history downloaded successfully!', 'success');
+    printBookingHistoryReport(bookings, `${user?.firstname || 'Customer'}'s Booking History Statement`);
+    if (success) showToast('Booking history downloaded & printable statement opened!', 'success');
   };
 
   const handleClearHistory = async () => {

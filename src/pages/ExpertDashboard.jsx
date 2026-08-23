@@ -36,7 +36,7 @@ import { SkeletonList } from '../components/common/SkeletonLoader';
 import { PopupModal } from '../components/common/PopupModal';
 import { BottomSheet } from '../components/common/BottomSheet';
 import { ImagePreviewModal } from '../components/common/ImagePreviewModal';
-import { downloadBookingHistoryCSV } from '../utils/bookingHistoryExport';
+import { downloadBookingHistoryCSV, printBookingHistoryReport } from '../utils/bookingHistoryExport';
 
 export const ExpertDashboard = () => {
   const navigate = useNavigate();
@@ -153,7 +153,8 @@ export const ExpertDashboard = () => {
       return;
     }
     const success = downloadBookingHistoryCSV(bookings, `Expert_Booking_History_${user?.firstname || 'Stylist'}.csv`);
-    if (success) showToast('Booking history downloaded successfully!', 'success');
+    printBookingHistoryReport(bookings, `Expert Appointment History Statement - ${user?.firstname || 'Stylist'}`);
+    if (success) showToast('Booking history downloaded & printable statement opened!', 'success');
   };
 
   // Clear all booking history handler
