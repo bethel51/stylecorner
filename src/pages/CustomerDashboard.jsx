@@ -339,7 +339,7 @@ export const CustomerDashboard = () => {
             <div style={sectionIcon('rgba(212,175,55,0.15)', '#d4af37')}><Star size={13} /></div>
             <span style={sectionTitle}>Overview</span>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '0.65rem' }}>
+          <div className="dashboard-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '0.65rem' }}>
             {[
               { label: 'Bookings', value: bookings.length, color: '#d4af37', bg: 'rgba(212,175,55,0.08)', border: 'rgba(212,175,55,0.25)' },
               { label: 'Orders', value: orders.length, color: '#3b82f6', bg: 'rgba(59,130,246,0.08)', border: 'rgba(59,130,246,0.2)' },
@@ -374,7 +374,7 @@ export const CustomerDashboard = () => {
             <div style={sectionIcon('#171717', '#d4af37')}><Sparkles size={13} /></div>
             <span style={sectionTitle}>Quick Actions</span>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+          <div className="dashboard-quick-actions" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
             {[
               {
                 icon: <Calendar size={22} />, label: 'Book a Visit',

@@ -682,7 +682,7 @@ img {
   display: none;
 }
 
-/* Responsive adjustments for Expert Dashboard cards */
+/* Responsive adjustments for Expert & Customer Dashboards */
 @media (max-width: 480px) {
   /* Ensure status badges fit within card */
   .status-badge {
@@ -702,4 +702,18 @@ img {
     align-items: flex-start;
     gap: 0.4rem;
   }
+  /* Responsive Dashboard Grids for extra small screens */
+  .dashboard-services-grid {
+    grid-template-columns: 1fr !important;
+  }
 }
+
+@media (max-width: 360px) {
+  .dashboard-stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .dashboard-quick-actions {
+    grid-template-columns: 1fr !important;
+  }
+}
+

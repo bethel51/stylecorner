@@ -359,7 +359,7 @@ export const ExpertDashboard = () => {
             <span style={sectionTitle}>Performance Overview</span>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.65rem' }}>
+          <div className="dashboard-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.65rem' }}>
             <div style={{
               background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.22)',
               borderRadius: '18px', padding: '1rem 0.5rem', textAlign: 'center',
@@ -448,7 +448,7 @@ export const ExpertDashboard = () => {
                 : ['Skin Fades & Beard Trim', 'Knotless Braids & Locs', 'Manicure & Gel Nails', 'Scalp Care Treatment'];
 
             return (
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem' }}>
+              <div className="dashboard-services-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem' }}>
                 {specs.map((s, idx) => (
                   <div
                     key={idx}
@@ -492,7 +492,7 @@ export const ExpertDashboard = () => {
             <span style={sectionTitle}>Quick Shortcuts</span>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+          <div className="dashboard-quick-actions" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
             <button
               onClick={() => {
                 const next = !isAvailable;
