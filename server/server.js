@@ -926,6 +926,7 @@ const INITIAL_PRODUCTS = [
 // Fetch all products (seed default if empty)
 app.get('/api/products', async (req, res) => {
   try {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
     let products = await Product.find({}).sort({ createdAt: -1 });
     if (products.length === 0) {
       products = await Product.insertMany(INITIAL_PRODUCTS);
@@ -940,7 +941,7 @@ app.get('/api/products', async (req, res) => {
 // Create product (Admin)
 app.post('/api/products', authenticateToken, async (req, res) => {
   try {
-    const { title, price, rating, desc, badge, image } = req.body;
+    const { title, price, rating, desc, badge, image, secondaryImage } = req.body;
     if (!title || price === undefined || !image) {
       return res.status(400).json({ error: 'Title, price, and image URL are required.' });
     }
@@ -950,7 +951,8 @@ app.post('/api/products', authenticateToken, async (req, res) => {
       rating: rating ? Number(rating) : 4.8,
       desc: desc || '',
       badge: badge || '',
-      image
+      image,
+      secondaryImage: secondaryImage || ''
     });
     const saved = await product.save();
     res.status(201).json(saved);
@@ -963,7 +965,7 @@ app.post('/api/products', authenticateToken, async (req, res) => {
 // Update product (Admin)
 app.put('/api/products/:id', authenticateToken, async (req, res) => {
   try {
-    const { title, price, rating, desc, badge, image } = req.body;
+    const { title, price, rating, desc, badge, image, secondaryImage } = req.body;
     const updated = await Product.findByIdAndUpdate(
       req.params.id,
       {
@@ -973,7 +975,8 @@ app.put('/api/products/:id', authenticateToken, async (req, res) => {
           rating: rating ? Number(rating) : 4.8,
           desc: desc || '',
           badge: badge || '',
-          image
+          image,
+          secondaryImage: secondaryImage || ''
         }
       },
       { new: true, runValidators: true }

@@ -43,12 +43,10 @@ export const ExpertDashboard = () => {
   const { user, logout, updateProfile, deleteAccount, showToast } = useAuth();
 
   const [bookings, setBookings] = useState([]);
-  const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState(null);
   const [isAvailable, setIsAvailable] = useState(true);
   const [filterStatus, setFilterStatus] = useState('all');
-  const [activeTab, setActiveTab] = useState('bookings'); // 'bookings' | 'orders'
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEnlargedAvatar, setShowEnlargedAvatar] = useState(false);
@@ -107,18 +105,10 @@ export const ExpertDashboard = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [bookingsResult, ordersResult] = await Promise.allSettled([
-        api.getBookings(),
-        api.getOrders(),
-      ]);
-      if (bookingsResult.status === 'fulfilled') {
-        setBookings(Array.isArray(bookingsResult.value) ? bookingsResult.value : []);
-      }
-      if (ordersResult.status === 'fulfilled') {
-        setOrders(Array.isArray(ordersResult.value) ? ordersResult.value : []);
-      }
+      const data = await api.getBookings();
+      setBookings(Array.isArray(data) ? data : []);
     } catch (err) {
-      showToast(err.message || 'Failed to fetch dashboard data', 'error');
+      showToast(err.message || 'Failed to fetch appointments data', 'error');
     } finally {
       setLoading(false);
     }
@@ -127,21 +117,6 @@ export const ExpertDashboard = () => {
   useEffect(() => {
     fetchData();
   }, []);
-
-  const handleUpdateOrderStatus = async (id, newStatus) => {
-    setUpdatingId(id);
-    try {
-      await api.updateOrderStatus(id, { status: newStatus });
-      setOrders((prev) =>
-        prev.map((item) => (item._id === id ? { ...item, status: newStatus } : item))
-      );
-      showToast(`Order marked as ${newStatus}! Notification sent to client.`, 'success');
-    } catch (err) {
-      showToast(err.message || 'Failed to update order status', 'error');
-    } finally {
-      setUpdatingId(null);
-    }
-  };
 
   const handleUpdateStatus = async (id, newStatus) => {
     setUpdatingId(id);
@@ -601,169 +576,113 @@ export const ExpertDashboard = () => {
           </div>
         </div>
 
-        {/* ── Segmented Tab Switcher (Appointments vs Store Orders) ── */}
-        <div style={{ background: '#e5e7eb', borderRadius: '14px', padding: '4px', display: 'flex', marginBottom: '1.25rem' }}>
-          <button
-            type="button"
-            onClick={() => setActiveTab('bookings')}
-            style={{
-              flex: 1,
-              padding: '0.65rem',
-              borderRadius: '11px',
-              border: 'none',
-              fontFamily: 'Outfit',
-              fontWeight: 800,
-              fontSize: '0.85rem',
-              cursor: 'pointer',
-              background: activeTab === 'bookings' ? '#ffffff' : 'transparent',
-              color: activeTab === 'bookings' ? '#171717' : '#6b7280',
-              boxShadow: activeTab === 'bookings' ? '0 4px 12px rgba(0,0,0,0.06)' : 'none',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '0.4rem',
-              transition: 'all 0.2s ease',
-            }}
-          >
-            <Calendar size={15} />
-            <span>Bookings ({bookings.length})</span>
-          </button>
+        {/* ── Appointments Feed Section ── */}
+        <div>
+          {/* Status Filter Pills */}
+          <div className="filter-pills-scroll" style={{ marginBottom: '1.25rem' }}>
+            {[
+              { id: 'all', label: `All (${bookings.length})` },
+              { id: 'pending', label: `Pending (${pendingBookings.length})` },
+              { id: 'accepted', label: `Confirmed (${acceptedBookings.length})` },
+              { id: 'completed', label: `Completed (${completedBookings.length})` },
+            ].map((pill) => (
+              <button
+                key={pill.id}
+                onClick={() => setFilterStatus(pill.id)}
+                style={{
+                  background: filterStatus === pill.id ? '#171717' : '#ffffff',
+                  color: filterStatus === pill.id ? '#d4af37' : '#6b7280',
+                  border: filterStatus === pill.id ? 'none' : '1px solid rgba(0,0,0,0.08)',
+                  padding: '0.4rem 0.85rem',
+                  borderRadius: '50px',
+                  fontFamily: 'Outfit',
+                  fontWeight: 700,
+                  fontSize: '0.78rem',
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                  boxShadow: filterStatus === pill.id ? '0 4px 12px rgba(0,0,0,0.1)' : 'none',
+                }}
+              >
+                {pill.label}
+              </button>
+            ))}
+          </div>
 
-          <button
-            type="button"
-            onClick={() => setActiveTab('orders')}
-            style={{
-              flex: 1,
-              padding: '0.65rem',
-              borderRadius: '11px',
-              border: 'none',
-              fontFamily: 'Outfit',
-              fontWeight: 800,
-              fontSize: '0.85rem',
-              cursor: 'pointer',
-              background: activeTab === 'orders' ? '#ffffff' : 'transparent',
-              color: activeTab === 'orders' ? '#171717' : '#6b7280',
-              boxShadow: activeTab === 'orders' ? '0 4px 12px rgba(0,0,0,0.06)' : 'none',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '0.4rem',
-              transition: 'all 0.2s ease',
-            }}
-          >
-            <ShoppingBag size={15} />
-            <span>Store Orders ({orders.length})</span>
-          </button>
-        </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: '#171717' }}>
+              Client Appointments Queue
+            </h3>
 
-        {/* ── Tab 1: Appointments Feed ── */}
-        {activeTab === 'bookings' && (
-          <div>
-            {/* Status Filter Pills */}
-            <div className="filter-pills-scroll" style={{ marginBottom: '1.25rem' }}>
-              {[
-                { id: 'all', label: `All (${bookings.length})` },
-                { id: 'pending', label: `Pending (${pendingBookings.length})` },
-                { id: 'accepted', label: `Confirmed (${acceptedBookings.length})` },
-                { id: 'completed', label: `Completed (${completedBookings.length})` },
-              ].map((pill) => (
-                <button
-                  key={pill.id}
-                  onClick={() => setFilterStatus(pill.id)}
-                  style={{
-                    background: filterStatus === pill.id ? '#171717' : '#ffffff',
-                    color: filterStatus === pill.id ? '#d4af37' : '#6b7280',
-                    border: filterStatus === pill.id ? 'none' : '1px solid rgba(0,0,0,0.08)',
-                    padding: '0.4rem 0.85rem',
-                    borderRadius: '50px',
-                    fontFamily: 'Outfit',
-                    fontWeight: 700,
-                    fontSize: '0.78rem',
-                    cursor: 'pointer',
-                    whiteSpace: 'nowrap',
-                    boxShadow: filterStatus === pill.id ? '0 4px 12px rgba(0,0,0,0.1)' : 'none',
-                  }}
-                >
-                  {pill.label}
-                </button>
-              ))}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              {bookings.length > 0 && (
+                <>
+                  <button
+                    onClick={handleDownloadHistory}
+                    title="Download Booking History (CSV)"
+                    style={{
+                      background: 'rgba(212,175,55,0.12)',
+                      border: '1px solid rgba(212,175,55,0.3)',
+                      color: '#d4af37',
+                      padding: '0.35rem 0.65rem',
+                      borderRadius: '8px',
+                      fontSize: '0.75rem',
+                      fontFamily: 'Outfit',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.3rem',
+                    }}
+                  >
+                    <Download size={13} /> Export CSV
+                  </button>
+
+                  <button
+                    onClick={handleClearHistory}
+                    title="Clear & Delete All History"
+                    style={{
+                      background: 'rgba(239,68,68,0.1)',
+                      border: '1px solid rgba(239,68,68,0.25)',
+                      color: '#ef4444',
+                      padding: '0.35rem 0.65rem',
+                      borderRadius: '8px',
+                      fontSize: '0.75rem',
+                      fontFamily: 'Outfit',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.3rem',
+                    }}
+                  >
+                    <Trash2 size={13} /> Clear History
+                  </button>
+                </>
+              )}
+
+              <button
+                onClick={fetchData}
+                style={{ background: 'none', border: 'none', color: '#d4af37', fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.85rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem', marginLeft: '0.3rem' }}
+              >
+                <RefreshCw size={14} /> Refresh
+              </button>
             </div>
+          </div>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-              <h3 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: '#171717' }}>
-                Client Appointments
-              </h3>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                {bookings.length > 0 && (
-                  <>
-                    <button
-                      onClick={handleDownloadHistory}
-                      title="Download Booking History (CSV)"
-                      style={{
-                        background: 'rgba(212,175,55,0.12)',
-                        border: '1px solid rgba(212,175,55,0.3)',
-                        color: '#d4af37',
-                        padding: '0.35rem 0.65rem',
-                        borderRadius: '8px',
-                        fontSize: '0.75rem',
-                        fontFamily: 'Outfit',
-                        fontWeight: 800,
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.3rem',
-                      }}
-                    >
-                      <Download size={13} /> Export CSV
-                    </button>
-
-                    <button
-                      onClick={handleClearHistory}
-                      title="Clear & Delete All History"
-                      style={{
-                        background: 'rgba(239,68,68,0.1)',
-                        border: '1px solid rgba(239,68,68,0.25)',
-                        color: '#ef4444',
-                        padding: '0.35rem 0.65rem',
-                        borderRadius: '8px',
-                        fontSize: '0.75rem',
-                        fontFamily: 'Outfit',
-                        fontWeight: 800,
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.3rem',
-                      }}
-                    >
-                      <Trash2 size={13} /> Clear History
-                    </button>
-                  </>
-                )}
-
-                <button
-                  onClick={fetchData}
-                  style={{ background: 'none', border: 'none', color: '#d4af37', fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.85rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem', marginLeft: '0.3rem' }}
-                >
-                  <RefreshCw size={14} /> Refresh
-                </button>
-              </div>
+          {loading ? (
+            <SkeletonList count={3} />
+          ) : filteredList.length === 0 ? (
+            <div className="app-card" style={{ textAlign: 'center', padding: '2.5rem 1rem', color: '#6b7280' }}>
+              <Calendar size={36} style={{ opacity: 0.3, marginBottom: '0.75rem' }} />
+              <h4 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: '#171717', marginBottom: '0.25rem' }}>
+                No Bookings Found
+              </h4>
+              <p style={{ fontSize: '0.85rem' }}>
+                New bookings will show up here as customers book.
+              </p>
             </div>
-
-            {loading ? (
-              <SkeletonList count={3} />
-            ) : filteredList.length === 0 ? (
-              <div className="app-card" style={{ textAlign: 'center', padding: '2.5rem 1rem', color: '#6b7280' }}>
-                <Calendar size={36} style={{ opacity: 0.3, marginBottom: '0.75rem' }} />
-                <h4 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: '#171717', marginBottom: '0.25rem' }}>
-                  No Bookings Found
-                </h4>
-                <p style={{ fontSize: '0.85rem' }}>
-                  New bookings will show up here as customers book.
-                </p>
-              </div>
-            ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
                 {filteredList.map((b) => (
                   <div key={b._id} className="app-card" style={{ marginBottom: 0, padding: '1.25rem', borderRadius: '14px', border: '1px solid rgba(0,0,0,0.06)', position: 'relative' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
@@ -845,97 +764,9 @@ export const ExpertDashboard = () => {
                     </div>
                   </div>
                 ))}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* ── Tab 2: Store Orders Feed ── */}
-        {activeTab === 'orders' && (
-          <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
-              <h3 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: '#171717' }}>
-                Store Orders Queue
-              </h3>
-              <button
-                onClick={fetchData}
-                style={{ background: 'none', border: 'none', color: '#d4af37', fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.85rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem' }}
-              >
-                <RefreshCw size={14} /> Refresh Orders
-              </button>
             </div>
-
-            {loading ? (
-              <SkeletonList count={2} />
-            ) : orders.length === 0 ? (
-              <div className="app-card" style={{ textAlign: 'center', padding: '2.5rem 1rem', color: '#6b7280' }}>
-                <ShoppingBag size={36} style={{ opacity: 0.3, marginBottom: '0.75rem' }} />
-                <h4 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: '#171717', marginBottom: '0.25rem' }}>
-                  No Store Orders Yet
-                </h4>
-                <p style={{ fontSize: '0.85rem' }}>
-                  Customer product purchases will appear here for fulfillment.
-                </p>
-              </div>
-            ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-                {orders.map((o) => (
-                  <div key={o._id} className="app-card" style={{ marginBottom: 0, padding: '1.25rem', borderRadius: '14px', border: '1px solid rgba(0,0,0,0.06)' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.65rem' }}>
-                      <div>
-                        <h4 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: '#171717' }}>
-                          {o.name || 'Customer'}
-                        </h4>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.78rem', color: '#6b7280', marginTop: '0.2rem' }}>
-                          <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                            <Mail size={12} /> {o.email}
-                          </span>
-                          {o.phone && (
-                            <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                              <Phone size={12} /> {o.phone}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                      <StatusBadge status={o.status || 'processing'} />
-                    </div>
-
-                    <div style={{ background: '#faf9f6', padding: '0.85rem', borderRadius: '14px', border: '1px solid rgba(0,0,0,0.06)', margin: '0.5rem 0 0.85rem' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <span style={{ fontWeight: 800, fontSize: '0.92rem', color: '#171717', fontFamily: 'Outfit' }}>
-                          {o.item || 'Grooming Products'}
-                        </span>
-                        <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.15rem', color: '#d4af37' }}>
-                          ${o.totalPrice || o.price || 0}
-                        </span>
-                      </div>
-                      {o.address && (
-                        <p style={{ fontSize: '0.78rem', color: '#4b5563', marginTop: '0.4rem', fontWeight: 600 }}>
-                          📍 Delivery Address: <span style={{ color: '#171717' }}>{o.address}</span>
-                        </p>
-                      )}
-                    </div>
-
-                    {o.status !== 'shipped' && o.status !== 'completed' ? (
-                      <button
-                        onClick={() => handleUpdateOrderStatus(o._id, 'shipped')}
-                        disabled={updatingId === o._id}
-                        className="app-btn app-btn-accent"
-                        style={{ width: '100%', minHeight: '38px', padding: '0.5rem', fontSize: '0.85rem' }}
-                      >
-                        <Truck size={16} /> Mark as Shipped
-                      </button>
-                    ) : (
-                      <div style={{ width: '100%', textAlign: 'center', fontSize: '0.78rem', color: '#3b82f6', fontFamily: 'Outfit', fontWeight: 800, padding: '0.4rem', background: 'rgba(59,130,246,0.08)', borderRadius: '8px' }}>
-                        ✓ Shipped & Dispatched
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {/* ── Account Management ── */}

@@ -7,6 +7,7 @@ const productSchema = new mongoose.Schema({
   desc: { type: String },
   badge: { type: String },
   image: { type: String, required: true },
+  secondaryImage: { type: String, default: '' },
   createdAt: { type: Date, default: Date.now }
 });
 

@@ -66,10 +66,7 @@ export const Store = () => {
   const [showCartSheet, setShowCartSheet] = useState(false);
   const [products, setProducts] = useState(DEFAULT_PRODUCTS);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchStoreProducts();
-  }, []);
+  const [hoveredImageMap, setHoveredImageMap] = useState({});
 
   const fetchStoreProducts = async () => {
     try {
@@ -83,6 +80,23 @@ export const Store = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchStoreProducts();
+
+    // Auto-refresh when user returns/focuses back on Store tab or window
+    const handleFocus = () => {
+      fetchStoreProducts();
+    };
+    window.addEventListener('focus', handleFocus);
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') fetchStoreProducts();
+    });
+
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, []);
 
   const handleAdd = (prod) => {
     addToCart(prod);
@@ -118,94 +132,156 @@ export const Store = () => {
           </p>
         </div>
 
-        <button
-          onClick={() => setShowCartSheet(true)}
-          style={{
-            background: 'linear-gradient(135deg, #d4af37, #b5952f)',
-            border: 'none',
-            color: '#ffffff',
-            padding: '0.75rem 1rem',
-            borderRadius: '12px',
-            fontFamily: 'Outfit',
-            fontWeight: 800,
-            fontSize: '0.85rem',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.4rem',
-            boxShadow: '0 6px 16px rgba(212,175,55,0.3)',
-          }}
-        >
-          <ShoppingBag size={18} />
-          <span>Cart ({itemCount})</span>
-        </button>
+        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+          <button
+            onClick={fetchStoreProducts}
+            title="Refresh Products"
+            style={{
+              background: 'rgba(255,255,255,0.1)',
+              border: '1px solid rgba(255,255,255,0.2)',
+              color: '#ffffff',
+              padding: '0.75rem',
+              borderRadius: '12px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <RefreshCw size={17} />
+          </button>
+
+          <button
+            onClick={() => setShowCartSheet(true)}
+            style={{
+              background: 'linear-gradient(135deg, #d4af37, #b5952f)',
+              border: 'none',
+              color: '#ffffff',
+              padding: '0.75rem 1rem',
+              borderRadius: '12px',
+              fontFamily: 'Outfit',
+              fontWeight: 800,
+              fontSize: '0.85rem',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              boxShadow: '0 6px 16px rgba(212,175,55,0.3)',
+            }}
+          >
+            <ShoppingBag size={18} />
+            <span>Cart ({itemCount})</span>
+          </button>
+        </div>
       </div>
 
       {/* Products Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.85rem' }}>
-        {products.map((p) => (
-          <div key={p.id} className="app-card" style={{ marginBottom: 0, padding: '0.85rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-            <div>
-              {/* Product Image Container */}
-              <div style={{ position: 'relative', width: '100%', height: '120px', borderRadius: '12px', overflow: 'hidden', marginBottom: '0.75rem', background: '#f3f4f6' }}>
-                <img
-                  src={p.image}
-                  alt={p.title}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                />
-                {p.badge && (
-                  <span
-                    style={{
-                      position: 'absolute',
-                      top: '6px',
-                      left: '6px',
-                      background: 'rgba(18, 18, 18, 0.85)',
-                      backdropFilter: 'blur(4px)',
-                      color: '#d4af37',
-                      fontSize: '0.65rem',
-                      fontFamily: 'Outfit',
-                      fontWeight: 800,
-                      padding: '0.15rem 0.5rem',
-                      borderRadius: '50px',
-                      textTransform: 'uppercase',
-                      border: '1px solid rgba(212,175,55,0.3)',
-                    }}
-                  >
-                    {p.badge}
-                  </span>
-                )}
-              </div>
+        {products.map((p) => {
+          const currentImg = hoveredImageMap[p.id] || p.image;
+          const hasSecondary = !!p.secondaryImage;
 
-              <h3 style={{ fontFamily: 'Outfit', fontSize: '0.95rem', fontWeight: 800, color: '#171717', lineHeight: 1.3 }}>
-                {p.title}
-              </h3>
+          return (
+            <div key={p.id} className="app-card" style={{ marginBottom: 0, padding: '0.85rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <div>
+                {/* Product Image Container with Dual Photo support */}
+                <div
+                  onMouseEnter={() => {
+                    if (p.secondaryImage) setHoveredImageMap(prev => ({ ...prev, [p.id]: p.secondaryImage }));
+                  }}
+                  onMouseLeave={() => {
+                    setHoveredImageMap(prev => ({ ...prev, [p.id]: p.image }));
+                  }}
+                  style={{ position: 'relative', width: '100%', height: '130px', borderRadius: '12px', overflow: 'hidden', marginBottom: '0.75rem', background: '#f3f4f6' }}
+                >
+                  <img
+                    src={currentImg}
+                    alt={p.title}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'all 0.3s ease' }}
+                  />
+                  
+                  {p.badge && (
+                    <span
+                      style={{
+                        position: 'absolute',
+                        top: '6px',
+                        left: '6px',
+                        background: 'rgba(18, 18, 18, 0.85)',
+                        backdropFilter: 'blur(4px)',
+                        color: '#d4af37',
+                        fontSize: '0.65rem',
+                        fontFamily: 'Outfit',
+                        fontWeight: 800,
+                        padding: '0.15rem 0.5rem',
+                        borderRadius: '50px',
+                        textTransform: 'uppercase',
+                        border: '1px solid rgba(212,175,55,0.3)',
+                      }}
+                    >
+                      {p.badge}
+                    </span>
+                  )}
 
-              <p style={{ color: '#6b7280', fontSize: '0.75rem', margin: '0.25rem 0 0.65rem', lineHeight: 1.35, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                {p.desc}
-              </p>
-            </div>
-
-            <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.55rem' }}>
-                <span style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 900, color: '#171717' }}>
-                  ${p.price}
-                </span>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#d4af37', fontSize: '0.75rem', fontWeight: 800 }}>
-                  <Star size={12} fill="#d4af37" />
-                  <span>{p.rating}</span>
+                  {/* Dual Photo Indicator Pills */}
+                  {hasSecondary && (
+                    <div style={{ position: 'absolute', bottom: '6px', right: '6px', display: 'flex', gap: '3px' }}>
+                      <span
+                        onClick={(e) => { e.stopPropagation(); setHoveredImageMap(prev => ({ ...prev, [p.id]: p.image })); }}
+                        style={{
+                          width: '8px',
+                          height: '8px',
+                          borderRadius: '50%',
+                          background: currentImg === p.image ? '#d4af37' : 'rgba(255,255,255,0.7)',
+                          cursor: 'pointer',
+                          boxShadow: '0 1px 3px rgba(0,0,0,0.3)'
+                        }}
+                      />
+                      <span
+                        onClick={(e) => { e.stopPropagation(); setHoveredImageMap(prev => ({ ...prev, [p.id]: p.secondaryImage })); }}
+                        style={{
+                          width: '8px',
+                          height: '8px',
+                          borderRadius: '50%',
+                          background: currentImg === p.secondaryImage ? '#d4af37' : 'rgba(255,255,255,0.7)',
+                          cursor: 'pointer',
+                          boxShadow: '0 1px 3px rgba(0,0,0,0.3)'
+                        }}
+                      />
+                    </div>
+                  )}
                 </div>
+
+                <h3 style={{ fontFamily: 'Outfit', fontSize: '0.95rem', fontWeight: 800, color: '#171717', lineHeight: 1.3 }}>
+                  {p.title}
+                </h3>
+
+                <p style={{ color: '#6b7280', fontSize: '0.75rem', margin: '0.25rem 0 0.65rem', lineHeight: 1.35, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                  {p.desc}
+                </p>
               </div>
 
-              <button
-                onClick={() => handleAdd(p)}
-                className="app-btn app-btn-primary"
-                style={{ minHeight: '36px', padding: '0.4rem', fontSize: '0.78rem' }}
-              >
-                <Plus size={14} /> Add to Cart
-              </button>
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.55rem' }}>
+                  <span style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 900, color: '#171717' }}>
+                    ${p.price}
+                  </span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#d4af37', fontSize: '0.75rem', fontWeight: 800 }}>
+                    <Star size={12} fill="#d4af37" />
+                    <span>{p.rating}</span>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => handleAdd(p)}
+                  className="app-btn app-btn-primary"
+                  style={{ minHeight: '36px', padding: '0.4rem', fontSize: '0.78rem' }}
+                >
+                  <Plus size={14} /> Add to Cart
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <CartSheet isOpen={showCartSheet} onClose={() => setShowCartSheet(false)} />

@@ -167,6 +167,7 @@ export const AdminDashboard = () => {
       desc: '',
       badge: '',
       image: '',
+      secondaryImage: '',
     });
     setShowProductModal(true);
   };
@@ -180,6 +181,7 @@ export const AdminDashboard = () => {
       desc: prod.desc || '',
       badge: prod.badge || '',
       image: prod.image || '',
+      secondaryImage: prod.secondaryImage || '',
     });
     setShowProductModal(true);
   };
@@ -191,7 +193,7 @@ export const AdminDashboard = () => {
     try {
       const url = await uploadToCloudinary(file);
       setProductForm(prev => ({ ...prev, image: url }));
-      showToast('Product photo uploaded successfully!', 'success');
+      showToast('Main product photo uploaded!', 'success');
     } catch (err) {
       showToast(err.message || 'Failed to upload photo', 'error');
     } finally {
@@ -199,10 +201,25 @@ export const AdminDashboard = () => {
     }
   };
 
+  const handleSecondaryProductImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setUploadingSecondaryImage(true);
+    try {
+      const url = await uploadToCloudinary(file);
+      setProductForm(prev => ({ ...prev, secondaryImage: url }));
+      showToast('Secondary product photo uploaded!', 'success');
+    } catch (err) {
+      showToast(err.message || 'Failed to upload photo', 'error');
+    } finally {
+      setUploadingSecondaryImage(false);
+    }
+  };
+
   const handleProductSubmit = async (e) => {
     e.preventDefault();
     if (!productForm.title || productForm.price === '' || !productForm.image) {
-      showToast('Title, price, and product image are required.', 'error');
+      showToast('Title, price, and primary product image are required.', 'error');
       return;
     }
 
@@ -215,6 +232,7 @@ export const AdminDashboard = () => {
         desc: productForm.desc.trim(),
         badge: productForm.badge.trim(),
         image: productForm.image.trim(),
+        secondaryImage: productForm.secondaryImage.trim(),
       };
 
       if (editingProduct) {
@@ -1222,46 +1240,98 @@ export const AdminDashboard = () => {
             </div>
 
             <form onSubmit={handleProductSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
-              <div>
-                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#334155', marginBottom: '0.35rem', fontFamily: 'Outfit' }}>
-                  Product Image *
-                </label>
+              {/* Dual Product Photos Section */}
+              <div style={{ background: '#faf9f5', padding: '0.85rem', borderRadius: '12px', border: '1px solid rgba(212,175,55,0.2)' }}>
+                <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#171717', marginBottom: '0.65rem', fontFamily: 'Outfit' }}>
+                  📸 Product Photos (Up to 2 Photos)
+                </div>
 
-                {productForm.image && (
-                  <div style={{ position: 'relative', width: '100%', height: '120px', borderRadius: '10px', overflow: 'hidden', marginBottom: '0.5rem', border: '1px solid rgba(0,0,0,0.1)' }}>
-                    <img src={productForm.image} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  </div>
-                )}
-
-                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                  <input
-                    type="url"
-                    placeholder="https://images.unsplash.com/..."
-                    value={productForm.image}
-                    onChange={e => setProductForm({ ...productForm, image: e.target.value })}
-                    style={{ flex: 1, padding: '0.55rem 0.75rem', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.12)', fontSize: '0.8rem', fontFamily: 'Outfit', outline: 'none' }}
-                  />
-                  <label
-                    htmlFor="product-image-upload"
-                    style={{
-                      cursor: uploadingProductImage ? 'not-allowed' : 'pointer',
-                      backgroundColor: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)',
-                      color: '#b5952f', padding: '0.55rem 0.75rem', borderRadius: '8px',
-                      fontSize: '0.78rem', fontWeight: 700, fontFamily: 'Outfit',
-                      display: 'inline-flex', alignItems: 'center', gap: '0.3rem', flexShrink: 0
-                    }}
-                  >
-                    <Upload size={13} />
-                    {uploadingProductImage ? 'Uploading...' : 'Upload'}
+                {/* Photo 1: Primary Image */}
+                <div style={{ marginBottom: '0.85rem' }}>
+                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#334155', marginBottom: '0.25rem', fontFamily: 'Outfit' }}>
+                    Photo 1: Primary Main Image *
                   </label>
-                  <input
-                    id="product-image-upload"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleProductImageUpload}
-                    disabled={uploadingProductImage}
-                    style={{ display: 'none' }}
-                  />
+
+                  {productForm.image && (
+                    <div style={{ position: 'relative', width: '100%', height: '110px', borderRadius: '8px', overflow: 'hidden', marginBottom: '0.4rem', border: '1px solid rgba(0,0,0,0.1)' }}>
+                      <img src={productForm.image} alt="Main Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
+                  )}
+
+                  <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
+                    <input
+                      type="url"
+                      placeholder="Primary image URL..."
+                      value={productForm.image}
+                      onChange={e => setProductForm({ ...productForm, image: e.target.value })}
+                      style={{ flex: 1, padding: '0.5rem 0.65rem', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.12)', fontSize: '0.78rem', fontFamily: 'Outfit', outline: 'none' }}
+                    />
+                    <label
+                      htmlFor="product-image-upload-1"
+                      style={{
+                        cursor: uploadingProductImage ? 'not-allowed' : 'pointer',
+                        backgroundColor: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.4)',
+                        color: '#b5952f', padding: '0.5rem 0.65rem', borderRadius: '8px',
+                        fontSize: '0.75rem', fontWeight: 800, fontFamily: 'Outfit',
+                        display: 'inline-flex', alignItems: 'center', gap: '0.3rem', flexShrink: 0
+                      }}
+                    >
+                      <Upload size={12} />
+                      {uploadingProductImage ? 'Uploading...' : 'Upload 1'}
+                    </label>
+                    <input
+                      id="product-image-upload-1"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleProductImageUpload}
+                      disabled={uploadingProductImage}
+                      style={{ display: 'none' }}
+                    />
+                  </div>
+                </div>
+
+                {/* Photo 2: Secondary Image */}
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#334155', marginBottom: '0.25rem', fontFamily: 'Outfit' }}>
+                    Photo 2: Secondary Angle / Detail Image (Optional)
+                  </label>
+
+                  {productForm.secondaryImage && (
+                    <div style={{ position: 'relative', width: '100%', height: '110px', borderRadius: '8px', overflow: 'hidden', marginBottom: '0.4rem', border: '1px solid rgba(0,0,0,0.1)' }}>
+                      <img src={productForm.secondaryImage} alt="Secondary Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
+                  )}
+
+                  <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
+                    <input
+                      type="url"
+                      placeholder="Secondary image URL..."
+                      value={productForm.secondaryImage}
+                      onChange={e => setProductForm({ ...productForm, secondaryImage: e.target.value })}
+                      style={{ flex: 1, padding: '0.5rem 0.65rem', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.12)', fontSize: '0.78rem', fontFamily: 'Outfit', outline: 'none' }}
+                    />
+                    <label
+                      htmlFor="product-image-upload-2"
+                      style={{
+                        cursor: uploadingSecondaryImage ? 'not-allowed' : 'pointer',
+                        backgroundColor: 'rgba(59,130,246,0.12)', border: '1px solid rgba(59,130,246,0.3)',
+                        color: '#3b82f6', padding: '0.5rem 0.65rem', borderRadius: '8px',
+                        fontSize: '0.75rem', fontWeight: 800, fontFamily: 'Outfit',
+                        display: 'inline-flex', alignItems: 'center', gap: '0.3rem', flexShrink: 0
+                      }}
+                    >
+                      <Upload size={12} />
+                      {uploadingSecondaryImage ? 'Uploading...' : 'Upload 2'}
+                    </label>
+                    <input
+                      id="product-image-upload-2"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleSecondaryProductImageUpload}
+                      disabled={uploadingSecondaryImage}
+                      style={{ display: 'none' }}
+                    />
+                  </div>
                 </div>
               </div>
 
