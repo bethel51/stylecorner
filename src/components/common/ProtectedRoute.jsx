@@ -19,7 +19,12 @@ export const ProtectedRoute = ({ children, requiredRole, allowedRoles }) => {
 
   const validRoles = allowedRoles || (requiredRole ? [requiredRole] : null);
   if (validRoles && !validRoles.includes(user?.role)) {
-    const fallbackPath = user?.role === 'staff' ? '/expert-dashboard' : '/customer-dashboard';
+    const fallbackPath =
+      user?.role === 'admin'
+        ? '/admin'
+        : user?.role === 'staff'
+        ? '/expert-dashboard'
+        : '/customer-dashboard';
     return <Navigate to={fallbackPath} replace />;
   }
 

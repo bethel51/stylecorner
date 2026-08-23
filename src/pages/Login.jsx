@@ -27,10 +27,14 @@ export const Login = () => {
     try {
       const loggedUser = await login(email, password, activeRole);
       const decoded = redirectPath ? decodeURIComponent(redirectPath) : null;
-      if (decoded && decoded.startsWith('/')) {
+      if (loggedUser?.role === 'admin') {
+        if (decoded && (decoded === '/admin' || decoded === '/profile' || decoded.startsWith('/admin'))) {
+          navigate(decoded);
+        } else {
+          navigate('/admin');
+        }
+      } else if (decoded && decoded.startsWith('/')) {
         navigate(decoded);
-      } else if (loggedUser?.role === 'admin') {
-        navigate('/admin');
       } else if (loggedUser?.role === 'staff') {
         navigate('/expert-dashboard');
       } else {

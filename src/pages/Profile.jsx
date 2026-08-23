@@ -16,7 +16,8 @@ import {
   Sparkles,
   ArrowLeft,
   Calendar,
-  Award
+  Award,
+  Shield
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { PageContainer } from '../components/common/PageContainer';
@@ -135,15 +136,26 @@ export const Profile = () => {
   };
 
   const isStaff = user?.role === 'staff';
+  const isAdmin = user?.role === 'admin';
+
+  const handleDashboardClick = () => {
+    if (isAdmin) {
+      navigate('/admin');
+    } else if (isStaff) {
+      navigate('/expert-dashboard');
+    } else {
+      navigate('/customer-dashboard');
+    }
+  };
 
   return (
-    <PageContainer title={`${isStaff ? 'Expert' : 'User'} Profile`}>
+    <PageContainer title={`${isAdmin ? 'Admin' : isStaff ? 'Expert' : 'User'} Profile`}>
       <div style={{ maxWidth: '720px', margin: '0 auto' }}>
         
         {/* Top Back & Navigation Banner */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
           <button
-            onClick={() => navigate(-1)}
+            onClick={handleDashboardClick}
             style={{
               background: 'none',
               border: 'none',
@@ -157,7 +169,7 @@ export const Profile = () => {
               gap: '0.4rem',
             }}
           >
-            <ArrowLeft size={16} /> Back to {isStaff ? 'Expert Dashboard' : 'Dashboard'}
+            <ArrowLeft size={16} /> Back to {isAdmin ? 'Admin Dashboard' : isStaff ? 'Expert Dashboard' : 'Dashboard'}
           </button>
         </div>
 
@@ -242,19 +254,19 @@ export const Profile = () => {
                 </h2>
                 <span
                   style={{
-                    background: 'rgba(212, 175, 55, 0.2)',
-                    color: '#d4af37',
+                    background: isAdmin ? 'rgba(22, 163, 74, 0.25)' : 'rgba(212, 175, 55, 0.2)',
+                    color: isAdmin ? '#4ade80' : '#d4af37',
                     fontSize: '0.7rem',
                     fontFamily: 'Outfit',
                     fontWeight: 800,
                     padding: '0.2rem 0.65rem',
                     borderRadius: '50px',
-                    border: '1px solid rgba(212,175,55,0.4)',
+                    border: isAdmin ? '1px solid rgba(74, 222, 128, 0.4)' : '1px solid rgba(212,175,55,0.4)',
                     textTransform: 'uppercase',
                     letterSpacing: '0.05em',
                   }}
                 >
-                  {isStaff ? 'Styling Expert' : 'Atelier VIP Client'}
+                  {isAdmin ? 'System Admin' : isStaff ? 'Styling Expert' : 'Atelier VIP Client'}
                 </span>
               </div>
 
@@ -266,6 +278,17 @@ export const Profile = () => {
                 <p style={{ color: '#a1a1aa', fontSize: '0.85rem', margin: 0 }}>
                   📞 {user.phone}
                 </p>
+              )}
+
+              {isAdmin && (
+                <button
+                  type="button"
+                  onClick={() => navigate('/admin')}
+                  className="app-btn app-btn-primary"
+                  style={{ marginTop: '0.75rem', gap: '0.5rem', padding: '0.4rem 0.9rem', fontSize: '0.82rem', width: 'fit-content' }}
+                >
+                  <Shield size={15} /> Open Admin Dashboard
+                </button>
               )}
             </div>
           </div>

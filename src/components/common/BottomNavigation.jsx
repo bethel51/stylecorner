@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Home, Scissors, CalendarPlus, ShoppingBag, User, LayoutDashboard } from 'lucide-react';
+import { Home, Scissors, CalendarPlus, ShoppingBag, User, LayoutDashboard, Shield } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 export const BottomNavigation = () => {
@@ -10,13 +10,18 @@ export const BottomNavigation = () => {
 
   const getDashboardPath = () => {
     if (!isAuthenticated) return '/login';
+    if (role === 'admin') return '/admin';
     return role === 'staff' ? '/expert-dashboard' : '/customer-dashboard';
   };
 
   const handleBookClick = () => {
-    if (isAuthenticated && role === 'staff') {
-      showToast('Experts cannot book services.', 'error');
-      navigate('/expert-dashboard');
+    if (isAuthenticated && (role === 'staff' || role === 'admin')) {
+      if (role === 'admin') {
+        navigate('/admin');
+      } else {
+        showToast('Experts cannot book services.', 'error');
+        navigate('/expert-dashboard');
+      }
       return;
     }
     navigate('/booking');
@@ -28,9 +33,9 @@ export const BottomNavigation = () => {
     { label: 'Book', path: '/booking', icon: CalendarPlus, isCTA: true, onClick: handleBookClick },
     { label: 'Store', path: '/store', icon: ShoppingBag },
     {
-      label: isAuthenticated ? (role === 'staff' ? 'Dashboard' : 'Profile') : 'Sign In',
+      label: isAuthenticated ? (role === 'admin' ? 'Admin' : role === 'staff' ? 'Dashboard' : 'Profile') : 'Sign In',
       path: getDashboardPath(),
-      icon: isAuthenticated ? LayoutDashboard : User,
+      icon: isAuthenticated ? (role === 'admin' ? Shield : LayoutDashboard) : User,
     },
   ];
 

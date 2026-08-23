@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ArrowLeft, ShoppingBag, User, Sparkles } from 'lucide-react';
+import { ArrowLeft, ShoppingBag, User, Sparkles, Shield } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
 import { ImagePreviewModal } from './ImagePreviewModal';
@@ -23,14 +23,20 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
   };
 
   const handleNavigateDashboard = () => {
-    navigate(role === 'staff' ? '/expert-dashboard' : '/customer-dashboard');
+    if (role === 'admin') {
+      navigate('/admin');
+    } else if (role === 'staff') {
+      navigate('/expert-dashboard');
+    } else {
+      navigate('/customer-dashboard');
+    }
   };
 
   return (
     <>
       <header className="app-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          {showBack || (!isHome && location.pathname !== '/customer-dashboard' && location.pathname !== '/expert-dashboard') ? (
+          {showBack || (!isHome && location.pathname !== '/customer-dashboard' && location.pathname !== '/expert-dashboard' && location.pathname !== '/admin') ? (
             <button
               className="app-header-btn"
               onClick={() => navigate(-1)}
@@ -73,6 +79,28 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          {role === 'admin' && (
+            <button
+              className="app-header-btn"
+              onClick={() => navigate('/admin')}
+              title="Admin Dashboard"
+              style={{
+                color: '#d4af37',
+                borderColor: 'rgba(212,175,55,0.5)',
+                background: 'rgba(212,175,55,0.12)',
+                fontWeight: 700,
+                fontSize: '0.75rem',
+                padding: '0 0.6rem',
+                gap: '0.35rem',
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+              <Shield size={15} />
+              <span style={{ fontFamily: 'Outfit', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Admin</span>
+            </button>
+          )}
+
           {onOpenAiMatcher && (
             <button
               className="app-header-btn"
