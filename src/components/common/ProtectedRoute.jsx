@@ -3,7 +3,7 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { SplashScreen } from './SplashScreen';
 
-export const ProtectedRoute = ({ children, requiredRole }) => {
+export const ProtectedRoute = ({ children, requiredRole, allowedRoles }) => {
   const { user, token, loading, isAuthenticated } = useAuth();
   const location = useLocation();
 
@@ -17,7 +17,8 @@ export const ProtectedRoute = ({ children, requiredRole }) => {
     return <Navigate to={`/login?redirect=${redirectPath}`} replace />;
   }
 
-  if (requiredRole && user?.role !== requiredRole) {
+  const validRoles = allowedRoles || (requiredRole ? [requiredRole] : null);
+  if (validRoles && !validRoles.includes(user?.role)) {
     const fallbackPath = user?.role === 'staff' ? '/expert-dashboard' : '/customer-dashboard';
     return <Navigate to={fallbackPath} replace />;
   }

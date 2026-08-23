@@ -65,6 +65,7 @@ export const AdminDashboard = () => {
   const [editingProduct, setEditingProduct] = useState(null);
   const [productToDelete, setProductToDelete] = useState(null);
   const [uploadingProductImage, setUploadingProductImage] = useState(false);
+  const [uploadingSecondaryImage, setUploadingSecondaryImage] = useState(false);
   const [productForm, setProductForm] = useState({
     title: '',
     price: '',

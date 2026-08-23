@@ -25,13 +25,16 @@ export const Login = () => {
 
     setSubmitting(true);
     try {
-      const user = await login(email, password, activeRole);
-      if (user?.role === 'staff') {
+      const loggedUser = await login(email, password, activeRole);
+      const decoded = redirectPath ? decodeURIComponent(redirectPath) : null;
+      if (decoded && decoded.startsWith('/')) {
+        navigate(decoded);
+      } else if (loggedUser?.role === 'admin') {
+        navigate('/admin');
+      } else if (loggedUser?.role === 'staff') {
         navigate('/expert-dashboard');
       } else {
-        // Decode the full redirect path (e.g. /booking, /booking?expert=123)
-        const decoded = redirectPath ? decodeURIComponent(redirectPath) : null;
-        navigate(decoded && decoded.startsWith('/') ? decoded : '/customer-dashboard');
+        navigate('/customer-dashboard');
       }
     } catch (err) {
       if (err.isUnverified && err.email) {
