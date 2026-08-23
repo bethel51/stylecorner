@@ -414,13 +414,86 @@ export const CustomerDashboard = () => {
             }}
           >
             {[
-              { label: 'Hair', service: 'Hair Stylist (Braider)', icon: '💇‍♀️', bg: '#FAF5F5' },
-              { label: 'Nails', service: 'Nail Tech', icon: '💅', bg: '#FAF5F5' },
-              { label: 'Lashes', service: 'Lash Tech', icon: '👁️', bg: '#FAF5F5' },
-              { label: 'Makeup', service: 'Makeup Artist', icon: '💄', bg: '#FAF5F5' },
-              { label: 'Wigs', service: 'Wig Installer', icon: '✨', bg: '#FAF5F5' },
-              { label: 'Manicure', service: 'Manicure', icon: '💅', bg: '#FAF5F5' },
-              { label: 'Pedicure', service: 'Pedicure', icon: '🦶', bg: '#FAF5F5' },
+              {
+                label: 'Hair',
+                service: 'Hair Stylist (Braider)',
+                icon: (
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#d4af37" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/>
+                    <line x1="20" y1="4" x2="8.12" y2="15.88"/>
+                    <line x1="14.47" y1="14.48" x2="20" y2="20"/>
+                    <line x1="8.12" y1="8.12" x2="12" y2="12"/>
+                  </svg>
+                ),
+                bg: '#FAF5F5'
+              },
+              {
+                label: 'Nails',
+                service: 'Nail Tech',
+                icon: (
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ec4899" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 2v6"/><path d="M6 8h12v10a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8z"/>
+                    <path d="M9 2h6"/>
+                  </svg>
+                ),
+                bg: '#FAF5F5'
+              },
+              {
+                label: 'Lashes',
+                service: 'Lash Tech',
+                icon: (
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M3 8l-1.5-2"/><path d="M7 5L6 2"/><path d="M12 4V1"/><path d="M17 5l1-3"/><path d="M21 8l1.5-2"/>
+                  </svg>
+                ),
+                bg: '#FAF5F5'
+              },
+              {
+                label: 'Makeup',
+                service: 'Makeup Artist',
+                icon: (
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M18 2l4 4-10 10H8v-4L18 2z"/><path d="M3 21h6"/>
+                    <path d="M15 5l4 4"/>
+                  </svg>
+                ),
+                bg: '#FAF5F5'
+              },
+              {
+                label: 'Wigs',
+                service: 'Wig Installer',
+                icon: (
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M2 4l3 12h14l3-12-6 7-4-5-4 5-6-7z"/>
+                  </svg>
+                ),
+                bg: '#FAF5F5'
+              },
+              {
+                label: 'Manicure',
+                service: 'Manicure',
+                icon: (
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v5"/>
+                    <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v6"/>
+                    <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/>
+                    <path d="M18 8a2 2 0 0 1 2 2v4a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.8-6-3l-3-4.5a2 2 0 0 1 3.2-2.4l1.8 2.4"/>
+                  </svg>
+                ),
+                bg: '#FAF5F5'
+              },
+              {
+                label: 'Pedicure',
+                service: 'Pedicure',
+                icon: (
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                  </svg>
+                ),
+                bg: '#FAF5F5'
+              },
             ].map((cat) => (
               <div
                 key={cat.label}
@@ -444,7 +517,6 @@ export const CustomerDashboard = () => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    fontSize: '1.75rem',
                     boxShadow: '0 4px 12px rgba(0,0,0,0.03)',
                     transition: 'transform 0.15s ease, box-shadow 0.15s ease'
                   }}

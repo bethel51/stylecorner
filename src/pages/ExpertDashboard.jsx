@@ -60,6 +60,7 @@ export const ExpertDashboard = () => {
   const [deletingAccount, setDeletingAccount] = useState(false);
 
   // Avatar edit state
+  const [showAvatarSheet, setShowAvatarSheet] = useState(false);
   const [avatarInput, setAvatarInput] = useState(user?.avatarUrl || '');
   const [coverInput, setCoverInput] = useState(user?.coverImage || '');
   const [uploadingPhoto, setUploadingPhoto] = useState(false);

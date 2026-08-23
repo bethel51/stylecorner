@@ -84,6 +84,24 @@ const DEFAULT_EXPERT_PROFILES = [
   }
 ];
 
+const normalizeServices = (rawServices) => {
+  if (!Array.isArray(rawServices) || rawServices.length === 0) {
+    return [{ name: 'Bespoke Styling', price: '₦20,000' }];
+  }
+  return rawServices.map((s, idx) => {
+    if (typeof s === 'string') {
+      return { name: s, price: `₦${(idx + 1) * 10 + 15},000` };
+    }
+    if (s && typeof s === 'object') {
+      return {
+        name: s.name || s.title || 'Specialist Service',
+        price: s.price ? (String(s.price).startsWith('₦') ? s.price : `₦${Number(s.price || 20000).toLocaleString()}`) : '₦20,000'
+      };
+    }
+    return { name: 'Specialist Service', price: '₦20,000' };
+  });
+};
+
 export const ExpertProfile = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -127,13 +145,15 @@ export const ExpertProfile = () => {
     if (customSaved) {
       try {
         const parsed = JSON.parse(customSaved);
-        setExpert(parsed);
-        if (parsed.services && parsed.services.length > 0) setSelectedService(parsed.services[0]);
+        const norm = { ...parsed, services: normalizeServices(parsed.services) };
+        setExpert(norm);
+        setSelectedService(norm.services[0]);
         return;
       } catch (err) {}
     }
 
     if (user && user.role === 'staff') {
+      const userServices = normalizeServices(user.services);
       const userProfile = {
         id: user._id || searchLower.replace(/\s+/g, '-'),
         name: `${user.firstname || ''} ${user.lastname || ''}`.trim() || 'Verified Specialist',
@@ -145,10 +165,7 @@ export const ExpertProfile = () => {
         bio: user.bio || 'Specialized in bespoke styling and executive client care.',
         avatar: user.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
         coverImage: user.coverImage || 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=800&q=80',
-        services: Array.isArray(user.services) && user.services.length > 0 ? user.services : [
-          { name: 'Wig Installer', price: '₦25,000' },
-          { name: 'Hair Stylist (Braider)', price: '₦35,000' }
-        ]
+        services: userServices
       };
       setExpert(userProfile);
       setSelectedService(userProfile.services[0]);
@@ -156,8 +173,9 @@ export const ExpertProfile = () => {
     }
 
     if (found) {
-      setExpert(found);
-      setSelectedService(found.services[0]);
+      const norm = { ...found, services: normalizeServices(found.services) };
+      setExpert(norm);
+      setSelectedService(norm.services[0]);
     } else {
       // Fallback API lookup
       api.getSpecialists()
@@ -166,9 +184,7 @@ export const ExpertProfile = () => {
             const matched = data.find(s => `${s.firstname} ${s.lastname}`.toLowerCase().includes(searchLower));
             if (matched) {
               const fullName = `${matched.firstname || ''} ${matched.lastname || ''}`.trim() || 'Style Specialist';
-              const specs = Array.isArray(matched.services)
-                ? matched.services
-                : (matched.services ? String(matched.services).split(',') : [{ name: 'Bespoke Styling', price: '₦20,000' }]);
+              const specs = normalizeServices(matched.services);
               
               const dynamicProfile = {
                 id: matched._id || fullName.toLowerCase().replace(/\s+/g, '-'),
@@ -188,12 +204,14 @@ export const ExpertProfile = () => {
               return;
             }
           }
-          setExpert(DEFAULT_EXPERT_PROFILES[0]);
-          setSelectedService(DEFAULT_EXPERT_PROFILES[0].services[0]);
+          const defaultNorm = { ...DEFAULT_EXPERT_PROFILES[0], services: normalizeServices(DEFAULT_EXPERT_PROFILES[0].services) };
+          setExpert(defaultNorm);
+          setSelectedService(defaultNorm.services[0]);
         })
         .catch(() => {
-          setExpert(DEFAULT_EXPERT_PROFILES[0]);
-          setSelectedService(DEFAULT_EXPERT_PROFILES[0].services[0]);
+          const defaultNorm = { ...DEFAULT_EXPERT_PROFILES[0], services: normalizeServices(DEFAULT_EXPERT_PROFILES[0].services) };
+          setExpert(defaultNorm);
+          setSelectedService(defaultNorm.services[0]);
         });
     }
   }, [queryName, user]);
@@ -747,7 +765,7 @@ export const ExpertProfile = () => {
             }}
           >
             <Calendar size={18} />
-            <span>Book Now ({selectedService ? selectedService.price : expert.services[0].price})</span>
+            <span>Book Now ({selectedService?.price || expert?.services?.[0]?.price || '₦20,000'})</span>
           </button>
         </div>
 
