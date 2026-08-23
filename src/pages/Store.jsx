@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { ShoppingBag, Plus, Check, Star, RefreshCw } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { ShoppingBag, Plus, Check, Star, RefreshCw, Eye } from 'lucide-react';
 import { PageContainer } from '../components/common/PageContainer';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
@@ -61,6 +62,7 @@ const DEFAULT_PRODUCTS = [
 ];
 
 export const Store = () => {
+  const navigate = useNavigate();
   const { addToCart, itemCount } = useCart();
   const { showToast } = useAuth();
   const [showCartSheet, setShowCartSheet] = useState(false);
@@ -87,93 +89,85 @@ export const Store = () => {
   useEffect(() => {
     fetchStoreProducts();
 
-    // Auto-refresh when user returns/focuses back on Store tab or window
     const handleFocus = () => {
       fetchStoreProducts();
     };
-    window.addEventListener('focus', handleFocus);
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible') fetchStoreProducts();
-    });
 
-    return () => {
-      window.removeEventListener('focus', handleFocus);
-    };
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
   }, []);
 
-  const handleAdd = (prod) => {
-    addToCart(prod);
-    showToast(`Added ${prod.title} to cart!`, 'success');
+  const handleAdd = (p, e) => {
+    if (e) e.stopPropagation();
+    addToCart(p);
+    showToast(`Added ${p.title} to cart!`, 'success');
   };
 
   return (
-    <PageContainer title="Grooming Store" onOpenCart={() => setShowCartSheet(true)}>
-      {/* Store Header Banner */}
+    <PageContainer title="Grooming Store">
+      {/* Hero Store Banner */}
       <div
-        className="app-card"
         style={{
-          background: 'linear-gradient(135deg, #171717, #0d0d0d)',
-          color: '#ffffff',
+          background: 'linear-gradient(135deg, #171717 0%, #0d0d0d 100%)',
           borderRadius: '20px',
-          padding: '1.5rem 1.25rem',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
+          padding: '1.25rem 1.25rem 1.1rem',
+          color: '#ffffff',
           marginBottom: '1.25rem',
-          border: '1px solid rgba(212,175,55,0.4)',
+          position: 'relative',
+          overflow: 'hidden',
+          border: '1.5px solid rgba(212,175,55,0.4)',
+          boxShadow: '0 12px 32px rgba(0,0,0,0.18)',
         }}
       >
-        <div>
-          <span style={{ fontSize: '0.72rem', color: '#d4af37', fontFamily: 'Outfit', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-            ATELIER STORE
-          </span>
-          <h2 style={{ fontFamily: 'Outfit', fontSize: '1.35rem', fontWeight: 900, marginTop: '0.2rem' }}>
-            Professional Grooming
-          </h2>
-          <p style={{ color: '#8e8e93', fontSize: '0.82rem', marginTop: '0.2rem' }}>
-            Artisan pomades, oils & scalp care delivered to your door.
-          </p>
-        </div>
-
-        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-          <button
-            onClick={fetchStoreProducts}
-            title="Refresh Products"
-            style={{
-              background: 'rgba(255,255,255,0.1)',
-              border: '1px solid rgba(255,255,255,0.2)',
-              color: '#ffffff',
-              padding: '0.75rem',
-              borderRadius: '12px',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <RefreshCw size={17} />
-          </button>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <span style={{ fontSize: '0.68rem', fontFamily: 'Outfit', fontWeight: 800, color: '#d4af37', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+              ATELIER ESSENTIALS
+            </span>
+            <h2 style={{ fontFamily: 'Outfit', fontSize: '1.3rem', fontWeight: 900, margin: '0.2rem 0 0.25rem', color: '#ffffff' }}>
+              Style Corner Boutique
+            </h2>
+            <p style={{ color: '#a1a1aa', fontSize: '0.78rem', margin: 0, maxWidth: '240px' }}>
+              Handpicked pomades, botanical oils & silk hair protection.
+            </p>
+          </div>
 
           <button
             onClick={() => setShowCartSheet(true)}
             style={{
-              background: 'linear-gradient(135deg, #d4af37, #b5952f)',
+              position: 'relative',
+              background: '#d4af37',
+              color: '#121212',
               border: 'none',
-              color: '#ffffff',
-              padding: '0.75rem 1rem',
-              borderRadius: '12px',
+              borderRadius: '14px',
+              padding: '0.65rem 0.9rem',
               fontFamily: 'Outfit',
-              fontWeight: 800,
-              fontSize: '0.85rem',
+              fontWeight: 900,
+              fontSize: '0.82rem',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               gap: '0.4rem',
-              boxShadow: '0 6px 16px rgba(212,175,55,0.3)',
+              boxShadow: '0 6px 18px rgba(212,175,55,0.35)',
+              flexShrink: 0,
             }}
           >
-            <ShoppingBag size={18} />
-            <span>Cart ({itemCount})</span>
+            <ShoppingBag size={16} />
+            <span>Cart</span>
+            {itemCount > 0 && (
+              <span
+                style={{
+                  background: '#121212',
+                  color: '#d4af37',
+                  fontSize: '0.7rem',
+                  borderRadius: '50px',
+                  padding: '0.1rem 0.45rem',
+                  fontWeight: 900,
+                }}
+              >
+                {itemCount}
+              </span>
+            )}
           </button>
         </div>
       </div>
@@ -185,7 +179,20 @@ export const Store = () => {
           const hasSecondary = !!p.secondaryImage;
 
           return (
-            <div key={p.id} className="app-card" style={{ marginBottom: 0, padding: '0.85rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+            <div
+              key={p.id}
+              onClick={() => navigate(`/product/${p.id}`)}
+              className="app-card"
+              style={{
+                marginBottom: 0,
+                padding: '0.85rem',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                cursor: 'pointer',
+                transition: 'transform 0.15s ease, box-shadow 0.15s ease'
+              }}
+            >
               <div>
                 {/* Product Image Container with Dual Photo support */}
                 <div
@@ -275,7 +282,7 @@ export const Store = () => {
                 </div>
 
                 <button
-                  onClick={() => handleAdd(p)}
+                  onClick={(e) => handleAdd(p, e)}
                   className="app-btn app-btn-primary"
                   style={{ minHeight: '36px', padding: '0.4rem', fontSize: '0.78rem' }}
                 >

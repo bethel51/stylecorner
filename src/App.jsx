@@ -24,6 +24,7 @@ import { Payment } from './pages/Payment';
 import { Policies } from './pages/Policies';
 import { Profile } from './pages/Profile';
 import { ExpertProfile } from './pages/ExpertProfile';
+import { ProductDetail } from './pages/ProductDetail';
 
 export const App = () => {
   return (
@@ -38,6 +39,7 @@ export const App = () => {
             <Route path="/expert-profile" element={<ExpertProfile />} />
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/store" element={<Store />} />
+            <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/booking" element={<Booking />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />

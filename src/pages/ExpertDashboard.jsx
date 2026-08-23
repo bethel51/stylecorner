@@ -594,6 +594,32 @@ export const ExpertDashboard = () => {
             </button>
 
             <button
+              onClick={() => navigate(`/expert-profile?name=${encodeURIComponent(user?.firstname || 'Stella Hair')}`)}
+              style={{
+                background: 'rgba(236,72,153,0.08)', border: '1.5px solid rgba(236,72,153,0.3)',
+                borderRadius: '18px', padding: '1.1rem 0.85rem',
+                cursor: 'pointer', textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '0.5rem',
+                minHeight: '102px',
+              }}
+            >
+              <div style={{
+                width: '42px', height: '42px', borderRadius: '12px',
+                background: '#ec4899', color: '#fff',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <Scissors size={20} />
+              </div>
+              <div>
+                <div style={{ fontFamily: 'Outfit', fontSize: '0.88rem', fontWeight: 800, color: '#171717' }}>
+                  Manage Public Page
+                </div>
+                <div style={{ fontSize: '0.7rem', color: '#6b7280', marginTop: '0.15rem', fontWeight: 600 }}>
+                  Edit bio, photos & prices
+                </div>
+              </div>
+            </button>
+
+            <button
               onClick={handleDownloadHistory}
               style={{
                 background: 'rgba(59,130,246,0.08)', border: '1.5px solid rgba(59,130,246,0.25)',
