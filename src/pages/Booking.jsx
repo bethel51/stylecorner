@@ -1,10 +1,50 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Calendar, Clock, Scissors, Sparkles, User, CheckCircle2, ShieldAlert } from 'lucide-react';
+import { Calendar, Clock, Scissors, Sparkles, User, CheckCircle2, ShieldAlert, MapPin } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import { PageContainer } from '../components/common/PageContainer';
 import { AISpecialistMatcherSheet } from '../components/booking/AISpecialistMatcherSheet';
+
+const NIGERIAN_STATES = [
+  'Abia State',
+  'Adamawa State',
+  'Akwa Ibom State',
+  'Anambra State',
+  'Bauchi State',
+  'Bayelsa State',
+  'Benue State',
+  'Borno State',
+  'Cross River State',
+  'Delta State',
+  'Ebonyi State',
+  'Edo State',
+  'Ekiti State',
+  'Enugu State',
+  'FCT – Abuja',
+  'Gombe State',
+  'Imo State',
+  'Jigawa State',
+  'Kaduna State',
+  'Kano State',
+  'Katsina State',
+  'Kebbi State',
+  'Kogi State',
+  'Kwara State',
+  'Lagos State',
+  'Nasarawa State',
+  'Niger State',
+  'Ogun State',
+  'Ondo State',
+  'Osun State',
+  'Oyo State',
+  'Plateau State',
+  'Rivers State',
+  'Sokoto State',
+  'Taraba State',
+  'Yobe State',
+  'Zamfara State',
+];
 
 export const Booking = () => {
   const navigate = useNavigate();
@@ -41,6 +81,7 @@ export const Booking = () => {
   const [service1, setService1] = useState(initialService || servicesData[0].title);
   const [service2, setService2] = useState('');
   const [stylist, setStylist] = useState(initialStylist);
+  const [location, setLocation] = useState('Lagos State');
   const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
   const [time, setTime] = useState('10:00 AM');
   const [submitting, setSubmitting] = useState(false);
@@ -98,6 +139,7 @@ export const Booking = () => {
       clientPhone: user.phone || 'N/A',
       stylist: stylist,
       service: servicesJoined,
+      location: location,
       price: totalPrice,
       date: date,
       time: time,
@@ -185,54 +227,80 @@ export const Booking = () => {
         </div>
 
         <form onSubmit={handleBookingSubmit} className="app-card" style={{ padding: '1.5rem' }}>
-          {/* Service Slot 1 */}
+          {/* Service Slot 1 — editable combobox */}
           <div className="app-input-group">
             <label className="app-label">Primary Service *</label>
-            <select
+            <input
+              list="service1-list"
               value={service1}
               onChange={(e) => setService1(e.target.value)}
-              className="app-select"
+              placeholder="Select or type a service..."
+              className="app-input"
               required
-            >
+            />
+            <datalist id="service1-list">
               {servicesData.map((s) => (
                 <option key={s.title} value={s.title}>
-                  {s.title} (₦{Number(s.price).toLocaleString()})
+                  ₦{Number(s.price).toLocaleString()}
                 </option>
               ))}
-            </select>
+            </datalist>
           </div>
 
-          {/* Service Slot 2 */}
+          {/* Service Slot 2 — editable combobox */}
           <div className="app-input-group">
             <label className="app-label">Secondary Combo Service (Optional)</label>
-            <select
+            <input
+              list="service2-list"
               value={service2}
               onChange={(e) => setService2(e.target.value)}
-              className="app-select"
-            >
-              <option value="">-- None (Single Service) --</option>
+              placeholder="Select or type a second service (optional)..."
+              className="app-input"
+            />
+            <datalist id="service2-list">
+              <option value="">None (Single Service)</option>
               {servicesData.map((s) => (
                 <option key={s.title} value={s.title}>
-                  {s.title} (₦{Number(s.price).toLocaleString()})
+                  ₦{Number(s.price).toLocaleString()}
                 </option>
               ))}
-            </select>
+            </datalist>
           </div>
 
           {/* Preferred Specialist */}
           <div className="app-input-group">
             <label className="app-label">Preferred Artisan / Specialist</label>
-            <select
+            <input
+              list="stylist-list"
               value={stylist}
               onChange={(e) => setStylist(e.target.value)}
-              className="app-select"
-            >
+              placeholder="Select or type a specialist name..."
+              className="app-input"
+            />
+            <datalist id="stylist-list">
               {stylistsList.map((st) => (
-                <option key={st} value={st}>
-                  {st}
-                </option>
+                <option key={st} value={st} />
               ))}
-            </select>
+            </datalist>
+          </div>
+
+          {/* Preferred Location — all 36 states + FCT, editable */}
+          <div className="app-input-group">
+            <label className="app-label" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+              <MapPin size={13} /> Preferred Service Location
+            </label>
+            <input
+              list="location-list"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              placeholder="Select state or type your city / address..."
+              className="app-input"
+            />
+            <datalist id="location-list">
+              {NIGERIAN_STATES.map((st) => (
+                <option key={st} value={st} />
+              ))}
+            </datalist>
           </div>
 
           {/* Date Picker */}
