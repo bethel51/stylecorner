@@ -87,9 +87,9 @@ const DEFAULT_EXPERT_PROFILES = [
 export const ExpertProfile = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { showToast, user } = useAuth();
+  const { showToast, user, updateProfile } = useAuth();
 
-  const queryName = searchParams.get('name') || searchParams.get('stylist') || 'Stella Hair';
+  const queryName = searchParams.get('name') || searchParams.get('stylist') || (user?.firstname ? `${user.firstname} ${user.lastname || ''}` : 'Style Specialist');
   
   const [expert, setExpert] = useState(null);
   const [selectedService, setSelectedService] = useState(null);
@@ -121,23 +121,45 @@ export const ExpertProfile = () => {
     let found = DEFAULT_EXPERT_PROFILES.find(p => p.name.toLowerCase().includes(searchLower) || p.id.includes(searchLower));
 
     // Check if custom profile saved in localStorage
-    const targetId = found ? found.id : searchLower.replace(/\s+/g, '-');
-    const customSaved = localStorage.getItem(`expert_profile_custom_${targetId}`);
+    const targetId1 = found ? found.id : searchLower.replace(/\s+/g, '-');
+    const customSaved = localStorage.getItem(`expert_profile_custom_${targetId1}`) || localStorage.getItem(`expert_profile_custom_${searchLower.replace(/\s+/g, '-')}`);
 
     if (customSaved) {
       try {
         const parsed = JSON.parse(customSaved);
         setExpert(parsed);
-        setSelectedService(parsed.services[0]);
+        if (parsed.services && parsed.services.length > 0) setSelectedService(parsed.services[0]);
         return;
       } catch (err) {}
+    }
+
+    if (user && user.role === 'staff') {
+      const userProfile = {
+        id: user._id || searchLower.replace(/\s+/g, '-'),
+        name: `${user.firstname || ''} ${user.lastname || ''}`.trim() || 'Verified Specialist',
+        role: user.title || 'Certified Style Specialist',
+        rating: 5.0,
+        reviewsCount: 12,
+        location: user.location || 'Lagos, Nigeria',
+        experience: 'Verified Atelier Expert',
+        bio: user.bio || 'Specialized in bespoke styling and executive client care.',
+        avatar: user.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
+        coverImage: user.coverImage || 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=800&q=80',
+        services: Array.isArray(user.services) && user.services.length > 0 ? user.services : [
+          { name: 'Wig Installer', price: '₦25,000' },
+          { name: 'Hair Stylist (Braider)', price: '₦35,000' }
+        ]
+      };
+      setExpert(userProfile);
+      setSelectedService(userProfile.services[0]);
+      return;
     }
 
     if (found) {
       setExpert(found);
       setSelectedService(found.services[0]);
     } else {
-      // Fallback API lookup or generate dynamic profile
+      // Fallback API lookup
       api.getSpecialists()
         .then((data) => {
           if (Array.isArray(data) && data.length > 0) {
@@ -146,23 +168,20 @@ export const ExpertProfile = () => {
               const fullName = `${matched.firstname || ''} ${matched.lastname || ''}`.trim() || 'Style Specialist';
               const specs = Array.isArray(matched.services)
                 ? matched.services
-                : (matched.services ? String(matched.services).split(',') : ['Hair Cut & Styling', 'Beard Trim']);
+                : (matched.services ? String(matched.services).split(',') : [{ name: 'Bespoke Styling', price: '₦20,000' }]);
               
               const dynamicProfile = {
                 id: matched._id || fullName.toLowerCase().replace(/\s+/g, '-'),
                 name: fullName,
-                role: matched.specialties ? (Array.isArray(matched.specialties) ? matched.specialties.join(' · ') : matched.specialties) : 'Certified Master Specialist',
+                role: matched.title || 'Certified Master Specialist',
                 rating: 5.0,
                 reviewsCount: 42,
-                location: matched.state ? `${matched.state}, Nigeria` : 'Lagos, Nigeria',
+                location: matched.location || 'Lagos, Nigeria',
                 experience: 'Verified Atelier Expert',
-                bio: `Specialized in premium ${specs.join(', ')}. Dedicated to luxury client care and bespoke grooming experiences.`,
+                bio: matched.bio || `Specialized in premium hair and beauty services.`,
                 avatar: matched.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
-                coverImage: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=800&q=80',
-                services: specs.map((s, idx) => ({
-                  name: s,
-                  price: `₦${(idx + 1) * 10 + 5},000`
-                }))
+                coverImage: matched.coverImage || 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=800&q=80',
+                services: specs
               };
               setExpert(dynamicProfile);
               setSelectedService(dynamicProfile.services[0]);
@@ -177,7 +196,7 @@ export const ExpertProfile = () => {
           setSelectedService(DEFAULT_EXPERT_PROFILES[0].services[0]);
         });
     }
-  }, [queryName]);
+  }, [queryName, user]);
 
   // Open Edit Sheet & Populate Form
   const handleOpenEditSheet = () => {
@@ -213,6 +232,10 @@ export const ExpertProfile = () => {
         if (prev?.id) localStorage.setItem(`expert_profile_custom_${prev.id}`, JSON.stringify(updated));
         return updated;
       });
+
+      if (user) {
+        api.updateProfile({ coverImage: url }).catch(() => {});
+      }
     } catch (err) {
       console.warn('Cloudinary cover upload warning:', err.message);
     } finally {
@@ -240,7 +263,6 @@ export const ExpertProfile = () => {
         return updated;
       });
 
-      // Sync with user account in database if logged in
       if (user) {
         api.updateProfile({ avatarUrl: url }).catch(() => {});
       }
@@ -287,8 +309,12 @@ export const ExpertProfile = () => {
       setExpert(updatedProfile);
       if (updatedProfile.services.length > 0) setSelectedService(updatedProfile.services[0]);
 
-      // Save to localStorage for instant client persistence
-      localStorage.setItem(`expert_profile_custom_${expert.id}`, JSON.stringify(updatedProfile));
+      // Save to localStorage for instant client persistence using BOTH target keys
+      const idKey1 = (expert.id || '').toLowerCase();
+      const idKey2 = (editForm.name || '').toLowerCase().replace(/\s+/g, '-');
+      
+      localStorage.setItem(`expert_profile_custom_${idKey1}`, JSON.stringify(updatedProfile));
+      localStorage.setItem(`expert_profile_custom_${idKey2}`, JSON.stringify(updatedProfile));
 
       // Save to database backend
       if (user) {
@@ -299,7 +325,16 @@ export const ExpertProfile = () => {
           location: editForm.location,
           bio: editForm.bio,
           avatarUrl: editForm.avatar,
-        }).catch(() => {});
+          coverImage: editForm.coverImage,
+          services: editForm.services,
+        }).catch((err) => console.warn('Update profile backend:', err));
+
+        if (updateProfile) {
+          await updateProfile({
+            avatarUrl: editForm.avatar,
+            coverImage: editForm.coverImage,
+          }).catch(() => {});
+        }
       }
 
       setShowEditSheet(false);

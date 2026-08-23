@@ -376,16 +376,29 @@ app.get('/api/auth/me', authenticateToken, async (req, res) => {
 // Update user profile
 app.put('/api/users/profile', authenticateToken, async (req, res) => {
   try {
-    const { firstname, lastname, phone, avatarUrl } = req.body;
+    const { firstname, lastname, phone, avatarUrl, coverImage, title, bio, location, services, specialties } = req.body;
     
+    const updatePayload = {};
+    if (firstname !== undefined) updatePayload.firstname = firstname;
+    if (lastname !== undefined) updatePayload.lastname = lastname;
+    if (phone !== undefined) updatePayload.phone = phone;
+    if (avatarUrl !== undefined) updatePayload.avatarUrl = avatarUrl;
+    if (coverImage !== undefined) updatePayload.coverImage = coverImage;
+    if (title !== undefined) updatePayload.title = title;
+    if (bio !== undefined) updatePayload.bio = bio;
+    if (location !== undefined) updatePayload.location = location;
+    if (services !== undefined) updatePayload.services = services;
+    if (specialties !== undefined) updatePayload.specialties = specialties;
+
     const updatedUser = await User.findByIdAndUpdate(
       req.user._id,
-      { $set: { firstname, lastname, phone, avatarUrl } },
+      { $set: updatePayload },
       { returnDocument: 'after', runValidators: true }
     ).select('-password');
     
     res.status(200).json(updatedUser);
   } catch (error) {
+    console.error('Update profile error:', error);
     res.status(500).json({ error: 'Failed to update profile' });
   }
 });
