@@ -483,6 +483,124 @@ export const ExpertDashboard = () => {
           })()}
         </div>
 
+        {/* ── Expert Quick Action Shortcuts Bar ── */}
+        <div className="app-card" style={{ padding: '1rem', marginBottom: '1.25rem', borderRadius: '18px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+            <h4 style={{ fontFamily: 'Outfit', fontSize: '0.9rem', fontWeight: 800, color: '#171717', margin: 0, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              ⚡ Expert Quick Shortcuts
+            </h4>
+            <span style={{ fontSize: '0.72rem', color: '#6b7280', fontWeight: 600 }}>Specialist Controls</span>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.6rem' }}>
+            <div
+              className="app-card"
+              onClick={() => {
+                const next = !isAvailable;
+                setIsAvailable(next);
+                showToast(next ? 'Status set to: Accepting Bookings' : 'Status set to: On Break', 'accent');
+              }}
+              style={{ cursor: 'pointer', padding: '0.85rem 0.4rem', textAlign: 'center', marginBottom: 0, border: isAvailable ? '1px solid rgba(16,185,129,0.3)' : '1px solid rgba(239,68,68,0.3)', borderRadius: '14px', background: isAvailable ? 'rgba(16,185,129,0.08)' : 'rgba(239,68,68,0.08)' }}
+            >
+              <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: isAvailable ? '#10b981' : '#ef4444', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 0.4rem' }}>
+                <Clock size={18} />
+              </div>
+              <span style={{ fontFamily: 'Outfit', fontSize: '0.74rem', fontWeight: 800, color: isAvailable ? '#059669' : '#dc2626', display: 'block' }}>
+                {isAvailable ? 'Available' : 'On Break'}
+              </span>
+            </div>
+
+            <div
+              className="app-card"
+              onClick={handleDownloadHistory}
+              style={{ cursor: 'pointer', padding: '0.85rem 0.4rem', textAlign: 'center', marginBottom: 0, border: '1px solid rgba(212,175,55,0.3)', borderRadius: '14px', background: 'rgba(212,175,55,0.08)' }}
+            >
+              <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: '#d4af37', color: '#171717', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 0.4rem' }}>
+                <Download size={18} />
+              </div>
+              <span style={{ fontFamily: 'Outfit', fontSize: '0.74rem', fontWeight: 800, color: '#b5952f', display: 'block' }}>Export CSV</span>
+            </div>
+
+            <div
+              className="app-card"
+              onClick={() => navigate('/profile')}
+              style={{ cursor: 'pointer', padding: '0.85rem 0.4rem', textAlign: 'center', marginBottom: 0, border: '1px solid rgba(0,0,0,0.08)', borderRadius: '14px', background: '#faf9f5' }}
+            >
+              <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'rgba(17,24,39,0.1)', color: '#171717', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 0.4rem' }}>
+                <Scissors size={18} />
+              </div>
+              <span style={{ fontFamily: 'Outfit', fontSize: '0.74rem', fontWeight: 800, color: '#171717', display: 'block' }}>Services</span>
+            </div>
+
+            <div
+              className="app-card"
+              onClick={fetchData}
+              style={{ cursor: 'pointer', padding: '0.85rem 0.4rem', textAlign: 'center', marginBottom: 0, border: '1px solid rgba(0,0,0,0.08)', borderRadius: '14px', background: '#faf9f5' }}
+            >
+              <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'rgba(59,130,246,0.12)', color: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 0.4rem' }}>
+                <RefreshCw size={18} />
+              </div>
+              <span style={{ fontFamily: 'Outfit', fontSize: '0.74rem', fontWeight: 800, color: '#171717', display: 'block' }}>Refresh</span>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Recent Activity Feed Widget for Expert ── */}
+        <div className="app-card" style={{ padding: '1.1rem', marginBottom: '1.25rem', borderRadius: '18px', background: 'linear-gradient(135deg, #ffffff 0%, #faf9f5 100%)', border: '1px solid rgba(0,0,0,0.08)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <Clock size={16} color="#d4af37" />
+              <h4 style={{ fontFamily: 'Outfit', fontSize: '0.95rem', fontWeight: 800, color: '#171717', margin: 0 }}>
+                Recent Appointment Feed
+              </h4>
+            </div>
+            <span style={{ fontSize: '0.72rem', color: '#6b7280' }}>Live Stream</span>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+            {bookings.length === 0 ? (
+              <p style={{ color: '#9ca3af', fontSize: '0.78rem', textAlign: 'center', margin: '0.5rem 0' }}>
+                No active appointments yet. Client bookings will appear here in real time!
+              </p>
+            ) : (
+              bookings
+                .slice()
+                .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
+                .slice(0, 3)
+                .map((item, idx) => (
+                  <div
+                    key={idx}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      padding: '0.65rem 0.85rem',
+                      borderRadius: '12px',
+                      background: '#ffffff',
+                      border: '1px solid rgba(0,0,0,0.06)',
+                      boxShadow: '0 2px 6px rgba(0,0,0,0.02)',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                      <div style={{ width: '32px', height: '32px', borderRadius: '10px', background: 'rgba(212,175,55,0.15)', color: '#d4af37', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        <Calendar size={16} />
+                      </div>
+                      <div>
+                        <span style={{ fontFamily: 'Outfit', fontSize: '0.82rem', fontWeight: 800, color: '#171717', display: 'block' }}>
+                          {item.clientName || 'Client'} — {item.service || 'Service'}
+                        </span>
+                        <span style={{ fontSize: '0.72rem', color: '#6b7280' }}>
+                          📅 {item.date || ''} @ {item.time || ''} · ${item.price || 0}
+                        </span>
+                      </div>
+                    </div>
+                    <StatusBadge status={item.status} />
+                  </div>
+                ))
+            )}
+          </div>
+        </div>
+
         {/* ── Segmented Tab Switcher (Appointments vs Store Orders) ── */}
         <div style={{ background: '#e5e7eb', borderRadius: '14px', padding: '4px', display: 'flex', marginBottom: '1.25rem' }}>
           <button

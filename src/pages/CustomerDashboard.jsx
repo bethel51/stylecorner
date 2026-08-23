@@ -382,39 +382,136 @@ export const CustomerDashboard = () => {
           </p>
         </div>
 
-        {/* ── Mobile Quick Actions Grid ── */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.75rem', marginBottom: '1.5rem' }}>
-          <div
-            className="app-card"
-            onClick={() => navigate('/booking')}
-            style={{ cursor: 'pointer', padding: '1rem 0.65rem', textAlign: 'center', marginBottom: 0 }}
-          >
-            <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'rgba(212,175,55,0.15)', color: '#d4af37', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 0.5rem' }}>
-              <Calendar size={20} />
-            </div>
-            <span style={{ fontFamily: 'Outfit', fontSize: '0.8rem', fontWeight: 800, color: '#171717' }}>Book Visit</span>
+        {/* ── Enhanced Quick Action Shortcuts Bar ── */}
+        <div className="app-card" style={{ padding: '1rem', marginBottom: '1.25rem', borderRadius: '18px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+            <h4 style={{ fontFamily: 'Outfit', fontSize: '0.9rem', fontWeight: 800, color: '#171717', margin: 0, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              ⚡ Quick Shortcuts
+            </h4>
+            <span style={{ fontSize: '0.72rem', color: '#6b7280', fontWeight: 600 }}>Instant Navigation</span>
           </div>
 
-          <div
-            className="app-card"
-            onClick={() => setShowAiSheet(true)}
-            style={{ cursor: 'pointer', padding: '1rem 0.65rem', textAlign: 'center', marginBottom: 0, border: '1.5px solid rgba(212,175,55,0.4)' }}
-          >
-            <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: '#171717', color: '#d4af37', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 0.5rem' }}>
-              <Sparkles size={20} />
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.6rem' }}>
+            <div
+              className="app-card"
+              onClick={() => navigate('/booking')}
+              style={{ cursor: 'pointer', padding: '0.85rem 0.4rem', textAlign: 'center', marginBottom: 0, border: '1px solid rgba(0,0,0,0.08)', borderRadius: '14px', background: '#faf9f5' }}
+            >
+              <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'rgba(212,175,55,0.18)', color: '#d4af37', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 0.4rem' }}>
+                <Calendar size={18} />
+              </div>
+              <span style={{ fontFamily: 'Outfit', fontSize: '0.76rem', fontWeight: 800, color: '#171717', display: 'block' }}>Book Visit</span>
             </div>
-            <span style={{ fontFamily: 'Outfit', fontSize: '0.8rem', fontWeight: 800, color: '#171717' }}>AI Matcher</span>
+
+            <div
+              className="app-card"
+              onClick={() => setShowAiSheet(true)}
+              style={{ cursor: 'pointer', padding: '0.85rem 0.4rem', textAlign: 'center', marginBottom: 0, border: '1.5px solid rgba(212,175,55,0.4)', borderRadius: '14px', background: 'linear-gradient(135deg, #171717, #0d0d0d)', color: '#ffffff' }}
+            >
+              <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: '#d4af37', color: '#171717', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 0.4rem' }}>
+                <Sparkles size={18} />
+              </div>
+              <span style={{ fontFamily: 'Outfit', fontSize: '0.76rem', fontWeight: 800, color: '#ffffff', display: 'block' }}>AI Matcher</span>
+            </div>
+
+            <div
+              className="app-card"
+              onClick={() => {
+                if (orders.length > 0) {
+                  setSelectedOrderForTracking(orders[0]);
+                } else {
+                  showToast('No active orders to track. Visit the store to place an order.', 'accent');
+                  navigate('/store');
+                }
+              }}
+              style={{ cursor: 'pointer', padding: '0.85rem 0.4rem', textAlign: 'center', marginBottom: 0, border: '1px solid rgba(0,0,0,0.08)', borderRadius: '14px', background: '#faf9f5' }}
+            >
+              <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'rgba(16,185,129,0.15)', color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 0.4rem' }}>
+                <Truck size={18} />
+              </div>
+              <span style={{ fontFamily: 'Outfit', fontSize: '0.76rem', fontWeight: 800, color: '#171717', display: 'block' }}>Track Delivery</span>
+            </div>
+
+            <div
+              className="app-card"
+              onClick={() => navigate('/store')}
+              style={{ cursor: 'pointer', padding: '0.85rem 0.4rem', textAlign: 'center', marginBottom: 0, border: '1px solid rgba(0,0,0,0.08)', borderRadius: '14px', background: '#faf9f5' }}
+            >
+              <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'rgba(59,130,246,0.15)', color: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 0.4rem' }}>
+                <ShoppingBag size={18} />
+              </div>
+              <span style={{ fontFamily: 'Outfit', fontSize: '0.76rem', fontWeight: 800, color: '#171717', display: 'block' }}>Store</span>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Recent Activity Feed Widget ── */}
+        <div className="app-card" style={{ padding: '1.1rem', marginBottom: '1.25rem', borderRadius: '18px', background: 'linear-gradient(135deg, #ffffff 0%, #faf9f5 100%)', border: '1px solid rgba(0,0,0,0.08)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <Clock size={16} color="#d4af37" />
+              <h4 style={{ fontFamily: 'Outfit', fontSize: '0.95rem', fontWeight: 800, color: '#171717', margin: 0 }}>
+                Recent Activity & Updates
+              </h4>
+            </div>
+            <span style={{ fontSize: '0.72rem', color: '#6b7280' }}>Live Timeline</span>
           </div>
 
-          <div
-            className="app-card"
-            onClick={() => navigate('/store')}
-            style={{ cursor: 'pointer', padding: '1rem 0.65rem', textAlign: 'center', marginBottom: 0 }}
-          >
-            <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'rgba(59,130,246,0.12)', color: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 0.5rem' }}>
-              <ShoppingBag size={20} />
-            </div>
-            <span style={{ fontFamily: 'Outfit', fontSize: '0.8rem', fontWeight: 800, color: '#171717' }}>Store</span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+            {bookings.length === 0 && orders.length === 0 ? (
+              <p style={{ color: '#9ca3af', fontSize: '0.78rem', textAlign: 'center', margin: '0.5rem 0' }}>
+                No recent activity. Book a visit or make a purchase to see updates here!
+              </p>
+            ) : (
+              [
+                ...bookings.map(b => ({
+                  type: 'booking',
+                  title: `Appointment: ${b.service || 'Grooming Service'}`,
+                  subtitle: `Stylist: ${b.stylist || 'VIP Specialist'} · ${b.date || ''} @ ${b.time || ''}`,
+                  status: b.status,
+                  date: b.createdAt || new Date().toISOString(),
+                })),
+                ...orders.map(o => ({
+                  type: 'order',
+                  title: `Store Order: #${String(o._id).slice(-6).toUpperCase()}`,
+                  subtitle: `Total: $${o.totalPrice || o.price || 0} · Stage: ${o.trackingStatus || o.status || 'Processing'}`,
+                  status: o.status || 'processing',
+                  date: o.createdAt || new Date().toISOString(),
+                }))
+              ]
+                .sort((a, b) => new Date(b.date) - new Date(a.date))
+                .slice(0, 3)
+                .map((item, idx) => (
+                  <div
+                    key={idx}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      padding: '0.65rem 0.85rem',
+                      borderRadius: '12px',
+                      background: '#ffffff',
+                      border: '1px solid rgba(0,0,0,0.06)',
+                      boxShadow: '0 2px 6px rgba(0,0,0,0.02)',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                      <div style={{ width: '32px', height: '32px', borderRadius: '10px', background: item.type === 'booking' ? 'rgba(212,175,55,0.15)' : 'rgba(16,185,129,0.15)', color: item.type === 'booking' ? '#d4af37' : '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        {item.type === 'booking' ? <Calendar size={16} /> : <ShoppingBag size={16} />}
+                      </div>
+                      <div>
+                        <span style={{ fontFamily: 'Outfit', fontSize: '0.82rem', fontWeight: 800, color: '#171717', display: 'block' }}>
+                          {item.title}
+                        </span>
+                        <span style={{ fontSize: '0.72rem', color: '#6b7280' }}>
+                          {item.subtitle}
+                        </span>
+                      </div>
+                    </div>
+                    <StatusBadge status={item.status} />
+                  </div>
+                ))
+            )}
           </div>
         </div>
 
