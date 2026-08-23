@@ -8,27 +8,43 @@ import { Scissors } from 'lucide-react';
 // Eager load Home page for instant initial render
 import { Home } from './pages/Home';
 
+// Helper to safely import lazy components with automatic page reload retry if chunk hash changes after deployment
+const safeLazy = (importFn) =>
+  lazy(async () => {
+    try {
+      return await importFn();
+    } catch (error) {
+      console.warn('[PWA] Module script import failed after deployment update. Reloading for fresh build...', error);
+      const hasReloaded = sessionStorage.getItem('chunk_reload_retry');
+      if (!hasReloaded) {
+        sessionStorage.setItem('chunk_reload_retry', 'true');
+        window.location.reload();
+      }
+      throw error;
+    }
+  });
+
 // Lazy load remaining routes for ultra-fast bundle splitting and zero-lag navigation
-const Services = lazy(() => import('./pages/Services').then(m => ({ default: m.Services })));
-const Experts = lazy(() => import('./pages/Experts').then(m => ({ default: m.Experts })));
-const Gallery = lazy(() => import('./pages/Gallery').then(m => ({ default: m.Gallery })));
-const Store = lazy(() => import('./pages/Store').then(m => ({ default: m.Store })));
-const Booking = lazy(() => import('./pages/Booking').then(m => ({ default: m.Booking })));
-const About = lazy(() => import('./pages/About').then(m => ({ default: m.About })));
-const Contact = lazy(() => import('./pages/Contact').then(m => ({ default: m.Contact })));
-const RoleSelection = lazy(() => import('./pages/RoleSelection').then(m => ({ default: m.RoleSelection })));
-const Signup = lazy(() => import('./pages/Signup').then(m => ({ default: m.Signup })));
-const VerifyOTP = lazy(() => import('./pages/VerifyOTP').then(m => ({ default: m.VerifyOTP })));
-const Login = lazy(() => import('./pages/Login').then(m => ({ default: m.Login })));
-const ForgotPassword = lazy(() => import('./pages/ForgotPassword').then(m => ({ default: m.ForgotPassword })));
-const CustomerDashboard = lazy(() => import('./pages/CustomerDashboard').then(m => ({ default: m.CustomerDashboard })));
-const ExpertDashboard = lazy(() => import('./pages/ExpertDashboard').then(m => ({ default: m.ExpertDashboard })));
-const AdminDashboard = lazy(() => import('./pages/AdminDashboard').then(m => ({ default: m.AdminDashboard })));
-const Payment = lazy(() => import('./pages/Payment').then(m => ({ default: m.Payment })));
-const Policies = lazy(() => import('./pages/Policies').then(m => ({ default: m.Policies })));
-const Profile = lazy(() => import('./pages/Profile').then(m => ({ default: m.Profile })));
-const ExpertProfile = lazy(() => import('./pages/ExpertProfile').then(m => ({ default: m.ExpertProfile })));
-const ProductDetail = lazy(() => import('./pages/ProductDetail').then(m => ({ default: m.ProductDetail })));
+const Services = safeLazy(() => import('./pages/Services').then(m => ({ default: m.Services })));
+const Experts = safeLazy(() => import('./pages/Experts').then(m => ({ default: m.Experts })));
+const Gallery = safeLazy(() => import('./pages/Gallery').then(m => ({ default: m.Gallery })));
+const Store = safeLazy(() => import('./pages/Store').then(m => ({ default: m.Store })));
+const Booking = safeLazy(() => import('./pages/Booking').then(m => ({ default: m.Booking })));
+const About = safeLazy(() => import('./pages/About').then(m => ({ default: m.About })));
+const Contact = safeLazy(() => import('./pages/Contact').then(m => ({ default: m.Contact })));
+const RoleSelection = safeLazy(() => import('./pages/RoleSelection').then(m => ({ default: m.RoleSelection })));
+const Signup = safeLazy(() => import('./pages/Signup').then(m => ({ default: m.Signup })));
+const VerifyOTP = safeLazy(() => import('./pages/VerifyOTP').then(m => ({ default: m.VerifyOTP })));
+const Login = safeLazy(() => import('./pages/Login').then(m => ({ default: m.Login })));
+const ForgotPassword = safeLazy(() => import('./pages/ForgotPassword').then(m => ({ default: m.ForgotPassword })));
+const CustomerDashboard = safeLazy(() => import('./pages/CustomerDashboard').then(m => ({ default: m.CustomerDashboard })));
+const ExpertDashboard = safeLazy(() => import('./pages/ExpertDashboard').then(m => ({ default: m.ExpertDashboard })));
+const AdminDashboard = safeLazy(() => import('./pages/AdminDashboard').then(m => ({ default: m.AdminDashboard })));
+const Payment = safeLazy(() => import('./pages/Payment').then(m => ({ default: m.Payment })));
+const Policies = safeLazy(() => import('./pages/Policies').then(m => ({ default: m.Policies })));
+const Profile = safeLazy(() => import('./pages/Profile').then(m => ({ default: m.Profile })));
+const ExpertProfile = safeLazy(() => import('./pages/ExpertProfile').then(m => ({ default: m.ExpertProfile })));
+const ProductDetail = safeLazy(() => import('./pages/ProductDetail').then(m => ({ default: m.ProductDetail })));
 
 // Ultra-sleek Gold Page Loader Component
 const PageLoader = () => (

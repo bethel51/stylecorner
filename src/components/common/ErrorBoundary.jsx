@@ -13,6 +13,21 @@ export class ErrorBoundary extends React.Component {
 
   componentDidCatch(error, errorInfo) {
     console.error('Uncaught React UI Error:', error, errorInfo);
+    const msg = String(error?.message || error || '');
+    if (
+      msg.includes('Importing a module script failed') ||
+      msg.includes('dynamically imported module') ||
+      msg.includes('Loading chunk') ||
+      msg.includes('MIME type') ||
+      msg.includes('Failed to fetch')
+    ) {
+      const hasReloaded = sessionStorage.getItem('chunk_reload_retry');
+      if (!hasReloaded) {
+        sessionStorage.setItem('chunk_reload_retry', 'true');
+        console.warn('[PWA] Module script import error detected. Auto-refreshing page for new build update...');
+        window.location.reload();
+      }
+    }
   }
 
   render() {
