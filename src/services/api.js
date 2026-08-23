@@ -33,8 +33,9 @@ const safeJson = async (res) => {
   if (!text || !text.trim()) return null;
   try {
     return JSON.parse(text);
-  } catch {
-    // Server returned HTML or non-JSON (e.g., a static file or proxy error)
+  } catch (err) {
+    console.error('Non-JSON response from server:', text.substring(0, 200));
+    return null;
   }
 };
 
