@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { PageContainer } from '../components/common/PageContainer';
 import { AISpecialistMatcherSheet } from '../components/booking/AISpecialistMatcherSheet';
+import { api } from '../services/api';
 
 export const Home = () => {
   const navigate = useNavigate();
