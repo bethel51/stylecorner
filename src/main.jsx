@@ -4,6 +4,20 @@ import { App } from './App.jsx';
 import { ErrorBoundary } from './components/common/ErrorBoundary.jsx';
 import './index.css';
 
+// ── Catch stale deployment chunks and MIME type script errors ──
+window.addEventListener('error', (event) => {
+  const msg = event?.message || '';
+  if (
+    msg.includes('JavaScript') ||
+    msg.includes('MIME type') ||
+    msg.includes('Loading chunk') ||
+    msg.includes('dynamically imported module')
+  ) {
+    console.warn('[PWA] Stale asset chunk detected after update. Reloading for latest build...');
+    window.location.reload();
+  }
+});
+
 // ── Auto-Updating PWA Service Worker Registration ──
 if ('serviceWorker' in navigator) {
   let refreshing = false;

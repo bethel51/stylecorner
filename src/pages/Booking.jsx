@@ -129,7 +129,7 @@ export const Booking = () => {
       return;
     }
 
-    const servicesJoined = [service1, service2].filter(Boolean).join(' + ');
+    const servicesJoined = [service1, service2].filter(s => s && s !== 'None').join(' + ');
 
     const bookingPayload = {
       clientName: `${user.firstname || ''} ${user.lastname || ''}`.trim() || 'Client',

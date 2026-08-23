@@ -43,9 +43,12 @@ export const OrderTrackingSheet = ({ isOpen, onClose, order, onOrderUpdated, isA
   // Calculate active stage index
   let activeIndex = TRACKING_STAGES.findIndex(s => s.id.toLowerCase() === currentStatus.toLowerCase());
   if (activeIndex === -1) {
-    if (currentStatus.toLowerCase() === 'shipped') activeIndex = 2;
+    if (currentStatus.toLowerCase() === 'pending' || currentStatus.toLowerCase() === 'order placed') activeIndex = 0;
+    else if (currentStatus.toLowerCase() === 'processing') activeIndex = 1;
+    else if (currentStatus.toLowerCase() === 'shipped') activeIndex = 2;
+    else if (currentStatus.toLowerCase() === 'out_for_delivery') activeIndex = 3;
     else if (currentStatus.toLowerCase() === 'delivered' || currentStatus.toLowerCase() === 'completed') activeIndex = 4;
-    else activeIndex = 1;
+    else activeIndex = 0;
   }
 
   const handleSendMessage = async (e) => {

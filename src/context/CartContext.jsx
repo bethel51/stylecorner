@@ -12,17 +12,18 @@ export const CartProvider = ({ children }) => {
     localStorage.setItem('style_corner_cart', JSON.stringify(cart));
   }, [cart]);
 
-  const addToCart = (product) => {
+  const addToCart = (product, quantityToAdd = 1) => {
     setCart((prev) => {
+      const qty = Number(quantityToAdd) || 1;
       const existing = prev.find((item) => item.id === product.id || item.title === product.title);
       if (existing) {
         return prev.map((item) =>
           item.id === product.id || item.title === product.title
-            ? { ...item, quantity: item.quantity + 1 }
+            ? { ...item, quantity: item.quantity + qty }
             : item
         );
       }
-      return [...prev, { ...product, quantity: 1 }];
+      return [...prev, { ...product, quantity: qty }];
     });
   };
 

@@ -1072,6 +1072,9 @@ app.use(express.static(distPath));
 // SPA Catch-all Route for client-side routing
 app.use((req, res, next) => {
   if (req.path.startsWith('/api')) return next();
+  if (req.path.startsWith('/assets') || req.path.endsWith('.js') || req.path.endsWith('.css')) {
+    return res.status(404).send('Asset not found');
+  }
   if (req.method !== 'GET') return next();
 
   const compiledIndex = path.join(distPath, 'index.html');
