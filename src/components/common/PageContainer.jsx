@@ -1,6 +1,7 @@
 import React from 'react';
 import { AppHeader } from './AppHeader';
 import { BottomNavigation } from './BottomNavigation';
+import { PwaInstallPrompt } from './PwaInstallPrompt';
 
 export const PageContainer = ({
   title,
@@ -22,6 +23,7 @@ export const PageContainer = ({
         <div className="page-content">{children}</div>
       </main>
       <BottomNavigation />
+      <PwaInstallPrompt />
     </div>
   );
 };
