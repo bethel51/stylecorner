@@ -60,12 +60,16 @@ export const ExpertDashboard = () => {
   const [deletingAccount, setDeletingAccount] = useState(false);
 
   // Avatar edit state
-  const [showAvatarSheet, setShowAvatarSheet] = useState(false);
   const [avatarInput, setAvatarInput] = useState(user?.avatarUrl || '');
+  const [coverInput, setCoverInput] = useState(user?.coverImage || '');
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const [uploadingCover, setUploadingCover] = useState(false);
 
   useEffect(() => {
-    if (user) setAvatarInput(user.avatarUrl || '');
+    if (user) {
+      setAvatarInput(user.avatarUrl || '');
+      setCoverInput(user.coverImage || '');
+    }
   }, [user]);
 
   const handleExpertPhotoChange = async (e) => {
@@ -79,19 +83,47 @@ export const ExpertDashboard = () => {
 
     const previewUrl = URL.createObjectURL(file);
     setAvatarInput(previewUrl);
+    showToast('Profile photo updated!', 'success');
     setUploadingPhoto(true);
 
     try {
       const url = await uploadToCloudinary(file);
       setAvatarInput(url);
       await updateProfile({ avatarUrl: url });
-      showToast('Profile picture updated!', 'success');
-      setTimeout(() => setShowAvatarSheet(false), 500);
+      showToast('Profile picture updated & synced across website!', 'success');
+      setShowAvatarSheet(false);
     } catch (err) {
       showToast(err.message || 'Failed to upload photo. Please try again.', 'error');
       setAvatarInput(user?.avatarUrl || '');
     } finally {
       setUploadingPhoto(false);
+    }
+  };
+
+  const handleExpertCoverChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      showToast('Please select a valid image file.', 'error');
+      return;
+    }
+
+    const previewUrl = URL.createObjectURL(file);
+    setCoverInput(previewUrl);
+    showToast('Cover banner updated!', 'success');
+    setUploadingCover(true);
+
+    try {
+      const url = await uploadToCloudinary(file);
+      setCoverInput(url);
+      await updateProfile({ coverImage: url });
+      showToast('Cover banner updated & synced across website!', 'success');
+    } catch (err) {
+      showToast(err.message || 'Failed to upload cover banner.', 'error');
+      setCoverInput(user?.coverImage || '');
+    } finally {
+      setUploadingCover(false);
     }
   };
 
@@ -210,10 +242,15 @@ export const ExpertDashboard = () => {
         {/* ══════════════════════════════════════════════
             SECTION 1 — HERO EXPERT PROFILE BANNER
         ══════════════════════════════════════════════ */}
+        {/* ══════════════════════════════════════════════
+            SECTION 1 — HERO EXPERT PROFILE BANNER
+        ══════════════════════════════════════════════ */}
         <div
           className="hero-profile-banner"
           style={{
-            background: 'linear-gradient(135deg, #111111 0%, #1c1917 60%, #0c0a09 100%)',
+            background: user?.coverImage
+              ? `linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.75) 100%), url(${user.coverImage}) center/cover no-repeat`
+              : 'linear-gradient(135deg, #111111 0%, #1c1917 60%, #0c0a09 100%)',
             borderRadius: '24px',
             padding: '1.5rem',
             marginBottom: '1rem',
@@ -223,21 +260,39 @@ export const ExpertDashboard = () => {
             overflow: 'hidden',
           }}
         >
-          {/* Decorative glow */}
-          <div style={{
-            position: 'absolute', top: '-40px', right: '-40px',
-            width: '160px', height: '160px', borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(212,175,55,0.18) 0%, transparent 70%)',
-            pointerEvents: 'none',
-          }} />
+          {/* Cover Photo Change Control */}
+          <label
+            style={{
+              position: 'absolute',
+              top: '12px',
+              right: '12px',
+              background: 'rgba(0,0,0,0.7)',
+              color: '#d4af37',
+              border: '1px solid rgba(212,175,55,0.4)',
+              borderRadius: '50px',
+              padding: '0.35rem 0.75rem',
+              fontSize: '0.72rem',
+              fontFamily: 'Outfit',
+              fontWeight: 800,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.3rem',
+              zIndex: 2,
+            }}
+          >
+            <Edit size={12} />
+            <span>{uploadingCover ? 'Updating...' : 'Change Cover Photo'}</span>
+            <input type="file" accept="image/*" onChange={handleExpertCoverChange} style={{ display: 'none' }} />
+          </label>
 
           {/* Avatar + Info */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.1rem' }}>
-            <div
-              onClick={() => user?.avatarUrl ? setShowEnlargedAvatar(true) : setShowAvatarSheet(true)}
-              style={{ position: 'relative', flexShrink: 0, cursor: 'pointer' }}
-              title={user?.avatarUrl ? "Click to view full size picture" : "Click to upload profile picture"}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.1rem', marginTop: '0.5rem' }}>
+            <label
+              style={{ position: 'relative', flexShrink: 0, cursor: 'pointer', display: 'block' }}
+              title="Tap to change profile picture"
             >
+              <input type="file" accept="image/*" onChange={handleExpertPhotoChange} style={{ display: 'none' }} />
               <div
                 style={{
                   width: '78px',
@@ -265,7 +320,7 @@ export const ExpertDashboard = () => {
               >
                 <Edit size={11} />
               </div>
-            </div>
+            </label>
 
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
@@ -273,12 +328,12 @@ export const ExpertDashboard = () => {
                   {user?.firstname} {user?.lastname}
                 </h2>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#d4af37', fontSize: '0.8rem', fontWeight: 900 }}>
-                  <Star size={13} fill="#d4af37" /> 4.9
+                  <Star size={13} fill="#d4af37" /> 5.0
                 </div>
               </div>
 
               <p style={{ color: '#d4af37', fontSize: '0.78rem', fontFamily: 'Outfit', fontWeight: 800, margin: '0.2rem 0 0.5rem', letterSpacing: '0.04em' }}>
-                MASTER STYLIST & SPECIALIST
+                {user?.title ? user.title.toUpperCase() : 'VERIFIED STYLE SPECIALIST'}
               </p>
 
               {/* Status Switcher Toggle Pill */}
@@ -315,17 +370,17 @@ export const ExpertDashboard = () => {
           {/* Quick Profile Controls Bar */}
           <div style={{ display: 'flex', gap: '0.6rem', borderTop: '1px solid rgba(255,255,255,0.09)', paddingTop: '1rem' }}>
             <button
-              onClick={() => navigate('/profile')}
+              onClick={() => navigate(`/expert-profile?name=${encodeURIComponent(`${user?.firstname || ''} ${user?.lastname || ''}`.trim() || 'Specialist')}`)}
               style={{
                 flex: 1,
-                background: 'rgba(255,255,255,0.08)',
-                border: '1px solid rgba(255,255,255,0.14)',
-                color: '#ffffff',
+                background: 'rgba(212,175,55,0.18)',
+                border: '1px solid rgba(212,175,55,0.4)',
+                color: '#d4af37',
                 padding: '0.65rem',
                 borderRadius: '14px',
                 fontSize: '0.82rem',
                 fontFamily: 'Outfit',
-                fontWeight: 700,
+                fontWeight: 800,
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
@@ -333,7 +388,7 @@ export const ExpertDashboard = () => {
                 gap: '0.4rem',
               }}
             >
-              <User size={14} /> Edit Profile Info
+              <Sparkles size={14} /> My Professional Page
             </button>
 
             <button
