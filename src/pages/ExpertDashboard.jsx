@@ -253,7 +253,7 @@ export const ExpertDashboard = () => {
               ? `linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.75) 100%), url(${user.coverImage}) center/cover no-repeat`
               : 'linear-gradient(135deg, #111111 0%, #1c1917 60%, #0c0a09 100%)',
             borderRadius: '24px',
-            padding: '1.5rem',
+            padding: '1.25rem',
             marginBottom: '1rem',
             border: '1.5px solid rgba(212, 175, 55, 0.45)',
             boxShadow: '0 20px 48px rgba(0,0,0,0.22)',
@@ -261,34 +261,48 @@ export const ExpertDashboard = () => {
             overflow: 'hidden',
           }}
         >
-          {/* Cover Photo Change Control */}
-          <label
-            style={{
-              position: 'absolute',
-              top: '12px',
-              right: '12px',
-              background: 'rgba(0,0,0,0.7)',
+          {/* Top Header Row inside Banner: Status badge & Cover Photo Pill */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
+            <span style={{
+              background: 'rgba(212,175,55,0.15)',
               color: '#d4af37',
-              border: '1px solid rgba(212,175,55,0.4)',
+              border: '1px solid rgba(212,175,55,0.3)',
               borderRadius: '50px',
-              padding: '0.35rem 0.75rem',
-              fontSize: '0.72rem',
+              padding: '0.2rem 0.6rem',
+              fontSize: '0.65rem',
               fontFamily: 'Outfit',
               fontWeight: 800,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.3rem',
-              zIndex: 2,
-            }}
-          >
-            <Edit size={12} />
-            <span>{uploadingCover ? 'Updating...' : 'Change Cover Photo'}</span>
-            <input type="file" accept="image/*" onChange={handleExpertCoverChange} style={{ display: 'none' }} />
-          </label>
+              letterSpacing: '0.06em',
+              textTransform: 'uppercase'
+            }}>
+              SPECIALIST ATELIER
+            </span>
 
-          {/* Avatar + Info */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.1rem', marginTop: '0.5rem' }}>
+            <label
+              style={{
+                background: 'rgba(0,0,0,0.75)',
+                color: '#d4af37',
+                border: '1px solid rgba(212,175,55,0.4)',
+                borderRadius: '50px',
+                padding: '0.3rem 0.7rem',
+                fontSize: '0.7rem',
+                fontFamily: 'Outfit',
+                fontWeight: 800,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+              }}
+            >
+              <Edit size={11} />
+              <span>{uploadingCover ? 'Updating...' : 'Change Cover Photo'}</span>
+              <input type="file" accept="image/*" onChange={handleExpertCoverChange} style={{ display: 'none' }} />
+            </label>
+          </div>
+
+          {/* Avatar + Info Row below top header row */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.1rem' }}>
             <label
               style={{ position: 'relative', flexShrink: 0, cursor: 'pointer', display: 'block' }}
               title="Tap to change profile picture"
@@ -296,8 +310,8 @@ export const ExpertDashboard = () => {
               <input type="file" accept="image/*" onChange={handleExpertPhotoChange} style={{ display: 'none' }} />
               <div
                 style={{
-                  width: '78px',
-                  height: '78px',
+                  width: '74px',
+                  height: '74px',
                   borderRadius: '50%',
                   background: user?.avatarUrl
                     ? `url(${user.avatarUrl}) center/cover no-repeat`
@@ -309,17 +323,17 @@ export const ExpertDashboard = () => {
                   boxShadow: '0 8px 24px rgba(212,175,55,0.35)',
                 }}
               >
-                {!user?.avatarUrl && <Scissors size={34} color="#ffffff" />}
+                {!user?.avatarUrl && <Scissors size={32} color="#ffffff" />}
               </div>
               <div
                 style={{
                   position: 'absolute', bottom: 0, right: 0,
-                  width: '26px', height: '26px', borderRadius: '50%',
+                  width: '24px', height: '24px', borderRadius: '50%',
                   background: '#d4af37', color: '#111111', border: '2px solid #111111',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}
               >
-                <Edit size={11} />
+                <Edit size={10} />
               </div>
             </label>
 
