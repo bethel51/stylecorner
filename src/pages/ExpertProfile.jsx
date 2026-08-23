@@ -27,62 +27,7 @@ import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import { uploadToCloudinary } from '../services/cloudinary';
 
-const DEFAULT_EXPERT_PROFILES = [
-  {
-    id: 'stella-hair',
-    name: 'Stella Hair',
-    role: 'Wig Installer & Hair Artisan',
-    rating: 4.9,
-    reviewsCount: 86,
-    location: 'Lagos, Nigeria',
-    experience: '8+ Years Experience',
-    bio: 'Specialized in luxury wigs, closures, frontals and custom wig customization. Renowned for flawless melting, scalp-matching lace, and long-lasting installs.',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
-    coverImage: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=800&q=80',
-    services: [
-      { name: 'Frontal Wig Install', price: '₦20,000' },
-      { name: 'Closure Wig Install', price: '₦15,000' },
-      { name: 'Wig Revamp & Styling', price: '₦10,000' },
-      { name: 'Custom Wig Making', price: '₦25,000' },
-    ]
-  },
-  {
-    id: 'amina-bello',
-    name: 'Amina Bello',
-    role: 'Knotless Braids & Extensions Artisan',
-    rating: 5.0,
-    reviewsCount: 94,
-    location: 'Lagos, Nigeria',
-    experience: '9+ Years Experience',
-    bio: 'Renowned for gentle tension-free knotless braiding techniques, cornrows, and protective styling.',
-    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80',
-    coverImage: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80',
-    services: [
-      { name: 'Knotless Box Braids', price: '₦22,000' },
-      { name: 'Cornrows & Custom Pattern', price: '₦14,000' },
-      { name: 'Goddess Braids Styling', price: '₦20,000' },
-      { name: 'Loc Maintenance & Retwist', price: '₦18,000' },
-    ]
-  },
-  {
-    id: 'tunde-adebayo',
-    name: 'Tunde Adebayo',
-    role: 'Master Barber & Cut Architect',
-    rating: 4.9,
-    reviewsCount: 112,
-    location: 'Abuja, Nigeria',
-    experience: '12+ Years Experience',
-    bio: 'Specializing in precision hair geometry, skin fades, and classic tailored cuts for executive clients.',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80',
-    coverImage: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=800&q=80',
-    services: [
-      { name: 'Precision Skin Fade & Cut', price: '₦12,000' },
-      { name: 'Executive Beard Trim & Sculpting', price: '₦8,000' },
-      { name: 'Scalp & Hair Treatment Combo', price: '₦15,000' },
-      { name: 'Hot Towel Royal Shave', price: '₦10,000' },
-    ]
-  }
-];
+const DEFAULT_EXPERT_PROFILES = [];
 
 const normalizeServices = (rawServices) => {
   if (!Array.isArray(rawServices) || rawServices.length === 0) {

@@ -90,7 +90,7 @@ export const Booking = () => {
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
           const fetchedNames = data.map((s) => `${s.firstname || ''} ${s.lastname || ''}`.trim()).filter(Boolean);
-          const combined = Array.from(new Set(['Any Specialist', ...fetchedNames, 'Stella Hair', 'Amina Bello', 'Tunde Adebayo']));
+          const combined = Array.from(new Set(['Any Specialist', ...fetchedNames]));
           setStylistsList(combined);
         }
       })

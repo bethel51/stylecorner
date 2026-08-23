@@ -328,12 +328,26 @@ export const api = {
     return data;
   },
 
-  // Products
+  // Products (Offline-ready with latest products cached)
   getProducts: async () => {
-    const res = await fetchWithTimeout(`${API_BASE}/products?_t=${Date.now()}`);
-    const data = await safeJson(res);
-    if (!res.ok) throw new Error(data?.error || 'Failed to fetch products');
-    return data;
+    try {
+      const res = await fetchWithTimeout(`${API_BASE}/products?_t=${Date.now()}`);
+      const data = await safeJson(res);
+      if (!res.ok) throw new Error(data?.error || 'Failed to fetch products');
+      if (Array.isArray(data) && data.length > 0) {
+        localStorage.setItem('cached_products_offline', JSON.stringify(data));
+      }
+      return data;
+    } catch (err) {
+      console.warn('Network request failed for products, loading offline products cache:', err.message);
+      const cached = localStorage.getItem('cached_products_offline');
+      if (cached) {
+        try {
+          return JSON.parse(cached);
+        } catch (e) {}
+      }
+      throw err;
+    }
   },
 
   createProduct: async (productData) => {

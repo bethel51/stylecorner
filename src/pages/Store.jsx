@@ -75,12 +75,23 @@ export const Store = () => {
       const data = await api.getProducts();
       if (Array.isArray(data) && data.length > 0) {
         setProducts(data.map(p => ({ ...p, id: p._id || p.id })));
+        localStorage.setItem('cached_store_products', JSON.stringify(data));
+      } else {
+        const cached = localStorage.getItem('cached_store_products');
+        if (cached) {
+          try { setProducts(JSON.parse(cached)); } catch (e) { setProducts(DEFAULT_PRODUCTS); }
+        } else {
+          setProducts(DEFAULT_PRODUCTS);
+        }
+      }
+    } catch (err) {
+      console.warn('Store product fetch warning, loading offline cache:', err.message);
+      const cached = localStorage.getItem('cached_store_products');
+      if (cached) {
+        try { setProducts(JSON.parse(cached)); } catch (e) { setProducts(DEFAULT_PRODUCTS); }
       } else {
         setProducts(DEFAULT_PRODUCTS);
       }
-    } catch (err) {
-      console.error('Dynamic products load failed:', err);
-      setProducts(DEFAULT_PRODUCTS);
     } finally {
       setLoading(false);
     }
