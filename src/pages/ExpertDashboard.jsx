@@ -528,11 +528,12 @@ export const ExpertDashboard = () => {
 
           {/* List of Expert Services */}
           {(() => {
-            const specs = Array.isArray(user?.specialties)
-              ? user.specialties
-              : (typeof user?.specialties === 'string' && user.specialties.trim())
-                ? user.specialties.split(',').map(s => s.trim())
-                : ['Skin Fades & Beard Trim', 'Knotless Braids & Locs', 'Manicure & Gel Nails', 'Scalp Care Treatment'];
+            const rawList = user?.services && user.services.length > 0 ? user.services : user?.specialties;
+            const specs = Array.isArray(rawList)
+              ? rawList.map(s => (typeof s === 'object' ? (s.name || s.title || String(s)) : String(s)))
+              : (typeof rawList === 'string' && rawList.trim())
+                ? rawList.split(',').map(s => s.trim())
+                : ['Wig Installer', 'Hair Stylist (Braider)', 'Manicure & Gel Nails', 'Scalp Care Treatment'];
 
             return (
               <div className="dashboard-services-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem' }}>
@@ -553,7 +554,7 @@ export const ExpertDashboard = () => {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', minWidth: 0 }}>
                       <Sparkles size={13} color="#d4af37" style={{ flexShrink: 0 }} />
                       <span style={{ fontFamily: 'Outfit', fontSize: '0.82rem', fontWeight: 800, color: '#171717', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {s}
+                        {typeof s === 'object' ? (s.name || s.title || String(s)) : String(s)}
                       </span>
                     </div>
                     <span style={{ fontSize: '0.62rem', background: 'rgba(16,185,129,0.12)', color: '#059669', padding: '0.15rem 0.45rem', borderRadius: '50px', fontWeight: 900, textTransform: 'uppercase', flexShrink: 0 }}>

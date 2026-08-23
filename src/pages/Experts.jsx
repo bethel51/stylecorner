@@ -114,7 +114,7 @@ export const Experts = () => {
                       fontWeight: 700,
                     }}
                   >
-                    {spec}
+                    {typeof spec === 'object' ? (spec.name || spec.title || String(spec)) : String(spec)}
                   </span>
                 ))}
               </div>
