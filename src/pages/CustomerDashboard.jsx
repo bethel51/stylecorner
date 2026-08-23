@@ -205,6 +205,7 @@ export const CustomerDashboard = () => {
             SECTION 1 — HERO PROFILE BANNER
         ══════════════════════════════════════════════ */}
         <div
+          className="hero-profile-banner"
           style={{
             background: 'linear-gradient(135deg, #111111 0%, #1a1a1a 60%, #0d0d0d 100%)',
             borderRadius: '24px',
@@ -257,7 +258,7 @@ export const CustomerDashboard = () => {
             {/* Name & badge */}
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
-                <h2 style={{
+                <h2 className="dashboard-user-name" style={{
                   fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 900,
                   color: '#fff', margin: 0, lineHeight: 1.1,
                 }}>

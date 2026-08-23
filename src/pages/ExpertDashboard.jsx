@@ -211,6 +211,7 @@ export const ExpertDashboard = () => {
             SECTION 1 — HERO EXPERT PROFILE BANNER
         ══════════════════════════════════════════════ */}
         <div
+          className="hero-profile-banner"
           style={{
             background: 'linear-gradient(135deg, #111111 0%, #1c1917 60%, #0c0a09 100%)',
             borderRadius: '24px',
@@ -268,7 +269,7 @@ export const ExpertDashboard = () => {
 
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
-                <h2 style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 900, color: '#ffffff', margin: 0, lineHeight: 1.1 }}>
+                <h2 className="dashboard-user-name" style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 900, color: '#ffffff', margin: 0, lineHeight: 1.1 }}>
                   {user?.firstname} {user?.lastname}
                 </h2>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#d4af37', fontSize: '0.8rem', fontWeight: 900 }}>

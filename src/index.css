@@ -686,12 +686,12 @@ img {
 @media (max-width: 480px) {
   /* Ensure status badges fit within card */
   .status-badge {
-    font-size: 0.6rem;
+    font-size: 0.62rem;
     padding: 0.2rem 0.6rem;
   }
-  /* Phone number text should wrap/truncate gracefully */
+  /* Phone number & email text wrap/truncate gracefully */
   .phone-number {
-    font-size: 0.6rem;
+    font-size: 0.68rem;
     flex-wrap: wrap;
     word-break: break-all;
   }
@@ -702,18 +702,36 @@ img {
     align-items: flex-start;
     gap: 0.4rem;
   }
-  /* Responsive Dashboard Grids for extra small screens */
+  /* Responsive Dashboard Grids for mobile screens */
   .dashboard-services-grid {
     grid-template-columns: 1fr !important;
   }
+  /* Hero card banner padding adjustment for narrow mobile screens */
+  .hero-profile-banner {
+    padding: 1.15rem !important;
+  }
+  /* Reduce font size slightly on small screens to prevent clipping */
+  .dashboard-user-name {
+    font-size: 1.15rem !important;
+  }
 }
 
-@media (max-width: 360px) {
+@media (max-width: 375px) {
   .dashboard-stats-grid {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: 1fr 1fr !important;
   }
   .dashboard-quick-actions {
     grid-template-columns: 1fr !important;
   }
+  .bottom-sheet-content {
+    padding: 1rem 0.75rem !important;
+  }
 }
+
+@media (max-width: 320px) {
+  .dashboard-stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
 
