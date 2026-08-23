@@ -129,13 +129,24 @@ export const Experts = () => {
               ))}
             </div>
 
-            <button
-              onClick={() => navigate(`/booking?stylist=${encodeURIComponent(m.name.split(' ')[0])}`)}
-              className="app-btn app-btn-primary"
-            >
-              <Calendar size={16} />
-              <span>Book Session with {m.name.split(' ')[0]}</span>
-            </button>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <button
+                onClick={() => navigate(`/expert-profile?name=${encodeURIComponent(m.name)}`)}
+                className="app-btn app-btn-outline"
+                style={{ flex: 1, minHeight: '44px', fontSize: '0.82rem' }}
+              >
+                <span>View Profile</span>
+              </button>
+
+              <button
+                onClick={() => navigate(`/booking?stylist=${encodeURIComponent(m.name.split(' ')[0])}`)}
+                className="app-btn app-btn-primary"
+                style={{ flex: 1, minHeight: '44px', fontSize: '0.82rem' }}
+              >
+                <Calendar size={15} />
+                <span>Book Session</span>
+              </button>
+            </div>
           </div>
         ))}
       </div>

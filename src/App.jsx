@@ -23,6 +23,7 @@ import { AdminDashboard } from './pages/AdminDashboard';
 import { Payment } from './pages/Payment';
 import { Policies } from './pages/Policies';
 import { Profile } from './pages/Profile';
+import { ExpertProfile } from './pages/ExpertProfile';
 
 export const App = () => {
   return (
@@ -34,6 +35,7 @@ export const App = () => {
             <Route path="/" element={<Home />} />
             <Route path="/services" element={<Services />} />
             <Route path="/experts" element={<Experts />} />
+            <Route path="/expert-profile" element={<ExpertProfile />} />
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/store" element={<Store />} />
             <Route path="/booking" element={<Booking />} />

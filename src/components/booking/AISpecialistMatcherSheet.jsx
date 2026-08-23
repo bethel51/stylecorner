@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { Sparkles, Check, Wand2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Sparkles, Check, Wand2, User } from 'lucide-react';
 import { BottomSheet } from '../common/BottomSheet';
 import { api } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 
 export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
+  const navigate = useNavigate();
   const { showToast } = useAuth();
   const [requestText, setRequestText] = useState('');
   const [primaryService, setPrimaryService] = useState('Precision Skin Fade & Cut');
@@ -154,13 +156,29 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
               {matchResult.rationale}
             </p>
 
-            <button
-              onClick={handleApply}
-              className="app-btn app-btn-primary"
-            >
-              <Check size={18} />
-              <span>Apply & Book with {matchResult.firstname}</span>
-            </button>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <button
+                onClick={() => {
+                  onClose();
+                  const targetName = matchResult.name || `${matchResult.firstname || ''} ${matchResult.lastname || ''}`.trim();
+                  navigate(`/expert-profile?name=${encodeURIComponent(targetName)}`);
+                }}
+                className="app-btn app-btn-outline"
+                style={{ flex: 1, minHeight: '44px', fontSize: '0.82rem' }}
+              >
+                <User size={15} />
+                <span>View Profile</span>
+              </button>
+
+              <button
+                onClick={handleApply}
+                className="app-btn app-btn-primary"
+                style={{ flex: 1, minHeight: '44px', fontSize: '0.82rem' }}
+              >
+                <Check size={16} />
+                <span>Book Now</span>
+              </button>
+            </div>
           </div>
         )}
       </div>
