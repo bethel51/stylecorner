@@ -22,7 +22,9 @@ import {
   Trash2,
   AlertTriangle,
   Eye,
-  MessageSquare
+  MessageSquare,
+  History,
+  Activity
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
@@ -45,6 +47,10 @@ export const CustomerDashboard = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('bookings'); // 'bookings' | 'orders'
+
+  // Dedicated Sheet/Page Navigation States
+  const [showHistorySheet, setShowHistorySheet] = useState(false);
+  const [showActivitySheet, setShowActivitySheet] = useState(false);
 
   const [selectedOrderForTracking, setSelectedOrderForTracking] = useState(null);
   const [showProfileSheet, setShowProfileSheet] = useState(false);
@@ -177,7 +183,7 @@ export const CustomerDashboard = () => {
   const rewardPoints = (completedCount * 150) + (orders.length * 80) + 250;
   const pointsToNextReward = 1000 - (rewardPoints % 1000);
 
-  // Section label style
+  // Section label style helper
   const sectionLabel = {
     display: 'flex', alignItems: 'center', gap: '0.5rem',
     marginBottom: '1rem',
@@ -312,10 +318,9 @@ export const CustomerDashboard = () => {
                 padding: '0.65rem', borderRadius: '14px',
                 fontSize: '0.82rem', fontFamily: 'Outfit', fontWeight: 700,
                 cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem',
-                transition: 'background 0.2s',
               }}
             >
-              <User size={14} /> My Profile
+              <User size={14} /> My Profile Info
             </button>
             <button
               onClick={logout}
@@ -324,7 +329,6 @@ export const CustomerDashboard = () => {
                 color: '#f87171', padding: '0.65rem 1.1rem', borderRadius: '14px',
                 fontSize: '0.82rem', fontFamily: 'Outfit', fontWeight: 700,
                 cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem',
-                transition: 'background 0.2s',
               }}
             >
               <LogOut size={14} /> Sign Out
@@ -342,14 +346,18 @@ export const CustomerDashboard = () => {
           </div>
           <div className="dashboard-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '0.65rem' }}>
             {[
-              { label: 'Bookings', value: bookings.length, color: '#d4af37', bg: 'rgba(212,175,55,0.08)', border: 'rgba(212,175,55,0.25)' },
-              { label: 'Orders', value: orders.length, color: '#3b82f6', bg: 'rgba(59,130,246,0.08)', border: 'rgba(59,130,246,0.2)' },
-              { label: 'Completed', value: completedCount, color: '#10b981', bg: 'rgba(16,185,129,0.08)', border: 'rgba(16,185,129,0.2)' },
+              { label: 'Bookings', value: bookings.length, color: '#d4af37', bg: 'rgba(212,175,55,0.08)', border: 'rgba(212,175,55,0.25)', action: () => setShowHistorySheet(true) },
+              { label: 'Orders', value: orders.length, color: '#3b82f6', bg: 'rgba(59,130,246,0.08)', border: 'rgba(59,130,246,0.2)', action: () => { setActiveTab('orders'); setShowHistorySheet(true); } },
+              { label: 'Completed', value: completedCount, color: '#10b981', bg: 'rgba(16,185,129,0.08)', border: 'rgba(16,185,129,0.2)', action: () => setShowHistorySheet(true) },
             ].map((stat) => (
-              <div key={stat.label} style={{
-                background: stat.bg, border: `1px solid ${stat.border}`,
-                borderRadius: '18px', padding: '1rem 0.5rem', textAlign: 'center',
-              }}>
+              <div
+                key={stat.label}
+                onClick={stat.action}
+                style={{
+                  background: stat.bg, border: `1px solid ${stat.border}`,
+                  borderRadius: '18px', padding: '1rem 0.5rem', textAlign: 'center', cursor: 'pointer',
+                }}
+              >
                 <div style={{
                   fontFamily: 'Outfit', fontSize: '2rem', fontWeight: 900, color: stat.color, lineHeight: 1,
                 }}>
@@ -364,7 +372,7 @@ export const CustomerDashboard = () => {
         </div>
 
         {/* ══════════════════════════════════════════════
-            SECTION 3 — QUICK ACTIONS (2×2 GRID)
+            SECTION 3 — QUICK ACTION SHORTCUTS (ICON CARDS)
         ══════════════════════════════════════════════ */}
         <div style={{
           background: '#fff', border: '1px solid rgba(0,0,0,0.07)',
@@ -373,15 +381,28 @@ export const CustomerDashboard = () => {
         }}>
           <div style={sectionLabel}>
             <div style={sectionIcon('#171717', '#d4af37')}><Sparkles size={13} /></div>
-            <span style={sectionTitle}>Quick Actions</span>
+            <span style={sectionTitle}>Quick Shortcuts</span>
           </div>
+
           <div className="dashboard-quick-actions" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
             {[
               {
+                icon: <History size={22} />, label: 'My Bookings History',
+                sub: `View ${bookings.length} visits & orders`,
+                bg: 'rgba(212,175,55,0.12)', iconBg: '#d4af37', iconColor: '#fff',
+                border: 'rgba(212,175,55,0.4)', action: () => setShowHistorySheet(true),
+              },
+              {
+                icon: <Activity size={22} />, label: 'Recent Activity',
+                sub: 'Live activity timeline',
+                bg: 'rgba(16,185,129,0.08)', iconBg: '#10b981', iconColor: '#fff',
+                border: 'rgba(16,185,129,0.3)', action: () => setShowActivitySheet(true),
+              },
+              {
                 icon: <Calendar size={22} />, label: 'Book a Visit',
                 sub: 'Hair, Nails, Braids',
-                bg: 'rgba(212,175,55,0.1)', iconBg: '#d4af37', iconColor: '#fff',
-                border: 'rgba(212,175,55,0.3)', action: () => navigate('/booking'),
+                bg: 'rgba(17,24,39,0.04)', iconBg: '#171717', iconColor: '#fff',
+                border: 'rgba(17,24,39,0.15)', action: () => navigate('/booking'),
               },
               {
                 icon: <Sparkles size={22} />, label: 'AI Matcher',
@@ -393,8 +414,8 @@ export const CustomerDashboard = () => {
               {
                 icon: <Truck size={22} />, label: 'Track Delivery',
                 sub: 'Order status & details',
-                bg: 'rgba(16,185,129,0.08)', iconBg: 'rgba(16,185,129,0.15)', iconColor: '#10b981',
-                border: 'rgba(16,185,129,0.2)',
+                bg: 'rgba(59,130,246,0.08)', iconBg: 'rgba(59,130,246,0.15)', iconColor: '#3b82f6',
+                border: 'rgba(59,130,246,0.2)',
                 action: () => {
                   if (orders.length > 0) setSelectedOrderForTracking(orders[0]);
                   else { showToast('No active orders. Visit the store first.', 'accent'); navigate('/store'); }
@@ -403,8 +424,8 @@ export const CustomerDashboard = () => {
               {
                 icon: <ShoppingBag size={22} />, label: 'Visit Store',
                 sub: 'Hair & grooming products',
-                bg: 'rgba(59,130,246,0.08)', iconBg: 'rgba(59,130,246,0.15)', iconColor: '#3b82f6',
-                border: 'rgba(59,130,246,0.2)', action: () => navigate('/store'),
+                bg: 'rgba(236,72,153,0.08)', iconBg: 'rgba(236,72,153,0.15)', iconColor: '#ec4899',
+                border: 'rgba(236,72,153,0.2)', action: () => navigate('/store'),
               },
             ].map((item) => (
               <button
@@ -416,7 +437,7 @@ export const CustomerDashboard = () => {
                   cursor: 'pointer', textAlign: 'left', display: 'flex',
                   flexDirection: 'column', gap: '0.5rem',
                   transition: 'transform 0.15s ease, box-shadow 0.15s ease',
-                  minHeight: '100px',
+                  minHeight: '102px',
                 }}
                 onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.08)'; }}
                 onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = ''; }}
@@ -429,10 +450,10 @@ export const CustomerDashboard = () => {
                   {item.icon}
                 </div>
                 <div>
-                  <div style={{ fontFamily: 'Outfit', fontSize: '0.9rem', fontWeight: 800, color: item.textColor || '#171717', lineHeight: 1.1 }}>
+                  <div style={{ fontFamily: 'Outfit', fontSize: '0.88rem', fontWeight: 800, color: item.textColor || '#171717', lineHeight: 1.1 }}>
                     {item.label}
                   </div>
-                  <div style={{ fontSize: '0.72rem', color: item.subColor || '#6b7280', marginTop: '0.15rem', fontWeight: 600 }}>
+                  <div style={{ fontSize: '0.7rem', color: item.subColor || '#6b7280', marginTop: '0.15rem', fontWeight: 600 }}>
                     {item.sub}
                   </div>
                 </div>
@@ -442,88 +463,81 @@ export const CustomerDashboard = () => {
         </div>
 
         {/* ══════════════════════════════════════════════
-            SECTION 4 — RECENT ACTIVITY FEED
+            SECTION 4 — ACCOUNT SETTINGS
         ══════════════════════════════════════════════ */}
         <div style={{
-          background: '#fff', border: '1px solid rgba(0,0,0,0.07)',
-          borderRadius: '22px', padding: '1.1rem', marginBottom: '1rem',
-          boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
+          background: '#fff', border: '1px solid rgba(239,68,68,0.18)',
+          borderRadius: '22px', padding: '1.1rem',
+          boxShadow: '0 4px 16px rgba(0,0,0,0.03)',
         }}>
           <div style={sectionLabel}>
-            <div style={sectionIcon('rgba(16,185,129,0.12)', '#10b981')}><Clock size={13} /></div>
-            <span style={sectionTitle}>Recent Activity</span>
+            <div style={sectionIcon('rgba(239,68,68,0.1)', '#ef4444')}><AlertTriangle size={13} /></div>
+            <span style={sectionTitle}>Account Settings</span>
           </div>
 
-          {bookings.length === 0 && orders.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '1.5rem 0', color: '#9ca3af', fontSize: '0.82rem' }}>
-              No recent activity — book a visit or make a purchase!
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
-              {[
-                ...bookings.map(b => ({
-                  type: 'booking', icon: <Calendar size={15} />,
-                  title: b.service || 'Grooming Service',
-                  sub: `${b.date || ''} @ ${b.time || ''} · ${b.stylist || ''}`,
-                  status: b.status, date: b.createdAt || new Date().toISOString(),
-                  iconBg: 'rgba(212,175,55,0.15)', iconColor: '#d4af37',
-                })),
-                ...orders.map(o => ({
-                  type: 'order', icon: <ShoppingBag size={15} />,
-                  title: o.item || `Order #${String(o._id).slice(-6).toUpperCase()}`,
-                  sub: `$${o.totalPrice || o.price || 0} · ${o.trackingStatus || o.status || 'Processing'}`,
-                  status: o.status || 'processing', date: o.createdAt || new Date().toISOString(),
-                  iconBg: 'rgba(16,185,129,0.12)', iconColor: '#10b981',
-                })),
-              ]
-                .sort((a, b) => new Date(b.date) - new Date(a.date))
-                .slice(0, 4)
-                .map((item, idx) => (
-                  <div key={idx} style={{
-                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                    padding: '0.75rem 0.85rem', borderRadius: '14px',
-                    background: '#faf9f6', border: '1px solid rgba(0,0,0,0.05)',
-                    gap: '0.65rem',
-                  }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flex: 1, minWidth: 0 }}>
-                      <div style={{
-                        width: '36px', height: '36px', borderRadius: '10px',
-                        background: item.iconBg, color: item.iconColor, flexShrink: 0,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      }}>
-                        {item.icon}
-                      </div>
-                      <div style={{ minWidth: 0 }}>
-                        <div style={{
-                          fontFamily: 'Outfit', fontSize: '0.85rem', fontWeight: 800, color: '#171717',
-                          overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-                        }}>{item.title}</div>
-                        <div style={{ fontSize: '0.7rem', color: '#9ca3af', marginTop: '0.1rem' }}>{item.sub}</div>
-                      </div>
-                    </div>
-                    <StatusBadge status={item.status} />
-                  </div>
-                ))
-              }
-            </div>
-          )}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+            <button
+              onClick={logout}
+              className="app-btn app-btn-outline"
+              style={{ justifyContent: 'center', gap: '0.4rem', minHeight: '46px', borderRadius: '14px', fontSize: '0.85rem' }}
+            >
+              <LogOut size={15} /> Sign Out of Account
+            </button>
+            <button
+              onClick={() => setShowDeleteModal(true)}
+              className="app-btn"
+              style={{
+                background: 'rgba(239,68,68,0.07)', color: '#ef4444',
+                border: '1px solid rgba(239,68,68,0.22)',
+                justifyContent: 'center', gap: '0.4rem', minHeight: '46px', borderRadius: '14px', fontSize: '0.85rem',
+              }}
+            >
+              <Trash2 size={15} /> Delete My Account
+            </button>
+          </div>
         </div>
 
-        {/* ══════════════════════════════════════════════
-            SECTION 5 — APPOINTMENTS & ORDERS (TABBED)
-        ══════════════════════════════════════════════ */}
-        <div style={{
-          background: '#fff', border: '1px solid rgba(0,0,0,0.07)',
-          borderRadius: '22px', padding: '1.1rem', marginBottom: '1rem',
-          boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
-        }}>
-          {/* Section label */}
-          <div style={sectionLabel}>
-            <div style={sectionIcon('rgba(59,130,246,0.12)', '#3b82f6')}><Calendar size={13} /></div>
-            <span style={sectionTitle}>My History</span>
+      </div>
+
+      {/* ═══ DEDICATED FULL-PAGE BOTTOM SHEETS FOR MY HISTORY & RECENT ACTIVITY ═══ */}
+
+      {/* ── 1. DEDICATED MY HISTORY & BOOKINGS PAGE SHEET ── */}
+      <BottomSheet
+        isOpen={showHistorySheet}
+        onClose={() => setShowHistorySheet(false)}
+        title="My History & Bookings"
+      >
+        <div style={{ paddingBottom: '1rem' }}>
+
+          {/* Export & Clear Actions Toolbar */}
+          <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
+            <button
+              onClick={handleDownloadHistory}
+              style={{
+                flex: 1, background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.35)',
+                color: '#b5952f', padding: '0.6rem', borderRadius: '12px',
+                fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.8rem',
+                cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
+                minHeight: '44px',
+              }}
+            >
+              <Download size={15} /> Export CSV / Statement
+            </button>
+            <button
+              onClick={handleClearHistory}
+              style={{
+                flex: 1, background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)',
+                color: '#ef4444', padding: '0.6rem', borderRadius: '12px',
+                fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.8rem',
+                cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
+                minHeight: '44px',
+              }}
+            >
+              <Trash2 size={15} /> Clear History
+            </button>
           </div>
 
-          {/* Tab switcher */}
+          {/* Tab Switcher */}
           <div style={{
             display: 'flex', background: '#f3f4f6',
             borderRadius: '14px', padding: '4px', gap: '4px', marginBottom: '1.1rem',
@@ -558,34 +572,9 @@ export const CustomerDashboard = () => {
             ))}
           </div>
 
-          {/* ── BOOKINGS TAB ── */}
+          {/* ── APPOINTMENTS TAB ── */}
           {activeTab === 'bookings' && (
             <div>
-              {/* Tab toolbar */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem', gap: '0.5rem' }}>
-                <button
-                  onClick={() => navigate('/booking')}
-                  style={{
-                    background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)',
-                    color: '#b5952f', padding: '0.45rem 0.85rem', borderRadius: '10px',
-                    fontSize: '0.8rem', fontFamily: 'Outfit', fontWeight: 800, cursor: 'pointer',
-                    display: 'flex', alignItems: 'center', gap: '0.3rem',
-                  }}
-                >
-                  <Plus size={14} /> New Booking
-                </button>
-                <button
-                  onClick={fetchData}
-                  style={{
-                    background: 'none', border: 'none', color: '#9ca3af',
-                    cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.25rem',
-                    fontSize: '0.78rem', fontFamily: 'Outfit', fontWeight: 700,
-                  }}
-                >
-                  <RefreshCw size={13} /> Refresh
-                </button>
-              </div>
-
               {loading ? (
                 <SkeletonList count={2} />
               ) : bookings.length === 0 ? (
@@ -595,9 +584,9 @@ export const CustomerDashboard = () => {
                     No Bookings Yet
                   </h4>
                   <p style={{ color: '#9ca3af', fontSize: '0.82rem', marginBottom: '1.25rem' }}>
-                    Book your first visit — hair, braids, or nails.
+                    Book your first visit — hair cuts, braids, or nails.
                   </p>
-                  <button onClick={() => navigate('/booking')} className="app-btn app-btn-primary"
+                  <button onClick={() => { setShowHistorySheet(false); navigate('/booking'); }} className="app-btn app-btn-primary"
                     style={{ maxWidth: '160px', margin: '0 auto', minHeight: '40px', fontSize: '0.82rem' }}>
                     Book Now
                   </button>
@@ -608,9 +597,7 @@ export const CustomerDashboard = () => {
                     <div key={b._id} style={{
                       border: '1px solid rgba(0,0,0,0.07)', borderRadius: '18px',
                       padding: '1.1rem', background: '#fafafa',
-                      transition: 'box-shadow 0.2s ease',
                     }}>
-                      {/* Header */}
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.65rem', gap: '0.5rem' }}>
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <h4 style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 800, color: '#171717', margin: 0 }}>
@@ -629,7 +616,6 @@ export const CustomerDashboard = () => {
                         </div>
                       </div>
 
-                      {/* Date pill */}
                       <div style={{
                         display: 'flex', alignItems: 'center', gap: '0.4rem',
                         background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.2)',
@@ -640,22 +626,9 @@ export const CustomerDashboard = () => {
                         {b.date} at {b.time}
                       </div>
 
-                      {/* Status banners */}
                       {b.status === 'accepted' && (
                         <div style={{ padding: '0.5rem 0.75rem', background: 'rgba(16,185,129,0.09)', border: '1px solid rgba(16,185,129,0.25)', borderRadius: '10px', fontSize: '0.75rem', color: '#065f46', fontWeight: 700, marginBottom: '0.5rem' }}>
                           ✓ Accepted by {b.stylist}
-                        </div>
-                      )}
-                      {b.status === 'rejected' && (
-                        <div style={{ padding: '0.5rem 0.75rem', background: 'rgba(239,68,68,0.07)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: '10px', fontSize: '0.75rem', color: '#991b1b', fontWeight: 700, marginBottom: '0.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-                          <span>Request unavailable. Try another expert.</span>
-                          <button
-                            onClick={() => navigate(`/booking?service=${encodeURIComponent(b.service)}`)}
-                            className="app-btn app-btn-accent"
-                            style={{ minHeight: '30px', width: 'auto', fontSize: '0.72rem', padding: '0.3rem 0.75rem', borderRadius: '8px' }}
-                          >
-                            <RefreshCw size={11} /> Rebook
-                          </button>
                         </div>
                       )}
                       {b.status === 'completed' && (
@@ -663,17 +636,11 @@ export const CustomerDashboard = () => {
                           ✓ Service rendered successfully
                         </div>
                       )}
-                      {b.status === 'pending' && (
-                        <div style={{ padding: '0.5rem 0.75rem', background: 'rgba(245,158,11,0.09)', border: '1px solid rgba(245,158,11,0.25)', borderRadius: '10px', fontSize: '0.75rem', color: '#92400e', fontWeight: 700, marginBottom: '0.5rem' }}>
-                          ⏳ Awaiting confirmation from {b.stylist}
-                        </div>
-                      )}
 
-                      {/* Rebook action */}
                       {b.status !== 'rejected' && (
                         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                           <button
-                            onClick={() => navigate(`/booking?stylist=${encodeURIComponent(b.stylist)}&service=${encodeURIComponent(b.service)}`)}
+                            onClick={() => { setShowHistorySheet(false); navigate(`/booking?stylist=${encodeURIComponent(b.stylist)}&service=${encodeURIComponent(b.service)}`); }}
                             className="app-btn app-btn-outline"
                             style={{ minHeight: '36px', width: 'auto', fontSize: '0.78rem', padding: '0.4rem 0.9rem', borderRadius: '10px' }}
                           >
@@ -691,20 +658,6 @@ export const CustomerDashboard = () => {
           {/* ── ORDERS TAB ── */}
           {activeTab === 'orders' && (
             <div>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '0.85rem' }}>
-                <button
-                  onClick={() => navigate('/store')}
-                  style={{
-                    background: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.25)',
-                    color: '#3b82f6', padding: '0.45rem 0.85rem', borderRadius: '10px',
-                    fontSize: '0.8rem', fontFamily: 'Outfit', fontWeight: 800, cursor: 'pointer',
-                    display: 'flex', alignItems: 'center', gap: '0.3rem',
-                  }}
-                >
-                  <ShoppingBag size={14} /> Shop Essentials
-                </button>
-              </div>
-
               {loading ? (
                 <SkeletonList count={2} />
               ) : orders.length === 0 ? (
@@ -716,7 +669,7 @@ export const CustomerDashboard = () => {
                   <p style={{ color: '#9ca3af', fontSize: '0.82rem', marginBottom: '1.25rem' }}>
                     Shop hair products, beard kits, and more.
                   </p>
-                  <button onClick={() => navigate('/store')} className="app-btn app-btn-accent"
+                  <button onClick={() => { setShowHistorySheet(false); navigate('/store'); }} className="app-btn app-btn-accent"
                     style={{ maxWidth: '160px', margin: '0 auto', minHeight: '40px', fontSize: '0.82rem' }}>
                     Browse Store
                   </button>
@@ -751,7 +704,7 @@ export const CustomerDashboard = () => {
                       </div>
                       <div style={{ borderTop: '1px solid rgba(0,0,0,0.06)', paddingTop: '0.65rem' }}>
                         <button
-                          onClick={() => setSelectedOrderForTracking(o)}
+                          onClick={() => { setShowHistorySheet(false); setSelectedOrderForTracking(o); }}
                           className="app-btn app-btn-accent"
                           style={{ width: '100%', minHeight: '40px', fontSize: '0.82rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem' }}
                         >
@@ -764,85 +717,75 @@ export const CustomerDashboard = () => {
               )}
             </div>
           )}
+
         </div>
+      </BottomSheet>
 
-        {/* ══════════════════════════════════════════════
-            SECTION 6 — ACCOUNT SETTINGS
-        ══════════════════════════════════════════════ */}
-        <div style={{
-          background: '#fff', border: '1px solid rgba(239,68,68,0.18)',
-          borderRadius: '22px', padding: '1.1rem',
-          boxShadow: '0 4px 16px rgba(0,0,0,0.03)',
-        }}>
-          <div style={sectionLabel}>
-            <div style={sectionIcon('rgba(239,68,68,0.1)', '#ef4444')}><AlertTriangle size={13} /></div>
-            <span style={sectionTitle}>Account Settings</span>
-          </div>
+      {/* ── 2. DEDICATED RECENT ACTIVITY STREAM PAGE SHEET ── */}
+      <BottomSheet
+        isOpen={showActivitySheet}
+        onClose={() => setShowActivitySheet(false)}
+        title="Recent Activity Stream"
+      >
+        <div style={{ paddingBottom: '1.5rem' }}>
+          <p style={{ fontSize: '0.82rem', color: '#6b7280', marginBottom: '1rem' }}>
+            Live stream timeline of all your recent visits, appointments, and store orders.
+          </p>
 
-          {/* Booking history management */}
-          {bookings.length > 0 && (
-            <div style={{
-              background: '#faf9f6', borderRadius: '14px', padding: '0.85rem',
-              marginBottom: '0.85rem', border: '1px solid rgba(0,0,0,0.06)',
-            }}>
-              <p style={{ fontFamily: 'Outfit', fontSize: '0.8rem', fontWeight: 800, color: '#171717', margin: '0 0 0.65rem' }}>
-                Booking History
-              </p>
-              <div style={{ display: 'flex', gap: '0.65rem' }}>
-                <button
-                  onClick={handleDownloadHistory}
-                  style={{
-                    flex: 1, background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)',
-                    color: '#b5952f', padding: '0.6rem', borderRadius: '12px',
-                    fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.8rem',
-                    cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
-                    minHeight: '44px',
-                  }}
-                >
-                  <Download size={14} /> Export CSV
-                </button>
-                <button
-                  onClick={handleClearHistory}
-                  style={{
-                    flex: 1, background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.22)',
-                    color: '#ef4444', padding: '0.6rem', borderRadius: '12px',
-                    fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.8rem',
-                    cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
-                    minHeight: '44px',
-                  }}
-                >
-                  <Trash2 size={14} /> Clear History
-                </button>
-              </div>
+          {bookings.length === 0 && orders.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '2.5rem 1rem', color: '#9ca3af', fontSize: '0.85rem' }}>
+              No recent activity found. Book a visit or order products to build your stream!
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              {[
+                ...bookings.map(b => ({
+                  type: 'booking', icon: <Calendar size={16} />,
+                  title: b.service || 'Grooming Service',
+                  sub: `${b.date || ''} @ ${b.time || ''} · Specialist: ${b.stylist || 'VIP Expert'}`,
+                  status: b.status, date: b.createdAt || new Date().toISOString(),
+                  iconBg: 'rgba(212,175,55,0.15)', iconColor: '#d4af37',
+                })),
+                ...orders.map(o => ({
+                  type: 'order', icon: <ShoppingBag size={16} />,
+                  title: o.item || `Store Order #${String(o._id).slice(-6).toUpperCase()}`,
+                  sub: `Total: $${o.totalPrice || o.price || 0} · Tracking: ${o.trackingStatus || o.status || 'Processing'}`,
+                  status: o.status || 'processing', date: o.createdAt || new Date().toISOString(),
+                  iconBg: 'rgba(16,185,129,0.12)', iconColor: '#10b981',
+                })),
+              ]
+                .sort((a, b) => new Date(b.date) - new Date(a.date))
+                .map((item, idx) => (
+                  <div key={idx} style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    padding: '0.85rem 1rem', borderRadius: '16px',
+                    background: '#fafafa', border: '1px solid rgba(0,0,0,0.06)',
+                    gap: '0.75rem',
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flex: 1, minWidth: 0 }}>
+                      <div style={{
+                        width: '40px', height: '40px', borderRadius: '12px',
+                        background: item.iconBg, color: item.iconColor, flexShrink: 0,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      }}>
+                        {item.icon}
+                      </div>
+                      <div style={{ minWidth: 0 }}>
+                        <div style={{
+                          fontFamily: 'Outfit', fontSize: '0.88rem', fontWeight: 800, color: '#171717',
+                          overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                        }}>{item.title}</div>
+                        <div style={{ fontSize: '0.72rem', color: '#6b7280', marginTop: '0.15rem' }}>{item.sub}</div>
+                      </div>
+                    </div>
+                    <StatusBadge status={item.status} />
+                  </div>
+                ))
+              }
             </div>
           )}
-
-          {/* Danger zone */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-            <button
-              onClick={logout}
-              className="app-btn app-btn-outline"
-              style={{ justifyContent: 'center', gap: '0.4rem', minHeight: '46px', borderRadius: '14px', fontSize: '0.85rem' }}
-            >
-              <LogOut size={15} /> Sign Out of Account
-            </button>
-            <button
-              onClick={() => setShowDeleteModal(true)}
-              className="app-btn"
-              style={{
-                background: 'rgba(239,68,68,0.07)', color: '#ef4444',
-                border: '1px solid rgba(239,68,68,0.22)',
-                justifyContent: 'center', gap: '0.4rem', minHeight: '46px', borderRadius: '14px', fontSize: '0.85rem',
-              }}
-            >
-              <Trash2 size={15} /> Delete My Account
-            </button>
-          </div>
         </div>
-
-      </div>
-
-      {/* ═══ MODALS & SHEETS ═══ */}
+      </BottomSheet>
 
       {/* Profile Edit Sheet */}
       <BottomSheet isOpen={showProfileSheet} onClose={() => setShowProfileSheet(false)} title="Edit Profile">

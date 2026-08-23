@@ -310,7 +310,7 @@ export const api = {
 
   // Products
   getProducts: async () => {
-    const res = await fetchWithTimeout(`${API_BASE}/products`);
+    const res = await fetchWithTimeout(`${API_BASE}/products?_t=${Date.now()}`);
     const data = await safeJson(res);
     if (!res.ok) throw new Error(data?.error || 'Failed to fetch products');
     return data;

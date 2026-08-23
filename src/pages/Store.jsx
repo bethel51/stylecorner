@@ -64,7 +64,7 @@ export const Store = () => {
   const { addToCart, itemCount } = useCart();
   const { showToast } = useAuth();
   const [showCartSheet, setShowCartSheet] = useState(false);
-  const [products, setProducts] = useState(DEFAULT_PRODUCTS);
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [hoveredImageMap, setHoveredImageMap] = useState({});
 
@@ -73,9 +73,12 @@ export const Store = () => {
       const data = await api.getProducts();
       if (Array.isArray(data) && data.length > 0) {
         setProducts(data.map(p => ({ ...p, id: p._id || p.id })));
+      } else {
+        setProducts(DEFAULT_PRODUCTS);
       }
     } catch (err) {
       console.error('Dynamic products load failed:', err);
+      setProducts(DEFAULT_PRODUCTS);
     } finally {
       setLoading(false);
     }

@@ -25,6 +25,9 @@ import {
   Plus,
   Trash2,
   AlertTriangle,
+  History,
+  Activity,
+  ListOrdered
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -48,6 +51,10 @@ export const ExpertDashboard = () => {
   const [isAvailable, setIsAvailable] = useState(true);
   const [filterStatus, setFilterStatus] = useState('all');
 
+  // Dedicated Sheet/Page Navigation States
+  const [showAppointmentsSheet, setShowAppointmentsSheet] = useState(false);
+  const [showActivitySheet, setShowActivitySheet] = useState(false);
+
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEnlargedAvatar, setShowEnlargedAvatar] = useState(false);
   const [deletingAccount, setDeletingAccount] = useState(false);
@@ -55,7 +62,6 @@ export const ExpertDashboard = () => {
   // Avatar edit state
   const [showAvatarSheet, setShowAvatarSheet] = useState(false);
   const [avatarInput, setAvatarInput] = useState(user?.avatarUrl || '');
-  const [savingAvatar, setSavingAvatar] = useState(false);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
 
   useEffect(() => {
@@ -216,7 +222,7 @@ export const ExpertDashboard = () => {
             overflow: 'hidden',
           }}
         >
-          {/* Decorative radial ambient light */}
+          {/* Decorative glow */}
           <div style={{
             position: 'absolute', top: '-40px', right: '-40px',
             width: '160px', height: '160px', borderRadius: '50%',
@@ -361,10 +367,13 @@ export const ExpertDashboard = () => {
           </div>
 
           <div className="dashboard-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.65rem' }}>
-            <div style={{
-              background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.22)',
-              borderRadius: '18px', padding: '1rem 0.5rem', textAlign: 'center',
-            }}>
+            <div
+              onClick={() => { setFilterStatus('pending'); setShowAppointmentsSheet(true); }}
+              style={{
+                background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.22)',
+                borderRadius: '18px', padding: '1rem 0.5rem', textAlign: 'center', cursor: 'pointer',
+              }}
+            >
               <div style={{ fontFamily: 'Outfit', fontSize: '1.9rem', fontWeight: 900, color: '#f59e0b', lineHeight: 1 }}>
                 {pendingBookings.length}
               </div>
@@ -373,10 +382,13 @@ export const ExpertDashboard = () => {
               </div>
             </div>
 
-            <div style={{
-              background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.22)',
-              borderRadius: '18px', padding: '1rem 0.5rem', textAlign: 'center',
-            }}>
+            <div
+              onClick={() => { setFilterStatus('accepted'); setShowAppointmentsSheet(true); }}
+              style={{
+                background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.22)',
+                borderRadius: '18px', padding: '1rem 0.5rem', textAlign: 'center', cursor: 'pointer',
+              }}
+            >
               <div style={{ fontFamily: 'Outfit', fontSize: '1.9rem', fontWeight: 900, color: '#10b981', lineHeight: 1 }}>
                 {acceptedBookings.length}
               </div>
@@ -385,10 +397,13 @@ export const ExpertDashboard = () => {
               </div>
             </div>
 
-            <div style={{
-              background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.25)',
-              borderRadius: '18px', padding: '1rem 0.5rem', textAlign: 'center',
-            }}>
+            <div
+              onClick={() => { setFilterStatus('completed'); setShowAppointmentsSheet(true); }}
+              style={{
+                background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.25)',
+                borderRadius: '18px', padding: '1rem 0.5rem', textAlign: 'center', cursor: 'pointer',
+              }}
+            >
               <div style={{ fontFamily: 'Outfit', fontSize: '1.7rem', fontWeight: 900, color: '#b5952f', lineHeight: 1 }}>
                 ${totalRevenue}
               </div>
@@ -481,7 +496,7 @@ export const ExpertDashboard = () => {
         </div>
 
         {/* ══════════════════════════════════════════════
-            SECTION 4 — QUICK ACTIONS (2×2 GRID)
+            SECTION 4 — QUICK SHORTCUTS (ICON CARDS)
         ══════════════════════════════════════════════ */}
         <div style={{
           background: '#fff', border: '1px solid rgba(0,0,0,0.07)',
@@ -489,11 +504,63 @@ export const ExpertDashboard = () => {
           boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
         }}>
           <div style={sectionLabel}>
-            <div style={sectionIcon('rgba(16,185,129,0.12)', '#10b981')}><Sparkles size={13} /></div>
-            <span style={sectionTitle}>Quick Shortcuts</span>
+            <div style={sectionIcon('#171717', '#d4af37')}><Sparkles size={13} /></div>
+            <span style={sectionTitle}>Specialist Shortcuts</span>
           </div>
 
           <div className="dashboard-quick-actions" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+            <button
+              onClick={() => setShowAppointmentsSheet(true)}
+              style={{
+                background: 'rgba(212,175,55,0.12)', border: '1.5px solid rgba(212,175,55,0.4)',
+                borderRadius: '18px', padding: '1.1rem 0.85rem',
+                cursor: 'pointer', textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '0.5rem',
+                minHeight: '102px',
+              }}
+            >
+              <div style={{
+                width: '42px', height: '42px', borderRadius: '12px',
+                background: '#d4af37', color: '#fff',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <ListOrdered size={22} />
+              </div>
+              <div>
+                <div style={{ fontFamily: 'Outfit', fontSize: '0.88rem', fontWeight: 800, color: '#171717' }}>
+                  Appointments Queue
+                </div>
+                <div style={{ fontSize: '0.7rem', color: '#6b7280', marginTop: '0.15rem', fontWeight: 600 }}>
+                  Manage {bookings.length} client requests
+                </div>
+              </div>
+            </button>
+
+            <button
+              onClick={() => setShowActivitySheet(true)}
+              style={{
+                background: 'rgba(16,185,129,0.08)', border: '1.5px solid rgba(16,185,129,0.3)',
+                borderRadius: '18px', padding: '1.1rem 0.85rem',
+                cursor: 'pointer', textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '0.5rem',
+                minHeight: '102px',
+              }}
+            >
+              <div style={{
+                width: '42px', height: '42px', borderRadius: '12px',
+                background: '#10b981', color: '#fff',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <Activity size={22} />
+              </div>
+              <div>
+                <div style={{ fontFamily: 'Outfit', fontSize: '0.88rem', fontWeight: 800, color: '#171717' }}>
+                  Recent Activity Feed
+                </div>
+                <div style={{ fontSize: '0.7rem', color: '#6b7280', marginTop: '0.15rem', fontWeight: 600 }}>
+                  Live booking events
+                </div>
+              </div>
+            </button>
+
             <button
               onClick={() => {
                 const next = !isAvailable;
@@ -505,7 +572,7 @@ export const ExpertDashboard = () => {
                 border: isAvailable ? '1.5px solid rgba(16,185,129,0.25)' : '1.5px solid rgba(239,68,68,0.25)',
                 borderRadius: '18px', padding: '1.1rem 0.85rem',
                 cursor: 'pointer', textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '0.5rem',
-                minHeight: '100px',
+                minHeight: '102px',
               }}
             >
               <div style={{
@@ -516,10 +583,10 @@ export const ExpertDashboard = () => {
                 <Clock size={20} />
               </div>
               <div>
-                <div style={{ fontFamily: 'Outfit', fontSize: '0.9rem', fontWeight: 800, color: isAvailable ? '#059669' : '#dc2626' }}>
+                <div style={{ fontFamily: 'Outfit', fontSize: '0.88rem', fontWeight: 800, color: isAvailable ? '#059669' : '#dc2626' }}>
                   {isAvailable ? 'Available' : 'On Break'}
                 </div>
-                <div style={{ fontSize: '0.72rem', color: '#6b7280', marginTop: '0.15rem', fontWeight: 600 }}>
+                <div style={{ fontSize: '0.7rem', color: '#6b7280', marginTop: '0.15rem', fontWeight: 600 }}>
                   Toggle availability
                 </div>
               </div>
@@ -528,62 +595,10 @@ export const ExpertDashboard = () => {
             <button
               onClick={handleDownloadHistory}
               style={{
-                background: 'rgba(212,175,55,0.08)', border: '1.5px solid rgba(212,175,55,0.25)',
+                background: 'rgba(59,130,246,0.08)', border: '1.5px solid rgba(59,130,246,0.25)',
                 borderRadius: '18px', padding: '1.1rem 0.85rem',
                 cursor: 'pointer', textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '0.5rem',
-                minHeight: '100px',
-              }}
-            >
-              <div style={{
-                width: '42px', height: '42px', borderRadius: '12px',
-                background: '#d4af37', color: '#171717',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-              }}>
-                <Download size={20} />
-              </div>
-              <div>
-                <div style={{ fontFamily: 'Outfit', fontSize: '0.9rem', fontWeight: 800, color: '#171717' }}>
-                  Export CSV
-                </div>
-                <div style={{ fontSize: '0.72rem', color: '#6b7280', marginTop: '0.15rem', fontWeight: 600 }}>
-                  Download History
-                </div>
-              </div>
-            </button>
-
-            <button
-              onClick={() => navigate('/profile')}
-              style={{
-                background: 'rgba(17,24,39,0.04)', border: '1.5px solid rgba(17,24,39,0.12)',
-                borderRadius: '18px', padding: '1.1rem 0.85rem',
-                cursor: 'pointer', textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '0.5rem',
-                minHeight: '100px',
-              }}
-            >
-              <div style={{
-                width: '42px', height: '42px', borderRadius: '12px',
-                background: '#171717', color: '#fff',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-              }}>
-                <User size={20} />
-              </div>
-              <div>
-                <div style={{ fontFamily: 'Outfit', fontSize: '0.9rem', fontWeight: 800, color: '#171717' }}>
-                  My Profile
-                </div>
-                <div style={{ fontSize: '0.72rem', color: '#6b7280', marginTop: '0.15rem', fontWeight: 600 }}>
-                  Manage details
-                </div>
-              </div>
-            </button>
-
-            <button
-              onClick={fetchData}
-              style={{
-                background: 'rgba(59,130,246,0.08)', border: '1.5px solid rgba(59,130,246,0.2)',
-                borderRadius: '18px', padding: '1.1rem 0.85rem',
-                cursor: 'pointer', textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '0.5rem',
-                minHeight: '100px',
+                minHeight: '102px',
               }}
             >
               <div style={{
@@ -591,14 +606,14 @@ export const ExpertDashboard = () => {
                 background: '#3b82f6', color: '#fff',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
-                <RefreshCw size={20} />
+                <Download size={20} />
               </div>
               <div>
-                <div style={{ fontFamily: 'Outfit', fontSize: '0.9rem', fontWeight: 800, color: '#171717' }}>
-                  Refresh Queue
+                <div style={{ fontFamily: 'Outfit', fontSize: '0.88rem', fontWeight: 800, color: '#171717' }}>
+                  Export CSV / PDF
                 </div>
-                <div style={{ fontSize: '0.72rem', color: '#6b7280', marginTop: '0.15rem', fontWeight: 600 }}>
-                  Sync latest data
+                <div style={{ fontSize: '0.7rem', color: '#6b7280', marginTop: '0.15rem', fontWeight: 600 }}>
+                  Statement & records
                 </div>
               </div>
             </button>
@@ -606,75 +621,88 @@ export const ExpertDashboard = () => {
         </div>
 
         {/* ══════════════════════════════════════════════
-            SECTION 5 — RECENT BOOKING STREAM
+            SECTION 5 — ACCOUNT SETTINGS & DANGER ZONE
         ══════════════════════════════════════════════ */}
         <div style={{
-          background: '#fff', border: '1px solid rgba(0,0,0,0.07)',
-          borderRadius: '22px', padding: '1.1rem', marginBottom: '1rem',
-          boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
+          background: '#fff', border: '1px solid rgba(239,68,68,0.18)',
+          borderRadius: '22px', padding: '1.1rem',
+          boxShadow: '0 4px 16px rgba(0,0,0,0.03)',
         }}>
           <div style={sectionLabel}>
-            <div style={sectionIcon('rgba(59,130,246,0.12)', '#3b82f6')}><Clock size={13} /></div>
-            <span style={sectionTitle}>Live Activity Feed</span>
+            <div style={sectionIcon('rgba(239,68,68,0.1)', '#ef4444')}><AlertTriangle size={13} /></div>
+            <span style={sectionTitle}>Account & Data Settings</span>
           </div>
 
-          {bookings.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '1.5rem 0', color: '#9ca3af', fontSize: '0.82rem' }}>
-              No appointments scheduled yet. New requests will appear here instantly!
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
-              {bookings
-                .slice()
-                .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
-                .slice(0, 3)
-                .map((item, idx) => (
-                  <div key={idx} style={{
-                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                    padding: '0.75rem 0.85rem', borderRadius: '14px',
-                    background: '#faf9f6', border: '1px solid rgba(0,0,0,0.05)', gap: '0.65rem',
-                  }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flex: 1, minWidth: 0 }}>
-                      <div style={{
-                        width: '36px', height: '36px', borderRadius: '10px',
-                        background: 'rgba(212,175,55,0.15)', color: '#d4af37', flexShrink: 0,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      }}>
-                        <Calendar size={15} />
-                      </div>
-                      <div style={{ minWidth: 0 }}>
-                        <div style={{
-                          fontFamily: 'Outfit', fontSize: '0.85rem', fontWeight: 800, color: '#171717',
-                          overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-                        }}>
-                          {item.clientName || 'Client'} — {item.service || 'Service'}
-                        </div>
-                        <div style={{ fontSize: '0.7rem', color: '#6b7280', marginTop: '0.1rem' }}>
-                          📅 {item.date || ''} @ {item.time || ''} · ${item.price || 0}
-                        </div>
-                      </div>
-                    </div>
-                    <StatusBadge status={item.status} />
-                  </div>
-                ))}
-            </div>
-          )}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+            <button
+              onClick={logout}
+              className="app-btn app-btn-outline"
+              style={{ justifyContent: 'center', gap: '0.5rem', minHeight: '46px', borderRadius: '14px', fontSize: '0.85rem' }}
+            >
+              <LogOut size={16} /> Sign Out of Account
+            </button>
+
+            <button
+              onClick={() => setShowDeleteModal(true)}
+              className="app-btn"
+              style={{
+                background: 'rgba(239, 68, 68, 0.07)',
+                color: '#ef4444',
+                border: '1px solid rgba(239, 68, 68, 0.22)',
+                justifyContent: 'center',
+                gap: '0.5rem',
+                minHeight: '46px',
+                borderRadius: '14px',
+                fontSize: '0.85rem',
+              }}
+            >
+              <Trash2 size={16} /> Delete Account Permanently
+            </button>
+          </div>
         </div>
 
-        {/* ══════════════════════════════════════════════
-            SECTION 6 — APPOINTMENTS QUEUE (FULL LIST)
-        ══════════════════════════════════════════════ */}
-        <div style={{
-          background: '#fff', border: '1px solid rgba(0,0,0,0.07)',
-          borderRadius: '22px', padding: '1.1rem', marginBottom: '1rem',
-          boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
-        }}>
-          <div style={sectionLabel}>
-            <div style={sectionIcon('#171717', '#d4af37')}><Calendar size={13} /></div>
-            <span style={sectionTitle}>Client Appointments Queue</span>
+      </div>
+
+      {/* ═══ DEDICATED FULL-PAGE BOTTOM SHEETS FOR EXPERT APPOINTMENTS & RECENT ACTIVITY ═══ */}
+
+      {/* ── 1. DEDICATED EXPERT APPOINTMENTS QUEUE PAGE SHEET ── */}
+      <BottomSheet
+        isOpen={showAppointmentsSheet}
+        onClose={() => setShowAppointmentsSheet(false)}
+        title="Client Appointments Queue"
+      >
+        <div style={{ paddingBottom: '1rem' }}>
+
+          {/* Export & Clear Actions Toolbar */}
+          <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
+            <button
+              onClick={handleDownloadHistory}
+              style={{
+                flex: 1, background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.35)',
+                color: '#b5952f', padding: '0.6rem', borderRadius: '12px',
+                fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.8rem',
+                cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
+                minHeight: '44px',
+              }}
+            >
+              <Download size={15} /> Export CSV / Statement
+            </button>
+
+            <button
+              onClick={handleClearHistory}
+              style={{
+                flex: 1, background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)',
+                color: '#ef4444', padding: '0.6rem', borderRadius: '12px',
+                fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.8rem',
+                cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
+                minHeight: '44px',
+              }}
+            >
+              <Trash2 size={15} /> Clear History
+            </button>
           </div>
 
-          {/* Filter Pills Horizontal Scroll */}
+          {/* Status Filter Pills Horizontal Scroll */}
           <div style={{
             display: 'flex', gap: '0.4rem', overflowX: 'auto', paddingBottom: '0.5rem',
             marginBottom: '1rem', scrollbarWidth: 'none',
@@ -732,7 +760,6 @@ export const ExpertDashboard = () => {
                     background: '#fafafa',
                   }}
                 >
-                  {/* Client Info & Status */}
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem', gap: '0.5rem' }}>
                     <div>
                       <h4 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: '#171717', margin: 0 }}>
@@ -752,7 +779,6 @@ export const ExpertDashboard = () => {
                     <StatusBadge status={b.status} />
                   </div>
 
-                  {/* Service & Time Card */}
                   <div style={{ background: '#ffffff', padding: '0.85rem', borderRadius: '14px', border: '1px solid rgba(0,0,0,0.06)', marginBottom: '0.85rem' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <span style={{ fontWeight: 800, fontSize: '0.92rem', color: '#171717', fontFamily: 'Outfit' }}>
@@ -769,7 +795,6 @@ export const ExpertDashboard = () => {
                     </div>
                   </div>
 
-                  {/* Action Buttons (Neat 1–2 per state, minimum 44px height) */}
                   <div style={{ display: 'flex', gap: '0.6rem' }}>
                     {b.status === 'pending' && (
                       <>
@@ -815,91 +840,62 @@ export const ExpertDashboard = () => {
             </div>
           )}
         </div>
+      </BottomSheet>
 
-        {/* ══════════════════════════════════════════════
-            SECTION 7 — ACCOUNT SETTINGS & DANGER ZONE
-        ══════════════════════════════════════════════ */}
-        <div style={{
-          background: '#fff', border: '1px solid rgba(239,68,68,0.18)',
-          borderRadius: '22px', padding: '1.1rem',
-          boxShadow: '0 4px 16px rgba(0,0,0,0.03)',
-        }}>
-          <div style={sectionLabel}>
-            <div style={sectionIcon('rgba(239,68,68,0.1)', '#ef4444')}><AlertTriangle size={13} /></div>
-            <span style={sectionTitle}>Account & Data Settings</span>
-          </div>
+      {/* ── 2. DEDICATED RECENT APPOINTMENT STREAM PAGE SHEET ── */}
+      <BottomSheet
+        isOpen={showActivitySheet}
+        onClose={() => setShowActivitySheet(false)}
+        title="Recent Appointment Stream"
+      >
+        <div style={{ paddingBottom: '1.5rem' }}>
+          <p style={{ fontSize: '0.82rem', color: '#6b7280', marginBottom: '1rem' }}>
+            Live stream timeline of client appointments and booking updates in real-time.
+          </p>
 
-          {/* Export / Clear History */}
-          {bookings.length > 0 && (
-            <div style={{
-              background: '#faf9f6', borderRadius: '14px', padding: '0.85rem',
-              marginBottom: '0.85rem', border: '1px solid rgba(0,0,0,0.06)',
-            }}>
-              <p style={{ fontFamily: 'Outfit', fontSize: '0.8rem', fontWeight: 800, color: '#171717', margin: '0 0 0.65rem' }}>
-                Booking Records Management
-              </p>
-              <div style={{ display: 'flex', gap: '0.65rem' }}>
-                <button
-                  onClick={handleDownloadHistory}
-                  style={{
-                    flex: 1, background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)',
-                    color: '#b5952f', padding: '0.6rem', borderRadius: '12px',
-                    fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.8rem',
-                    cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
-                    minHeight: '44px',
-                  }}
-                >
-                  <Download size={14} /> Export CSV
-                </button>
-
-                <button
-                  onClick={handleClearHistory}
-                  style={{
-                    flex: 1, background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.22)',
-                    color: '#ef4444', padding: '0.6rem', borderRadius: '12px',
-                    fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.8rem',
-                    cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
-                    minHeight: '44px',
-                  }}
-                >
-                  <Trash2 size={14} /> Clear History
-                </button>
-              </div>
+          {bookings.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '2.5rem 1rem', color: '#9ca3af', fontSize: '0.85rem' }}>
+              No active appointments yet. Client bookings will appear here in real time!
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              {bookings
+                .slice()
+                .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
+                .map((item, idx) => (
+                  <div key={idx} style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    padding: '0.85rem 1rem', borderRadius: '16px',
+                    background: '#fafafa', border: '1px solid rgba(0,0,0,0.06)',
+                    gap: '0.75rem',
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flex: 1, minWidth: 0 }}>
+                      <div style={{
+                        width: '40px', height: '40px', borderRadius: '12px',
+                        background: 'rgba(212,175,55,0.15)', color: '#d4af37', flexShrink: 0,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      }}>
+                        <Calendar size={16} />
+                      </div>
+                      <div style={{ minWidth: 0 }}>
+                        <div style={{
+                          fontFamily: 'Outfit', fontSize: '0.88rem', fontWeight: 800, color: '#171717',
+                          overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                        }}>
+                          {item.clientName || 'Client'} — {item.service || 'Service'}
+                        </div>
+                        <div style={{ fontSize: '0.72rem', color: '#6b7280', marginTop: '0.15rem' }}>
+                          📅 {item.date || ''} @ {item.time || ''} · Amount: ${item.price || 0}
+                        </div>
+                      </div>
+                    </div>
+                    <StatusBadge status={item.status} />
+                  </div>
+                ))}
             </div>
           )}
-
-          {/* Account Actions */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-            <button
-              onClick={logout}
-              className="app-btn app-btn-outline"
-              style={{ justifyContent: 'center', gap: '0.5rem', minHeight: '46px', borderRadius: '14px', fontSize: '0.85rem' }}
-            >
-              <LogOut size={16} /> Sign Out of Account
-            </button>
-
-            <button
-              onClick={() => setShowDeleteModal(true)}
-              className="app-btn"
-              style={{
-                background: 'rgba(239, 68, 68, 0.07)',
-                color: '#ef4444',
-                border: '1px solid rgba(239, 68, 68, 0.22)',
-                justifyContent: 'center',
-                gap: '0.5rem',
-                minHeight: '46px',
-                borderRadius: '14px',
-                fontSize: '0.85rem',
-              }}
-            >
-              <Trash2 size={16} /> Delete Account Permanently
-            </button>
-          </div>
         </div>
-
-      </div>
-
-      {/* ═══ MODALS & SHEETS ═══ */}
+      </BottomSheet>
 
       {/* Delete Confirmation Modal */}
       <PopupModal
