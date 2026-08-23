@@ -19,9 +19,10 @@ export const Experts = () => {
 
           const registeredTeam = verifiedStaff.map((spec) => {
             const fullName = `${spec.firstname || ''} ${spec.lastname || ''}`.trim() || 'Verified Specialist';
+            // Always normalize services to plain strings (MongoDB returns {name, price, _id})
             const specialtiesList = Array.isArray(spec.services)
-              ? spec.services
-              : (spec.services ? String(spec.services).split(',').map((s) => s.trim()) : ['Bespoke Styling', 'Executive Care']);
+              ? spec.services.map((s) => typeof s === 'object' ? (s.name || s.title || 'Specialist Service') : String(s)).filter(Boolean)
+              : (spec.services ? String(spec.services).split(',').map((s) => s.trim()).filter(Boolean) : ['Bespoke Styling', 'Executive Care']);
             return {
               id: spec._id,
               name: fullName,

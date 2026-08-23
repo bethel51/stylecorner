@@ -59,7 +59,9 @@ export const Home = () => {
             name: `${s.firstname || ''} ${s.lastname || ''}`.trim() || 'Verified Specialist',
             role: s.title || s.roleTitle || 'Certified Specialist',
             rating: s.rating || 5.0,
-            specialty: Array.isArray(s.services) ? s.services[0] : (s.services || 'Professional Hair & Grooming'),
+            specialty: Array.isArray(s.services) && s.services[0]
+              ? (typeof s.services[0] === 'object' ? (s.services[0].name || s.services[0].title || 'Professional Styling') : String(s.services[0]))
+              : (typeof s.services === 'string' ? s.services : 'Professional Hair & Grooming'),
             image: s.avatarUrl || s.profileImage || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
           }));
           setSpecialists(mapped.slice(0, 3));
