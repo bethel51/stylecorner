@@ -5,18 +5,17 @@ import { useAuth } from '../context/AuthContext';
 import { PageContainer } from '../components/common/PageContainer';
 
 const EXPERT_SERVICES = [
-  { id: 'fade', label: 'Precision Skin Fade & Cut', icon: '✂️' },
-  { id: 'beard', label: 'Beard Trim & Sculpting', icon: '🧔' },
-  { id: 'braids', label: 'Knotless Box Braids', icon: '🪢' },
-  { id: 'cornrows', label: 'Cornrows & Custom Pattern', icon: '💈' },
-  { id: 'nails', label: 'Full Gel Nail Architecture', icon: '💅' },
-  { id: 'pedicure', label: 'Luxury Pedicure Session', icon: '🦶' },
-  { id: 'combo', label: 'Full Atelier Grooming Combo', icon: '⭐' },
-  { id: 'color', label: 'Hair Colouring & Treatment', icon: '🎨' },
-  { id: 'locs', label: 'Dreadlocks & Loc Maintenance', icon: '🌿' },
+  { id: 'lash', label: 'Lash Tech', icon: '👁️' },
+  { id: 'nail', label: 'Nail Tech', icon: '💅' },
+  { id: 'wig_install', label: 'Wig Installer', icon: '💇‍♀️' },
+  { id: 'wig_revamp', label: 'Wig Revamper', icon: '✨' },
+  { id: 'makeup', label: 'Makeup Artist', icon: '💄' },
+  { id: 'braider', label: 'Hair Stylist (Braider)', icon: '🪢' },
+  { id: 'pedicure', label: 'Pedicure', icon: '🦶' },
+  { id: 'manicure', label: 'Manicure', icon: '💅' },
 ];
 
-const MAX_SERVICES = 3;
+const MAX_SERVICES = 2;
 
 export const Signup = () => {
   const navigate = useNavigate();

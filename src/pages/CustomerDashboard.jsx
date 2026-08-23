@@ -373,7 +373,96 @@ export const CustomerDashboard = () => {
         </div>
 
         {/* ══════════════════════════════════════════════
-            SECTION 3 — QUICK ACTION SHORTCUTS (ICON CARDS)
+            SECTION 3 — CATEGORIES (MATCHING USER SCREENSHOT)
+        ══════════════════════════════════════════════ */}
+        <div style={{
+          background: '#ffffff',
+          borderRadius: '22px',
+          padding: '1.1rem 1rem',
+          marginBottom: '1rem',
+          border: '1px solid rgba(0,0,0,0.06)',
+          boxShadow: '0 4px 16px rgba(0,0,0,0.03)',
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
+            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: '#171717', margin: 0 }}>
+              Categories
+            </h3>
+            <button
+              onClick={() => navigate('/services')}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#ec4899',
+                fontFamily: 'Outfit',
+                fontWeight: 700,
+                fontSize: '0.85rem',
+                cursor: 'pointer'
+              }}
+            >
+              View all
+            </button>
+          </div>
+
+          <div
+            className="filter-pills-scroll"
+            style={{
+              display: 'flex',
+              gap: '0.75rem',
+              overflowX: 'auto',
+              paddingBottom: '0.4rem',
+              scrollbarWidth: 'none'
+            }}
+          >
+            {[
+              { label: 'Hair', service: 'Hair Stylist (Braider)', icon: '💇‍♀️', bg: '#FAF5F5' },
+              { label: 'Nails', service: 'Nail Tech', icon: '💅', bg: '#FAF5F5' },
+              { label: 'Lashes', service: 'Lash Tech', icon: '👁️', bg: '#FAF5F5' },
+              { label: 'Makeup', service: 'Makeup Artist', icon: '💄', bg: '#FAF5F5' },
+              { label: 'Wigs', service: 'Wig Installer', icon: '✨', bg: '#FAF5F5' },
+              { label: 'Manicure', service: 'Manicure', icon: '💅', bg: '#FAF5F5' },
+              { label: 'Pedicure', service: 'Pedicure', icon: '🦶', bg: '#FAF5F5' },
+            ].map((cat) => (
+              <div
+                key={cat.label}
+                onClick={() => navigate(`/booking?service=${encodeURIComponent(cat.service)}`)}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  cursor: 'pointer',
+                  flexShrink: 0
+                }}
+              >
+                <div
+                  style={{
+                    width: '74px',
+                    height: '74px',
+                    borderRadius: '20px',
+                    background: cat.bg,
+                    border: '1px solid rgba(236,72,153,0.12)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '1.75rem',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.03)',
+                    transition: 'transform 0.15s ease, box-shadow 0.15s ease'
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.05)'; e.currentTarget.style.boxShadow = '0 8px 20px rgba(236,72,153,0.18)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.03)'; }}
+                >
+                  {cat.icon}
+                </div>
+                <span style={{ fontFamily: 'Outfit', fontSize: '0.78rem', fontWeight: 700, color: '#374151' }}>
+                  {cat.label}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ══════════════════════════════════════════════
+            SECTION 4 — QUICK ACTION SHORTCUTS (ICON CARDS)
         ══════════════════════════════════════════════ */}
         <div style={{
           background: '#fff', border: '1px solid rgba(0,0,0,0.07)',

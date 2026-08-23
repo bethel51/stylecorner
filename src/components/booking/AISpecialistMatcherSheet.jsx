@@ -18,11 +18,14 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
   const [matchResult, setMatchResult] = useState(null);
 
   const categories = [
-    { id: 'wigs', label: 'Wigs & Frontals', service: 'Frontal Wig Install' },
-    { id: 'braids', label: 'Knotless Braids & Locs', service: 'Knotless Box Braids' },
-    { id: 'barber', label: 'Hair Cut & Fade', service: 'Precision Skin Fade & Cut' },
-    { id: 'nails', label: 'Nails & Pedicure', service: 'Full Gel Nail Architecture' },
-    { id: 'combo', label: 'Full Executive Combo', service: 'Full Atelier Grooming Combo' },
+    { id: 'wig_install', label: 'Wig Installer', service: 'Wig Installer' },
+    { id: 'wig_revamp', label: 'Wig Revamper', service: 'Wig Revamper' },
+    { id: 'braider', label: 'Hair Stylist (Braider)', service: 'Hair Stylist (Braider)' },
+    { id: 'lash', label: 'Lash Tech', service: 'Lash Tech' },
+    { id: 'nail', label: 'Nail Tech', service: 'Nail Tech' },
+    { id: 'makeup', label: 'Makeup Artist', service: 'Makeup Artist' },
+    { id: 'manicure', label: 'Manicure', service: 'Manicure' },
+    { id: 'pedicure', label: 'Pedicure', service: 'Pedicure' },
   ];
 
   const vibes = [

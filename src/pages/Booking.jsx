@@ -62,20 +62,18 @@ export const Booking = () => {
   }, [isAuthenticated, role, navigate]);
 
   const servicesData = [
-    { title: 'Precision Skin Fade & Cut', price: 15000 },
-    { title: 'Beard Trim & Sculpting', price: 10000 },
-    { title: 'Knotless Box Braids', price: 45000 },
-    { title: 'Cornrows & Custom Pattern', price: 25000 },
-    { title: 'Full Gel Nail Architecture', price: 18000 },
-    { title: 'Luxury Pedicure Session', price: 15000 },
-    { title: 'Full Atelier Grooming Combo', price: 35000 },
+    { title: 'Wig Installer', price: 25000 },
+    { title: 'Wig Revamper', price: 15000 },
+    { title: 'Hair Stylist (Braider)', price: 35000 },
+    { title: 'Lash Tech', price: 20000 },
+    { title: 'Nail Tech', price: 18000 },
+    { title: 'Makeup Artist', price: 30000 },
+    { title: 'Manicure', price: 12000 },
+    { title: 'Pedicure', price: 15000 },
   ];
 
   const [stylistsList, setStylistsList] = useState([
     'Any Specialist',
-    'Stella Hair',
-    'Amina Bello',
-    'Tunde Adebayo',
   ]);
 
   const [service1, setService1] = useState(initialService || servicesData[0].title);
