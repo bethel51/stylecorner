@@ -21,6 +21,10 @@ import {
   ShoppingBag,
   Truck,
   Shield,
+  Download,
+  Plus,
+  Trash2,
+  AlertTriangle,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -32,7 +36,7 @@ import { SkeletonList } from '../components/common/SkeletonLoader';
 import { PopupModal } from '../components/common/PopupModal';
 import { BottomSheet } from '../components/common/BottomSheet';
 import { ImagePreviewModal } from '../components/common/ImagePreviewModal';
-import { Trash2, AlertTriangle } from 'lucide-react';
+import { downloadBookingHistoryCSV } from '../utils/bookingHistoryExport';
 
 export const ExpertDashboard = () => {
   const navigate = useNavigate();
@@ -167,16 +171,28 @@ export const ExpertDashboard = () => {
   const acceptedBookings = bookings.filter((b) => b.status === 'accepted');
   const completedBookings = bookings.filter((b) => b.status === 'completed');
 
+  // Download booking history handler
+  const handleDownloadHistory = () => {
+    if (bookings.length === 0) {
+      showToast('No booking history available to download.', 'error');
+      return;
+    }
+    const success = downloadBookingHistoryCSV(bookings, `Expert_Booking_History_${user?.firstname || 'Stylist'}.csv`);
+    if (success) showToast('Booking history downloaded successfully!', 'success');
+  };
+
   // Clear all booking history handler
   const handleClearHistory = async () => {
-    if (!window.confirm('Are you sure you want to clear all booking history?')) return;
+    if (bookings.length === 0) {
+      showToast('No booking history to clear.', 'accent');
+      return;
+    }
+    if (!window.confirm('Are you sure you want to clear and delete all booking history?')) return;
     try {
       setLoading(true);
-      const data = await api.getBookings();
-      const ids = Array.isArray(data) ? data.map(b => b._id) : [];
-      await Promise.all(ids.map(id => api.deleteBooking(id)));
+      await api.clearBookingHistory();
       setBookings([]);
-      showToast('All booking history cleared.', 'success');
+      showToast('All booking history cleared successfully.', 'success');
     } catch (err) {
       showToast(err.message || 'Failed to clear history', 'error');
     } finally {
@@ -305,78 +321,51 @@ export const ExpertDashboard = () => {
             </div>
           </div>
 
-          {/* Specialties Badges */}
-          {(() => {
-            const specs = Array.isArray(user?.specialties)
-              ? user.specialties
-              : (typeof user?.specialties === 'string' && user.specialties.trim())
-                ? user.specialties.split(',').map(s => s.trim())
-                : [];
-            if (specs.length === 0) return null;
-            return (
-              <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', marginBottom: '1.25rem', paddingTop: '0.5rem', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-                {specs.map((s, idx) => (
-                  <span
-                    key={idx}
-                    style={{
-                      background: 'rgba(255,255,255,0.08)',
-                      color: '#e5e7eb',
-                      fontSize: '0.72rem',
-                      fontFamily: 'Outfit',
-                      fontWeight: 700,
-                      padding: '0.2rem 0.6rem',
-                      borderRadius: '50px',
-                      border: '1px solid rgba(255,255,255,0.1)',
-                    }}
-                  >
-                    {s}
-                  </span>
-                ))}
-              </div>
-            );
-          })()}
+          {/* Quick Profile & Shift Controls */}
+          <div style={{ display: 'flex', gap: '0.5rem', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '1rem' }}>
+            <button
+              onClick={() => navigate('/profile')}
+              style={{
+                flex: 1,
+                background: 'rgba(255,255,255,0.08)',
+                border: '1px solid rgba(255,255,255,0.12)',
+                color: '#ffffff',
+                padding: '0.55rem',
+                borderRadius: '12px',
+                fontSize: '0.8rem',
+                fontFamily: 'Outfit',
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.4rem',
+              }}
+            >
+              <User size={14} /> My Profile Info
+            </button>
 
-            <div style={{ marginTop: '1rem' }}>
-                <button
-                  onClick={logout}
-                  style={{
-                    width: '100%',
-                    background: 'rgba(239, 68, 68, 0.15)',
-                    border: '1px solid rgba(239, 68, 68, 0.3)',
-                    color: '#ef4444',
-                    padding: '0.6rem',
-                    borderRadius: '12px',
-                    fontSize: '0.8rem',
-                    fontFamily: 'Outfit',
-                    fontWeight: 800,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '0.4rem',
-                  }}
-                >
-                  <LogOut size={14} /> Sign Out
-                </button>
-                <button
-                  onClick={handleClearHistory}
-                  style={{
-                    width: '100%',
-                    marginTop: '0.6rem',
-                    background: 'rgba(212, 175, 55, 0.15)',
-                    border: '1px solid rgba(212, 175, 55, 0.3)',
-                    color: '#d4af37',
-                    padding: '0.6rem',
-                    borderRadius: '12px',
-                    fontSize: '0.8rem',
-                    fontFamily: 'Outfit',
-                    fontWeight: 800,
-                    cursor: 'pointer',
-                  }}
-                >
-                  Clear All Booking History
-                </button>
-              </div>
+            <button
+              onClick={logout}
+              style={{
+                background: 'rgba(239, 68, 68, 0.15)',
+                border: '1px solid rgba(239, 68, 68, 0.3)',
+                color: '#ef4444',
+                padding: '0.55rem 1rem',
+                borderRadius: '12px',
+                fontSize: '0.8rem',
+                fontFamily: 'Outfit',
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.4rem',
+              }}
+            >
+              <LogOut size={14} /> Sign Out
+            </button>
+          </div>
         </div>
 
         {/* ── Metric Cards Grid ── */}
@@ -407,6 +396,91 @@ export const ExpertDashboard = () => {
               Earnings
             </span>
           </div>
+        </div>
+
+        {/* ── DEDICATED EXPERT SERVICES & SPECIALTIES SECTION ── */}
+        <div
+          className="app-card"
+          style={{
+            background: 'linear-gradient(135deg, rgba(212,175,55,0.06) 0%, rgba(23,23,23,0.02) 100%)',
+            border: '1.5px solid rgba(212, 175, 55, 0.35)',
+            padding: '1.25rem',
+            marginBottom: '1.25rem',
+            borderRadius: '20px',
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: '#171717', color: '#d4af37', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Scissors size={18} />
+              </div>
+              <div>
+                <h3 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: '#171717', margin: 0 }}>
+                  My Expert Services & Offerings
+                </h3>
+                <span style={{ fontSize: '0.75rem', color: '#6b7280' }}>Manage services listed for client booking</span>
+              </div>
+            </div>
+
+            <button
+              onClick={() => navigate('/profile')}
+              style={{
+                background: 'rgba(212,175,55,0.15)',
+                border: '1px solid rgba(212,175,55,0.4)',
+                color: '#b5952f',
+                padding: '0.4rem 0.75rem',
+                borderRadius: '10px',
+                fontSize: '0.78rem',
+                fontFamily: 'Outfit',
+                fontWeight: 800,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.3rem',
+              }}
+            >
+              <Edit size={13} /> Edit Services
+            </button>
+          </div>
+
+          {/* List of Expert Services */}
+          {(() => {
+            const specs = Array.isArray(user?.specialties)
+              ? user.specialties
+              : (typeof user?.specialties === 'string' && user.specialties.trim())
+                ? user.specialties.split(',').map(s => s.trim())
+                : ['Skin Fades & Beard Trim', 'Knotless Braids & Locs', 'Manicure & Gel Nails', 'Scalp Treatment'];
+
+            return (
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem' }}>
+                {specs.map((s, idx) => (
+                  <div
+                    key={idx}
+                    style={{
+                      background: '#ffffff',
+                      border: '1px solid rgba(0,0,0,0.08)',
+                      padding: '0.75rem 0.85rem',
+                      borderRadius: '12px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                      <Sparkles size={14} color="#d4af37" />
+                      <span style={{ fontFamily: 'Outfit', fontSize: '0.85rem', fontWeight: 800, color: '#171717' }}>
+                        {s}
+                      </span>
+                    </div>
+                    <span style={{ fontSize: '0.65rem', background: 'rgba(16,185,129,0.12)', color: '#059669', padding: '0.15rem 0.5rem', borderRadius: '50px', fontWeight: 800, textTransform: 'uppercase' }}>
+                      Active
+                    </span>
+                  </div>
+                ))}
+              </div>
+            );
+          })()}
         </div>
 
         {/* ── Segmented Tab Switcher (Appointments vs Store Orders) ── */}
@@ -497,16 +571,65 @@ export const ExpertDashboard = () => {
               ))}
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem', flexWrap: 'wrap', gap: '0.5rem' }}>
               <h3 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: '#171717' }}>
                 Client Appointments
               </h3>
-              <button
-                onClick={fetchData}
-                style={{ background: 'none', border: 'none', color: '#d4af37', fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.85rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem' }}
-              >
-                <RefreshCw size={14} /> Refresh Queue
-              </button>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                {bookings.length > 0 && (
+                  <>
+                    <button
+                      onClick={handleDownloadHistory}
+                      title="Download Booking History (CSV)"
+                      style={{
+                        background: 'rgba(212,175,55,0.12)',
+                        border: '1px solid rgba(212,175,55,0.3)',
+                        color: '#d4af37',
+                        padding: '0.35rem 0.65rem',
+                        borderRadius: '8px',
+                        fontSize: '0.75rem',
+                        fontFamily: 'Outfit',
+                        fontWeight: 800,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.3rem',
+                      }}
+                    >
+                      <Download size={13} /> Export CSV
+                    </button>
+
+                    <button
+                      onClick={handleClearHistory}
+                      title="Clear & Delete All History"
+                      style={{
+                        background: 'rgba(239,68,68,0.1)',
+                        border: '1px solid rgba(239,68,68,0.25)',
+                        color: '#ef4444',
+                        padding: '0.35rem 0.65rem',
+                        borderRadius: '8px',
+                        fontSize: '0.75rem',
+                        fontFamily: 'Outfit',
+                        fontWeight: 800,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.3rem',
+                      }}
+                    >
+                      <Trash2 size={13} /> Clear History
+                    </button>
+                  </>
+                )}
+
+                <button
+                  onClick={fetchData}
+                  style={{ background: 'none', border: 'none', color: '#d4af37', fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.85rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem', marginLeft: '0.3rem' }}
+                >
+                  <RefreshCw size={14} /> Refresh
+                </button>
+              </div>
             </div>
 
             {loading ? (

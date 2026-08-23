@@ -17,10 +17,8 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
   const handleProfileClick = () => {
     if (!isAuthenticated) {
       navigate('/login');
-    } else if (user?.avatarUrl) {
-      setShowImagePreview(true);
     } else {
-      navigate(role === 'staff' ? '/expert-dashboard' : '/customer-dashboard');
+      navigate('/profile');
     }
   };
 

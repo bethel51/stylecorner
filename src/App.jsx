@@ -22,6 +22,7 @@ import { ExpertDashboard } from './pages/ExpertDashboard';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { Payment } from './pages/Payment';
 import { Policies } from './pages/Policies';
+import { Profile } from './pages/Profile';
 
 export const App = () => {
   return (
@@ -45,6 +46,16 @@ export const App = () => {
             <Route path="/verify" element={<VerifyOTP />} />
             <Route path="/login" element={<Login />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
+
+            {/* User Profile Route */}
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
 
             {/* Role Protected Routes */}
             <Route

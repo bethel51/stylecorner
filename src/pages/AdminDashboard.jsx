@@ -35,6 +35,7 @@ import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import { uploadToCloudinary } from '../services/cloudinary';
 import { StatusBadge } from '../components/common/StatusBadge';
+import { OrderTrackingSheet } from '../components/store/OrderTrackingSheet';
 
 export const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -55,6 +56,7 @@ export const AdminDashboard = () => {
   const [searchQuery, setSearchQuery] = useState('');
   
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [selectedOrderForTracking, setSelectedOrderForTracking] = useState(null);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [userToDelete, setUserToDelete] = useState(null);
 
@@ -740,10 +742,17 @@ export const AdminDashboard = () => {
                         </button>
                       )}
                       <button
+                        onClick={(e) => { e.stopPropagation(); setSelectedOrderForTracking(order); }}
+                        style={{ padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: 'rgba(212,175,55,0.15)', color: '#b5952f', fontWeight: 800, fontSize: '0.78rem', border: '1px solid rgba(212,175,55,0.4)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
+                      >
+                        <Truck size={13} /> Track & Manage Delivery
+                      </button>
+
+                      <button
                         onClick={(e) => { e.stopPropagation(); setSelectedOrder(order); }}
                         style={{ padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: 'rgba(0,0,0,0.04)', color: '#334155', fontWeight: 600, fontSize: '0.78rem', border: '1px solid rgba(0,0,0,0.08)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
                       >
-                        <Eye size={13} /> View Details
+                        <Eye size={13} /> Details
                       </button>
                     </div>
                   </div>
@@ -1380,6 +1389,18 @@ export const AdminDashboard = () => {
           </div>
         </div>
       )}
+
+      {/* Order Tracking & Communication Sheet (Admin Mode) */}
+      <OrderTrackingSheet
+        isOpen={!!selectedOrderForTracking}
+        onClose={() => setSelectedOrderForTracking(null)}
+        order={selectedOrderForTracking}
+        isAdmin={true}
+        onOrderUpdated={(updated) => {
+          setOrders(prev => prev.map(o => o._id === updated._id ? updated : o));
+          setSelectedOrderForTracking(updated);
+        }}
+      />
     </div>
   );
 };

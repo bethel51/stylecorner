@@ -634,6 +634,31 @@ app.put('/api/bookings/:id', authenticateToken, async (req, res) => {
   }
 });
 
+// Clear all booking history for logged in user
+app.delete('/api/bookings/clear-history', authenticateToken, async (req, res) => {
+  try {
+    let query = {};
+    if (req.user.role === 'customer') {
+      const userEmail = (req.user.email || '').trim();
+      query = { clientEmail: new RegExp('^' + userEmail + '$', 'i') };
+    } else if (req.user.role === 'staff') {
+      const staffName = (req.user.firstname || '').trim();
+      query = {
+        $or: [
+          { stylist: new RegExp(staffName, 'i') },
+          { staff: new RegExp(staffName, 'i') },
+          { clientEmail: new RegExp('^' + (req.user.email || '').trim() + '$', 'i') }
+        ]
+      };
+    }
+    const result = await Booking.deleteMany(query);
+    res.status(200).json({ message: 'Booking history cleared successfully', deletedCount: result.deletedCount });
+  } catch (error) {
+    console.error('Failed to clear booking history:', error);
+    res.status(500).json({ error: 'Failed to clear booking history' });
+  }
+});
+
 // Delete a booking by ID
 app.delete('/api/bookings/:id', authenticateToken, async (req, res) => {
   try {
@@ -715,7 +740,9 @@ app.post('/api/orders', authenticateToken, async (req, res) => {
     const userEmail = (req.body.email || req.user.email || '').trim();
     const orderData = {
       ...req.body,
-      email: userEmail
+      email: userEmail,
+      status: req.body.status || 'processing',
+      trackingStatus: req.body.trackingStatus || 'Order Placed'
     };
     const order = new Order(orderData);
     const savedOrder = await order.save();
@@ -769,6 +796,83 @@ app.put('/api/orders/:id', authenticateToken, async (req, res) => {
     res.status(500).json({ error: 'Failed to update order' });
   }
 });
+
+// Update Order Tracking (Admin or System)
+app.put('/api/orders/:id/tracking', authenticateToken, async (req, res) => {
+  try {
+    const { trackingStatus, trackingNumber, estimatedDelivery, status } = req.body;
+    const updateFields = {};
+    if (trackingStatus !== undefined) updateFields.trackingStatus = trackingStatus;
+    if (trackingNumber !== undefined) updateFields.trackingNumber = trackingNumber;
+    if (estimatedDelivery !== undefined) updateFields.estimatedDelivery = estimatedDelivery;
+    if (status !== undefined) updateFields.status = status;
+
+    const updatedOrder = await Order.findByIdAndUpdate(
+      req.params.id,
+      { $set: updateFields },
+      { new: true }
+    );
+
+    if (!updatedOrder) return res.status(404).json({ error: 'Order not found' });
+
+    // Send notification to customer if tracking status changes
+    if (trackingStatus) {
+      await sendNotificationSafe(
+        updatedOrder.email,
+        `Order Tracking Update: Order #${updatedOrder._id}`,
+        `Hi ${updatedOrder.name || 'Customer'},\n\nYour order #${updatedOrder._id} tracking status has been updated to: ${trackingStatus}.\n\nEstimated Delivery: ${updatedOrder.estimatedDelivery || 'Pending updates'}\nTracking Number: ${updatedOrder.trackingNumber || 'N/A'}`
+      );
+    }
+
+    res.status(200).json(updatedOrder);
+  } catch (error) {
+    console.error('Failed to update tracking info:', error);
+    res.status(500).json({ error: 'Failed to update tracking information' });
+  }
+});
+
+// Add a message to an Order conversation (Customer <-> Admin communication)
+app.post('/api/orders/:id/messages', authenticateToken, async (req, res) => {
+  try {
+    const { text } = req.body;
+    if (!text || !text.trim()) {
+      return res.status(400).json({ error: 'Message content is required.' });
+    }
+
+    const order = await Order.findById(req.params.id);
+    if (!order) return res.status(404).json({ error: 'Order not found' });
+
+    const newMessage = {
+      sender: `${req.user.firstname || ''} ${req.user.lastname || ''}`.trim() || req.user.email,
+      senderRole: req.user.role === 'staff' ? 'admin' : 'customer',
+      text: text.trim(),
+      createdAt: new Date()
+    };
+
+    order.messages.push(newMessage);
+    await order.save();
+
+    // Send email alert to recipient
+    const isSenderAdmin = req.user.role === 'staff';
+    const recipientEmail = isSenderAdmin
+      ? order.email
+      : (process.env.ADMIN_EMAIL || process.env.EMAIL_USER || process.env.BREVO_SMTP_LOGIN);
+
+    if (recipientEmail) {
+      await sendNotificationSafe(
+        recipientEmail,
+        `New Message on Order #${order._id}`,
+        `New message from ${newMessage.sender} (${newMessage.senderRole.toUpperCase()}):\n\n"${newMessage.text}"\n\nLog in to your Style Corner dashboard to respond.`
+      );
+    }
+
+    res.status(200).json(order);
+  } catch (error) {
+    console.error('Failed to post message to order:', error);
+    res.status(500).json({ error: 'Failed to send message' });
+  }
+});
+
 
 // --- PRODUCT ROUTES ---
 const INITIAL_PRODUCTS = [

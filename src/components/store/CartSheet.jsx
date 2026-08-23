@@ -5,13 +5,19 @@ import { BottomSheet } from '../common/BottomSheet';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { api } from '../../services/api';
+import { LocationSelector } from './LocationSelector';
 
 export const CartSheet = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const { cart, removeFromCart, updateQuantity, clearCart, subtotal } = useCart();
   const { user, isAuthenticated, showToast } = useAuth();
 
-  const [address, setAddress] = useState('');
+  const [location, setLocation] = useState({
+    state: 'Lagos',
+    lga: 'Ikeja',
+    street: '',
+    houseNumber: '',
+  });
   const [submitting, setSubmitting] = useState(false);
 
   const handleCheckout = async (e) => {
@@ -28,10 +34,12 @@ export const CartSheet = ({ isOpen, onClose }) => {
       return;
     }
 
-    if (!address) {
-      showToast('Please provide a delivery address.', 'error');
+    if (!location.street.trim() || !location.houseNumber.trim()) {
+      showToast('Please specify your street name and house number.', 'error');
       return;
     }
+
+    const fullAddress = `${location.houseNumber.trim()}, ${location.street.trim()}, ${location.lga}, ${location.state} State`;
 
     setSubmitting(true);
     try {
@@ -43,8 +51,13 @@ export const CartSheet = ({ isOpen, onClose }) => {
         item: itemsList,
         price: subtotal,
         totalPrice: subtotal,
-        address: address,
+        address: fullAddress,
+        state: location.state,
+        lga: location.lga,
+        street: location.street.trim(),
+        houseNumber: location.houseNumber.trim(),
         status: 'processing',
+        trackingStatus: 'Order Placed',
       };
 
       await api.createOrder(orderPayload);
@@ -58,6 +71,7 @@ export const CartSheet = ({ isOpen, onClose }) => {
       setSubmitting(false);
     }
   };
+
 
   return (
     <BottomSheet isOpen={isOpen} onClose={onClose} title={`Your Grooming Cart (${cart.length})`}>
@@ -131,16 +145,11 @@ export const CartSheet = ({ isOpen, onClose }) => {
           </div>
 
           <form onSubmit={handleCheckout} style={{ borderTop: '1px solid rgba(0,0,0,0.08)', paddingTop: '1rem' }}>
-            <div className="app-input-group">
-              <label className="app-label">Delivery Address *</label>
-              <input
-                type="text"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                placeholder="123 Fashion Ave, Suite 400, New York, NY"
-                className="app-input"
-                required
-              />
+            <div style={{ marginBottom: '1.25rem' }}>
+              <h4 style={{ fontFamily: 'Outfit', fontSize: '0.9rem', fontWeight: 800, color: '#171717', marginBottom: '0.65rem' }}>
+                Delivery Location Details
+              </h4>
+              <LocationSelector location={location} onChange={setLocation} />
             </div>
 
             <div

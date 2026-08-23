@@ -17,6 +17,12 @@ import {
   CheckCircle,
   Phone,
   ArrowRight,
+  Download,
+  Truck,
+  Trash2,
+  AlertTriangle,
+  Eye,
+  MessageSquare
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
@@ -28,7 +34,8 @@ import { BottomSheet } from '../components/common/BottomSheet';
 import { PopupModal } from '../components/common/PopupModal';
 import { AISpecialistMatcherSheet } from '../components/booking/AISpecialistMatcherSheet';
 import { ImagePreviewModal } from '../components/common/ImagePreviewModal';
-import { Trash2, AlertTriangle, Eye } from 'lucide-react';
+import { OrderTrackingSheet } from '../components/store/OrderTrackingSheet';
+import { downloadBookingHistoryCSV } from '../utils/bookingHistoryExport';
 
 export const CustomerDashboard = () => {
   const navigate = useNavigate();
@@ -39,11 +46,13 @@ export const CustomerDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('bookings'); // 'bookings' | 'orders'
 
+  const [selectedOrderForTracking, setSelectedOrderForTracking] = useState(null);
   const [showProfileSheet, setShowProfileSheet] = useState(false);
   const [showAiSheet, setShowAiSheet] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEnlargedAvatar, setShowEnlargedAvatar] = useState(false);
   const [deletingAccount, setDeletingAccount] = useState(false);
+
 
   const [profileForm, setProfileForm] = useState({
     firstname: user?.firstname || '',
@@ -94,6 +103,34 @@ export const CustomerDashboard = () => {
       setDeletingAccount(false);
     }
   };
+
+  const handleDownloadHistory = () => {
+    if (bookings.length === 0) {
+      showToast('No booking history available to download.', 'error');
+      return;
+    }
+    const success = downloadBookingHistoryCSV(bookings, `Customer_Booking_History_${user?.firstname || 'VIP'}.csv`);
+    if (success) showToast('Booking history downloaded successfully!', 'success');
+  };
+
+  const handleClearHistory = async () => {
+    if (bookings.length === 0) {
+      showToast('No booking history to clear.', 'accent');
+      return;
+    }
+    if (!window.confirm('Are you sure you want to clear and delete all your booking history?')) return;
+    try {
+      setLoading(true);
+      await api.clearBookingHistory();
+      setBookings([]);
+      showToast('All booking history cleared successfully.', 'success');
+    } catch (err) {
+      showToast(err.message || 'Failed to clear history', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   const fetchData = async () => {
     setLoading(true);
@@ -254,7 +291,7 @@ export const CustomerDashboard = () => {
           {/* Quick Profile Controls */}
           <div style={{ display: 'flex', gap: '0.5rem', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '1rem' }}>
             <button
-              onClick={() => setShowProfileSheet(true)}
+              onClick={() => navigate('/profile')}
               style={{
                 flex: 1,
                 background: 'rgba(255,255,255,0.08)',
@@ -272,7 +309,7 @@ export const CustomerDashboard = () => {
                 gap: '0.4rem',
               }}
             >
-              <Edit size={14} /> Edit Profile
+              <User size={14} /> My Profile Info
             </button>
 
             <button
@@ -439,16 +476,65 @@ export const CustomerDashboard = () => {
         {/* ── Tab 1: Bookings Feed ── */}
         {activeTab === 'bookings' && (
           <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem', flexWrap: 'wrap', gap: '0.5rem' }}>
               <h3 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: '#171717' }}>
                 My Bookings
               </h3>
-              <button
-                onClick={() => navigate('/booking')}
-                style={{ background: 'none', border: 'none', color: '#d4af37', fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.85rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.2rem' }}
-              >
-                <Plus size={16} /> Book New
-              </button>
+              
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                {bookings.length > 0 && (
+                  <>
+                    <button
+                      onClick={handleDownloadHistory}
+                      title="Download Booking History (CSV)"
+                      style={{
+                        background: 'rgba(212,175,55,0.12)',
+                        border: '1px solid rgba(212,175,55,0.3)',
+                        color: '#d4af37',
+                        padding: '0.35rem 0.65rem',
+                        borderRadius: '8px',
+                        fontSize: '0.75rem',
+                        fontFamily: 'Outfit',
+                        fontWeight: 800,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.3rem',
+                      }}
+                    >
+                      <Download size={13} /> Export CSV
+                    </button>
+
+                    <button
+                      onClick={handleClearHistory}
+                      title="Clear & Delete All History"
+                      style={{
+                        background: 'rgba(239,68,68,0.1)',
+                        border: '1px solid rgba(239,68,68,0.25)',
+                        color: '#ef4444',
+                        padding: '0.35rem 0.65rem',
+                        borderRadius: '8px',
+                        fontSize: '0.75rem',
+                        fontFamily: 'Outfit',
+                        fontWeight: 800,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.3rem',
+                      }}
+                    >
+                      <Trash2 size={13} /> Clear
+                    </button>
+                  </>
+                )}
+
+                <button
+                  onClick={() => navigate('/booking')}
+                  style={{ background: 'none', border: 'none', color: '#d4af37', fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.85rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.2rem', marginLeft: '0.3rem' }}
+                >
+                  <Plus size={16} /> Book New
+                </button>
+              </div>
             </div>
 
             {loading ? (
@@ -595,7 +681,7 @@ export const CustomerDashboard = () => {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
                 {orders.map((o) => (
                   <div key={o._id} className="app-card" style={{ marginBottom: 0, padding: '1.15rem', borderRadius: '18px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.65rem' }}>
                       <div>
                         <h4 style={{ fontFamily: 'Outfit', fontSize: '0.98rem', fontWeight: 800, color: '#171717' }}>
                           {o.item || 'Grooming Product'}
@@ -605,16 +691,26 @@ export const CustomerDashboard = () => {
                         </p>
                         {o.address && (
                           <p style={{ color: '#9ca3af', fontSize: '0.75rem', marginTop: '0.25rem' }}>
-                            📍 Delivery to: {o.address}
+                            📍 Delivery: {o.address}
                           </p>
                         )}
                       </div>
                       <div style={{ textAlign: 'right' }}>
-                        <StatusBadge status={o.status || 'processing'} />
+                        <StatusBadge status={o.trackingStatus || o.status || 'processing'} />
                         <div style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.1rem', color: '#171717', marginTop: '0.35rem' }}>
                           ${o.totalPrice || o.price || 0}
                         </div>
                       </div>
+                    </div>
+
+                    <div style={{ borderTop: '1px solid rgba(0,0,0,0.06)', paddingTop: '0.65rem', display: 'flex', justifyContent: 'flex-end' }}>
+                      <button
+                        onClick={() => setSelectedOrderForTracking(o)}
+                        className="app-btn app-btn-accent"
+                        style={{ minHeight: '34px', width: 'auto', fontSize: '0.78rem', padding: '0.35rem 0.85rem', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '0.35rem' }}
+                      >
+                        <Truck size={14} /> Track Delivery & Details
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -855,6 +951,17 @@ export const CustomerDashboard = () => {
         onClose={() => setShowEnlargedAvatar(false)}
         imageUrl={user?.avatarUrl}
         title={`${user?.firstname || 'User'}'s Profile Picture`}
+      />
+
+      {/* Order Tracking & Communication Sheet */}
+      <OrderTrackingSheet
+        isOpen={!!selectedOrderForTracking}
+        onClose={() => setSelectedOrderForTracking(null)}
+        order={selectedOrderForTracking}
+        onOrderUpdated={(updated) => {
+          setOrders(prev => prev.map(o => o._id === updated._id ? updated : o));
+          setSelectedOrderForTracking(updated);
+        }}
       />
     </PageContainer>
   );

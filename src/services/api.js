@@ -222,6 +222,16 @@ export const api = {
     return data;
   },
 
+  clearBookingHistory: async () => {
+    const res = await fetchWithTimeout(`${API_BASE}/bookings/clear-history`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Failed to clear booking history');
+    return data;
+  },
+
   // Orders
   getOrders: async () => {
     const res = await fetchWithTimeout(`${API_BASE}/orders`, {
@@ -254,6 +264,29 @@ export const api = {
     if (!res.ok) throw new Error(data?.error || 'Failed to update order');
     return data;
   },
+
+  updateOrderTracking: async (id, trackingData) => {
+    const res = await fetchWithTimeout(`${API_BASE}/orders/${id}/tracking`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(trackingData),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Failed to update order tracking');
+    return data;
+  },
+
+  addOrderMessage: async (id, text) => {
+    const res = await fetchWithTimeout(`${API_BASE}/orders/${id}/messages`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ text }),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Failed to send message');
+    return data;
+  },
+
 
   // Admin User Management
   getAdminUsers: async () => {
