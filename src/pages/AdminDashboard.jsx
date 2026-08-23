@@ -237,8 +237,9 @@ export const AdminDashboard = () => {
       };
 
       if (editingProduct) {
-        const updated = await api.updateProduct(editingProduct._id, payload);
-        setProductsList(prev => prev.map(p => p._id === editingProduct._id ? updated : p));
+        const targetId = editingProduct._id || editingProduct.id;
+        const updated = await api.updateProduct(targetId, payload);
+        setProductsList(prev => prev.map(p => (p._id === targetId || p.id === targetId) ? updated : p));
         showToast(`Product "${updated.title}" updated!`, 'success');
       } else {
         const created = await api.createProduct(payload);
