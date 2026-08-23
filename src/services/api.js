@@ -35,9 +35,16 @@ const safeJson = async (res) => {
     return JSON.parse(text);
   } catch {
     // Server returned HTML or non-JSON (e.g., a static file or proxy error)
-    console.error('Non-JSON response from server:', text.substring(0, 200));
-    return null;
   }
+};
+
+const cache = {
+  specialists: null,
+  products: null,
+};
+const cacheTime = {
+  specialists: 0,
+  products: 0,
 };
 
 export const api = {
@@ -160,12 +167,24 @@ export const api = {
     return data;
   },
 
-  // Specialists & AI Matcher
+  // Specialists & AI Matcher (Cached for instant navigation)
   getSpecialists: async () => {
-    const res = await fetchWithTimeout(`${API_BASE}/specialists`);
-    const data = await safeJson(res);
-    if (!res.ok) throw new Error(data?.error || 'Failed to fetch specialists');
-    return data;
+    if (cache.specialists && (Date.now() - cacheTime.specialists < 15000)) {
+      return cache.specialists;
+    }
+    try {
+      const res = await fetchWithTimeout(`${API_BASE}/specialists`);
+      const data = await safeJson(res);
+      if (!res.ok) throw new Error(data?.error || 'Failed to fetch specialists');
+      if (Array.isArray(data)) {
+        cache.specialists = data;
+        cacheTime.specialists = Date.now();
+      }
+      return data || [];
+    } catch (err) {
+      if (cache.specialists) return cache.specialists;
+      throw err;
+    }
   },
 
   matchAiSpecialist: async (requestText, primaryService, secondaryService) => {

@@ -47,29 +47,27 @@ export const Home = () => {
     },
   ];
 
-  const specialists = [
-    {
-      name: 'Stella Hair',
-      role: 'Wig Installer & Hair Artisan',
-      rating: 4.9,
-      specialty: 'Luxury Wigs & Frontals',
-      image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
-    },
-    {
-      name: 'Amina Bello',
-      role: 'Knotless Braids & Locs Specialist',
-      rating: 5.0,
-      specialty: 'Tension-Free Box Braids',
-      image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80',
-    },
-    {
-      name: 'Tunde Adebayo',
-      role: 'Master Barber & Cut Architect',
-      rating: 4.9,
-      specialty: 'Precision Skin Fades & Beard Trim',
-      image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80',
-    },
-  ];
+  const [specialists, setSpecialists] = useState([]);
+
+  React.useEffect(() => {
+    api.getSpecialists()
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          const verifiedStaff = data.filter((s) => s.role === 'staff' || s.isVerified === true);
+          const mapped = verifiedStaff.map((s) => ({
+            name: `${s.firstname || ''} ${s.lastname || ''}`.trim() || 'Verified Specialist',
+            role: s.title || s.roleTitle || 'Certified Specialist',
+            rating: s.rating || 5.0,
+            specialty: Array.isArray(s.services) ? s.services[0] : (s.services || 'Professional Hair & Grooming'),
+            image: s.avatarUrl || s.profileImage || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
+          }));
+          setSpecialists(mapped.slice(0, 3));
+        } else {
+          setSpecialists([]);
+        }
+      })
+      .catch((err) => console.warn('Home specialists fetch:', err.message));
+  }, []);
 
   return (
     <PageContainer onOpenAiMatcher={() => setShowAiSheet(true)}>
@@ -412,40 +410,56 @@ export const Home = () => {
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-          {specialists.map((sp, i) => (
-            <div
-              key={i}
-              className="app-card"
-              onClick={() => navigate(`/booking?stylist=${encodeURIComponent(sp.name.split(' ')[0])}`)}
-              style={{ marginBottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-                <img
-                  src={sp.image}
-                  alt={sp.name}
-                  loading="lazy"
-                  style={{
-                    width: '48px',
-                    height: '48px',
-                    borderRadius: '50%',
-                    objectFit: 'cover',
-                    border: '1.5px solid rgba(212,175,55,0.4)',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                  }}
-                />
-                <div>
-                  <h4 style={{ fontFamily: 'Outfit', fontSize: '0.98rem', fontWeight: 700, color: '#171717' }}>{sp.name}</h4>
-                  <p style={{ color: '#d4af37', fontSize: '0.75rem', fontWeight: 700, fontFamily: 'Outfit' }}>{sp.specialty}</p>
+          {specialists.length > 0 ? (
+            specialists.map((sp, i) => (
+              <div
+                key={i}
+                className="app-card"
+                onClick={() => navigate(`/booking?stylist=${encodeURIComponent(sp.name.split(' ')[0])}`)}
+                style={{ marginBottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                  <img
+                    src={sp.image}
+                    alt={sp.name}
+                    loading="lazy"
+                    decoding="async"
+                    style={{
+                      width: '48px',
+                      height: '48px',
+                      borderRadius: '50%',
+                      objectFit: 'cover',
+                      border: '1.5px solid rgba(212,175,55,0.4)',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                    }}
+                  />
+                  <div>
+                    <h4 style={{ fontFamily: 'Outfit', fontSize: '0.98rem', fontWeight: 700, color: '#171717' }}>{sp.name}</h4>
+                    <p style={{ color: '#d4af37', fontSize: '0.75rem', fontWeight: 700, fontFamily: 'Outfit' }}>{sp.specialty}</p>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.15rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#d4af37', fontWeight: 800, fontSize: '0.85rem' }}>
+                    <Star size={13} fill="#d4af37" /><span>{sp.rating}</span>
+                  </div>
+                  <span style={{ fontSize: '0.7rem', color: '#9ca3af' }}>Book Now</span>
                 </div>
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.15rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#d4af37', fontWeight: 800, fontSize: '0.85rem' }}>
-                  <Star size={13} fill="#d4af37" /><span>{sp.rating}</span>
-                </div>
-                <span style={{ fontSize: '0.7rem', color: '#9ca3af' }}>Book Now</span>
-              </div>
+            ))
+          ) : (
+            <div className="app-card" style={{ textAlign: 'center', padding: '1.25rem', marginBottom: 0 }}>
+              <p style={{ fontSize: '0.82rem', color: '#6b7280', margin: '0 0 0.5rem' }}>
+                All experts are verified dynamically upon registration.
+              </p>
+              <button
+                onClick={() => navigate('/experts')}
+                className="app-btn app-btn-outline"
+                style={{ minHeight: '38px', fontSize: '0.78rem', width: 'auto', margin: '0 auto' }}
+              >
+                Explore Experts Page
+              </button>
             </div>
-          ))}
+          )}
         </div>
       </div>
 

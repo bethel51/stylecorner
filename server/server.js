@@ -478,9 +478,7 @@ app.post('/api/ai/match-specialist', async (req, res) => {
 
     if (!staffMembers || staffMembers.length === 0) {
       staffMembers = [
-        { firstname: 'Julian', lastname: 'Reed', specialties: ['Precision Skin Fade & Cut', 'Beard Trim & Sculpting', 'Barbering'] },
-        { firstname: 'Elena', lastname: 'Thorne', specialties: ['Knotless Box Braids', 'Cornrows & Custom Pattern', 'Wig Installation'] },
-        { firstname: 'Marcus', lastname: 'Grey', specialties: ['Full Gel Nail Architecture', 'Luxury Pedicure Session', 'Full Atelier Grooming Combo'] }
+        { firstname: 'Verified', lastname: 'Artisan', specialties: ['Precision Hair Styling', 'Bespoke Grooming', 'Scalp Architecture'] }
       ];
     }
 

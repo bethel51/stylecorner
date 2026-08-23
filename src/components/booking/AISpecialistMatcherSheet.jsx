@@ -57,28 +57,31 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
           vibe: vibe
         });
       } else {
-        // Fallback smart match calculation
+        // Fallback match using registered team
+        const dynamicSpecs = await api.getSpecialists().catch(() => []);
+        const firstSpec = Array.isArray(dynamicSpecs) && dynamicSpecs.find(s => s.role === 'staff' || s.isVerified);
+        const specName = firstSpec ? `${firstSpec.firstname || ''} ${firstSpec.lastname || ''}`.trim() : 'Style Corner Artisan';
+
         setMatchResult({
-          name: category.includes('Wigs') ? 'Stella Hair' : category.includes('Braids') ? 'Amina Bello' : 'Tunde Adebayo',
-          role: category.includes('Wigs') ? 'Wig Installer & Hair Artisan' : category.includes('Braids') ? 'Knotless Braids & Extensions Specialist' : 'Master Barber & Cut Architect',
-          rating: 4.9,
+          name: specName,
+          role: firstSpec?.title || 'Certified Atelier Specialist',
+          rating: firstSpec?.rating || 5.0,
           matchScore: 98,
           location: preferredState,
-          rationale: `Matched based on your selection for ${category} with a ${vibe} finish in ${preferredState}. Outstanding track record for scalp care and precision styling.`,
-          avatar: category.includes('Wigs') ? 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80' : category.includes('Braids') ? 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80' : 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80',
+          rationale: `Matched based on your selection for ${category} with a ${vibe} finish in ${preferredState}. Verified track record for scalp care and precision styling.`,
+          avatar: firstSpec?.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
           primaryService: selectedService
         });
       }
     } catch (err) {
-      // Fallback response
       setMatchResult({
-        name: category.includes('Wigs') ? 'Stella Hair' : category.includes('Braids') ? 'Amina Bello' : 'Tunde Adebayo',
-        role: category.includes('Wigs') ? 'Wig Installer & Hair Artisan' : category.includes('Braids') ? 'Knotless Braids & Extensions Specialist' : 'Master Barber & Cut Architect',
-        rating: 4.9,
-        matchScore: 98,
+        name: 'Style Corner Artisan',
+        role: 'Certified Atelier Specialist',
+        rating: 5.0,
+        matchScore: 95,
         location: preferredState,
         rationale: `Matched based on your preference for ${category} (${vibe}) in ${preferredState}. Dedicated to luxury client care and long-lasting styling.`,
-        avatar: category.includes('Wigs') ? 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80' : category.includes('Braids') ? 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80' : 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80',
+        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
         primaryService: selectedService
       });
     } finally {
