@@ -182,41 +182,58 @@ export const ExpertDashboard = () => {
     return b.status === filterStatus;
   });
 
+  // Reusable Section Label Components
+  const sectionLabel = {
+    display: 'flex', alignItems: 'center', gap: '0.5rem',
+    marginBottom: '1rem',
+  };
+  const sectionTitle = {
+    fontFamily: 'Outfit', fontSize: '0.78rem', fontWeight: 900,
+    color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.08em',
+  };
+  const sectionIcon = (bg, color) => ({
+    width: '26px', height: '26px', borderRadius: '8px',
+    background: bg, color, display: 'flex', alignItems: 'center', justifyContent: 'center',
+  });
+
   return (
     <PageContainer title="Expert Dashboard">
-      <div>
+      <div style={{ paddingBottom: '2rem' }}>
 
-        {/* ── Executive Stylist Header Card ── */}
+        {/* ══════════════════════════════════════════════
+            SECTION 1 — HERO EXPERT PROFILE BANNER
+        ══════════════════════════════════════════════ */}
         <div
-          className="app-card"
           style={{
-            background: 'linear-gradient(135deg, #1f1f1f 0%, #121212 100%)',
-            color: '#ffffff',
-            border: '1.5px solid rgba(212, 175, 55, 0.5)',
-            padding: '1.5rem 1.25rem',
+            background: 'linear-gradient(135deg, #111111 0%, #1c1917 60%, #0c0a09 100%)',
             borderRadius: '24px',
+            padding: '1.5rem',
+            marginBottom: '1rem',
+            border: '1.5px solid rgba(212, 175, 55, 0.45)',
+            boxShadow: '0 20px 48px rgba(0,0,0,0.22)',
             position: 'relative',
-            boxShadow: '0 16px 36px rgba(0,0,0,0.25)',
-            marginBottom: '1.25rem',
+            overflow: 'hidden',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.25rem' }}>
-            {/* Avatar */}
+          {/* Decorative radial ambient light */}
+          <div style={{
+            position: 'absolute', top: '-40px', right: '-40px',
+            width: '160px', height: '160px', borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(212,175,55,0.18) 0%, transparent 70%)',
+            pointerEvents: 'none',
+          }} />
+
+          {/* Avatar + Info */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.1rem' }}>
             <div
-              onClick={() => {
-                if (user?.avatarUrl) {
-                  setShowEnlargedAvatar(true);
-                } else {
-                  setShowAvatarSheet(true);
-                }
-              }}
+              onClick={() => user?.avatarUrl ? setShowEnlargedAvatar(true) : setShowAvatarSheet(true)}
               style={{ position: 'relative', flexShrink: 0, cursor: 'pointer' }}
               title={user?.avatarUrl ? "Click to view full size picture" : "Click to upload profile picture"}
             >
               <div
                 style={{
-                  width: '72px',
-                  height: '72px',
+                  width: '78px',
+                  height: '78px',
                   borderRadius: '50%',
                   background: user?.avatarUrl
                     ? `url(${user.avatarUrl}) center/cover no-repeat`
@@ -225,48 +242,38 @@ export const ExpertDashboard = () => {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: '0 8px 20px rgba(212,175,55,0.3)',
-                  flexShrink: 0,
+                  boxShadow: '0 8px 24px rgba(212,175,55,0.35)',
                 }}
               >
-                {!user?.avatarUrl && <Scissors size={32} color="#ffffff" />}
+                {!user?.avatarUrl && <Scissors size={34} color="#ffffff" />}
               </div>
               <div
                 style={{
-                  position: 'absolute',
-                  bottom: -2,
-                  right: -2,
-                  width: '24px',
-                  height: '24px',
-                  borderRadius: '50%',
-                  background: '#d4af37',
-                  color: '#121212',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: '0 2px 6px rgba(0,0,0,0.4)',
+                  position: 'absolute', bottom: 0, right: 0,
+                  width: '26px', height: '26px', borderRadius: '50%',
+                  background: '#d4af37', color: '#111111', border: '2px solid #111111',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}
               >
-                <Edit size={12} />
+                <Edit size={11} />
               </div>
             </div>
 
-            <div style={{ flex: 1 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                <h2 style={{ fontFamily: 'Outfit', fontSize: '1.3rem', fontWeight: 800, color: '#ffffff' }}>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
+                <h2 style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 900, color: '#ffffff', margin: 0, lineHeight: 1.1 }}>
                   {user?.firstname} {user?.lastname}
                 </h2>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.15rem', color: '#d4af37', fontSize: '0.8rem', fontWeight: 800 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#d4af37', fontSize: '0.8rem', fontWeight: 900 }}>
                   <Star size={13} fill="#d4af37" /> 4.9
                 </div>
               </div>
 
-              <p style={{ color: '#d4af37', fontSize: '0.82rem', fontFamily: 'Outfit', fontWeight: 700, margin: '0.15rem 0 0.4rem' }}>
-                MASTER STYLIST
+              <p style={{ color: '#d4af37', fontSize: '0.78rem', fontFamily: 'Outfit', fontWeight: 800, margin: '0.2rem 0 0.5rem', letterSpacing: '0.04em' }}>
+                MASTER STYLIST & SPECIALIST
               </p>
 
-              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.35rem' }}>
-              {/* Shift Availability Toggle */}
+              {/* Status Switcher Toggle Pill */}
               <button
                 type="button"
                 onClick={() => {
@@ -275,39 +282,40 @@ export const ExpertDashboard = () => {
                   showToast(next ? 'Status set to: Accepting Bookings' : 'Status set to: On Break / Away', 'accent');
                 }}
                 style={{
-                  background: isAvailable ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)',
-                  border: isAvailable ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid rgba(239, 68, 68, 0.3)',
-                  color: isAvailable ? '#10b981' : '#ef4444',
-                  fontSize: '0.72rem',
+                  background: isAvailable ? 'rgba(16, 185, 129, 0.16)' : 'rgba(239, 68, 68, 0.16)',
+                  border: isAvailable ? '1px solid rgba(16, 185, 129, 0.35)' : '1px solid rgba(239, 68, 68, 0.35)',
+                  color: isAvailable ? '#10b981' : '#f87171',
+                  fontSize: '0.7rem',
                   fontFamily: 'Outfit',
-                  fontWeight: 800,
+                  fontWeight: 900,
                   padding: '0.25rem 0.65rem',
                   borderRadius: '50px',
                   cursor: 'pointer',
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '0.35rem',
+                  gap: '0.4rem',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
                 }}
               >
-                <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: isAvailable ? '#10b981' : '#ef4444' }} />
-                <span>{isAvailable ? 'AVAILABLE — TAKING BOOKINGS' : 'ON BREAK'}</span>
+                <div style={{ width: '7px', height: '7px', borderRadius: '50%', background: isAvailable ? '#10b981' : '#ef4444' }} />
+                <span>{isAvailable ? 'AVAILABLE FOR BOOKINGS' : 'ON BREAK'}</span>
               </button>
-              </div>
             </div>
           </div>
 
-          {/* Quick Profile & Shift Controls */}
-          <div style={{ display: 'flex', gap: '0.5rem', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '1rem' }}>
+          {/* Quick Profile Controls Bar */}
+          <div style={{ display: 'flex', gap: '0.6rem', borderTop: '1px solid rgba(255,255,255,0.09)', paddingTop: '1rem' }}>
             <button
               onClick={() => navigate('/profile')}
               style={{
                 flex: 1,
                 background: 'rgba(255,255,255,0.08)',
-                border: '1px solid rgba(255,255,255,0.12)',
+                border: '1px solid rgba(255,255,255,0.14)',
                 color: '#ffffff',
-                padding: '0.55rem',
-                borderRadius: '12px',
-                fontSize: '0.8rem',
+                padding: '0.65rem',
+                borderRadius: '14px',
+                fontSize: '0.82rem',
                 fontFamily: 'Outfit',
                 fontWeight: 700,
                 cursor: 'pointer',
@@ -317,7 +325,7 @@ export const ExpertDashboard = () => {
                 gap: '0.4rem',
               }}
             >
-              <User size={14} /> My Profile Info
+              <User size={14} /> Edit Profile Info
             </button>
 
             <button
@@ -325,16 +333,15 @@ export const ExpertDashboard = () => {
               style={{
                 background: 'rgba(239, 68, 68, 0.15)',
                 border: '1px solid rgba(239, 68, 68, 0.3)',
-                color: '#ef4444',
-                padding: '0.55rem 1rem',
-                borderRadius: '12px',
-                fontSize: '0.8rem',
+                color: '#f87171',
+                padding: '0.65rem 1.1rem',
+                borderRadius: '14px',
+                fontSize: '0.82rem',
                 fontFamily: 'Outfit',
                 fontWeight: 700,
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
                 gap: '0.4rem',
               }}
             >
@@ -343,67 +350,80 @@ export const ExpertDashboard = () => {
           </div>
         </div>
 
-        {/* ── Metric Cards Grid ── */}
-        <div className="metrics-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.75rem', marginBottom: '1.25rem' }}>
-          <div className="app-card" style={{ textAlign: 'center', padding: '1.1rem 0.5rem', marginBottom: 0 }}>
-            <div style={{ fontFamily: 'Outfit', fontSize: '1.6rem', fontWeight: 900, color: '#d97706' }}>
-              {pendingBookings.length}
-            </div>
-            <span style={{ fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 800, color: '#6b7280', textTransform: 'uppercase' }}>
-              Pending
-            </span>
+        {/* ══════════════════════════════════════════════
+            SECTION 2 — EARNINGS & APPOINTMENT METRICS TILES
+        ══════════════════════════════════════════════ */}
+        <div style={{ marginBottom: '1rem' }}>
+          <div style={sectionLabel}>
+            <div style={sectionIcon('rgba(212,175,55,0.15)', '#d4af37')}><DollarSign size={13} /></div>
+            <span style={sectionTitle}>Performance Overview</span>
           </div>
 
-          <div className="app-card" style={{ textAlign: 'center', padding: '1.1rem 0.5rem', marginBottom: 0 }}>
-            <div style={{ fontFamily: 'Outfit', fontSize: '1.6rem', fontWeight: 900, color: '#10b981' }}>
-              {acceptedBookings.length}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.65rem' }}>
+            <div style={{
+              background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.22)',
+              borderRadius: '18px', padding: '1rem 0.5rem', textAlign: 'center',
+            }}>
+              <div style={{ fontFamily: 'Outfit', fontSize: '1.9rem', fontWeight: 900, color: '#f59e0b', lineHeight: 1 }}>
+                {pendingBookings.length}
+              </div>
+              <div style={{ fontSize: '0.7rem', fontFamily: 'Outfit', fontWeight: 800, color: '#6b7280', marginTop: '0.3rem', textTransform: 'uppercase' }}>
+                Pending
+              </div>
             </div>
-            <span style={{ fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 800, color: '#6b7280', textTransform: 'uppercase' }}>
-              Confirmed
-            </span>
-          </div>
 
-          <div className="app-card" style={{ textAlign: 'center', padding: '1.1rem 0.5rem', marginBottom: 0 }}>
-            <div style={{ fontFamily: 'Outfit', fontSize: '1.6rem', fontWeight: 900, color: '#d4af37' }}>
-              ${totalRevenue}
+            <div style={{
+              background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.22)',
+              borderRadius: '18px', padding: '1rem 0.5rem', textAlign: 'center',
+            }}>
+              <div style={{ fontFamily: 'Outfit', fontSize: '1.9rem', fontWeight: 900, color: '#10b981', lineHeight: 1 }}>
+                {acceptedBookings.length}
+              </div>
+              <div style={{ fontSize: '0.7rem', fontFamily: 'Outfit', fontWeight: 800, color: '#6b7280', marginTop: '0.3rem', textTransform: 'uppercase' }}>
+                Confirmed
+              </div>
             </div>
-            <span style={{ fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 800, color: '#6b7280', textTransform: 'uppercase' }}>
-              Earnings
-            </span>
+
+            <div style={{
+              background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.25)',
+              borderRadius: '18px', padding: '1rem 0.5rem', textAlign: 'center',
+            }}>
+              <div style={{ fontFamily: 'Outfit', fontSize: '1.7rem', fontWeight: 900, color: '#b5952f', lineHeight: 1 }}>
+                ${totalRevenue}
+              </div>
+              <div style={{ fontSize: '0.7rem', fontFamily: 'Outfit', fontWeight: 800, color: '#6b7280', marginTop: '0.3rem', textTransform: 'uppercase' }}>
+                Earnings
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* ── DEDICATED EXPERT SERVICES & SPECIALTIES SECTION ── */}
+        {/* ══════════════════════════════════════════════
+            SECTION 3 — MY EXPERT SERVICES & OFFERINGS
+        ══════════════════════════════════════════════ */}
         <div
-          className="app-card"
           style={{
-            background: 'linear-gradient(135deg, rgba(212,175,55,0.06) 0%, rgba(23,23,23,0.02) 100%)',
-            border: '1.5px solid rgba(212, 175, 55, 0.35)',
-            padding: '1.25rem',
-            marginBottom: '1.25rem',
-            borderRadius: '20px',
+            background: '#ffffff',
+            border: '1px solid rgba(0, 0, 0, 0.07)',
+            borderRadius: '22px',
+            padding: '1.1rem',
+            marginBottom: '1rem',
+            boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
           }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: '#171717', color: '#d4af37', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Scissors size={18} />
-              </div>
-              <div>
-                <h3 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: '#171717', margin: 0 }}>
-                  My Expert Services & Offerings
-                </h3>
-                <span style={{ fontSize: '0.75rem', color: '#6b7280' }}>Manage services listed for client booking</span>
-              </div>
+            <div style={sectionLabel}>
+              <div style={sectionIcon('#171717', '#d4af37')}><Scissors size={13} /></div>
+              <span style={sectionTitle}>My Offered Services</span>
             </div>
 
             <button
               onClick={() => navigate('/profile')}
               style={{
-                background: 'rgba(212,175,55,0.15)',
-                border: '1px solid rgba(212,175,55,0.4)',
+                background: 'rgba(212,175,55,0.12)',
+                border: '1px solid rgba(212,175,55,0.3)',
                 color: '#b5952f',
-                padding: '0.4rem 0.75rem',
+                padding: '0.35rem 0.75rem',
                 borderRadius: '10px',
                 fontSize: '0.78rem',
                 fontFamily: 'Outfit',
@@ -412,9 +432,10 @@ export const ExpertDashboard = () => {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.3rem',
+                marginBottom: '1rem',
               }}
             >
-              <Edit size={13} /> Edit Services
+              <Edit size={12} /> Edit Offerings
             </button>
           </div>
 
@@ -424,7 +445,7 @@ export const ExpertDashboard = () => {
               ? user.specialties
               : (typeof user?.specialties === 'string' && user.specialties.trim())
                 ? user.specialties.split(',').map(s => s.trim())
-                : ['Skin Fades & Beard Trim', 'Knotless Braids & Locs', 'Manicure & Gel Nails', 'Scalp Treatment'];
+                : ['Skin Fades & Beard Trim', 'Knotless Braids & Locs', 'Manicure & Gel Nails', 'Scalp Care Treatment'];
 
             return (
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem' }}>
@@ -432,23 +453,23 @@ export const ExpertDashboard = () => {
                   <div
                     key={idx}
                     style={{
-                      background: '#ffffff',
-                      border: '1px solid rgba(0,0,0,0.08)',
+                      background: '#faf9f6',
+                      border: '1px solid rgba(0,0,0,0.06)',
                       padding: '0.75rem 0.85rem',
-                      borderRadius: '12px',
+                      borderRadius: '14px',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'space-between',
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
+                      gap: '0.4rem',
                     }}
                   >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-                      <Sparkles size={14} color="#d4af37" />
-                      <span style={{ fontFamily: 'Outfit', fontSize: '0.85rem', fontWeight: 800, color: '#171717' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', minWidth: 0 }}>
+                      <Sparkles size={13} color="#d4af37" style={{ flexShrink: 0 }} />
+                      <span style={{ fontFamily: 'Outfit', fontSize: '0.82rem', fontWeight: 800, color: '#171717', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {s}
                       </span>
                     </div>
-                    <span style={{ fontSize: '0.65rem', background: 'rgba(16,185,129,0.12)', color: '#059669', padding: '0.15rem 0.5rem', borderRadius: '50px', fontWeight: 800, textTransform: 'uppercase' }}>
+                    <span style={{ fontSize: '0.62rem', background: 'rgba(16,185,129,0.12)', color: '#059669', padding: '0.15rem 0.45rem', borderRadius: '50px', fontWeight: 900, textTransform: 'uppercase', flexShrink: 0 }}>
                       Active
                     </span>
                   </div>
@@ -458,128 +479,205 @@ export const ExpertDashboard = () => {
           })()}
         </div>
 
-        {/* ── Expert Quick Action Shortcuts Bar ── */}
-        <div className="app-card" style={{ padding: '1rem', marginBottom: '1.25rem', borderRadius: '18px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-            <h4 style={{ fontFamily: 'Outfit', fontSize: '0.9rem', fontWeight: 800, color: '#171717', margin: 0, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-              ⚡ Expert Quick Shortcuts
-            </h4>
-            <span style={{ fontSize: '0.72rem', color: '#6b7280', fontWeight: 600 }}>Specialist Controls</span>
+        {/* ══════════════════════════════════════════════
+            SECTION 4 — QUICK ACTIONS (2×2 GRID)
+        ══════════════════════════════════════════════ */}
+        <div style={{
+          background: '#fff', border: '1px solid rgba(0,0,0,0.07)',
+          borderRadius: '22px', padding: '1.1rem', marginBottom: '1rem',
+          boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
+        }}>
+          <div style={sectionLabel}>
+            <div style={sectionIcon('rgba(16,185,129,0.12)', '#10b981')}><Sparkles size={13} /></div>
+            <span style={sectionTitle}>Quick Shortcuts</span>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.6rem' }}>
-            <div
-              className="app-card"
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+            <button
               onClick={() => {
                 const next = !isAvailable;
                 setIsAvailable(next);
-                showToast(next ? 'Status set to: Accepting Bookings' : 'Status set to: On Break', 'accent');
+                showToast(next ? 'Status: Accepting Bookings' : 'Status: On Break', 'accent');
               }}
-              style={{ cursor: 'pointer', padding: '0.85rem 0.4rem', textAlign: 'center', marginBottom: 0, border: isAvailable ? '1px solid rgba(16,185,129,0.3)' : '1px solid rgba(239,68,68,0.3)', borderRadius: '14px', background: isAvailable ? 'rgba(16,185,129,0.08)' : 'rgba(239,68,68,0.08)' }}
+              style={{
+                background: isAvailable ? 'rgba(16,185,129,0.08)' : 'rgba(239,68,68,0.08)',
+                border: isAvailable ? '1.5px solid rgba(16,185,129,0.25)' : '1.5px solid rgba(239,68,68,0.25)',
+                borderRadius: '18px', padding: '1.1rem 0.85rem',
+                cursor: 'pointer', textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '0.5rem',
+                minHeight: '100px',
+              }}
             >
-              <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: isAvailable ? '#10b981' : '#ef4444', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 0.4rem' }}>
-                <Clock size={18} />
+              <div style={{
+                width: '42px', height: '42px', borderRadius: '12px',
+                background: isAvailable ? '#10b981' : '#ef4444', color: '#fff',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <Clock size={20} />
               </div>
-              <span style={{ fontFamily: 'Outfit', fontSize: '0.74rem', fontWeight: 800, color: isAvailable ? '#059669' : '#dc2626', display: 'block' }}>
-                {isAvailable ? 'Available' : 'On Break'}
-              </span>
-            </div>
+              <div>
+                <div style={{ fontFamily: 'Outfit', fontSize: '0.9rem', fontWeight: 800, color: isAvailable ? '#059669' : '#dc2626' }}>
+                  {isAvailable ? 'Available' : 'On Break'}
+                </div>
+                <div style={{ fontSize: '0.72rem', color: '#6b7280', marginTop: '0.15rem', fontWeight: 600 }}>
+                  Toggle availability
+                </div>
+              </div>
+            </button>
 
-            <div
-              className="app-card"
+            <button
               onClick={handleDownloadHistory}
-              style={{ cursor: 'pointer', padding: '0.85rem 0.4rem', textAlign: 'center', marginBottom: 0, border: '1px solid rgba(212,175,55,0.3)', borderRadius: '14px', background: 'rgba(212,175,55,0.08)' }}
+              style={{
+                background: 'rgba(212,175,55,0.08)', border: '1.5px solid rgba(212,175,55,0.25)',
+                borderRadius: '18px', padding: '1.1rem 0.85rem',
+                cursor: 'pointer', textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '0.5rem',
+                minHeight: '100px',
+              }}
             >
-              <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: '#d4af37', color: '#171717', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 0.4rem' }}>
-                <Download size={18} />
+              <div style={{
+                width: '42px', height: '42px', borderRadius: '12px',
+                background: '#d4af37', color: '#171717',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <Download size={20} />
               </div>
-              <span style={{ fontFamily: 'Outfit', fontSize: '0.74rem', fontWeight: 800, color: '#b5952f', display: 'block' }}>Export CSV</span>
-            </div>
+              <div>
+                <div style={{ fontFamily: 'Outfit', fontSize: '0.9rem', fontWeight: 800, color: '#171717' }}>
+                  Export CSV
+                </div>
+                <div style={{ fontSize: '0.72rem', color: '#6b7280', marginTop: '0.15rem', fontWeight: 600 }}>
+                  Download History
+                </div>
+              </div>
+            </button>
 
-            <div
-              className="app-card"
+            <button
               onClick={() => navigate('/profile')}
-              style={{ cursor: 'pointer', padding: '0.85rem 0.4rem', textAlign: 'center', marginBottom: 0, border: '1px solid rgba(0,0,0,0.08)', borderRadius: '14px', background: '#faf9f5' }}
+              style={{
+                background: 'rgba(17,24,39,0.04)', border: '1.5px solid rgba(17,24,39,0.12)',
+                borderRadius: '18px', padding: '1.1rem 0.85rem',
+                cursor: 'pointer', textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '0.5rem',
+                minHeight: '100px',
+              }}
             >
-              <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'rgba(17,24,39,0.1)', color: '#171717', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 0.4rem' }}>
-                <Scissors size={18} />
+              <div style={{
+                width: '42px', height: '42px', borderRadius: '12px',
+                background: '#171717', color: '#fff',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <User size={20} />
               </div>
-              <span style={{ fontFamily: 'Outfit', fontSize: '0.74rem', fontWeight: 800, color: '#171717', display: 'block' }}>Services</span>
-            </div>
+              <div>
+                <div style={{ fontFamily: 'Outfit', fontSize: '0.9rem', fontWeight: 800, color: '#171717' }}>
+                  My Profile
+                </div>
+                <div style={{ fontSize: '0.72rem', color: '#6b7280', marginTop: '0.15rem', fontWeight: 600 }}>
+                  Manage details
+                </div>
+              </div>
+            </button>
 
-            <div
-              className="app-card"
+            <button
               onClick={fetchData}
-              style={{ cursor: 'pointer', padding: '0.85rem 0.4rem', textAlign: 'center', marginBottom: 0, border: '1px solid rgba(0,0,0,0.08)', borderRadius: '14px', background: '#faf9f5' }}
+              style={{
+                background: 'rgba(59,130,246,0.08)', border: '1.5px solid rgba(59,130,246,0.2)',
+                borderRadius: '18px', padding: '1.1rem 0.85rem',
+                cursor: 'pointer', textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '0.5rem',
+                minHeight: '100px',
+              }}
             >
-              <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'rgba(59,130,246,0.12)', color: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 0.4rem' }}>
-                <RefreshCw size={18} />
+              <div style={{
+                width: '42px', height: '42px', borderRadius: '12px',
+                background: '#3b82f6', color: '#fff',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <RefreshCw size={20} />
               </div>
-              <span style={{ fontFamily: 'Outfit', fontSize: '0.74rem', fontWeight: 800, color: '#171717', display: 'block' }}>Refresh</span>
-            </div>
+              <div>
+                <div style={{ fontFamily: 'Outfit', fontSize: '0.9rem', fontWeight: 800, color: '#171717' }}>
+                  Refresh Queue
+                </div>
+                <div style={{ fontSize: '0.72rem', color: '#6b7280', marginTop: '0.15rem', fontWeight: 600 }}>
+                  Sync latest data
+                </div>
+              </div>
+            </button>
           </div>
         </div>
 
-        {/* ── Recent Activity Feed Widget for Expert ── */}
-        <div className="app-card" style={{ padding: '1.1rem', marginBottom: '1.25rem', borderRadius: '18px', background: 'linear-gradient(135deg, #ffffff 0%, #faf9f5 100%)', border: '1px solid rgba(0,0,0,0.08)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <Clock size={16} color="#d4af37" />
-              <h4 style={{ fontFamily: 'Outfit', fontSize: '0.95rem', fontWeight: 800, color: '#171717', margin: 0 }}>
-                Recent Appointment Feed
-              </h4>
-            </div>
-            <span style={{ fontSize: '0.72rem', color: '#6b7280' }}>Live Stream</span>
+        {/* ══════════════════════════════════════════════
+            SECTION 5 — RECENT BOOKING STREAM
+        ══════════════════════════════════════════════ */}
+        <div style={{
+          background: '#fff', border: '1px solid rgba(0,0,0,0.07)',
+          borderRadius: '22px', padding: '1.1rem', marginBottom: '1rem',
+          boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
+        }}>
+          <div style={sectionLabel}>
+            <div style={sectionIcon('rgba(59,130,246,0.12)', '#3b82f6')}><Clock size={13} /></div>
+            <span style={sectionTitle}>Live Activity Feed</span>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-            {bookings.length === 0 ? (
-              <p style={{ color: '#9ca3af', fontSize: '0.78rem', textAlign: 'center', margin: '0.5rem 0' }}>
-                No active appointments yet. Client bookings will appear here in real time!
-              </p>
-            ) : (
-              bookings
+          {bookings.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '1.5rem 0', color: '#9ca3af', fontSize: '0.82rem' }}>
+              No appointments scheduled yet. New requests will appear here instantly!
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
+              {bookings
                 .slice()
                 .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
                 .slice(0, 3)
                 .map((item, idx) => (
-                  <div
-                    key={idx}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      padding: '0.65rem 0.85rem',
-                      borderRadius: '12px',
-                      background: '#ffffff',
-                      border: '1px solid rgba(0,0,0,0.06)',
-                      boxShadow: '0 2px 6px rgba(0,0,0,0.02)',
-                    }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                      <div style={{ width: '32px', height: '32px', borderRadius: '10px', background: 'rgba(212,175,55,0.15)', color: '#d4af37', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                        <Calendar size={16} />
+                  <div key={idx} style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    padding: '0.75rem 0.85rem', borderRadius: '14px',
+                    background: '#faf9f6', border: '1px solid rgba(0,0,0,0.05)', gap: '0.65rem',
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flex: 1, minWidth: 0 }}>
+                      <div style={{
+                        width: '36px', height: '36px', borderRadius: '10px',
+                        background: 'rgba(212,175,55,0.15)', color: '#d4af37', flexShrink: 0,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      }}>
+                        <Calendar size={15} />
                       </div>
-                      <div>
-                        <span style={{ fontFamily: 'Outfit', fontSize: '0.82rem', fontWeight: 800, color: '#171717', display: 'block' }}>
+                      <div style={{ minWidth: 0 }}>
+                        <div style={{
+                          fontFamily: 'Outfit', fontSize: '0.85rem', fontWeight: 800, color: '#171717',
+                          overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                        }}>
                           {item.clientName || 'Client'} — {item.service || 'Service'}
-                        </span>
-                        <span style={{ fontSize: '0.72rem', color: '#6b7280' }}>
+                        </div>
+                        <div style={{ fontSize: '0.7rem', color: '#6b7280', marginTop: '0.1rem' }}>
                           📅 {item.date || ''} @ {item.time || ''} · ${item.price || 0}
-                        </span>
+                        </div>
                       </div>
                     </div>
                     <StatusBadge status={item.status} />
                   </div>
-                ))
-            )}
-          </div>
+                ))}
+            </div>
+          )}
         </div>
 
-        {/* ── Appointments Feed Section ── */}
-        <div>
-          {/* Status Filter Pills */}
-          <div className="filter-pills-scroll" style={{ marginBottom: '1.25rem' }}>
+        {/* ══════════════════════════════════════════════
+            SECTION 6 — APPOINTMENTS QUEUE (FULL LIST)
+        ══════════════════════════════════════════════ */}
+        <div style={{
+          background: '#fff', border: '1px solid rgba(0,0,0,0.07)',
+          borderRadius: '22px', padding: '1.1rem', marginBottom: '1rem',
+          boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
+        }}>
+          <div style={sectionLabel}>
+            <div style={sectionIcon('#171717', '#d4af37')}><Calendar size={13} /></div>
+            <span style={sectionTitle}>Client Appointments Queue</span>
+          </div>
+
+          {/* Filter Pills Horizontal Scroll */}
+          <div style={{
+            display: 'flex', gap: '0.4rem', overflowX: 'auto', paddingBottom: '0.5rem',
+            marginBottom: '1rem', scrollbarWidth: 'none',
+          }}>
             {[
               { id: 'all', label: `All (${bookings.length})` },
               { id: 'pending', label: `Pending (${pendingBookings.length})` },
@@ -590,17 +688,18 @@ export const ExpertDashboard = () => {
                 key={pill.id}
                 onClick={() => setFilterStatus(pill.id)}
                 style={{
-                  background: filterStatus === pill.id ? '#171717' : '#ffffff',
+                  background: filterStatus === pill.id ? '#171717' : '#f3f4f6',
                   color: filterStatus === pill.id ? '#d4af37' : '#6b7280',
-                  border: filterStatus === pill.id ? 'none' : '1px solid rgba(0,0,0,0.08)',
-                  padding: '0.4rem 0.85rem',
+                  border: filterStatus === pill.id ? 'none' : '1px solid rgba(0,0,0,0.06)',
+                  padding: '0.45rem 0.85rem',
                   borderRadius: '50px',
                   fontFamily: 'Outfit',
-                  fontWeight: 700,
+                  fontWeight: 800,
                   fontSize: '0.78rem',
                   cursor: 'pointer',
                   whiteSpace: 'nowrap',
                   boxShadow: filterStatus === pill.id ? '0 4px 12px rgba(0,0,0,0.1)' : 'none',
+                  transition: 'all 0.15s ease',
                 }}
               >
                 {pill.label}
@@ -608,199 +707,200 @@ export const ExpertDashboard = () => {
             ))}
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: '#171717' }}>
-              Client Appointments Queue
-            </h3>
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              {bookings.length > 0 && (
-                <>
-                  <button
-                    onClick={handleDownloadHistory}
-                    title="Download Booking History (CSV)"
-                    style={{
-                      background: 'rgba(212,175,55,0.12)',
-                      border: '1px solid rgba(212,175,55,0.3)',
-                      color: '#d4af37',
-                      padding: '0.35rem 0.65rem',
-                      borderRadius: '8px',
-                      fontSize: '0.75rem',
-                      fontFamily: 'Outfit',
-                      fontWeight: 800,
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.3rem',
-                    }}
-                  >
-                    <Download size={13} /> Export CSV
-                  </button>
-
-                  <button
-                    onClick={handleClearHistory}
-                    title="Clear & Delete All History"
-                    style={{
-                      background: 'rgba(239,68,68,0.1)',
-                      border: '1px solid rgba(239,68,68,0.25)',
-                      color: '#ef4444',
-                      padding: '0.35rem 0.65rem',
-                      borderRadius: '8px',
-                      fontSize: '0.75rem',
-                      fontFamily: 'Outfit',
-                      fontWeight: 800,
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.3rem',
-                    }}
-                  >
-                    <Trash2 size={13} /> Clear History
-                  </button>
-                </>
-              )}
-
-              <button
-                onClick={fetchData}
-                style={{ background: 'none', border: 'none', color: '#d4af37', fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.85rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem', marginLeft: '0.3rem' }}
-              >
-                <RefreshCw size={14} /> Refresh
-              </button>
-            </div>
-          </div>
-
           {loading ? (
             <SkeletonList count={3} />
           ) : filteredList.length === 0 ? (
-            <div className="app-card" style={{ textAlign: 'center', padding: '2.5rem 1rem', color: '#6b7280' }}>
-              <Calendar size={36} style={{ opacity: 0.3, marginBottom: '0.75rem' }} />
-              <h4 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: '#171717', marginBottom: '0.25rem' }}>
+            <div style={{ textAlign: 'center', padding: '2.5rem 1rem', color: '#6b7280' }}>
+              <Calendar size={38} style={{ opacity: 0.3, marginBottom: '0.75rem' }} />
+              <h4 style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 800, color: '#171717', marginBottom: '0.25rem' }}>
                 No Bookings Found
               </h4>
-              <p style={{ fontSize: '0.85rem' }}>
-                New bookings will show up here as customers book.
+              <p style={{ fontSize: '0.82rem' }}>
+                Client requests matching this filter will show up here.
               </p>
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-                {filteredList.map((b) => (
-                  <div key={b._id} className="app-card" style={{ marginBottom: 0, padding: '1.25rem', borderRadius: '14px', border: '1px solid rgba(0,0,0,0.06)', position: 'relative' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
-                      <div>
-                        <h4 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: '#171717' }}>
-                          {b.clientName || 'Client'}
-                        </h4>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.78rem', color: '#6b7280', marginTop: '0.2rem' }}>
+              {filteredList.map((b) => (
+                <div
+                  key={b._id}
+                  style={{
+                    border: '1px solid rgba(0,0,0,0.07)',
+                    borderRadius: '18px',
+                    padding: '1.1rem',
+                    background: '#fafafa',
+                  }}
+                >
+                  {/* Client Info & Status */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem', gap: '0.5rem' }}>
+                    <div>
+                      <h4 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: '#171717', margin: 0 }}>
+                        {b.clientName || 'Client'}
+                      </h4>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.75rem', color: '#6b7280', marginTop: '0.25rem', flexWrap: 'wrap' }}>
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                          <Mail size={12} /> {b.clientEmail}
+                        </span>
+                        {b.clientPhone && (
                           <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                            <Mail size={12} /> {b.clientEmail}
+                            <Phone size={12} /> {b.clientPhone}
                           </span>
-                          {b.clientPhone && (
-                            <span className="phone-number" style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                              <Phone size={12} /> {b.clientPhone}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                      <div style={{ alignSelf: 'flex-start' }}>
-                        <StatusBadge status={b.status} />
+                        )}
                       </div>
                     </div>
+                    <StatusBadge status={b.status} />
+                  </div>
 
-                    <div style={{ background: '#faf9f6', padding: '0.85rem', borderRadius: '14px', border: '1px solid rgba(0,0,0,0.06)', margin: '0.5rem 0 0.85rem' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <span style={{ fontWeight: 800, fontSize: '0.92rem', color: '#171717', fontFamily: 'Outfit' }}>
-                          {b.service}
-                        </span>
-                        <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.15rem', color: '#d4af37' }}>
-                          ${b.price}
-                        </span>
-                      </div>
-
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.82rem', color: '#4b5563', marginTop: '0.4rem', fontWeight: 600 }}>
-                        <Clock size={14} color="#d4af37" />
-                        <span>{b.date} at {b.time}</span>
-                      </div>
+                  {/* Service & Time Card */}
+                  <div style={{ background: '#ffffff', padding: '0.85rem', borderRadius: '14px', border: '1px solid rgba(0,0,0,0.06)', marginBottom: '0.85rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontWeight: 800, fontSize: '0.92rem', color: '#171717', fontFamily: 'Outfit' }}>
+                        {b.service}
+                      </span>
+                      <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.15rem', color: '#b5952f' }}>
+                        ${b.price}
+                      </span>
                     </div>
 
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
-                      {b.status === 'pending' && (
-                        <>
-                          <button
-                            onClick={() => handleUpdateStatus(b._id, 'accepted')}
-                            disabled={updatingId === b._id}
-                            className="app-btn app-btn-primary"
-                            style={{ flex: 1, minHeight: '38px', padding: '0.5rem', fontSize: '0.82rem' }}
-                          >
-                            <CheckCircle size={15} /> Accept
-                          </button>
-
-                          <button
-                            onClick={() => handleUpdateStatus(b._id, 'rejected')}
-                            disabled={updatingId === b._id}
-                            className="app-btn app-btn-outline"
-                            style={{ flex: 1, minHeight: '38px', padding: '0.5rem', fontSize: '0.82rem', borderColor: '#ef4444', color: '#ef4444' }}
-                          >
-                            <XCircle size={15} /> Reject
-                          </button>
-                        </>
-                      )}
-
-                      {b.status === 'accepted' && (
-                        <button
-                          onClick={() => handleUpdateStatus(b._id, 'completed')}
-                          disabled={updatingId === b._id}
-                          className="app-btn app-btn-accent"
-                          style={{ width: '100%', minHeight: '38px', padding: '0.5rem', fontSize: '0.85rem' }}
-                        >
-                          <CheckCircle size={15} /> Finish Request
-                        </button>
-                      )}
-
-                      {b.status === 'completed' && (
-                        <div style={{ width: '100%', textAlign: 'center', fontSize: '0.78rem', color: '#10b981', fontFamily: 'Outfit', fontWeight: 800, padding: '0.4rem', background: 'rgba(16,185,129,0.08)', borderRadius: '8px' }}>
-                          ✓ Completed & Settled
-                        </div>
-                      )}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem', color: '#4b5563', marginTop: '0.4rem', fontWeight: 700 }}>
+                      <Clock size={14} color="#d4af37" />
+                      <span>{b.date} at {b.time}</span>
                     </div>
                   </div>
-                ))}
+
+                  {/* Action Buttons (Neat 1–2 per state, minimum 44px height) */}
+                  <div style={{ display: 'flex', gap: '0.6rem' }}>
+                    {b.status === 'pending' && (
+                      <>
+                        <button
+                          onClick={() => handleUpdateStatus(b._id, 'accepted')}
+                          disabled={updatingId === b._id}
+                          className="app-btn app-btn-primary"
+                          style={{ flex: 1, minHeight: '44px', fontSize: '0.82rem', borderRadius: '12px' }}
+                        >
+                          <CheckCircle size={15} /> Accept Request
+                        </button>
+
+                        <button
+                          onClick={() => handleUpdateStatus(b._id, 'rejected')}
+                          disabled={updatingId === b._id}
+                          className="app-btn app-btn-outline"
+                          style={{ flex: 1, minHeight: '44px', fontSize: '0.82rem', borderColor: '#ef4444', color: '#ef4444', borderRadius: '12px' }}
+                        >
+                          <XCircle size={15} /> Reject
+                        </button>
+                      </>
+                    )}
+
+                    {b.status === 'accepted' && (
+                      <button
+                        onClick={() => handleUpdateStatus(b._id, 'completed')}
+                        disabled={updatingId === b._id}
+                        className="app-btn app-btn-accent"
+                        style={{ width: '100%', minHeight: '44px', fontSize: '0.85rem', borderRadius: '12px' }}
+                      >
+                        <CheckCircle size={15} /> Mark Service as Completed & Settled
+                      </button>
+                    )}
+
+                    {b.status === 'completed' && (
+                      <div style={{ width: '100%', textAlign: 'center', fontSize: '0.78rem', color: '#10b981', fontFamily: 'Outfit', fontWeight: 800, padding: '0.5rem', background: 'rgba(16,185,129,0.08)', borderRadius: '10px' }}>
+                        ✓ Completed & Settled
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </div>
-      </div>
 
-      {/* ── Account Management ── */}
-      <div className="app-card" style={{ margin: '1.5rem 1rem', background: '#ffffff', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
-        <h4 style={{ fontFamily: 'Outfit', fontSize: '0.98rem', fontWeight: 800, color: '#171717', marginBottom: '0.85rem' }}>
-          Account Settings
-        </h4>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-          <button
-            onClick={logout}
-            className="app-btn app-btn-outline"
-            style={{ justifyContent: 'center', gap: '0.5rem', minHeight: '44px' }}
-          >
-            <LogOut size={16} /> Sign Out of Account
-          </button>
+        {/* ══════════════════════════════════════════════
+            SECTION 7 — ACCOUNT SETTINGS & DANGER ZONE
+        ══════════════════════════════════════════════ */}
+        <div style={{
+          background: '#fff', border: '1px solid rgba(239,68,68,0.18)',
+          borderRadius: '22px', padding: '1.1rem',
+          boxShadow: '0 4px 16px rgba(0,0,0,0.03)',
+        }}>
+          <div style={sectionLabel}>
+            <div style={sectionIcon('rgba(239,68,68,0.1)', '#ef4444')}><AlertTriangle size={13} /></div>
+            <span style={sectionTitle}>Account & Data Settings</span>
+          </div>
 
-          <button
-            onClick={() => setShowDeleteModal(true)}
-            className="app-btn"
-            style={{
-              background: 'rgba(239, 68, 68, 0.08)',
-              color: '#ef4444',
-              border: '1px solid rgba(239, 68, 68, 0.25)',
-              justifyContent: 'center',
-              gap: '0.5rem',
-              minHeight: '44px',
-            }}
-          >
-            <Trash2 size={16} /> Delete Account Permanently
-          </button>
+          {/* Export / Clear History */}
+          {bookings.length > 0 && (
+            <div style={{
+              background: '#faf9f6', borderRadius: '14px', padding: '0.85rem',
+              marginBottom: '0.85rem', border: '1px solid rgba(0,0,0,0.06)',
+            }}>
+              <p style={{ fontFamily: 'Outfit', fontSize: '0.8rem', fontWeight: 800, color: '#171717', margin: '0 0 0.65rem' }}>
+                Booking Records Management
+              </p>
+              <div style={{ display: 'flex', gap: '0.65rem' }}>
+                <button
+                  onClick={handleDownloadHistory}
+                  style={{
+                    flex: 1, background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)',
+                    color: '#b5952f', padding: '0.6rem', borderRadius: '12px',
+                    fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.8rem',
+                    cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
+                    minHeight: '44px',
+                  }}
+                >
+                  <Download size={14} /> Export CSV
+                </button>
+
+                <button
+                  onClick={handleClearHistory}
+                  style={{
+                    flex: 1, background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.22)',
+                    color: '#ef4444', padding: '0.6rem', borderRadius: '12px',
+                    fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.8rem',
+                    cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
+                    minHeight: '44px',
+                  }}
+                >
+                  <Trash2 size={14} /> Clear History
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Account Actions */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+            <button
+              onClick={logout}
+              className="app-btn app-btn-outline"
+              style={{ justifyContent: 'center', gap: '0.5rem', minHeight: '46px', borderRadius: '14px', fontSize: '0.85rem' }}
+            >
+              <LogOut size={16} /> Sign Out of Account
+            </button>
+
+            <button
+              onClick={() => setShowDeleteModal(true)}
+              className="app-btn"
+              style={{
+                background: 'rgba(239, 68, 68, 0.07)',
+                color: '#ef4444',
+                border: '1px solid rgba(239, 68, 68, 0.22)',
+                justifyContent: 'center',
+                gap: '0.5rem',
+                minHeight: '46px',
+                borderRadius: '14px',
+                fontSize: '0.85rem',
+              }}
+            >
+              <Trash2 size={16} /> Delete Account Permanently
+            </button>
+          </div>
         </div>
+
       </div>
 
-      {/* Delete Account Confirmation Modal */}
+      {/* ═══ MODALS & SHEETS ═══ */}
+
+      {/* Delete Confirmation Modal */}
       <PopupModal
         isOpen={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
@@ -819,7 +919,7 @@ export const ExpertDashboard = () => {
             Permanent Account Deletion
           </h4>
           <p style={{ color: '#6b7280', fontSize: '0.85rem', lineHeight: 1.5, marginBottom: '1.5rem' }}>
-            Are you sure? This will permanently delete your expert account and all your data. This cannot be undone.
+            Are you sure? This will permanently delete your expert account and all associated booking data. This cannot be undone.
           </p>
           <div style={{ display: 'flex', gap: '0.65rem' }}>
             <button onClick={() => setShowDeleteModal(false)} className="app-btn app-btn-outline" style={{ flex: 1 }}>
@@ -844,7 +944,6 @@ export const ExpertDashboard = () => {
         title="Edit Profile Picture"
       >
         <div>
-          {/* Live Preview */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
             <label
               htmlFor="expert-avatar-upload"
@@ -878,7 +977,7 @@ export const ExpertDashboard = () => {
                     <span style={{ color: '#d4af37', fontSize: '0.65rem', fontFamily: 'Outfit', fontWeight: 800 }}>Saving...</span>
                   </div>
                 ) : (
-                  <div style={{ position: 'absolute', bottom: 0, insetX: 0, background: 'rgba(0,0,0,0.45)', padding: '2px 0', display: 'flex', justifyContent: 'center' }}>
+                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'rgba(0,0,0,0.45)', padding: '2px 0', display: 'flex', justifyContent: 'center' }}>
                     <Edit size={12} color="#ffffff" />
                   </div>
                 )}
@@ -900,7 +999,6 @@ export const ExpertDashboard = () => {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.4rem',
-                transition: 'all 0.2s ease',
               }}
             >
               <Edit size={14} />
