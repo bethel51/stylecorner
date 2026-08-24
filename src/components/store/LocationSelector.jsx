@@ -167,7 +167,7 @@ export const LocationSelector = ({ location, onChange }) => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.75rem' }}>
         {/* State Select */}
         <div className="app-input-group" style={{ marginBottom: 0 }}>
           <label className="app-label" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
@@ -210,7 +210,7 @@ export const LocationSelector = ({ location, onChange }) => {
       </div>
 
       {/* Street Name & House Number */}
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '0.75rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', gap: '0.75rem' }}>
         <div className="app-input-group" style={{ marginBottom: 0 }}>
           <label className="app-label" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
             <Navigation size={13} color="#d4af37" /> Street Name *

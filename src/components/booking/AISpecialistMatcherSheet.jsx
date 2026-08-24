@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles, Check, Wand2, User, Star, MapPin, ShieldCheck, ArrowRight, RefreshCw, Scissors } from 'lucide-react';
+import { Sparkles, Check, Wand2, User, Star, MapPin, ShieldCheck, RefreshCw } from 'lucide-react';
 import { BottomSheet } from '../common/BottomSheet';
+import { OptimizedImage } from '../common/OptimizedImage';
 import { api } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 
@@ -9,7 +10,7 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
   const navigate = useNavigate();
   const { showToast } = useAuth();
 
-  const [category, setCategory] = useState('Wigs & Frontal Installs');
+  const [category, setCategory] = useState('Wig Installer');
   const [vibe, setVibe] = useState('Bespoke Executive Luxury');
   const [preferredState, setPreferredState] = useState('Lagos State');
   const [requestText, setRequestText] = useState('');
@@ -52,33 +53,40 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
 
     try {
       const data = await api.matchAiSpecialist(queryPayload, selectedService, '');
+      const dynamicSpecs = await api.getSpecialists().catch(() => []);
+      const matchedSpec = Array.isArray(dynamicSpecs) && dynamicSpecs.find(s => s.role === 'staff' || s.isVerified);
+      
+      const fallbackAvatar = matchedSpec?.avatarUrl || matchedSpec?.profileImage || matchedSpec?.image || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80';
+
       if (data.match) {
         setMatchResult({
           ...data.match,
+          avatar: data.match.avatarUrl || data.match.avatar || data.match.profileImage || data.match.image || fallbackAvatar,
           primaryService: selectedService,
           state: preferredState,
           vibe: vibe
         });
       } else {
-        // Fallback match using registered team
-        const dynamicSpecs = await api.getSpecialists().catch(() => []);
-        const firstSpec = Array.isArray(dynamicSpecs) && dynamicSpecs.find(s => s.role === 'staff' || s.isVerified);
-        const specName = firstSpec ? `${firstSpec.firstname || ''} ${firstSpec.lastname || ''}`.trim() : 'Style Corner Artisan';
+        const specName = matchedSpec ? `${matchedSpec.firstname || ''} ${matchedSpec.lastname || ''}`.trim() : 'Style Corner Artisan';
 
         setMatchResult({
           name: specName,
-          role: firstSpec?.title || 'Certified Atelier Specialist',
-          rating: firstSpec?.rating || 5.0,
+          firstname: matchedSpec?.firstname || 'Style',
+          lastname: matchedSpec?.lastname || 'Artisan',
+          role: matchedSpec?.title || matchedSpec?.roleTitle || 'Certified Atelier Specialist',
+          rating: matchedSpec?.rating || 5.0,
           matchScore: 98,
           location: preferredState,
           rationale: `Matched based on your selection for ${category} with a ${vibe} finish in ${preferredState}. Verified track record for scalp care and precision styling.`,
-          avatar: firstSpec?.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
+          avatar: fallbackAvatar,
           primaryService: selectedService
         });
       }
     } catch (err) {
       setMatchResult({
         name: 'Style Corner Artisan',
+        firstname: 'Style',
+        lastname: 'Artisan',
         role: 'Certified Atelier Specialist',
         rating: 5.0,
         matchScore: 95,
@@ -96,31 +104,36 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
     if (matchResult && onApplyMatch) {
       onApplyMatch({
         ...matchResult,
-        primaryService: matchResult.primaryService || 'Precision Skin Fade & Cut',
+        primaryService: matchResult.primaryService || 'Wig Installer',
       });
       onClose();
     }
   };
 
+  const avatarSrc = matchResult
+    ? (matchResult.avatar || matchResult.avatarUrl || matchResult.profileImage || matchResult.image || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80')
+    : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80';
+
   return (
     <BottomSheet isOpen={isOpen} onClose={onClose} title="AI Specialist Matcher">
-      <div style={{ paddingBottom: '1rem' }}>
+      <div style={{ paddingBottom: '1rem', width: '100%', overflowX: 'hidden' }}>
         
         {/* Header Callout */}
         <div style={{
           background: 'linear-gradient(135deg, #171717 0%, #0d0d0d 100%)',
           color: '#ffffff',
           borderRadius: '16px',
-          padding: '1rem',
-          marginBottom: '1.25rem',
+          padding: '0.95rem',
+          marginBottom: '1.15rem',
           border: '1.5px solid rgba(212,175,55,0.4)',
           display: 'flex',
           alignItems: 'center',
-          gap: '0.75rem'
+          gap: '0.65rem',
+          boxSizing: 'border-box'
         }}>
           <div style={{
-            width: '42px',
-            height: '42px',
+            width: '38px',
+            height: '38px',
             borderRadius: '12px',
             background: 'rgba(212,175,55,0.2)',
             color: '#d4af37',
@@ -129,14 +142,14 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
             justifyContent: 'center',
             flexShrink: 0
           }}>
-            <Sparkles size={22} />
+            <Sparkles size={20} />
           </div>
-          <div>
-            <h4 style={{ fontFamily: 'Outfit', fontSize: '0.95rem', fontWeight: 800, margin: 0, color: '#ffffff' }}>
-              Smart Artisan Recommendation Engine
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <h4 style={{ fontFamily: 'Outfit', fontSize: '0.9rem', fontWeight: 800, margin: 0, color: '#ffffff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              Smart Recommendation Engine
             </h4>
-            <p style={{ fontSize: '0.75rem', color: '#a1a1aa', margin: '0.15rem 0 0' }}>
-              Answer 3 quick preferences and AI will analyze artisan skills, ratings & availability.
+            <p style={{ fontSize: '0.72rem', color: '#a1a1aa', margin: '0.1rem 0 0', lineHeight: 1.3 }}>
+              Select your preferences below to get matched instantly.
             </p>
           </div>
         </div>
@@ -144,25 +157,27 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
         <form onSubmit={handleRunMatch}>
           
           {/* Preference 1: Category */}
-          <div style={{ marginBottom: '1.1rem' }}>
+          <div style={{ marginBottom: '1rem' }}>
             <label className="app-label">1. Desired Service Specialty *</label>
-            <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap', width: '100%' }}>
               {categories.map((cat) => (
                 <button
                   type="button"
                   key={cat.id}
                   onClick={() => setCategory(cat.label)}
                   style={{
-                    padding: '0.45rem 0.85rem',
+                    padding: '0.4rem 0.75rem',
                     borderRadius: '50px',
                     fontFamily: 'Outfit',
                     fontWeight: 800,
-                    fontSize: '0.78rem',
+                    fontSize: '0.72rem',
                     cursor: 'pointer',
                     transition: 'all 0.15s ease',
                     background: category === cat.label ? '#171717' : '#f3f4f6',
-                    color: category === cat.label ? '#d4af37' : '#6b7280',
+                    color: category === cat.label ? '#d4af37' : '#4b5563',
                     border: category === cat.label ? '1px solid #d4af37' : '1px solid rgba(0,0,0,0.06)',
+                    maxWidth: '100%',
+                    whiteSpace: 'nowrap'
                   }}
                 >
                   {cat.label}
@@ -172,9 +187,9 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
           </div>
 
           {/* Preference 2: Style Vibe */}
-          <div style={{ marginBottom: '1.1rem' }}>
+          <div style={{ marginBottom: '1rem' }}>
             <label className="app-label">2. Desired Style Vibe & Finish</label>
-            <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap', width: '100%' }}>
               {vibes.map((v) => (
                 <button
                   type="button"
@@ -185,11 +200,12 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
                     borderRadius: '50px',
                     fontFamily: 'Outfit',
                     fontWeight: 700,
-                    fontSize: '0.75rem',
+                    fontSize: '0.72rem',
                     cursor: 'pointer',
                     background: vibe === v ? 'rgba(212,175,55,0.15)' : '#f8fafc',
                     color: vibe === v ? '#b5952f' : '#64748b',
                     border: vibe === v ? '1.5px solid #d4af37' : '1px solid rgba(0,0,0,0.08)',
+                    maxWidth: '100%'
                   }}
                 >
                   {v}
@@ -219,7 +235,7 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
               rows={2}
               value={requestText}
               onChange={(e) => setRequestText(e.target.value)}
-              placeholder="e.g. Knotless box braids with waist length, or clean taper fade with razor lineup..."
+              placeholder="e.g. Knotless box braids with waist length, or clean frontal wig melt..."
               className="app-textarea"
             />
           </div>
@@ -228,49 +244,50 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
             type="submit"
             disabled={loading}
             className="app-btn app-btn-accent"
-            style={{ minHeight: '48px', borderRadius: '14px', marginBottom: '1.25rem' }}
+            style={{ minHeight: '46px', borderRadius: '14px', marginBottom: '1.25rem' }}
           >
             {loading ? (
               <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                <RefreshCw size={18} style={{ animation: 'spin 1s linear infinite' }} /> Analyzing Artisan Profiles...
+                <RefreshCw size={16} style={{ animation: 'spin 1s linear infinite' }} /> Analyzing Artisan Profiles...
               </span>
             ) : (
               <>
-                <Wand2 size={18} />
+                <Wand2 size={16} />
                 <span>Run AI Matching Engine</span>
               </>
             )}
           </button>
         </form>
 
-        {/* ── AI MATCH RESULT CARD ── */}
+        {/* ── AI MATCH RESULT CARD (MOBILE OPTIMIZED) ── */}
         {matchResult && (
           <div
             style={{
-              padding: '1.25rem',
+              padding: '1.1rem 0.95rem',
               background: '#ffffff',
               border: '2px solid #d4af37',
-              borderRadius: '20px',
-              boxShadow: '0 12px 32px rgba(212,175,55,0.18)',
+              borderRadius: '18px',
+              boxShadow: '0 10px 28px rgba(212,175,55,0.18)',
               position: 'relative',
-              overflow: 'hidden'
+              overflow: 'hidden',
+              boxSizing: 'border-box'
             }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
               <span
                 style={{
                   fontFamily: 'Outfit',
-                  fontSize: '0.72rem',
+                  fontSize: '0.68rem',
                   fontWeight: 900,
                   color: '#b5952f',
                   textTransform: 'uppercase',
-                  letterSpacing: '0.08em',
+                  letterSpacing: '0.06em',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.3rem'
+                  gap: '0.25rem'
                 }}
               >
-                <Sparkles size={13} color="#d4af37" /> TOP RECOMMENDED ARTISAN MATCH
+                <Sparkles size={12} color="#d4af37" /> TOP MATCHED ARTISAN
               </span>
 
               <span style={{
@@ -278,42 +295,47 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
                 color: '#ffffff',
                 fontFamily: 'Outfit',
                 fontWeight: 900,
-                fontSize: '0.75rem',
-                padding: '0.2rem 0.6rem',
+                fontSize: '0.7rem',
+                padding: '0.18rem 0.55rem',
                 borderRadius: '50px',
-                boxShadow: '0 2px 8px rgba(16,185,129,0.3)'
+                boxShadow: '0 2px 8px rgba(16,185,129,0.25)'
               }}>
                 {matchResult.matchScore || 98}% MATCH
               </span>
             </div>
 
-            {/* Profile Info */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginBottom: '0.85rem' }}>
-              <div style={{
-                width: '60px',
-                height: '60px',
-                borderRadius: '50%',
-                background: `url(${matchResult.avatar}) center/cover no-repeat`,
-                border: '2.5px solid #d4af37',
-                flexShrink: 0
-              }} />
+            {/* Profile Info with Robust Avatar Fallback */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.85rem' }}>
+              <OptimizedImage
+                src={avatarSrc}
+                alt={matchResult.name || 'Artisan Profile'}
+                style={{
+                  width: '56px',
+                  height: '56px',
+                  borderRadius: '50%',
+                  objectFit: 'cover',
+                  border: '2.5px solid #d4af37',
+                  flexShrink: 0,
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.12)'
+                }}
+              />
 
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                  <h3 style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 900, color: '#171717', margin: 0 }}>
-                    {matchResult.name || `${matchResult.firstname} ${matchResult.lastname}`}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                  <h3 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 900, color: '#171717', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {matchResult.name || `${matchResult.firstname || ''} ${matchResult.lastname || ''}`.trim() || 'Verified Specialist'}
                   </h3>
-                  <ShieldCheck size={16} color="#d4af37" />
+                  <ShieldCheck size={15} color="#d4af37" style={{ flexShrink: 0 }} />
                 </div>
-                <p style={{ color: '#6b7280', fontSize: '0.8rem', fontFamily: 'Outfit', fontWeight: 600, margin: '0.15rem 0 0.25rem' }}>
-                  {matchResult.role}
+                <p style={{ color: '#6b7280', fontSize: '0.78rem', fontFamily: 'Outfit', fontWeight: 600, margin: '0.1rem 0 0.2rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {matchResult.role || 'Certified Atelier Specialist'}
                 </p>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.75rem', color: '#4b5563' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.72rem', color: '#4b5563' }}>
                   <span style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#f59e0b', fontWeight: 800 }}>
-                    <Star size={12} fill="#f59e0b" /> {matchResult.rating || 5.0}
+                    <Star size={11} fill="#f59e0b" /> {matchResult.rating || 5.0}
                   </span>
                   <span style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#6b7280' }}>
-                    <MapPin size={12} /> {matchResult.location || preferredState}
+                    <MapPin size={11} /> {matchResult.location || preferredState}
                   </span>
                 </div>
               </div>
@@ -322,19 +344,19 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
             {/* Rationale explanation */}
             <div style={{
               background: '#faf9f5',
-              padding: '0.75rem 0.85rem',
+              padding: '0.65rem 0.75rem',
               borderRadius: '12px',
               border: '1px solid rgba(212,175,55,0.2)',
-              fontSize: '0.82rem',
+              fontSize: '0.78rem',
               color: '#374151',
-              lineHeight: 1.5,
-              marginBottom: '1rem'
+              lineHeight: 1.45,
+              marginBottom: '0.85rem'
             }}>
               {matchResult.rationale}
             </div>
 
             {/* Action Buttons */}
-            <div style={{ display: 'flex', gap: '0.6rem' }}>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
               <button
                 type="button"
                 onClick={() => {
@@ -343,20 +365,20 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
                   navigate(`/expert-profile?name=${encodeURIComponent(targetName)}`);
                 }}
                 className="app-btn app-btn-outline"
-                style={{ flex: 1, minHeight: '44px', fontSize: '0.82rem', borderRadius: '12px' }}
+                style={{ flex: 1, minHeight: '42px', fontSize: '0.78rem', borderRadius: '12px', padding: '0.4rem' }}
               >
-                <User size={15} />
-                <span>View Profile</span>
+                <User size={14} />
+                <span>Profile</span>
               </button>
 
               <button
                 type="button"
                 onClick={handleApply}
                 className="app-btn app-btn-primary"
-                style={{ flex: 1, minHeight: '44px', fontSize: '0.82rem', borderRadius: '12px' }}
+                style={{ flex: 1, minHeight: '42px', fontSize: '0.78rem', borderRadius: '12px', padding: '0.4rem' }}
               >
-                <Check size={16} />
-                <span>Book Now</span>
+                <Check size={15} />
+                <span>Book Match</span>
               </button>
             </div>
           </div>

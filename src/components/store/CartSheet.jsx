@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ShoppingBag, Trash2, Plus, Minus, CheckCircle2 } from 'lucide-react';
 import { BottomSheet } from '../common/BottomSheet';
+import { OptimizedImage } from '../common/OptimizedImage';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { api } from '../../services/api';
@@ -72,7 +73,6 @@ export const CartSheet = ({ isOpen, onClose }) => {
     }
   };
 
-
   return (
     <BottomSheet isOpen={isOpen} onClose={onClose} title={`Your Grooming Cart (${cart.length})`}>
       {cart.length === 0 ? (
@@ -81,7 +81,7 @@ export const CartSheet = ({ isOpen, onClose }) => {
           <p style={{ fontSize: '0.9rem' }}>Your shopping cart is currently empty.</p>
         </div>
       ) : (
-        <div>
+        <div style={{ width: '100%', overflowX: 'hidden' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.25rem' }}>
             {cart.map((item) => (
               <div
@@ -90,22 +90,39 @@ export const CartSheet = ({ isOpen, onClose }) => {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
+                  gap: '0.5rem',
                   padding: '0.75rem',
                   background: '#faf9f6',
                   borderRadius: '12px',
                   border: '1px solid rgba(0,0,0,0.08)',
+                  boxSizing: 'border-box'
                 }}
               >
-                <div>
-                  <h4 style={{ fontFamily: 'Outfit', fontSize: '0.95rem', fontWeight: 700, color: '#171717' }}>
-                    {item.title}
-                  </h4>
-                  <span style={{ fontSize: '0.82rem', color: '#d4af37', fontWeight: 800 }}>
-                    ₦{Number(item.price).toLocaleString()}
-                  </span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flex: 1, minWidth: 0 }}>
+                  {item.image && (
+                    <OptimizedImage
+                      src={item.image}
+                      alt={item.title}
+                      style={{
+                        width: '44px',
+                        height: '44px',
+                        borderRadius: '10px',
+                        objectFit: 'cover',
+                        flexShrink: 0
+                      }}
+                    />
+                  )}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <h4 style={{ fontFamily: 'Outfit', fontSize: '0.88rem', fontWeight: 800, color: '#171717', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {item.title}
+                    </h4>
+                    <span style={{ fontSize: '0.82rem', color: '#d4af37', fontWeight: 900 }}>
+                      ₦{Number(item.price).toLocaleString()}
+                    </span>
+                  </div>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexShrink: 0 }}>
                   <div
                     style={{
                       display: 'flex',
@@ -113,27 +130,30 @@ export const CartSheet = ({ isOpen, onClose }) => {
                       background: '#ffffff',
                       borderRadius: '8px',
                       border: '1px solid rgba(0,0,0,0.08)',
-                      padding: '2px 6px',
+                      padding: '2px 4px',
                     }}
                   >
                     <button
+                      type="button"
                       onClick={() => updateQuantity(item.id || item.title, item.quantity - 1)}
-                      style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px' }}
+                      style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '3px' }}
                     >
-                      <Minus size={14} />
+                      <Minus size={13} />
                     </button>
-                    <span style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.85rem', padding: '0 8px' }}>
+                    <span style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.82rem', padding: '0 5px' }}>
                       {item.quantity}
                     </span>
                     <button
+                      type="button"
                       onClick={() => updateQuantity(item.id || item.title, item.quantity + 1)}
-                      style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px' }}
+                      style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '3px' }}
                     >
-                      <Plus size={14} />
+                      <Plus size={13} />
                     </button>
                   </div>
 
                   <button
+                    type="button"
                     onClick={() => removeFromCart(item.id || item.title)}
                     style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', padding: '4px' }}
                   >
