@@ -3,10 +3,44 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
+import { ScrollToTop } from './components/common/ScrollToTop';
 import { Scissors } from 'lucide-react';
 
 // Eager load Home page for instant initial render
 import { Home } from './pages/Home';
+
+// Route loader dictionary for instant prefetching
+const routeLoaders = {
+  '/services': () => import('./pages/Services'),
+  '/experts': () => import('./pages/Experts'),
+  '/expert-profile': () => import('./pages/ExpertProfile'),
+  '/gallery': () => import('./pages/Gallery'),
+  '/store': () => import('./pages/Store'),
+  '/booking': () => import('./pages/Booking'),
+  '/about': () => import('./pages/About'),
+  '/contact': () => import('./pages/Contact'),
+  '/role-selection': () => import('./pages/RoleSelection'),
+  '/signup': () => import('./pages/Signup'),
+  '/verify': () => import('./pages/VerifyOTP'),
+  '/login': () => import('./pages/Login'),
+  '/forgot-password': () => import('./pages/ForgotPassword'),
+  '/customer-dashboard': () => import('./pages/CustomerDashboard'),
+  '/expert-dashboard': () => import('./pages/ExpertDashboard'),
+  '/admin': () => import('./pages/AdminDashboard'),
+  '/payment': () => import('./pages/Payment'),
+  '/policies': () => import('./pages/Policies'),
+  '/profile': () => import('./pages/Profile'),
+};
+
+// Global helper to prefetch route JavaScript chunk on hover/touchstart
+export const preloadRoute = (path) => {
+  if (!path) return;
+  const basePath = path.split('?')[0].split('#')[0];
+  const loader = routeLoaders[basePath];
+  if (loader) {
+    loader().catch(() => {});
+  }
+};
 
 // Helper to safely import lazy components with automatic page reload retry if chunk hash changes after deployment
 const safeLazy = (importFn) =>
@@ -24,8 +58,8 @@ const safeLazy = (importFn) =>
     }
   });
 
-// Lazy load remaining routes for ultra-fast bundle splitting and zero-lag navigation
-const Services = safeLazy(() => import('./pages/Services').then(m => ({ default: m.Services })));
+// Lazy load remaining routes with ultra-fast bundle splitting
+const Services = safeLazy(routeLoaders['/services'].then ? () => routeLoaders['/services'] : () => import('./pages/Services').then(m => ({ default: m.Services })));
 const Experts = safeLazy(() => import('./pages/Experts').then(m => ({ default: m.Experts })));
 const Gallery = safeLazy(() => import('./pages/Gallery').then(m => ({ default: m.Gallery })));
 const Store = safeLazy(() => import('./pages/Store').then(m => ({ default: m.Store })));
@@ -50,7 +84,7 @@ const ProductDetail = safeLazy(() => import('./pages/ProductDetail').then(m => (
 const PageLoader = () => (
   <div
     style={{
-      minHeight: '80vh',
+      minHeight: '75vh',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
@@ -95,6 +129,7 @@ export const App = () => {
     <AuthProvider>
       <CartProvider>
         <BrowserRouter>
+          <ScrollToTop />
           <Suspense fallback={<PageLoader />}>
             <Routes>
               {/* Public Routes */}

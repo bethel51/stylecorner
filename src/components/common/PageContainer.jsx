@@ -20,7 +20,7 @@ export const PageContainer = ({
         onOpenCart={onOpenCart}
       />
       <main className="page-scroll-container">
-        <div className="page-content">{children}</div>
+        <div className="page-content page-enter">{children}</div>
       </main>
       <BottomNavigation />
       <PwaInstallPrompt />

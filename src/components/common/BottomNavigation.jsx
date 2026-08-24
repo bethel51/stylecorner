@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Home, Scissors, CalendarPlus, ShoppingBag, User, LayoutDashboard, Shield } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { preloadRoute } from '../../App';
 
 export const BottomNavigation = () => {
   const navigate = useNavigate();
@@ -47,11 +48,15 @@ export const BottomNavigation = () => {
           location.pathname === item.path ||
           (item.path !== '/' && location.pathname.startsWith(item.path));
 
+        const handlePrefetch = () => preloadRoute(item.path);
+
         if (item.isCTA) {
           return (
             <button
               key={item.path}
               onClick={item.onClick || (() => navigate(item.path))}
+              onMouseEnter={handlePrefetch}
+              onTouchStart={handlePrefetch}
               className="bottom-nav-cta"
               title="Book Visit"
             >
@@ -64,6 +69,8 @@ export const BottomNavigation = () => {
           <button
             key={item.path}
             onClick={() => navigate(item.path)}
+            onMouseEnter={handlePrefetch}
+            onTouchStart={handlePrefetch}
             className={`bottom-nav-item ${isActive ? 'active' : ''}`}
             style={{ background: 'none', border: 'none', cursor: 'pointer' }}
           >

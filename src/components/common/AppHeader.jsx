@@ -4,6 +4,8 @@ import { ArrowLeft, ShoppingBag, User, Sparkles, Shield } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
 import { ImagePreviewModal } from './ImagePreviewModal';
+import { OptimizedImage } from './OptimizedImage';
+import { preloadRoute } from '../../App';
 
 export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
   const navigate = useNavigate();
@@ -47,6 +49,7 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
           ) : (
             <div
               onClick={() => navigate('/')}
+              onMouseEnter={() => preloadRoute('/')}
               style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
             >
               <div
@@ -83,6 +86,7 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
             <button
               className="app-header-btn"
               onClick={() => navigate('/admin')}
+              onMouseEnter={() => preloadRoute('/admin')}
               title="Admin Dashboard"
               style={{
                 color: '#d4af37',
@@ -115,6 +119,7 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
           <button
             className="app-header-btn"
             onClick={onOpenCart || (() => navigate('/store'))}
+            onMouseEnter={() => preloadRoute('/store')}
             aria-label="Store Cart"
           >
             <ShoppingBag size={18} />
@@ -124,6 +129,7 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
           <button
             className="app-header-btn"
             onClick={handleProfileClick}
+            onMouseEnter={() => preloadRoute(isAuthenticated ? '/profile' : '/login')}
             aria-label="User Profile"
             style={{
               borderColor: isAuthenticated ? '#d4af37' : undefined,
@@ -135,7 +141,7 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
             }}
           >
             {user?.avatarUrl ? (
-              <img
+              <OptimizedImage
                 src={user.avatarUrl}
                 alt={user?.firstname || 'User Profile'}
                 style={{

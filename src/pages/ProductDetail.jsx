@@ -19,6 +19,8 @@ import { PageContainer } from '../components/common/PageContainer';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { CartSheet } from '../components/store/CartSheet';
+import { OptimizedImage } from '../components/common/OptimizedImage';
+import { preloadRoute } from '../App';
 import { api } from '../services/api';
 
 const DEFAULT_PRODUCTS = [
@@ -360,14 +362,13 @@ export const ProductDetail = () => {
             background: '#f8fafc',
             marginBottom: product.secondaryImage ? '0.85rem' : 0
           }}>
-            <img
+            <OptimizedImage
               src={selectedImage || product.image}
               alt={product.title}
               style={{
                 width: '100%',
                 height: '100%',
                 objectFit: 'cover',
-                transition: 'all 0.3s ease'
               }}
             />
           </div>
@@ -388,7 +389,7 @@ export const ProductDetail = () => {
                   transition: 'all 0.2s ease'
                 }}
               >
-                <img src={product.image} alt="Primary" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <OptimizedImage src={product.image} alt="Primary" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
 
               <div
@@ -404,7 +405,7 @@ export const ProductDetail = () => {
                   transition: 'all 0.2s ease'
                 }}
               >
-                <img src={product.secondaryImage} alt="Secondary" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <OptimizedImage src={product.secondaryImage} alt="Secondary" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
             </div>
           )}
@@ -599,7 +600,7 @@ export const ProductDetail = () => {
                 }}
               >
                 <div style={{ width: '100%', height: '80px', borderRadius: '10px', overflow: 'hidden', marginBottom: '0.4rem', background: '#f3f4f6' }}>
-                  <img src={rel.image} alt={rel.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <OptimizedImage src={rel.image} alt={rel.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </div>
                 <h4 style={{ fontFamily: 'Outfit', fontSize: '0.78rem', fontWeight: 800, color: '#171717', margin: '0 0 0.2rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {rel.title}

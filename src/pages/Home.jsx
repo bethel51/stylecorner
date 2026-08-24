@@ -17,6 +17,8 @@ import {
 } from 'lucide-react';
 import { PageContainer } from '../components/common/PageContainer';
 import { AISpecialistMatcherSheet } from '../components/booking/AISpecialistMatcherSheet';
+import { OptimizedImage } from '../components/common/OptimizedImage';
+import { preloadRoute } from '../App';
 import { api } from '../services/api';
 
 export const Home = () => {
@@ -250,6 +252,7 @@ export const Home = () => {
               key={idx}
               className="app-card"
               onClick={() => navigate(`/booking?service=${encodeURIComponent(item.serviceName)}`)}
+              onMouseEnter={() => preloadRoute('/booking')}
               style={{
                 cursor: 'pointer',
                 position: 'relative',
@@ -263,10 +266,9 @@ export const Home = () => {
               }}
             >
               {/* Background Image */}
-              <img
+              <OptimizedImage
                 src={item.image}
                 alt={item.title}
-                loading="lazy"
                 style={{
                   position: 'absolute',
                   inset: 0,
@@ -419,14 +421,13 @@ export const Home = () => {
                 key={i}
                 className="app-card"
                 onClick={() => navigate(`/booking?stylist=${encodeURIComponent(sp.name.split(' ')[0])}`)}
+                onMouseEnter={() => preloadRoute('/booking')}
                 style={{ marginBottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-                  <img
+                  <OptimizedImage
                     src={sp.image}
                     alt={sp.name}
-                    loading="lazy"
-                    decoding="async"
                     style={{
                       width: '48px',
                       height: '48px',

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Scissors, Sparkles, Clock, Check, Calendar } from 'lucide-react';
 import { PageContainer } from '../components/common/PageContainer';
+import { preloadRoute } from '../App';
 
 export const Services = () => {
   const navigate = useNavigate();
@@ -148,6 +149,7 @@ export const Services = () => {
 
               <button
                 onClick={() => navigate(`/booking?service=${encodeURIComponent(s.title)}`)}
+                onMouseEnter={() => preloadRoute('/booking')}
                 className="app-btn app-btn-accent"
                 style={{ borderRadius: '12px', minHeight: '44px', fontSize: '0.85rem' }}
               >

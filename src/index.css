@@ -757,4 +757,36 @@ button:active, .dashboard-quick-actions button:active {
   }
 }
 
+/* ── Hardware Accelerated Smooth Page Transitions & Image Shimmer ── */
 
+.page-enter {
+  animation: pageEnter 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+@keyframes pageEnter {
+  0% {
+    opacity: 0.6;
+    transform: translateY(6px) scale(0.995) translateZ(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1) translateZ(0);
+  }
+}
+
+.image-skeleton-shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+  animation: skeletonPulse 1.4s infinite ease-in-out;
+  border-radius: inherit;
+  z-index: 1;
+}
+
+.optimized-image-wrapper.is-loaded .image-skeleton-shimmer {
+  display: none;
+}

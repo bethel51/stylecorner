@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Scissors, Star, Calendar, ShieldCheck, UserPlus, Sparkles } from 'lucide-react';
 import { PageContainer } from '../components/common/PageContainer';
+import { OptimizedImage } from '../components/common/OptimizedImage';
+import { preloadRoute } from '../App';
 import { api } from '../services/api';
 
 export const Experts = () => {
@@ -60,11 +62,9 @@ export const Experts = () => {
           team.map((m, idx) => (
             <div key={m.id || idx} className="app-card" style={{ marginBottom: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginBottom: '0.85rem' }}>
-                <img
+                <OptimizedImage
                   src={m.image}
                   alt={m.name}
-                  loading="lazy"
-                  decoding="async"
                   style={{
                     width: '60px',
                     height: '60px',
@@ -123,6 +123,7 @@ export const Experts = () => {
               <div style={{ display: 'flex', gap: '0.5rem' }}>
                 <button
                   onClick={() => navigate(`/expert-profile?name=${encodeURIComponent(m.name)}`)}
+                  onMouseEnter={() => preloadRoute('/expert-profile')}
                   className="app-btn app-btn-outline"
                   style={{ flex: 1, minHeight: '42px', fontSize: '0.82rem', borderRadius: '12px' }}
                 >
@@ -130,6 +131,7 @@ export const Experts = () => {
                 </button>
                 <button
                   onClick={() => navigate(`/booking?stylist=${encodeURIComponent(m.name)}`)}
+                  onMouseEnter={() => preloadRoute('/booking')}
                   className="app-btn app-btn-primary"
                   style={{ flex: 1, minHeight: '42px', fontSize: '0.82rem', borderRadius: '12px' }}
                 >

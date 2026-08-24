@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ShoppingBag, Plus, Check, Star, RefreshCw, Eye } from 'lucide-react';
+import { ShoppingBag, Plus, Star } from 'lucide-react';
 import { PageContainer } from '../components/common/PageContainer';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { CartSheet } from '../components/store/CartSheet';
+import { OptimizedImage } from '../components/common/OptimizedImage';
+import { preloadRoute } from '../App';
 import { api } from '../services/api';
 
 const DEFAULT_PRODUCTS = [
@@ -67,7 +69,6 @@ export const Store = () => {
   const { showToast } = useAuth();
   const [showCartSheet, setShowCartSheet] = useState(false);
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [hoveredImageMap, setHoveredImageMap] = useState({});
 
   const fetchStoreProducts = async () => {
@@ -92,20 +93,11 @@ export const Store = () => {
       } else {
         setProducts(DEFAULT_PRODUCTS);
       }
-    } finally {
-      setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchStoreProducts();
-
-    const handleFocus = () => {
-      fetchStoreProducts();
-    };
-
-    window.addEventListener('focus', handleFocus);
-    return () => window.removeEventListener('focus', handleFocus);
   }, []);
 
   const handleAdd = (p, e) => {
@@ -193,6 +185,7 @@ export const Store = () => {
             <div
               key={p.id}
               onClick={() => navigate(`/product/${p.id}`)}
+              onMouseEnter={() => preloadRoute('/product/p1')}
               className="app-card"
               style={{
                 marginBottom: 0,
@@ -215,10 +208,10 @@ export const Store = () => {
                   }}
                   style={{ position: 'relative', width: '100%', height: '130px', borderRadius: '12px', overflow: 'hidden', marginBottom: '0.75rem', background: '#f3f4f6' }}
                 >
-                  <img
+                  <OptimizedImage
                     src={currentImg}
                     alt={p.title}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'all 0.3s ease' }}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   />
                   
                   {p.badge && (
