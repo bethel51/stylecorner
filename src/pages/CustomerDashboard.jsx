@@ -37,6 +37,7 @@ import { PopupModal } from '../components/common/PopupModal';
 import { AISpecialistMatcherSheet } from '../components/booking/AISpecialistMatcherSheet';
 import { ImagePreviewModal } from '../components/common/ImagePreviewModal';
 import { OrderTrackingSheet } from '../components/store/OrderTrackingSheet';
+import { LocationSelector } from '../components/store/LocationSelector';
 import { downloadBookingHistoryCSV, printBookingHistoryReport } from '../utils/bookingHistoryExport';
 
 export const CustomerDashboard = () => {
@@ -65,6 +66,14 @@ export const CustomerDashboard = () => {
     phone: user?.phone || '',
     avatarUrl: user?.avatarUrl || '',
   });
+
+  const [location, setLocation] = useState({
+    state: user?.state || 'Lagos',
+    lga: user?.lga || 'Ikeja',
+    street: user?.street || '',
+    houseNumber: user?.houseNumber || '',
+  });
+
   const [savingProfile, setSavingProfile] = useState(false);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
 
@@ -162,6 +171,12 @@ export const CustomerDashboard = () => {
         phone: user.phone || '',
         avatarUrl: user.avatarUrl || '',
       });
+      setLocation({
+        state: user.state || 'Lagos',
+        lga: user.lga || 'Ikeja',
+        street: user.street || '',
+        houseNumber: user.houseNumber || '',
+      });
     }
   }, [user]);
 
@@ -169,7 +184,13 @@ export const CustomerDashboard = () => {
     e.preventDefault();
     setSavingProfile(true);
     try {
-      await updateProfile(profileForm);
+      await updateProfile({
+        ...profileForm,
+        state: location.state,
+        lga: location.lga,
+        street: location.street.trim(),
+        houseNumber: location.houseNumber.trim(),
+      });
       setShowProfileSheet(false);
     } catch (err) {
       showToast(err.message || 'Failed to update profile', 'error');
@@ -1004,8 +1025,17 @@ export const CustomerDashboard = () => {
             <label className="app-label">Phone Number</label>
             <input type="tel" value={profileForm.phone} onChange={(e) => setProfileForm({ ...profileForm, phone: e.target.value })} className="app-input" />
           </div>
+
+          {/* Delivery Location Section */}
+          <div style={{ background: '#faf9f5', borderRadius: '16px', padding: '0.85rem', border: '1px solid rgba(212,175,55,0.3)', marginBottom: '1rem' }}>
+            <label className="app-label" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#171717', fontWeight: 800, marginBottom: '0.65rem' }}>
+              Default Delivery Location
+            </label>
+            <LocationSelector location={location} onChange={setLocation} />
+          </div>
+
           <button type="submit" disabled={savingProfile} className="app-btn app-btn-primary" style={{ marginTop: '0.5rem' }}>
-            {savingProfile ? 'Saving...' : 'Save Changes'}
+            {savingProfile ? 'Saving Profile & Location...' : 'Save Profile & Location'}
           </button>
         </form>
       </BottomSheet>

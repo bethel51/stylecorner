@@ -376,7 +376,7 @@ app.get('/api/auth/me', authenticateToken, async (req, res) => {
 // Update user profile
 app.put('/api/users/profile', authenticateToken, async (req, res) => {
   try {
-    const { firstname, lastname, phone, avatarUrl, coverImage, title, bio, location, services, specialties } = req.body;
+    const { firstname, lastname, phone, avatarUrl, coverImage, title, bio, location, state, lga, street, houseNumber, address, services, specialties } = req.body;
     
     const updatePayload = {};
     if (firstname !== undefined) updatePayload.firstname = firstname;
@@ -387,6 +387,11 @@ app.put('/api/users/profile', authenticateToken, async (req, res) => {
     if (title !== undefined) updatePayload.title = title;
     if (bio !== undefined) updatePayload.bio = bio;
     if (location !== undefined) updatePayload.location = location;
+    if (state !== undefined) updatePayload.state = state;
+    if (lga !== undefined) updatePayload.lga = lga;
+    if (street !== undefined) updatePayload.street = street;
+    if (houseNumber !== undefined) updatePayload.houseNumber = houseNumber;
+    if (address !== undefined) updatePayload.address = address;
     if (services !== undefined) updatePayload.services = services;
     if (specialties !== undefined) updatePayload.specialties = specialties;
 

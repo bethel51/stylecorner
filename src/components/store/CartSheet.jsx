@@ -14,12 +14,23 @@ export const CartSheet = ({ isOpen, onClose }) => {
   const { user, isAuthenticated, showToast } = useAuth();
 
   const [location, setLocation] = useState({
-    state: 'Lagos',
-    lga: 'Ikeja',
-    street: '',
-    houseNumber: '',
+    state: user?.state || 'Lagos',
+    lga: user?.lga || 'Ikeja',
+    street: user?.street || '',
+    houseNumber: user?.houseNumber || '',
   });
   const [submitting, setSubmitting] = useState(false);
+
+  React.useEffect(() => {
+    if (user && isOpen) {
+      setLocation({
+        state: user.state || 'Lagos',
+        lga: user.lga || 'Ikeja',
+        street: user.street || '',
+        houseNumber: user.houseNumber || '',
+      });
+    }
+  }, [user, isOpen]);
 
   const handleCheckout = async (e) => {
     e.preventDefault();
@@ -62,6 +73,15 @@ export const CartSheet = ({ isOpen, onClose }) => {
       };
 
       await api.createOrder(orderPayload);
+
+      // Save delivery location back to user profile for future seamless orders
+      updateProfile({
+        state: location.state,
+        lga: location.lga,
+        street: location.street.trim(),
+        houseNumber: location.houseNumber.trim(),
+      }).catch(() => {});
+
       clearCart();
       showToast('Order placed successfully!', 'success');
       onClose();
