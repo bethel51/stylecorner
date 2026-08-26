@@ -350,7 +350,7 @@ export const AdminDashboard = () => {
   });
 
   const kpiCards = [
-    { label: 'Store Revenue', value: `$${totalRevenue.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, icon: DollarSign, color: '#d4af37', bg: 'rgba(212,175,55,0.1)' },
+    { label: 'Store Revenue', value: `₦${Number(totalRevenue).toLocaleString()}`, icon: DollarSign, color: '#d4af37', bg: 'rgba(212,175,55,0.1)' },
     { label: 'Total Orders', value: orders.length, sub: `${pendingOrdersCount} pending`, icon: ShoppingBag, color: '#3b82f6', bg: 'rgba(59,130,246,0.1)' },
     { label: 'Bookings Queue', value: bookings.length, sub: `${pendingBookingsCount} pending`, icon: Calendar, color: '#10b981', bg: 'rgba(16,185,129,0.1)' },
     { label: 'Store Products', value: productsList.length, sub: 'Active in store', icon: Tag, color: '#a855f7', bg: 'rgba(168,85,247,0.1)' },
@@ -721,7 +721,7 @@ export const AdminDashboard = () => {
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
                         <span style={{ fontSize: '1.05rem', fontWeight: 800, color: '#b5952f', fontFamily: 'Outfit' }}>
-                          ${(order.totalPrice || order.price || 0).toFixed(2)}
+                          ₦{Number(order.totalPrice || order.price || 0).toLocaleString()}
                         </span>
                         <StatusBadge status={order.status || 'pending'} />
                       </div>
@@ -997,7 +997,7 @@ export const AdminDashboard = () => {
                             fontSize: '0.95rem', padding: '0.2rem 0.6rem', borderRadius: '8px',
                             boxShadow: '0 2px 8px rgba(0,0,0,0.15)', fontFamily: 'Outfit'
                           }}>
-                            ${p.price}
+                            ₦{Number(p.price).toLocaleString()}
                           </span>
                         </div>
 
@@ -1083,7 +1083,7 @@ export const AdminDashboard = () => {
                 selectedOrder.items.map((item, i) => (
                   <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.35rem 0', fontSize: '0.8rem', color: '#334155', borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
                     <span>{item.name || item.title} × {item.quantity || 1}</span>
-                    <span style={{ color: '#0f172a', fontWeight: 600 }}>${((item.price || 0) * (item.quantity || 1)).toFixed(2)}</span>
+                    <span style={{ color: '#0f172a', fontWeight: 600 }}>₦{Number((item.price || 0) * (item.quantity || 1)).toLocaleString()}</span>
                   </div>
                 ))
               ) : (
@@ -1095,7 +1095,7 @@ export const AdminDashboard = () => {
 
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', paddingTop: '0.65rem', borderTop: '1px solid rgba(0,0,0,0.08)' }}>
               <span>Total Paid</span>
-              <span style={{ color: '#b5952f' }}>${(selectedOrder.totalPrice || selectedOrder.price || 0).toFixed(2)}</span>
+              <span style={{ color: '#b5952f' }}>₦{Number(selectedOrder.totalPrice || selectedOrder.price || 0).toLocaleString()}</span>
             </div>
 
             <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1.1rem' }}>

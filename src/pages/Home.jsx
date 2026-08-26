@@ -395,7 +395,7 @@ export const Home = () => {
             <ShoppingBag size={15} /> Explore Store
           </button>
           <span style={{ fontFamily: 'Outfit', fontSize: '0.8rem', fontWeight: 800, color: '#d4af37' }}>
-            From $15 →
+            From ₦15,000 →
           </span>
         </div>
       </div>
