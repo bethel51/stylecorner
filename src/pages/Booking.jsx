@@ -66,14 +66,21 @@ export const Booking = () => {
   }, [isAuthenticated, role, navigate]);
 
   const [activeStep, setActiveStep] = useState(1);
-  const [service1, setService1] = useState(initialService || SERVICES[0].title);
-  const [service2, setService2] = useState('');
+  const [selectedService, setSelectedService] = useState(initialService || SERVICES[0].title);
   const [stylist, setStylist] = useState(initialStylist);
   const [location, setLocation] = useState('Lagos State');
   const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
   const [time, setTime] = useState('10:00 AM');
   const [submitting, setSubmitting] = useState(false);
   const [showAiSheet, setShowAiSheet] = useState(false);
+
+  useEffect(() => {
+    if (initialService) {
+      const match = SERVICES.find(s => s.title.toLowerCase() === initialService.toLowerCase() || s.title.toLowerCase().includes(initialService.toLowerCase()));
+      if (match) setSelectedService(match.title);
+      else setSelectedService(initialService);
+    }
+  }, [initialService]);
 
   const [specialistsList, setSpecialistsList] = useState([
     { name: 'Any Specialist', role: 'First Available Expert', rating: 5.0, image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80' },
@@ -97,10 +104,10 @@ export const Booking = () => {
 
   const getPrice = (title) => {
     const match = SERVICES.find((s) => s.title === title);
-    return match ? match.price : 0;
+    return match ? match.price : 20000;
   };
 
-  const totalPrice = getPrice(service1) + getPrice(service2);
+  const totalPrice = getPrice(selectedService);
 
   const handleBookingSubmit = async (e) => {
     e.preventDefault();
@@ -117,19 +124,17 @@ export const Booking = () => {
       return;
     }
 
-    if (!service1 && !service2) {
-      showToast('Please select at least one service.', 'error');
+    if (!selectedService) {
+      showToast('Please select a service.', 'error');
       return;
     }
-
-    const servicesJoined = [service1, service2].filter(s => s && s !== 'None').join(' + ');
 
     const bookingPayload = {
       clientName: `${user.firstname || ''} ${user.lastname || ''}`.trim() || 'Client',
       clientEmail: user.email,
       clientPhone: user.phone || 'N/A',
       stylist: stylist,
-      service: servicesJoined,
+      service: selectedService,
       location: location,
       price: totalPrice,
       date: date,
@@ -203,7 +208,7 @@ export const Booking = () => {
                 AI Specialist Matcher
               </h4>
               <p style={{ color: '#a1a1aa', fontSize: '0.78rem', margin: '0.15rem 0 0' }}>
-                Match best artisan based on your style request
+                Match best specialist & auto-fill your booking schedule
               </p>
             </div>
           </div>
@@ -276,18 +281,18 @@ export const Booking = () => {
                   Choose Your Service
                 </h2>
                 <p style={{ color: '#6b7280', fontSize: '0.82rem', margin: 0 }}>
-                  Tap a primary service, or add a secondary combo service.
+                  Tap a service to select your booking session.
                 </p>
               </div>
 
-              {/* Primary Service Selection Grid */}
+              {/* Single Service Selection Grid */}
               <div className="service-select-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem', marginBottom: '1.25rem' }}>
                 {SERVICES.map((s) => {
-                  const isSelected = service1 === s.title;
+                  const isSelected = selectedService === s.title;
                   return (
                     <div
                       key={s.id}
-                      onClick={() => setService1(s.title)}
+                      onClick={() => setSelectedService(s.title)}
                       style={{
                         padding: '0.75rem',
                         borderRadius: '14px',
@@ -317,26 +322,6 @@ export const Booking = () => {
                     </div>
                   );
                 })}
-              </div>
-
-              {/* Secondary Combo Service Selector */}
-              <div style={{ background: '#faf9f5', borderRadius: '16px', padding: '1rem', border: '1px dashed rgba(212,175,55,0.4)', marginBottom: '1.25rem' }}>
-                <label className="app-label" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', marginBottom: '0.5rem' }}>
-                  <Plus size={14} color="#d4af37" /> Add Combo Service (Optional)
-                </label>
-                <select
-                  value={service2}
-                  onChange={(e) => setService2(e.target.value)}
-                  className="app-select"
-                  style={{ background: '#ffffff' }}
-                >
-                  <option value="">None (Single Service Only)</option>
-                  {SERVICES.filter(s => s.title !== service1).map((s) => (
-                    <option key={s.title} value={s.title}>
-                      {s.title} (+₦{Number(s.price).toLocaleString()})
-                    </option>
-                  ))}
-                </select>
               </div>
 
               <button
@@ -541,7 +526,7 @@ export const Booking = () => {
                   BOOKING SUMMARY
                 </div>
                 <h3 style={{ fontFamily: 'Outfit', fontSize: 'clamp(0.9rem, 3vw, 1.1rem)', fontWeight: 900, margin: '0 0 0.35rem', color: '#ffffff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                  {[service1, service2].filter(Boolean).join(' + ')}
+                  {selectedService}
                 </h3>
                 <div style={{ fontSize: '0.75rem', color: '#a1a1aa', display: 'flex', flexDirection: 'column', gap: '0.15rem', marginBottom: '0.75rem' }}>
                   <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>• Specialist: <strong style={{ color: '#ffffff' }}>{stylist}</strong></span>
@@ -594,12 +579,14 @@ export const Booking = () => {
         isOpen={showAiSheet}
         onClose={() => setShowAiSheet(false)}
         onApplyMatch={(match) => {
-          if (match?.firstname) setStylist(match.name || match.firstname);
-          if (match?.primaryService) setService1(match.primaryService);
-          if (match?.secondaryService) setService2(match.secondaryService);
-          showToast(`Matched with ${match.name}! Form pre-filled.`, 'success');
+          if (match?.stylist) setStylist(match.stylist);
+          if (match?.service) setSelectedService(match.service);
+          if (match?.location) setLocation(match.location);
+          setActiveStep(3);
+          showToast(`Matched with ${match.stylist || 'Specialist'}! Date & time schedule ready.`, 'success');
         }}
       />
     </PageContainer>
   );
 };
+

@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Sparkles, Check, Wand2, User, Star, MapPin, ShieldCheck, RefreshCw } from 'lucide-react';
+import { Sparkles, Check, Wand2, User, Star, MapPin, ShieldCheck, RefreshCw, Calendar, ArrowRight } from 'lucide-react';
 import { BottomSheet } from '../common/BottomSheet';
 import { OptimizedImage } from '../common/OptimizedImage';
 import { api } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 
 export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
-  const navigate = useNavigate();
   const { showToast } = useAuth();
 
   const [category, setCategory] = useState('Wig Installer');
@@ -37,8 +35,8 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
 
   const states = [
     'Lagos State',
-    'Abuja FCT',
-    'Port Harcourt (Rivers)',
+    'FCT – Abuja',
+    'Rivers State (Port Harcourt)',
     'At-Home VIP Service',
   ];
 
@@ -48,7 +46,7 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
     setMatchResult(null);
 
     const activeCat = categories.find(c => c.label === category || c.id === category);
-    const selectedService = activeCat ? activeCat.service : 'Precision Skin Fade & Cut';
+    const selectedService = activeCat ? activeCat.service : category;
     const queryPayload = `${category} - ${vibe} in ${preferredState}. ${requestText}`;
 
     try {
@@ -59,41 +57,41 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
       const fallbackAvatar = matchedSpec?.avatarUrl || matchedSpec?.profileImage || matchedSpec?.image || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80';
 
       if (data.match) {
+        const fullName = data.match.name || `${data.match.firstname || ''} ${data.match.lastname || ''}`.trim() || 'Verified Specialist';
         setMatchResult({
           ...data.match,
+          name: fullName,
           avatar: data.match.avatarUrl || data.match.avatar || data.match.profileImage || data.match.image || fallbackAvatar,
-          primaryService: selectedService,
-          state: preferredState,
-          vibe: vibe
+          service: selectedService,
+          location: preferredState,
+          vibe: vibe,
+          matchScore: data.match.matchScore || 98,
+          rationale: data.match.rationale || `Matched top verified specialist for ${selectedService} with ${vibe} styling in ${preferredState}.`,
         });
       } else {
-        const specName = matchedSpec ? `${matchedSpec.firstname || ''} ${matchedSpec.lastname || ''}`.trim() : 'Style Corner Artisan';
+        const specName = matchedSpec ? `${matchedSpec.firstname || ''} ${matchedSpec.lastname || ''}`.trim() : 'Verified Style Specialist';
 
         setMatchResult({
           name: specName,
-          firstname: matchedSpec?.firstname || 'Style',
-          lastname: matchedSpec?.lastname || 'Artisan',
           role: matchedSpec?.title || matchedSpec?.roleTitle || 'Certified Atelier Specialist',
           rating: matchedSpec?.rating || 5.0,
           matchScore: 98,
           location: preferredState,
-          rationale: `Matched based on your selection for ${category} with a ${vibe} finish in ${preferredState}. Verified track record for scalp care and precision styling.`,
+          rationale: `Matched based on your preference for ${selectedService} (${vibe}) in ${preferredState}. Verified track record for top quality styling.`,
           avatar: fallbackAvatar,
-          primaryService: selectedService
+          service: selectedService,
         });
       }
     } catch (err) {
       setMatchResult({
-        name: 'Style Corner Artisan',
-        firstname: 'Style',
-        lastname: 'Artisan',
+        name: 'Verified Style Specialist',
         role: 'Certified Atelier Specialist',
         rating: 5.0,
-        matchScore: 95,
+        matchScore: 96,
         location: preferredState,
-        rationale: `Matched based on your preference for ${category} (${vibe}) in ${preferredState}. Dedicated to luxury client care and long-lasting styling.`,
+        rationale: `Matched based on your preference for ${selectedService} (${vibe}) in ${preferredState}. Dedicated to high-precision styling and long-lasting results.`,
         avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
-        primaryService: selectedService
+        service: selectedService,
       });
     } finally {
       setLoading(false);
@@ -103,8 +101,9 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
   const handleApply = () => {
     if (matchResult && onApplyMatch) {
       onApplyMatch({
-        ...matchResult,
-        primaryService: matchResult.primaryService || 'Wig Installer',
+        stylist: matchResult.name || 'Verified Specialist',
+        service: matchResult.service || category,
+        location: matchResult.location || preferredState,
       });
       onClose();
     }
@@ -146,10 +145,10 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             <h4 style={{ fontFamily: 'Outfit', fontSize: '0.9rem', fontWeight: 800, margin: 0, color: '#ffffff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-              Smart Recommendation Engine
+              AI Specialist Matcher
             </h4>
             <p style={{ fontSize: '0.72rem', color: '#a1a1aa', margin: '0.1rem 0 0', lineHeight: 1.3 }}>
-              Select your preferences below to get matched instantly.
+              Find the perfect specialist for your service & location in seconds.
             </p>
           </div>
         </div>
@@ -158,7 +157,7 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
           
           {/* Preference 1: Category */}
           <div style={{ marginBottom: '1rem' }}>
-            <label className="app-label">1. Desired Service Specialty *</label>
+            <label className="app-label">1. Select Service *</label>
             <div style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap', width: '100%' }}>
               {categories.map((cat) => (
                 <button
@@ -188,7 +187,7 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
 
           {/* Preference 2: Style Vibe */}
           <div style={{ marginBottom: '1rem' }}>
-            <label className="app-label">2. Desired Style Vibe & Finish</label>
+            <label className="app-label">2. Style Finish / Goal</label>
             <div style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap', width: '100%' }}>
               {vibes.map((v) => (
                 <button
@@ -230,12 +229,12 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
 
           {/* Optional Request Text Area */}
           <div className="app-input-group">
-            <label className="app-label">Custom Style Request / Hair Details (Optional)</label>
+            <label className="app-label">Specific Hair or Style Notes (Optional)</label>
             <textarea
               rows={2}
               value={requestText}
               onChange={(e) => setRequestText(e.target.value)}
-              placeholder="e.g. Knotless box braids with waist length, or clean frontal wig melt..."
+              placeholder="e.g. Waist-length knotless braids, frontal melt, acrylic refill..."
               className="app-textarea"
             />
           </div>
@@ -248,18 +247,18 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
           >
             {loading ? (
               <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                <RefreshCw size={16} style={{ animation: 'spin 1s linear infinite' }} /> Analyzing Artisan Profiles...
+                <RefreshCw size={16} style={{ animation: 'spin 1s linear infinite' }} /> Matching Best Specialist...
               </span>
             ) : (
               <>
                 <Wand2 size={16} />
-                <span>Run AI Matching Engine</span>
+                <span>Find Best Specialist Match</span>
               </>
             )}
           </button>
         </form>
 
-        {/* ── AI MATCH RESULT CARD (MOBILE OPTIMIZED) ── */}
+        {/* ── AI MATCH RESULT CARD ── */}
         {matchResult && (
           <div
             style={{
@@ -287,7 +286,7 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
                   gap: '0.25rem'
                 }}
               >
-                <Sparkles size={12} color="#d4af37" /> TOP MATCHED ARTISAN
+                <Sparkles size={12} color="#d4af37" /> AI RECOMMENDED MATCH
               </span>
 
               <span style={{
@@ -304,7 +303,7 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
               </span>
             </div>
 
-            {/* Profile Info with Robust Avatar Fallback */}
+            {/* Profile Info */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.85rem' }}>
               <OptimizedImage
                 src={avatarSrc}
@@ -323,7 +322,7 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
                   <h3 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 900, color: '#171717', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {matchResult.name || `${matchResult.firstname || ''} ${matchResult.lastname || ''}`.trim() || 'Verified Specialist'}
+                    {matchResult.name}
                   </h3>
                   <ShieldCheck size={15} color="#d4af37" style={{ flexShrink: 0 }} />
                 </div>
@@ -355,30 +354,17 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
               {matchResult.rationale}
             </div>
 
-            {/* Action Buttons */}
+            {/* Primary Action Button to Book Schedule */}
             <div style={{ display: 'flex', gap: '0.5rem' }}>
               <button
                 type="button"
-                onClick={() => {
-                  onClose();
-                  const targetName = matchResult.name || `${matchResult.firstname || ''} ${matchResult.lastname || ''}`.trim();
-                  navigate(`/expert-profile?name=${encodeURIComponent(targetName)}`);
-                }}
-                className="app-btn app-btn-outline"
-                style={{ flex: 1, minHeight: '42px', fontSize: '0.78rem', borderRadius: '12px', padding: '0.4rem' }}
-              >
-                <User size={14} />
-                <span>Profile</span>
-              </button>
-
-              <button
-                type="button"
                 onClick={handleApply}
-                className="app-btn app-btn-primary"
-                style={{ flex: 1, minHeight: '42px', fontSize: '0.78rem', borderRadius: '12px', padding: '0.4rem' }}
+                className="app-btn app-btn-accent"
+                style={{ width: '100%', minHeight: '44px', fontSize: '0.82rem', borderRadius: '12px', padding: '0.4rem', justifyContent: 'center', gap: '0.4rem' }}
               >
-                <Check size={15} />
-                <span>Book Match</span>
+                <Calendar size={16} />
+                <span>Book {matchResult.service} with {matchResult.name.split(' ')[0]}</span>
+                <ArrowRight size={15} />
               </button>
             </div>
           </div>
@@ -387,3 +373,4 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
     </BottomSheet>
   );
 };
+
