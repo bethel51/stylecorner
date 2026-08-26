@@ -383,24 +383,25 @@ export const ExpertDashboard = () => {
           </div>
 
           {/* Quick Profile Controls Bar */}
-          <div style={{ display: 'flex', gap: '0.6rem', borderTop: '1px solid rgba(255,255,255,0.09)', paddingTop: '1rem' }}>
+          <div style={{ display: 'flex', gap: '0.6rem', borderTop: '1px solid rgba(255,255,255,0.09)', paddingTop: '1rem', flexWrap: 'wrap' }}>
             <button
               onClick={() => navigate(`/expert-profile?name=${encodeURIComponent(`${user?.firstname || ''} ${user?.lastname || ''}`.trim() || 'Specialist')}`)}
               style={{
-                flex: 1,
+                flex: '1 1 160px',
                 background: 'rgba(212,175,55,0.18)',
                 border: '1px solid rgba(212,175,55,0.4)',
                 color: '#d4af37',
-                padding: '0.65rem',
+                padding: '0.65rem 0.5rem',
                 borderRadius: '14px',
-                fontSize: '0.82rem',
+                fontSize: '0.8rem',
                 fontFamily: 'Outfit',
                 fontWeight: 800,
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '0.4rem',
+                gap: '0.35rem',
+                whiteSpace: 'nowrap',
               }}
             >
               <Sparkles size={14} /> My Professional Page
@@ -409,18 +410,21 @@ export const ExpertDashboard = () => {
             <button
               onClick={logout}
               style={{
+                flex: '1 1 100px',
                 background: 'rgba(239, 68, 68, 0.15)',
                 border: '1px solid rgba(239, 68, 68, 0.3)',
                 color: '#f87171',
-                padding: '0.65rem 1.1rem',
+                padding: '0.65rem 0.8rem',
                 borderRadius: '14px',
-                fontSize: '0.82rem',
+                fontSize: '0.8rem',
                 fontFamily: 'Outfit',
                 fontWeight: 700,
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.4rem',
+                justifyContent: 'center',
+                gap: '0.35rem',
+                whiteSpace: 'nowrap',
               }}
             >
               <LogOut size={14} /> Sign Out

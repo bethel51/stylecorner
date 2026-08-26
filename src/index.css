@@ -807,18 +807,21 @@ button:active, .dashboard-quick-actions button:active {
 
 /* Ensure proper touch scroll on the sheet scroll body */
 .pm-scroll-body {
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch !important;
+  overscroll-behavior-y: contain !important;
+  touch-action: pan-y !important;
   scroll-behavior: smooth;
+  flex: 1 1 auto !important;
 }
 
 /* iOS rubber-banding fix for modals */
 @supports (-webkit-touch-callout: none) {
   .pm-panel {
-    -webkit-overflow-scrolling: touch;
+    -webkit-overflow-scrolling: touch !important;
   }
   .pm-scroll-body {
-    -webkit-overflow-scrolling: touch;
+    -webkit-overflow-scrolling: touch !important;
+    touch-action: pan-y !important;
   }
 }
 

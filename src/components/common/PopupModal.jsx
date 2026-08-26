@@ -55,12 +55,10 @@ export const PopupModal = ({ isOpen, onClose, title, children, maxWidth = '480px
           background: '#ffffff',
           borderTopLeftRadius: '24px',
           borderTopRightRadius: '24px',
-          maxHeight: '95vh',
           display: 'flex',
           flexDirection: 'column',
           boxShadow: '0 -12px 40px rgba(0,0,0,0.25)',
           animation: 'pmSlideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1)',
-          willChange: 'transform',
         }}
       >
         {/* Drag handle — fixed at top */}
@@ -112,11 +110,12 @@ export const PopupModal = ({ isOpen, onClose, title, children, maxWidth = '480px
           ref={scrollRef}
           className="pm-scroll-body"
           style={{
-            flex: 1,
+            flex: '1 1 auto',
             overflowY: 'auto',
             overflowX: 'hidden',
             WebkitOverflowScrolling: 'touch',
-            overscrollBehavior: 'contain',
+            touchAction: 'pan-y',
+            overscrollBehaviorY: 'contain',
             padding: '1rem 1.25rem calc(1.5rem + env(safe-area-inset-bottom))',
             minHeight: 0,
           }}
@@ -142,17 +141,26 @@ export const PopupModal = ({ isOpen, onClose, title, children, maxWidth = '480px
         /* Mobile-specific optimizations */
         @media (max-width: 640px) {
           .pm-panel {
-            max-height: 95vh !important;
+            height: 90vh !important;
+            height: 90dvh !important;
+            max-height: 90dvh !important;
             border-top-left-radius: 20px !important;
             border-top-right-radius: 20px !important;
           }
           .pm-scroll-body {
             padding-left: 1rem !important;
             padding-right: 1rem !important;
+            touch-action: pan-y !important;
+            -webkit-overflow-scrolling: touch !important;
           }
         }
 
         @media (max-width: 380px) {
+          .pm-panel {
+            height: 92vh !important;
+            height: 92dvh !important;
+            max-height: 92dvh !important;
+          }
           .pm-scroll-body {
             padding-left: 0.75rem !important;
             padding-right: 0.75rem !important;
@@ -170,6 +178,7 @@ export const PopupModal = ({ isOpen, onClose, title, children, maxWidth = '480px
             width: calc(100% - 2rem) !important;
             max-width: ${maxWidth} !important;
             max-height: 85vh !important;
+            height: auto !important;
             border-radius: 20px !important;
             animation: pmScaleIn 0.22s cubic-bezier(0.34, 1.4, 0.64, 1) !important;
           }
@@ -181,3 +190,4 @@ export const PopupModal = ({ isOpen, onClose, title, children, maxWidth = '480px
     </>
   );
 };
+

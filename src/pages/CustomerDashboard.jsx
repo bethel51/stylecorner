@@ -310,15 +310,16 @@ export const CustomerDashboard = () => {
           </div>
 
           {/* Action row */}
-          <div style={{ display: 'flex', gap: '0.6rem', marginTop: '1rem' }}>
+          <div style={{ display: 'flex', gap: '0.6rem', marginTop: '1rem', flexWrap: 'wrap' }}>
             <button
               onClick={() => navigate('/profile')}
               style={{
-                flex: 1, background: 'rgba(255,255,255,0.09)',
+                flex: '1 1 140px', background: 'rgba(255,255,255,0.09)',
                 border: '1px solid rgba(255,255,255,0.14)', color: '#fff',
-                padding: '0.65rem', borderRadius: '14px',
-                fontSize: '0.82rem', fontFamily: 'Outfit', fontWeight: 700,
-                cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem',
+                padding: '0.65rem 0.5rem', borderRadius: '14px',
+                fontSize: '0.8rem', fontFamily: 'Outfit', fontWeight: 700,
+                cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
+                whiteSpace: 'nowrap',
               }}
             >
               <User size={14} /> My Profile Info
@@ -326,10 +327,11 @@ export const CustomerDashboard = () => {
             <button
               onClick={logout}
               style={{
-                background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)',
-                color: '#f87171', padding: '0.65rem 1.1rem', borderRadius: '14px',
-                fontSize: '0.82rem', fontFamily: 'Outfit', fontWeight: 700,
-                cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem',
+                flex: '1 1 100px', background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)',
+                color: '#f87171', padding: '0.65rem 0.8rem', borderRadius: '14px',
+                fontSize: '0.8rem', fontFamily: 'Outfit', fontWeight: 700,
+                cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
+                whiteSpace: 'nowrap',
               }}
             >
               <LogOut size={14} /> Sign Out
