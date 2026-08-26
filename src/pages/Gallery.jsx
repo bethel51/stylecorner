@@ -22,29 +22,29 @@ export const Gallery = () => {
 
   return (
     <PageContainer title="Style Portfolio Gallery">
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.85rem' }}>
+      <div className="gallery-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
         {items.map((item) => {
           const isLiked = likes[item.id];
           return (
-            <div key={item.id} className="app-card" style={{ marginBottom: 0, padding: '1rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+            <div key={item.id} className="app-card gallery-card" style={{ marginBottom: 0, padding: '0.85rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <div>
                 <div
                   style={{
-                    height: '110px',
-                    borderRadius: '12px',
+                    height: '100px',
+                    borderRadius: '10px',
                     background: 'linear-gradient(135deg, #1f1f1f, #121212)',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
                     color: '#d4af37',
-                    marginBottom: '0.75rem',
+                    marginBottom: '0.65rem',
                     border: '1px solid rgba(212,175,55,0.3)',
                     position: 'relative',
                   }}
                 >
-                  <Sparkles size={28} />
-                  <span style={{ fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 800, marginTop: '0.4rem', color: '#ffffff' }}>
+                  <Sparkles size={24} />
+                  <span style={{ fontSize: '0.68rem', fontFamily: 'Outfit', fontWeight: 800, marginTop: '0.35rem', color: '#ffffff' }}>
                     {item.category}
                   </span>
 
@@ -52,13 +52,13 @@ export const Gallery = () => {
                     onClick={() => toggleLike(item.id)}
                     style={{
                       position: 'absolute',
-                      top: '8px',
-                      right: '8px',
+                      top: '6px',
+                      right: '6px',
                       background: 'rgba(0,0,0,0.5)',
                       border: 'none',
                       borderRadius: '50%',
-                      width: '28px',
-                      height: '28px',
+                      width: '26px',
+                      height: '26px',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -66,21 +66,21 @@ export const Gallery = () => {
                       cursor: 'pointer',
                     }}
                   >
-                    <Heart size={14} fill={isLiked ? '#ef4444' : 'none'} />
+                    <Heart size={13} fill={isLiked ? '#ef4444' : 'none'} />
                   </button>
                 </div>
 
-                <h4 style={{ fontFamily: 'Outfit', fontSize: '0.95rem', fontWeight: 800, color: '#171717' }}>
+                <h4 style={{ fontFamily: 'Outfit', fontSize: '0.85rem', fontWeight: 800, color: '#171717', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {item.title}
                 </h4>
 
-                <p style={{ color: '#6b7280', fontSize: '0.78rem', marginTop: '0.2rem' }}>
+                <p style={{ color: '#6b7280', fontSize: '0.72rem', marginTop: '0.15rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   By {item.artisan}
                 </p>
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.75rem' }}>
-                <span style={{ fontSize: '0.75rem', color: '#6b7280', fontWeight: 600 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.65rem', gap: '0.25rem' }}>
+                <span style={{ fontSize: '0.7rem', color: '#6b7280', fontWeight: 600, whiteSpace: 'nowrap' }}>
                   ❤️ {item.likes + (isLiked ? 1 : 0)}
                 </span>
                 <button
@@ -91,11 +91,12 @@ export const Gallery = () => {
                     color: '#d4af37',
                     fontFamily: 'Outfit',
                     fontWeight: 800,
-                    fontSize: '0.8rem',
+                    fontSize: '0.72rem',
                     cursor: 'pointer',
+                    whiteSpace: 'nowrap',
                   }}
                 >
-                  Get This Style
+                  Book Style
                 </button>
               </div>
             </div>

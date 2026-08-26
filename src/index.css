@@ -757,6 +757,167 @@ button:active, .dashboard-quick-actions button:active {
   }
 }
 
+/* ═══════════════════════════════════════════════════════════════════
+   MOBILE RESPONSIVENESS — BOOKING HISTORY / APPOINTMENT SHEETS
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Ensure all sheet content never overflows horizontally */
+.pm-scroll-body {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.pm-scroll-body > div {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* ── Booking / Order History Cards inside sheets ── */
+@media (max-width: 480px) {
+  /* Export & Clear toolbar buttons - stack on very small screens */
+  .pm-scroll-body [style*="display: flex"][style*="gap: 0.5rem"] > button {
+    font-size: 0.72rem !important;
+    padding: 0.5rem 0.4rem !important;
+    min-height: 40px !important;
+  }
+
+  /* Tab switcher buttons in history sheet */
+  .pm-scroll-body [style*="background: #f3f4f6"] button {
+    font-size: 0.76rem !important;
+    padding: 0.5rem 0.35rem !important;
+  }
+
+  /* Booking/order cards - tighter on mobile */
+  .pm-scroll-body [style*="borderRadius: '18px'"][style*="padding: '1.1rem'"] {
+    padding: 0.85rem !important;
+    border-radius: 14px !important;
+  }
+}
+
+@media (max-width: 380px) {
+  /* Stack export/clear buttons vertically on very narrow phones */
+  .history-toolbar {
+    flex-direction: column !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   MOBILE SCROLL FIX — TOUCH / OVERSCROLL / HEIGHT
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Ensure proper touch scroll on the sheet scroll body */
+.pm-scroll-body {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  scroll-behavior: smooth;
+}
+
+/* iOS rubber-banding fix for modals */
+@supports (-webkit-touch-callout: none) {
+  .pm-panel {
+    -webkit-overflow-scrolling: touch;
+  }
+  .pm-scroll-body {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   MOBILE RESPONSIVENESS — GENERAL PAGE ELEMENTS
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Prevent any fixed-width element from breaking mobile layout */
+@media (max-width: 480px) {
+  .page-content {
+    overflow-x: hidden !important;
+  }
+
+  /* Ensure text inputs don't zoom on iOS */
+  .app-input, .app-select, .app-textarea {
+    font-size: 16px !important;
+  }
+
+  /* Cards with inline padding should be capped */
+  .page-content > div > div {
+    max-width: 100%;
+  }
+
+  /* Status badges - compact on small screens */
+  .status-badge {
+    font-size: 0.6rem !important;
+    padding: 0.18rem 0.5rem !important;
+    white-space: nowrap;
+  }
+}
+
+/* Extra small phones (iPhone SE, Galaxy A01) */
+@media (max-width: 360px) {
+  .page-content {
+    padding: 0.75rem !important;
+  }
+
+  .hero-profile-banner {
+    padding: 0.85rem 0.75rem !important;
+    border-radius: 16px !important;
+  }
+
+  .dashboard-stats-grid {
+    gap: 0.35rem !important;
+  }
+
+  .dashboard-stats-grid > div {
+    padding: 0.5rem 0.25rem !important;
+    border-radius: 14px !important;
+  }
+
+  .dashboard-quick-actions {
+    gap: 0.5rem !important;
+  }
+
+  .dashboard-quick-actions button {
+    padding: 0.75rem 0.6rem !important;
+    min-height: 88px !important;
+    border-radius: 14px !important;
+  }
+
+  /* Scale down stat values on tiny screens */
+  .dashboard-stats-grid div[style*="fontSize: '2rem'"],
+  .dashboard-stats-grid div[style*="fontSize: '1.9rem'"] {
+    font-size: 1.5rem !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   PAGE-SPECIFIC MOBILE RULES
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Gallery grid: single column on very small phones */
+@media (max-width: 320px) {
+  .gallery-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Booking step bar: reduce text further on tiny screens */
+@media (max-width: 360px) {
+  .booking-step-bar > div {
+    padding: 0.5rem 0.15rem !important;
+  }
+  .service-select-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .timeslot-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* Store: single column below 300px */
+@media (max-width: 300px) {
+  .store-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
 /* ── Hardware Accelerated Smooth Page Transitions & Image Shimmer ── */
 
 .page-enter {

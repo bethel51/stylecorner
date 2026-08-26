@@ -113,7 +113,7 @@ export const Store = () => {
         style={{
           background: 'linear-gradient(135deg, #171717 0%, #0d0d0d 100%)',
           borderRadius: '20px',
-          padding: '1.25rem 1.25rem 1.1rem',
+          padding: '1.1rem 1rem 1rem',
           color: '#ffffff',
           marginBottom: '1.25rem',
           position: 'relative',
@@ -122,16 +122,16 @@ export const Store = () => {
           boxShadow: '0 12px 32px rgba(0,0,0,0.18)',
         }}
       >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div>
-            <span style={{ fontSize: '0.68rem', fontFamily: 'Outfit', fontWeight: 800, color: '#d4af37', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.75rem', flexWrap: 'wrap' }}>
+          <div style={{ flex: '1 1 140px', minWidth: 0 }}>
+            <span style={{ fontSize: '0.65rem', fontFamily: 'Outfit', fontWeight: 800, color: '#d4af37', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
               ATELIER ESSENTIALS
             </span>
-            <h2 style={{ fontFamily: 'Outfit', fontSize: '1.3rem', fontWeight: 900, margin: '0.2rem 0 0.25rem', color: '#ffffff' }}>
+            <h2 style={{ fontFamily: 'Outfit', fontSize: 'clamp(1.05rem, 4vw, 1.3rem)', fontWeight: 900, margin: '0.2rem 0 0.2rem', color: '#ffffff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               Style Corner Boutique
             </h2>
-            <p style={{ color: '#a1a1aa', fontSize: '0.78rem', margin: 0, maxWidth: '240px' }}>
-              Handpicked pomades, botanical oils & silk hair protection.
+            <p style={{ color: '#a1a1aa', fontSize: '0.75rem', margin: 0 }}>
+              Handpicked pomades, botanical oils &amp; silk hair protection.
             </p>
           </div>
 
@@ -142,20 +142,21 @@ export const Store = () => {
               background: '#d4af37',
               color: '#121212',
               border: 'none',
-              borderRadius: '14px',
-              padding: '0.65rem 0.9rem',
+              borderRadius: '12px',
+              padding: '0.6rem 0.85rem',
               fontFamily: 'Outfit',
               fontWeight: 900,
-              fontSize: '0.82rem',
+              fontSize: '0.8rem',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              gap: '0.4rem',
+              gap: '0.35rem',
               boxShadow: '0 6px 18px rgba(212,175,55,0.35)',
               flexShrink: 0,
+              whiteSpace: 'nowrap',
             }}
           >
-            <ShoppingBag size={16} />
+            <ShoppingBag size={15} />
             <span>Cart</span>
             {itemCount > 0 && (
               <span
@@ -164,7 +165,7 @@ export const Store = () => {
                   color: '#d4af37',
                   fontSize: '0.7rem',
                   borderRadius: '50px',
-                  padding: '0.1rem 0.45rem',
+                  padding: '0.1rem 0.4rem',
                   fontWeight: 900,
                 }}
               >
@@ -176,7 +177,7 @@ export const Store = () => {
       </div>
 
       {/* Products Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.85rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '0.75rem' }}>
         {products.map((p) => {
           const currentImg = hoveredImageMap[p.id] || p.image;
           const hasSecondary = !!p.secondaryImage;
@@ -189,12 +190,13 @@ export const Store = () => {
               className="app-card"
               style={{
                 marginBottom: 0,
-                padding: '0.85rem',
+                padding: '0.75rem',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
                 cursor: 'pointer',
-                transition: 'transform 0.15s ease, box-shadow 0.15s ease'
+                transition: 'transform 0.15s ease, box-shadow 0.15s ease',
+                overflow: 'hidden',
               }}
             >
               <div>
@@ -206,7 +208,7 @@ export const Store = () => {
                   onMouseLeave={() => {
                     setHoveredImageMap(prev => ({ ...prev, [p.id]: p.image }));
                   }}
-                  style={{ position: 'relative', width: '100%', height: '130px', borderRadius: '12px', overflow: 'hidden', marginBottom: '0.75rem', background: '#f3f4f6' }}
+                  style={{ position: 'relative', width: '100%', height: '120px', borderRadius: '10px', overflow: 'hidden', marginBottom: '0.65rem', background: '#f3f4f6' }}
                 >
                   <OptimizedImage
                     src={currentImg}
@@ -218,15 +220,15 @@ export const Store = () => {
                     <span
                       style={{
                         position: 'absolute',
-                        top: '6px',
-                        left: '6px',
+                        top: '5px',
+                        left: '5px',
                         background: 'rgba(18, 18, 18, 0.85)',
                         backdropFilter: 'blur(4px)',
                         color: '#d4af37',
-                        fontSize: '0.65rem',
+                        fontSize: '0.6rem',
                         fontFamily: 'Outfit',
                         fontWeight: 800,
-                        padding: '0.15rem 0.5rem',
+                        padding: '0.12rem 0.4rem',
                         borderRadius: '50px',
                         textTransform: 'uppercase',
                         border: '1px solid rgba(212,175,55,0.3)',
@@ -238,49 +240,43 @@ export const Store = () => {
 
                   {/* Dual Photo Indicator Pills */}
                   {hasSecondary && (
-                    <div style={{ position: 'absolute', bottom: '6px', right: '6px', display: 'flex', gap: '3px' }}>
+                    <div style={{ position: 'absolute', bottom: '5px', right: '5px', display: 'flex', gap: '3px' }}>
                       <span
                         onClick={(e) => { e.stopPropagation(); setHoveredImageMap(prev => ({ ...prev, [p.id]: p.image })); }}
                         style={{
-                          width: '8px',
-                          height: '8px',
-                          borderRadius: '50%',
+                          width: '7px', height: '7px', borderRadius: '50%',
                           background: currentImg === p.image ? '#d4af37' : 'rgba(255,255,255,0.7)',
-                          cursor: 'pointer',
-                          boxShadow: '0 1px 3px rgba(0,0,0,0.3)'
+                          cursor: 'pointer', boxShadow: '0 1px 3px rgba(0,0,0,0.3)'
                         }}
                       />
                       <span
                         onClick={(e) => { e.stopPropagation(); setHoveredImageMap(prev => ({ ...prev, [p.id]: p.secondaryImage })); }}
                         style={{
-                          width: '8px',
-                          height: '8px',
-                          borderRadius: '50%',
+                          width: '7px', height: '7px', borderRadius: '50%',
                           background: currentImg === p.secondaryImage ? '#d4af37' : 'rgba(255,255,255,0.7)',
-                          cursor: 'pointer',
-                          boxShadow: '0 1px 3px rgba(0,0,0,0.3)'
+                          cursor: 'pointer', boxShadow: '0 1px 3px rgba(0,0,0,0.3)'
                         }}
                       />
                     </div>
                   )}
                 </div>
 
-                <h3 style={{ fontFamily: 'Outfit', fontSize: '0.95rem', fontWeight: 800, color: '#171717', lineHeight: 1.3 }}>
+                <h3 style={{ fontFamily: 'Outfit', fontSize: 'clamp(0.8rem, 2.5vw, 0.95rem)', fontWeight: 800, color: '#171717', lineHeight: 1.25, margin: 0 }}>
                   {p.title}
                 </h3>
 
-                <p style={{ color: '#6b7280', fontSize: '0.75rem', margin: '0.25rem 0 0.65rem', lineHeight: 1.35, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                <p style={{ color: '#6b7280', fontSize: '0.7rem', margin: '0.2rem 0 0.55rem', lineHeight: 1.3, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                   {p.desc}
                 </p>
               </div>
 
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.55rem' }}>
-                  <span style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 900, color: '#171717' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem', flexWrap: 'wrap', gap: '0.2rem' }}>
+                  <span style={{ fontFamily: 'Outfit', fontSize: 'clamp(0.95rem, 3vw, 1.15rem)', fontWeight: 900, color: '#171717' }}>
                     ₦{Number(p.price).toLocaleString()}
                   </span>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#d4af37', fontSize: '0.75rem', fontWeight: 800 }}>
-                    <Star size={12} fill="#d4af37" />
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#d4af37', fontSize: '0.72rem', fontWeight: 800 }}>
+                    <Star size={11} fill="#d4af37" />
                     <span>{p.rating}</span>
                   </div>
                 </div>
@@ -288,9 +284,9 @@ export const Store = () => {
                 <button
                   onClick={(e) => handleAdd(p, e)}
                   className="app-btn app-btn-primary"
-                  style={{ minHeight: '36px', padding: '0.4rem', fontSize: '0.78rem' }}
+                  style={{ minHeight: '34px', padding: '0.35rem', fontSize: '0.72rem' }}
                 >
-                  <Plus size={14} /> Add to Cart
+                  <Plus size={13} /> Add to Cart
                 </button>
               </div>
             </div>

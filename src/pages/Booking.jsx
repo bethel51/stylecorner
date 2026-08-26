@@ -226,25 +226,26 @@ export const Booking = () => {
 
         {/* ── STEP PROGRESS BAR HEADER ── */}
         <div
+          className="booking-step-bar"
           style={{
             display: 'grid',
             gridTemplateColumns: '1fr 1fr 1fr',
-            gap: '0.5rem',
+            gap: '0.4rem',
             marginBottom: '1.25rem',
             textAlign: 'center'
           }}
         >
           {[
-            { num: 1, label: 'Select Service' },
-            { num: 2, label: 'Artisan & Place' },
-            { num: 3, label: 'Date & Time' },
+            { num: 1, label: 'Service' },
+            { num: 2, label: 'Artisan' },
+            { num: 3, label: 'Schedule' },
           ].map((s) => (
             <div
               key={s.num}
               onClick={() => setActiveStep(s.num)}
               style={{
-                padding: '0.65rem 0.35rem',
-                borderRadius: '14px',
+                padding: '0.6rem 0.25rem',
+                borderRadius: '12px',
                 background: activeStep === s.num ? '#171717' : '#ffffff',
                 border: activeStep === s.num ? '1.5px solid #d4af37' : '1px solid rgba(0,0,0,0.08)',
                 color: activeStep === s.num ? '#d4af37' : '#6b7280',
@@ -252,10 +253,10 @@ export const Booking = () => {
                 transition: 'all 0.2s ease',
               }}
             >
-              <span style={{ fontFamily: 'Outfit', fontSize: '0.7rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '0.1rem' }}>
-                Step 0{s.num}
+              <span style={{ fontFamily: 'Outfit', fontSize: '0.62rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.04em', display: 'block', marginBottom: '0.1rem' }}>
+                Step {s.num}
               </span>
-              <span style={{ fontFamily: 'Outfit', fontSize: '0.78rem', fontWeight: 800 }}>
+              <span style={{ fontFamily: 'Outfit', fontSize: 'clamp(0.7rem, 2.5vw, 0.8rem)', fontWeight: 800 }}>
                 {s.label}
               </span>
             </div>
@@ -280,7 +281,7 @@ export const Booking = () => {
               </div>
 
               {/* Primary Service Selection Grid */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1.25rem' }}>
+              <div className="service-select-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem', marginBottom: '1.25rem' }}>
                 {SERVICES.map((s) => {
                   const isSelected = service1 === s.title;
                   return (
@@ -288,28 +289,29 @@ export const Booking = () => {
                       key={s.id}
                       onClick={() => setService1(s.title)}
                       style={{
-                        padding: '0.85rem',
-                        borderRadius: '16px',
+                        padding: '0.75rem',
+                        borderRadius: '14px',
                         background: isSelected ? 'rgba(212,175,55,0.12)' : '#f8fafc',
                         border: isSelected ? '2px solid #d4af37' : '1px solid rgba(0,0,0,0.08)',
                         cursor: 'pointer',
                         transition: 'all 0.15s ease',
-                        position: 'relative'
+                        position: 'relative',
+                        overflow: 'hidden',
                       }}
                     >
                       {isSelected && (
-                        <div style={{ position: 'absolute', top: '8px', right: '8px', color: '#b5952f' }}>
-                          <CheckCircle2 size={16} />
+                        <div style={{ position: 'absolute', top: '6px', right: '6px', color: '#b5952f' }}>
+                          <CheckCircle2 size={14} />
                         </div>
                       )}
-                      <span style={{ fontSize: '1.25rem', display: 'block', marginBottom: '0.35rem' }}>{s.icon}</span>
-                      <h4 style={{ fontFamily: 'Outfit', fontSize: '0.9rem', fontWeight: 800, color: '#171717', margin: '0 0 0.15rem' }}>
+                      <span style={{ fontSize: '1.1rem', display: 'block', marginBottom: '0.3rem' }}>{s.icon}</span>
+                      <h4 style={{ fontFamily: 'Outfit', fontSize: 'clamp(0.78rem, 2.5vw, 0.9rem)', fontWeight: 800, color: '#171717', margin: '0 0 0.1rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {s.title}
                       </h4>
-                      <span style={{ fontFamily: 'Outfit', fontSize: '0.95rem', fontWeight: 900, color: '#b5952f', display: 'block' }}>
+                      <span style={{ fontFamily: 'Outfit', fontSize: 'clamp(0.82rem, 2.5vw, 0.95rem)', fontWeight: 900, color: '#b5952f', display: 'block' }}>
                         ₦{Number(s.price).toLocaleString()}
                       </span>
-                      <span style={{ fontSize: '0.72rem', color: '#6b7280', marginTop: '0.2rem', display: 'block' }}>
+                      <span style={{ fontSize: '0.68rem', color: '#6b7280', marginTop: '0.15rem', display: 'block' }}>
                         ⏱ {s.duration}
                       </span>
                     </div>
@@ -495,23 +497,25 @@ export const Booking = () => {
                 <label className="app-label" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
                   <Clock size={14} color="#d4af37" /> Select Time Slot
                 </label>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.45rem' }}>
+                <div className="timeslot-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.4rem' }}>
                   {timeslots.map((ts) => (
                     <button
                       type="button"
                       key={ts}
                       onClick={() => setTime(ts)}
                       style={{
-                        padding: '0.65rem 0.2rem',
+                        padding: '0.6rem 0.1rem',
                         borderRadius: '10px',
                         border: time === ts ? '1.5px solid #d4af37' : '1px solid rgba(0,0,0,0.08)',
                         background: time === ts ? '#171717' : '#ffffff',
                         color: time === ts ? '#d4af37' : '#171717',
                         fontFamily: 'Outfit',
                         fontWeight: 800,
-                        fontSize: '0.78rem',
+                        fontSize: 'clamp(0.68rem, 2.2vw, 0.78rem)',
                         cursor: 'pointer',
-                        transition: 'all 0.15s ease'
+                        transition: 'all 0.15s ease',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
                       }}
                     >
                       {ts}
@@ -525,30 +529,31 @@ export const Booking = () => {
                 style={{
                   background: '#171717',
                   color: '#ffffff',
-                  borderRadius: '18px',
-                  padding: '1.1rem 1.25rem',
+                  borderRadius: '16px',
+                  padding: '1rem 1rem',
                   border: '1.5px solid rgba(212,175,55,0.4)',
                   marginBottom: '1.25rem',
-                  boxShadow: '0 8px 24px rgba(0,0,0,0.15)'
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+                  overflow: 'hidden',
                 }}
               >
-                <div style={{ fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 900, color: '#d4af37', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.4rem' }}>
-                  BOOKING SUMMARY RECEIPT
+                <div style={{ fontSize: '0.68rem', fontFamily: 'Outfit', fontWeight: 900, color: '#d4af37', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.35rem' }}>
+                  BOOKING SUMMARY
                 </div>
-                <h3 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 900, margin: '0 0 0.4rem', color: '#ffffff' }}>
+                <h3 style={{ fontFamily: 'Outfit', fontSize: 'clamp(0.9rem, 3vw, 1.1rem)', fontWeight: 900, margin: '0 0 0.35rem', color: '#ffffff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {[service1, service2].filter(Boolean).join(' + ')}
                 </h3>
-                <div style={{ fontSize: '0.78rem', color: '#a1a1aa', display: 'flex', flexDirection: 'column', gap: '0.2rem', marginBottom: '0.85rem' }}>
-                  <span>• Specialist: <strong style={{ color: '#ffffff' }}>{stylist}</strong></span>
-                  <span>• Location: <strong style={{ color: '#ffffff' }}>{location}</strong></span>
+                <div style={{ fontSize: '0.75rem', color: '#a1a1aa', display: 'flex', flexDirection: 'column', gap: '0.15rem', marginBottom: '0.75rem' }}>
+                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>• Specialist: <strong style={{ color: '#ffffff' }}>{stylist}</strong></span>
+                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>• Location: <strong style={{ color: '#ffffff' }}>{location}</strong></span>
                   <span>• Schedule: <strong style={{ color: '#ffffff' }}>{date} at {time}</strong></span>
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '0.65rem' }}>
-                  <span style={{ fontSize: '0.78rem', color: '#a1a1aa', fontFamily: 'Outfit', fontWeight: 700 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '0.6rem', flexWrap: 'wrap', gap: '0.25rem' }}>
+                  <span style={{ fontSize: '0.75rem', color: '#a1a1aa', fontFamily: 'Outfit', fontWeight: 700 }}>
                     TOTAL PRICE:
                   </span>
-                  <span style={{ fontFamily: 'Outfit', fontSize: '1.65rem', fontWeight: 900, color: '#d4af37' }}>
+                  <span style={{ fontFamily: 'Outfit', fontSize: 'clamp(1.3rem, 4vw, 1.65rem)', fontWeight: 900, color: '#d4af37' }}>
                     ₦{Number(totalPrice).toLocaleString()}
                   </span>
                 </div>

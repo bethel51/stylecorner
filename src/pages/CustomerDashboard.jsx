@@ -669,33 +669,33 @@ export const CustomerDashboard = () => {
         onClose={() => setShowHistorySheet(false)}
         title="My History & Bookings"
       >
-        <div style={{ paddingBottom: '1rem' }}>
+        <div style={{ paddingBottom: '1rem', maxWidth: '100%', overflow: 'hidden' }}>
 
           {/* Export & Clear Actions Toolbar */}
-          <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
+          <div className="history-toolbar" style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
             <button
               onClick={handleDownloadHistory}
               style={{
-                flex: 1, background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.35)',
-                color: '#b5952f', padding: '0.6rem', borderRadius: '12px',
-                fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.8rem',
-                cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
-                minHeight: '44px',
+                flex: '1 1 auto', minWidth: '120px', background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.35)',
+                color: '#b5952f', padding: '0.6rem 0.5rem', borderRadius: '12px',
+                fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.75rem',
+                cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem',
+                minHeight: '42px',
               }}
             >
-              <Download size={15} /> Export CSV / Statement
+              <Download size={14} /> Export CSV
             </button>
             <button
               onClick={handleClearHistory}
               style={{
-                flex: 1, background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)',
-                color: '#ef4444', padding: '0.6rem', borderRadius: '12px',
-                fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.8rem',
-                cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
-                minHeight: '44px',
+                flex: '1 1 auto', minWidth: '120px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)',
+                color: '#ef4444', padding: '0.6rem 0.5rem', borderRadius: '12px',
+                fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.75rem',
+                cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem',
+                minHeight: '42px',
               }}
             >
-              <Trash2 size={15} /> Clear History
+              <Trash2 size={14} /> Clear History
             </button>
           </div>
 
@@ -757,44 +757,44 @@ export const CustomerDashboard = () => {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                   {bookings.map((b) => (
                     <div key={b._id} style={{
-                      border: '1px solid rgba(0,0,0,0.07)', borderRadius: '18px',
-                      padding: '1.1rem', background: '#fafafa',
+                      border: '1px solid rgba(0,0,0,0.07)', borderRadius: '16px',
+                      padding: '0.9rem', background: '#fafafa', overflow: 'hidden',
                     }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.65rem', gap: '0.5rem' }}>
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          <h4 style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 800, color: '#171717', margin: 0 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.55rem', gap: '0.4rem', flexWrap: 'wrap' }}>
+                        <div style={{ flex: '1 1 0%', minWidth: 0 }}>
+                          <h4 style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 800, color: '#171717', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                             {b.service}
                           </h4>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', marginTop: '0.25rem', fontSize: '0.75rem', color: '#6b7280' }}>
-                            <Sparkles size={11} color="#d4af37" />
-                            <span>Specialist: <strong style={{ color: '#171717' }}>{b.stylist}</strong></span>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', marginTop: '0.2rem', fontSize: '0.72rem', color: '#6b7280', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            <Sparkles size={10} color="#d4af37" style={{ flexShrink: 0 }} />
+                            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Specialist: <strong style={{ color: '#171717' }}>{b.stylist}</strong></span>
                           </div>
                         </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.3rem', flexShrink: 0 }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.25rem', flexShrink: 0 }}>
                           <StatusBadge status={b.status} />
-                          <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1rem', color: '#b5952f' }}>
+                          <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '0.92rem', color: '#b5952f', whiteSpace: 'nowrap' }}>
                             ₦{Number(b.price).toLocaleString()}
                           </span>
                         </div>
                       </div>
 
                       <div style={{
-                        display: 'flex', alignItems: 'center', gap: '0.4rem',
+                        display: 'flex', alignItems: 'center', gap: '0.35rem',
                         background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.2)',
-                        borderRadius: '10px', padding: '0.5rem 0.75rem', marginBottom: '0.65rem',
-                        fontSize: '0.8rem', color: '#171717', fontWeight: 700,
+                        borderRadius: '10px', padding: '0.45rem 0.65rem', marginBottom: '0.55rem',
+                        fontSize: '0.75rem', color: '#171717', fontWeight: 700, overflow: 'hidden',
                       }}>
-                        <Clock size={13} color="#d4af37" />
-                        {b.date} at {b.time}
+                        <Clock size={12} color="#d4af37" style={{ flexShrink: 0 }} />
+                        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{b.date} at {b.time}</span>
                       </div>
 
                       {b.status === 'accepted' && (
-                        <div style={{ padding: '0.5rem 0.75rem', background: 'rgba(16,185,129,0.09)', border: '1px solid rgba(16,185,129,0.25)', borderRadius: '10px', fontSize: '0.75rem', color: '#065f46', fontWeight: 700, marginBottom: '0.5rem' }}>
+                        <div style={{ padding: '0.4rem 0.65rem', background: 'rgba(16,185,129,0.09)', border: '1px solid rgba(16,185,129,0.25)', borderRadius: '10px', fontSize: '0.72rem', color: '#065f46', fontWeight: 700, marginBottom: '0.45rem' }}>
                           ✓ Accepted by {b.stylist}
                         </div>
                       )}
                       {b.status === 'completed' && (
-                        <div style={{ padding: '0.5rem 0.75rem', background: 'rgba(16,185,129,0.09)', border: '1px solid rgba(16,185,129,0.25)', borderRadius: '10px', fontSize: '0.75rem', color: '#065f46', fontWeight: 700, marginBottom: '0.5rem' }}>
+                        <div style={{ padding: '0.4rem 0.65rem', background: 'rgba(16,185,129,0.09)', border: '1px solid rgba(16,185,129,0.25)', borderRadius: '10px', fontSize: '0.72rem', color: '#065f46', fontWeight: 700, marginBottom: '0.45rem' }}>
                           ✓ Service rendered successfully
                         </div>
                       )}
@@ -804,9 +804,9 @@ export const CustomerDashboard = () => {
                           <button
                             onClick={() => { setShowHistorySheet(false); navigate(`/booking?stylist=${encodeURIComponent(b.stylist)}&service=${encodeURIComponent(b.service)}`); }}
                             className="app-btn app-btn-outline"
-                            style={{ minHeight: '36px', width: 'auto', fontSize: '0.78rem', padding: '0.4rem 0.9rem', borderRadius: '10px' }}
+                            style={{ minHeight: '34px', width: 'auto', fontSize: '0.75rem', padding: '0.35rem 0.8rem', borderRadius: '10px' }}
                           >
-                            <RefreshCw size={12} /> Rebook
+                            <RefreshCw size={11} /> Rebook
                           </button>
                         </div>
                       )}
@@ -840,37 +840,37 @@ export const CustomerDashboard = () => {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                   {orders.map((o) => (
                     <div key={o._id} style={{
-                      border: '1px solid rgba(0,0,0,0.07)', borderRadius: '18px',
-                      padding: '1.1rem', background: '#fafafa',
+                      border: '1px solid rgba(0,0,0,0.07)', borderRadius: '16px',
+                      padding: '0.9rem', background: '#fafafa', overflow: 'hidden',
                     }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.65rem', gap: '0.5rem' }}>
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          <h4 style={{ fontFamily: 'Outfit', fontSize: '0.98rem', fontWeight: 800, color: '#171717', margin: 0 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.55rem', gap: '0.4rem', flexWrap: 'wrap' }}>
+                        <div style={{ flex: '1 1 0%', minWidth: 0 }}>
+                          <h4 style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 800, color: '#171717', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                             {o.item || 'Grooming Product'}
                           </h4>
-                          <p style={{ color: '#9ca3af', fontSize: '0.72rem', margin: '0.2rem 0 0' }}>
+                          <p style={{ color: '#9ca3af', fontSize: '0.7rem', margin: '0.15rem 0 0' }}>
                             Order #{String(o._id).slice(-6).toUpperCase()}
                           </p>
                           {o.address && (
-                            <p style={{ color: '#6b7280', fontSize: '0.72rem', marginTop: '0.2rem' }}>
+                            <p style={{ color: '#6b7280', fontSize: '0.7rem', marginTop: '0.15rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                               📍 {o.address}
                             </p>
                           )}
                         </div>
                         <div style={{ textAlign: 'right', flexShrink: 0 }}>
                           <StatusBadge status={o.trackingStatus || o.status || 'processing'} />
-                          <div style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.05rem', color: '#171717', marginTop: '0.3rem' }}>
+                          <div style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '0.95rem', color: '#171717', marginTop: '0.25rem', whiteSpace: 'nowrap' }}>
                             ₦{Number(o.totalPrice || o.price || 0).toLocaleString()}
                           </div>
                         </div>
                       </div>
-                      <div style={{ borderTop: '1px solid rgba(0,0,0,0.06)', paddingTop: '0.65rem' }}>
+                      <div style={{ borderTop: '1px solid rgba(0,0,0,0.06)', paddingTop: '0.55rem' }}>
                         <button
                           onClick={() => { setShowHistorySheet(false); setSelectedOrderForTracking(o); }}
                           className="app-btn app-btn-accent"
-                          style={{ width: '100%', minHeight: '40px', fontSize: '0.82rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem' }}
+                          style={{ width: '100%', minHeight: '38px', fontSize: '0.78rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem' }}
                         >
-                          <Truck size={15} /> Track Delivery & Details
+                          <Truck size={14} /> Track Delivery & Details
                         </button>
                       </div>
                     </div>
@@ -920,27 +920,29 @@ export const CustomerDashboard = () => {
                 .map((item, idx) => (
                   <div key={idx} style={{
                     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                    padding: '0.85rem 1rem', borderRadius: '16px',
+                    padding: '0.7rem 0.75rem', borderRadius: '14px',
                     background: '#fafafa', border: '1px solid rgba(0,0,0,0.06)',
-                    gap: '0.75rem',
+                    gap: '0.5rem', overflow: 'hidden',
                   }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flex: 1, minWidth: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flex: '1 1 0%', minWidth: 0, overflow: 'hidden' }}>
                       <div style={{
-                        width: '40px', height: '40px', borderRadius: '12px',
+                        width: '36px', height: '36px', minWidth: '36px', borderRadius: '10px',
                         background: item.iconBg, color: item.iconColor, flexShrink: 0,
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                       }}>
                         {item.icon}
                       </div>
-                      <div style={{ minWidth: 0 }}>
+                      <div style={{ minWidth: 0, overflow: 'hidden' }}>
                         <div style={{
-                          fontFamily: 'Outfit', fontSize: '0.88rem', fontWeight: 800, color: '#171717',
+                          fontFamily: 'Outfit', fontSize: '0.82rem', fontWeight: 800, color: '#171717',
                           overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                         }}>{item.title}</div>
-                        <div style={{ fontSize: '0.72rem', color: '#6b7280', marginTop: '0.15rem' }}>{item.sub}</div>
+                        <div style={{ fontSize: '0.68rem', color: '#6b7280', marginTop: '0.1rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.sub}</div>
                       </div>
                     </div>
-                    <StatusBadge status={item.status} />
+                    <div style={{ flexShrink: 0 }}>
+                      <StatusBadge status={item.status} />
+                    </div>
                   </div>
                 ))
               }

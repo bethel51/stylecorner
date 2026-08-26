@@ -769,34 +769,34 @@ export const ExpertDashboard = () => {
         onClose={() => setShowAppointmentsSheet(false)}
         title="Client Appointments Queue"
       >
-        <div style={{ paddingBottom: '1rem' }}>
+        <div style={{ paddingBottom: '1rem', maxWidth: '100%', overflow: 'hidden' }}>
 
           {/* Export & Clear Actions Toolbar */}
-          <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
+          <div className="history-toolbar" style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
             <button
               onClick={handleDownloadHistory}
               style={{
-                flex: 1, background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.35)',
-                color: '#b5952f', padding: '0.6rem', borderRadius: '12px',
-                fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.8rem',
-                cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
-                minHeight: '44px',
+                flex: '1 1 auto', minWidth: '120px', background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.35)',
+                color: '#b5952f', padding: '0.6rem 0.5rem', borderRadius: '12px',
+                fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.75rem',
+                cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem',
+                minHeight: '42px',
               }}
             >
-              <Download size={15} /> Export CSV / Statement
+              <Download size={14} /> Export CSV
             </button>
 
             <button
               onClick={handleClearHistory}
               style={{
-                flex: 1, background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)',
-                color: '#ef4444', padding: '0.6rem', borderRadius: '12px',
-                fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.8rem',
-                cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
-                minHeight: '44px',
+                flex: '1 1 auto', minWidth: '120px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)',
+                color: '#ef4444', padding: '0.6rem 0.5rem', borderRadius: '12px',
+                fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.75rem',
+                cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem',
+                minHeight: '42px',
               }}
             >
-              <Trash2 size={15} /> Clear History
+              <Trash2 size={14} /> Clear History
             </button>
           </div>
 
@@ -853,65 +853,68 @@ export const ExpertDashboard = () => {
                   key={b._id}
                   style={{
                     border: '1px solid rgba(0,0,0,0.07)',
-                    borderRadius: '18px',
-                    padding: '1.1rem',
+                    borderRadius: '16px',
+                    padding: '0.9rem',
                     background: '#fafafa',
+                    overflow: 'hidden',
                   }}
                 >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem', gap: '0.5rem' }}>
-                    <div>
-                      <h4 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: '#171717', margin: 0 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.65rem', gap: '0.4rem', flexWrap: 'wrap' }}>
+                    <div style={{ flex: '1 1 0%', minWidth: 0 }}>
+                      <h4 style={{ fontFamily: 'Outfit', fontSize: '0.95rem', fontWeight: 800, color: '#171717', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {b.clientName || 'Client'}
                       </h4>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.75rem', color: '#6b7280', marginTop: '0.25rem', flexWrap: 'wrap' }}>
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                          <Mail size={12} /> {b.clientEmail}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.72rem', color: '#6b7280', marginTop: '0.2rem', flexWrap: 'wrap', overflow: 'hidden' }}>
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.2rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '100%' }}>
+                          <Mail size={11} style={{ flexShrink: 0 }} /> <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{b.clientEmail}</span>
                         </span>
                         {b.clientPhone && (
-                          <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                            <Phone size={12} /> {b.clientPhone}
+                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.2rem', whiteSpace: 'nowrap' }}>
+                            <Phone size={11} style={{ flexShrink: 0 }} /> {b.clientPhone}
                           </span>
                         )}
                       </div>
                     </div>
-                    <StatusBadge status={b.status} />
+                    <div style={{ flexShrink: 0 }}>
+                      <StatusBadge status={b.status} />
+                    </div>
                   </div>
 
-                  <div style={{ background: '#ffffff', padding: '0.85rem', borderRadius: '14px', border: '1px solid rgba(0,0,0,0.06)', marginBottom: '0.85rem' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span style={{ fontWeight: 800, fontSize: '0.92rem', color: '#171717', fontFamily: 'Outfit' }}>
+                  <div style={{ background: '#ffffff', padding: '0.75rem', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.06)', marginBottom: '0.75rem', overflow: 'hidden' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
+                      <span style={{ fontWeight: 800, fontSize: '0.88rem', color: '#171717', fontFamily: 'Outfit', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: '1 1 0%', minWidth: 0 }}>
                         {b.service}
                       </span>
-                      <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.15rem', color: '#b5952f' }}>
+                      <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1rem', color: '#b5952f', whiteSpace: 'nowrap', flexShrink: 0 }}>
                         ₦{Number(b.price).toLocaleString()}
                       </span>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem', color: '#4b5563', marginTop: '0.4rem', fontWeight: 700 }}>
-                      <Clock size={14} color="#d4af37" />
-                      <span>{b.date} at {b.time}</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.75rem', color: '#4b5563', marginTop: '0.35rem', fontWeight: 700 }}>
+                      <Clock size={13} color="#d4af37" style={{ flexShrink: 0 }} />
+                      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{b.date} at {b.time}</span>
                     </div>
                   </div>
 
-                  <div style={{ display: 'flex', gap: '0.6rem' }}>
+                  <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                     {b.status === 'pending' && (
                       <>
                         <button
                           onClick={() => handleUpdateStatus(b._id, 'accepted')}
                           disabled={updatingId === b._id}
                           className="app-btn app-btn-primary"
-                          style={{ flex: 1, minHeight: '44px', fontSize: '0.82rem', borderRadius: '12px' }}
+                          style={{ flex: '1 1 auto', minHeight: '42px', fontSize: '0.78rem', borderRadius: '12px', minWidth: '110px' }}
                         >
-                          <CheckCircle size={15} /> Accept Request
+                          <CheckCircle size={14} /> Accept
                         </button>
 
                         <button
                           onClick={() => handleUpdateStatus(b._id, 'rejected')}
                           disabled={updatingId === b._id}
                           className="app-btn app-btn-outline"
-                          style={{ flex: 1, minHeight: '44px', fontSize: '0.82rem', borderColor: '#ef4444', color: '#ef4444', borderRadius: '12px' }}
+                          style={{ flex: '1 1 auto', minHeight: '42px', fontSize: '0.78rem', borderColor: '#ef4444', color: '#ef4444', borderRadius: '12px', minWidth: '90px' }}
                         >
-                          <XCircle size={15} /> Reject
+                          <XCircle size={14} /> Reject
                         </button>
                       </>
                     )}
@@ -921,14 +924,14 @@ export const ExpertDashboard = () => {
                         onClick={() => handleUpdateStatus(b._id, 'completed')}
                         disabled={updatingId === b._id}
                         className="app-btn app-btn-accent"
-                        style={{ width: '100%', minHeight: '44px', fontSize: '0.85rem', borderRadius: '12px' }}
+                        style={{ width: '100%', minHeight: '42px', fontSize: '0.8rem', borderRadius: '12px' }}
                       >
-                        <CheckCircle size={15} /> Mark Service as Completed & Settled
+                        <CheckCircle size={14} /> Mark Completed
                       </button>
                     )}
 
                     {b.status === 'completed' && (
-                      <div style={{ width: '100%', textAlign: 'center', fontSize: '0.78rem', color: '#10b981', fontFamily: 'Outfit', fontWeight: 800, padding: '0.5rem', background: 'rgba(16,185,129,0.08)', borderRadius: '10px' }}>
+                      <div style={{ width: '100%', textAlign: 'center', fontSize: '0.75rem', color: '#10b981', fontFamily: 'Outfit', fontWeight: 800, padding: '0.45rem', background: 'rgba(16,185,129,0.08)', borderRadius: '10px' }}>
                         ✓ Completed & Settled
                       </div>
                     )}
@@ -963,31 +966,33 @@ export const ExpertDashboard = () => {
                 .map((item, idx) => (
                   <div key={idx} style={{
                     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                    padding: '0.85rem 1rem', borderRadius: '16px',
+                    padding: '0.7rem 0.75rem', borderRadius: '14px',
                     background: '#fafafa', border: '1px solid rgba(0,0,0,0.06)',
-                    gap: '0.75rem',
+                    gap: '0.5rem', overflow: 'hidden',
                   }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flex: 1, minWidth: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flex: '1 1 0%', minWidth: 0, overflow: 'hidden' }}>
                       <div style={{
-                        width: '40px', height: '40px', borderRadius: '12px',
+                        width: '36px', height: '36px', minWidth: '36px', borderRadius: '10px',
                         background: 'rgba(212,175,55,0.15)', color: '#d4af37', flexShrink: 0,
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                       }}>
-                        <Calendar size={16} />
+                        <Calendar size={15} />
                       </div>
-                      <div style={{ minWidth: 0 }}>
+                      <div style={{ minWidth: 0, overflow: 'hidden' }}>
                         <div style={{
-                          fontFamily: 'Outfit', fontSize: '0.88rem', fontWeight: 800, color: '#171717',
+                          fontFamily: 'Outfit', fontSize: '0.82rem', fontWeight: 800, color: '#171717',
                           overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                         }}>
                           {item.clientName || 'Client'} — {item.service || 'Service'}
                         </div>
-                        <div style={{ fontSize: '0.72rem', color: '#6b7280', marginTop: '0.15rem' }}>
-                          📅 {item.date || ''} @ {item.time || ''} · Amount: ₦{Number(item.price || 0).toLocaleString()}
+                        <div style={{ fontSize: '0.68rem', color: '#6b7280', marginTop: '0.1rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          📅 {item.date || ''} @ {item.time || ''} · ₦{Number(item.price || 0).toLocaleString()}
                         </div>
                       </div>
                     </div>
-                    <StatusBadge status={item.status} />
+                    <div style={{ flexShrink: 0 }}>
+                      <StatusBadge status={item.status} />
+                    </div>
                   </div>
                 ))}
             </div>

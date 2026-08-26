@@ -409,29 +409,29 @@ export const ExpertProfile = () => {
         <div style={{ position: 'relative', marginBottom: '3rem' }}>
           <div style={{
             width: '100%',
-            height: '200px',
+            height: 'clamp(160px, 28vw, 220px)',
             background: `url(${expert.coverImage}) center/cover no-repeat`,
-            borderRadius: '0 0 24px 24px',
+            borderRadius: '0 0 20px 20px',
             position: 'relative',
           }}>
             <div style={{
               position: 'absolute',
               inset: 0,
               background: 'linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.4) 100%)',
-              borderRadius: '0 0 24px 24px',
+              borderRadius: '0 0 20px 20px',
             }} />
 
             <label
               style={{
                 position: 'absolute',
-                top: '12px',
-                right: '12px',
+                top: '10px',
+                right: '10px',
                 background: 'rgba(0,0,0,0.65)',
                 color: '#ffffff',
                 border: '1px solid rgba(255,255,255,0.3)',
                 borderRadius: '50px',
-                padding: '0.35rem 0.75rem',
-                fontSize: '0.72rem',
+                padding: '0.3rem 0.65rem',
+                fontSize: '0.68rem',
                 fontFamily: 'Outfit',
                 fontWeight: 800,
                 cursor: 'pointer',
@@ -441,7 +441,7 @@ export const ExpertProfile = () => {
                 zIndex: 2
               }}
             >
-              <Upload size={12} />
+              <Upload size={11} />
               <span>{uploadingCover ? 'Updating...' : 'Change Banner'}</span>
               <input type="file" accept="image/*" onChange={handleUploadCover} style={{ display: 'none' }} />
             </label>
@@ -452,9 +452,9 @@ export const ExpertProfile = () => {
             style={{
               position: 'absolute',
               bottom: '-36px',
-              left: '1.25rem',
-              width: '84px',
-              height: '84px',
+              left: '1rem',
+              width: '78px',
+              height: '78px',
               borderRadius: '50%',
               background: `url(${expert.avatar}) center/cover no-repeat`,
               border: '4px solid #ffffff',
@@ -469,8 +469,8 @@ export const ExpertProfile = () => {
               position: 'absolute',
               bottom: 0,
               right: 0,
-              width: '26px',
-              height: '26px',
+              width: '24px',
+              height: '24px',
               borderRadius: '50%',
               background: '#d4af37',
               color: '#111',
@@ -480,21 +480,24 @@ export const ExpertProfile = () => {
               justifyContent: 'center',
               boxShadow: '0 2px 6px rgba(0,0,0,0.2)'
             }}>
-              <Upload size={11} />
+              <Upload size={10} />
             </div>
           </label>
         </div>
 
         {/* ── EXPERT HEADER METADATA ── */}
-        <div style={{ padding: '0 1.25rem', marginBottom: '1.5rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.2rem' }}>
+        <div style={{ padding: '0 1rem', marginBottom: '1.25rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.2rem', flexWrap: 'wrap' }}>
             <h1 style={{
               fontFamily: 'Outfit',
-              fontSize: '1.5rem',
+              fontSize: 'clamp(1.2rem, 5vw, 1.5rem)',
               fontWeight: 900,
               color: '#171717',
               margin: 0,
               lineHeight: 1.1,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
             }}>
               {expert.name}
             </h1>
@@ -508,6 +511,7 @@ export const ExpertProfile = () => {
               alignItems: 'center',
               justifyContent: 'center',
               boxShadow: '0 2px 6px rgba(236,72,153,0.4)',
+              flexShrink: 0,
             }}>
               <Check size={11} strokeWidth={3} />
             </div>
@@ -515,10 +519,13 @@ export const ExpertProfile = () => {
 
           <p style={{
             color: '#6b7280',
-            fontSize: '0.88rem',
+            fontSize: '0.85rem',
             fontFamily: 'Outfit',
             fontWeight: 600,
-            margin: '0 0 0.65rem 0',
+            margin: '0 0 0.55rem 0',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
           }}>
             {expert.role}
           </p>
@@ -526,20 +533,20 @@ export const ExpertProfile = () => {
           <div style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '1.25rem',
-            fontSize: '0.82rem',
+            gap: '0.85rem',
+            fontSize: '0.8rem',
             color: '#4b5563',
             flexWrap: 'wrap',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontWeight: 700 }}>
-              <Star size={15} fill="#f59e0b" color="#f59e0b" />
+              <Star size={14} fill="#f59e0b" color="#f59e0b" />
               <span style={{ color: '#171717', fontWeight: 800 }}>{expert.rating}</span>
               <span style={{ color: '#9ca3af', fontWeight: 500 }}>({expert.reviewsCount} reviews)</span>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', color: '#6b7280', fontWeight: 600 }}>
-              <MapPin size={15} color="#9ca3af" />
-              <span>{expert.location}</span>
+              <MapPin size={13} color="#9ca3af" />
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '160px' }}>{expert.location}</span>
             </div>
           </div>
         </div>
@@ -597,7 +604,7 @@ export const ExpertProfile = () => {
             </button>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
             {expert.services.map((service, idx) => {
               const isSelected = selectedService?.name === service.name;
 
@@ -609,19 +616,22 @@ export const ExpertProfile = () => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    padding: '0.95rem 1rem',
-                    borderRadius: '14px',
+                    padding: '0.85rem 0.9rem',
+                    borderRadius: '12px',
                     background: isSelected ? '#faf8f5' : '#fafafa',
                     border: isSelected ? '1.5px solid #d4af37' : '1px solid rgba(0,0,0,0.06)',
                     cursor: 'pointer',
                     transition: 'all 0.2s ease',
                     boxShadow: isSelected ? '0 4px 14px rgba(212,175,55,0.15)' : 'none',
+                    gap: '0.5rem',
+                    overflow: 'hidden',
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', flex: '1 1 0%', minWidth: 0 }}>
                     <div style={{
-                      width: '20px',
-                      height: '20px',
+                      width: '18px',
+                      height: '18px',
+                      minWidth: '18px',
                       borderRadius: '50%',
                       border: isSelected ? '5px solid #d4af37' : '2px solid #d1d5db',
                       background: '#ffffff',
@@ -630,17 +640,20 @@ export const ExpertProfile = () => {
                     }} />
                     <span style={{
                       fontFamily: 'Outfit',
-                      fontSize: '0.88rem',
+                      fontSize: 'clamp(0.78rem, 2.5vw, 0.88rem)',
                       fontWeight: 700,
                       color: '#171717',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
                     }}>
                       {service.name}
                     </span>
                   </div>
 
-                  <div style={{ textAlign: 'right' }}>
-                    <span style={{ fontSize: '0.72rem', color: '#9ca3af', fontWeight: 600, marginRight: '0.25rem' }}>From</span>
-                    <span style={{ fontFamily: 'Outfit', fontSize: '0.95rem', fontWeight: 900, color: '#171717' }}>
+                  <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                    <span style={{ fontSize: '0.68rem', color: '#9ca3af', fontWeight: 600, marginRight: '0.2rem' }}>From</span>
+                    <span style={{ fontFamily: 'Outfit', fontSize: 'clamp(0.82rem, 2.5vw, 0.95rem)', fontWeight: 900, color: '#171717', whiteSpace: 'nowrap' }}>
                       {service.price}
                     </span>
                   </div>
@@ -654,16 +667,15 @@ export const ExpertProfile = () => {
         <div style={{
           position: 'fixed',
           bottom: 0,
-          left: '50%',
-          transform: 'translateX(-50%)',
+          left: 0,
+          right: 0,
           width: '100%',
-          maxWidth: '480px',
           background: '#ffffff',
           borderTop: '1px solid rgba(0,0,0,0.08)',
-          padding: '0.85rem 1.25rem calc(0.85rem + env(safe-area-inset-bottom))',
+          padding: '0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom))',
           display: 'flex',
           alignItems: 'center',
-          gap: '0.85rem',
+          gap: '0.75rem',
           zIndex: 900,
           boxShadow: '0 -8px 24px rgba(0,0,0,0.06)',
         }}>
@@ -672,9 +684,9 @@ export const ExpertProfile = () => {
             onClick={() => setShowChatModal(true)}
             title="Chat with Expert"
             style={{
-              width: '52px',
-              height: '52px',
-              borderRadius: '16px',
+              width: '48px',
+              height: '48px',
+              borderRadius: '14px',
               background: '#ffffff',
               border: '1.5px solid #ec4899',
               color: '#ec4899',
@@ -685,7 +697,7 @@ export const ExpertProfile = () => {
               flexShrink: 0,
             }}
           >
-            <MessageSquare size={22} color="#ec4899" />
+            <MessageSquare size={20} color="#ec4899" />
           </button>
 
           {/* Book Now Primary Button */}
@@ -693,24 +705,25 @@ export const ExpertProfile = () => {
             onClick={handleBookNow}
             style={{
               flex: 1,
-              height: '52px',
-              borderRadius: '16px',
+              height: '48px',
+              borderRadius: '14px',
               background: 'linear-gradient(135deg, #d4af37, #b5952f)',
               color: '#ffffff',
               border: 'none',
               fontFamily: 'Outfit',
-              fontSize: '1rem',
+              fontSize: 'clamp(0.85rem, 3vw, 1rem)',
               fontWeight: 800,
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '0.5rem',
+              gap: '0.4rem',
               boxShadow: '0 6px 20px rgba(212,175,55,0.35)',
+              overflow: 'hidden',
             }}
           >
-            <Calendar size={18} />
-            <span>Book Now ({selectedService?.price || expert?.services?.[0]?.price || '₦20,000'})</span>
+            <Calendar size={16} style={{ flexShrink: 0 }} />
+            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Book Now ({selectedService?.price || expert?.services?.[0]?.price || '₦20,000'})</span>
           </button>
         </div>
 
