@@ -12,15 +12,18 @@ export const PopupModal = ({ isOpen, onClose, title, children, maxWidth = '480px
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      document.body.classList.add('modal-open');
       // Scroll the sheet body to top when opening
       if (scrollRef.current) {
         scrollRef.current.scrollTop = 0;
       }
     } else {
       document.body.style.overflow = '';
+      document.body.classList.remove('modal-open');
     }
     return () => {
       document.body.style.overflow = '';
+      document.body.classList.remove('modal-open');
     };
   }, [isOpen]);
 
@@ -37,7 +40,7 @@ export const PopupModal = ({ isOpen, onClose, title, children, maxWidth = '480px
           background: 'rgba(0, 0, 0, 0.65)',
           backdropFilter: 'blur(4px)',
           WebkitBackdropFilter: 'blur(4px)',
-          zIndex: 2000,
+          zIndex: 99998,
           animation: 'pmFadeIn 0.18s ease-out',
         }}
       />
@@ -51,7 +54,7 @@ export const PopupModal = ({ isOpen, onClose, title, children, maxWidth = '480px
           bottom: 0,
           left: 0,
           right: 0,
-          zIndex: 2001,
+          zIndex: 99999,
           background: '#ffffff',
           borderTopLeftRadius: '24px',
           borderTopRightRadius: '24px',
@@ -116,7 +119,7 @@ export const PopupModal = ({ isOpen, onClose, title, children, maxWidth = '480px
             WebkitOverflowScrolling: 'touch',
             touchAction: 'pan-y',
             overscrollBehaviorY: 'contain',
-            padding: '1rem 1.25rem calc(1.5rem + env(safe-area-inset-bottom))',
+            padding: '1rem 1.25rem calc(2rem + env(safe-area-inset-bottom, 20px))',
             minHeight: 0,
           }}
         >
@@ -125,6 +128,13 @@ export const PopupModal = ({ isOpen, onClose, title, children, maxWidth = '480px
       </div>
 
       <style>{`
+        body.modal-open .bottom-nav {
+          display: none !important;
+          opacity: 0 !important;
+          pointer-events: none !important;
+          visibility: hidden !important;
+        }
+
         @keyframes pmFadeIn {
           from { opacity: 0; }
           to   { opacity: 1; }
@@ -181,9 +191,6 @@ export const PopupModal = ({ isOpen, onClose, title, children, maxWidth = '480px
             height: auto !important;
             border-radius: 20px !important;
             animation: pmScaleIn 0.22s cubic-bezier(0.34, 1.4, 0.64, 1) !important;
-          }
-          .pm-panel > div:first-child {
-            display: none !important;
           }
         }
       `}</style>

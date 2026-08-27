@@ -166,11 +166,11 @@ export const LocationSelector = ({ location, onChange }) => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.75rem' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', width: '100%' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6rem', width: '100%' }}>
         {/* State Select */}
-        <div className="app-input-group" style={{ marginBottom: 0 }}>
-          <label className="app-label" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+        <div className="app-input-group" style={{ marginBottom: 0, minWidth: 0 }}>
+          <label className="app-label" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.75rem' }}>
             <MapPin size={13} color="#d4af37" /> State *
           </label>
           <select
@@ -178,7 +178,7 @@ export const LocationSelector = ({ location, onChange }) => {
             onChange={handleStateChange}
             className="app-input"
             required
-            style={{ appearance: 'auto', background: '#ffffff' }}
+            style={{ appearance: 'auto', background: '#ffffff', minWidth: 0, width: '100%', boxSizing: 'border-box' }}
           >
             {NIGERIAN_STATES.map(st => (
               <option key={st.name} value={st.name}>
@@ -189,8 +189,8 @@ export const LocationSelector = ({ location, onChange }) => {
         </div>
 
         {/* Local Government Area (LGA) Select */}
-        <div className="app-input-group" style={{ marginBottom: 0 }}>
-          <label className="app-label" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+        <div className="app-input-group" style={{ marginBottom: 0, minWidth: 0 }}>
+          <label className="app-label" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.75rem' }}>
             <Building size={13} color="#d4af37" /> LGA / District *
           </label>
           <select
@@ -198,7 +198,7 @@ export const LocationSelector = ({ location, onChange }) => {
             onChange={(e) => onChange({ ...location, lga: e.target.value })}
             className="app-input"
             required
-            style={{ appearance: 'auto', background: '#ffffff' }}
+            style={{ appearance: 'auto', background: '#ffffff', minWidth: 0, width: '100%', boxSizing: 'border-box' }}
           >
             {selectedStateObj.lgas.map(lga => (
               <option key={lga} value={lga}>
@@ -210,32 +210,34 @@ export const LocationSelector = ({ location, onChange }) => {
       </div>
 
       {/* Street Name & House Number */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', gap: '0.75rem' }}>
-        <div className="app-input-group" style={{ marginBottom: 0 }}>
-          <label className="app-label" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6rem', width: '100%' }}>
+        <div className="app-input-group" style={{ marginBottom: 0, minWidth: 0 }}>
+          <label className="app-label" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.75rem' }}>
             <Navigation size={13} color="#d4af37" /> Street Name *
           </label>
           <input
             type="text"
             value={location.street || ''}
             onChange={(e) => onChange({ ...location, street: e.target.value })}
-            placeholder="e.g. Allen Avenue, VI"
+            placeholder="e.g. Allen Avenue"
             className="app-input"
             required
+            style={{ minWidth: 0, width: '100%', boxSizing: 'border-box' }}
           />
         </div>
 
-        <div className="app-input-group" style={{ marginBottom: 0 }}>
-          <label className="app-label" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+        <div className="app-input-group" style={{ marginBottom: 0, minWidth: 0 }}>
+          <label className="app-label" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.75rem' }}>
             <Home size={13} color="#d4af37" /> House/Flat # *
           </label>
           <input
             type="text"
             value={location.houseNumber || ''}
             onChange={(e) => onChange({ ...location, houseNumber: e.target.value })}
-            placeholder="e.g. No. 12"
+            placeholder="e.g. 23"
             className="app-input"
             required
+            style={{ minWidth: 0, width: '100%', boxSizing: 'border-box' }}
           />
         </div>
       </div>

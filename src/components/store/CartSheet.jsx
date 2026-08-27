@@ -11,7 +11,7 @@ import { LocationSelector } from './LocationSelector';
 export const CartSheet = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const { cart, removeFromCart, updateQuantity, clearCart, subtotal } = useCart();
-  const { user, isAuthenticated, showToast } = useAuth();
+  const { user, isAuthenticated, updateProfile, showToast } = useAuth();
 
   const [location, setLocation] = useState({
     state: user?.state || 'Lagos',

@@ -351,7 +351,7 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
               lineHeight: 1.45,
               marginBottom: '0.85rem'
             }}>
-              {matchResult.rationale}
+              {(matchResult.rationale || '').replace(/\{\s*name:\s*'([^']+)'[^\}]*\}/gi, '$1').replace(/,\s*,/g, ',')}
             </div>
 
             {/* Primary Action Button to Book Schedule */}

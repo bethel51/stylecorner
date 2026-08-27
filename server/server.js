@@ -508,7 +508,14 @@ app.post('/api/ai/match-specialist', async (req, res) => {
 
     staffMembers.forEach(staff => {
       let score = 75; // baseline match score
-      const specs = (staff.services || staff.specialties || []).map(s => String(s).toLowerCase());
+      const rawSpecs = staff.services || staff.specialties || [];
+      const specsNames = rawSpecs.map(s => {
+        if (typeof s === 'string') return s;
+        if (s && typeof s === 'object') return s.name || s.title || s.service || '';
+        return String(s || '');
+      }).filter(Boolean);
+
+      const specs = specsNames.map(s => s.toLowerCase());
       
       specs.forEach(s => {
         if (query.includes(s) || s.split(' ').some(w => w.length > 3 && query.includes(w))) {
@@ -536,18 +543,27 @@ app.post('/api/ai/match-specialist', async (req, res) => {
 
     if (!bestMatch) bestMatch = staffMembers[0];
 
-    const specsList = (bestMatch.services || bestMatch.specialties || ['General Styling']);
-    const specsDisplay = Array.isArray(specsList) ? specsList.join(', ') : String(specsList);
+    const rawList = (bestMatch.services && bestMatch.services.length > 0)
+      ? bestMatch.services
+      : (bestMatch.specialties && bestMatch.specialties.length > 0)
+        ? bestMatch.specialties
+        : ['General Styling'];
 
-    const rationale = `${bestMatch.firstname} ${bestMatch.lastname || ''} is your top match based on expertise in ${specsDisplay}. Ideal match for ${primaryService || 'your requested style'}${secondaryService ? ' + ' + secondaryService : ''}.`;
+    const specsDisplay = rawList.map(s => {
+      if (typeof s === 'string') return s;
+      if (s && typeof s === 'object') return s.name || s.title || s.service || '';
+      return String(s || '');
+    }).filter(Boolean).join(', ') || 'General Styling';
+
+    const rationale = `${bestMatch.firstname} ${bestMatch.lastname || ''} is your top match based on expertise in ${specsDisplay}. Ideal match for ${primaryService || 'your requested style'}.`;
 
     res.status(200).json({
       match: {
         firstname: bestMatch.firstname,
         lastname: bestMatch.lastname || '',
         name: `${bestMatch.firstname} ${bestMatch.lastname || ''}`.trim(),
-        specialties: specsList,
-        primaryService: primaryService || 'Precision Skin Fade & Cut',
+        specialties: specsDisplay,
+        primaryService: primaryService || 'Precision Styling',
         secondaryService: secondaryService || '',
         matchScore: maxScore,
         rationale: rationale
