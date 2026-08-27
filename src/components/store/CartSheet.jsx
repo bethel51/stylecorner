@@ -102,13 +102,34 @@ export const CartSheet = ({ isOpen, onClose }) => {
   return (
     <BottomSheet isOpen={isOpen} onClose={onClose} title={`Your Grooming Cart (${cart.length})`}>
       {cart.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '2rem 1rem', color: '#6b7280' }}>
-          <ShoppingBag size={40} style={{ opacity: 0.3, marginBottom: '0.75rem' }} />
-          <p style={{ fontSize: '0.9rem' }}>Your shopping cart is currently empty.</p>
+        <div style={{ textAlign: 'center', padding: '2.5rem 1rem', color: '#6b7280' }}>
+          <div style={{
+            width: '64px', height: '64px', borderRadius: '50%',
+            backgroundColor: '#faf9f5', border: '1px dashed rgba(212,175,55,0.4)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            margin: '0 auto 1rem', color: '#d4af37'
+          }}>
+            <ShoppingBag size={28} />
+          </div>
+          <h4 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: '#171717', margin: '0 0 0.35rem' }}>
+            Your Cart is Empty
+          </h4>
+          <p style={{ fontSize: '0.82rem', color: '#6b7280', margin: '0 0 1.25rem', lineHeight: 1.4 }}>
+            Explore our curated grooming pomades, beard elixirs & hair wraps.
+          </p>
+          <button
+            type="button"
+            onClick={() => { onClose(); navigate('/store'); }}
+            className="app-btn app-btn-primary"
+            style={{ width: 'auto', padding: '0.6rem 1.5rem', margin: '0 auto', fontSize: '0.85rem' }}
+          >
+            Explore Grooming Store
+          </button>
         </div>
       ) : (
         <div style={{ width: '100%', overflowX: 'hidden' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.25rem' }}>
+          {/* Cart Item Cards List */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', marginBottom: '1.25rem' }}>
             {cart.map((item) => (
               <div
                 key={item.id || item.title}
@@ -116,105 +137,161 @@ export const CartSheet = ({ isOpen, onClose }) => {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  gap: '0.5rem',
-                  padding: '0.75rem',
+                  gap: '0.65rem',
+                  padding: '0.75rem 0.85rem',
                   background: '#faf9f6',
-                  borderRadius: '12px',
-                  border: '1px solid rgba(0,0,0,0.08)',
-                  boxSizing: 'border-box'
+                  borderRadius: '16px',
+                  border: '1px solid rgba(0,0,0,0.06)',
+                  boxSizing: 'border-box',
+                  width: '100%'
                 }}
               >
+                {/* Product Thumbnail & Details */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flex: 1, minWidth: 0 }}>
                   {item.image && (
                     <OptimizedImage
                       src={item.image}
                       alt={item.title}
                       style={{
-                        width: '44px',
-                        height: '44px',
-                        borderRadius: '10px',
+                        width: '48px',
+                        height: '48px',
+                        borderRadius: '12px',
                         objectFit: 'cover',
-                        flexShrink: 0
+                        flexShrink: 0,
+                        border: '1px solid rgba(0,0,0,0.06)'
                       }}
                     />
                   )}
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <h4 style={{ fontFamily: 'Outfit', fontSize: '0.88rem', fontWeight: 800, color: '#171717', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    <h4 style={{
+                      fontFamily: 'Outfit',
+                      fontSize: '0.86rem',
+                      fontWeight: 800,
+                      color: '#171717',
+                      margin: 0,
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                      lineHeight: 1.25
+                    }}>
                       {item.title}
                     </h4>
-                    <span style={{ fontSize: '0.82rem', color: '#d4af37', fontWeight: 900 }}>
+                    <span style={{ fontSize: '0.82rem', color: '#d4af37', fontWeight: 900, marginTop: '0.15rem', display: 'block' }}>
                       ₦{Number(item.price).toLocaleString()}
                     </span>
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexShrink: 0 }}>
+                {/* Mobile Touch-Friendly Quantity Control */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', flexShrink: 0 }}>
                   <div
                     style={{
                       display: 'flex',
                       alignItems: 'center',
                       background: '#ffffff',
-                      borderRadius: '8px',
-                      border: '1px solid rgba(0,0,0,0.08)',
-                      padding: '2px 4px',
+                      borderRadius: '10px',
+                      border: '1px solid rgba(0,0,0,0.1)',
+                      padding: '3px 5px',
                     }}
                   >
                     <button
                       type="button"
+                      aria-label="Decrease quantity"
                       onClick={() => updateQuantity(item.id || item.title, item.quantity - 1)}
-                      style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '3px' }}
+                      style={{
+                        background: 'none', border: 'none', cursor: 'pointer',
+                        padding: '6px 8px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        color: '#4b5563'
+                      }}
                     >
-                      <Minus size={13} />
+                      <Minus size={12} />
                     </button>
-                    <span style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.82rem', padding: '0 5px' }}>
+                    <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '0.85rem', padding: '0 4px', color: '#171717' }}>
                       {item.quantity}
                     </span>
                     <button
                       type="button"
+                      aria-label="Increase quantity"
                       onClick={() => updateQuantity(item.id || item.title, item.quantity + 1)}
-                      style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '3px' }}
+                      style={{
+                        background: 'none', border: 'none', cursor: 'pointer',
+                        padding: '6px 8px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        color: '#4b5563'
+                      }}
                     >
-                      <Plus size={13} />
+                      <Plus size={12} />
                     </button>
                   </div>
 
                   <button
                     type="button"
+                    aria-label="Remove item"
                     onClick={() => removeFromCart(item.id || item.title)}
-                    style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', padding: '4px' }}
+                    style={{
+                      background: 'rgba(239,68,68,0.08)',
+                      border: '1px solid rgba(239,68,68,0.2)',
+                      borderRadius: '10px',
+                      color: '#ef4444',
+                      cursor: 'pointer',
+                      padding: '7px 8px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0
+                    }}
                   >
-                    <Trash2 size={16} />
+                    <Trash2 size={15} />
                   </button>
                 </div>
               </div>
             ))}
           </div>
 
+          {/* Checkout Form */}
           <form onSubmit={handleCheckout} style={{ borderTop: '1px solid rgba(0,0,0,0.08)', paddingTop: '1rem' }}>
             <div style={{ marginBottom: '1.25rem' }}>
-              <h4 style={{ fontFamily: 'Outfit', fontSize: '0.9rem', fontWeight: 800, color: '#171717', marginBottom: '0.65rem' }}>
-                Delivery Location Details
+              <h4 style={{ fontFamily: 'Outfit', fontSize: '0.88rem', fontWeight: 800, color: '#171717', marginBottom: '0.65rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                📍 Delivery Location Details
               </h4>
               <LocationSelector location={location} onChange={setLocation} />
             </div>
 
+            {/* Subtotal & Checkout Button Footer */}
             <div
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                margin: '1rem 0',
+                padding: '0.75rem 0',
+                borderTop: '1px dashed rgba(0,0,0,0.1)',
+                marginBottom: '0.85rem'
               }}
             >
-              <span style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.9rem', color: '#6b7280' }}>
-                SUBTOTAL:
+              <span style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.85rem', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                Subtotal
               </span>
-              <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.4rem', color: '#171717' }}>
+              <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.35rem', color: '#171717' }}>
                 ₦{Number(subtotal).toLocaleString()}
               </span>
             </div>
 
-            <button type="submit" disabled={submitting} className="app-btn app-btn-accent">
+            <button
+              type="submit"
+              disabled={submitting}
+              className="app-btn app-btn-accent"
+              style={{
+                width: '100%',
+                minHeight: '48px',
+                borderRadius: '14px',
+                fontSize: '0.92rem',
+                fontWeight: 900,
+                boxShadow: '0 8px 20px rgba(212,175,55,0.3)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.45rem'
+              }}
+            >
               {submitting ? (
                 <span>Placing Order...</span>
               ) : (
