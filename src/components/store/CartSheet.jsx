@@ -75,12 +75,18 @@ export const CartSheet = ({ isOpen, onClose }) => {
       await api.createOrder(orderPayload);
 
       // Save delivery location back to user profile for future seamless orders
-      updateProfile({
-        state: location.state,
-        lga: location.lga,
-        street: location.street.trim(),
-        houseNumber: location.houseNumber.trim(),
-      }).catch(() => {});
+      if (typeof updateProfile === 'function') {
+        try {
+          await updateProfile({
+            state: location.state,
+            lga: location.lga,
+            street: location.street.trim(),
+            houseNumber: location.houseNumber.trim(),
+          });
+        } catch (profileErr) {
+          console.warn('Profile location sync warning:', profileErr);
+        }
+      }
 
       clearCart();
       showToast('Order placed successfully!', 'success');
