@@ -678,6 +678,42 @@ export const AdminDashboard = () => {
             ))}
           </div>
 
+          {/* Mobile Fast Navigation Scroller */}
+          {isMobile && (
+            <div
+              style={{
+                display: 'flex', gap: '0.4rem', overflowX: 'auto', paddingBottom: '0.5rem',
+                marginBottom: '0.85rem', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none'
+              }}
+            >
+              {navItems.map(item => (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id)}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: '0.35rem',
+                    padding: '0.5rem 0.85rem', borderRadius: '50px', flexShrink: 0,
+                    border: activeTab === item.id ? '1.5px solid #d4af37' : '1px solid rgba(0,0,0,0.1)',
+                    backgroundColor: activeTab === item.id ? '#171717' : '#ffffff',
+                    color: activeTab === item.id ? '#d4af37' : '#64748b',
+                    fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.78rem',
+                    cursor: 'pointer', boxShadow: activeTab === item.id ? '0 4px 12px rgba(0,0,0,0.12)' : 'none'
+                  }}
+                >
+                  <item.icon size={13} />
+                  <span>{item.label}</span>
+                  <span style={{
+                    fontSize: '0.68rem', fontWeight: 900, padding: '0.05rem 0.4rem',
+                    borderRadius: '50px', backgroundColor: activeTab === item.id ? '#d4af37' : 'rgba(0,0,0,0.06)',
+                    color: activeTab === item.id ? '#171717' : '#64748b',
+                  }}>
+                    {item.count}
+                  </span>
+                </button>
+              ))}
+            </div>
+          )}
+
           {/* Search Bar + Filter Chips Row */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.25rem' }}>
             <div style={{ position: 'relative', width: '100%' }}>
@@ -812,7 +848,7 @@ export const AdminDashboard = () => {
                         <button
                           disabled={updatingId === order._id}
                           onClick={(e) => handleUpdateOrderStatus(order._id, 'shipped', e)}
-                          style={{ flex: 1, padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: '#d4af37', color: '#fff', fontWeight: 700, fontSize: '0.78rem', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
+                          style={{ flex: '1 1 120px', minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '10px', backgroundColor: '#d4af37', color: '#fff', fontWeight: 800, fontSize: '0.78rem', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
                         >
                           <Truck size={13} /> Mark Shipped
                         </button>
@@ -821,21 +857,21 @@ export const AdminDashboard = () => {
                         <button
                           disabled={updatingId === order._id}
                           onClick={(e) => handleUpdateOrderStatus(order._id, 'completed', e)}
-                          style={{ flex: 1, padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: '#16a34a', color: '#fff', fontWeight: 700, fontSize: '0.78rem', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
+                          style={{ flex: '1 1 120px', minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '10px', backgroundColor: '#16a34a', color: '#fff', fontWeight: 800, fontSize: '0.78rem', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
                         >
                           <CheckCircle size={13} /> Mark Completed
                         </button>
                       )}
                       <button
                         onClick={(e) => { e.stopPropagation(); setSelectedOrderForTracking(order); }}
-                        style={{ padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: 'rgba(212,175,55,0.15)', color: '#b5952f', fontWeight: 800, fontSize: '0.78rem', border: '1px solid rgba(212,175,55,0.4)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
+                        style={{ flex: '1 1 140px', minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '10px', backgroundColor: 'rgba(212,175,55,0.15)', color: '#b5952f', fontWeight: 800, fontSize: '0.78rem', border: '1px solid rgba(212,175,55,0.4)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
                       >
-                        <Truck size={13} /> Track & Manage Delivery
+                        <Truck size={13} /> Track & Manage
                       </button>
 
                       <button
                         onClick={(e) => { e.stopPropagation(); setSelectedOrder(order); }}
-                        style={{ padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: 'rgba(0,0,0,0.04)', color: '#334155', fontWeight: 600, fontSize: '0.78rem', border: '1px solid rgba(0,0,0,0.08)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
+                        style={{ flex: '0 0 auto', minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '10px', backgroundColor: 'rgba(0,0,0,0.04)', color: '#334155', fontWeight: 700, fontSize: '0.78rem', border: '1px solid rgba(0,0,0,0.08)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
                       >
                         <Eye size={13} /> Details
                       </button>
