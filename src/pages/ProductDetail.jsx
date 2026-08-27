@@ -579,34 +579,70 @@ export const ProductDetail = () => {
 
         {/* ── Related Recommendations Grid ── */}
         <div>
-          <h3 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 900, color: '#171717', marginBottom: '0.85rem' }}>
-            Recommended Grooming Essentials
-          </h3>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
+            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 900, color: '#171717', margin: 0 }}>
+              Recommended Grooming Essentials
+            </h3>
+            <span style={{ fontSize: '0.72rem', color: '#d4af37', fontFamily: 'Outfit', fontWeight: 800 }}>
+              Handpicked Essentials
+            </span>
+          </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.65rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(135px, 1fr))', gap: '0.75rem' }}>
             {relatedProducts.map((rel) => (
               <div
                 key={rel.id}
-                onClick={() => navigate(`/product/${rel.id}`)}
+                onClick={() => { navigate(`/product/${rel.id}`); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                 style={{
                   background: '#ffffff',
                   borderRadius: '16px',
-                  padding: '0.65rem',
-                  border: '1px solid rgba(0,0,0,0.07)',
+                  padding: '0.75rem',
+                  border: '1.5px solid rgba(212,175,55,0.25)',
                   cursor: 'pointer',
-                  textAlign: 'center',
-                  boxShadow: '0 2px 10px rgba(0,0,0,0.03)',
-                  transition: 'transform 0.15s ease'
+                  textAlign: 'left',
+                  boxShadow: '0 4px 16px rgba(0,0,0,0.03)',
+                  transition: 'all 0.2s ease',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justify: 'space-between'
                 }}
               >
-                <div style={{ width: '100%', height: '80px', borderRadius: '10px', overflow: 'hidden', marginBottom: '0.4rem', background: '#f3f4f6' }}>
-                  <OptimizedImage src={rel.image} alt={rel.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <div>
+                  <div style={{ width: '100%', height: '95px', borderRadius: '12px', overflow: 'hidden', marginBottom: '0.5rem', background: '#faf9f5' }}>
+                    <OptimizedImage src={rel.image} alt={rel.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.2rem' }}>
+                    <span style={{ fontSize: '0.65rem', color: '#16a34a', fontWeight: 800, fontFamily: 'Outfit' }}>● In Stock</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.15rem', color: '#d4af37', fontWeight: 800, fontSize: '0.72rem' }}>
+                      <Star size={11} fill="#d4af37" /><span>{rel.rating || 4.8}</span>
+                    </div>
+                  </div>
+
+                  <h4 style={{ fontFamily: 'Outfit', fontSize: '0.82rem', fontWeight: 800, color: '#171717', margin: '0 0 0.3rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {rel.title}
+                  </h4>
                 </div>
-                <h4 style={{ fontFamily: 'Outfit', fontSize: '0.78rem', fontWeight: 800, color: '#171717', margin: '0 0 0.2rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                  {rel.title}
-                </h4>
-                <div style={{ fontFamily: 'Outfit', fontSize: '0.82rem', fontWeight: 900, color: '#b5952f' }}>
-                  ₦{Number(rel.price).toLocaleString()}
+
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.35rem' }}>
+                  <div style={{ fontFamily: 'Outfit', fontSize: '0.86rem', fontWeight: 900, color: '#171717' }}>
+                    ₦{Number(rel.price).toLocaleString()}
+                  </div>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      addToCart(rel);
+                      showToast(`Added ${rel.title} to cart!`, 'success');
+                    }}
+                    style={{
+                      backgroundColor: '#171717', color: '#d4af37', border: '1px solid #d4af37',
+                      borderRadius: '8px', padding: '0.3rem 0.5rem', fontFamily: 'Outfit',
+                      fontWeight: 800, fontSize: '0.7rem', cursor: 'pointer', display: 'flex',
+                      alignItems: 'center', gap: '0.2rem'
+                    }}
+                  >
+                    + Add
+                  </button>
                 </div>
               </div>
             ))}

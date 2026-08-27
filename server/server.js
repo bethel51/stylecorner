@@ -779,7 +779,7 @@ app.get('/api/orders', authenticateToken, async (req, res) => {
       const userEmail = (req.user.email || '').trim();
       query = { email: new RegExp('^' + userEmail + '$', 'i') };
     }
-    const orders = await Order.find(query).sort({ createdAt: -1 });
+    const orders = await Order.find(query).sort({ createdAt: -1 }).lean();
     res.status(200).json(orders);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch orders' });
@@ -990,7 +990,7 @@ app.get('/api/notifications', authenticateToken, async (req, res) => {
         ...(isAdmin ? [{ userEmail: 'admin@stylecorner.com' }, { userEmail: 'admin' }] : [])
       ]
     };
-    const notifications = await Notification.find(query).sort({ createdAt: -1 }).limit(50);
+    const notifications = await Notification.find(query).sort({ createdAt: -1 }).limit(50).lean();
     const unreadCount = notifications.filter(n => !n.read).length;
     res.status(200).json({ notifications, unreadCount });
   } catch (error) {

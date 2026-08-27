@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 import {
   Scissors,
   Sparkles,
@@ -14,6 +15,7 @@ import {
   Phone,
   ArrowRight,
   ShieldCheck,
+  Plus,
 } from 'lucide-react';
 import { PageContainer } from '../components/common/PageContainer';
 import { AISpecialistMatcherSheet } from '../components/booking/AISpecialistMatcherSheet';
@@ -23,7 +25,8 @@ import { api } from '../services/api';
 
 export const Home = () => {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, showToast } = useAuth();
+  const { addToCart } = useCart();
   const [showAiSheet, setShowAiSheet] = useState(false);
 
   const signatureServices = [
@@ -358,45 +361,106 @@ export const Home = () => {
         <ChevronRight size={18} color="#d4af37" />
       </div>
 
-      {/* ── Curated Grooming Essentials Collection CTA ── */}
-      <div
-        className="app-card"
-        onClick={() => navigate('/store')}
-        style={{
-          cursor: 'pointer',
-          background: '#F4F1E9',
-          border: '1px solid rgba(0,0,0,0.06)',
-          borderRadius: '20px',
-          padding: '1.5rem 1.25rem',
-          marginBottom: '1.5rem',
-        }}
-      >
-        <span style={{ color: '#d4af37', textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 800, display: 'block', marginBottom: '0.4rem' }}>
-          Grooming Products
-        </span>
-        <h3 style={{ fontSize: '1.35rem', fontFamily: 'Outfit', fontWeight: 900, color: '#171717', marginBottom: '0.5rem', lineHeight: 1.2 }}>
-          Products for Home Use
-        </h3>
-        <p style={{ color: '#4A4A4A', fontSize: '0.85rem', lineHeight: 1.55, marginBottom: '1.15rem' }}>
-          Shop the same products our stylists use. Hair oils, beard kits, wax, and more — delivered to your door.
-        </p>
-
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      {/* ── Recommended Grooming Essentials Showcase ── */}
+      <div style={{ marginBottom: '1.75rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
+          <div>
+            <span style={{ color: '#d4af37', textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.68rem', fontFamily: 'Outfit', fontWeight: 800, display: 'block' }}>
+              Atelier Boutique
+            </span>
+            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.18rem', fontWeight: 900, color: '#171717', margin: 0 }}>
+              Recommended Grooming Essentials
+            </h3>
+          </div>
           <button
-            className="app-btn"
-            style={{
-              background: '#1A1A1A',
-              color: '#ffffff',
-              padding: '0.65rem 1.25rem',
-              fontSize: '0.82rem',
-              width: 'auto',
-            }}
+            onClick={() => navigate('/store')}
+            style={{ background: 'none', border: 'none', color: '#d4af37', fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.82rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.2rem' }}
           >
-            <ShoppingBag size={15} /> Explore Store
+            View All Store <ChevronRight size={15} />
           </button>
-          <span style={{ fontFamily: 'Outfit', fontSize: '0.8rem', fontWeight: 800, color: '#d4af37' }}>
-            From ₦15,000 →
-          </span>
+        </div>
+
+        <div style={{
+          display: 'flex',
+          gap: '0.85rem',
+          overflowX: 'auto',
+          paddingBottom: '0.5rem',
+          scrollSnapType: 'x mandatory',
+          WebkitOverflowScrolling: 'touch'
+        }}>
+          {featuredProducts.map((p) => (
+            <div
+              key={p.id}
+              onClick={() => navigate(`/product/${p.id}`)}
+              style={{
+                flex: '0 0 220px',
+                scrollSnapAlign: 'start',
+                background: '#ffffff',
+                borderRadius: '18px',
+                padding: '0.85rem',
+                border: '1.5px solid rgba(212,175,55,0.25)',
+                boxShadow: '0 8px 24px rgba(0,0,0,0.04)',
+                cursor: 'pointer',
+                transition: 'transform 0.2s ease, boxShadow 0.2s ease',
+                display: 'flex',
+                flexDirection: 'column',
+                justify: 'space-between',
+                position: 'relative'
+              }}
+            >
+              {/* Badge */}
+              {p.badge && (
+                <span style={{
+                  position: 'absolute', top: '14px', left: '14px', zIndex: 2,
+                  backgroundColor: '#171717', color: '#d4af37', fontSize: '0.65rem',
+                  fontFamily: 'Outfit', fontWeight: 900, padding: '0.2rem 0.55rem',
+                  borderRadius: '20px', border: '1px solid rgba(212,175,55,0.5)'
+                }}>
+                  {p.badge}
+                </span>
+              )}
+
+              {/* Product Thumbnail */}
+              <div style={{ width: '100%', height: '130px', borderRadius: '14px', overflow: 'hidden', marginBottom: '0.65rem', backgroundColor: '#faf9f5' }}>
+                <OptimizedImage src={p.image} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              </div>
+
+              {/* Details */}
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.2rem' }}>
+                  <span style={{ fontSize: '0.72rem', color: '#6b7280', fontFamily: 'Outfit', fontWeight: 600 }}>Grooming</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#d4af37', fontWeight: 800, fontSize: '0.76rem' }}>
+                    <Star size={12} fill="#d4af37" /><span>{p.rating}</span>
+                  </div>
+                </div>
+
+                <h4 style={{ fontFamily: 'Outfit', fontSize: '0.88rem', fontWeight: 800, color: '#171717', margin: '0 0 0.35rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {p.title}
+                </h4>
+
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.4rem' }}>
+                  <span style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 900, color: '#171717' }}>
+                    ₦{Number(p.price).toLocaleString()}
+                  </span>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      addToCart(p);
+                      showToast(`Added ${p.title} to cart!`, 'success');
+                    }}
+                    style={{
+                      backgroundColor: '#171717', color: '#d4af37', border: '1px solid #d4af37',
+                      borderRadius: '10px', padding: '0.35rem 0.65rem', fontFamily: 'Outfit',
+                      fontWeight: 800, fontSize: '0.72rem', cursor: 'pointer', display: 'flex',
+                      alignItems: 'center', gap: '0.25rem'
+                    }}
+                  >
+                    <Plus size={13} /> Add
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
