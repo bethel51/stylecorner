@@ -54,6 +54,23 @@ export const Home = () => {
   ];
 
   const [specialists, setSpecialists] = useState([]);
+  const [featuredProducts, setFeaturedProducts] = useState([
+    { id: 'p1', title: 'Atelier Gold Pomade', price: 12000, rating: 4.9, badge: 'Bestseller', image: 'https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?auto=format&fit=crop&w=500&q=80' },
+    { id: 'p2', title: 'Botanical Beard Elixir', price: 8500, rating: 4.8, badge: 'Popular', image: 'https://images.unsplash.com/photo-1626285861696-9f0bf5a49c6d?auto=format&fit=crop&w=500&q=80' },
+    { id: 'p3', title: 'Sculpting Clay Wax', price: 9500, rating: 4.9, badge: 'New', image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=500&q=80' },
+    { id: 'p4', title: 'Scalp Revitalizing Shampoo', price: 11000, rating: 4.7, image: 'https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=500&q=80' },
+    { id: 'p5', title: 'Wooden Comb Set', price: 6500, rating: 4.9, image: 'https://images.unsplash.com/photo-1590159763121-7c9fd312190d?auto=format&fit=crop&w=500&q=80' },
+  ]);
+
+  React.useEffect(() => {
+    api.getProducts()
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setFeaturedProducts(data.slice(0, 6).map(p => ({ ...p, id: p._id || p.id })));
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   React.useEffect(() => {
     api.getSpecialists()
