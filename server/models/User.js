@@ -19,6 +19,8 @@ const userSchema = new mongoose.Schema({
   role: { type: String, enum: ['customer', 'staff'], default: 'customer' },
   specialties: [{ type: String }],
   services: [{ name: String, price: String }],
+  portfolio: [{ type: String }],
+  walletBalance: { type: Number, default: 50000 },
   isVerified: { type: Boolean, default: false },
   otpCode: { type: String },
   otpExpiresAt: { type: Date },

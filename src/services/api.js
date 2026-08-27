@@ -441,15 +441,35 @@ export const api = {
     return Array.isArray(data) ? data : [];
   },
 
-  // Specialist Portfolio API
-  updatePortfolio: async (portfolio) => {
-    const res = await fetchWithTimeout(`${API_BASE}/specialists/portfolio`, {
-      method: 'PUT',
+  // Wallet API
+  getWalletBalance: async () => {
+    const res = await fetchWithTimeout(`${API_BASE}/wallet`, {
       headers: getAuthHeaders(),
-      body: JSON.stringify({ portfolio }),
     });
     const data = await safeJson(res);
-    if (!res.ok) throw new Error(data?.error || 'Failed to update portfolio');
+    if (!res.ok) throw new Error(data?.error || 'Failed to fetch wallet');
+    return data || { walletBalance: 50000 };
+  },
+
+  topupWallet: async (amount) => {
+    const res = await fetchWithTimeout(`${API_BASE}/wallet/topup`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ amount }),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Failed to top up wallet');
+    return data;
+  },
+
+  payWithWallet: async (amount, orderId = null, bookingId = null, description = '') => {
+    const res = await fetchWithTimeout(`${API_BASE}/wallet/pay`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ amount, orderId, bookingId, description }),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Payment failed');
     return data;
   },
 };

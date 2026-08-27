@@ -77,7 +77,7 @@ export const CartSheet = ({ isOpen, onClose }) => {
         trackingStatus: 'Order Placed',
       };
 
-      await api.createOrder(orderPayload);
+      const createdOrder = await api.createOrder(orderPayload);
 
       // Save delivery location back to user profile for future seamless orders
       if (typeof updateProfile === 'function') {
@@ -94,9 +94,16 @@ export const CartSheet = ({ isOpen, onClose }) => {
       }
 
       clearCart();
-      showToast('Order placed successfully!', 'success');
+      showToast('Order created! Proceeding to Payment...', 'success');
       onClose();
-      navigate('/customer-dashboard');
+      navigate('/payment', {
+        state: {
+          orderId: createdOrder?._id,
+          title: `Order #${String(createdOrder?._id || '').slice(-6).toUpperCase()}`,
+          amount: finalAmount,
+          description: itemsList
+        }
+      });
     } catch (err) {
       showToast(err.message || 'Failed to place order', 'error');
     } finally {

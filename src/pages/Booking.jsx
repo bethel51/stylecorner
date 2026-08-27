@@ -150,11 +150,16 @@ export const Booking = () => {
 
     setSubmitting(true);
     try {
-      await api.createBooking(bookingPayload);
-      showToast('Booking submitted successfully!', 'success');
-      setTimeout(() => {
-        navigate('/customer-dashboard');
-      }, 1200);
+      const createdBooking = await api.createBooking(bookingPayload);
+      showToast('Session scheduled! Proceeding to Payment...', 'success');
+      navigate('/payment', {
+        state: {
+          bookingId: createdBooking?._id,
+          title: `Booking: ${selectedService}`,
+          amount: totalPrice,
+          description: `Specialist: ${stylist} · Date: ${date} at ${time}`
+        }
+      });
     } catch (err) {
       showToast(err.message || 'Failed to submit booking', 'error');
       setSubmitting(false);

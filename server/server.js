@@ -1309,6 +1309,93 @@ app.put('/api/specialists/portfolio', authenticateToken, async (req, res) => {
   }
 });
 
+// ── WALLET BALANCE & PAYMENT ROUTES ── //
+
+// Get User Wallet Balance
+app.get('/api/wallet', authenticateToken, async (req, res) => {
+  try {
+    const userDoc = await User.findById(req.user._id).select('walletBalance email firstname lastname');
+    const balance = userDoc ? (userDoc.walletBalance ?? 50000) : 50000;
+    res.status(200).json({ walletBalance: balance });
+  } catch (error) {
+    console.error('Fetch wallet error:', error);
+    res.status(500).json({ error: 'Failed to fetch wallet balance' });
+  }
+});
+
+// Top-Up Wallet Balance
+app.post('/api/wallet/topup', authenticateToken, async (req, res) => {
+  try {
+    const amount = Number(req.body.amount);
+    if (!amount || amount <= 0) {
+      return res.status(400).json({ error: 'Please enter a valid top-up amount' });
+    }
+
+    const userDoc = await User.findById(req.user._id);
+    if (!userDoc) return res.status(404).json({ error: 'User not found' });
+
+    const currentBal = userDoc.walletBalance ?? 50000;
+    const newBal = currentBal + amount;
+    userDoc.walletBalance = newBal;
+    await userDoc.save();
+
+    await createInAppNotification({
+      userEmail: userDoc.email,
+      title: '💳 Wallet Top-Up Successful!',
+      message: `Your Atelier Wallet has been credited with ₦${amount.toLocaleString()}. New Balance: ₦${newBal.toLocaleString()}`,
+      type: 'order',
+    });
+
+    res.status(200).json({ message: 'Wallet top-up successful', walletBalance: newBal });
+  } catch (error) {
+    console.error('Wallet top-up error:', error);
+    res.status(500).json({ error: 'Failed to top up wallet' });
+  }
+});
+
+// Pay via Wallet (for order or booking)
+app.post('/api/wallet/pay', authenticateToken, async (req, res) => {
+  try {
+    const amount = Number(req.body.amount);
+    const { orderId, bookingId, description } = req.body;
+    if (!amount || amount <= 0) {
+      return res.status(400).json({ error: 'Invalid payment amount' });
+    }
+
+    const userDoc = await User.findById(req.user._id);
+    if (!userDoc) return res.status(404).json({ error: 'User not found' });
+
+    const currentBal = userDoc.walletBalance ?? 50000;
+    if (currentBal < amount) {
+      return res.status(400).json({ error: `Insufficient wallet balance (₦${currentBal.toLocaleString()}). Please top up first.` });
+    }
+
+    const newBal = currentBal - amount;
+    userDoc.walletBalance = newBal;
+    await userDoc.save();
+
+    if (orderId) {
+      await Order.findByIdAndUpdate(orderId, { $set: { paymentStatus: 'paid_wallet', status: 'processing' } });
+    }
+    if (bookingId) {
+      await Booking.findByIdAndUpdate(bookingId, { $set: { paymentStatus: 'paid_wallet', status: 'accepted' } });
+    }
+
+    await createInAppNotification({
+      userEmail: userDoc.email,
+      title: '💳 Payment Successful via Wallet!',
+      message: `Debited ₦${amount.toLocaleString()} for ${description || 'your checkout'}. Remaining Balance: ₦${newBal.toLocaleString()}`,
+      type: 'order',
+      orderId: orderId || null
+    });
+
+    res.status(200).json({ message: 'Payment completed successfully', walletBalance: newBal });
+  } catch (error) {
+    console.error('Wallet payment error:', error);
+    res.status(500).json({ error: 'Payment processing failed' });
+  }
+});
+
 // Serve dist directory if built
 const distPath = path.join(__dirname, '../dist');
 app.use(express.static(distPath));

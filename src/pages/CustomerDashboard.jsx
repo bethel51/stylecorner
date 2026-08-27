@@ -24,7 +24,8 @@ import {
   Eye,
   MessageSquare,
   History,
-  Activity
+  Activity,
+  Wallet
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
@@ -166,18 +167,24 @@ export const CustomerDashboard = () => {
     }
   };
 
+  const [walletBalance, setWalletBalance] = useState(50000);
+
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [bookingsResult, ordersResult] = await Promise.allSettled([
+      const [bookingsResult, ordersResult, walletResult] = await Promise.allSettled([
         api.getBookings(),
         api.getOrders(),
+        api.getWalletBalance(),
       ]);
       if (bookingsResult.status === 'fulfilled') {
         setBookings(Array.isArray(bookingsResult.value) ? bookingsResult.value : []);
       }
       if (ordersResult.status === 'fulfilled') {
         setOrders(Array.isArray(ordersResult.value) ? ordersResult.value : []);
+      }
+      if (walletResult.status === 'fulfilled') {
+        setWalletBalance(walletResult.value.walletBalance ?? 50000);
       }
     } catch (err) {
       console.error('Failed to load dashboard data:', err);
@@ -333,6 +340,35 @@ export const CustomerDashboard = () => {
                 <Star size={10} fill="#d4af37" /> Style Corner VIP
               </span>
             </div>
+          </div>
+
+          {/* Wallet Balance Card */}
+          <div style={{
+            background: 'linear-gradient(135deg, rgba(212,175,55,0.15) 0%, rgba(0,0,0,0.4) 100%)',
+            border: '1px solid rgba(212,175,55,0.4)', borderRadius: '16px',
+            padding: '0.85rem 1rem', marginBottom: '0.75rem',
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          }}>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#d4af37', fontFamily: 'Outfit', fontSize: '0.75rem', fontWeight: 800 }}>
+                <Wallet size={14} /> Atelier Digital Wallet
+              </div>
+              <div style={{ fontFamily: 'Outfit', fontSize: '1.4rem', fontWeight: 900, color: '#ffffff', marginTop: '0.1rem' }}>
+                ₦{Number(walletBalance).toLocaleString()}
+              </div>
+            </div>
+            <button
+              onClick={() => navigate('/payment', { state: { title: 'Wallet Top-Up', amount: 10000, description: 'Direct Wallet Credit' } })}
+              style={{
+                background: '#d4af37', color: '#171717', border: 'none',
+                padding: '0.45rem 0.85rem', borderRadius: '50px',
+                fontFamily: 'Outfit', fontWeight: 900, fontSize: '0.75rem',
+                cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem',
+                boxShadow: '0 4px 14px rgba(212,175,55,0.3)'
+              }}
+            >
+              <Plus size={13} /> Add Funds
+            </button>
           </div>
 
           {/* Bottom row: Loyalty bar */}
