@@ -201,8 +201,16 @@ export const CustomerDashboard = () => {
 
   // Stats
   const completedCount = bookings.filter((b) => b.status === 'completed').length;
-  const rewardPoints = (completedCount * 150) + (orders.length * 80) + 250;
-  const pointsToNextReward = 1000 - (rewardPoints % 1000);
+  // Only DELIVERED orders earn points — placing an order alone doesn't count
+  const deliveredOrdersCount = orders.filter(
+    (o) => o.trackingStatus === 'delivered' || o.status === 'delivered'
+  ).length;
+  // Harder tier: 100pts/completed booking, 45pts/delivered order, 150pt welcome bonus
+  // First voucher requires ~25 completed bookings or a mix of ~28+ total actions
+  const LOYALTY_TIER_SIZE = 3000;
+  const rewardPoints = (completedCount * 100) + (deliveredOrdersCount * 45) + 150;
+  const pointsToNextReward = LOYALTY_TIER_SIZE - (rewardPoints % LOYALTY_TIER_SIZE);
+  const tiersEarned = Math.floor(rewardPoints / LOYALTY_TIER_SIZE);
 
   // Section label style helper
   const sectionLabel = {
@@ -320,13 +328,13 @@ export const CustomerDashboard = () => {
             </div>
             <div style={{ background: 'rgba(255,255,255,0.1)', borderRadius: '50px', height: '6px', overflow: 'hidden', marginBottom: '0.35rem' }}>
               <div style={{
-                width: `${Math.min(100, (rewardPoints % 1000) / 10)}%`,
+                width: `${Math.min(100, (rewardPoints % LOYALTY_TIER_SIZE) / (LOYALTY_TIER_SIZE / 100))}%`,
                 height: '100%', background: 'linear-gradient(90deg, #d4af37, #f0c040)',
                 borderRadius: '50px', transition: 'width 0.6s ease',
               }} />
             </div>
             <p style={{ fontSize: '0.7rem', color: '#6b7280', margin: 0 }}>
-              {pointsToNextReward} pts to your next ₦25,000 reward voucher
+              {pointsToNextReward.toLocaleString()} pts to next reward · {tiersEarned > 0 ? `${tiersEarned} voucher${tiersEarned > 1 ? 's' : ''} earned 🎉` : 'Earn by completing bookings & receiving orders'}
             </p>
           </div>
 
