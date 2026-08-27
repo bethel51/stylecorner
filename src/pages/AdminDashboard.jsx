@@ -30,12 +30,16 @@ import {
   Edit3,
   Star,
   Upload,
+  MessageSquare,
+  Send,
+  Bell,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import { uploadToCloudinary } from '../services/cloudinary';
 import { StatusBadge } from '../components/common/StatusBadge';
 import { OrderTrackingSheet } from '../components/store/OrderTrackingSheet';
+import { NotificationSheet } from '../components/common/NotificationSheet';
 
 export const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -78,6 +82,42 @@ export const AdminDashboard = () => {
   // Mobile sidebar state
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  // Notification Sheet & Inquiries Reply State
+  const [showNotificationSheet, setShowNotificationSheet] = useState(false);
+  const [unreadNotifCount, setUnreadNotifCount] = useState(0);
+  const [replyInputMap, setReplyInputMap] = useState({});
+  const [sendingReplyId, setSendingReplyId] = useState(null);
+
+  const fetchUnreadNotifs = async () => {
+    try {
+      const data = await api.getNotifications();
+      setUnreadNotifCount(data.unreadCount || 0);
+    } catch (e) {}
+  };
+
+  useEffect(() => {
+    fetchUnreadNotifs();
+    const timer = setInterval(fetchUnreadNotifs, 20000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const handleSendAdminReply = async (orderId) => {
+    const text = (replyInputMap[orderId] || '').trim();
+    if (!text) return;
+    setSendingReplyId(orderId);
+    try {
+      const updatedOrder = await api.addOrderMessage(orderId, text);
+      setOrders(prev => prev.map(o => o._id === orderId ? updatedOrder : o));
+      setReplyInputMap(prev => ({ ...prev, [orderId]: '' }));
+      showToast('Reply sent and customer notified in real-time!', 'success');
+      fetchUnreadNotifs();
+    } catch (err) {
+      showToast(err.message || 'Failed to send reply', 'error');
+    } finally {
+      setSendingReplyId(null);
+    }
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -356,8 +396,11 @@ export const AdminDashboard = () => {
     { label: 'Store Products', value: productsList.length, sub: 'Active in store', icon: Tag, color: '#a855f7', bg: 'rgba(168,85,247,0.1)' },
   ];
 
+  const ordersWithMessages = orders.filter(o => Array.isArray(o.messages) && o.messages.length > 0);
+
   const navItems = [
     { id: 'orders', label: 'Store Orders', icon: ShoppingBag, count: orders.length },
+    { id: 'messages', label: 'Order Inquiries', icon: MessageSquare, count: ordersWithMessages.length },
     { id: 'bookings', label: 'Salon Bookings', icon: Calendar, count: bookings.length },
     { id: 'users', label: 'User Accounts', icon: Users, count: usersList.length },
     { id: 'products', label: 'Manage Products', icon: Tag, count: productsList.length },
@@ -543,10 +586,10 @@ export const AdminDashboard = () => {
             )}
             <div>
               <h1 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: isMobile ? '1.1rem' : '1.3rem', color: '#0f172a', margin: 0 }}>
-                {activeTab === 'orders' ? 'Store Orders' : activeTab === 'bookings' ? 'Salon Bookings' : activeTab === 'users' ? 'User Accounts' : 'Manage Store Products'}
+                {activeTab === 'orders' ? 'Store Orders' : activeTab === 'messages' ? 'Order Inquiries & Customer Support' : activeTab === 'bookings' ? 'Salon Bookings' : activeTab === 'users' ? 'User Accounts' : 'Manage Store Products'}
               </h1>
               <p style={{ color: '#64748b', fontSize: '0.75rem', margin: '0.1rem 0 0 0', display: isMobile ? 'none' : 'block' }}>
-                {activeTab === 'orders' ? 'Manage customer orders in real-time' : activeTab === 'bookings' ? 'Manage appointment bookings' : activeTab === 'users' ? 'Manage registered client and expert accounts' : 'Upload and manage products displayed on the public store page'}
+                {activeTab === 'orders' ? 'Manage customer orders in real-time' : activeTab === 'messages' ? 'Reply to customer inquiries and send instant real-time notifications' : activeTab === 'bookings' ? 'Manage appointment bookings' : activeTab === 'users' ? 'Manage registered client and expert accounts' : 'Upload and manage products displayed on the public store page'}
               </p>
             </div>
           </div>
@@ -566,6 +609,28 @@ export const AdminDashboard = () => {
                 <Plus size={15} /> Add Product
               </button>
             )}
+            <button
+              onClick={() => setShowNotificationSheet(true)}
+              title="Notifications"
+              style={{
+                background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.08)',
+                color: unreadNotifCount > 0 ? '#b5952f' : '#0f172a', padding: '0.45rem', borderRadius: '10px', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative'
+              }}
+            >
+              <Bell size={15} />
+              {unreadNotifCount > 0 && (
+                <span style={{
+                  position: 'absolute', top: '-3px', right: '-3px',
+                  backgroundColor: '#ef4444', color: '#fff', fontSize: '0.58rem',
+                  fontWeight: 900, borderRadius: '50%', width: '15px', height: '15px',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  boxShadow: '0 0 6px rgba(239,68,68,0.4)'
+                }}>
+                  {unreadNotifCount}
+                </span>
+              )}
+            </button>
             <button
               onClick={fetchAdminData}
               title="Refresh"
@@ -777,6 +842,139 @@ export const AdminDashboard = () => {
                     </div>
                   </div>
                 ))}
+              </div>
+            )
+          ) : activeTab === 'messages' ? (
+            /* --- TAB 2: CUSTOMER ORDER MESSAGES & INQUIRIES --- */
+            ordersWithMessages.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '3.5rem 1.5rem', backgroundColor: '#ffffff', borderRadius: '18px', border: '1px dashed rgba(0,0,0,0.12)' }}>
+                <MessageSquare size={42} color="#94a3b8" style={{ marginBottom: '0.75rem' }} />
+                <h3 style={{ color: '#0f172a', fontFamily: 'Outfit', margin: '0 0 0.25rem', fontSize: '1.05rem', fontWeight: 800 }}>No Order Messages Yet</h3>
+                <p style={{ color: '#64748b', fontSize: '0.8rem' }}>When customers message about their store orders, their conversations and inquiries will appear here.</p>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                {ordersWithMessages.map(order => {
+                  const msgs = order.messages || [];
+                  const replyText = replyInputMap[order._id] || '';
+
+                  return (
+                    <div
+                      key={order._id}
+                      style={{
+                        backgroundColor: '#ffffff',
+                        borderRadius: '18px',
+                        padding: isMobile ? '1rem' : '1.35rem',
+                        border: '1px solid rgba(0,0,0,0.08)',
+                        boxShadow: '0 4px 16px rgba(0,0,0,0.02)'
+                      }}
+                    >
+                      {/* Customer & Order Header */}
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.85rem', paddingBottom: '0.75rem', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
+                        <div>
+                          <div style={{ fontSize: '0.7rem', color: '#64748b', fontFamily: 'monospace', marginBottom: '0.15rem' }}>
+                            ORDER #{(order._id || '').slice(-6).toUpperCase()}
+                          </div>
+                          <h4 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '1rem', color: '#0f172a', margin: 0 }}>
+                            {order.name || order.customerInfo?.name || 'Store Customer'}
+                          </h4>
+                          <div style={{ fontSize: '0.76rem', color: '#64748b', marginTop: '0.1rem' }}>
+                            {order.email} {order.phone ? `· ${order.phone}` : ''}
+                          </div>
+                        </div>
+
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                          <span style={{ fontSize: '0.95rem', fontWeight: 900, color: '#b5952f', fontFamily: 'Outfit' }}>
+                            ₦{Number(order.totalPrice || order.price || 0).toLocaleString()}
+                          </span>
+                          <StatusBadge status={order.status || 'pending'} />
+                        </div>
+                      </div>
+
+                      {/* Items Purchased Summary */}
+                      <div style={{ fontSize: '0.76rem', color: '#475569', backgroundColor: '#faf9f6', padding: '0.5rem 0.75rem', borderRadius: '10px', marginBottom: '1rem', border: '1px solid rgba(212,175,55,0.2)' }}>
+                        <strong style={{ color: '#0f172a' }}>Purchased Items: </strong>
+                        {Array.isArray(order.items) && order.items.length > 0 ? (
+                          order.items.map(i => `${i.name || i.title} (x${i.quantity || 1})`).join(', ')
+                        ) : (
+                          order.item || 'Grooming Products'
+                        )}
+                      </div>
+
+                      {/* Conversation Message Thread */}
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1rem', maxHeight: '260px', overflowY: 'auto', paddingRight: '4px' }}>
+                        {msgs.map((m, idx) => {
+                          const isAdminSender = m.senderRole === 'admin' || m.senderRole === 'staff';
+                          return (
+                            <div
+                              key={idx}
+                              style={{
+                                alignSelf: isAdminSender ? 'flex-end' : 'flex-start',
+                                maxWidth: '85%',
+                                padding: '0.6rem 0.85rem',
+                                borderRadius: isAdminSender ? '14px 14px 2px 14px' : '14px 14px 14px 2px',
+                                backgroundColor: isAdminSender ? '#171717' : '#f1f5f9',
+                                color: isAdminSender ? '#ffffff' : '#0f172a',
+                                border: isAdminSender ? '1px solid #d4af37' : '1px solid rgba(0,0,0,0.06)'
+                              }}
+                            >
+                              <div style={{ fontSize: '0.65rem', fontWeight: 800, color: isAdminSender ? '#d4af37' : '#64748b', marginBottom: '0.15rem' }}>
+                                {isAdminSender ? '👑 Admin Support' : `👤 ${m.sender || 'Customer'}`}
+                              </div>
+                              <div style={{ fontSize: '0.82rem', lineHeight: 1.35 }}>{m.text}</div>
+                              <div style={{ fontSize: '0.62rem', color: isAdminSender ? '#a1a1aa' : '#94a3b8', marginTop: '0.2rem', textAlign: 'right' }}>
+                                {m.createdAt ? new Date(m.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {/* Admin Quick Reply Input */}
+                      <form
+                        onSubmit={(e) => { e.preventDefault(); handleSendAdminReply(order._id); }}
+                        style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}
+                      >
+                        <input
+                          type="text"
+                          placeholder={`Reply to ${order.name || 'customer'}...`}
+                          value={replyText}
+                          onChange={(e) => setReplyInputMap({ ...replyInputMap, [order._id]: e.target.value })}
+                          style={{
+                            flex: 1, padding: '0.6rem 0.85rem', borderRadius: '10px',
+                            border: '1px solid rgba(0,0,0,0.12)', fontSize: '0.82rem',
+                            outline: 'none', fontFamily: 'Outfit'
+                          }}
+                        />
+                        <button
+                          type="submit"
+                          disabled={sendingReplyId === order._id || !replyText.trim()}
+                          style={{
+                            backgroundColor: '#d4af37', color: '#ffffff', border: 'none',
+                            padding: '0.6rem 1rem', borderRadius: '10px', fontWeight: 800,
+                            fontSize: '0.8rem', fontFamily: 'Outfit', cursor: replyText.trim() ? 'pointer' : 'not-allowed',
+                            display: 'flex', alignItems: 'center', gap: '0.35rem', flexShrink: 0
+                          }}
+                        >
+                          <Send size={13} /> Reply & Notify
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => setSelectedOrderForTracking(order)}
+                          style={{
+                            backgroundColor: 'rgba(0,0,0,0.04)', color: '#334155', border: '1px solid rgba(0,0,0,0.08)',
+                            padding: '0.6rem 0.85rem', borderRadius: '10px', fontWeight: 600,
+                            fontSize: '0.8rem', fontFamily: 'Outfit', cursor: 'pointer',
+                            display: 'flex', alignItems: 'center', gap: '0.35rem', flexShrink: 0
+                          }}
+                        >
+                          <Truck size={13} /> Track
+                        </button>
+                      </form>
+                    </div>
+                  );
+                })}
               </div>
             )
           ) : activeTab === 'bookings' ? (
@@ -1471,6 +1669,17 @@ export const AdminDashboard = () => {
         onOrderUpdated={(updated) => {
           setOrders(prev => prev.map(o => o._id === updated._id ? updated : o));
           setSelectedOrderForTracking(updated);
+        }}
+      />
+
+      <NotificationSheet
+        isOpen={showNotificationSheet}
+        onClose={() => { setShowNotificationSheet(false); fetchUnreadNotifs(); }}
+        onSelectNotification={(notif) => {
+          if (notif.orderId) {
+            const foundOrder = orders.find(o => o._id === notif.orderId);
+            if (foundOrder) setSelectedOrderForTracking(foundOrder);
+          }
         }}
       />
     </div>

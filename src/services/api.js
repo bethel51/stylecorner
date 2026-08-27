@@ -381,4 +381,44 @@ export const api = {
     if (!res.ok) throw new Error(data?.error || 'Failed to delete product');
     return data;
   },
+
+  // Notifications API
+  getNotifications: async () => {
+    const res = await fetchWithTimeout(`${API_BASE}/notifications?_t=${Date.now()}`, {
+      headers: getAuthHeaders(),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Failed to fetch notifications');
+    return data || { notifications: [], unreadCount: 0 };
+  },
+
+  markNotificationRead: async (id) => {
+    const res = await fetchWithTimeout(`${API_BASE}/notifications/${id}/read`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Failed to update notification');
+    return data;
+  },
+
+  markAllNotificationsRead: async () => {
+    const res = await fetchWithTimeout(`${API_BASE}/notifications/read-all`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Failed to mark notifications read');
+    return data;
+  },
+
+  deleteNotification: async (id) => {
+    const res = await fetchWithTimeout(`${API_BASE}/notifications/${id}`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Failed to delete notification');
+    return data;
+  },
 };

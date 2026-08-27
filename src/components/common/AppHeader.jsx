@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ArrowLeft, ShoppingBag, User, Sparkles, Shield } from 'lucide-react';
+import { ArrowLeft, ShoppingBag, User, Sparkles, Shield, Bell } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
+import { api } from '../../services/api';
 import { ImagePreviewModal } from './ImagePreviewModal';
+import { NotificationSheet } from './NotificationSheet';
 import { OptimizedImage } from './OptimizedImage';
 import { preloadRoute } from '../../App';
 
@@ -13,8 +15,26 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
   const { user, isAuthenticated, role } = useAuth();
   const { itemCount } = useCart();
   const [showImagePreview, setShowImagePreview] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   const isHome = location.pathname === '/';
+
+  const fetchUnread = async () => {
+    if (!isAuthenticated) return;
+    try {
+      const data = await api.getNotifications();
+      setUnreadCount(data.unreadCount || 0);
+    } catch (e) {}
+  };
+
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      fetchUnread();
+      const timer = setInterval(fetchUnread, 20000);
+      return () => clearInterval(timer);
+    }
+  }, [isAuthenticated]);
 
   const handleProfileClick = () => {
     if (!isAuthenticated) {
@@ -116,6 +136,19 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
             </button>
           )}
 
+          {isAuthenticated && (
+            <button
+              className="app-header-btn"
+              onClick={() => setShowNotifications(true)}
+              title="Notifications"
+              aria-label="Notifications"
+              style={{ position: 'relative', color: unreadCount > 0 ? '#d4af37' : undefined, borderColor: unreadCount > 0 ? '#d4af37' : undefined }}
+            >
+              <Bell size={18} />
+              {unreadCount > 0 && <span className="badge-dot" style={{ backgroundColor: '#ef4444' }} />}
+            </button>
+          )}
+
           <button
             className="app-header-btn"
             onClick={onOpenCart || (() => navigate('/store'))}
@@ -169,6 +202,17 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
           </button>
         </div>
       </header>
+
+      <NotificationSheet
+        isOpen={showNotifications}
+        onClose={() => { setShowNotifications(false); fetchUnread(); }}
+        onSelectNotification={(notif) => {
+          if (notif.orderId) {
+            if (role === 'admin') navigate('/admin');
+            else navigate('/customer-dashboard');
+          }
+        }}
+      />
 
       <ImagePreviewModal
         isOpen={showImagePreview}

@@ -8,6 +8,7 @@ const Booking = require('./models/Booking');
 const Order = require('./models/Order');
 const User = require('./models/User');
 const Product = require('./models/Product');
+const Notification = require('./models/Notification');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -68,6 +69,25 @@ async function sendNotificationSafe(to, subject, text) {
     console.error('Non-blocking notification email failed to send:', err.message);
   }
 }
+
+const createInAppNotification = async ({ userEmail, title, message, type = 'order', orderId, bookingId }) => {
+  try {
+    if (!userEmail) return null;
+    const cleanEmail = userEmail.trim().toLowerCase();
+    const notif = new Notification({
+      userEmail: cleanEmail,
+      title,
+      message,
+      type,
+      orderId: orderId ? String(orderId) : undefined,
+      bookingId: bookingId ? String(bookingId) : undefined,
+    });
+    return await notif.save();
+  } catch (err) {
+    console.error('In-app notification creation error:', err.message);
+    return null;
+  }
+};
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -782,13 +802,29 @@ app.post('/api/orders', authenticateToken, async (req, res) => {
     // 1. Send confirmation to Customer
     await sendNotificationSafe(savedOrder.email, "Order Received", `Thank you for your order! Order #${savedOrder._id} for ${savedOrder.item} has been placed.`);
     
+    // In-app notifications
+    await createInAppNotification({
+      userEmail: savedOrder.email,
+      title: "Order Placed 📦",
+      message: `Your order #${savedOrder._id.toString().slice(-6).toUpperCase()} for ${savedOrder.item} has been placed.`,
+      type: 'order',
+      orderId: savedOrder._id
+    });
+    await createInAppNotification({
+      userEmail: 'admin@stylecorner.com',
+      title: "New Store Order Alert 🛒",
+      message: `Order #${savedOrder._id.toString().slice(-6).toUpperCase()} placed by ${savedOrder.name || savedOrder.email} (₦${Number(savedOrder.totalPrice || savedOrder.price || 0).toLocaleString()})`,
+      type: 'order',
+      orderId: savedOrder._id
+    });
+
     // 2. Send instant alert email to Store Admin / Manager
     const adminEmail = process.env.ADMIN_EMAIL || process.env.EMAIL_USER || process.env.BREVO_SMTP_LOGIN;
     if (adminEmail && adminEmail !== savedOrder.email) {
       await sendNotificationSafe(
         adminEmail,
         `📦 New Store Order Alert: Order #${savedOrder._id}`,
-        `ADMIN NOTIFICATION\n\nA new order has been placed on the Atelier Store!\n\nOrder Details:\n- Order ID: #${savedOrder._id}\n- Items: ${savedOrder.item}\n- Customer: ${savedOrder.name || 'Customer'} (${savedOrder.email})\n- Phone: ${savedOrder.phone || 'N/A'}\n- Delivery Address: ${savedOrder.address || 'N/A'}\n- Total Price: $${savedOrder.totalPrice || savedOrder.price}`
+        `ADMIN NOTIFICATION\n\nA new order has been placed on the Atelier Store!\n\nOrder Details:\n- Order ID: #${savedOrder._id}\n- Items: ${savedOrder.item}\n- Customer: ${savedOrder.name || 'Customer'} (${savedOrder.email})\n- Phone: ${savedOrder.phone || 'N/A'}\n- Delivery Address: ${savedOrder.address || 'N/A'}\n- Total Price: ₦${Number(savedOrder.totalPrice || savedOrder.price || 0).toLocaleString()}`
       );
     }
 
@@ -809,6 +845,16 @@ app.put('/api/orders/:id', authenticateToken, async (req, res) => {
     }
 
     const newStatus = updateObj.status || updated.status;
+    if (updated.email) {
+      await createInAppNotification({
+        userEmail: updated.email,
+        title: `Order Status: ${newStatus.toUpperCase()} 🚚`,
+        message: `Order #${updated._id.toString().slice(-6).toUpperCase()} status changed to ${newStatus}`,
+        type: 'order',
+        orderId: updated._id
+      });
+    }
+
     if (newStatus === 'shipped') {
       const recipient = updated.email || updated.customerInfo?.email;
       if (recipient) {
@@ -848,7 +894,15 @@ app.put('/api/orders/:id/tracking', authenticateToken, async (req, res) => {
     if (!updatedOrder) return res.status(404).json({ error: 'Order not found' });
 
     // Send notification to customer if tracking status changes
-    if (trackingStatus) {
+    if (trackingStatus && updatedOrder.email) {
+      await createInAppNotification({
+        userEmail: updatedOrder.email,
+        title: `Order Tracking Update 🚚`,
+        message: `Order #${updatedOrder._id.toString().slice(-6).toUpperCase()} is now ${trackingStatus}. Est: ${updatedOrder.estimatedDelivery || 'Pending'}`,
+        type: 'order',
+        orderId: updatedOrder._id
+      });
+
       await sendNotificationSafe(
         updatedOrder.email,
         `Order Tracking Update: Order #${updatedOrder._id}`,
@@ -874,9 +928,10 @@ app.post('/api/orders/:id/messages', authenticateToken, async (req, res) => {
     const order = await Order.findById(req.params.id);
     if (!order) return res.status(404).json({ error: 'Order not found' });
 
+    const isSenderAdmin = req.user.role === 'staff' || req.user.role === 'admin';
     const newMessage = {
       sender: `${req.user.firstname || ''} ${req.user.lastname || ''}`.trim() || req.user.email,
-      senderRole: req.user.role === 'staff' ? 'admin' : 'customer',
+      senderRole: isSenderAdmin ? 'admin' : 'customer',
       text: text.trim(),
       createdAt: new Date()
     };
@@ -884,24 +939,100 @@ app.post('/api/orders/:id/messages', authenticateToken, async (req, res) => {
     order.messages.push(newMessage);
     await order.save();
 
-    // Send email alert to recipient
-    const isSenderAdmin = req.user.role === 'staff';
-    const recipientEmail = isSenderAdmin
-      ? order.email
-      : (process.env.ADMIN_EMAIL || process.env.EMAIL_USER || process.env.BREVO_SMTP_LOGIN);
-
-    if (recipientEmail) {
+    if (isSenderAdmin) {
+      // Admin replied -> Notify Customer in-app & via email!
+      await createInAppNotification({
+        userEmail: order.email,
+        title: `Admin Replied on Order #${order._id.toString().slice(-6).toUpperCase()} 💬`,
+        message: `Admin: "${text.trim()}"`,
+        type: 'message',
+        orderId: order._id
+      });
       await sendNotificationSafe(
-        recipientEmail,
-        `New Message on Order #${order._id}`,
-        `New message from ${newMessage.sender} (${newMessage.senderRole.toUpperCase()}):\n\n"${newMessage.text}"\n\nLog in to your Style Corner dashboard to respond.`
+        order.email,
+        `Admin Replied to Order #${order._id}`,
+        `Admin response:\n\n"${newMessage.text}"\n\nLog in to your Style Corner dashboard to view and reply.`
       );
+    } else {
+      // Customer sent message -> Notify Admin in-app & via email!
+      await createInAppNotification({
+        userEmail: 'admin@stylecorner.com',
+        title: `Customer Message on Order #${order._id.toString().slice(-6).toUpperCase()} 💬`,
+        message: `${newMessage.sender}: "${text.trim()}"`,
+        type: 'message',
+        orderId: order._id
+      });
+      const adminEmail = process.env.ADMIN_EMAIL || process.env.EMAIL_USER || process.env.BREVO_SMTP_LOGIN;
+      if (adminEmail) {
+        await sendNotificationSafe(
+          adminEmail,
+          `New Customer Message on Order #${order._id}`,
+          `New message from ${newMessage.sender}:\n\n"${newMessage.text}"\n\nLog in to Admin Dashboard to reply.`
+        );
+      }
     }
 
     res.status(200).json(order);
   } catch (error) {
     console.error('Failed to post message to order:', error);
     res.status(500).json({ error: 'Failed to send message' });
+  }
+});
+
+// --- NOTIFICATION ROUTES ---
+app.get('/api/notifications', authenticateToken, async (req, res) => {
+  try {
+    const userEmail = (req.user.email || '').trim().toLowerCase();
+    const isAdmin = req.user.role === 'admin' || req.user.role === 'staff';
+    const query = {
+      $or: [
+        { userEmail: new RegExp('^' + userEmail + '$', 'i') },
+        ...(isAdmin ? [{ userEmail: 'admin@stylecorner.com' }, { userEmail: 'admin' }] : [])
+      ]
+    };
+    const notifications = await Notification.find(query).sort({ createdAt: -1 }).limit(50);
+    const unreadCount = notifications.filter(n => !n.read).length;
+    res.status(200).json({ notifications, unreadCount });
+  } catch (error) {
+    console.error('Fetch notifications error:', error);
+    res.status(500).json({ error: 'Failed to fetch notifications' });
+  }
+});
+
+app.put('/api/notifications/:id/read', authenticateToken, async (req, res) => {
+  try {
+    const updated = await Notification.findByIdAndUpdate(req.params.id, { read: true }, { new: true });
+    res.status(200).json(updated);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update notification' });
+  }
+});
+
+app.put('/api/notifications/read-all', authenticateToken, async (req, res) => {
+  try {
+    const userEmail = (req.user.email || '').trim().toLowerCase();
+    const isAdmin = req.user.role === 'admin' || req.user.role === 'staff';
+    await Notification.updateMany(
+      {
+        $or: [
+          { userEmail: new RegExp('^' + userEmail + '$', 'i') },
+          ...(isAdmin ? [{ userEmail: 'admin@stylecorner.com' }, { userEmail: 'admin' }] : [])
+        ]
+      },
+      { $set: { read: true } }
+    );
+    res.status(200).json({ message: 'All notifications marked as read' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to mark all as read' });
+  }
+});
+
+app.delete('/api/notifications/:id', authenticateToken, async (req, res) => {
+  try {
+    await Notification.findByIdAndDelete(req.params.id);
+    res.status(200).json({ message: 'Notification deleted' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete notification' });
   }
 });
 
