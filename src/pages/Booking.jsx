@@ -40,6 +40,7 @@ const NIGERIAN_STATES = [
 ];
 
 const SERVICES = [
+  { id: 's0', title: 'Barber', price: 8000, duration: '30 mins', category: 'Barbing', icon: '💈', desc: 'Precision fades, line-ups, beard sculpting & shape-ups by a certified barber.' },
   { id: 's1', title: 'Wig Installer', price: 25000, duration: '90 mins', category: 'Hair', icon: '✂️', desc: 'Flawless frontal & closure installation, lace melting & knots bleaching.' },
   { id: 's2', title: 'Wig Revamper', price: 15000, duration: '60 mins', category: 'Hair', icon: '✨', desc: 'Deep wig washing, lace restoration & custom hot-comb restyling.' },
   { id: 's3', title: 'Hair Stylist (Braider)', price: 35000, duration: '120 mins', category: 'Hair', icon: '🪮', desc: 'Knotless box braids, goddess braids & loc maintenance.' },

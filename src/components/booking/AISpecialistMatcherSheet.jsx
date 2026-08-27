@@ -17,6 +17,7 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
   const [matchResult, setMatchResult] = useState(null);
 
   const categories = [
+    { id: 'barber', label: 'Barber', service: 'Barber' },
     { id: 'wig_install', label: 'Wig Installer', service: 'Wig Installer' },
     { id: 'wig_revamp', label: 'Wig Revamper', service: 'Wig Revamper' },
     { id: 'braider', label: 'Hair Stylist (Braider)', service: 'Hair Stylist (Braider)' },

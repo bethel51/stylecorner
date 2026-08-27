@@ -8,9 +8,17 @@ export const Services = () => {
   const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState('All');
 
-  const categories = ['All', 'Hair & Wigs', 'Lashes & Makeup', 'Nails & Spa'];
+  const categories = ['All', 'Barbing', 'Hair & Wigs', 'Lashes & Makeup', 'Nails & Spa'];
 
   const servicesList = [
+    {
+      id: 'barber',
+      title: 'Barber',
+      category: 'Barbing',
+      price: 8000,
+      duration: '30 mins',
+      desc: 'Precision fades, line-ups, beard sculpting, edge-ups & shape-ups by a certified barber.',
+    },
     {
       id: 'wig_install',
       title: 'Wig Installer',

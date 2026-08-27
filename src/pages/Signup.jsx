@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { PageContainer } from '../components/common/PageContainer';
 
 const EXPERT_SERVICES = [
+  { id: 'barber', label: 'Barber', icon: '💈' },
   { id: 'lash', label: 'Lash Tech', icon: '👁️' },
   { id: 'nail', label: 'Nail Tech', icon: '💅' },
   { id: 'wig_install', label: 'Wig Installer', icon: '💇‍♀️' },
