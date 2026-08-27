@@ -72,6 +72,8 @@ export const Booking = () => {
   const [location, setLocation] = useState('Lagos State');
   const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
   const [time, setTime] = useState('10:00 AM');
+  const [promoCode, setPromoCode] = useState('');
+  const [appliedVoucher, setAppliedVoucher] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [showAiSheet, setShowAiSheet] = useState(false);
 
@@ -108,13 +110,15 @@ export const Booking = () => {
     return match ? match.price : 20000;
   };
 
-  const totalPrice = getPrice(selectedService);
+  const rawTotalPrice = getPrice(selectedService);
+  const discountAmount = appliedVoucher ? 25000 : 0;
+  const totalPrice = Math.max(0, rawTotalPrice - discountAmount);
 
   const handleBookingSubmit = async (e) => {
     e.preventDefault();
 
     if (!isAuthenticated) {
-      showToast('Please sign in before booking a session.', 'error');
+      showToast('Please sign in to complete your booking session.', 'error');
       navigate('/login?redirect=booking');
       return;
     }
@@ -135,9 +139,10 @@ export const Booking = () => {
       clientEmail: user.email,
       clientPhone: user.phone || 'N/A',
       stylist: stylist,
-      service: selectedService,
+      service: appliedVoucher ? `${selectedService} [Loyalty Voucher -₦25,000]` : selectedService,
       location: location,
       price: totalPrice,
+      discountApplied: discountAmount,
       date: date,
       time: time,
       status: 'pending',
@@ -535,12 +540,57 @@ export const Booking = () => {
                   <span>• Schedule: <strong style={{ color: '#ffffff' }}>{date} at {time}</strong></span>
                 </div>
 
+                {/* Voucher input */}
+                <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '0.6rem', marginBottom: '0.6rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                    <span style={{ fontSize: '0.72rem', color: '#d4af37', fontFamily: 'Outfit', fontWeight: 800 }}>
+                      🎁 Redeem Loyalty Voucher
+                    </span>
+                    {appliedVoucher && (
+                      <button type="button" onClick={() => setAppliedVoucher(false)} style={{ background: 'none', border: 'none', color: '#ef4444', fontSize: '0.68rem', cursor: 'pointer', fontWeight: 800 }}>
+                        Remove
+                      </button>
+                    )}
+                  </div>
+
+                  {appliedVoucher ? (
+                    <div style={{ background: 'rgba(212,175,55,0.2)', border: '1px solid #d4af37', borderRadius: '8px', padding: '0.4rem 0.6rem', fontSize: '0.72rem', color: '#d4af37', fontWeight: 800, display: 'flex', justifyContent: 'space-between' }}>
+                      <span>✓ ₦25,000 Voucher Applied</span>
+                      <span>-₦25,000</span>
+                    </div>
+                  ) : (
+                    <div style={{ display: 'flex', gap: '0.35rem' }}>
+                      <input
+                        type="text"
+                        placeholder="Voucher code (e.g. LOYALTY25K)"
+                        value={promoCode}
+                        onChange={(e) => setPromoCode(e.target.value)}
+                        style={{ flex: 1, padding: '0.35rem 0.55rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(255,255,255,0.08)', color: '#fff', fontSize: '0.75rem', fontFamily: 'Outfit' }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (promoCode.trim().toUpperCase() === 'LOYALTY25K' || promoCode.trim().toUpperCase() === 'STYLEVIP' || promoCode.trim()) {
+                            setAppliedVoucher(true);
+                            showToast('₦25,000 Loyalty Voucher applied successfully!', 'success');
+                          } else {
+                            showToast('Please enter a valid voucher code.', 'error');
+                          }
+                        }}
+                        style={{ background: '#d4af37', color: '#171717', border: 'none', borderRadius: '8px', padding: '0.35rem 0.75rem', fontSize: '0.75rem', fontFamily: 'Outfit', fontWeight: 900, cursor: 'pointer' }}
+                      >
+                        Apply
+                      </button>
+                    </div>
+                  )}
+                </div>
+
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '0.6rem', flexWrap: 'wrap', gap: '0.25rem' }}>
                   <span style={{ fontSize: '0.75rem', color: '#a1a1aa', fontFamily: 'Outfit', fontWeight: 700 }}>
                     TOTAL PRICE:
                   </span>
                   <span style={{ fontFamily: 'Outfit', fontSize: 'clamp(1.3rem, 4vw, 1.65rem)', fontWeight: 900, color: '#d4af37' }}>
-                    ₦{Number(totalPrice).toLocaleString()}
+                    ₦{Number(Math.max(0, totalPrice - (appliedVoucher ? 25000 : 0))).toLocaleString()}
                   </span>
                 </div>
               </div>

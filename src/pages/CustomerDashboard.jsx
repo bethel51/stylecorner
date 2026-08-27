@@ -134,10 +134,35 @@ export const CustomerDashboard = () => {
       await api.clearBookingHistory();
       setBookings([]);
       showToast('All booking history cleared successfully.', 'success');
-    } catch (err) {
-      showToast(err.message || 'Failed to clear history', 'error');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const [reviewModalBooking, setReviewModalBooking] = useState(null);
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState('');
+  const [submittingReview, setSubmittingReview] = useState(false);
+
+  const handleSubmitReview = async (e) => {
+    e.preventDefault();
+    if (!reviewModalBooking) return;
+    setSubmittingReview(true);
+    try {
+      await api.postReview({
+        bookingId: reviewModalBooking._id,
+        stylistName: reviewModalBooking.stylist,
+        serviceName: reviewModalBooking.service,
+        rating: reviewRating,
+        comment: reviewComment.trim(),
+      });
+      showToast(`Thank you! Your ${reviewRating}-star review for ${reviewModalBooking.stylist} has been posted. ⭐`, 'success');
+      setReviewModalBooking(null);
+      setReviewComment('');
+    } catch (err) {
+      showToast(err.message || 'Failed to submit review', 'error');
+    } finally {
+      setSubmittingReview(false);
     }
   };
 
@@ -844,7 +869,25 @@ export const CustomerDashboard = () => {
                       )}
 
                       {b.status !== 'rejected' && (
-                        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.4rem' }}>
+                          {b.status === 'completed' && (
+                            <button
+                              onClick={() => {
+                                setReviewModalBooking(b);
+                                setReviewRating(5);
+                                setReviewComment('');
+                              }}
+                              style={{
+                                background: 'rgba(212,175,55,0.15)',
+                                border: '1px solid rgba(212,175,55,0.4)',
+                                color: '#b5952f',
+                                minHeight: '34px', width: 'auto', fontSize: '0.75rem', padding: '0.35rem 0.8rem', borderRadius: '10px',
+                                fontFamily: 'Outfit', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem'
+                              }}
+                            >
+                              <Star size={11} fill="#b5952f" /> Rate Specialist
+                            </button>
+                          )}
                           <button
                             onClick={() => { setShowHistorySheet(false); navigate(`/booking?stylist=${encodeURIComponent(b.stylist)}&service=${encodeURIComponent(b.service)}`); }}
                             className="app-btn app-btn-outline"
@@ -1105,6 +1148,73 @@ export const CustomerDashboard = () => {
           setSelectedOrderForTracking(updated);
         }}
       />
+
+      {/* Rate & Review Specialist Sheet */}
+      <BottomSheet
+        isOpen={!!reviewModalBooking}
+        onClose={() => setReviewModalBooking(null)}
+        title="Rate & Review Specialist"
+      >
+        {reviewModalBooking && (
+          <form onSubmit={handleSubmitReview} style={{ paddingBottom: '1rem' }}>
+            <div style={{ textAlign: 'center', marginBottom: '1.25rem' }}>
+              <span style={{ fontSize: '0.78rem', fontFamily: 'Outfit', fontWeight: 800, color: '#d4af37', textTransform: 'uppercase' }}>
+                {reviewModalBooking.service}
+              </span>
+              <h3 style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 900, color: '#171717', margin: '0.2rem 0' }}>
+                How was your session with {reviewModalBooking.stylist}?
+              </h3>
+              <p style={{ color: '#6b7280', fontSize: '0.8rem', margin: 0 }}>
+                Your feedback helps us maintain verified luxury standards.
+              </p>
+            </div>
+
+            {/* Star Selection */}
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', marginBottom: '1.25rem' }}>
+              {[1, 2, 3, 4, 5].map((star) => (
+                <button
+                  type="button"
+                  key={star}
+                  onClick={() => setReviewRating(star)}
+                  style={{
+                    background: 'none', border: 'none', cursor: 'pointer', padding: '0.2rem',
+                    transition: 'transform 0.15s ease'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.2)'}
+                  onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                >
+                  <Star
+                    size={32}
+                    fill={star <= reviewRating ? '#f59e0b' : 'none'}
+                    color={star <= reviewRating ? '#f59e0b' : '#d1d5db'}
+                  />
+                </button>
+              ))}
+            </div>
+
+            <div className="app-input-group" style={{ marginBottom: '1.25rem' }}>
+              <label className="app-label">Your Experience & Feedback</label>
+              <textarea
+                rows={3}
+                placeholder="Share your thoughts about the hairstyle, nail art, or barbering service..."
+                value={reviewComment}
+                onChange={(e) => setReviewComment(e.target.value)}
+                className="app-textarea"
+                style={{ width: '100%', padding: '0.65rem', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.12)', fontFamily: 'Outfit', fontSize: '0.85rem' }}
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={submittingReview}
+              className="app-btn app-btn-accent"
+              style={{ width: '100%', minHeight: '44px', borderRadius: '14px', fontSize: '0.88rem', fontWeight: 800 }}
+            >
+              {submittingReview ? 'Submitting Review...' : `Submit ${reviewRating}-Star Review`}
+            </button>
+          </form>
+        )}
+      </BottomSheet>
     </PageContainer>
   );
 };

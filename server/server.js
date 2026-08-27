@@ -9,6 +9,7 @@ const Order = require('./models/Order');
 const User = require('./models/User');
 const Product = require('./models/Product');
 const Notification = require('./models/Notification');
+const Review = require('./models/Review');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -1214,6 +1215,97 @@ app.delete('/api/products/:id', authenticateToken, async (req, res) => {
   } catch (error) {
     console.error('Delete product error:', error);
     res.status(500).json({ error: 'Failed to delete product' });
+  }
+});
+
+// ── SPECIALIST REVIEWS & PORTFOLIO ROUTES ── //
+
+// Post a review for a completed booking
+app.post('/api/reviews', authenticateToken, async (req, res) => {
+  try {
+    const { bookingId, stylistName, serviceName, rating, comment } = req.body;
+    if (!bookingId || !stylistName || !rating) {
+      return res.status(400).json({ error: 'Missing required review fields (bookingId, stylistName, rating)' });
+    }
+
+    const customerName = `${req.user.firstname || ''} ${req.user.lastname || ''}`.trim() || 'Valued Customer';
+    const review = new Review({
+      bookingId,
+      customerEmail: req.user.email,
+      customerName,
+      stylistName,
+      serviceName: serviceName || 'Grooming Service',
+      rating: Number(rating),
+      comment: comment || '',
+    });
+    await review.save();
+
+    // Recalculate average rating for the specialist
+    const specialistReviews = await Review.find({ stylistName: new RegExp('^' + stylistName.trim() + '$', 'i') });
+    if (specialistReviews.length > 0) {
+      const avgRating = Number((specialistReviews.reduce((sum, r) => sum + r.rating, 0) / specialistReviews.length).toFixed(1));
+      // Update matching user record if role is staff
+      await User.updateMany(
+        { role: 'staff', $or: [{ firstname: new RegExp('^' + stylistName.split(' ')[0] + '$', 'i') }, { email: new RegExp('^' + stylistName + '$', 'i') }] },
+        { $set: { rating: avgRating } }
+      );
+    }
+
+    // Send in-app notification to specialist
+    const specialistUser = await User.findOne({
+      role: 'staff',
+      $or: [
+        { firstname: new RegExp('^' + stylistName.split(' ')[0] + '$', 'i') },
+        { email: new RegExp('^' + stylistName + '$', 'i') }
+      ]
+    }).lean();
+
+    if (specialistUser && specialistUser.email) {
+      await createInAppNotification({
+        userEmail: specialistUser.email,
+        title: '⭐ New Customer Review!',
+        message: `${customerName} left a ${rating}-star review for your ${serviceName || 'service'}: "${comment || 'Great service!'}"`,
+        type: 'message',
+      });
+    }
+
+    res.status(201).json({ message: 'Review submitted successfully', review });
+  } catch (error) {
+    console.error('Create review error:', error);
+    res.status(500).json({ error: 'Failed to submit review' });
+  }
+});
+
+// Get reviews for a specific specialist
+app.get('/api/reviews/specialist/:name', async (req, res) => {
+  try {
+    const reviews = await Review.find({
+      stylistName: new RegExp('^' + req.params.name.trim() + '$', 'i')
+    }).sort({ createdAt: -1 }).lean();
+    res.status(200).json(reviews);
+  } catch (error) {
+    console.error('Fetch specialist reviews error:', error);
+    res.status(500).json({ error: 'Failed to fetch reviews' });
+  }
+});
+
+// Update Specialist Portfolio Gallery (Staff feature)
+app.put('/api/specialists/portfolio', authenticateToken, async (req, res) => {
+  try {
+    const { portfolio } = req.body;
+    if (!Array.isArray(portfolio)) {
+      return res.status(400).json({ error: 'Portfolio must be an array of image URLs' });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user._id,
+      { $set: { portfolio } },
+      { new: true, select: '-password' }
+    );
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    console.error('Update portfolio error:', error);
+    res.status(500).json({ error: 'Failed to update portfolio' });
   }
 });
 

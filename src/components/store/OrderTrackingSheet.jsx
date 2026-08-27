@@ -11,11 +11,13 @@ import {
   Package,
   ShieldCheck,
   Calendar,
-  AlertCircle
+  AlertCircle,
+  Download
 } from 'lucide-react';
 import { BottomSheet } from '../common/BottomSheet';
 import { api } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+import { printOrderInvoice } from '../../utils/orderInvoiceExport';
 
 const TRACKING_STAGES = [
   { id: 'Order Placed', label: 'Order Placed', icon: Package },
@@ -118,15 +120,31 @@ export const OrderTrackingSheet = ({ isOpen, onClose, order, onOrderUpdated, isA
             </div>
           </div>
 
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '0.75rem', fontSize: '0.78rem', color: '#a1a1aa', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '0.65rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.75rem', fontSize: '0.78rem', color: '#a1a1aa', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '0.65rem', flexWrap: 'wrap', gap: '0.5rem' }}>
             <div>
               <span style={{ color: '#6b7280' }}>Tracking #: </span>
               <strong style={{ color: '#ffffff' }}>{order.trackingNumber || 'SC-' + String(order._id).slice(-8).toUpperCase()}</strong>
             </div>
-            <div>
-              <span style={{ color: '#6b7280' }}>Est. Delivery: </span>
-              <strong style={{ color: '#d4af37' }}>{order.estimatedDelivery || '2-3 Business Days'}</strong>
-            </div>
+            <button
+              type="button"
+              onClick={() => printOrderInvoice(order)}
+              style={{
+                background: 'rgba(212,175,55,0.18)',
+                border: '1px solid rgba(212,175,55,0.4)',
+                color: '#d4af37',
+                padding: '0.35rem 0.75rem',
+                borderRadius: '50px',
+                fontSize: '0.72rem',
+                fontFamily: 'Outfit',
+                fontWeight: 800,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.3rem'
+              }}
+            >
+              <Download size={12} /> Download PDF / Receipt
+            </button>
           </div>
         </div>
 

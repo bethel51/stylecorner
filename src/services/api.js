@@ -421,4 +421,35 @@ export const api = {
     if (!res.ok) throw new Error(data?.error || 'Failed to delete notification');
     return data;
   },
+
+  // Specialist Reviews API
+  postReview: async (reviewData) => {
+    const res = await fetchWithTimeout(`${API_BASE}/reviews`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(reviewData),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Failed to submit review');
+    return data;
+  },
+
+  getSpecialistReviews: async (stylistName) => {
+    const res = await fetchWithTimeout(`${API_BASE}/reviews/specialist/${encodeURIComponent(stylistName)}`);
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Failed to fetch specialist reviews');
+    return Array.isArray(data) ? data : [];
+  },
+
+  // Specialist Portfolio API
+  updatePortfolio: async (portfolio) => {
+    const res = await fetchWithTimeout(`${API_BASE}/specialists/portfolio`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ portfolio }),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Failed to update portfolio');
+    return data;
+  },
 };

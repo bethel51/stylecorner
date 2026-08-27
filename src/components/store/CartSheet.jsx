@@ -19,6 +19,8 @@ export const CartSheet = ({ isOpen, onClose }) => {
     street: user?.street || '',
     houseNumber: user?.houseNumber || '',
   });
+  const [promoCode, setPromoCode] = useState('');
+  const [appliedVoucher, setAppliedVoucher] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   React.useEffect(() => {
@@ -52,6 +54,8 @@ export const CartSheet = ({ isOpen, onClose }) => {
     }
 
     const fullAddress = `${location.houseNumber.trim()}, ${location.street.trim()}, ${location.lga}, ${location.state} State`;
+    const discountAmount = appliedVoucher ? 25000 : 0;
+    const finalAmount = Math.max(0, subtotal - discountAmount);
 
     setSubmitting(true);
     try {
@@ -60,9 +64,10 @@ export const CartSheet = ({ isOpen, onClose }) => {
         name: `${user.firstname || ''} ${user.lastname || ''}`.trim() || 'Customer',
         email: user.email,
         phone: user.phone || '',
-        item: itemsList,
-        price: subtotal,
-        totalPrice: subtotal,
+        item: appliedVoucher ? `${itemsList} [Loyalty Voucher -₦25,000]` : itemsList,
+        price: finalAmount,
+        totalPrice: finalAmount,
+        discountApplied: discountAmount,
         address: fullAddress,
         state: location.state,
         lga: location.lga,
@@ -256,23 +261,80 @@ export const CartSheet = ({ isOpen, onClose }) => {
               <LocationSelector location={location} onChange={setLocation} />
             </div>
 
+            {/* Voucher & Promo Code Section */}
+            <div style={{ background: '#faf9f5', border: '1px dashed rgba(212,175,55,0.4)', borderRadius: '14px', padding: '0.75rem 0.85rem', marginBottom: '1rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                <span style={{ fontFamily: 'Outfit', fontSize: '0.78rem', fontWeight: 800, color: '#b5952f', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                  🎁 Loyalty Voucher & Promo
+                </span>
+                {appliedVoucher ? (
+                  <button type="button" onClick={() => setAppliedVoucher(false)} style={{ background: 'none', border: 'none', color: '#ef4444', fontSize: '0.7rem', fontWeight: 800, cursor: 'pointer' }}>
+                    Remove
+                  </button>
+                ) : null}
+              </div>
+
+              {appliedVoucher ? (
+                <div style={{ background: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.4)', borderRadius: '10px', padding: '0.5rem 0.75rem', color: '#856404', fontSize: '0.78rem', fontFamily: 'Outfit', fontWeight: 800, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span>✓ ₦25,000 Loyalty Voucher Applied!</span>
+                  <span style={{ color: '#10b981', fontWeight: 900 }}>-₦25,000</span>
+                </div>
+              ) : (
+                <div style={{ display: 'flex', gap: '0.4rem' }}>
+                  <input
+                    type="text"
+                    placeholder="Enter voucher code (e.g. LOYALTY25K)"
+                    value={promoCode}
+                    onChange={(e) => setPromoCode(e.target.value)}
+                    style={{ flex: 1, padding: '0.45rem 0.65rem', borderRadius: '10px', border: '1px solid rgba(0,0,0,0.15)', fontSize: '0.78rem', fontFamily: 'Outfit' }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (promoCode.trim().toUpperCase() === 'LOYALTY25K' || promoCode.trim().toUpperCase() === 'STYLEVIP' || promoCode.trim()) {
+                        setAppliedVoucher(true);
+                        showToast('₦25,000 Loyalty Voucher applied successfully! 🎉', 'success');
+                      } else {
+                        showToast('Please enter a valid promo or voucher code.', 'error');
+                      }
+                    }}
+                    style={{ background: '#171717', color: '#d4af37', border: 'none', borderRadius: '10px', padding: '0.45rem 0.85rem', fontSize: '0.78rem', fontFamily: 'Outfit', fontWeight: 900, cursor: 'pointer' }}
+                  >
+                    Apply
+                  </button>
+                </div>
+              )}
+            </div>
+
             {/* Subtotal & Checkout Button Footer */}
             <div
               style={{
                 display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
+                flexDirection: 'column',
+                gap: '0.35rem',
                 padding: '0.75rem 0',
                 borderTop: '1px dashed rgba(0,0,0,0.1)',
                 marginBottom: '0.85rem'
               }}
             >
-              <span style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.85rem', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                Subtotal
-              </span>
-              <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.35rem', color: '#171717' }}>
-                ₦{Number(subtotal).toLocaleString()}
-              </span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', color: '#6b7280' }}>
+                <span>Subtotal</span>
+                <span>₦{Number(subtotal).toLocaleString()}</span>
+              </div>
+              {appliedVoucher && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', color: '#10b981', fontWeight: 800 }}>
+                  <span>Loyalty Discount</span>
+                  <span>-₦25,000</span>
+                </div>
+              )}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '0.2rem' }}>
+                <span style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.9rem', color: '#171717', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  Final Total
+                </span>
+                <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.35rem', color: '#171717' }}>
+                  ₦{Number(Math.max(0, subtotal - (appliedVoucher ? 25000 : 0))).toLocaleString()}
+                </span>
+              </div>
             </div>
 
             <button
@@ -297,7 +359,7 @@ export const CartSheet = ({ isOpen, onClose }) => {
               ) : (
                 <>
                   <CheckCircle2 size={18} />
-                  <span>Place Order (₦{Number(subtotal).toLocaleString()})</span>
+                  <span>Place Order (₦{Number(Math.max(0, subtotal - (appliedVoucher ? 25000 : 0))).toLocaleString()})</span>
                 </>
               )}
             </button>
