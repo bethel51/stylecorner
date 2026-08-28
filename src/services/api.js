@@ -472,4 +472,16 @@ export const api = {
     if (!res.ok) throw new Error(data?.error || 'Payment failed');
     return data;
   },
+
+  // Flutterwave API
+  initFlutterwave: async (paymentPayload) => {
+    const res = await fetchWithTimeout(`${API_BASE}/payment/flutterwave/initialize`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(paymentPayload),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Failed to initialize Flutterwave');
+    return data;
+  },
 };
