@@ -192,7 +192,7 @@ export const ProductDetail = () => {
     for (let i = 0; i < quantity; i++) {
       addToCart(product);
     }
-    setShowCartSheet(true);
+    navigate('/cart');
   };
 
   const handleShare = () => {
@@ -211,7 +211,7 @@ export const ProductDetail = () => {
   const relatedProducts = allProducts.filter(p => String(p.id) !== String(product.id)).slice(0, 3);
 
   return (
-    <PageContainer title={product.title}>
+    <PageContainer title={product.title} onOpenCart={() => navigate('/cart')}>
       <div style={{ paddingBottom: '3rem', maxWidth: '640px', margin: '0 auto' }}>
 
         {/* Top Header Navigation Bar */}

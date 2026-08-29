@@ -107,7 +107,7 @@ export const Store = () => {
   };
 
   return (
-    <PageContainer title="Grooming Store">
+    <PageContainer title="Grooming Store" onOpenCart={() => navigate('/cart')}>
       {/* Hero Store Banner */}
       <div
         style={{
@@ -136,7 +136,7 @@ export const Store = () => {
           </div>
 
           <button
-            onClick={() => setShowCartSheet(true)}
+            onClick={() => navigate('/cart')}
             style={{
               position: 'relative',
               background: '#d4af37',

@@ -151,8 +151,8 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
 
           <button
             className="app-header-btn"
-            onClick={onOpenCart || (() => navigate('/store'))}
-            onMouseEnter={() => preloadRoute('/store')}
+            onClick={onOpenCart || (() => navigate('/cart'))}
+            onMouseEnter={() => preloadRoute('/cart')}
             aria-label="Store Cart"
           >
             <ShoppingBag size={18} />

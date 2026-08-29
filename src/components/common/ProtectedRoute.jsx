@@ -12,9 +12,11 @@ export const ProtectedRoute = ({ children, requiredRole, allowedRoles }) => {
   }
 
   if (!token || !isAuthenticated) {
-    // Save where they were trying to go, redirect to login
+    // Save where they were trying to go, redirect to login with role hint if accessing admin
     const redirectPath = encodeURIComponent(location.pathname + location.search);
-    return <Navigate to={`/login?redirect=${redirectPath}`} replace />;
+    const isAdminRoute = location.pathname.startsWith('/admin');
+    const roleParam = isAdminRoute ? 'role=admin&' : '';
+    return <Navigate to={`/login?${roleParam}redirect=${redirectPath}`} replace />;
   }
 
   const validRoles = allowedRoles || (requiredRole ? [requiredRole] : null);

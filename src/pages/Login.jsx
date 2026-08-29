@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { User, Scissors, Lock, Mail, LogIn, Sparkles } from 'lucide-react';
+import { User, Scissors, Lock, Mail, LogIn, Sparkles, Shield } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { PageContainer } from '../components/common/PageContainer';
 
@@ -8,10 +8,14 @@ export const Login = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const redirectPath = searchParams.get('redirect') || '';
+  const initialRole = searchParams.get('role');
 
   const { login, showToast } = useAuth();
 
-  const [activeRole, setActiveRole] = useState('customer'); // 'customer' or 'staff'
+  const [activeRole, setActiveRole] = useState(
+    initialRole === 'admin' ? 'admin' : initialRole === 'staff' ? 'staff' : 'customer'
+  ); // 'customer' | 'staff' | 'admin'
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -53,25 +57,26 @@ export const Login = () => {
   };
 
   return (
-    <PageContainer title="Sign In">
-      <div style={{ maxWidth: '420px', margin: '0.5rem auto 2rem' }}>
+    <PageContainer title={activeRole === 'admin' ? "Admin Portal Sign In" : "Sign In"}>
+      <div style={{ maxWidth: '440px', margin: '0.5rem auto 2rem' }}>
         <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
           <div
             style={{
               width: '60px',
               height: '60px',
               borderRadius: '18px',
-              background: 'linear-gradient(135deg, #1f1f1f, #121212)',
-              color: '#d4af37',
+              background: activeRole === 'admin' ? 'linear-gradient(135deg, #d4af37, #b5952f)' : 'linear-gradient(135deg, #1f1f1f, #121212)',
+              color: activeRole === 'admin' ? '#ffffff' : '#d4af37',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               margin: '0 auto 1rem',
               border: '1.5px solid rgba(212, 175, 55, 0.4)',
               boxShadow: '0 10px 25px rgba(0,0,0,0.15)',
+              transition: 'all 0.3s ease',
             }}
           >
-            <Sparkles size={28} />
+            {activeRole === 'admin' ? <Shield size={30} /> : <Sparkles size={28} />}
           </div>
 
           <h2
@@ -82,10 +87,12 @@ export const Login = () => {
               color: '#171717',
             }}
           >
-            Welcome Back
+            {activeRole === 'admin' ? 'Admin Portal Access' : 'Welcome Back'}
           </h2>
           <p style={{ color: '#6b7280', fontSize: '0.88rem', marginTop: '0.2rem' }}>
-            Access your appointments, profile & grooming dashboard
+            {activeRole === 'admin'
+              ? 'Sign in with your administrator account to manage store & bookings'
+              : 'Access your appointments, profile & grooming dashboard'}
           </p>
         </div>
 
@@ -97,6 +104,7 @@ export const Login = () => {
             padding: '4px',
             display: 'flex',
             marginBottom: '1.25rem',
+            gap: '2px',
           }}
         >
           <button
@@ -104,12 +112,12 @@ export const Login = () => {
             onClick={() => setActiveRole('customer')}
             style={{
               flex: 1,
-              padding: '0.7rem',
+              padding: '0.65rem 0.4rem',
               borderRadius: '11px',
               border: 'none',
               fontFamily: 'Outfit',
               fontWeight: 700,
-              fontSize: '0.88rem',
+              fontSize: '0.82rem',
               cursor: 'pointer',
               background: activeRole === 'customer' ? '#ffffff' : 'transparent',
               color: activeRole === 'customer' ? '#171717' : '#6b7280',
@@ -117,11 +125,11 @@ export const Login = () => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '0.4rem',
+              gap: '0.3rem',
               transition: 'all 0.2s ease',
             }}
           >
-            <User size={16} />
+            <User size={15} />
             <span>Customer</span>
           </button>
 
@@ -130,12 +138,12 @@ export const Login = () => {
             onClick={() => setActiveRole('staff')}
             style={{
               flex: 1,
-              padding: '0.7rem',
+              padding: '0.65rem 0.4rem',
               borderRadius: '11px',
               border: 'none',
               fontFamily: 'Outfit',
               fontWeight: 700,
-              fontSize: '0.88rem',
+              fontSize: '0.82rem',
               cursor: 'pointer',
               background: activeRole === 'staff' ? '#ffffff' : 'transparent',
               color: activeRole === 'staff' ? '#171717' : '#6b7280',
@@ -143,23 +151,51 @@ export const Login = () => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '0.4rem',
+              gap: '0.3rem',
               transition: 'all 0.2s ease',
             }}
           >
-            <Scissors size={16} />
-            <span>Expert / Staff</span>
+            <Scissors size={15} />
+            <span>Expert</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveRole('admin')}
+            style={{
+              flex: 1,
+              padding: '0.65rem 0.4rem',
+              borderRadius: '11px',
+              border: 'none',
+              fontFamily: 'Outfit',
+              fontWeight: 700,
+              fontSize: '0.82rem',
+              cursor: 'pointer',
+              background: activeRole === 'admin' ? '#ffffff' : 'transparent',
+              color: activeRole === 'admin' ? '#b5952f' : '#6b7280',
+              boxShadow: activeRole === 'admin' ? '0 4px 12px rgba(0,0,0,0.06)' : 'none',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.3rem',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            <Shield size={15} />
+            <span>Admin</span>
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="app-card" style={{ padding: '1.5rem' }}>
           <div className="app-input-group">
-            <label className="app-label">Email Address</label>
+            <label className="app-label">
+              {activeRole === 'admin' ? 'Administrator Email' : 'Email Address'}
+            </label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="name@example.com"
+              placeholder={activeRole === 'admin' ? "admin@stylecorner.com" : "name@example.com"}
               className="app-input"
               required
             />
@@ -195,14 +231,20 @@ export const Login = () => {
             type="submit"
             disabled={submitting}
             className="app-btn app-btn-primary"
-            style={{ marginTop: '0.5rem' }}
+            style={{
+              marginTop: '0.5rem',
+              backgroundColor: activeRole === 'admin' ? '#d4af37' : undefined,
+              borderColor: activeRole === 'admin' ? '#d4af37' : undefined,
+            }}
           >
             {submitting ? (
               <span>Authenticating...</span>
             ) : (
               <>
-                <LogIn size={18} />
-                <span>Sign In as {activeRole === 'staff' ? 'Expert' : 'Customer'}</span>
+                {activeRole === 'admin' ? <Shield size={18} /> : <LogIn size={18} />}
+                <span>
+                  Sign In as {activeRole === 'admin' ? 'Administrator' : activeRole === 'staff' ? 'Expert' : 'Customer'}
+                </span>
               </>
             )}
           </button>

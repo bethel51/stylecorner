@@ -16,6 +16,7 @@ const routeLoaders = {
   '/expert-profile': () => import('./pages/ExpertProfile'),
   '/gallery': () => import('./pages/Gallery'),
   '/store': () => import('./pages/Store'),
+  '/cart': () => import('./pages/Cart'),
   '/booking': () => import('./pages/Booking'),
   '/about': () => import('./pages/About'),
   '/contact': () => import('./pages/Contact'),
@@ -79,6 +80,7 @@ const Policies = safeLazy(() => import('./pages/Policies').then(m => ({ default:
 const Profile = safeLazy(() => import('./pages/Profile').then(m => ({ default: m.Profile })));
 const ExpertProfile = safeLazy(() => import('./pages/ExpertProfile').then(m => ({ default: m.ExpertProfile })));
 const ProductDetail = safeLazy(() => import('./pages/ProductDetail').then(m => ({ default: m.ProductDetail })));
+const Cart = safeLazy(() => import('./pages/Cart').then(m => ({ default: m.Cart })));
 
 // Ultra-sleek Gold Page Loader Component
 const PageLoader = () => (
@@ -139,6 +141,7 @@ export const App = () => {
               <Route path="/expert-profile" element={<ExpertProfile />} />
               <Route path="/gallery" element={<Gallery />} />
               <Route path="/store" element={<Store />} />
+              <Route path="/cart" element={<Cart />} />
               <Route path="/product/:id" element={<ProductDetail />} />
               <Route path="/booking" element={<Booking />} />
               <Route path="/about" element={<About />} />
@@ -183,7 +186,7 @@ export const App = () => {
               <Route
                 path="/admin"
                 element={
-                  <ProtectedRoute allowedRoles={['admin', 'staff']}>
+                  <ProtectedRoute allowedRoles={['admin']}>
                     <AdminDashboard />
                   </ProtectedRoute>
                 }
