@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { User, Scissors, Lock, Mail, LogIn, Sparkles, Shield } from 'lucide-react';
+import { User, Scissors, Lock, Mail, LogIn, Sparkles } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { PageContainer } from '../components/common/PageContainer';
 
@@ -12,9 +12,17 @@ export const Login = () => {
 
   const { login, showToast } = useAuth();
 
+  // If someone lands here with role=admin in URL, redirect them to dedicated admin portal
+  useEffect(() => {
+    if (initialRole === 'admin') {
+      const redirectUrl = redirectPath ? `/admin/login?redirect=${encodeURIComponent(redirectPath)}` : '/admin/login';
+      navigate(redirectUrl, { replace: true });
+    }
+  }, [initialRole, redirectPath, navigate]);
+
   const [activeRole, setActiveRole] = useState(
-    initialRole === 'admin' ? 'admin' : initialRole === 'staff' ? 'staff' : 'customer'
-  ); // 'customer' | 'staff' | 'admin'
+    initialRole === 'staff' ? 'staff' : 'customer'
+  ); // 'customer' | 'staff'
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -32,11 +40,7 @@ export const Login = () => {
       const loggedUser = await login(email, password, activeRole);
       const decoded = redirectPath ? decodeURIComponent(redirectPath) : null;
       if (loggedUser?.role === 'admin') {
-        if (decoded && (decoded === '/admin' || decoded === '/profile' || decoded.startsWith('/admin'))) {
-          navigate(decoded);
-        } else {
-          navigate('/admin');
-        }
+        navigate('/admin');
       } else if (decoded && decoded.startsWith('/')) {
         navigate(decoded);
       } else if (loggedUser?.role === 'staff') {
@@ -57,7 +61,7 @@ export const Login = () => {
   };
 
   return (
-    <PageContainer title={activeRole === 'admin' ? "Admin Portal Sign In" : "Sign In"}>
+    <PageContainer title="Sign In">
       <div style={{ maxWidth: '440px', margin: '0.5rem auto 2rem' }}>
         <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
           <div
@@ -65,8 +69,8 @@ export const Login = () => {
               width: '60px',
               height: '60px',
               borderRadius: '18px',
-              background: activeRole === 'admin' ? 'linear-gradient(135deg, #d4af37, #b5952f)' : 'linear-gradient(135deg, #1f1f1f, #121212)',
-              color: activeRole === 'admin' ? '#ffffff' : '#d4af37',
+              background: 'linear-gradient(135deg, #1f1f1f, #121212)',
+              color: '#d4af37',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -76,7 +80,7 @@ export const Login = () => {
               transition: 'all 0.3s ease',
             }}
           >
-            {activeRole === 'admin' ? <Shield size={30} /> : <Sparkles size={28} />}
+            <Sparkles size={28} />
           </div>
 
           <h2
@@ -87,16 +91,14 @@ export const Login = () => {
               color: '#171717',
             }}
           >
-            {activeRole === 'admin' ? 'Admin Portal Access' : 'Welcome Back'}
+            Welcome Back
           </h2>
           <p style={{ color: '#6b7280', fontSize: '0.88rem', marginTop: '0.2rem' }}>
-            {activeRole === 'admin'
-              ? 'Sign in with your administrator account to manage store & bookings'
-              : 'Access your appointments, profile & grooming dashboard'}
+            Access your appointments, profile & grooming dashboard
           </p>
         </div>
 
-        {/* Role Segmented Controller */}
+        {/* Role Segmented Controller (Public Roles Only) */}
         <div
           style={{
             background: '#e5e7eb',
@@ -117,7 +119,7 @@ export const Login = () => {
               border: 'none',
               fontFamily: 'Outfit',
               fontWeight: 700,
-              fontSize: '0.82rem',
+              fontSize: '0.85rem',
               cursor: 'pointer',
               background: activeRole === 'customer' ? '#ffffff' : 'transparent',
               color: activeRole === 'customer' ? '#171717' : '#6b7280',
@@ -125,11 +127,11 @@ export const Login = () => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '0.3rem',
+              gap: '0.4rem',
               transition: 'all 0.2s ease',
             }}
           >
-            <User size={15} />
+            <User size={16} />
             <span>Customer</span>
           </button>
 
@@ -143,7 +145,7 @@ export const Login = () => {
               border: 'none',
               fontFamily: 'Outfit',
               fontWeight: 700,
-              fontSize: '0.82rem',
+              fontSize: '0.85rem',
               cursor: 'pointer',
               background: activeRole === 'staff' ? '#ffffff' : 'transparent',
               color: activeRole === 'staff' ? '#171717' : '#6b7280',
@@ -151,51 +153,23 @@ export const Login = () => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '0.3rem',
+              gap: '0.4rem',
               transition: 'all 0.2s ease',
             }}
           >
-            <Scissors size={15} />
+            <Scissors size={16} />
             <span>Expert</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveRole('admin')}
-            style={{
-              flex: 1,
-              padding: '0.65rem 0.4rem',
-              borderRadius: '11px',
-              border: 'none',
-              fontFamily: 'Outfit',
-              fontWeight: 700,
-              fontSize: '0.82rem',
-              cursor: 'pointer',
-              background: activeRole === 'admin' ? '#ffffff' : 'transparent',
-              color: activeRole === 'admin' ? '#b5952f' : '#6b7280',
-              boxShadow: activeRole === 'admin' ? '0 4px 12px rgba(0,0,0,0.06)' : 'none',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '0.3rem',
-              transition: 'all 0.2s ease',
-            }}
-          >
-            <Shield size={15} />
-            <span>Admin</span>
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="app-card" style={{ padding: '1.5rem' }}>
           <div className="app-input-group">
-            <label className="app-label">
-              {activeRole === 'admin' ? 'Administrator Email' : 'Email Address'}
-            </label>
+            <label className="app-label">Email Address</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder={activeRole === 'admin' ? "admin@stylecorner.com" : "name@example.com"}
+              placeholder="name@example.com"
               className="app-input"
               required
             />
@@ -231,19 +205,15 @@ export const Login = () => {
             type="submit"
             disabled={submitting}
             className="app-btn app-btn-primary"
-            style={{
-              marginTop: '0.5rem',
-              backgroundColor: activeRole === 'admin' ? '#d4af37' : undefined,
-              borderColor: activeRole === 'admin' ? '#d4af37' : undefined,
-            }}
+            style={{ marginTop: '0.5rem' }}
           >
             {submitting ? (
               <span>Authenticating...</span>
             ) : (
               <>
-                {activeRole === 'admin' ? <Shield size={18} /> : <LogIn size={18} />}
+                <LogIn size={18} />
                 <span>
-                  Sign In as {activeRole === 'admin' ? 'Administrator' : activeRole === 'staff' ? 'Expert' : 'Customer'}
+                  Sign In as {activeRole === 'staff' ? 'Expert' : 'Customer'}
                 </span>
               </>
             )}
@@ -270,3 +240,4 @@ export const Login = () => {
     </PageContainer>
   );
 };
+

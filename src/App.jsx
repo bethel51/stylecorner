@@ -25,6 +25,7 @@ const routeLoaders = {
   '/verify': () => import('./pages/VerifyOTP'),
   '/login': () => import('./pages/Login'),
   '/forgot-password': () => import('./pages/ForgotPassword'),
+  '/admin/login': () => import('./pages/AdminLogin'),
   '/customer-dashboard': () => import('./pages/CustomerDashboard'),
   '/expert-dashboard': () => import('./pages/ExpertDashboard'),
   '/admin': () => import('./pages/AdminDashboard'),
@@ -72,6 +73,7 @@ const Signup = safeLazy(() => import('./pages/Signup').then(m => ({ default: m.S
 const VerifyOTP = safeLazy(() => import('./pages/VerifyOTP').then(m => ({ default: m.VerifyOTP })));
 const Login = safeLazy(() => import('./pages/Login').then(m => ({ default: m.Login })));
 const ForgotPassword = safeLazy(() => import('./pages/ForgotPassword').then(m => ({ default: m.ForgotPassword })));
+const AdminLogin = safeLazy(() => import('./pages/AdminLogin').then(m => ({ default: m.AdminLogin })));
 const CustomerDashboard = safeLazy(() => import('./pages/CustomerDashboard').then(m => ({ default: m.CustomerDashboard })));
 const ExpertDashboard = safeLazy(() => import('./pages/ExpertDashboard').then(m => ({ default: m.ExpertDashboard })));
 const AdminDashboard = safeLazy(() => import('./pages/AdminDashboard').then(m => ({ default: m.AdminDashboard })));
@@ -153,6 +155,7 @@ export const App = () => {
               <Route path="/verify" element={<VerifyOTP />} />
               <Route path="/login" element={<Login />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/admin/login" element={<AdminLogin />} />
 
               {/* User Profile Route */}
               <Route
