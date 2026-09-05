@@ -1150,14 +1150,14 @@ export const AdminDashboard = () => {
                         <button
                           onClick={() => setUserToDelete(u)}
                           style={{
-                            padding: '0.5rem 0.85rem', borderRadius: '10px',
+                            padding: '0.55rem 0.85rem', borderRadius: '10px', minHeight: '44px',
                             backgroundColor: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)',
                             color: '#ef4444', fontWeight: 700, fontSize: '0.78rem',
-                            cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
-                            fontFamily: 'Outfit', transition: 'all 0.15s ease',
+                            cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
+                            fontFamily: 'Outfit', transition: 'all 0.15s ease', flexShrink: 0,
                           }}
                         >
-                          <Trash2 size={13} /> Delete Account
+                          <Trash2 size={13} /> Delete
                         </button>
                       </div>
                     </div>
@@ -1204,7 +1204,7 @@ export const AdminDashboard = () => {
                   </button>
                 </div>
               ) : (
-                <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(auto-fill, minmax(280px, 1fr))', gap: isMobile ? '0.65rem' : '1rem' }}>
                   {filteredProducts.map(p => (
                     <div
                       key={p._id || p.id}
@@ -1254,30 +1254,30 @@ export const AdminDashboard = () => {
                       </div>
 
                       {/* Action buttons */}
-                      <div style={{ display: 'flex', gap: '0.5rem', paddingTop: '0.65rem', borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+                      <div style={{ display: 'flex', gap: '0.4rem', paddingTop: '0.65rem', borderTop: '1px solid rgba(0,0,0,0.06)' }}>
                         <button
                           onClick={() => handleOpenEditProduct(p)}
                           style={{
-                            flex: 1, padding: '0.5rem', borderRadius: '8px',
+                            flex: 1, padding: '0.5rem', borderRadius: '8px', minHeight: '44px',
                             backgroundColor: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)',
-                            color: '#b5952f', fontWeight: 700, fontSize: '0.78rem',
-                            cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem',
+                            color: '#b5952f', fontWeight: 700, fontSize: '0.75rem',
+                            cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem',
                             fontFamily: 'Outfit'
                           }}
                         >
-                          <Edit3 size={13} /> Edit Details
+                          <Edit3 size={12} /> Edit
                         </button>
                         <button
                           onClick={() => setProductToDelete(p)}
                           style={{
-                            padding: '0.5rem 0.75rem', borderRadius: '8px',
+                            padding: '0.5rem 0.65rem', borderRadius: '8px', minHeight: '44px',
                             backgroundColor: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)',
-                            color: '#ef4444', fontWeight: 700, fontSize: '0.78rem',
-                            cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem',
+                            color: '#ef4444', fontWeight: 700, fontSize: '0.75rem',
+                            cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem',
                             fontFamily: 'Outfit'
                           }}
                         >
-                          <Trash2 size={13} /> Delete
+                          <Trash2 size={12} />
                         </button>
                       </div>
                     </div>
@@ -1287,60 +1287,77 @@ export const AdminDashboard = () => {
             </div>
           )}
         </div>
+        {/* iOS safe area bottom spacer */}
+        <div style={{ height: 'env(safe-area-inset-bottom, 0px)', minHeight: isMobile ? '1rem' : 0 }} />
       </main>
 
       {/* Order Details Modal */}
       {selectedOrder && (
         <div
           onClick={() => setSelectedOrder(null)}
-          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(6px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}
+          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(6px)', zIndex: 9999, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', padding: isMobile ? '0' : '1rem' }}
         >
           <div
             onClick={e => e.stopPropagation()}
-            style={{ backgroundColor: '#ffffff', borderRadius: '20px', border: '1px solid rgba(0,0,0,0.1)', width: '100%', maxWidth: '480px', maxHeight: '85vh', overflowY: 'auto', padding: '1.25rem', boxShadow: '0 20px 40px rgba(0,0,0,0.15)' }}
+            style={{
+              backgroundColor: '#ffffff',
+              borderRadius: isMobile ? '20px 20px 0 0' : '20px',
+              border: '1px solid rgba(0,0,0,0.1)',
+              width: '100%', maxWidth: isMobile ? '100%' : '480px',
+              maxHeight: isMobile ? '92vh' : '85vh',
+              overflowY: 'auto',
+              padding: isMobile ? '1.25rem 1.25rem calc(1.25rem + env(safe-area-inset-bottom, 0px))' : '1.5rem',
+              boxShadow: '0 -8px 40px rgba(0,0,0,0.15)',
+            }}
           >
+            {/* Drag handle on mobile */}
+            {isMobile && <div style={{ width: '36px', height: '4px', borderRadius: '2px', backgroundColor: 'rgba(0,0,0,0.15)', margin: '0 auto 1rem' }} />}
+
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
               <h3 style={{ color: '#0f172a', fontFamily: 'Outfit', fontWeight: 800, margin: 0, fontSize: '1.1rem' }}>Order Details</h3>
-              <button onClick={() => setSelectedOrder(null)} style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', fontSize: '1.2rem', lineHeight: 1 }}>✕</button>
+              <button
+                onClick={() => setSelectedOrder(null)}
+                style={{ background: 'rgba(0,0,0,0.06)', border: 'none', color: '#64748b', cursor: 'pointer', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem' }}
+              >✕</button>
             </div>
 
             <div style={{ fontSize: '0.7rem', color: '#64748b', fontFamily: 'monospace', marginBottom: '0.85rem' }}>
               ORDER #{(selectedOrder._id || '').slice(-6).toUpperCase()}
             </div>
 
-            <div style={{ display: 'grid', gap: '0.4rem', fontSize: '0.82rem', color: '#334155', marginBottom: '1rem' }}>
-              <div><span style={{ color: '#64748b' }}>Customer: </span>{selectedOrder.customerInfo?.name || selectedOrder.name || 'N/A'}</div>
-              <div><span style={{ color: '#64748b' }}>Email: </span>{selectedOrder.customerInfo?.email || selectedOrder.email || 'N/A'}</div>
-              <div><span style={{ color: '#64748b' }}>Phone: </span>{selectedOrder.customerInfo?.phone || selectedOrder.phone || 'N/A'}</div>
-              <div><span style={{ color: '#64748b' }}>Address: </span>{selectedOrder.customerInfo?.address || selectedOrder.address || 'N/A'}</div>
+            <div style={{ display: 'grid', gap: '0.45rem', fontSize: '0.83rem', color: '#334155', marginBottom: '1rem', backgroundColor: '#fafafa', padding: '0.85rem', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.06)' }}>
+              <div><span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase' }}>Customer</span><br />{selectedOrder.customerInfo?.name || selectedOrder.name || 'N/A'}</div>
+              <div><span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase' }}>Email</span><br />{selectedOrder.customerInfo?.email || selectedOrder.email || 'N/A'}</div>
+              <div><span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase' }}>Phone</span><br />{selectedOrder.customerInfo?.phone || selectedOrder.phone || 'N/A'}</div>
+              <div><span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase' }}>Address</span><br />{selectedOrder.customerInfo?.address || selectedOrder.address || 'N/A'}</div>
             </div>
 
             <div style={{ borderTop: '1px solid rgba(0,0,0,0.08)', paddingTop: '0.85rem', marginBottom: '0.85rem' }}>
               <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#b5952f', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '0.5rem' }}>Items Ordered</div>
               {Array.isArray(selectedOrder.items) && selectedOrder.items.length > 0 ? (
                 selectedOrder.items.map((item, i) => (
-                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.35rem 0', fontSize: '0.8rem', color: '#334155', borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
+                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.45rem 0', fontSize: '0.82rem', color: '#334155', borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
                     <span>{item.name || item.title} × {item.quantity || 1}</span>
                     <span style={{ color: '#0f172a', fontWeight: 600 }}>₦{Number((item.price || 0) * (item.quantity || 1)).toLocaleString()}</span>
                   </div>
                 ))
               ) : (
-                <div style={{ padding: '0.35rem 0', fontSize: '0.82rem', color: '#0f172a' }}>
+                <div style={{ padding: '0.45rem 0', fontSize: '0.82rem', color: '#0f172a' }}>
                   {selectedOrder.item || 'Grooming Products'}
                 </div>
               )}
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', paddingTop: '0.65rem', borderTop: '1px solid rgba(0,0,0,0.08)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1rem', fontWeight: 800, color: '#0f172a', paddingTop: '0.65rem', borderTop: '1px solid rgba(0,0,0,0.08)', marginBottom: '1rem' }}>
               <span>Total Paid</span>
               <span style={{ color: '#b5952f' }}>₦{Number(selectedOrder.totalPrice || selectedOrder.price || 0).toLocaleString()}</span>
             </div>
 
-            <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1.1rem' }}>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
               {selectedOrder.status !== 'shipped' && selectedOrder.status !== 'completed' && (
                 <button
                   onClick={(e) => handleUpdateOrderStatus(selectedOrder._id, 'shipped', e)}
-                  style={{ flex: 1, padding: '0.6rem', borderRadius: '10px', backgroundColor: '#d4af37', color: '#fff', fontWeight: 700, fontSize: '0.8rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit' }}
+                  style={{ flex: 1, minHeight: '48px', borderRadius: '12px', backgroundColor: '#d4af37', color: '#fff', fontWeight: 800, fontSize: '0.85rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit' }}
                 >
                   Mark Shipped
                 </button>
@@ -1348,14 +1365,14 @@ export const AdminDashboard = () => {
               {selectedOrder.status === 'shipped' && (
                 <button
                   onClick={(e) => handleUpdateOrderStatus(selectedOrder._id, 'completed', e)}
-                  style={{ flex: 1, padding: '0.6rem', borderRadius: '10px', backgroundColor: '#16a34a', color: '#fff', fontWeight: 700, fontSize: '0.8rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit' }}
+                  style={{ flex: 1, minHeight: '48px', borderRadius: '12px', backgroundColor: '#16a34a', color: '#fff', fontWeight: 800, fontSize: '0.85rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit' }}
                 >
                   Mark Completed
                 </button>
               )}
               <button
                 onClick={() => setSelectedOrder(null)}
-                style={{ padding: '0.6rem 0.85rem', borderRadius: '10px', backgroundColor: 'rgba(0,0,0,0.04)', color: '#64748b', fontWeight: 600, fontSize: '0.8rem', border: '1px solid rgba(0,0,0,0.08)', cursor: 'pointer', fontFamily: 'Outfit' }}
+                style={{ minHeight: '48px', padding: '0.6rem 1rem', borderRadius: '12px', backgroundColor: 'rgba(0,0,0,0.04)', color: '#64748b', fontWeight: 600, fontSize: '0.85rem', border: '1px solid rgba(0,0,0,0.08)', cursor: 'pointer', fontFamily: 'Outfit' }}
               >
                 Close
               </button>
@@ -1368,36 +1385,50 @@ export const AdminDashboard = () => {
       {selectedBooking && (
         <div
           onClick={() => setSelectedBooking(null)}
-          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(6px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}
+          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(6px)', zIndex: 9999, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', padding: isMobile ? '0' : '1rem' }}
         >
           <div
             onClick={e => e.stopPropagation()}
-            style={{ backgroundColor: '#ffffff', borderRadius: '20px', border: '1px solid rgba(0,0,0,0.1)', width: '100%', maxWidth: '480px', maxHeight: '85vh', overflowY: 'auto', padding: '1.25rem', boxShadow: '0 20px 40px rgba(0,0,0,0.15)' }}
+            style={{
+              backgroundColor: '#ffffff',
+              borderRadius: isMobile ? '20px 20px 0 0' : '20px',
+              border: '1px solid rgba(0,0,0,0.1)',
+              width: '100%', maxWidth: isMobile ? '100%' : '480px',
+              maxHeight: isMobile ? '92vh' : '85vh',
+              overflowY: 'auto',
+              padding: isMobile ? '1.25rem 1.25rem calc(1.25rem + env(safe-area-inset-bottom, 0px))' : '1.5rem',
+              boxShadow: '0 -8px 40px rgba(0,0,0,0.15)',
+            }}
           >
+            {isMobile && <div style={{ width: '36px', height: '4px', borderRadius: '2px', backgroundColor: 'rgba(0,0,0,0.15)', margin: '0 auto 1rem' }} />}
+
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
               <h3 style={{ color: '#0f172a', fontFamily: 'Outfit', fontWeight: 800, margin: 0, fontSize: '1.1rem' }}>Booking Details</h3>
-              <button onClick={() => setSelectedBooking(null)} style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', fontSize: '1.2rem', lineHeight: 1 }}>✕</button>
+              <button
+                onClick={() => setSelectedBooking(null)}
+                style={{ background: 'rgba(0,0,0,0.06)', border: 'none', color: '#64748b', cursor: 'pointer', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem' }}
+              >✕</button>
             </div>
 
             <div style={{ fontSize: '0.7rem', color: '#64748b', fontFamily: 'monospace', marginBottom: '0.85rem' }}>
               BOOKING #{(selectedBooking._id || '').slice(-6).toUpperCase()}
             </div>
 
-            <div style={{ display: 'grid', gap: '0.45rem', fontSize: '0.83rem', color: '#334155', marginBottom: '1rem' }}>
-              <div><span style={{ color: '#64748b' }}>Service: </span><strong style={{ color: '#0f172a' }}>{selectedBooking.serviceName || selectedBooking.service}</strong></div>
-              <div><span style={{ color: '#64748b' }}>Client Name: </span>{selectedBooking.clientName || selectedBooking.user?.firstname || 'Guest'}</div>
-              <div><span style={{ color: '#64748b' }}>Client Email: </span>{selectedBooking.clientEmail || selectedBooking.email || 'N/A'}</div>
-              <div><span style={{ color: '#64748b' }}>Phone: </span>{selectedBooking.phone || selectedBooking.clientPhone || 'N/A'}</div>
-              <div><span style={{ color: '#64748b' }}>Assigned Stylist: </span><span style={{ color: '#b5952f', fontWeight: 600 }}>{selectedBooking.stylist || 'Any Specialist'}</span></div>
-              <div><span style={{ color: '#64748b' }}>Date & Time: </span>{selectedBooking.date || 'TBD'} at {selectedBooking.time || 'TBD'}</div>
-              <div><span style={{ color: '#64748b' }}>Status: </span><StatusBadge status={selectedBooking.status || 'pending'} /></div>
+            <div style={{ display: 'grid', gap: '0.5rem', fontSize: '0.83rem', color: '#334155', marginBottom: '1rem', backgroundColor: '#fafafa', padding: '0.85rem', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.06)' }}>
+              <div><span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase' }}>Service</span><br /><strong style={{ color: '#0f172a' }}>{selectedBooking.serviceName || selectedBooking.service}</strong></div>
+              <div><span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase' }}>Client</span><br />{selectedBooking.clientName || selectedBooking.user?.firstname || 'Guest'}</div>
+              <div><span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase' }}>Email</span><br />{selectedBooking.clientEmail || selectedBooking.email || 'N/A'}</div>
+              <div><span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase' }}>Phone</span><br />{selectedBooking.phone || selectedBooking.clientPhone || 'N/A'}</div>
+              <div><span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase' }}>Stylist</span><br /><span style={{ color: '#b5952f', fontWeight: 600 }}>{selectedBooking.stylist || 'Any Specialist'}</span></div>
+              <div><span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase' }}>Date & Time</span><br />{selectedBooking.date || 'TBD'} at {selectedBooking.time || 'TBD'}</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase' }}>Status: </span><StatusBadge status={selectedBooking.status || 'pending'} /></div>
             </div>
 
-            <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1.25rem', paddingTop: '0.85rem', borderTop: '1px solid rgba(0,0,0,0.08)' }}>
+            <div style={{ display: 'flex', gap: '0.5rem', paddingTop: '0.5rem' }}>
               {selectedBooking.status !== 'confirmed' && selectedBooking.status !== 'completed' && selectedBooking.status !== 'cancelled' && (
                 <button
                   onClick={(e) => handleUpdateBookingStatus(selectedBooking._id, 'confirmed', e)}
-                  style={{ flex: 1, padding: '0.6rem', borderRadius: '10px', backgroundColor: '#d4af37', color: '#fff', fontWeight: 700, fontSize: '0.8rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit' }}
+                  style={{ flex: 1, minHeight: '48px', borderRadius: '12px', backgroundColor: '#d4af37', color: '#fff', fontWeight: 800, fontSize: '0.85rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit' }}
                 >
                   Confirm Booking
                 </button>
@@ -1405,14 +1436,14 @@ export const AdminDashboard = () => {
               {selectedBooking.status === 'confirmed' && (
                 <button
                   onClick={(e) => handleUpdateBookingStatus(selectedBooking._id, 'completed', e)}
-                  style={{ flex: 1, padding: '0.6rem', borderRadius: '10px', backgroundColor: '#16a34a', color: '#fff', fontWeight: 700, fontSize: '0.8rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit' }}
+                  style={{ flex: 1, minHeight: '48px', borderRadius: '12px', backgroundColor: '#16a34a', color: '#fff', fontWeight: 800, fontSize: '0.85rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit' }}
                 >
                   Complete Service
                 </button>
               )}
               <button
                 onClick={() => setSelectedBooking(null)}
-                style={{ padding: '0.6rem 0.85rem', borderRadius: '10px', backgroundColor: 'rgba(0,0,0,0.04)', color: '#64748b', fontWeight: 600, fontSize: '0.8rem', border: '1px solid rgba(0,0,0,0.08)', cursor: 'pointer', fontFamily: 'Outfit' }}
+                style={{ minHeight: '48px', padding: '0.6rem 1rem', borderRadius: '12px', backgroundColor: 'rgba(0,0,0,0.04)', color: '#64748b', fontWeight: 600, fontSize: '0.85rem', border: '1px solid rgba(0,0,0,0.08)', cursor: 'pointer', fontFamily: 'Outfit' }}
               >
                 Close
               </button>
@@ -1425,35 +1456,44 @@ export const AdminDashboard = () => {
       {userToDelete && (
         <div
           onClick={() => setUserToDelete(null)}
-          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(6px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}
+          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(6px)', zIndex: 9999, display: 'flex', alignItems: isMobile ? 'flex-end' : 'center', justifyContent: 'center', padding: isMobile ? '0' : '1rem' }}
         >
           <div
             onClick={e => e.stopPropagation()}
-            style={{ backgroundColor: '#ffffff', borderRadius: '20px', border: '1px solid rgba(239,68,68,0.3)', width: '100%', maxWidth: '420px', padding: '1.5rem', textAlign: 'center', boxShadow: '0 20px 40px rgba(0,0,0,0.15)' }}
+            style={{
+              backgroundColor: '#ffffff',
+              borderRadius: isMobile ? '20px 20px 0 0' : '20px',
+              border: '1px solid rgba(239,68,68,0.3)',
+              width: '100%', maxWidth: isMobile ? '100%' : '420px',
+              padding: isMobile ? '1.5rem 1.5rem calc(1.5rem + env(safe-area-inset-bottom, 0px))' : '1.5rem',
+              textAlign: 'center', boxShadow: '0 -8px 40px rgba(0,0,0,0.15)',
+            }}
           >
-            <div style={{ width: '50px', height: '50px', borderRadius: '50%', backgroundColor: 'rgba(239,68,68,0.1)', color: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
-              <AlertTriangle size={26} />
+            {isMobile && <div style={{ width: '36px', height: '4px', borderRadius: '2px', backgroundColor: 'rgba(0,0,0,0.15)', margin: '0 auto 1.25rem' }} />}
+
+            <div style={{ width: '54px', height: '54px', borderRadius: '50%', backgroundColor: 'rgba(239,68,68,0.1)', color: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
+              <AlertTriangle size={28} />
             </div>
 
-            <h3 style={{ color: '#0f172a', fontFamily: 'Outfit', fontWeight: 800, margin: '0 0 0.5rem', fontSize: '1.1rem' }}>
+            <h3 style={{ color: '#0f172a', fontFamily: 'Outfit', fontWeight: 800, margin: '0 0 0.5rem', fontSize: '1.15rem' }}>
               Delete User Account?
             </h3>
 
-            <p style={{ color: '#64748b', fontSize: '0.85rem', lineHeight: 1.5, marginBottom: '1.25rem' }}>
+            <p style={{ color: '#64748b', fontSize: '0.85rem', lineHeight: 1.6, marginBottom: '1.5rem' }}>
               Are you sure you want to delete <strong style={{ color: '#0f172a' }}>{userToDelete.firstname} ({userToDelete.email})</strong>? All their profile data and bookings will be wiped.
             </p>
 
             <div style={{ display: 'flex', gap: '0.65rem' }}>
               <button
                 onClick={() => setUserToDelete(null)}
-                style={{ flex: 1, padding: '0.65rem', borderRadius: '10px', backgroundColor: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.08)', color: '#64748b', fontWeight: 600, fontSize: '0.82rem', cursor: 'pointer', fontFamily: 'Outfit' }}
+                style={{ flex: 1, minHeight: '50px', borderRadius: '12px', backgroundColor: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.08)', color: '#64748b', fontWeight: 600, fontSize: '0.88rem', cursor: 'pointer', fontFamily: 'Outfit' }}
               >
                 Cancel
               </button>
               <button
                 disabled={updatingId === userToDelete._id}
                 onClick={() => handleDeleteUserAccount(userToDelete)}
-                style={{ flex: 1, padding: '0.65rem', borderRadius: '10px', backgroundColor: '#ef4444', border: 'none', color: '#ffffff', fontWeight: 700, fontSize: '0.82rem', cursor: 'pointer', fontFamily: 'Outfit' }}
+                style={{ flex: 1, minHeight: '50px', borderRadius: '12px', backgroundColor: '#ef4444', border: 'none', color: '#ffffff', fontWeight: 800, fontSize: '0.88rem', cursor: 'pointer', fontFamily: 'Outfit' }}
               >
                 {updatingId === userToDelete._id ? 'Deleting...' : 'Delete Permanently'}
               </button>
@@ -1466,17 +1506,31 @@ export const AdminDashboard = () => {
       {showProductModal && (
         <div
           onClick={() => setShowProductModal(false)}
-          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(6px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}
+          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(6px)', zIndex: 9999, display: 'flex', alignItems: isMobile ? 'flex-end' : 'center', justifyContent: 'center', padding: isMobile ? '0' : '1rem' }}
         >
           <div
             onClick={e => e.stopPropagation()}
-            style={{ backgroundColor: '#ffffff', borderRadius: '20px', border: '1px solid rgba(0,0,0,0.1)', width: '100%', maxWidth: '480px', maxHeight: '90vh', overflowY: 'auto', padding: '1.5rem', boxShadow: '0 20px 40px rgba(0,0,0,0.15)' }}
+            style={{
+              backgroundColor: '#ffffff',
+              borderRadius: isMobile ? '20px 20px 0 0' : '20px',
+              border: '1px solid rgba(0,0,0,0.1)',
+              width: '100%', maxWidth: isMobile ? '100%' : '480px',
+              maxHeight: isMobile ? '95vh' : '90vh',
+              overflowY: 'auto',
+              padding: isMobile ? '1.25rem 1.25rem calc(1.25rem + env(safe-area-inset-bottom, 0px))' : '1.5rem',
+              boxShadow: '0 -8px 40px rgba(0,0,0,0.15)',
+            }}
           >
+            {isMobile && <div style={{ width: '36px', height: '4px', borderRadius: '2px', backgroundColor: 'rgba(0,0,0,0.15)', margin: '0 auto 1rem' }} />}
+
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
               <h3 style={{ color: '#0f172a', fontFamily: 'Outfit', fontWeight: 800, margin: 0, fontSize: '1.15rem' }}>
                 {editingProduct ? 'Edit Product' : 'Add New Product'}
               </h3>
-              <button onClick={() => setShowProductModal(false)} style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', fontSize: '1.2rem', lineHeight: 1 }}>✕</button>
+              <button
+                onClick={() => setShowProductModal(false)}
+                style={{ background: 'rgba(0,0,0,0.06)', border: 'none', color: '#64748b', cursor: 'pointer', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem' }}
+              >✕</button>
             </div>
 
             <form onSubmit={handleProductSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
@@ -1504,20 +1558,20 @@ export const AdminDashboard = () => {
                       placeholder="Primary image URL..."
                       value={productForm.image}
                       onChange={e => setProductForm({ ...productForm, image: e.target.value })}
-                      style={{ flex: 1, padding: '0.5rem 0.65rem', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.12)', fontSize: '0.78rem', fontFamily: 'Outfit', outline: 'none' }}
+                      style={{ flex: 1, padding: '0.6rem 0.75rem', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.12)', fontSize: '16px', fontFamily: 'Outfit', outline: 'none', minHeight: '44px', boxSizing: 'border-box' }}
                     />
                     <label
                       htmlFor="product-image-upload-1"
                       style={{
                         cursor: uploadingProductImage ? 'not-allowed' : 'pointer',
                         backgroundColor: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.4)',
-                        color: '#b5952f', padding: '0.5rem 0.65rem', borderRadius: '8px',
+                        color: '#b5952f', padding: '0.6rem 0.75rem', borderRadius: '8px', minHeight: '44px',
                         fontSize: '0.75rem', fontWeight: 800, fontFamily: 'Outfit',
-                        display: 'inline-flex', alignItems: 'center', gap: '0.3rem', flexShrink: 0
+                        display: 'inline-flex', alignItems: 'center', gap: '0.3rem', flexShrink: 0, boxSizing: 'border-box'
                       }}
                     >
-                      <Upload size={12} />
-                      {uploadingProductImage ? 'Uploading...' : 'Upload 1'}
+                      <Upload size={13} />
+                      {uploadingProductImage ? 'Uploading...' : 'Upload'}
                     </label>
                     <input
                       id="product-image-upload-1"
@@ -1533,7 +1587,7 @@ export const AdminDashboard = () => {
                 {/* Photo 2: Secondary Image */}
                 <div>
                   <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#334155', marginBottom: '0.25rem', fontFamily: 'Outfit' }}>
-                    Photo 2: Secondary Angle / Detail Image (Optional)
+                    Photo 2: Secondary / Detail Image (Optional)
                   </label>
 
                   {productForm.secondaryImage && (
@@ -1548,20 +1602,20 @@ export const AdminDashboard = () => {
                       placeholder="Secondary image URL..."
                       value={productForm.secondaryImage}
                       onChange={e => setProductForm({ ...productForm, secondaryImage: e.target.value })}
-                      style={{ flex: 1, padding: '0.5rem 0.65rem', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.12)', fontSize: '0.78rem', fontFamily: 'Outfit', outline: 'none' }}
+                      style={{ flex: 1, padding: '0.6rem 0.75rem', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.12)', fontSize: '16px', fontFamily: 'Outfit', outline: 'none', minHeight: '44px', boxSizing: 'border-box' }}
                     />
                     <label
                       htmlFor="product-image-upload-2"
                       style={{
                         cursor: uploadingSecondaryImage ? 'not-allowed' : 'pointer',
                         backgroundColor: 'rgba(59,130,246,0.12)', border: '1px solid rgba(59,130,246,0.3)',
-                        color: '#3b82f6', padding: '0.5rem 0.65rem', borderRadius: '8px',
+                        color: '#3b82f6', padding: '0.6rem 0.75rem', borderRadius: '8px', minHeight: '44px',
                         fontSize: '0.75rem', fontWeight: 800, fontFamily: 'Outfit',
-                        display: 'inline-flex', alignItems: 'center', gap: '0.3rem', flexShrink: 0
+                        display: 'inline-flex', alignItems: 'center', gap: '0.3rem', flexShrink: 0, boxSizing: 'border-box'
                       }}
                     >
-                      <Upload size={12} />
-                      {uploadingSecondaryImage ? 'Uploading...' : 'Upload 2'}
+                      <Upload size={13} />
+                      {uploadingSecondaryImage ? 'Uploading...' : 'Upload'}
                     </label>
                     <input
                       id="product-image-upload-2"
@@ -1583,7 +1637,7 @@ export const AdminDashboard = () => {
                   value={productForm.title}
                   onChange={e => setProductForm({ ...productForm, title: e.target.value })}
                   required
-                  style={{ width: '100%', padding: '0.6rem 0.75rem', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.12)', fontSize: '0.82rem', fontFamily: 'Outfit', outline: 'none', boxSizing: 'border-box' }}
+                  style={{ width: '100%', padding: '0.7rem 0.85rem', borderRadius: '10px', border: '1px solid rgba(0,0,0,0.12)', fontSize: '16px', fontFamily: 'Outfit', outline: 'none', boxSizing: 'border-box', minHeight: '48px' }}
                 />
               </div>
 
@@ -1598,24 +1652,24 @@ export const AdminDashboard = () => {
                     value={productForm.price}
                     onChange={e => setProductForm({ ...productForm, price: e.target.value })}
                     required
-                    style={{ width: '100%', padding: '0.6rem 0.75rem', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.12)', fontSize: '0.82rem', fontFamily: 'Outfit', outline: 'none', boxSizing: 'border-box' }}
+                    style={{ width: '100%', padding: '0.7rem 0.85rem', borderRadius: '10px', border: '1px solid rgba(0,0,0,0.12)', fontSize: '16px', fontFamily: 'Outfit', outline: 'none', boxSizing: 'border-box', minHeight: '48px' }}
                   />
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#334155', marginBottom: '0.3rem', fontFamily: 'Outfit' }}>Badge (Optional)</label>
+                  <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#334155', marginBottom: '0.3rem', fontFamily: 'Outfit' }}>Badge</label>
                   <input
                     type="text"
-                    placeholder="e.g. Bestseller / New"
+                    placeholder="Bestseller / New"
                     value={productForm.badge}
                     onChange={e => setProductForm({ ...productForm, badge: e.target.value })}
-                    style={{ width: '100%', padding: '0.6rem 0.75rem', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.12)', fontSize: '0.82rem', fontFamily: 'Outfit', outline: 'none', boxSizing: 'border-box' }}
+                    style={{ width: '100%', padding: '0.7rem 0.85rem', borderRadius: '10px', border: '1px solid rgba(0,0,0,0.12)', fontSize: '16px', fontFamily: 'Outfit', outline: 'none', boxSizing: 'border-box', minHeight: '48px' }}
                   />
                 </div>
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#334155', marginBottom: '0.3rem', fontFamily: 'Outfit' }}>Rating (1.0 - 5.0)</label>
+                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#334155', marginBottom: '0.3rem', fontFamily: 'Outfit' }}>Rating (1.0 – 5.0)</label>
                 <input
                   type="number"
                   step="0.1"
@@ -1623,7 +1677,7 @@ export const AdminDashboard = () => {
                   max="5"
                   value={productForm.rating}
                   onChange={e => setProductForm({ ...productForm, rating: e.target.value })}
-                  style={{ width: '100%', padding: '0.6rem 0.75rem', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.12)', fontSize: '0.82rem', fontFamily: 'Outfit', outline: 'none', boxSizing: 'border-box' }}
+                  style={{ width: '100%', padding: '0.7rem 0.85rem', borderRadius: '10px', border: '1px solid rgba(0,0,0,0.12)', fontSize: '16px', fontFamily: 'Outfit', outline: 'none', boxSizing: 'border-box', minHeight: '48px' }}
                 />
               </div>
 
@@ -1634,7 +1688,7 @@ export const AdminDashboard = () => {
                   placeholder="Short product description..."
                   value={productForm.desc}
                   onChange={e => setProductForm({ ...productForm, desc: e.target.value })}
-                  style={{ width: '100%', padding: '0.6rem 0.75rem', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.12)', fontSize: '0.82rem', fontFamily: 'Outfit', outline: 'none', boxSizing: 'border-box', resize: 'vertical' }}
+                  style={{ width: '100%', padding: '0.7rem 0.85rem', borderRadius: '10px', border: '1px solid rgba(0,0,0,0.12)', fontSize: '16px', fontFamily: 'Outfit', outline: 'none', boxSizing: 'border-box', resize: 'vertical' }}
                 />
               </div>
 
@@ -1642,14 +1696,14 @@ export const AdminDashboard = () => {
                 <button
                   type="button"
                   onClick={() => setShowProductModal(false)}
-                  style={{ flex: 1, padding: '0.65rem', borderRadius: '10px', backgroundColor: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.08)', color: '#64748b', fontWeight: 600, fontSize: '0.82rem', cursor: 'pointer', fontFamily: 'Outfit' }}
+                  style={{ flex: 1, minHeight: '50px', borderRadius: '12px', backgroundColor: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.08)', color: '#64748b', fontWeight: 600, fontSize: '0.88rem', cursor: 'pointer', fontFamily: 'Outfit' }}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={updatingId === 'product_submit'}
-                  style={{ flex: 1, padding: '0.65rem', borderRadius: '10px', backgroundColor: '#d4af37', border: 'none', color: '#ffffff', fontWeight: 800, fontSize: '0.82rem', cursor: 'pointer', fontFamily: 'Outfit' }}
+                  style={{ flex: 1, minHeight: '50px', borderRadius: '12px', backgroundColor: '#d4af37', border: 'none', color: '#ffffff', fontWeight: 800, fontSize: '0.88rem', cursor: 'pointer', fontFamily: 'Outfit' }}
                 >
                   {updatingId === 'product_submit' ? 'Saving...' : editingProduct ? 'Save Changes' : 'Upload Product'}
                 </button>
@@ -1663,35 +1717,44 @@ export const AdminDashboard = () => {
       {productToDelete && (
         <div
           onClick={() => setProductToDelete(null)}
-          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(6px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}
+          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(6px)', zIndex: 9999, display: 'flex', alignItems: isMobile ? 'flex-end' : 'center', justifyContent: 'center', padding: isMobile ? '0' : '1rem' }}
         >
           <div
             onClick={e => e.stopPropagation()}
-            style={{ backgroundColor: '#ffffff', borderRadius: '20px', border: '1px solid rgba(239,68,68,0.3)', width: '100%', maxWidth: '420px', padding: '1.5rem', textAlign: 'center', boxShadow: '0 20px 40px rgba(0,0,0,0.15)' }}
+            style={{
+              backgroundColor: '#ffffff',
+              borderRadius: isMobile ? '20px 20px 0 0' : '20px',
+              border: '1px solid rgba(239,68,68,0.3)',
+              width: '100%', maxWidth: isMobile ? '100%' : '420px',
+              padding: isMobile ? '1.5rem 1.5rem calc(1.5rem + env(safe-area-inset-bottom, 0px))' : '1.5rem',
+              textAlign: 'center', boxShadow: '0 -8px 40px rgba(0,0,0,0.15)',
+            }}
           >
-            <div style={{ width: '50px', height: '50px', borderRadius: '50%', backgroundColor: 'rgba(239,68,68,0.1)', color: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
-              <AlertTriangle size={26} />
+            {isMobile && <div style={{ width: '36px', height: '4px', borderRadius: '2px', backgroundColor: 'rgba(0,0,0,0.15)', margin: '0 auto 1.25rem' }} />}
+
+            <div style={{ width: '54px', height: '54px', borderRadius: '50%', backgroundColor: 'rgba(239,68,68,0.1)', color: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
+              <AlertTriangle size={28} />
             </div>
 
-            <h3 style={{ color: '#0f172a', fontFamily: 'Outfit', fontWeight: 800, margin: '0 0 0.5rem', fontSize: '1.1rem' }}>
+            <h3 style={{ color: '#0f172a', fontFamily: 'Outfit', fontWeight: 800, margin: '0 0 0.5rem', fontSize: '1.15rem' }}>
               Delete Product?
             </h3>
 
-            <p style={{ color: '#64748b', fontSize: '0.85rem', lineHeight: 1.5, marginBottom: '1.25rem' }}>
+            <p style={{ color: '#64748b', fontSize: '0.85rem', lineHeight: 1.6, marginBottom: '1.5rem' }}>
               Are you sure you want to remove <strong style={{ color: '#0f172a' }}>"{productToDelete.title}"</strong> from the public store page?
             </p>
 
             <div style={{ display: 'flex', gap: '0.65rem' }}>
               <button
                 onClick={() => setProductToDelete(null)}
-                style={{ flex: 1, padding: '0.65rem', borderRadius: '10px', backgroundColor: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.08)', color: '#64748b', fontWeight: 600, fontSize: '0.82rem', cursor: 'pointer', fontFamily: 'Outfit' }}
+                style={{ flex: 1, minHeight: '50px', borderRadius: '12px', backgroundColor: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.08)', color: '#64748b', fontWeight: 600, fontSize: '0.88rem', cursor: 'pointer', fontFamily: 'Outfit' }}
               >
                 Cancel
               </button>
               <button
                 disabled={updatingId === productToDelete._id}
                 onClick={() => handleDeleteProduct(productToDelete)}
-                style={{ flex: 1, padding: '0.65rem', borderRadius: '10px', backgroundColor: '#ef4444', border: 'none', color: '#ffffff', fontWeight: 700, fontSize: '0.82rem', cursor: 'pointer', fontFamily: 'Outfit' }}
+                style={{ flex: 1, minHeight: '50px', borderRadius: '12px', backgroundColor: '#ef4444', border: 'none', color: '#ffffff', fontWeight: 800, fontSize: '0.88rem', cursor: 'pointer', fontFamily: 'Outfit' }}
               >
                 {updatingId === productToDelete._id ? 'Deleting...' : 'Delete Permanently'}
               </button>
