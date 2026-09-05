@@ -407,7 +407,18 @@ export const AdminDashboard = () => {
   ];
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc', display: 'flex', fontFamily: 'Outfit, sans-serif', color: '#0f172a' }}>
+    <div style={{
+      minHeight: '100vh',
+      width: '100%',
+      maxWidth: '100vw',
+      overflowX: 'hidden',
+      backgroundColor: '#f8fafc',
+      display: 'flex',
+      flexDirection: isMobile ? 'column' : 'row',
+      fontFamily: 'Outfit, sans-serif',
+      color: '#0f172a',
+      boxSizing: 'border-box',
+    }}>
 
       {/* Mobile Drawer Backdrop */}
       {isMobile && isMobileOpen && (
@@ -558,9 +569,13 @@ export const AdminDashboard = () => {
       <main style={{
         marginLeft: isMobile ? 0 : '260px',
         flex: 1,
+        minWidth: 0,
+        maxWidth: '100%',
+        width: isMobile ? '100%' : 'calc(100% - 260px)',
+        overflowX: 'hidden',
         overflowY: 'auto',
         minHeight: '100vh',
-        width: '100%',
+        boxSizing: 'border-box',
       }}>
 
         {/* Top Header Bar */}
@@ -568,45 +583,48 @@ export const AdminDashboard = () => {
           position: 'sticky', top: 0, zIndex: 10,
           backgroundColor: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(12px)',
           borderBottom: '1px solid rgba(0,0,0,0.08)',
-          padding: isMobile ? '0.85rem 1rem' : '1rem 2rem',
+          padding: isMobile ? '0.75rem 0.85rem' : '1rem 2rem',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          gap: '0.5rem',
+          maxWidth: '100%',
+          boxSizing: 'border-box',
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', minWidth: 0, flex: 1 }}>
             {isMobile && (
               <button
                 onClick={() => setIsMobileOpen(true)}
                 style={{
                   background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.08)',
                   color: '#b5952f', padding: '0.45rem', borderRadius: '10px', cursor: 'pointer',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
                 }}
               >
                 <Menu size={20} />
               </button>
             )}
-            <div>
-              <h1 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: isMobile ? '1.1rem' : '1.3rem', color: '#0f172a', margin: 0 }}>
-                {activeTab === 'orders' ? 'Store Orders' : activeTab === 'messages' ? 'Order Inquiries & Customer Support' : activeTab === 'bookings' ? 'Salon Bookings' : activeTab === 'users' ? 'User Accounts' : 'Manage Store Products'}
+            <div style={{ minWidth: 0, overflow: 'hidden' }}>
+              <h1 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: isMobile ? '1rem' : '1.3rem', color: '#0f172a', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {activeTab === 'orders' ? 'Store Orders' : activeTab === 'messages' ? 'Order Inquiries' : activeTab === 'bookings' ? 'Salon Bookings' : activeTab === 'users' ? 'User Accounts' : 'Store Products'}
               </h1>
-              <p style={{ color: '#64748b', fontSize: '0.75rem', margin: '0.1rem 0 0 0', display: isMobile ? 'none' : 'block' }}>
+              <p style={{ color: '#64748b', fontSize: '0.75rem', margin: '0.1rem 0 0 0', display: isMobile ? 'none' : 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 {activeTab === 'orders' ? 'Manage customer orders in real-time' : activeTab === 'messages' ? 'Reply to customer inquiries and send instant real-time notifications' : activeTab === 'bookings' ? 'Manage appointment bookings' : activeTab === 'users' ? 'Manage registered client and expert accounts' : 'Upload and manage products displayed on the public store page'}
               </p>
             </div>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', flexShrink: 0 }}>
             {activeTab === 'products' && (
               <button
                 onClick={handleOpenAddProduct}
                 style={{
                   backgroundColor: '#d4af37', border: 'none', color: '#ffffff',
-                  padding: '0.45rem 0.85rem', borderRadius: '10px', fontWeight: 800,
-                  fontSize: '0.8rem', fontFamily: 'Outfit', cursor: 'pointer',
-                  display: 'flex', alignItems: 'center', gap: '0.35rem',
-                  boxShadow: '0 4px 12px rgba(212,175,55,0.3)'
+                  padding: isMobile ? '0.45rem 0.65rem' : '0.45rem 0.85rem', borderRadius: '10px', fontWeight: 800,
+                  fontSize: isMobile ? '0.75rem' : '0.8rem', fontFamily: 'Outfit', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', gap: '0.3rem',
+                  boxShadow: '0 4px 12px rgba(212,175,55,0.3)', flexShrink: 0,
                 }}
               >
-                <Plus size={15} /> Add Product
+                <Plus size={15} /> {isMobile ? 'Add' : 'Add Product'}
               </button>
             )}
             <button
@@ -615,7 +633,7 @@ export const AdminDashboard = () => {
               style={{
                 background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.08)',
                 color: unreadNotifCount > 0 ? '#b5952f' : '#0f172a', padding: '0.45rem', borderRadius: '10px', cursor: 'pointer',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative'
+                display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', flexShrink: 0,
               }}
             >
               <Bell size={15} />
@@ -637,27 +655,29 @@ export const AdminDashboard = () => {
               style={{
                 background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.08)',
                 color: '#0f172a', padding: '0.45rem', borderRadius: '10px', cursor: 'pointer',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
               }}
             >
               <RefreshCw size={15} />
             </button>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', backgroundColor: 'rgba(34,197,94,0.1)', padding: '0.3rem 0.6rem', borderRadius: '50px', border: '1px solid rgba(34,197,94,0.2)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', backgroundColor: 'rgba(34,197,94,0.1)', padding: '0.3rem 0.5rem', borderRadius: '50px', border: '1px solid rgba(34,197,94,0.2)', flexShrink: 0 }}>
               <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#22c55e', boxShadow: '0 0 6px #22c55e' }} />
-              <span style={{ fontSize: '0.7rem', color: '#16a34a', fontWeight: 700 }}>Live</span>
+              <span style={{ fontSize: '0.68rem', color: '#16a34a', fontWeight: 700 }}>Live</span>
             </div>
           </div>
         </div>
 
         {/* Dashboard Content */}
-        <div style={{ padding: isMobile ? '0.85rem 0.85rem 6.5rem' : '2rem' }}>
+        <div style={{ padding: isMobile ? '0.85rem 0.85rem calc(5.5rem + env(safe-area-inset-bottom, 0px))' : '2rem', boxSizing: 'border-box' }}>
 
           {/* KPI Metrics Cards Grid */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(auto-fit, minmax(180px, 1fr))',
+            gridTemplateColumns: isMobile ? 'repeat(2, minmax(0, 1fr))' : 'repeat(auto-fit, minmax(180px, 1fr))',
             gap: isMobile ? '0.65rem' : '1rem',
             marginBottom: '1.25rem',
+            width: '100%',
+            boxSizing: 'border-box',
           }}>
             {kpiCards.map((card, i) => (
               <div key={i} style={{
@@ -666,6 +686,7 @@ export const AdminDashboard = () => {
                 border: '1px solid rgba(0,0,0,0.08)',
                 boxShadow: '0 4px 16px rgba(0,0,0,0.03)',
                 overflow: 'hidden',
+                boxSizing: 'border-box',
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
                   <span style={{ fontSize: isMobile ? '0.66rem' : '0.75rem', color: '#64748b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.4px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{card.label}</span>
@@ -1785,6 +1806,105 @@ export const AdminDashboard = () => {
           }
         }}
       />
+
+      {/* ── Mobile Fixed Bottom Nav Bar ── */}
+      {isMobile && (
+        <nav
+          style={{
+            position: 'fixed',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            zIndex: 45,
+            backgroundColor: 'rgba(255, 255, 255, 0.96)',
+            backdropFilter: 'blur(16px)',
+            borderTop: '1px solid rgba(0, 0, 0, 0.08)',
+            padding: '0.4rem 0.5rem calc(0.4rem + env(safe-area-inset-bottom, 0px))',
+            display: 'flex',
+            justifyContent: 'space-around',
+            alignItems: 'center',
+            boxShadow: '0 -4px 20px rgba(0, 0, 0, 0.05)',
+          }}
+        >
+          {navItems.map(item => {
+            const isActive = activeTab === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => setActiveTab(item.id)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '0.2rem',
+                  padding: '0.35rem 0.25rem',
+                  borderRadius: '10px',
+                  cursor: 'pointer',
+                  position: 'relative',
+                  flex: 1,
+                  color: isActive ? '#b5952f' : '#64748b',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                <div style={{ position: 'relative' }}>
+                  <item.icon size={18} color={isActive ? '#b5952f' : '#64748b'} />
+                  {item.count > 0 && (
+                    <span
+                      style={{
+                        position: 'absolute',
+                        top: '-4px',
+                        right: '-8px',
+                        backgroundColor: isActive ? '#d4af37' : 'rgba(0,0,0,0.15)',
+                        color: isActive ? '#fff' : '#0f172a',
+                        fontSize: '0.58rem',
+                        fontWeight: 800,
+                        padding: '0.05rem 0.3rem',
+                        borderRadius: '50px',
+                        lineHeight: 1,
+                      }}
+                    >
+                      {item.count}
+                    </span>
+                  )}
+                </div>
+                <span
+                  style={{
+                    fontSize: '0.62rem',
+                    fontWeight: isActive ? 800 : 500,
+                    fontFamily: 'Outfit',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {item.id === 'orders' ? 'Orders' : item.id === 'messages' ? 'Inquiries' : item.id === 'bookings' ? 'Bookings' : item.id === 'users' ? 'Users' : 'Products'}
+                </span>
+              </button>
+            );
+          })}
+          <button
+            onClick={() => setIsMobileOpen(true)}
+            style={{
+              background: 'none',
+              border: 'none',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '0.2rem',
+              padding: '0.35rem 0.25rem',
+              borderRadius: '10px',
+              cursor: 'pointer',
+              color: '#64748b',
+              flex: 1,
+            }}
+          >
+            <Menu size={18} color="#64748b" />
+            <span style={{ fontSize: '0.62rem', fontWeight: 500, fontFamily: 'Outfit', whiteSpace: 'nowrap' }}>
+              Menu
+            </span>
+          </button>
+        </nav>
+      )}
     </div>
   );
 };
