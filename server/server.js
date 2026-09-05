@@ -254,8 +254,17 @@ app.post('/api/auth/login', async (req, res) => {
 
     // Strict Role Enforcement
     if (role) {
-      const expectedRole = (role === 'staff' || role === 'expert') ? 'staff' : 'customer';
-      if (user.role !== expectedRole) {
+      const expectedRole = (role === 'staff' || role === 'expert')
+        ? 'staff'
+        : role === 'admin'
+        ? 'admin'
+        : 'customer';
+
+      if (expectedRole === 'admin') {
+        if (user.role !== 'admin') {
+          return res.status(403).json({ error: 'Access denied. Account does not have administrator privileges.' });
+        }
+      } else if (user.role !== expectedRole && user.role !== 'admin') {
         const message = expectedRole === 'staff'
           ? 'Access denied. This is a Customer account. Please select the Customer tab to sign in.'
           : 'Access denied. This is an Expert account. Please select the Expert tab to sign in.';
