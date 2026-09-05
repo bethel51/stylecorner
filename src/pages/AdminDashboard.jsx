@@ -33,6 +33,8 @@ import {
   MessageSquare,
   Send,
   Bell,
+  Download,
+  Phone,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
@@ -40,6 +42,7 @@ import { uploadToCloudinary } from '../services/cloudinary';
 import { StatusBadge } from '../components/common/StatusBadge';
 import { OrderTrackingSheet } from '../components/store/OrderTrackingSheet';
 import { NotificationSheet } from '../components/common/NotificationSheet';
+import { exportOrdersToCSV, exportBookingsToCSV } from '../utils/exportUtils';
 
 export const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -57,6 +60,7 @@ export const AdminDashboard = () => {
   const [orderStatusFilter, setOrderStatusFilter] = useState('all');
   const [bookingStatusFilter, setBookingStatusFilter] = useState('all');
   const [userRoleFilter, setUserRoleFilter] = useState('all');
+  const [datePeriodFilter, setDatePeriodFilter] = useState('all'); // 'all' | 'today' | 'week' | 'month'
   const [searchQuery, setSearchQuery] = useState('');
   
   const [selectedOrder, setSelectedOrder] = useState(null);
@@ -309,16 +313,90 @@ export const AdminDashboard = () => {
     }
   };
 
-  const totalRevenue = orders.reduce((sum, o) => sum + (o.totalPrice || o.price || 0), 0);
-  const pendingOrdersCount = orders.filter(o => {
+  const filterByDatePeriod = (dateVal) => {
+    if (datePeriodFilter === 'all' || !dateVal) return true;
+    const d = new Date(dateVal);
+    if (isNaN(d.getTime())) return true;
+    const now = new Date();
+    if (datePeriodFilter === 'today') {
+      return d.toDateString() === now.toDateString();
+    }
+    if (datePeriodFilter === 'week') {
+      const pastWeek = new Date();
+      pastWeek.setDate(now.getDate() - 7);
+      return d >= pastWeek;
+    }
+    if (datePeriodFilter === 'month') {
+      const pastMonth = new Date();
+      pastMonth.setDate(now.getDate() - 30);
+      return d >= pastMonth;
+    }
+    return true;
+  };
+
+  const getCleanPhone = (phone) => (phone || '').replace(/[^0-9+]/g, '');
+  const openWhatsApp = (phone, name = 'Customer') => {
+    const clean = getCleanPhone(phone);
+    if (!clean) {
+      showToast('No valid phone number for WhatsApp', 'error');
+      return;
+    }
+    const intl = clean.startsWith('+') ? clean.slice(1) : clean.startsWith('0') ? '234' + clean.slice(1) : clean;
+    const msg = encodeURIComponent(`Hello ${name}, this is Style Corner Salon & Atelier regarding your order/booking.`);
+    window.open(`https://wa.me/${intl}?text=${msg}`, '_blank');
+  };
+
+  const handleToggleProductStock = async (product, e) => {
+    e.stopPropagation();
+    const isOut = product.badge === 'Out of Stock';
+    const newBadge = isOut ? '' : 'Out of Stock';
+    setUpdatingId(product._id || product.id);
+    try {
+      const updated = await api.updateProduct(product._id || product.id, {
+        ...product,
+        badge: newBadge,
+      });
+      setProductsList(prev => prev.map(p => (p._id === product._id || p.id === product._id) ? updated : p));
+      showToast(`"${product.title}" marked as ${newBadge ? 'Out of Stock' : 'In Stock'}`, 'success');
+    } catch (err) {
+      showToast(err.message || 'Failed to update stock status', 'error');
+    } finally {
+      setUpdatingId(null);
+    }
+  };
+
+  const periodOrders = orders.filter(o => filterByDatePeriod(o.createdAt));
+  const totalRevenue = periodOrders.reduce((sum, o) => sum + (o.totalPrice || o.price || 0), 0);
+  const pendingOrdersCount = periodOrders.filter(o => {
     const st = (o.status || 'pending').toLowerCase();
     return st === 'pending' || st === 'processing';
   }).length;
-  const pendingBookingsCount = bookings.filter(b => (b.status || 'pending').toLowerCase() === 'pending').length;
-  const customerCount = usersList.filter(u => u.role !== 'staff').length;
-  const expertCount = usersList.filter(u => u.role === 'staff').length;
+  const periodBookings = bookings.filter(b => filterByDatePeriod(b.date || b.createdAt));
+  const pendingBookingsCount = periodBookings.filter(b => (b.status || 'pending').toLowerCase() === 'pending').length;
 
-  const filteredOrders = orders.filter(o => {
+  const orderCounts = {
+    all: periodOrders.length,
+    pending: periodOrders.filter(o => (o.status || 'pending').toLowerCase() === 'pending').length,
+    processing: periodOrders.filter(o => (o.status || '').toLowerCase() === 'processing').length,
+    shipped: periodOrders.filter(o => (o.status || '').toLowerCase() === 'shipped').length,
+    completed: periodOrders.filter(o => (o.status || '').toLowerCase() === 'completed').length,
+  };
+
+  const bookingCounts = {
+    all: periodBookings.length,
+    pending: periodBookings.filter(b => (b.status || 'pending').toLowerCase() === 'pending').length,
+    confirmed: periodBookings.filter(b => ['confirmed', 'accepted'].includes((b.status || '').toLowerCase())).length,
+    completed: periodBookings.filter(b => (b.status || '').toLowerCase() === 'completed').length,
+    cancelled: periodBookings.filter(b => ['cancelled', 'rejected'].includes((b.status || '').toLowerCase())).length,
+  };
+
+  const userCounts = {
+    all: usersList.length,
+    customer: usersList.filter(u => u.role !== 'staff').length,
+    staff: usersList.filter(u => u.role === 'staff').length,
+  };
+
+  const filteredOrders = periodOrders.filter(o => {
     const orderStatus = (o.status || 'pending').toLowerCase();
     const matchesStatus = orderStatusFilter === 'all' || orderStatus === orderStatusFilter.toLowerCase();
     const q = searchQuery.trim().toLowerCase();
@@ -338,7 +416,7 @@ export const AdminDashboard = () => {
     return matchesStatus && matchesSearch;
   });
 
-  const filteredBookings = bookings.filter(b => {
+  const filteredBookings = periodBookings.filter(b => {
     const bookingStatus = (b.status || 'pending').toLowerCase();
     let matchesStatus = bookingStatusFilter === 'all';
     if (!matchesStatus) {
@@ -390,9 +468,9 @@ export const AdminDashboard = () => {
   });
 
   const kpiCards = [
-    { label: 'Store Revenue', value: `₦${Number(totalRevenue).toLocaleString()}`, icon: DollarSign, color: '#d4af37', bg: 'rgba(212,175,55,0.1)' },
-    { label: 'Total Orders', value: orders.length, sub: `${pendingOrdersCount} pending`, icon: ShoppingBag, color: '#3b82f6', bg: 'rgba(59,130,246,0.1)' },
-    { label: 'Bookings Queue', value: bookings.length, sub: `${pendingBookingsCount} pending`, icon: Calendar, color: '#10b981', bg: 'rgba(16,185,129,0.1)' },
+    { label: datePeriodFilter === 'all' ? 'Store Revenue' : `Revenue (${datePeriodFilter})`, value: `₦${Number(totalRevenue).toLocaleString()}`, icon: DollarSign, color: '#d4af37', bg: 'rgba(212,175,55,0.1)' },
+    { label: 'Total Orders', value: periodOrders.length, sub: `${pendingOrdersCount} pending`, icon: ShoppingBag, color: '#3b82f6', bg: 'rgba(59,130,246,0.1)' },
+    { label: 'Bookings Queue', value: periodBookings.length, sub: `${pendingBookingsCount} pending`, icon: Calendar, color: '#10b981', bg: 'rgba(16,185,129,0.1)' },
     { label: 'Store Products', value: productsList.length, sub: 'Active in store', icon: Tag, color: '#a855f7', bg: 'rgba(168,85,247,0.1)' },
   ];
 
@@ -763,7 +841,70 @@ export const AdminDashboard = () => {
               />
             </div>
 
-            {/* Scrollable Filter Chips */}
+            {/* Period Selector & CSV Export Action Bar */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
+              <div style={{ display: 'flex', gap: '0.35rem', overflowX: 'auto', WebkitOverflowScrolling: 'touch', paddingBottom: '2px' }}>
+                {[
+                  { id: 'all', label: 'All Time' },
+                  { id: 'today', label: 'Today' },
+                  { id: 'week', label: 'This Week' },
+                  { id: 'month', label: 'This Month' },
+                ].map((period) => (
+                  <button
+                    key={period.id}
+                    onClick={() => setDatePeriodFilter(period.id)}
+                    style={{
+                      padding: '0.35rem 0.65rem',
+                      borderRadius: '50px',
+                      fontSize: '0.72rem',
+                      fontWeight: datePeriodFilter === period.id ? 800 : 600,
+                      backgroundColor: datePeriodFilter === period.id ? '#d4af37' : '#ffffff',
+                      color: datePeriodFilter === period.id ? '#ffffff' : '#64748b',
+                      border: datePeriodFilter === period.id ? '1px solid #d4af37' : '1px solid rgba(0,0,0,0.1)',
+                      cursor: 'pointer',
+                      fontFamily: 'Outfit',
+                      flexShrink: 0,
+                    }}
+                  >
+                    {period.label}
+                  </button>
+                ))}
+              </div>
+
+              {(activeTab === 'orders' || activeTab === 'bookings') && (
+                <button
+                  onClick={() => {
+                    if (activeTab === 'orders') {
+                      exportOrdersToCSV(filteredOrders);
+                      showToast(`Exported ${filteredOrders.length} orders to CSV`, 'success');
+                    } else {
+                      exportBookingsToCSV(filteredBookings);
+                      showToast(`Exported ${filteredBookings.length} bookings to CSV`, 'success');
+                    }
+                  }}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.35rem',
+                    padding: '0.38rem 0.75rem',
+                    borderRadius: '8px',
+                    backgroundColor: '#ffffff',
+                    border: '1px solid rgba(212,175,55,0.3)',
+                    color: '#b5952f',
+                    fontSize: '0.75rem',
+                    fontWeight: 800,
+                    fontFamily: 'Outfit',
+                    cursor: 'pointer',
+                    boxShadow: '0 2px 6px rgba(0,0,0,0.02)',
+                    flexShrink: 0,
+                  }}
+                >
+                  <Download size={13} /> Export CSV
+                </button>
+              )}
+            </div>
+
+            {/* Scrollable Filter Chips with Live Counts */}
             {activeTab !== 'products' && (
               <div style={{ display: 'flex', gap: '0.4rem', overflowX: 'auto', paddingBottom: '0.2rem', WebkitOverflowScrolling: 'touch' }}>
                 {(activeTab === 'orders'
@@ -779,6 +920,13 @@ export const AdminDashboard = () => {
                       ? bookingStatusFilter === status
                       : userRoleFilter === status;
                   const labelDisplay = status === 'staff' ? 'experts' : status;
+                  const countVal =
+                    activeTab === 'orders'
+                      ? orderCounts[status] || 0
+                      : activeTab === 'bookings'
+                      ? bookingCounts[status] || 0
+                      : userCounts[status] || 0;
+
                   return (
                     <button
                       key={status}
@@ -794,9 +942,17 @@ export const AdminDashboard = () => {
                         color: active ? '#ffffff' : '#64748b',
                         border: active ? '1px solid #171717' : '1px solid rgba(0,0,0,0.1)',
                         fontFamily: 'Outfit', transition: 'all 0.15s ease',
+                        display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
                       }}
                     >
-                      {labelDisplay}
+                      <span>{labelDisplay}</span>
+                      <span style={{
+                        fontSize: '0.66rem', fontWeight: 800, padding: '0.05rem 0.4rem', borderRadius: '50px',
+                        backgroundColor: active ? '#d4af37' : 'rgba(0,0,0,0.06)',
+                        color: active ? '#ffffff' : '#64748b',
+                      }}>
+                        {countVal}
+                      </span>
                     </button>
                   );
                 })}
@@ -839,8 +995,28 @@ export const AdminDashboard = () => {
                         <div style={{ fontSize: '0.98rem', fontWeight: 700, color: '#0f172a', fontFamily: 'Outfit' }}>
                           {order.name || order.customerInfo?.name || 'Store Customer'}
                         </div>
-                        <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.1rem' }}>
-                          {order.email || order.customerInfo?.email || ''} {(order.phone || order.customerInfo?.phone) ? `· ${order.phone || order.customerInfo?.phone}` : ''}
+                        <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.1rem', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '0.4rem' }}>
+                          <span>{order.email || order.customerInfo?.email || ''} {(order.phone || order.customerInfo?.phone) ? `· ${order.phone || order.customerInfo?.phone}` : ''}</span>
+                          {(order.phone || order.customerInfo?.phone) && (
+                            <span style={{ display: 'inline-flex', gap: '0.3rem' }}>
+                              <button
+                                type="button"
+                                onClick={(e) => { e.stopPropagation(); openWhatsApp(order.phone || order.customerInfo?.phone, order.name || order.customerInfo?.name); }}
+                                style={{ background: 'rgba(34,197,94,0.12)', border: '1px solid rgba(34,197,94,0.3)', color: '#16a34a', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem' }}
+                                title="Chat on WhatsApp"
+                              >
+                                <MessageSquare size={10} /> WhatsApp
+                              </button>
+                              <a
+                                href={`tel:${order.phone || order.customerInfo?.phone}`}
+                                onClick={e => e.stopPropagation()}
+                                style={{ background: 'rgba(59,130,246,0.12)', border: '1px solid rgba(59,130,246,0.3)', color: '#2563eb', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem', textDecoration: 'none' }}
+                                title="Call customer"
+                              >
+                                <Phone size={10} /> Call
+                              </a>
+                            </span>
+                          )}
                         </div>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
@@ -937,8 +1113,27 @@ export const AdminDashboard = () => {
                           <h4 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '1rem', color: '#0f172a', margin: 0 }}>
                             {order.name || order.customerInfo?.name || 'Store Customer'}
                           </h4>
-                          <div style={{ fontSize: '0.76rem', color: '#64748b', marginTop: '0.1rem' }}>
-                            {order.email} {order.phone ? `· ${order.phone}` : ''}
+                          <div style={{ fontSize: '0.76rem', color: '#64748b', marginTop: '0.1rem', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '0.4rem' }}>
+                            <span>{order.email} {order.phone ? `· ${order.phone}` : ''}</span>
+                            {order.phone && (
+                              <span style={{ display: 'inline-flex', gap: '0.3rem' }}>
+                                <button
+                                  type="button"
+                                  onClick={() => openWhatsApp(order.phone, order.name || order.customerInfo?.name)}
+                                  style={{ background: 'rgba(34,197,94,0.12)', border: '1px solid rgba(34,197,94,0.3)', color: '#16a34a', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem' }}
+                                  title="Chat on WhatsApp"
+                                >
+                                  <MessageSquare size={10} /> WhatsApp
+                                </button>
+                                <a
+                                  href={`tel:${order.phone}`}
+                                  style={{ background: 'rgba(59,130,246,0.12)', border: '1px solid rgba(59,130,246,0.3)', color: '#2563eb', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem', textDecoration: 'none' }}
+                                  title="Call customer"
+                                >
+                                  <Phone size={10} /> Call
+                                </a>
+                              </span>
+                            )}
                           </div>
                         </div>
 
@@ -1063,8 +1258,30 @@ export const AdminDashboard = () => {
                         <div style={{ fontSize: '0.98rem', fontWeight: 700, color: '#0f172a', fontFamily: 'Outfit' }}>
                           {b.serviceName || b.service || 'Grooming Service'}
                         </div>
-                        <div style={{ fontSize: '0.76rem', color: '#b5952f', marginTop: '0.15rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                          <Users size={12} /> {b.clientName || b.user?.firstname || 'Guest'} {b.phone || b.clientPhone ? `· ${b.phone || b.clientPhone}` : ''}
+                        <div style={{ fontSize: '0.76rem', color: '#b5952f', marginTop: '0.15rem', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '0.4rem' }}>
+                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+                            <Users size={12} /> {b.clientName || b.user?.firstname || 'Guest'} {b.phone || b.clientPhone ? `· ${b.phone || b.clientPhone}` : ''}
+                          </span>
+                          {(b.phone || b.clientPhone) && (
+                            <span style={{ display: 'inline-flex', gap: '0.3rem' }}>
+                              <button
+                                type="button"
+                                onClick={(e) => { e.stopPropagation(); openWhatsApp(b.phone || b.clientPhone, b.clientName || b.user?.firstname); }}
+                                style={{ background: 'rgba(34,197,94,0.12)', border: '1px solid rgba(34,197,94,0.3)', color: '#16a34a', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem' }}
+                                title="Chat on WhatsApp"
+                              >
+                                <MessageSquare size={10} /> WhatsApp
+                              </button>
+                              <a
+                                href={`tel:${b.phone || b.clientPhone}`}
+                                onClick={e => e.stopPropagation()}
+                                style={{ background: 'rgba(59,130,246,0.12)', border: '1px solid rgba(59,130,246,0.3)', color: '#2563eb', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem', textDecoration: 'none' }}
+                                title="Call client"
+                              >
+                                <Phone size={10} /> Call
+                              </a>
+                            </span>
+                          )}
                         </div>
                       </div>
                       <StatusBadge status={b.status || 'pending'} />
@@ -1162,8 +1379,27 @@ export const AdminDashboard = () => {
                                 </span>
                               )}
                             </div>
-                            <div style={{ fontSize: '0.78rem', color: '#64748b', marginTop: '0.15rem' }}>
-                              {u.email || 'No email'} {u.phone ? `· ${u.phone}` : ''}
+                            <div style={{ fontSize: '0.78rem', color: '#64748b', marginTop: '0.15rem', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '0.4rem' }}>
+                              <span>{u.email || 'No email'} {u.phone ? `· ${u.phone}` : ''}</span>
+                              {u.phone && (
+                                <span style={{ display: 'inline-flex', gap: '0.3rem' }}>
+                                  <button
+                                    type="button"
+                                    onClick={() => openWhatsApp(u.phone, fullName)}
+                                    style={{ background: 'rgba(34,197,94,0.12)', border: '1px solid rgba(34,197,94,0.3)', color: '#16a34a', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem' }}
+                                    title="Chat on WhatsApp"
+                                  >
+                                    <MessageSquare size={10} /> WhatsApp
+                                  </button>
+                                  <a
+                                    href={`tel:${u.phone}`}
+                                    style={{ background: 'rgba(59,130,246,0.12)', border: '1px solid rgba(59,130,246,0.3)', color: '#2563eb', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem', textDecoration: 'none' }}
+                                    title="Call user"
+                                  >
+                                    <Phone size={10} /> Call
+                                  </a>
+                                </span>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -1275,16 +1511,34 @@ export const AdminDashboard = () => {
                       </div>
 
                       {/* Action buttons */}
-                      <div style={{ display: 'flex', gap: '0.4rem', paddingTop: '0.65rem', borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+                      <div style={{ display: 'flex', gap: '0.35rem', paddingTop: '0.65rem', borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+                        <button
+                          type="button"
+                          onClick={(e) => handleToggleProductStock(p, e)}
+                          disabled={updatingId === (p._id || p.id)}
+                          style={{
+                            flex: 1, padding: '0.45rem 0.4rem', borderRadius: '8px', minHeight: '44px',
+                            backgroundColor: p.badge === 'Out of Stock' ? 'rgba(239,68,68,0.1)' : 'rgba(34,197,94,0.1)',
+                            border: p.badge === 'Out of Stock' ? '1px solid rgba(239,68,68,0.3)' : '1px solid rgba(34,197,94,0.3)',
+                            color: p.badge === 'Out of Stock' ? '#ef4444' : '#16a34a',
+                            fontWeight: 800, fontSize: '0.72rem',
+                            cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            fontFamily: 'Outfit', whiteSpace: 'nowrap'
+                          }}
+                          title="Toggle Stock Availability"
+                        >
+                          {p.badge === 'Out of Stock' ? 'Out of Stock' : 'In Stock'}
+                        </button>
                         <button
                           onClick={() => handleOpenEditProduct(p)}
                           style={{
-                            flex: 1, padding: '0.5rem', borderRadius: '8px', minHeight: '44px',
+                            padding: '0.5rem 0.75rem', borderRadius: '8px', minHeight: '44px',
                             backgroundColor: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)',
                             color: '#b5952f', fontWeight: 700, fontSize: '0.75rem',
                             cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem',
                             fontFamily: 'Outfit'
                           }}
+                          title="Edit Product"
                         >
                           <Edit3 size={12} /> Edit
                         </button>
@@ -1297,6 +1551,7 @@ export const AdminDashboard = () => {
                             cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem',
                             fontFamily: 'Outfit'
                           }}
+                          title="Delete Product"
                         >
                           <Trash2 size={12} />
                         </button>

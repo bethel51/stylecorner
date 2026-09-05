@@ -244,6 +244,11 @@ export const CustomerDashboard = () => {
   const pointsToNextReward = LOYALTY_TIER_SIZE - (rewardPoints % LOYALTY_TIER_SIZE);
   const tiersEarned = Math.floor(rewardPoints / LOYALTY_TIER_SIZE);
 
+  // Nearest upcoming appointment for prominent countdown display
+  const upcomingBooking = bookings
+    .filter(b => ['confirmed', 'accepted', 'pending'].includes((b.status || '').toLowerCase()))
+    .sort((a, b) => new Date(a.date || a.createdAt) - new Date(b.date || b.createdAt))[0];
+
   // Section label style helper
   const sectionLabel = {
     display: 'flex', alignItems: 'center', gap: '0.5rem',
@@ -428,6 +433,71 @@ export const CustomerDashboard = () => {
             </button>
           </div>
         </div>
+
+        {/* ══════════════════════════════════════════════
+            UPCOMING APPOINTMENT HERO CARD
+        ══════════════════════════════════════════════ */}
+        {upcomingBooking && (
+          <div
+            style={{
+              background: 'linear-gradient(135deg, #18181b 0%, #27272a 100%)',
+              borderRadius: '20px',
+              padding: '1.1rem 1.2rem',
+              marginBottom: '1rem',
+              border: '1.5px solid rgba(212,175,55,0.4)',
+              boxShadow: '0 10px 30px rgba(0,0,0,0.18)',
+              color: '#ffffff',
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.65rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#d4af37', fontSize: '0.72rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.06em', fontFamily: 'Outfit' }}>
+                <Clock size={13} /> Your Upcoming Appointment
+              </div>
+              <StatusBadge status={upcomingBooking.status} />
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.5rem' }}>
+              <div>
+                <h4 style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.1rem', margin: '0 0 0.2rem', color: '#ffffff' }}>
+                  {upcomingBooking.serviceName || upcomingBooking.service || 'Salon Service'}
+                </h4>
+                <div style={{ fontSize: '0.8rem', color: '#d1d5db', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                  <Sparkles size={12} color="#d4af37" /> Specialist: <strong style={{ color: '#d4af37' }}>{upcomingBooking.stylist || 'Any Specialist'}</strong>
+                </div>
+                <div style={{ fontSize: '0.76rem', color: '#9ca3af', marginTop: '0.25rem' }}>
+                  📅 {upcomingBooking.date || 'Scheduled'} at {upcomingBooking.time || 'TBD'}
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '0.4rem', marginTop: '0.35rem' }}>
+                <button
+                  type="button"
+                  onClick={() => setShowHistorySheet(true)}
+                  style={{
+                    background: 'rgba(212,175,55,0.18)', border: '1px solid rgba(212,175,55,0.4)',
+                    color: '#d4af37', padding: '0.45rem 0.75rem', borderRadius: '10px',
+                    fontSize: '0.75rem', fontWeight: 800, fontFamily: 'Outfit',
+                    display: 'inline-flex', alignItems: 'center', gap: '0.3rem', cursor: 'pointer',
+                  }}
+                >
+                  <Eye size={12} /> View Details
+                </button>
+                <button
+                  type="button"
+                  onClick={() => navigate('/booking')}
+                  style={{
+                    background: '#d4af37', color: '#111', border: 'none',
+                    padding: '0.45rem 0.75rem', borderRadius: '10px',
+                    fontSize: '0.75rem', fontWeight: 900, fontFamily: 'Outfit',
+                    cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.3rem',
+                  }}
+                >
+                  Book New
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* ══════════════════════════════════════════════
             SECTION 2 — STATS TILES

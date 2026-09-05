@@ -27,7 +27,8 @@ import {
   AlertTriangle,
   History,
   Activity,
-  ListOrdered
+  ListOrdered,
+  MessageSquare,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -217,7 +218,27 @@ export const ExpertDashboard = () => {
 
   const totalRevenue = completedBookings.reduce((sum, b) => sum + (Number(b.price) || 0), 0);
 
+  const isToday = (dateVal) => {
+    if (!dateVal) return false;
+    const d = new Date(dateVal);
+    return !isNaN(d.getTime()) && d.toDateString() === new Date().toDateString();
+  };
+
+  const todayBookings = bookings.filter(b => isToday(b.date || b.createdAt));
+
+  const openClientWhatsApp = (phone, name = 'Client') => {
+    const clean = (phone || '').replace(/[^0-9+]/g, '');
+    if (!clean) {
+      showToast('No phone number available for WhatsApp', 'error');
+      return;
+    }
+    const intl = clean.startsWith('+') ? clean.slice(1) : clean.startsWith('0') ? '234' + clean.slice(1) : clean;
+    const msg = encodeURIComponent(`Hello ${name}, this is ${user?.firstname || 'your Stylist'} from Style Corner regarding your salon appointment.`);
+    window.open(`https://wa.me/${intl}?text=${msg}`, '_blank');
+  };
+
   const filteredList = bookings.filter((b) => {
+    if (filterStatus === 'today') return isToday(b.date || b.createdAt);
     if (filterStatus === 'all') return true;
     return b.status === filterStatus;
   });
@@ -811,6 +832,7 @@ export const ExpertDashboard = () => {
           }}>
             {[
               { id: 'all', label: `All (${bookings.length})` },
+              { id: 'today', label: `Today (${todayBookings.length})` },
               { id: 'pending', label: `Pending (${pendingBookings.length})` },
               { id: 'accepted', label: `Confirmed (${acceptedBookings.length})` },
               { id: 'completed', label: `Completed (${completedBookings.length})` },
@@ -873,8 +895,25 @@ export const ExpertDashboard = () => {
                           <Mail size={11} style={{ flexShrink: 0 }} /> <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{b.clientEmail}</span>
                         </span>
                         {b.clientPhone && (
-                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.2rem', whiteSpace: 'nowrap' }}>
-                            <Phone size={11} style={{ flexShrink: 0 }} /> {b.clientPhone}
+                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', flexWrap: 'wrap' }}>
+                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.2rem', whiteSpace: 'nowrap' }}>
+                              <Phone size={11} style={{ flexShrink: 0 }} /> {b.clientPhone}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => openClientWhatsApp(b.clientPhone, b.clientName)}
+                              style={{ background: 'rgba(34,197,94,0.12)', border: '1px solid rgba(34,197,94,0.3)', color: '#16a34a', padding: '0.12rem 0.4rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem' }}
+                              title="Message Client on WhatsApp"
+                            >
+                              <MessageSquare size={10} /> WhatsApp
+                            </button>
+                            <a
+                              href={`tel:${b.clientPhone}`}
+                              style={{ background: 'rgba(59,130,246,0.12)', border: '1px solid rgba(59,130,246,0.3)', color: '#2563eb', padding: '0.12rem 0.4rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem', textDecoration: 'none' }}
+                              title="Call Client"
+                            >
+                              <Phone size={10} /> Call
+                            </a>
                           </span>
                         )}
                       </div>
