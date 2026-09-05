@@ -650,30 +650,31 @@ export const AdminDashboard = () => {
         </div>
 
         {/* Dashboard Content */}
-        <div style={{ padding: isMobile ? '1rem' : '2rem' }}>
+        <div style={{ padding: isMobile ? '0.85rem 0.85rem 6.5rem' : '2rem' }}>
 
           {/* KPI Metrics Cards Grid */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: isMobile ? 'repeat(auto-fit, minmax(130px, 1fr))' : 'repeat(auto-fit, minmax(180px, 1fr))',
+            gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(auto-fit, minmax(180px, 1fr))',
             gap: isMobile ? '0.65rem' : '1rem',
-            marginBottom: '1.5rem',
+            marginBottom: '1.25rem',
           }}>
             {kpiCards.map((card, i) => (
               <div key={i} style={{
                 backgroundColor: '#ffffff', borderRadius: isMobile ? '14px' : '16px',
-                padding: isMobile ? '0.85rem' : '1.25rem',
+                padding: isMobile ? '0.85rem 0.75rem' : '1.25rem',
                 border: '1px solid rgba(0,0,0,0.08)',
                 boxShadow: '0 4px 16px rgba(0,0,0,0.03)',
+                overflow: 'hidden',
               }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                  <span style={{ fontSize: isMobile ? '0.68rem' : '0.75rem', color: '#64748b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{card.label}</span>
-                  <div style={{ width: isMobile ? '26px' : '32px', height: isMobile ? '26px' : '32px', borderRadius: '8px', backgroundColor: card.bg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
+                  <span style={{ fontSize: isMobile ? '0.66rem' : '0.75rem', color: '#64748b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.4px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{card.label}</span>
+                  <div style={{ width: isMobile ? '28px' : '32px', height: isMobile ? '28px' : '32px', borderRadius: '8px', backgroundColor: card.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                     <card.icon size={isMobile ? 14 : 16} color={card.color} />
                   </div>
                 </div>
-                <div style={{ fontSize: isMobile ? '1.25rem' : '1.6rem', fontWeight: 800, color: card.color === '#d4af37' ? '#b5952f' : card.color, fontFamily: 'Outfit', lineHeight: 1 }}>{card.value}</div>
-                {card.sub && <div style={{ fontSize: '0.68rem', color: '#94a3b8', marginTop: '0.2rem' }}>{card.sub}</div>}
+                <div style={{ fontSize: isMobile ? '1.2rem' : '1.6rem', fontWeight: 800, color: card.color === '#d4af37' ? '#b5952f' : card.color, fontFamily: 'Outfit', lineHeight: 1.1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{card.value}</div>
+                {card.sub && <div style={{ fontSize: '0.68rem', color: '#94a3b8', marginTop: '0.25rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{card.sub}</div>}
               </div>
             ))}
           </div>
@@ -697,7 +698,8 @@ export const AdminDashboard = () => {
                     backgroundColor: activeTab === item.id ? '#171717' : '#ffffff',
                     color: activeTab === item.id ? '#d4af37' : '#64748b',
                     fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.78rem',
-                    cursor: 'pointer', boxShadow: activeTab === item.id ? '0 4px 12px rgba(0,0,0,0.12)' : 'none'
+                    cursor: 'pointer', boxShadow: activeTab === item.id ? '0 4px 12px rgba(0,0,0,0.12)' : 'none',
+                    minHeight: '38px',
                   }}
                 >
                   <item.icon size={13} />
@@ -717,7 +719,7 @@ export const AdminDashboard = () => {
           {/* Search Bar + Filter Chips Row */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.25rem' }}>
             <div style={{ position: 'relative', width: '100%' }}>
-              <Search size={15} style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
+              <Search size={16} style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
               <input
                 type="text"
                 placeholder={
@@ -734,8 +736,8 @@ export const AdminDashboard = () => {
                 style={{
                   width: '100%', padding: '0.65rem 0.85rem 0.65rem 2.5rem', borderRadius: '10px',
                   backgroundColor: '#ffffff', border: '1px solid rgba(0,0,0,0.12)',
-                  color: '#0f172a', fontSize: '0.83rem', outline: 'none', fontFamily: 'Outfit',
-                  boxSizing: 'border-box',
+                  color: '#0f172a', fontSize: isMobile ? '16px' : '0.83rem', outline: 'none', fontFamily: 'Outfit',
+                  boxSizing: 'border-box', minHeight: '44px',
                 }}
               />
             </div>
@@ -843,12 +845,12 @@ export const AdminDashboard = () => {
                       )}
                     </div>
 
-                    <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', paddingTop: '0.65rem', borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+                    <div style={{ display: 'flex', gap: '0.45rem', flexWrap: 'wrap', paddingTop: '0.65rem', borderTop: '1px solid rgba(0,0,0,0.06)' }}>
                       {order.status !== 'shipped' && order.status !== 'completed' && (
                         <button
                           disabled={updatingId === order._id}
                           onClick={(e) => handleUpdateOrderStatus(order._id, 'shipped', e)}
-                          style={{ flex: '1 1 120px', minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '10px', backgroundColor: '#d4af37', color: '#fff', fontWeight: 800, fontSize: '0.78rem', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
+                          style={{ flex: isMobile ? '1 1 calc(50% - 0.45rem)' : '1 1 120px', minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '10px', backgroundColor: '#d4af37', color: '#fff', fontWeight: 800, fontSize: '0.78rem', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
                         >
                           <Truck size={13} /> Mark Shipped
                         </button>
@@ -857,21 +859,21 @@ export const AdminDashboard = () => {
                         <button
                           disabled={updatingId === order._id}
                           onClick={(e) => handleUpdateOrderStatus(order._id, 'completed', e)}
-                          style={{ flex: '1 1 120px', minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '10px', backgroundColor: '#16a34a', color: '#fff', fontWeight: 800, fontSize: '0.78rem', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
+                          style={{ flex: isMobile ? '1 1 calc(50% - 0.45rem)' : '1 1 120px', minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '10px', backgroundColor: '#16a34a', color: '#fff', fontWeight: 800, fontSize: '0.78rem', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
                         >
                           <CheckCircle size={13} /> Mark Completed
                         </button>
                       )}
                       <button
                         onClick={(e) => { e.stopPropagation(); setSelectedOrderForTracking(order); }}
-                        style={{ flex: '1 1 140px', minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '10px', backgroundColor: 'rgba(212,175,55,0.15)', color: '#b5952f', fontWeight: 800, fontSize: '0.78rem', border: '1px solid rgba(212,175,55,0.4)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
+                        style={{ flex: isMobile ? '1 1 calc(50% - 0.45rem)' : '1 1 140px', minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '10px', backgroundColor: 'rgba(212,175,55,0.15)', color: '#b5952f', fontWeight: 800, fontSize: '0.78rem', border: '1px solid rgba(212,175,55,0.4)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
                       >
                         <Truck size={13} /> Track & Manage
                       </button>
 
                       <button
                         onClick={(e) => { e.stopPropagation(); setSelectedOrder(order); }}
-                        style={{ flex: '0 0 auto', minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '10px', backgroundColor: 'rgba(0,0,0,0.04)', color: '#334155', fontWeight: 700, fontSize: '0.78rem', border: '1px solid rgba(0,0,0,0.08)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
+                        style={{ flex: isMobile ? '1 1 100%' : '0 0 auto', minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '10px', backgroundColor: 'rgba(0,0,0,0.04)', color: '#334155', fontWeight: 700, fontSize: '0.78rem', border: '1px solid rgba(0,0,0,0.08)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
                       >
                         <Eye size={13} /> Details
                       </button>
@@ -969,7 +971,7 @@ export const AdminDashboard = () => {
                       {/* Admin Quick Reply Input */}
                       <form
                         onSubmit={(e) => { e.preventDefault(); handleSendAdminReply(order._id); }}
-                        style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}
+                        style={{ display: 'flex', gap: '0.45rem', alignItems: 'center', flexWrap: isMobile ? 'wrap' : 'nowrap' }}
                       >
                         <input
                           type="text"
@@ -977,9 +979,9 @@ export const AdminDashboard = () => {
                           value={replyText}
                           onChange={(e) => setReplyInputMap({ ...replyInputMap, [order._id]: e.target.value })}
                           style={{
-                            flex: 1, padding: '0.6rem 0.85rem', borderRadius: '10px',
-                            border: '1px solid rgba(0,0,0,0.12)', fontSize: '0.82rem',
-                            outline: 'none', fontFamily: 'Outfit'
+                            flex: isMobile ? '1 1 100%' : 1, padding: '0.65rem 0.85rem', borderRadius: '10px',
+                            border: '1px solid rgba(0,0,0,0.12)', fontSize: isMobile ? '16px' : '0.82rem',
+                            outline: 'none', fontFamily: 'Outfit', minHeight: '44px', boxSizing: 'border-box'
                           }}
                         />
                         <button
@@ -987,12 +989,13 @@ export const AdminDashboard = () => {
                           disabled={sendingReplyId === order._id || !replyText.trim()}
                           style={{
                             backgroundColor: '#d4af37', color: '#ffffff', border: 'none',
-                            padding: '0.6rem 1rem', borderRadius: '10px', fontWeight: 800,
-                            fontSize: '0.8rem', fontFamily: 'Outfit', cursor: replyText.trim() ? 'pointer' : 'not-allowed',
-                            display: 'flex', alignItems: 'center', gap: '0.35rem', flexShrink: 0
+                            padding: '0.65rem 1rem', borderRadius: '10px', fontWeight: 800,
+                            fontSize: '0.82rem', fontFamily: 'Outfit', cursor: replyText.trim() ? 'pointer' : 'not-allowed',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
+                            flex: isMobile ? 1 : '0 0 auto', minHeight: '44px'
                           }}
                         >
-                          <Send size={13} /> Reply & Notify
+                          <Send size={14} /> Reply & Notify
                         </button>
 
                         <button
@@ -1000,12 +1003,13 @@ export const AdminDashboard = () => {
                           onClick={() => setSelectedOrderForTracking(order)}
                           style={{
                             backgroundColor: 'rgba(0,0,0,0.04)', color: '#334155', border: '1px solid rgba(0,0,0,0.08)',
-                            padding: '0.6rem 0.85rem', borderRadius: '10px', fontWeight: 600,
-                            fontSize: '0.8rem', fontFamily: 'Outfit', cursor: 'pointer',
-                            display: 'flex', alignItems: 'center', gap: '0.35rem', flexShrink: 0
+                            padding: '0.65rem 0.85rem', borderRadius: '10px', fontWeight: 600,
+                            fontSize: '0.82rem', fontFamily: 'Outfit', cursor: 'pointer',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
+                            flex: isMobile ? '0 0 auto' : '0 0 auto', minHeight: '44px'
                           }}
                         >
-                          <Truck size={13} /> Track
+                          <Truck size={14} /> Track
                         </button>
                       </form>
                     </div>
@@ -1050,12 +1054,12 @@ export const AdminDashboard = () => {
                       <span><Sparkles size={12} style={{ verticalAlign: 'middle', marginRight: '3px' }} />Stylist: {b.stylist || 'Any'}</span>
                     </div>
 
-                    <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', paddingTop: '0.65rem', borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+                    <div style={{ display: 'flex', gap: '0.45rem', flexWrap: 'wrap', paddingTop: '0.65rem', borderTop: '1px solid rgba(0,0,0,0.06)' }}>
                       {b.status !== 'confirmed' && b.status !== 'completed' && b.status !== 'cancelled' && (
                         <button
                           disabled={updatingId === b._id}
                           onClick={(e) => handleUpdateBookingStatus(b._id, 'confirmed', e)}
-                          style={{ flex: 1, padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: '#d4af37', color: '#fff', fontWeight: 700, fontSize: '0.78rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit' }}
+                          style={{ flex: 1, minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: '#d4af37', color: '#fff', fontWeight: 700, fontSize: '0.78rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
                         >
                           Confirm
                         </button>
@@ -1064,7 +1068,7 @@ export const AdminDashboard = () => {
                         <button
                           disabled={updatingId === b._id}
                           onClick={(e) => handleUpdateBookingStatus(b._id, 'completed', e)}
-                          style={{ flex: 1, padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: '#16a34a', color: '#fff', fontWeight: 700, fontSize: '0.78rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit' }}
+                          style={{ flex: 1, minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: '#16a34a', color: '#fff', fontWeight: 700, fontSize: '0.78rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
                         >
                           Complete
                         </button>
@@ -1073,14 +1077,14 @@ export const AdminDashboard = () => {
                         <button
                           disabled={updatingId === b._id}
                           onClick={(e) => handleUpdateBookingStatus(b._id, 'cancelled', e)}
-                          style={{ padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: 'rgba(239,68,68,0.1)', color: '#ef4444', fontWeight: 600, fontSize: '0.78rem', border: '1px solid rgba(239,68,68,0.2)', cursor: 'pointer', fontFamily: 'Outfit' }}
+                          style={{ minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: 'rgba(239,68,68,0.1)', color: '#ef4444', fontWeight: 600, fontSize: '0.78rem', border: '1px solid rgba(239,68,68,0.2)', cursor: 'pointer', fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
                         >
                           Cancel
                         </button>
                       )}
                       <button
                         onClick={(e) => { e.stopPropagation(); setSelectedBooking(b); }}
-                        style={{ padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: 'rgba(0,0,0,0.04)', color: '#334155', fontWeight: 600, fontSize: '0.78rem', border: '1px solid rgba(0,0,0,0.08)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
+                        style={{ minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: 'rgba(0,0,0,0.04)', color: '#334155', fontWeight: 600, fontSize: '0.78rem', border: '1px solid rgba(0,0,0,0.08)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
                       >
                         <Eye size={13} /> View Details
                       </button>
