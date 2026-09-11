@@ -720,7 +720,7 @@ export const ExpertProfile = () => {
               <Star size={16} fill="#f59e0b" color="#f59e0b" /> Verified Customer Reviews
             </h3>
             <span style={{ fontFamily: 'Outfit', fontSize: '0.78rem', fontWeight: 800, color: '#b5952f', background: 'rgba(212,175,55,0.12)', padding: '0.2rem 0.6rem', borderRadius: '50px' }}>
-              ★ {expert?.rating || '5.0'} ({reviewsList.length > 0 ? reviewsList.length : '12'} reviews)
+              ★ {expert?.rating || '5.0'} ({reviewsList.length} {reviewsList.length === 1 ? 'review' : 'reviews'})
             </span>
           </div>
 

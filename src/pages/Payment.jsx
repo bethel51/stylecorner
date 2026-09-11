@@ -12,11 +12,11 @@ export const Payment = () => {
 
   const checkoutData = location.state || {
     title: 'Grooming Store Checkout',
-    amount: 15000,
+    amount: 0,
     description: 'Style Corner Atelier Order',
   };
 
-  const amount = Number(checkoutData.amount || checkoutData.totalPrice || 15000);
+  const amount = Number(checkoutData.amount || checkoutData.totalPrice || 0);
   const [activeMethod, setActiveMethod] = useState('wallet'); // 'wallet' | 'card' | 'transfer'
 
   // Wallet State
@@ -26,7 +26,7 @@ export const Payment = () => {
   const [submitting, setSubmitting] = useState(false);
 
   // Card State
-  const [cardHolder, setCardHolder] = useState(`${user?.firstname || ''} ${user?.lastname || ''}`.trim() || 'Alex Morgan');
+  const [cardHolder, setCardHolder] = useState(`${user?.firstname || ''} ${user?.lastname || ''}`.trim() || 'Cardholder Name');
   const [cardNumber, setCardNumber] = useState('');
   const [expiry, setExpiry] = useState('');
   const [cvv, setCvv] = useState('');

@@ -838,9 +838,11 @@ export const ExpertDashboard = () => {
                 <h2 className="dashboard-user-name" style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 900, color: '#ffffff', margin: 0, lineHeight: 1.1 }}>
                   {user?.firstname} {user?.lastname}
                 </h2>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#d4af37', fontSize: '0.8rem', fontWeight: 900 }}>
-                  <Star size={13} fill="#d4af37" /> 5.0
-                </div>
+                {user?.rating && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#d4af37', fontSize: '0.8rem', fontWeight: 900 }}>
+                    <Star size={13} fill="#d4af37" /> {user.rating}
+                  </div>
+                )}
               </div>
 
               <p style={{ color: '#d4af37', fontSize: '0.78rem', fontFamily: 'Outfit', fontWeight: 800, margin: '0.2rem 0 0.5rem', letterSpacing: '0.04em' }}>

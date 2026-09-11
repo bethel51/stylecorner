@@ -258,7 +258,7 @@ export const CustomerDashboard = () => {
   // Harder tier: 100pts/completed booking, 45pts/delivered order, 150pt welcome bonus
   // First voucher requires ~25 completed bookings or a mix of ~28+ total actions
   const LOYALTY_TIER_SIZE = 3000;
-  const rewardPoints = (completedCount * 100) + (deliveredOrdersCount * 45) + 150;
+  const rewardPoints = (completedCount * 100) + (deliveredOrdersCount * 45);
   const pointsToNextReward = LOYALTY_TIER_SIZE - (rewardPoints % LOYALTY_TIER_SIZE);
   const tiersEarned = Math.floor(rewardPoints / LOYALTY_TIER_SIZE);
 
@@ -381,7 +381,7 @@ export const CustomerDashboard = () => {
               </div>
             </div>
             <button
-              onClick={() => navigate('/payment', { state: { title: 'Wallet Top-Up', amount: 10000, description: 'Direct Wallet Credit' } })}
+              onClick={() => navigate('/payment', { state: { title: 'Wallet Top-Up', amount: 0, description: 'Direct Wallet Credit' } })}
               style={{
                 background: '#d4af37', color: '#171717', border: 'none',
                 padding: '0.45rem 0.85rem', borderRadius: '50px',

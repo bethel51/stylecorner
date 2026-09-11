@@ -106,7 +106,30 @@ mongoose.set('bufferCommands', false); // Disable command buffering so queries f
 mongoose.connect(process.env.MONGODB_URI, {
   serverSelectionTimeoutMS: 5000 // Timeout after 5s instead of hanging
 })
-  .then(() => console.log('Connected to MongoDB Atlas'))
+  .then(async () => {
+    console.log('Connected to MongoDB Atlas');
+    try {
+      // Auto-cleanup legacy dummy 50000 balances in DB for customer and expert accounts
+      const resetResult = await User.updateMany({ walletBalance: 50000 }, { $set: { walletBalance: 0 } });
+      if (resetResult && resetResult.modifiedCount > 0) {
+        console.log(`Reset dummy 50000 wallet balance for ${resetResult.modifiedCount} account(s) to 0.`);
+      }
+      // Correct any legacy products seeded with dollar amounts
+      const priceFixes = [
+        { title: 'Atelier Gold Pomade', price: 12000 },
+        { title: 'Botanical Beard Elixir', price: 8500 },
+        { title: 'Sculpting Clay Wax', price: 9500 },
+        { title: 'Scalp Revitalizing Shampoo', price: 11000 },
+        { title: 'Wooden Comb Set', price: 6500 },
+        { title: 'Silk Edge Wrap Scarf', price: 5000 },
+      ];
+      for (const item of priceFixes) {
+        await Product.updateMany({ title: item.title, price: { $lte: 100 } }, { $set: { price: item.price } });
+      }
+    } catch (cleanErr) {
+      console.warn('Initial cleanup notice:', cleanErr.message);
+    }
+  })
   .catch(err => console.error('MongoDB connection error. Check your network or IP whitelist:', err.message));
 
 // --- API ROUTES ---
@@ -1305,7 +1328,7 @@ app.delete('/api/notifications/:id', authenticateToken, async (req, res) => {
 const INITIAL_PRODUCTS = [
   {
     title: 'Atelier Gold Pomade',
-    price: 28,
+    price: 12000,
     rating: 4.9,
     desc: 'Medium-hold matte finish pomade infused with organic argan oil.',
     badge: 'Bestseller',
@@ -1313,7 +1336,7 @@ const INITIAL_PRODUCTS = [
   },
   {
     title: 'Botanical Beard Elixir',
-    price: 24,
+    price: 8500,
     rating: 4.8,
     desc: 'Nourishing oil blend with jojoba and cedarwood fragrance.',
     badge: 'Popular',
@@ -1321,7 +1344,7 @@ const INITIAL_PRODUCTS = [
   },
   {
     title: 'Sculpting Clay Wax',
-    price: 26,
+    price: 9500,
     rating: 4.9,
     desc: 'High-hold textured clay wax for textured crops and modern fades.',
     badge: 'New',
@@ -1329,21 +1352,21 @@ const INITIAL_PRODUCTS = [
   },
   {
     title: 'Scalp Revitalizing Shampoo',
-    price: 32,
+    price: 11000,
     rating: 4.7,
     desc: 'Sulfate-free tea tree shampoo for deep scalp hydration.',
     image: 'https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=500&q=80',
   },
   {
     title: 'Wooden Comb Set',
-    price: 18,
+    price: 6500,
     rating: 4.9,
     desc: 'Anti-static sandalwood comb set for precise hair and beard styling.',
     image: 'https://images.unsplash.com/photo-1590159763121-7c9fd312190d?auto=format&fit=crop&w=500&q=80',
   },
   {
     title: 'Silk Edge Wrap Scarf',
-    price: 15,
+    price: 5000,
     rating: 5.0,
     desc: '100% mulberry silk wrap for protecting braid edges and locs.',
     image: 'https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?auto=format&fit=crop&w=500&q=80',
@@ -1578,7 +1601,11 @@ app.put('/api/specialists/portfolio', authenticateToken, async (req, res) => {
 app.get('/api/wallet', authenticateToken, async (req, res) => {
   try {
     const userDoc = await User.findById(req.user._id).select('walletBalance email firstname lastname');
-    const balance = userDoc ? (userDoc.walletBalance ?? 50000) : 50000;
+    let balance = userDoc?.walletBalance ?? 0;
+    if (balance === 50000) {
+      balance = 0;
+      await User.findByIdAndUpdate(req.user._id, { $set: { walletBalance: 0 } });
+    }
     res.status(200).json({ walletBalance: balance });
   } catch (error) {
     console.error('Fetch wallet error:', error);
@@ -1597,7 +1624,7 @@ app.post('/api/wallet/topup', authenticateToken, async (req, res) => {
     const userDoc = await User.findById(req.user._id);
     if (!userDoc) return res.status(404).json({ error: 'User not found' });
 
-    const currentBal = userDoc.walletBalance ?? 50000;
+    const currentBal = (userDoc.walletBalance === 50000 ? 0 : (userDoc.walletBalance ?? 0));
     const newBal = currentBal + amount;
     userDoc.walletBalance = newBal;
     await userDoc.save();
@@ -1628,7 +1655,7 @@ app.post('/api/wallet/pay', authenticateToken, async (req, res) => {
     const userDoc = await User.findById(req.user._id);
     if (!userDoc) return res.status(404).json({ error: 'User not found' });
 
-    const currentBal = userDoc.walletBalance ?? 50000;
+    const currentBal = (userDoc.walletBalance === 50000 ? 0 : (userDoc.walletBalance ?? 0));
     if (currentBal < amount) {
       return res.status(400).json({ error: `Insufficient wallet balance (₦${currentBal.toLocaleString()}). Please top up first.` });
     }
