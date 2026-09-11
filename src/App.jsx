@@ -25,10 +25,8 @@ const routeLoaders = {
   '/verify': () => import('./pages/VerifyOTP'),
   '/login': () => import('./pages/Login'),
   '/forgot-password': () => import('./pages/ForgotPassword'),
-  '/admin/login': () => import('./pages/AdminLogin'),
   '/customer-dashboard': () => import('./pages/CustomerDashboard'),
   '/expert-dashboard': () => import('./pages/ExpertDashboard'),
-  '/admin': () => import('./pages/AdminDashboard'),
   '/payment': () => import('./pages/Payment'),
   '/policies': () => import('./pages/Policies'),
   '/profile': () => import('./pages/Profile'),
@@ -73,10 +71,8 @@ const Signup = safeLazy(() => import('./pages/Signup').then(m => ({ default: m.S
 const VerifyOTP = safeLazy(() => import('./pages/VerifyOTP').then(m => ({ default: m.VerifyOTP })));
 const Login = safeLazy(() => import('./pages/Login').then(m => ({ default: m.Login })));
 const ForgotPassword = safeLazy(() => import('./pages/ForgotPassword').then(m => ({ default: m.ForgotPassword })));
-const AdminLogin = safeLazy(() => import('./pages/AdminLogin').then(m => ({ default: m.AdminLogin })));
 const CustomerDashboard = safeLazy(() => import('./pages/CustomerDashboard').then(m => ({ default: m.CustomerDashboard })));
 const ExpertDashboard = safeLazy(() => import('./pages/ExpertDashboard').then(m => ({ default: m.ExpertDashboard })));
-const AdminDashboard = safeLazy(() => import('./pages/AdminDashboard').then(m => ({ default: m.AdminDashboard })));
 const Payment = safeLazy(() => import('./pages/Payment').then(m => ({ default: m.Payment })));
 const Policies = safeLazy(() => import('./pages/Policies').then(m => ({ default: m.Policies })));
 const Profile = safeLazy(() => import('./pages/Profile').then(m => ({ default: m.Profile })));
@@ -155,7 +151,6 @@ export const App = () => {
               <Route path="/verify" element={<VerifyOTP />} />
               <Route path="/login" element={<Login />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
-              <Route path="/admin/login" element={<AdminLogin />} />
 
               {/* User Profile Route */}
               <Route
@@ -182,15 +177,6 @@ export const App = () => {
                 element={
                   <ProtectedRoute requiredRole="staff">
                     <ExpertDashboard />
-                  </ProtectedRoute>
-                }
-              />
-
-              <Route
-                path="/admin"
-                element={
-                  <ProtectedRoute allowedRoles={['admin']}>
-                    <AdminDashboard />
                   </ProtectedRoute>
                 }
               />

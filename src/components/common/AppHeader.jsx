@@ -45,9 +45,7 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
   };
 
   const handleNavigateDashboard = () => {
-    if (role === 'admin') {
-      navigate('/admin');
-    } else if (role === 'staff') {
+    if (role === 'staff') {
       navigate('/expert-dashboard');
     } else {
       navigate('/customer-dashboard');
@@ -58,7 +56,7 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
     <>
       <header className="app-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          {showBack || (!isHome && location.pathname !== '/customer-dashboard' && location.pathname !== '/expert-dashboard' && location.pathname !== '/admin') ? (
+          {showBack || (!isHome && location.pathname !== '/customer-dashboard' && location.pathname !== '/expert-dashboard') ? (
             <button
               className="app-header-btn"
               onClick={() => navigate(-1)}
@@ -102,29 +100,6 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          {role === 'admin' && (
-            <button
-              className="app-header-btn"
-              onClick={() => navigate('/admin')}
-              onMouseEnter={() => preloadRoute('/admin')}
-              title="Admin Dashboard"
-              style={{
-                color: '#d4af37',
-                borderColor: 'rgba(212,175,55,0.5)',
-                background: 'rgba(212,175,55,0.12)',
-                fontWeight: 700,
-                fontSize: '0.75rem',
-                padding: '0 0.6rem',
-                gap: '0.35rem',
-                display: 'flex',
-                alignItems: 'center',
-              }}
-            >
-              <Shield size={15} />
-              <span style={{ fontFamily: 'Outfit', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Admin</span>
-            </button>
-          )}
-
           {onOpenAiMatcher && (
             <button
               className="app-header-btn"

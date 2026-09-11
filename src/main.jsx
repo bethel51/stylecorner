@@ -1,8 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { App } from './App.jsx';
 import { ErrorBoundary } from './components/common/ErrorBoundary.jsx';
 import './index.css';
+
+// ── Path-based app selection: admin vs public ──
+// Admin portal is completely standalone – no shared providers, headers, or routes.
+const isAdminPath = window.location.pathname.startsWith('/admin');
+
+const AppRoot = isAdminPath
+  ? React.lazy(() => import('./admin/AdminApp.jsx').then((m) => ({ default: m.AdminApp })))
+  : React.lazy(() => import('./App.jsx').then((m) => ({ default: m.App })));
 
 // ── Catch stale deployment chunks and MIME type script errors ──
 window.addEventListener('error', (event) => {
@@ -74,7 +81,9 @@ if ('serviceWorker' in navigator) {
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ErrorBoundary>
-      <App />
+      <React.Suspense fallback={null}>
+        <AppRoot />
+      </React.Suspense>
     </ErrorBoundary>
   </React.StrictMode>
 );
