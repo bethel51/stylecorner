@@ -1153,6 +1153,34 @@ app.put('/api/orders/:id/tracking', authenticateToken, async (req, res) => {
   }
 });
 
+// Delete an order (Customer only — only if not yet shipped)
+app.delete('/api/orders/:id', authenticateToken, async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id);
+    if (!order) return res.status(404).json({ error: 'Order not found' });
+
+    // Only the customer who placed the order can delete it
+    const orderEmail = (order.email || '').trim().toLowerCase();
+    const userEmail = (req.user.email || '').trim().toLowerCase();
+    if (orderEmail !== userEmail) {
+      return res.status(403).json({ error: 'You can only delete your own orders.' });
+    }
+
+    // Block deletion if already shipped/delivered
+    const lockedStatuses = ['shipped', 'out for delivery', 'delivered'];
+    const currentStatus = (order.trackingStatus || order.status || '').toLowerCase();
+    if (lockedStatuses.includes(currentStatus)) {
+      return res.status(400).json({ error: 'This order has already shipped and cannot be deleted.' });
+    }
+
+    await Order.findByIdAndDelete(req.params.id);
+    res.status(200).json({ message: 'Order deleted successfully.' });
+  } catch (error) {
+    console.error('Failed to delete order:', error);
+    res.status(500).json({ error: 'Failed to delete order' });
+  }
+});
+
 // Add a message to an Order conversation (Customer <-> Admin communication)
 app.post('/api/orders/:id/messages', authenticateToken, async (req, res) => {
   try {

@@ -448,7 +448,7 @@ export const api = {
     });
     const data = await safeJson(res);
     if (!res.ok) throw new Error(data?.error || 'Failed to fetch wallet');
-    return data || { walletBalance: 50000 };
+    return data || { walletBalance: 0 };
   },
 
   topupWallet: async (amount) => {
@@ -533,5 +533,14 @@ export const api = {
     });
     const data = await safeJson(res);
     return Array.isArray(data) ? data : [];
+  },
+  deleteOrder: async (id) => {
+    const res = await fetchWithTimeout(`${API_BASE}/orders/${id}`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Failed to delete order');
+    return data;
   },
 };

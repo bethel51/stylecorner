@@ -20,7 +20,7 @@ export const Payment = () => {
   const [activeMethod, setActiveMethod] = useState('wallet'); // 'wallet' | 'card' | 'transfer'
 
   // Wallet State
-  const [walletBalance, setWalletBalance] = useState(50000);
+  const [walletBalance, setWalletBalance] = useState(0);
   const [topupAmount, setTopupAmount] = useState('');
   const [showTopupModal, setShowTopupModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -34,9 +34,9 @@ export const Payment = () => {
   const fetchWallet = async () => {
     try {
       const data = await api.getWalletBalance();
-      setWalletBalance(data.walletBalance ?? 50000);
+      setWalletBalance(data.walletBalance ?? 0);
     } catch (e) {
-      setWalletBalance(50000);
+      setWalletBalance(0);
     }
   };
 

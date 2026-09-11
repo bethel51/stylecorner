@@ -140,6 +140,24 @@ export const CustomerDashboard = () => {
     }
   };
 
+  const handleDeleteOrder = async (orderId, trackingStatus) => {
+    const shipped = ['shipped', 'out for delivery', 'delivered'].includes(
+      (trackingStatus || '').toLowerCase()
+    );
+    if (shipped) {
+      showToast('This order has already shipped and cannot be deleted.', 'error');
+      return;
+    }
+    if (!window.confirm('Delete this order? This cannot be undone.')) return;
+    try {
+      await api.deleteOrder(orderId);
+      setOrders((prev) => prev.filter((o) => o._id !== orderId));
+      showToast('Order deleted successfully.', 'success');
+    } catch (err) {
+      showToast(err.message || 'Failed to delete order.', 'error');
+    }
+  };
+
   const [reviewModalBooking, setReviewModalBooking] = useState(null);
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewComment, setReviewComment] = useState('');
@@ -167,7 +185,7 @@ export const CustomerDashboard = () => {
     }
   };
 
-  const [walletBalance, setWalletBalance] = useState(50000);
+  const [walletBalance, setWalletBalance] = useState(0);
 
   const fetchData = async () => {
     setLoading(true);
@@ -184,7 +202,7 @@ export const CustomerDashboard = () => {
         setOrders(Array.isArray(ordersResult.value) ? ordersResult.value : []);
       }
       if (walletResult.status === 'fulfilled') {
-        setWalletBalance(walletResult.value.walletBalance ?? 50000);
+        setWalletBalance(walletResult.value.walletBalance ?? 0);
       }
     } catch (err) {
       console.error('Failed to load dashboard data:', err);
@@ -1057,13 +1075,30 @@ export const CustomerDashboard = () => {
                           </div>
                         </div>
                       </div>
-                      <div style={{ borderTop: '1px solid rgba(0,0,0,0.06)', paddingTop: '0.55rem' }}>
+                      <div style={{ borderTop: '1px solid rgba(0,0,0,0.06)', paddingTop: '0.55rem', display: 'flex', gap: '0.5rem' }}>
                         <button
                           onClick={() => { setShowHistorySheet(false); setSelectedOrderForTracking(o); }}
                           className="app-btn app-btn-accent"
-                          style={{ width: '100%', minHeight: '38px', fontSize: '0.78rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem' }}
+                          style={{ flex: 1, minHeight: '38px', fontSize: '0.78rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem' }}
                         >
-                          <Truck size={14} /> Track Delivery & Details
+                          <Truck size={14} /> Track Delivery
+                        </button>
+                        <button
+                          onClick={() => handleDeleteOrder(o._id, o.trackingStatus || o.status)}
+                          style={{
+                            background: 'rgba(239,68,68,0.08)',
+                            border: '1px solid rgba(239,68,68,0.25)',
+                            color: '#ef4444',
+                            borderRadius: '10px',
+                            minHeight: '38px',
+                            padding: '0 0.75rem',
+                            cursor: 'pointer',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            transition: 'all 0.2s ease',
+                          }}
+                          title="Delete order"
+                        >
+                          <Trash2 size={15} />
                         </button>
                       </div>
                     </div>
