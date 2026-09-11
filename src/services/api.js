@@ -473,15 +473,65 @@ export const api = {
     return data;
   },
 
-  // Flutterwave API
-  initFlutterwave: async (paymentPayload) => {
-    const res = await fetchWithTimeout(`${API_BASE}/payment/flutterwave/initialize`, {
+  // Paystack & Withdrawal API
+  getPaystackConfig: async () => {
+    const res = await fetchWithTimeout(`${API_BASE}/config/paystack`);
+    const data = await safeJson(res);
+    return data || { publicKey: '' };
+  },
+
+  verifyPaystackPayment: async ({ reference, bookingId = null, orderId = null, isTopup = false, amount = 0 }) => {
+    const res = await fetchWithTimeout(`${API_BASE}/paystack/verify`, {
       method: 'POST',
       headers: getAuthHeaders(),
-      body: JSON.stringify(paymentPayload),
+      body: JSON.stringify({ reference, bookingId, orderId, isTopup, amount }),
     });
     const data = await safeJson(res);
-    if (!res.ok) throw new Error(data?.error || 'Failed to initialize Flutterwave');
+    if (!res.ok) throw new Error(data?.error || 'Payment verification failed');
     return data;
+  },
+
+  getBanksList: async () => {
+    const res = await fetchWithTimeout(`${API_BASE}/paystack/banks`);
+    const data = await safeJson(res);
+    return Array.isArray(data) ? data : [];
+  },
+
+  resolveBankAccount: async (accountNumber, bankCode) => {
+    const res = await fetchWithTimeout(`${API_BASE}/paystack/resolve-account`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ accountNumber, bankCode }),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Could not verify account name');
+    return data;
+  },
+
+  requestWithdrawal: async ({ amount, bankName, bankCode, accountNumber, accountName }) => {
+    const res = await fetchWithTimeout(`${API_BASE}/wallet/withdraw`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ amount, bankName, bankCode, accountNumber, accountName }),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Withdrawal request failed');
+    return data;
+  },
+
+  getWalletTransactions: async () => {
+    const res = await fetchWithTimeout(`${API_BASE}/wallet/transactions`, {
+      headers: getAuthHeaders(),
+    });
+    const data = await safeJson(res);
+    return Array.isArray(data) ? data : [];
+  },
+
+  getWalletWithdrawals: async () => {
+    const res = await fetchWithTimeout(`${API_BASE}/wallet/withdrawals`, {
+      headers: getAuthHeaders(),
+    });
+    const data = await safeJson(res);
+    return Array.isArray(data) ? data : [];
   },
 };

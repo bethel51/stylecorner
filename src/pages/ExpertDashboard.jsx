@@ -30,6 +30,14 @@ import {
   Activity,
   ListOrdered,
   MessageSquare,
+  Wallet,
+  ArrowUpRight,
+  ArrowDownLeft,
+  Building2,
+  CheckCircle2,
+  ShieldCheck,
+  Lock,
+  ExternalLink,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -56,6 +64,33 @@ export const ExpertDashboard = () => {
   // Dedicated Sheet/Page Navigation States
   const [showAppointmentsSheet, setShowAppointmentsSheet] = useState(false);
   const [showActivitySheet, setShowActivitySheet] = useState(false);
+
+  // Atelier Expert Wallet & Payout States
+  const [walletBalance, setWalletBalance] = useState(0);
+  const [transactions, setTransactions] = useState([]);
+  const [withdrawalsList, setWithdrawalsList] = useState([]);
+  const [banksList, setBanksList] = useState([]);
+
+  // Top-Up Modal State
+  const [showTopupModal, setShowTopupModal] = useState(false);
+  const [topupAmount, setTopupAmount] = useState('');
+  const [topupSubmitting, setTopupSubmitting] = useState(false);
+
+  // Withdraw Modal State
+  const [showWithdrawModal, setShowWithdrawModal] = useState(false);
+  const [withdrawAmount, setWithdrawAmount] = useState('');
+  const [selectedBankCode, setSelectedBankCode] = useState('');
+  const [selectedBankName, setSelectedBankName] = useState('');
+  const [accountNumber, setAccountNumber] = useState('');
+  const [accountName, setAccountName] = useState('');
+  const [resolvingAccount, setResolvingAccount] = useState(false);
+  const [accountResolved, setAccountResolved] = useState(false);
+  const [resolveError, setResolveError] = useState('');
+  const [withdrawSubmitting, setWithdrawSubmitting] = useState(false);
+
+  // Wallet History Sheet State
+  const [showWalletHistorySheet, setShowWalletHistorySheet] = useState(false);
+  const [walletFilterTab, setWalletFilterTab] = useState('all'); // 'all' | 'earnings' | 'withdrawals' | 'topups'
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEnlargedAvatar, setShowEnlargedAvatar] = useState(false);
@@ -143,11 +178,44 @@ export const ExpertDashboard = () => {
     }
   };
 
+  const fetchWalletData = async () => {
+    try {
+      const [walletRes, txnsRes, withRes, banksRes] = await Promise.allSettled([
+        api.getWalletBalance(),
+        api.getWalletTransactions(),
+        api.getWalletWithdrawals(),
+        api.getBanksList(),
+      ]);
+      if (walletRes.status === 'fulfilled') {
+        setWalletBalance(walletRes.value?.walletBalance ?? 0);
+      }
+      if (txnsRes.status === 'fulfilled') {
+        setTransactions(Array.isArray(txnsRes.value) ? txnsRes.value : []);
+      }
+      if (withRes.status === 'fulfilled') {
+        setWithdrawalsList(Array.isArray(withRes.value) ? withRes.value : []);
+      }
+      if (banksRes.status === 'fulfilled') {
+        const bl = Array.isArray(banksRes.value) ? banksRes.value : [];
+        setBanksList(bl);
+        if (bl.length > 0 && !selectedBankCode) {
+          setSelectedBankCode(bl[0].code);
+          setSelectedBankName(bl[0].name);
+        }
+      }
+    } catch (e) {
+      console.warn('Wallet data notice:', e);
+    }
+  };
+
   const fetchData = async () => {
     setLoading(true);
     try {
-      const data = await api.getBookings();
-      setBookings(Array.isArray(data) ? data : []);
+      const [bookingsData] = await Promise.all([
+        api.getBookings(),
+        fetchWalletData(),
+      ]);
+      setBookings(Array.isArray(bookingsData) ? bookingsData : []);
     } catch (err) {
       showToast(err.message || 'Failed to fetch appointments data', 'error');
     } finally {
@@ -158,6 +226,156 @@ export const ExpertDashboard = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  // Bank Account Resolution for Withdrawal
+  const handleResolveAccount = async (accNum, bCode) => {
+    if (!accNum || accNum.length !== 10 || !bCode) return;
+    setResolvingAccount(true);
+    setResolveError('');
+    try {
+      const res = await api.resolveBankAccount(accNum, bCode);
+      if (res && res.accountName) {
+        setAccountName(res.accountName);
+        setAccountResolved(true);
+      } else {
+        setAccountName('');
+        setAccountResolved(false);
+        setResolveError('Could not verify account name. Please check account number.');
+      }
+    } catch (err) {
+      setAccountName('');
+      setAccountResolved(false);
+      setResolveError(err.message || 'Verification failed. Please check account details.');
+    } finally {
+      setResolvingAccount(false);
+    }
+  };
+
+  const onAccountNumberChange = (e) => {
+    const val = e.target.value.replace(/[^0-9]/g, '').slice(0, 10);
+    setAccountNumber(val);
+    setAccountResolved(false);
+    setResolveError('');
+    if (val.length === 10 && selectedBankCode) {
+      handleResolveAccount(val, selectedBankCode);
+    } else {
+      setAccountName('');
+    }
+  };
+
+  const onBankChange = (e) => {
+    const code = e.target.value;
+    const found = banksList.find((b) => String(b.code) === String(code));
+    setSelectedBankCode(code);
+    setSelectedBankName(found ? found.name : '');
+    setAccountResolved(false);
+    setResolveError('');
+    if (accountNumber.length === 10 && code) {
+      handleResolveAccount(accountNumber, code);
+    }
+  };
+
+  // Withdraw Submission
+  const handleWithdrawSubmit = async (e) => {
+    e.preventDefault();
+    const amt = Number(withdrawAmount);
+    if (!amt || amt < 1000) {
+      showToast('Minimum withdrawal amount is ₦1,000.', 'error');
+      return;
+    }
+    if (amt > walletBalance) {
+      showToast(`Insufficient balance. Maximum withdrawable: ₦${Number(walletBalance).toLocaleString()}`, 'error');
+      return;
+    }
+    if (!selectedBankCode || !accountNumber || accountNumber.length !== 10) {
+      showToast('Please enter a valid 10-digit Nigerian account number and select a bank.', 'error');
+      return;
+    }
+    if (!accountName) {
+      showToast('Please verify your account details before submitting payout.', 'error');
+      return;
+    }
+
+    setWithdrawSubmitting(true);
+    try {
+      const res = await api.requestWithdrawal({
+        amount: amt,
+        bankName: selectedBankName || 'Bank',
+        bankCode: selectedBankCode,
+        accountNumber,
+        accountName,
+      });
+      setWalletBalance(res.walletBalance ?? (walletBalance - amt));
+      showToast(`Withdrawal of ₦${amt.toLocaleString()} submitted! Funds will reflect shortly.`, 'success');
+      setShowWithdrawModal(false);
+      setWithdrawAmount('');
+      setAccountNumber('');
+      setAccountName('');
+      setAccountResolved(false);
+      fetchWalletData();
+    } catch (err) {
+      showToast(err.message || 'Withdrawal failed. Please try again.', 'error');
+    } finally {
+      setWithdrawSubmitting(false);
+    }
+  };
+
+  // Top Up Submission (Paystack)
+  const handleTopupSubmit = async (e) => {
+    if (e) e.preventDefault();
+    const amt = Number(topupAmount);
+    if (!amt || amt <= 0) {
+      showToast('Please enter a valid top-up amount.', 'error');
+      return;
+    }
+    setTopupSubmitting(true);
+    try {
+      const config = await api.getPaystackConfig();
+      const pKey = config.publicKey;
+
+      if (window.PaystackPop && pKey && pKey !== 'pk_test_placeholder_key') {
+        const handler = window.PaystackPop.setup({
+          key: pKey,
+          email: user?.email || 'expert@stylecorner.com',
+          amount: Math.round(amt * 100),
+          currency: 'NGN',
+          ref: 'EXP-TOPUP-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+          callback: async (response) => {
+            try {
+              const res = await api.verifyPaystackPayment({
+                reference: response.reference,
+                isTopup: true,
+                amount: amt,
+              });
+              setWalletBalance(res.walletBalance);
+              showToast(`Wallet credited with ₦${amt.toLocaleString()} via Paystack! 🎉`, 'success');
+              setShowTopupModal(false);
+              setTopupAmount('');
+              fetchWalletData();
+            } catch (err) {
+              showToast(err.message || 'Top-up verification failed', 'error');
+            }
+          },
+          onClose: () => {
+            showToast('Top-up cancelled', 'accent');
+            setTopupSubmitting(false);
+          },
+        });
+        handler.openIframe();
+      } else {
+        const res = await api.topupWallet(amt);
+        setWalletBalance(res.walletBalance);
+        showToast(`Wallet credited with ₦${amt.toLocaleString()}! New balance: ₦${res.walletBalance.toLocaleString()}`, 'success');
+        setShowTopupModal(false);
+        setTopupAmount('');
+        fetchWalletData();
+      }
+    } catch (err) {
+      showToast(err.message || 'Top-up failed', 'error');
+    } finally {
+      setTopupSubmitting(false);
+    }
+  };
 
   const handleUpdateStatus = async (id, newStatus) => {
     setUpdatingId(id);
@@ -171,7 +389,8 @@ export const ExpertDashboard = () => {
       } else if (newStatus === 'rejected') {
         showToast('Booking request rejected.', 'accent');
       } else if (newStatus === 'completed') {
-        showToast('Your scheduled services have been rendered. Thanks for using Style Corner!', 'success');
+        showToast('Service completed! Earnings credited to your Atelier Wallet! 💰', 'success');
+        fetchWalletData();
       } else {
         showToast(`Status updated to ${newStatus}`, 'success');
       }
@@ -508,6 +727,143 @@ export const ExpertDashboard = () => {
                 Earnings
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* ══════════════════════════════════════════════
+            SECTION 2.5 — ATELIER EXPERT WALLET & PAYOUT HUB
+        ══════════════════════════════════════════════ */}
+        <div
+          style={{
+            background: 'linear-gradient(135deg, #18181b 0%, #09090b 100%)',
+            borderRadius: '24px',
+            padding: '1.25rem',
+            marginBottom: '1rem',
+            border: '1.5px solid rgba(212, 175, 55, 0.45)',
+            boxShadow: '0 16px 40px rgba(0,0,0,0.25)',
+            color: '#ffffff',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          {/* Subtle Ambient Gold Gradient */}
+          <div style={{
+            position: 'absolute', top: '-40px', right: '-40px', width: '130px', height: '130px',
+            background: 'radial-gradient(circle, rgba(212, 175, 55, 0.22) 0%, transparent 70%)',
+            pointerEvents: 'none'
+          }} />
+
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+              <div style={{
+                width: '42px', height: '42px', borderRadius: '13px',
+                background: 'rgba(212,175,55,0.18)', color: '#d4af37',
+                border: '1px solid rgba(212,175,55,0.35)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center'
+              }}>
+                <Wallet size={21} />
+              </div>
+              <div>
+                <div style={{ fontFamily: 'Outfit', fontSize: '0.72rem', fontWeight: 800, color: '#d4af37', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                  ATELIER EXPERT WALLET
+                </div>
+                <div style={{ fontFamily: 'Outfit', fontSize: '1.85rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.1 }}>
+                  ₦{Number(walletBalance).toLocaleString()}
+                </div>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setShowWalletHistorySheet(true)}
+              style={{
+                background: 'rgba(255,255,255,0.08)',
+                border: '1px solid rgba(255,255,255,0.14)',
+                color: '#d4d4d8',
+                padding: '0.35rem 0.7rem',
+                borderRadius: '50px',
+                fontSize: '0.72rem',
+                fontFamily: 'Outfit',
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.35rem'
+              }}
+            >
+              <History size={13} /> Payout Ledger
+            </button>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '0.9rem', marginBottom: '1rem' }}>
+            <div>
+              <span style={{ fontSize: '0.68rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 700 }}>
+                Total Service Earnings
+              </span>
+              <div style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 900, color: '#34d399', marginTop: '0.15rem' }}>
+                ₦{Number(totalRevenue).toLocaleString()}
+              </div>
+            </div>
+            <div>
+              <span style={{ fontSize: '0.68rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 700 }}>
+                Settlement Gateway
+              </span>
+              <div style={{ fontFamily: 'Outfit', fontSize: '0.85rem', fontWeight: 800, color: '#e2e8f0', marginTop: '0.2rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                <CheckCircle2 size={13} color="#10b981" /> Paystack Direct
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Action Buttons: Top Up + Withdraw Funds */}
+          <div style={{ display: 'flex', gap: '0.65rem' }}>
+            <button
+              type="button"
+              onClick={() => setShowTopupModal(true)}
+              style={{
+                flex: 1,
+                background: 'rgba(212,175,55,0.15)',
+                border: '1px solid rgba(212,175,55,0.4)',
+                color: '#d4af37',
+                borderRadius: '14px',
+                padding: '0.75rem 0.5rem',
+                fontFamily: 'Outfit',
+                fontSize: '0.82rem',
+                fontWeight: 900,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.4rem',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <Plus size={15} /> Top Up Wallet
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setShowWithdrawModal(true)}
+              style={{
+                flex: 1,
+                background: 'linear-gradient(135deg, #d4af37 0%, #b5952f 100%)',
+                border: 'none',
+                color: '#111111',
+                borderRadius: '14px',
+                padding: '0.75rem 0.5rem',
+                fontFamily: 'Outfit',
+                fontSize: '0.82rem',
+                fontWeight: 900,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.4rem',
+                boxShadow: '0 4px 16px rgba(212,175,55,0.35)',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <ArrowUpRight size={16} /> Withdraw Funds
+            </button>
           </div>
         </div>
 
@@ -1445,6 +1801,426 @@ export const ExpertDashboard = () => {
         imageUrl={user?.avatarUrl}
         title={`${user?.firstname || 'Expert'}'s Profile Picture`}
       />
+
+      {/* ── TOP UP WALLET MODAL (PAYSTACK) ── */}
+      <PopupModal
+        isOpen={showTopupModal}
+        onClose={() => setShowTopupModal(false)}
+        title="Top Up Atelier Wallet"
+      >
+        <form onSubmit={handleTopupSubmit} style={{ padding: '0.5rem 0' }}>
+          <p style={{ fontSize: '0.82rem', color: '#6b7280', margin: '0 0 1rem', lineHeight: 1.5 }}>
+            Add funds instantly to your Atelier Expert Wallet using Paystack (supports Card, Apple Pay, Bank Transfer & USSD).
+          </p>
+
+          {/* Quick Preset Chips */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.5rem', marginBottom: '1rem' }}>
+            {[5000, 10000, 25000, 50000].map((preset) => (
+              <button
+                key={preset}
+                type="button"
+                onClick={() => setTopupAmount(String(preset))}
+                style={{
+                  background: topupAmount === String(preset) ? 'rgba(212,175,55,0.22)' : '#f4f4f5',
+                  border: topupAmount === String(preset) ? '1.5px solid #d4af37' : '1px solid rgba(0,0,0,0.08)',
+                  color: topupAmount === String(preset) ? '#b5952f' : '#18181b',
+                  borderRadius: '12px',
+                  padding: '0.5rem 0.2rem',
+                  fontSize: '0.75rem',
+                  fontFamily: 'Outfit',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s'
+                }}
+              >
+                ₦{(preset / 1000).toLocaleString()}k
+              </button>
+            ))}
+          </div>
+
+          <div className="app-input-group" style={{ marginBottom: '1.25rem' }}>
+            <label className="app-label">Amount to Add (₦)</label>
+            <input
+              type="number"
+              min="500"
+              step="500"
+              required
+              value={topupAmount}
+              onChange={(e) => setTopupAmount(e.target.value)}
+              placeholder="e.g. 10000"
+              className="app-input"
+              style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 700 }}
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={topupSubmitting || !topupAmount}
+            className="app-btn app-btn-primary"
+            style={{
+              width: '100%',
+              minHeight: '48px',
+              borderRadius: '14px',
+              fontWeight: 900,
+              fontSize: '0.92rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.5rem',
+              background: 'linear-gradient(135deg, #09a5db 0%, #00c3aa 100%)',
+              color: '#ffffff',
+              border: 'none',
+              boxShadow: '0 8px 20px -4px rgba(0, 195, 170, 0.4)'
+            }}
+          >
+            <ShieldCheck size={18} />
+            <span>{topupSubmitting ? 'Opening Paystack...' : `Pay ₦${Number(topupAmount || 0).toLocaleString()} via Paystack`}</span>
+          </button>
+
+          <div style={{ marginTop: '0.85rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', color: '#9ca3af', fontSize: '0.72rem' }}>
+            <Lock size={12} />
+            <span>Secured with 256-Bit SSL Encryption</span>
+          </div>
+        </form>
+      </PopupModal>
+
+      {/* ── WITHDRAW FUNDS MODAL (NIGERIAN BANK RESOLVER) ── */}
+      <PopupModal
+        isOpen={showWithdrawModal}
+        onClose={() => {
+          setShowWithdrawModal(false);
+          setResolveError('');
+        }}
+        title="Withdraw Funds to Nigerian Bank"
+      >
+        <form onSubmit={handleWithdrawSubmit} style={{ padding: '0.5rem 0' }}>
+          {/* Current Withdrawable Balance Banner */}
+          <div style={{
+            background: '#fafaf9',
+            border: '1px solid rgba(212,175,55,0.3)',
+            borderRadius: '14px',
+            padding: '0.75rem 1rem',
+            marginBottom: '1rem',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}>
+            <div>
+              <div style={{ fontSize: '0.68rem', color: '#78716c', fontWeight: 800, textTransform: 'uppercase' }}>
+                Withdrawable Balance
+              </div>
+              <div style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 900, color: '#171717' }}>
+                ₦{Number(walletBalance).toLocaleString()}
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setWithdrawAmount(String(walletBalance))}
+              style={{
+                background: 'rgba(212,175,55,0.15)',
+                border: '1px solid rgba(212,175,55,0.4)',
+                color: '#b5952f',
+                padding: '0.35rem 0.65rem',
+                borderRadius: '50px',
+                fontSize: '0.72rem',
+                fontFamily: 'Outfit',
+                fontWeight: 800,
+                cursor: 'pointer'
+              }}
+            >
+              Withdraw All
+            </button>
+          </div>
+
+          {/* Amount to Withdraw */}
+          <div className="app-input-group" style={{ marginBottom: '0.85rem' }}>
+            <label className="app-label">Withdrawal Amount (₦)</label>
+            <input
+              type="number"
+              min="1000"
+              max={walletBalance}
+              required
+              value={withdrawAmount}
+              onChange={(e) => setWithdrawAmount(e.target.value)}
+              placeholder="Minimum ₦1,000"
+              className="app-input"
+              style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 700 }}
+            />
+          </div>
+
+          {/* Select Nigerian Bank */}
+          <div className="app-input-group" style={{ marginBottom: '0.85rem' }}>
+            <label className="app-label">Select Destination Bank</label>
+            <select
+              value={selectedBankCode}
+              onChange={onBankChange}
+              required
+              className="app-input"
+              style={{ fontFamily: 'Outfit', fontSize: '0.85rem', fontWeight: 700 }}
+            >
+              <option value="">Select a Nigerian Bank...</option>
+              {banksList.map((b, idx) => (
+                <option key={`${b.code}-${idx}`} value={b.code}>
+                  {b.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* 10-Digit NUBAN Account Number */}
+          <div className="app-input-group" style={{ marginBottom: '0.85rem' }}>
+            <label className="app-label">10-Digit NUBAN Account Number</label>
+            <input
+              type="text"
+              maxLength={10}
+              required
+              value={accountNumber}
+              onChange={onAccountNumberChange}
+              placeholder="0123456789"
+              className="app-input"
+              style={{ fontFamily: 'monospace', fontSize: '1.05rem', fontWeight: 800, letterSpacing: '0.08em' }}
+            />
+          </div>
+
+          {/* Live Account Resolution Badge */}
+          {resolvingAccount && (
+            <div style={{
+              background: '#f8fafc',
+              border: '1px solid #cbd5e1',
+              borderRadius: '12px',
+              padding: '0.65rem 0.85rem',
+              marginBottom: '1rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              fontSize: '0.78rem',
+              color: '#64748b'
+            }}>
+              <RefreshCw size={14} style={{ animation: 'spin 1s linear infinite' }} />
+              <span>Verifying NUBAN account name via Paystack...</span>
+            </div>
+          )}
+
+          {accountResolved && accountName && (
+            <div style={{
+              background: 'rgba(16,185,129,0.08)',
+              border: '1.5px solid rgba(16,185,129,0.3)',
+              borderRadius: '12px',
+              padding: '0.65rem 0.85rem',
+              marginBottom: '1rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              fontSize: '0.82rem',
+              color: '#065f46',
+              fontWeight: 800
+            }}>
+              <CheckCircle2 size={16} color="#10b981" />
+              <div>
+                <span style={{ fontSize: '0.68rem', color: '#059669', display: 'block', fontWeight: 700, textTransform: 'uppercase' }}>
+                  Verified Account Holder
+                </span>
+                <span>{accountName}</span>
+              </div>
+            </div>
+          )}
+
+          {resolveError && (
+            <div style={{
+              background: 'rgba(239,68,68,0.08)',
+              border: '1px solid rgba(239,68,68,0.25)',
+              borderRadius: '12px',
+              padding: '0.65rem 0.85rem',
+              marginBottom: '1rem',
+              fontSize: '0.78rem',
+              color: '#b91c1c',
+              fontWeight: 600
+            }}>
+              ⚠️ {resolveError}
+            </div>
+          )}
+
+          {/* Zero Fee Notice */}
+          <div style={{
+            background: 'rgba(212,175,55,0.08)',
+            border: '1px solid rgba(212,175,55,0.2)',
+            borderRadius: '12px',
+            padding: '0.55rem 0.85rem',
+            marginBottom: '1.25rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.4rem',
+            fontSize: '0.72rem',
+            color: '#854d0e',
+            fontWeight: 700
+          }}>
+            <Building2 size={13} />
+            <span>Paystack Transfer Fee: ₦0 (100% covered by Style Corner Atelier)</span>
+          </div>
+
+          <button
+            type="submit"
+            disabled={withdrawSubmitting || !accountName || !withdrawAmount || Number(withdrawAmount) > walletBalance}
+            className="app-btn app-btn-primary"
+            style={{
+              width: '100%',
+              minHeight: '48px',
+              borderRadius: '14px',
+              fontWeight: 900,
+              fontSize: '0.92rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.45rem',
+              background: 'linear-gradient(135deg, #d4af37 0%, #b5952f 100%)',
+              color: '#111111',
+              border: 'none',
+              boxShadow: '0 8px 20px -4px rgba(212, 175, 55, 0.4)'
+            }}
+          >
+            <ArrowUpRight size={18} />
+            <span>{withdrawSubmitting ? 'Processing Transfer...' : `Authorize ₦${Number(withdrawAmount || 0).toLocaleString()} Payout`}</span>
+          </button>
+        </form>
+      </PopupModal>
+
+      {/* ── WALLET TRANSACTION & PAYOUT LEDGER SHEET ── */}
+      <BottomSheet
+        isOpen={showWalletHistorySheet}
+        onClose={() => setShowWalletHistorySheet(false)}
+        title="Atelier Wallet & Payout Ledger"
+      >
+        <div style={{ paddingBottom: '1.5rem' }}>
+          {/* Filter Tabs */}
+          <div style={{ display: 'flex', gap: '0.4rem', marginBottom: '1rem', overflowX: 'auto', paddingBottom: '4px' }}>
+            {[
+              { id: 'all', label: 'All Transactions' },
+              { id: 'earnings', label: 'Service Earnings' },
+              { id: 'withdrawals', label: 'Payouts' },
+              { id: 'topups', label: 'Top-Ups' }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setWalletFilterTab(tab.id)}
+                style={{
+                  background: walletFilterTab === tab.id ? '#18181b' : '#f4f4f5',
+                  color: walletFilterTab === tab.id ? '#d4af37' : '#71717a',
+                  border: walletFilterTab === tab.id ? '1px solid rgba(212,175,55,0.4)' : '1px solid transparent',
+                  padding: '0.4rem 0.8rem',
+                  borderRadius: '50px',
+                  fontSize: '0.75rem',
+                  fontFamily: 'Outfit',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap'
+                }}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Transactions List */}
+          {(() => {
+            const filtered = transactions.filter((t) => {
+              if (walletFilterTab === 'earnings') return t.type === 'service_earning';
+              if (walletFilterTab === 'withdrawals') return t.type === 'withdrawal';
+              if (walletFilterTab === 'topups') return t.type === 'wallet_topup';
+              return true;
+            });
+
+            if (filtered.length === 0) {
+              return (
+                <div style={{ textAlign: 'center', padding: '2.5rem 1rem', color: '#9ca3af' }}>
+                  <Wallet size={32} style={{ margin: '0 auto 0.5rem', opacity: 0.4 }} />
+                  <p style={{ margin: 0, fontSize: '0.85rem', fontWeight: 600 }}>No transaction records found in this category.</p>
+                </div>
+              );
+            }
+
+            return (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                {filtered.map((item, idx) => {
+                  const isCredit = item.direction === 'credit';
+                  return (
+                    <div
+                      key={item._id || idx}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '0.75rem 0.85rem',
+                        borderRadius: '14px',
+                        background: '#fafafa',
+                        border: '1px solid rgba(0,0,0,0.06)',
+                        gap: '0.5rem'
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', minWidth: 0 }}>
+                        <div style={{
+                          width: '36px',
+                          height: '36px',
+                          borderRadius: '10px',
+                          background: isCredit ? 'rgba(16,185,129,0.12)' : 'rgba(239,68,68,0.12)',
+                          color: isCredit ? '#10b981' : '#ef4444',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          flexShrink: 0
+                        }}>
+                          {isCredit ? <ArrowDownLeft size={16} /> : <ArrowUpRight size={16} />}
+                        </div>
+                        <div style={{ minWidth: 0 }}>
+                          <div style={{
+                            fontFamily: 'Outfit',
+                            fontSize: '0.82rem',
+                            fontWeight: 800,
+                            color: '#18181b',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap'
+                          }}>
+                            {item.description || (item.type === 'service_earning' ? 'Service Earnings' : item.type === 'withdrawal' ? 'Bank Withdrawal' : 'Wallet Top-Up')}
+                          </div>
+                          <div style={{ fontSize: '0.68rem', color: '#71717a', marginTop: '0.1rem' }}>
+                            {new Date(item.createdAt || Date.now()).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })} · Ref: {item.reference?.slice(0, 14)}...
+                          </div>
+                        </div>
+                      </div>
+
+                      <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                        <div style={{
+                          fontFamily: 'Outfit',
+                          fontSize: '0.92rem',
+                          fontWeight: 900,
+                          color: isCredit ? '#10b981' : '#18181b'
+                        }}>
+                          {isCredit ? '+' : '-'}₦{Number(item.amount || 0).toLocaleString()}
+                        </div>
+                        <span style={{
+                          display: 'inline-block',
+                          fontSize: '0.62rem',
+                          fontWeight: 800,
+                          fontFamily: 'Outfit',
+                          textTransform: 'uppercase',
+                          padding: '0.15rem 0.45rem',
+                          borderRadius: '50px',
+                          background: item.status === 'success' ? 'rgba(16,185,129,0.12)' : 'rgba(245,158,11,0.12)',
+                          color: item.status === 'success' ? '#059669' : '#d97706',
+                          marginTop: '0.15rem'
+                        }}>
+                          {item.status || 'success'}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })()}
+        </div>
+      </BottomSheet>
     </PageContainer>
   );
 };

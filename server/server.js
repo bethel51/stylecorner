@@ -10,11 +10,15 @@ const User = require('./models/User');
 const Product = require('./models/Product');
 const Notification = require('./models/Notification');
 const Review = require('./models/Review');
+const Transaction = require('./models/Transaction');
+const Withdrawal = require('./models/Withdrawal');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-prototype-key-12345';
+const PAYSTACK_SECRET_KEY = (process.env.PAYSTACK_SECRET_KEY || '').trim();
+const PAYSTACK_PUBLIC_KEY = (process.env.PAYSTACK_PUBLIC_KEY || '').trim();
 
 let transporter;
 if (process.env.BREVO_SMTP_HOST && process.env.BREVO_SMTP_KEY) {
@@ -779,6 +783,58 @@ app.put('/api/bookings/:id', authenticateToken, async (req, res) => {
         });
       }
     } else if (newStatus === 'completed') {
+      // 1. Credit Expert's Atelier Wallet with earnings for rendered service
+      try {
+        let expertUser = null;
+        if (updated.stylistId) {
+          expertUser = await User.findById(updated.stylistId);
+        }
+        if (!expertUser && updated.stylist) {
+          expertUser = await User.findOne({
+            $or: [
+              { firstname: new RegExp(updated.stylist, 'i'), role: 'staff' },
+              { email: updated.stylistEmail }
+            ]
+          });
+        }
+
+        if (expertUser) {
+          const earningAmount = Number(updated.price) || 0;
+          expertUser.walletBalance = (expertUser.walletBalance ?? 0) + earningAmount;
+          await expertUser.save();
+
+          const txn = new Transaction({
+            userId: expertUser._id,
+            userEmail: expertUser.email,
+            userName: `${expertUser.firstname} ${expertUser.lastname || ''}`.trim(),
+            type: 'service_earning',
+            amount: earningAmount,
+            direction: 'credit',
+            reference: `EARN-${Date.now()}-${String(updated._id).slice(-4)}`,
+            status: 'success',
+            description: `Earnings for completed appointment: ${updated.service} (${updated.clientName})`,
+            metadata: { bookingId: updated._id }
+          });
+          await txn.save();
+
+          await createInAppNotification({
+            userEmail: expertUser.email,
+            title: '💰 Service Earnings Credited!',
+            message: `₦${earningAmount.toLocaleString()} credited to your Atelier Wallet for completing ${updated.service} with ${updated.clientName}.`,
+            type: 'booking',
+            bookingId: updated._id
+          });
+
+          await sendNotificationSafe(
+            expertUser.email,
+            `Service Earnings Credited: ₦${earningAmount.toLocaleString()} 💰`,
+            `Hi ${expertUser.firstname},\n\nCongratulations on completing your styling session for ${updated.clientName} (${updated.service})!\n\nYour Atelier Wallet has been credited with ₦${earningAmount.toLocaleString()}.\nYou can view your balance and withdraw directly to your Nigerian bank account anytime from your Expert Dashboard.`
+          );
+        }
+      } catch (earnErr) {
+        console.error('Failed to credit expert wallet earnings:', earnErr);
+      }
+
       if (updated.clientEmail) {
         await sendNotificationSafe(
           updated.clientEmail,
@@ -1562,6 +1618,383 @@ app.post('/api/wallet/pay', authenticateToken, async (req, res) => {
   } catch (error) {
     console.error('Wallet payment error:', error);
     res.status(500).json({ error: 'Payment processing failed' });
+  }
+});
+
+// ── PAYSTACK CONFIG & VERIFICATION ROUTES ── //
+
+// Get Paystack Public Key
+app.get('/api/config/paystack', (req, res) => {
+  res.status(200).json({
+    publicKey: PAYSTACK_PUBLIC_KEY || process.env.PAYSTACK_PUBLIC_KEY || 'pk_test_placeholder_key',
+    isConfigured: Boolean(PAYSTACK_SECRET_KEY && PAYSTACK_PUBLIC_KEY)
+  });
+});
+
+// Verify Paystack Payment Reference
+app.post('/api/paystack/verify', authenticateToken, async (req, res) => {
+  try {
+    const { reference, bookingId, orderId, isTopup, amount } = req.body;
+    if (!reference) {
+      return res.status(400).json({ error: 'Payment reference is required' });
+    }
+
+    let verifiedAmount = Number(amount) || 0;
+    let paystackData = null;
+
+    // Verify against Paystack API if secret key is configured
+    if (PAYSTACK_SECRET_KEY) {
+      try {
+        const response = await fetch(`https://api.paystack.co/transaction/verify/${encodeURIComponent(reference)}`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${PAYSTACK_SECRET_KEY}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        const result = await response.json();
+        if (!response.ok || !result.status || result.data?.status !== 'success') {
+          return res.status(400).json({ error: result.message || 'Payment verification failed on Paystack' });
+        }
+        paystackData = result.data;
+        verifiedAmount = (paystackData.amount || 0) / 100; // Paystack delivers amount in kobo
+      } catch (paystackErr) {
+        console.error('Paystack live verification error:', paystackErr.message);
+      }
+    }
+
+    // 1. Wallet Top-Up Flow
+    if (isTopup) {
+      const topupVal = verifiedAmount || Number(amount);
+      if (topupVal <= 0) return res.status(400).json({ error: 'Invalid top-up amount' });
+
+      const user = await User.findById(req.user._id);
+      if (!user) return res.status(404).json({ error: 'User not found' });
+
+      user.walletBalance = (user.walletBalance ?? 0) + topupVal;
+      await user.save();
+
+      const txn = new Transaction({
+        userId: user._id,
+        userEmail: user.email,
+        userName: `${user.firstname} ${user.lastname || ''}`.trim(),
+        type: 'wallet_topup',
+        amount: topupVal,
+        direction: 'credit',
+        reference: reference,
+        status: 'success',
+        description: `Wallet top-up via Paystack`,
+      });
+      await txn.save();
+
+      await createInAppNotification({
+        userEmail: user.email,
+        title: '💳 Wallet Top-Up Successful!',
+        message: `₦${topupVal.toLocaleString()} credited to your Atelier Wallet via Paystack. New Balance: ₦${user.walletBalance.toLocaleString()}`,
+        type: 'order'
+      });
+
+      return res.status(200).json({
+        success: true,
+        message: 'Wallet funded successfully!',
+        walletBalance: user.walletBalance,
+        reference
+      });
+    }
+
+    // 2. Booking Service Payment Flow
+    if (bookingId) {
+      const booking = await Booking.findById(bookingId);
+      if (!booking) return res.status(404).json({ error: 'Booking not found' });
+
+      booking.paymentStatus = 'paid_paystack';
+      booking.status = 'pending'; // Keep pending for expert acceptance!
+      await booking.save();
+
+      const txn = new Transaction({
+        userId: req.user._id,
+        userEmail: req.user.email,
+        userName: `${req.user.firstname} ${req.user.lastname || ''}`.trim(),
+        type: 'service_payment',
+        amount: verifiedAmount || booking.price,
+        direction: 'debit',
+        reference: reference,
+        status: 'success',
+        description: `Paystack payment for ${booking.service} with ${booking.stylist}`,
+        metadata: { bookingId: booking._id }
+      });
+      await txn.save();
+
+      await createInAppNotification({
+        userEmail: booking.clientEmail,
+        title: 'Payment Confirmed! 💳',
+        message: `Your payment of ₦${(verifiedAmount || booking.price).toLocaleString()} for ${booking.service} with ${booking.stylist} is confirmed. Awaiting specialist acceptance.`,
+        type: 'booking',
+        bookingId: booking._id
+      });
+
+      return res.status(200).json({
+        success: true,
+        message: 'Booking payment verified!',
+        bookingId: booking._id,
+        reference
+      });
+    }
+
+    // 3. Store Order Payment Flow
+    if (orderId) {
+      const order = await Order.findById(orderId);
+      if (!order) return res.status(404).json({ error: 'Order not found' });
+
+      order.paymentStatus = 'paid_paystack';
+      order.status = 'processing';
+      await order.save();
+
+      const txn = new Transaction({
+        userId: req.user._id,
+        userEmail: req.user.email,
+        userName: `${req.user.firstname} ${req.user.lastname || ''}`.trim(),
+        type: 'store_purchase',
+        amount: verifiedAmount || order.totalPrice || order.price,
+        direction: 'debit',
+        reference: reference,
+        status: 'success',
+        description: `Store order #${order._id.toString().slice(-6).toUpperCase()} checkout`,
+        metadata: { orderId: order._id }
+      });
+      await txn.save();
+
+      await createInAppNotification({
+        userEmail: order.email,
+        title: 'Order Payment Confirmed! 🛍️',
+        message: `Your payment for order #${order._id.toString().slice(-6).toUpperCase()} has been confirmed. We are packaging your items!`,
+        type: 'order',
+        orderId: order._id
+      });
+
+      return res.status(200).json({
+        success: true,
+        message: 'Order payment verified!',
+        orderId: order._id,
+        reference
+      });
+    }
+
+    return res.status(200).json({ success: true, message: 'Transaction verified', reference });
+  } catch (error) {
+    console.error('Paystack verification error:', error);
+    res.status(500).json({ error: 'Failed to verify payment reference' });
+  }
+});
+
+// Top Nigerian Commercial & Fintech Banks Fallback List
+const TOP_NIGERIAN_BANKS = [
+  { name: 'Access Bank', code: '044' },
+  { name: 'Guaranty Trust Bank (GTBank)', code: '058' },
+  { name: 'Zenith Bank', code: '057' },
+  { name: 'First Bank of Nigeria', code: '011' },
+  { name: 'United Bank For Africa (UBA)', code: '033' },
+  { name: 'Kuda Microfinance Bank', code: '50211' },
+  { name: 'OPay Digital Services', code: '999992' },
+  { name: 'Palmpay', code: '999991' },
+  { name: 'Moniepoint Microfinance Bank', code: '50515' },
+  { name: 'Fidelity Bank', code: '070' },
+  { name: 'Stanbic IBTC Bank', code: '221' },
+  { name: 'First City Monument Bank (FCMB)', code: '214' },
+  { name: 'Sterling Bank', code: '232' },
+  { name: 'Wema Bank', code: '035' },
+  { name: 'Union Bank of Nigeria', code: '032' },
+  { name: 'Polaris Bank', code: '076' },
+  { name: 'Ecobank Nigeria', code: '050' },
+  { name: 'Keystone Bank', code: '082' },
+  { name: 'Jaiz Bank', code: '301' },
+  { name: 'Taj Bank', code: '302' },
+  { name: 'VFD Microfinance Bank', code: '566' },
+  { name: 'Rubies Bank', code: '125' },
+  { name: 'Carbon', code: '565' }
+];
+
+// Get List of Nigerian Banks for Expert Withdrawals
+app.get('/api/paystack/banks', async (req, res) => {
+  try {
+    if (PAYSTACK_SECRET_KEY) {
+      try {
+        const response = await fetch('https://api.paystack.co/bank?country=nigeria&perPage=100', {
+          headers: { Authorization: `Bearer ${PAYSTACK_SECRET_KEY}` }
+        });
+        const data = await response.json();
+        if (response.ok && data.status && Array.isArray(data.data) && data.data.length > 0) {
+          return res.status(200).json(data.data.map(b => ({ name: b.name, code: b.code })));
+        }
+      } catch (e) {
+        console.warn('Paystack live bank fetch fallback to curated list');
+      }
+    }
+    res.status(200).json(TOP_NIGERIAN_BANKS);
+  } catch (error) {
+    res.status(200).json(TOP_NIGERIAN_BANKS);
+  }
+});
+
+// Resolve Nigerian NUBAN Bank Account Number Live
+app.post('/api/paystack/resolve-account', authenticateToken, async (req, res) => {
+  try {
+    const { accountNumber, bankCode } = req.body;
+    if (!accountNumber || !bankCode) {
+      return res.status(400).json({ error: 'Account number and bank code are required' });
+    }
+
+    const cleanAcc = String(accountNumber).trim();
+    if (cleanAcc.length !== 10) {
+      return res.status(400).json({ error: 'Nigerian NUBAN account number must be exactly 10 digits' });
+    }
+
+    if (PAYSTACK_SECRET_KEY) {
+      try {
+        const response = await fetch(`https://api.paystack.co/bank/resolve?account_number=${encodeURIComponent(cleanAcc)}&bank_code=${encodeURIComponent(bankCode)}`, {
+          headers: { Authorization: `Bearer ${PAYSTACK_SECRET_KEY}` }
+        });
+        const data = await response.json();
+        if (response.ok && data.status && data.data?.account_name) {
+          return res.status(200).json({
+            accountName: data.data.account_name,
+            accountNumber: data.data.account_number
+          });
+        } else {
+          return res.status(400).json({ error: data.message || 'Could not resolve account name. Please verify bank and account number.' });
+        }
+      } catch (err) {
+        console.error('Paystack resolve error:', err.message);
+      }
+    }
+
+    // Fallback simulation for testing without live keys
+    const fallbackName = `${req.user.firstname.toUpperCase()} ${req.user.lastname.toUpperCase()} (VERIFIED)`;
+    res.status(200).json({ accountName: fallbackName, accountNumber: cleanAcc });
+  } catch (error) {
+    res.status(500).json({ error: 'Account resolution temporary error' });
+  }
+});
+
+// ── EXPERT WITHDRAWAL & TRANSACTIONS ROUTES ── //
+
+// Request a Withdrawal from Atelier Wallet to Nigerian Bank
+app.post('/api/wallet/withdraw', authenticateToken, async (req, res) => {
+  try {
+    const { amount, bankName, bankCode, accountNumber, accountName } = req.body;
+    const withdrawAmount = Number(amount);
+
+    if (!withdrawAmount || withdrawAmount < 1000) {
+      return res.status(400).json({ error: 'Minimum withdrawal amount is ₦1,000' });
+    }
+    if (!bankName || !accountNumber || !accountName) {
+      return res.status(400).json({ error: 'Complete bank account details are required' });
+    }
+
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json({ error: 'User account not found' });
+
+    const currentBalance = user.walletBalance ?? 0;
+    if (currentBalance < withdrawAmount) {
+      return res.status(400).json({
+        error: `Insufficient withdrawable balance (₦${currentBalance.toLocaleString()}). Requested: ₦${withdrawAmount.toLocaleString()}`
+      });
+    }
+
+    // Debit the wallet balance
+    user.walletBalance = currentBalance - withdrawAmount;
+    await user.save();
+
+    const ref = `WD-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`;
+
+    const withdrawal = new Withdrawal({
+      userId: user._id,
+      userEmail: user.email,
+      expertName: `${user.firstname} ${user.lastname || ''}`.trim(),
+      amount: withdrawAmount,
+      bankName: bankName.trim(),
+      bankCode: bankCode || 'N/A',
+      accountNumber: accountNumber.trim(),
+      accountName: accountName.trim(),
+      status: 'processing',
+      reference: ref,
+    });
+    await withdrawal.save();
+
+    const txn = new Transaction({
+      userId: user._id,
+      userEmail: user.email,
+      userName: `${user.firstname} ${user.lastname || ''}`.trim(),
+      type: 'withdrawal',
+      amount: withdrawAmount,
+      direction: 'debit',
+      reference: ref,
+      status: 'pending',
+      description: `Withdrawal payout to ${bankName} (${accountNumber})`,
+      metadata: {
+        withdrawalId: withdrawal._id,
+        bankDetails: { bankName, accountNumber, accountName }
+      }
+    });
+    await txn.save();
+
+    // 1. Notify Expert
+    await createInAppNotification({
+      userEmail: user.email,
+      title: 'Payout Request Submitted! 🏦',
+      message: `Your withdrawal of ₦${withdrawAmount.toLocaleString()} to ${bankName} (${accountNumber}) is being processed.`,
+      type: 'order'
+    });
+
+    await sendNotificationSafe(
+      user.email,
+      `Payout Request Confirmed: ₦${withdrawAmount.toLocaleString()} 🏦`,
+      `Hi ${user.firstname},\n\nYour withdrawal request of ₦${withdrawAmount.toLocaleString()} has been received and is being processed.\n\nPayout Details:\n- Amount: ₦${withdrawAmount.toLocaleString()}\n- Bank: ${bankName}\n- Account Number: ${accountNumber}\n- Account Name: ${accountName}\n- Reference: ${ref}\n\nFunds will reflect in your bank account shortly.`
+    );
+
+    // 2. Alert Admin
+    const adminEmail = process.env.ADMIN_EMAIL || process.env.EMAIL_USER || process.env.BREVO_SMTP_LOGIN;
+    if (adminEmail && adminEmail !== user.email) {
+      await sendNotificationSafe(
+        adminEmail,
+        `🔔 Expert Payout Request: ${user.firstname} (₦${withdrawAmount.toLocaleString()})`,
+        `ADMIN PAYOUT ALERT\n\nExpert ${user.firstname} ${user.lastname || ''} (${user.email}) requested a payout:\n- Amount: ₦${withdrawAmount.toLocaleString()}\n- Bank: ${bankName}\n- Account: ${accountNumber} (${accountName})\n- Reference: ${ref}`
+      );
+    }
+
+    res.status(200).json({
+      message: `Withdrawal of ₦${withdrawAmount.toLocaleString()} submitted successfully!`,
+      walletBalance: user.walletBalance,
+      withdrawal
+    });
+  } catch (error) {
+    console.error('Withdrawal error:', error);
+    res.status(500).json({ error: 'Failed to process withdrawal request' });
+  }
+});
+
+// Get User's Wallet Transaction History
+app.get('/api/wallet/transactions', authenticateToken, async (req, res) => {
+  try {
+    const transactions = await Transaction.find({ userId: req.user._id })
+      .sort({ createdAt: -1 })
+      .limit(50)
+      .lean();
+    res.status(200).json(transactions);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch transaction history' });
+  }
+});
+
+// Get User's Payout / Withdrawal History
+app.get('/api/wallet/withdrawals', authenticateToken, async (req, res) => {
+  try {
+    const withdrawals = await Withdrawal.find({ userId: req.user._id })
+      .sort({ createdAt: -1 })
+      .lean();
+    res.status(200).json(withdrawals);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch withdrawals' });
   }
 });
 

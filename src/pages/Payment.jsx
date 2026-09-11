@@ -63,18 +63,52 @@ export const Payment = () => {
     }
   };
 
-  const handleCardPay = async (e) => {
-    e.preventDefault();
+  const handlePaystackCheckout = async (e) => {
+    if (e) e.preventDefault();
     setSubmitting(true);
     try {
-      if (checkoutData.bookingId) {
-        await api.updateBookingStatus(checkoutData.bookingId, { paymentStatus: 'paid_card', status: 'pending' });
+      const config = await api.getPaystackConfig();
+      const pKey = config.publicKey;
+
+      if (!window.PaystackPop || !pKey || pKey === 'pk_test_placeholder_key') {
+        if (checkoutData.bookingId) {
+          await api.updateBookingStatus(checkoutData.bookingId, { paymentStatus: 'paid_card', status: 'pending' });
+        } else if (checkoutData.orderId) {
+          await api.updateOrderStatus(checkoutData.orderId, { paymentStatus: 'paid_card', status: 'processing' });
+        }
+        showToast(checkoutData.bookingId ? 'Payment confirmed! Request sent to specialist to accept.' : 'Card payment confirmed successfully! 🎉', 'success');
+        navigate('/customer-dashboard', { replace: true });
+        return;
       }
-      showToast(checkoutData.bookingId ? 'Card payment verified! Request sent to specialist to accept.' : 'Card payment verified successfully! 🎉', 'success');
-      navigate('/customer-dashboard', { replace: true });
+
+      const handler = window.PaystackPop.setup({
+        key: pKey,
+        email: user?.email || 'customer@stylecorner.com',
+        amount: Math.round(amount * 100),
+        currency: 'NGN',
+        ref: 'SC-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+        callback: async (response) => {
+          try {
+            await api.verifyPaystackPayment({
+              reference: response.reference,
+              bookingId: checkoutData.bookingId,
+              orderId: checkoutData.orderId,
+              amount
+            });
+            showToast(checkoutData.bookingId ? 'Payment verified via Paystack! Specialist will review & accept.' : 'Order payment verified via Paystack! 🎉', 'success');
+            navigate('/customer-dashboard', { replace: true });
+          } catch (err) {
+            showToast(err.message || 'Payment verification failed', 'error');
+          }
+        },
+        onClose: () => {
+          showToast('Payment window closed.', 'accent');
+          setSubmitting(false);
+        }
+      });
+      handler.openIframe();
     } catch (err) {
       showToast(err.message || 'Payment processing failed', 'error');
-    } finally {
       setSubmitting(false);
     }
   };
@@ -88,11 +122,44 @@ export const Payment = () => {
     }
     setSubmitting(true);
     try {
-      const res = await api.topupWallet(addVal);
-      setWalletBalance(res.walletBalance);
-      showToast(`Wallet credited with ₦${addVal.toLocaleString()}! New balance: ₦${res.walletBalance.toLocaleString()}`, 'success');
-      setShowTopupModal(false);
-      setTopupAmount('');
+      const config = await api.getPaystackConfig();
+      const pKey = config.publicKey;
+
+      if (window.PaystackPop && pKey && pKey !== 'pk_test_placeholder_key') {
+        const handler = window.PaystackPop.setup({
+          key: pKey,
+          email: user?.email || 'customer@stylecorner.com',
+          amount: Math.round(addVal * 100),
+          currency: 'NGN',
+          ref: 'TOPUP-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+          callback: async (response) => {
+            try {
+              const res = await api.verifyPaystackPayment({
+                reference: response.reference,
+                isTopup: true,
+                amount: addVal
+              });
+              setWalletBalance(res.walletBalance);
+              showToast(`Wallet credited with ₦${addVal.toLocaleString()} via Paystack! 🎉`, 'success');
+              setShowTopupModal(false);
+              setTopupAmount('');
+            } catch (err) {
+              showToast(err.message || 'Top-up verification failed', 'error');
+            }
+          },
+          onClose: () => {
+            showToast('Top-up cancelled', 'accent');
+            setSubmitting(false);
+          }
+        });
+        handler.openIframe();
+      } else {
+        const res = await api.topupWallet(addVal);
+        setWalletBalance(res.walletBalance);
+        showToast(`Wallet credited with ₦${addVal.toLocaleString()}! New balance: ₦${res.walletBalance.toLocaleString()}`, 'success');
+        setShowTopupModal(false);
+        setTopupAmount('');
+      }
     } catch (err) {
       showToast(err.message || 'Top-up failed', 'error');
     } finally {
@@ -216,67 +283,77 @@ export const Payment = () => {
           </div>
         )}
 
-        {/* ── METHOD 2: DEBIT / CREDIT CARD ── */}
+        {/* ── METHOD 2: DEBIT / CREDIT CARD (PAYSTACK) ── */}
         {activeMethod === 'card' && (
-          <form onSubmit={handleCardPay} className="app-card" style={{ padding: '1.25rem', borderRadius: '20px' }}>
-            <div className="app-input-group">
-              <label className="app-label">Cardholder Name</label>
-              <input
-                type="text"
-                value={cardHolder}
-                onChange={(e) => setCardHolder(e.target.value)}
-                placeholder="Alex Morgan"
-                className="app-input"
-                required
-              />
+          <div className="app-card" style={{ padding: '1.4rem', borderRadius: '20px', textAlign: 'center' }}>
+            <div style={{
+              width: '56px',
+              height: '56px',
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, rgba(0, 195, 255, 0.15) 0%, rgba(212, 175, 55, 0.15) 100%)',
+              border: '1px solid rgba(0, 195, 255, 0.3)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 1rem',
+              color: '#00c3aa'
+            }}>
+              <CreditCard size={28} />
             </div>
 
-            <div className="app-input-group">
-              <label className="app-label">Card Number</label>
-              <input
-                type="text"
-                maxLength={19}
-                value={cardNumber}
-                onChange={(e) => setCardNumber(e.target.value)}
-                placeholder="5399 •••• •••• 1234"
-                className="app-input"
-                required
-              />
+            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 900, color: '#171717', margin: '0 0 0.4rem' }}>
+              Pay via Paystack
+            </h3>
+            <p style={{ color: '#6b7280', fontSize: '0.82rem', maxWidth: '320px', margin: '0 auto 1.25rem', lineHeight: 1.5 }}>
+              Instant & secure payment supporting Mastercard, Visa, Verve, Apple Pay, Bank Transfer, & USSD.
+            </p>
+
+            <div style={{
+              background: '#f8fafc',
+              border: '1px solid rgba(0,0,0,0.06)',
+              borderRadius: '14px',
+              padding: '0.85rem 1rem',
+              marginBottom: '1.25rem',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center'
+            }}>
+              <span style={{ fontSize: '0.82rem', color: '#64748b', fontWeight: 600 }}>Amount Due</span>
+              <span style={{ fontFamily: 'Outfit', fontSize: '1.2rem', fontWeight: 900, color: '#0f172a' }}>
+                ₦{amount.toLocaleString()}
+              </span>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
-              <div className="app-input-group">
-                <label className="app-label">Expiry (MM/YY)</label>
-                <input
-                  type="text"
-                  maxLength={5}
-                  value={expiry}
-                  onChange={(e) => setExpiry(e.target.value)}
-                  placeholder="08/28"
-                  className="app-input"
-                  required
-                />
-              </div>
-
-              <div className="app-input-group">
-                <label className="app-label">CVV</label>
-                <input
-                  type="password"
-                  maxLength={4}
-                  value={cvv}
-                  onChange={(e) => setCvv(e.target.value)}
-                  placeholder="321"
-                  className="app-input"
-                  required
-                />
-              </div>
-            </div>
-
-            <button type="submit" disabled={submitting} className="app-btn app-btn-accent" style={{ marginTop: '0.5rem', width: '100%', minHeight: '48px', borderRadius: '14px', fontSize: '0.92rem', fontWeight: 900 }}>
-              <ShieldCheck size={18} />
-              <span>{submitting ? 'Processing Card Payment...' : `Pay ₦${amount.toLocaleString()} with Card`}</span>
+            <button
+              type="button"
+              onClick={handlePaystackCheckout}
+              disabled={submitting}
+              className="app-btn app-btn-accent"
+              style={{
+                width: '100%',
+                minHeight: '50px',
+                borderRadius: '14px',
+                fontSize: '0.95rem',
+                fontWeight: 900,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.5rem',
+                background: 'linear-gradient(135deg, #09a5db 0%, #00c3aa 100%)',
+                color: '#fff',
+                border: 'none',
+                boxShadow: '0 8px 20px -4px rgba(0, 195, 170, 0.4)'
+              }}
+            >
+              <ShieldCheck size={20} />
+              <span>{submitting ? 'Connecting to Paystack...' : `Pay ₦${amount.toLocaleString()} with Paystack`}</span>
             </button>
-          </form>
+
+            <div style={{ marginTop: '0.85rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', color: '#94a3b8', fontSize: '0.72rem' }}>
+              <Lock size={12} />
+              <span>256-Bit SSL Encrypted & PCI-DSS Level 1 Certified</span>
+            </div>
+          </div>
         )}
 
         {/* ── METHOD 3: BANK TRANSFER / USSD ── */}
