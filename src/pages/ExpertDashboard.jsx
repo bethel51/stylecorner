@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   Scissors,
   CheckCircle,
@@ -51,6 +51,259 @@ import { BottomSheet } from '../components/common/BottomSheet';
 import { ImagePreviewModal } from '../components/common/ImagePreviewModal';
 import { downloadBookingHistoryCSV, printBookingHistoryReport } from '../utils/bookingHistoryExport';
 
+// ─── Swipeable Booking Request Card ────────────────────────────────────────
+const SwipeableBookingCard = ({ booking: b, updatingId, onAccept, onDecline, openClientWhatsApp }) => {
+  const cardRef = useRef(null);
+  const startX = useRef(0);
+  const currentX = useRef(0);
+  const isDragging = useRef(false);
+  const THRESHOLD = 80; // px to trigger action
+
+  const resetCard = useCallback(() => {
+    if (!cardRef.current) return;
+    cardRef.current.style.transition = 'transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s ease';
+    cardRef.current.style.transform = 'translateX(0)';
+    cardRef.current.style.boxShadow = '';
+    currentX.current = 0;
+  }, []);
+
+  const handleTouchStart = (e) => {
+    startX.current = e.touches[0].clientX;
+    isDragging.current = true;
+    if (cardRef.current) {
+      cardRef.current.style.transition = 'none';
+    }
+  };
+
+  const handleTouchMove = (e) => {
+    if (!isDragging.current || !cardRef.current) return;
+    const diff = e.touches[0].clientX - startX.current;
+    currentX.current = diff;
+    const clamped = Math.max(-140, Math.min(140, diff));
+    const progress = Math.min(Math.abs(clamped) / THRESHOLD, 1);
+    const isRight = clamped > 0;
+    cardRef.current.style.transform = `translateX(${clamped}px)`;
+    if (isRight) {
+      cardRef.current.style.boxShadow = `0 8px 32px rgba(16,185,129,${0.15 + progress * 0.35})`;
+      cardRef.current.style.borderColor = `rgba(16,185,129,${0.3 + progress * 0.7})`;
+    } else {
+      cardRef.current.style.boxShadow = `0 8px 32px rgba(239,68,68,${0.15 + progress * 0.35})`;
+      cardRef.current.style.borderColor = `rgba(239,68,68,${0.3 + progress * 0.7})`;
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (!isDragging.current) return;
+    isDragging.current = false;
+    const diff = currentX.current;
+    if (diff > THRESHOLD) {
+      // Swipe right → Accept
+      if (cardRef.current) {
+        cardRef.current.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+        cardRef.current.style.transform = 'translateX(110%)';
+        cardRef.current.style.opacity = '0';
+      }
+      setTimeout(onAccept, 280);
+    } else if (diff < -THRESHOLD) {
+      // Swipe left → Decline
+      if (cardRef.current) {
+        cardRef.current.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+        cardRef.current.style.transform = 'translateX(-110%)';
+        cardRef.current.style.opacity = '0';
+      }
+      setTimeout(onDecline, 280);
+    } else {
+      resetCard();
+    }
+  };
+
+  const isPaid = ['paid_wallet', 'paid_card', 'paid_transfer'].includes(b.paymentStatus);
+  const isUpdating = updatingId === b._id;
+
+  return (
+    <div style={{ position: 'relative', overflow: 'hidden', borderRadius: '18px' }}>
+      {/* Swipe hint backgrounds */}
+      <div style={{
+        position: 'absolute', inset: 0, borderRadius: '18px',
+        display: 'flex', alignItems: 'center', justifyContent: 'flex-start',
+        paddingLeft: '1.5rem',
+        background: 'linear-gradient(90deg, rgba(16,185,129,0.25) 0%, transparent 100%)',
+        pointerEvents: 'none', zIndex: 0,
+      }}>
+        <CheckCircle size={28} color="#10b981" />
+      </div>
+      <div style={{
+        position: 'absolute', inset: 0, borderRadius: '18px',
+        display: 'flex', alignItems: 'center', justifyContent: 'flex-end',
+        paddingRight: '1.5rem',
+        background: 'linear-gradient(270deg, rgba(239,68,68,0.25) 0%, transparent 100%)',
+        pointerEvents: 'none', zIndex: 0,
+      }}>
+        <XCircle size={28} color="#ef4444" />
+      </div>
+
+      {/* The actual card */}
+      <div
+        ref={cardRef}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        style={{
+          position: 'relative', zIndex: 1,
+          background: 'rgba(255,255,255,0.06)',
+          border: '1px solid rgba(245,158,11,0.35)',
+          borderRadius: '18px',
+          padding: '1rem',
+          willChange: 'transform',
+          touchAction: 'pan-y',
+        }}
+      >
+        {/* Row 1: Client Name + Price */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem', gap: '0.5rem' }}>
+          <h4 style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 900, color: '#ffffff', margin: 0, flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            {b.clientName || 'Client'}
+          </h4>
+          <span style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 900, color: '#f59e0b', flexShrink: 0 }}>
+            ₦{Number(b.price).toLocaleString()}
+          </span>
+        </div>
+
+        {/* Row 2: Payment badge */}
+        <div style={{ marginBottom: '0.75rem' }}>
+          <span style={{
+            fontSize: '0.65rem', fontWeight: 800,
+            background: isPaid ? 'rgba(16,185,129,0.18)' : 'rgba(245,158,11,0.15)',
+            color: isPaid ? '#34d399' : '#f59e0b',
+            padding: '0.2rem 0.6rem', borderRadius: '50px',
+            display: 'inline-block',
+          }}>
+            {isPaid ? '✓ Paid by Client' : '⏳ Payment Pending'}
+          </span>
+        </div>
+
+        {/* Row 3: Service + Date/Time info box */}
+        <div style={{
+          background: 'rgba(0,0,0,0.3)', borderRadius: '12px',
+          padding: '0.6rem 0.8rem', marginBottom: '0.85rem',
+        }}>
+          <div style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.85rem', color: '#ffffff', marginBottom: '0.3rem' }}>
+            ✂️ {b.service}
+          </div>
+          <div style={{ fontSize: '0.72rem', color: '#a8a29e', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '0.35rem' }}>
+            <Clock size={11} color="#f59e0b" />
+            <span>{b.date} at {b.time}</span>
+            {b.location && (
+              <>
+                <span style={{ opacity: 0.4 }}>•</span>
+                <MapPin size={11} color="#f59e0b" />
+                <span>{b.location}</span>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Row 4: Contact row (email + WhatsApp + Call) */}
+        {(b.clientEmail || b.clientPhone) && (
+          <div style={{
+            display: 'flex', flexWrap: 'wrap', gap: '0.4rem',
+            alignItems: 'center', marginBottom: '0.85rem',
+            fontSize: '0.72rem', color: '#d6d3d1',
+          }}>
+            {b.clientEmail && (
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem', flex: '1 1 auto', minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <Mail size={11} color="#f59e0b" /> {b.clientEmail}
+              </span>
+            )}
+            {b.clientPhone && (
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', flexShrink: 0 }}>
+                <button
+                  type="button"
+                  onClick={() => openClientWhatsApp(b.clientPhone, b.clientName)}
+                  style={{
+                    background: 'rgba(34,197,94,0.2)', border: '1px solid rgba(34,197,94,0.4)',
+                    color: '#4ade80', padding: '0.2rem 0.55rem', borderRadius: '8px',
+                    cursor: 'pointer', fontSize: '0.68rem', fontWeight: 800, fontFamily: 'Outfit',
+                    display: 'inline-flex', alignItems: 'center', gap: '0.25rem',
+                  }}
+                >
+                  <MessageSquare size={11} /> WhatsApp
+                </button>
+                <a
+                  href={`tel:${b.clientPhone}`}
+                  style={{
+                    background: 'rgba(59,130,246,0.2)', border: '1px solid rgba(59,130,246,0.4)',
+                    color: '#60a5fa', padding: '0.2rem 0.55rem', borderRadius: '8px',
+                    fontSize: '0.68rem', fontWeight: 800, fontFamily: 'Outfit',
+                    display: 'inline-flex', alignItems: 'center', gap: '0.25rem', textDecoration: 'none',
+                  }}
+                >
+                  <Phone size={11} /> Call
+                </a>
+              </span>
+            )}
+          </div>
+        )}
+
+        {/* Row 5: Accept / Decline buttons */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6rem' }}>
+          <button
+            onClick={onAccept}
+            disabled={isUpdating}
+            style={{
+              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+              border: 'none', color: '#fff',
+              borderRadius: '12px', minHeight: '46px',
+              fontSize: '0.85rem', fontWeight: 900, fontFamily: 'Outfit',
+              cursor: isUpdating ? 'not-allowed' : 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem',
+              opacity: isUpdating ? 0.6 : 1,
+              boxShadow: '0 4px 14px rgba(16,185,129,0.35)',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            <CheckCircle size={16} />
+            <span>{isUpdating ? 'Updating…' : 'Accept'}</span>
+          </button>
+
+          <button
+            onClick={onDecline}
+            disabled={isUpdating}
+            style={{
+              background: 'rgba(239,68,68,0.12)',
+              border: '1.5px solid rgba(239,68,68,0.45)',
+              color: '#f87171',
+              borderRadius: '12px', minHeight: '46px',
+              fontSize: '0.85rem', fontWeight: 800, fontFamily: 'Outfit',
+              cursor: isUpdating ? 'not-allowed' : 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
+              opacity: isUpdating ? 0.6 : 1,
+              transition: 'all 0.2s ease',
+            }}
+          >
+            <XCircle size={16} />
+            <span>Decline</span>
+          </button>
+        </div>
+
+        {/* Swipe hint pill */}
+        <div style={{
+          marginTop: '0.7rem', display: 'flex', alignItems: 'center',
+          justifyContent: 'center', gap: '0.4rem',
+          fontSize: '0.62rem', color: 'rgba(255,255,255,0.3)',
+          fontFamily: 'Outfit', letterSpacing: '0.04em',
+        }}>
+          <span>← Decline</span>
+          <span style={{ width: '24px', height: '2px', borderRadius: '2px', background: 'rgba(255,255,255,0.12)', display: 'inline-block' }} />
+          <span>Swipe</span>
+          <span style={{ width: '24px', height: '2px', borderRadius: '2px', background: 'rgba(255,255,255,0.12)', display: 'inline-block' }} />
+          <span>Accept →</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ─── Main Dashboard ──────────────────────────────────────────────────────────
 export const ExpertDashboard = () => {
   const navigate = useNavigate();
   const { user, logout, updateProfile, deleteAccount, showToast } = useAuth();
@@ -944,107 +1197,14 @@ export const ExpertDashboard = () => {
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
               {pendingBookings.map((b) => (
-                <div
+                <SwipeableBookingCard
                   key={b._id}
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.06)',
-                    border: '1px solid rgba(245, 158, 11, 0.35)',
-                    borderRadius: '16px',
-                    padding: '1rem',
-                  }}
-                >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.65rem', gap: '0.5rem', flexWrap: 'wrap' }}>
-                    <div style={{ minWidth: 0, flex: 1 }}>
-                      <h4 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 900, color: '#ffffff', margin: 0 }}>
-                        {b.clientName || 'Client'}
-                      </h4>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.75rem', color: '#d6d3d1', marginTop: '0.2rem', flexWrap: 'wrap' }}>
-                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
-                          <Mail size={11} color="#f59e0b" /> {b.clientEmail}
-                        </span>
-                        {b.clientPhone && (
-                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
-                            <span>• {b.clientPhone}</span>
-                            <button
-                              type="button"
-                              onClick={() => openClientWhatsApp(b.clientPhone, b.clientName)}
-                              style={{ background: 'rgba(34,197,94,0.2)', border: '1px solid rgba(34,197,94,0.4)', color: '#4ade80', padding: '0.12rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 800, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem' }}
-                            >
-                              <MessageSquare size={10} /> WhatsApp
-                            </button>
-                            <a
-                              href={`tel:${b.clientPhone}`}
-                              style={{ background: 'rgba(59,130,246,0.2)', border: '1px solid rgba(59,130,246,0.4)', color: '#60a5fa', padding: '0.12rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 800, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem', textDecoration: 'none' }}
-                            >
-                              <Phone size={10} /> Call
-                            </a>
-                          </span>
-                        )}
-                      </div>
-                    </div>
-
-                    <div style={{ textAlign: 'right' }}>
-                      <span style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 900, color: '#f59e0b', display: 'block' }}>
-                        ₦{Number(b.price).toLocaleString()}
-                      </span>
-                      <span style={{ fontSize: '0.65rem', background: 'rgba(16,185,129,0.2)', color: '#34d399', padding: '0.15rem 0.5rem', borderRadius: '50px', fontWeight: 800 }}>
-                        {b.paymentStatus === 'paid_wallet' || b.paymentStatus === 'paid_card' || b.paymentStatus === 'paid_transfer' ? '✓ Paid by Client' : 'Payment Awaiting Settlement'}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div style={{ background: 'rgba(0,0,0,0.3)', borderRadius: '12px', padding: '0.65rem 0.85rem', marginBottom: '0.85rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
-                    <div>
-                      <div style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.85rem', color: '#ffffff' }}>
-                        ✂️ {b.service}
-                      </div>
-                      <div style={{ fontSize: '0.72rem', color: '#a8a29e', marginTop: '0.15rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                        <Clock size={11} color="#f59e0b" /> {b.date} at {b.time}
-                        {b.location && (
-                          <span style={{ marginLeft: '0.5rem', display: 'inline-flex', alignItems: 'center', gap: '0.2rem' }}>
-                            <MapPin size={11} color="#f59e0b" /> {b.location}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Accept / Decline Action Buttons */}
-                  <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '0.65rem' }}>
-                    <button
-                      onClick={() => handleUpdateStatus(b._id, 'accepted')}
-                      disabled={updatingId === b._id}
-                      className="app-btn app-btn-primary"
-                      style={{ minHeight: '44px', borderRadius: '12px', fontSize: '0.85rem', fontWeight: 900, gap: '0.4rem' }}
-                    >
-                      <CheckCircle size={16} />
-                      <span>{updatingId === b._id ? 'Updating...' : 'Accept Booking'}</span>
-                    </button>
-
-                    <button
-                      onClick={() => handleUpdateStatus(b._id, 'rejected')}
-                      disabled={updatingId === b._id}
-                      style={{
-                        background: 'rgba(239, 68, 68, 0.15)',
-                        border: '1.5px solid rgba(239, 68, 68, 0.4)',
-                        color: '#f87171',
-                        borderRadius: '12px',
-                        minHeight: '44px',
-                        fontSize: '0.82rem',
-                        fontWeight: 800,
-                        fontFamily: 'Outfit',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '0.35rem',
-                      }}
-                    >
-                      <XCircle size={16} />
-                      <span>Decline</span>
-                    </button>
-                  </div>
-                </div>
+                  booking={b}
+                  updatingId={updatingId}
+                  onAccept={() => handleUpdateStatus(b._id, 'accepted')}
+                  onDecline={() => handleUpdateStatus(b._id, 'rejected')}
+                  openClientWhatsApp={openClientWhatsApp}
+                />
               ))}
             </div>
           )}
