@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Order | Style Corner Luxury Atelier</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --track-bg: #faf9f6;
+            --track-surface: #ffffff;
+            --track-accent: #d4af37;
+            --track-accent-hover: #b5952f;
+            --track-accent-soft: rgba(212, 175, 55, 0.1);
+            --track-dark: #121212;
+            --track-text: #171717;
+            --track-muted: #6b7280;
+            --track-border: rgba(0, 0, 0, 0.07);
+            --track-success: #10b981;
+            --track-pending: #f59e0b;
+            --track-blue: #3b82f6;
+        }
+
+        body.page-tracking {
+            background-color: var(--track-bg);
+            background-image: radial-gradient(circle at 100% 0%, #ffffff 0%, #faf9f6 100%);
+            color: var(--track-text);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.9) !important;
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+            height: 5.5rem;
+        }
+
+        .track-container {
+            max-width: 900px;
+            margin: 7.5rem auto 4rem;
+            padding: 0 1.5rem;
+            width: 100%;
+            flex: 1;
+        }
+
+        /* Top Lookup Bar */
+        .lookup-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            border: 1px solid var(--track-border);
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .lookup-input-wrap {
+            flex: 1;
+            min-width: 260px;
+            position: relative;
+        }
+        .lookup-input-wrap i {
+            position: absolute;
+            left: 1.1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--track-muted);
+            font-size: 0.95rem;
+        }
+        .lookup-input {
+            width: 100%;
+            padding: 0.85rem 1.25rem 0.85rem 2.75rem;
+            border-radius: 12px;
+            border: 1.5px solid var(--track-border);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            outline: none;
+            transition: all 0.2s;
+        }
+        .lookup-input:focus {
+            border-color: var(--track-accent);
+            box-shadow: 0 0 0 4px var(--track-accent-soft);
+        }
+        .lookup-btn {
+            background: var(--track-dark);
+            color: var(--track-accent);
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 0.9rem;
+            padding: 0.85rem 1.75rem;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .lookup-btn:hover {
+            background: #222;
+            transform: translateY(-1px);
+        }
+
+        /* Main Tracking Card */
+        .tracking-card {
+            background: #fff;
+            border-radius: 24px;
+            border: 1px solid var(--track-border);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.04);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .tracking-header {
+            background: linear-gradient(135deg, #171717 0%, #242424 100%);
+            color: #fff;
+            padding: 2.25rem 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.25rem;
+        }
+        .tracking-title-wrap h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin: 0 0 0.4rem;
+            letter-spacing: -0.01em;
+        }
+        .tracking-title-wrap p {
+            color: #9ca3af;
+            margin: 0;
+            font-size: 0.875rem;
+        }
+        .tracking-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.25rem;
+            border-radius: 30px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .tracking-badge.order-placed { background: rgba(245, 158, 11, 0.18); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+        .tracking-badge.processing { background: rgba(59, 130, 246, 0.18); color: #60a5fa; border: 1px solid rgba(59,130,246,0.3); }
+        .tracking-badge.in-transit { background: rgba(212, 175, 55, 0.2); color: #f59e0b; border: 1px solid rgba(212,175,55,0.4); }
+        .tracking-badge.out-for-delivery { background: rgba(168, 85, 247, 0.18); color: #c084fc; border: 1px solid rgba(168,85,247,0.3); }
+        .tracking-badge.delivered { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+
+        /* Progress Bar Section */
+        .progress-section {
+            padding: 3rem 2.5rem;
+            background: #ffffff;
+            border-bottom: 1px solid var(--track-border);
+        }
+
+        .stepper {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin: 0 auto;
+            max-width: 750px;
+        }
+        .stepper::before {
+            content: '';
+            position: absolute;
+            top: 26px;
+            left: 5%;
+            right: 5%;
+            height: 4px;
+            background: #e5e7eb;
+            z-index: 1;
+        }
+        .stepper-progress-fill {
+            position: absolute;
+            top: 26px;
+            left: 5%;
+            height: 4px;
+            background: linear-gradient(90deg, #d4af37, #10b981);
+            z-index: 2;
+            transition: width 0.6s cubic-bezier(0.16,1,0.3,1);
+        }
+
+        .step-item {
+            position: relative;
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 110px;
+            text-align: center;
+        }
+        .step-icon-wrap {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: #f3f4f6;
+            color: #9ca3af;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            border: 3px solid #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+            margin-bottom: 0.85rem;
+        }
+        .step-item.completed .step-icon-wrap {
+            background: var(--track-dark);
+            color: var(--track-accent);
+            box-shadow: 0 6px 16px rgba(212,175,55,0.25);
+            border-color: var(--track-accent);
+        }
+        .step-item.active .step-icon-wrap {
+            background: var(--track-accent);
+            color: #171717;
+            transform: scale(1.15);
+            box-shadow: 0 0 0 6px rgba(212,175,55,0.25);
+            animation: pulse-ring 2s infinite;
+        }
+        @keyframes pulse-ring {
+            0% { box-shadow: 0 0 0 0 rgba(212,175,55,0.4); }
+            70% { box-shadow: 0 0 0 12px rgba(212,175,55,0); }
+            100% { box-shadow: 0 0 0 0 rgba(212,175,55,0); }
+        }
+        .step-label {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #9ca3af;
+            line-height: 1.25;
+        }
+        .step-item.completed .step-label {
+            color: var(--track-text);
+        }
+        .step-item.active .step-label {
+            color: var(--track-text);
+            font-weight: 800;
+        }
+
+        /* Information Grid */
+        .info-grid {
+            padding: 2.25rem 2.5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 2rem;
+            background: #ffffff;
+            border-bottom: 1px solid var(--track-border);
+        }
+        .info-col h4 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--track-muted);
+            margin: 0 0 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .info-col h4 i { color: var(--track-accent); }
+        .info-val {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--track-text);
+            margin-bottom: 0.25rem;
+        }
+        .info-sub {
+            color: var(--track-muted);
+            font-size: 0.875rem;
+            line-height: 1.4;
+        }
+
+        /* Items Section */
+        .items-section {
+            padding: 2.25rem 2.5rem;
+            background: #faf9f6;
+        }
+        .items-section h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 800;
+            margin: 0 0 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .order-item-row {
+            background: #fff;
+            border: 1px solid var(--track-border);
+            border-radius: 16px;
+            padding: 1rem 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.85rem;
+        }
+        .item-main-details {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .item-icon-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: rgba(212,175,55,0.12);
+            color: var(--track-accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+        .item-name {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 0.98rem;
+            color: var(--track-text);
+            margin: 0 0 0.2rem;
+        }
+        .item-qty {
+            font-size: 0.8rem;
+            color: var(--track-muted);
+        }
+        .item-price {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 1.05rem;
+            color: var(--track-text);
+        }
+
+        /* Pricing Summary */
+        .price-summary-box {
+            background: #fff;
+            border: 1px solid var(--track-border);
+            border-radius: 16px;
+            padding: 1.25rem 1.5rem;
+            margin-top: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+        }
+        .price-line {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+            color: var(--track-muted);
+        }
+        .price-line.total {
+            border-top: 1.5px dashed var(--track-border);
+            padding-top: 0.75rem;
+            margin-top: 0.25rem;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--track-text);
+        }
+
+        /* Action Buttons footer */
+        .track-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+        .btn-track {
+            padding: 0.85rem 1.75rem;
+            border-radius: 14px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+        .btn-track-primary {
+            background: var(--track-dark);
+            color: var(--track-accent);
+        }
+        .btn-track-primary:hover {
+            background: #262626;
+            transform: translateY(-2px);
+        }
+        .btn-track-outline {
+            background: #fff;
+            color: var(--track-text);
+            border: 1.5px solid var(--track-border);
+        }
+        .btn-track-outline:hover {
+            border-color: var(--track-accent);
+            color: var(--track-accent);
+        }
+        .btn-track-support {
+            background: #25D366;
+            color: #fff;
+        }
+        .btn-track-support:hover {
+            background: #20b858;
+            color: #fff;
+        }
+
+        /* Skeletons & States */
+        .loading-state, .error-state {
+            text-align: center;
+            padding: 5rem 2rem;
+            background: #fff;
+            border-radius: 24px;
+            border: 1px solid var(--track-border);
+        }
+        .loading-state i {
+            font-size: 2.5rem;
+            color: var(--track-accent);
+            animation: fa-spin 1.5s linear infinite;
+            margin-bottom: 1.25rem;
+        }
+        .error-state i {
+            font-size: 3rem;
+            color: #ef4444;
+            margin-bottom: 1.25rem;
+        }
+
+        @media (max-width: 680px) {
+            .stepper {
+                flex-direction: column;
+                gap: 1.5rem;
+                align-items: flex-start;
+                padding-left: 1.5rem;
+            }
+            .stepper::before {
+                top: 0;
+                bottom: 0;
+                left: 36px;
+                width: 4px;
+                height: 100%;
+            }
+            .stepper-progress-fill {
+                top: 0;
+                left: 36px;
+                width: 4px !important;
+                height: var(--fill-height, 0%);
+            }
+            .step-item {
+                flex-direction: row;
+                text-align: left;
+                width: 100%;
+                gap: 1.25rem;
+            }
+            .step-icon-wrap {
+                margin-bottom: 0;
+                flex-shrink: 0;
+            }
+        }
+    </style>
+</head>
+<body class="page-tracking">
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <svg class="logo-icon" viewBox="0 0 100 100">
+                    <path d="M30 20 H70 L80 50 L70 80 H30 L20 50 Z" fill="none" stroke="currentColor" stroke-width="4" />
+                    <circle cx="50" cy="50" r="5" fill="currentColor" />
+                </svg>
+                STYLE<span>CORNER</span>
+            </a>
+            <nav class="nav">
+                <a href="index.html">Home</a>
+                <a href="services.html">Services</a>
+                <a href="store.html">Store</a>
+                <a href="customer-dashboard.html" class="cta">Dashboard</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="track-container">
+        <!-- Lookup Form Bar -->
+        <div class="lookup-card">
+            <div class="lookup-input-wrap">
+                <i class="fas fa-magnifying-glass"></i>
+                <input type="text" id="track-search-input" class="lookup-input" placeholder="Enter Order ID or Tracking Number (e.g. SC-123456)">
+            </div>
+            <button class="lookup-btn" id="track-search-btn">
+                <i class="fas fa-location-arrow"></i> Track Order
+            </button>
+        </div>
+
+        <!-- Tracking Content Container -->
+        <div id="tracking-content">
+            <div class="loading-state">
+                <i class="fas fa-circle-notch"></i>
+                <h3 style="font-family:'Outfit';font-weight:800;font-size:1.4rem;margin:0 0 0.5rem">Locating Shipment</h3>
+                <p style="color:var(--track-muted);margin:0">Retrieving real-time dispatch and delivery telemetry...</p>
+            </div>
+        </div>
+
+        <!-- Action Links -->
+        <div class="track-actions">
+            <a href="customer-dashboard.html" class="btn-track btn-track-outline">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+            <div style="display:flex;gap:0.75rem;">
+                <a href="https://wa.me/2348000000000?text=Hello%20Style%20Corner%20Support,%20I%20need%20assistance%20tracking%20my%20order" target="_blank" class="btn-track btn-track-support">
+                    <i class="fab fa-whatsapp"></i> WhatsApp Support
+                </a>
+                <a href="store.html" class="btn-track btn-track-primary">
+                    <i class="fas fa-bag-shopping"></i> Shop More
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer style="margin-top:auto;border-top:1px solid var(--track-border);padding:2.5rem 0;background:#ffffff;">
+        <div class="container text-center">
+            <p style="color:var(--track-muted);font-weight:700;font-size:0.75rem;letter-spacing:2px;text-transform:uppercase;">STYLE CORNER ATELIER &copy; 2026</p>
+        </div>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script>
+        const TRACKING_STAGES = [
+            { id: 'Order Placed', label: 'Order Placed', icon: 'fa-box-open' },
+            { id: 'Processing', label: 'Processing', icon: 'fa-clock' },
+            { id: 'In Transit', label: 'In Transit', icon: 'fa-truck-fast' },
+            { id: 'Out for Delivery', label: 'Out for Delivery', icon: 'fa-location-dot' },
+            { id: 'Delivered', label: 'Delivered', icon: 'fa-circle-check' }
+        ];
+
+        function getActiveStageIndex(statusStr) {
+            const s = (statusStr || '').toLowerCase();
+            if (s.includes('deliver') || s.includes('complete')) return 4;
+            if (s.includes('out') || s.includes('delivery')) return 3;
+            if (s.includes('transit') || s.includes('ship')) return 2;
+            if (s.includes('process') || s.includes('paid')) return 1;
+            return 0; // Order Placed / Pending
+        }
+
+        function getStatusClass(statusStr) {
+            const s = (statusStr || '').toLowerCase();
+            if (s.includes('deliver') || s.includes('complete')) return 'delivered';
+            if (s.includes('out')) return 'out-for-delivery';
+            if (s.includes('transit') || s.includes('ship')) return 'in-transit';
+            if (s.includes('process') || s.includes('paid')) return 'processing';
+            return 'order-placed';
+        }
+
+        async function fetchAndRenderOrder(orderId) {
+            const container = document.getElementById('tracking-content');
+            container.innerHTML = `
+                <div class="loading-state">
+                    <i class="fas fa-circle-notch"></i>
+                    <h3 style="font-family:'Outfit';font-weight:800;font-size:1.4rem;margin:0 0 0.5rem">Locating Shipment</h3>
+                    <p style="color:var(--track-muted);margin:0">Retrieving real-time dispatch and delivery telemetry...</p>
+                </div>
+            `;
+
+            try {
+                const token = localStorage.getItem('token');
+                const headers = {};
+                if (token) headers['Authorization'] = `Bearer ${token}`;
+
+                let order = null;
+
+                // 1. Try single order endpoint
+                if (orderId) {
+                    const res = await fetch(`/api/orders/${orderId}`, { headers });
+                    if (res.ok) order = await res.json();
+                }
+
+                // 2. If not found or no ID provided, try to fetch all user orders and find match or latest
+                if (!order && token) {
+                    const allRes = await fetch('/api/orders', { headers });
+                    if (allRes.ok) {
+                        const orders = await allRes.json();
+                        if (Array.isArray(orders) && orders.length > 0) {
+                            if (orderId) {
+                                order = orders.find(o => o._id === orderId || o.trackingNumber === orderId);
+                            }
+                            if (!order && !orderId) {
+                                order = orders[0]; // Most recent order
+                            }
+                        }
+                    }
+                }
+
+                if (!order) {
+                    container.innerHTML = `
+                        <div class="error-state">
+                            <i class="fas fa-box-archive"></i>
+                            <h3 style="font-family:'Outfit';font-weight:800;font-size:1.4rem;margin:0 0 0.5rem">Order Not Found</h3>
+                            <p style="color:var(--track-muted);margin:0 0 1.5rem">We couldn't locate an order with ID or tracking code: <strong>${orderId || 'N/A'}</strong>.</p>
+                            <a href="customer-dashboard.html" class="btn-track btn-track-primary"><i class="fas fa-list"></i> View All Orders</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                renderOrderUI(order);
+            } catch (err) {
+                console.error('Tracking fetch error:', err);
+                container.innerHTML = `
+                    <div class="error-state">
+                        <i class="fas fa-triangle-exclamation"></i>
+                        <h3 style="font-family:'Outfit';font-weight:800;font-size:1.4rem;margin:0 0 0.5rem">Connection Error</h3>
+                        <p style="color:var(--track-muted);margin:0 0 1.5rem">Could not fetch order information. Please check your connection and try again.</p>
+                        <button onclick="location.reload()" class="btn-track btn-track-primary"><i class="fas fa-rotate"></i> Retry</button>
+                    </div>
+                `;
+            }
+        }
+
+        function renderOrderUI(order) {
+            const container = document.getElementById('tracking-content');
+            const statusRaw = order.trackingStatus || order.status || 'Order Placed';
+            const activeIdx = getActiveStageIndex(statusRaw);
+            const statusClass = getStatusClass(statusRaw);
+            const shortId = (order._id || '').slice(-6).toUpperCase();
+            const trackingNum = order.trackingNumber || `SC-${shortId}`;
+            const estDelivery = order.estimatedDelivery || '2 - 4 Business Days';
+            const progressPercent = (activeIdx / (TRACKING_STAGES.length - 1)) * 90;
+
+            const stepperHTML = TRACKING_STAGES.map((stg, idx) => {
+                let stateClass = '';
+                if (idx < activeIdx) stateClass = 'completed';
+                else if (idx === activeIdx) stateClass = 'active';
+
+                return `
+                    <div class="step-item ${stateClass}">
+                        <div class="step-icon-wrap">
+                            <i class="fas ${idx < activeIdx ? 'fa-check' : stg.icon}"></i>
+                        </div>
+                        <span class="step-label">${stg.label}</span>
+                    </div>
+                `;
+            }).join('');
+
+            // Format items list
+            const rawItem = order.item || 'Luxury Atelier Grooming Items';
+            const price = order.totalPrice || order.price || 0;
+            const address = order.address || `${order.houseNumber || ''} ${order.street || ''}, ${order.lga || ''}, ${order.state || 'Lagos'}`;
+
+            container.innerHTML = `
+                <div class="tracking-card">
+                    <!-- Tracking Header -->
+                    <div class="tracking-header">
+                        <div class="tracking-title-wrap">
+                            <h2>Order #${shortId}</h2>
+                            <p>Tracking Code: <strong style="color:#fff;letter-spacing:1px">${trackingNum}</strong> · Placed on ${new Date(order.createdAt || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                        </div>
+                        <div>
+                            <span class="tracking-badge ${statusClass}">
+                                <i class="fas fa-circle" style="font-size:0.5rem"></i> ${statusRaw}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Progress Stepper -->
+                    <div class="progress-section">
+                        <div class="stepper" style="--fill-height: ${progressPercent}%">
+                            <div class="stepper-progress-fill" style="width: ${progressPercent}%"></div>
+                            ${stepperHTML}
+                        </div>
+                    </div>
+
+                    <!-- Shipment Details Grid -->
+                    <div class="info-grid">
+                        <div class="info-col">
+                            <h4><i class="fas fa-calendar-check"></i> Estimated Delivery</h4>
+                            <div class="info-val">${estDelivery}</div>
+                            <div class="info-sub">Standard Express Courier</div>
+                        </div>
+                        <div class="info-col">
+                            <h4><i class="fas fa-barcode"></i> Tracking Number</h4>
+                            <div class="info-val" style="font-family:monospace;letter-spacing:1px">${trackingNum}</div>
+                            <div class="info-sub"><a href="#" onclick="navigator.clipboard.writeText('${trackingNum}');alert('Tracking number copied!');return false;" style="color:var(--track-accent);text-decoration:none;font-weight:700"><i class="fas fa-copy"></i> Copy Code</a></div>
+                        </div>
+                        <div class="info-col">
+                            <h4><i class="fas fa-location-dot"></i> Delivery Address</h4>
+                            <div class="info-val">${order.name || 'Valued Customer'}</div>
+                            <div class="info-sub">${address}</div>
+                        </div>
+                    </div>
+
+                    <!-- Ordered Items Breakdown -->
+                    <div class="items-section">
+                        <h3><i class="fas fa-bag-shopping" style="color:var(--track-accent)"></i> Package Contents</h3>
+                        <div class="order-item-row">
+                            <div class="item-main-details">
+                                <div class="item-icon-box">
+                                    <i class="fas fa-gem"></i>
+                                </div>
+                                <div>
+                                    <div class="item-name">${rawItem}</div>
+                                    <div class="item-qty">Qty: 1 Package · Inspected & Sealed</div>
+                                </div>
+                            </div>
+                            <div class="item-price">₦${Number(price).toLocaleString()}</div>
+                        </div>
+
+                        <!-- Price Breakdown -->
+                        <div class="price-summary-box">
+                            <div class="price-line">
+                                <span>Subtotal</span>
+                                <span>₦${Number(price).toLocaleString()}</span>
+                            </div>
+                            <div class="price-line">
+                                <span>Delivery Fee</span>
+                                <span style="color:#10b981;font-weight:700">Free / Included</span>
+                            </div>
+                            ${order.discountApplied ? `
+                            <div class="price-line" style="color:#10b981;font-weight:700">
+                                <span>Loyalty Voucher Discount</span>
+                                <span>-₦${Number(order.discountApplied).toLocaleString()}</span>
+                            </div>` : ''}
+                            <div class="price-line total">
+                                <span>Total Paid</span>
+                                <span style="color:var(--track-accent)">₦${Number(price).toLocaleString()}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const initialId = urlParams.get('id') || urlParams.get('tracking');
+            if (initialId) {
+                document.getElementById('track-search-input').value = initialId;
+            }
+            fetchAndRenderOrder(initialId);
+
+            document.getElementById('track-search-btn').addEventListener('click', () => {
+                const query = document.getElementById('track-search-input').value.trim();
+                if (query) {
+                    const newUrl = new URL(window.location);
+                    newUrl.searchParams.set('id', query);
+                    window.history.pushState({}, '', newUrl);
+                    fetchAndRenderOrder(query);
+                }
+            });
+
+            document.getElementById('track-search-input').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    document.getElementById('track-search-btn').click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

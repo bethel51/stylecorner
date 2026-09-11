@@ -100,10 +100,118 @@
             border: 2px solid var(--exp-accent);
             transform: rotate(-3deg);
             transition: all 0.3s ease;
+            cursor: pointer;
         }
         
         .expert-avatar:hover {
-            transform: rotate(0deg) scale(1.05);
+            transform: rotate(0deg) scale(1.08);
+            box-shadow: 0 12px 28px rgba(212,175,55,0.35);
+        }
+
+        .expert-avatar:active {
+            transform: rotate(0deg) scale(0.97);
+        }
+
+        /* ── Profile Lightbox (Expert) ── */
+        .profile-lightbox-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0);
+            backdrop-filter: blur(0px);
+            -webkit-backdrop-filter: blur(0px);
+            transition: background 0.35s ease, backdrop-filter 0.35s ease;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        .profile-lightbox-overlay.active {
+            background: rgba(0, 0, 0, 0.72);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            pointer-events: all;
+            opacity: 1;
+        }
+
+        .profile-lightbox-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.25rem;
+            transform: scale(0.7) translateY(30px);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease;
+            opacity: 0;
+        }
+
+        .profile-lightbox-overlay.active .profile-lightbox-card {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+        .profile-lightbox-avatar {
+            width: 160px;
+            height: 160px;
+            background: linear-gradient(135deg, #222222, #171717);
+            color: var(--exp-accent);
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            text-transform: uppercase;
+            border: 4px solid var(--exp-accent);
+            box-shadow: 0 24px 60px rgba(0,0,0,0.5), 0 0 0 8px rgba(212,175,55,0.12);
+        }
+
+        .profile-lightbox-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 24px;
+        }
+
+        .profile-lightbox-name {
+            color: #ffffff;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 1.35rem;
+            text-align: center;
+            letter-spacing: -0.01em;
+        }
+
+        .profile-lightbox-role {
+            color: var(--exp-accent);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+        }
+
+        .profile-lightbox-close {
+            margin-top: 0.5rem;
+            background: rgba(255,255,255,0.1);
+            border: 1.5px solid rgba(255,255,255,0.2);
+            color: #ffffff;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.25s ease, transform 0.25s ease;
+        }
+
+        .profile-lightbox-close:hover {
+            background: rgba(255,255,255,0.2);
+            transform: rotate(90deg);
         }
 
         .expert-name {
@@ -719,6 +827,161 @@
                 font-size: 0.7rem;
             }
         }
+
+        /* ── Skeleton Loaders ── */
+        @keyframes shimmer {
+            0% { background-position: -600px 0; }
+            100% { background-position: 600px 0; }
+        }
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 600px 100%;
+            animation: shimmer 1.4s infinite;
+            border-radius: 8px;
+        }
+        .skeleton-line { height: 14px; border-radius: 6px; }
+        .skeleton-line.short { width: 40%; }
+        .skeleton-line.med { width: 65%; }
+        .skeleton-action-row {
+            background: #fff;
+            border: 1px solid var(--exp-border);
+            border-radius: 14px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* ── Empty States ── */
+        .exp-empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 3rem 2rem;
+            background: #fff;
+            border: 1px solid var(--exp-border);
+            border-radius: 20px;
+            margin-top: 1rem;
+        }
+        .exp-empty-state svg { margin-bottom: 1.25rem; opacity: 0.4; }
+        .exp-empty-state h4 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--exp-text);
+            margin-bottom: 0.35rem;
+        }
+        .exp-empty-state p { color: var(--exp-muted); font-size: 0.875rem; margin: 0; }
+
+        /* ── Notification Bell ── */
+        .exp-notif-wrap {
+            position: relative;
+            margin-top: 0.75rem;
+            display: flex;
+            justify-content: center;
+        }
+        .exp-notif-btn {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #8e8e93;
+            width: 40px; height: 40px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+        }
+        .exp-notif-btn:hover { background: rgba(212,175,55,0.12); color: #d4af37; }
+        .exp-notif-badge {
+            position: absolute; top: -4px; right: -4px;
+            background: #ef4444;
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.6rem; font-weight: 800;
+            width: 16px; height: 16px;
+            border-radius: 50%;
+            display: none;
+            align-items: center; justify-content: center;
+        }
+
+        /* ── Toast Notifications ── */
+        #exp-toast-container {
+            position: fixed;
+            top: 6rem; right: 1.25rem;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+            pointer-events: none;
+        }
+        .exp-toast {
+            background: #1a1a1a;
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 0.875rem;
+            padding: 0.85rem 1.25rem;
+            border-radius: 14px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            pointer-events: all;
+            transform: translateX(110%);
+            transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+            max-width: 320px;
+            border-left: 4px solid #d4af37;
+        }
+        .exp-toast.show { transform: translateX(0); }
+        .exp-toast.success { border-left-color: #10b981; }
+        .exp-toast.error { border-left-color: #ef4444; }
+        .exp-toast.info { border-left-color: #3b82f6; }
+
+        /* ── Photo Upload ── */
+        .exp-photo-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            padding: 2rem;
+            border: 2px dashed var(--exp-border);
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            cursor: pointer;
+            transition: border-color 0.25s;
+            background: #fafafa;
+        }
+        .exp-photo-area:hover { border-color: var(--exp-accent); background: var(--exp-accent-soft); }
+        .exp-photo-preview {
+            width: 80px; height: 80px;
+            border-radius: 20px;
+            object-fit: cover;
+            border: 3px solid var(--exp-accent);
+            display: none;
+        }
+        .exp-photo-initial {
+            width: 80px; height: 80px;
+            border-radius: 20px;
+            background: linear-gradient(135deg,#222,#171717);
+            color: var(--exp-accent);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.75rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            border: 3px solid var(--exp-accent);
+        }
+        .exp-photo-label {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 0.875rem;
+            color: var(--exp-muted);
+            text-align: center;
+        }
+        .exp-photo-label span { color: var(--exp-accent); }
     </style>
 </head>
 <body class="page-dashboard">
@@ -748,6 +1011,12 @@
                     <div class="expert-avatar">E</div>
                     <h3 id="sidebar-user-name" class="expert-name">Staff</h3>
                     <span class="expert-role-badge">Artisan</span>
+                    <div class="exp-notif-wrap">
+                        <button class="exp-notif-btn" id="exp-notif-btn" title="Notifications">
+                            <i class="fas fa-bell"></i>
+                            <span class="exp-notif-badge" id="exp-notif-badge">0</span>
+                        </button>
+                    </div>
                 </div>
                 <nav class="panel-nav">
                     <a href="#" class="panel-nav-link active" data-tab="live-hub"><i class="fas fa-briefcase"></i> My Work</a>
@@ -827,6 +1096,13 @@
                             <h3>Atelier Info & Matrix</h3>
                             <button id="edit-mat-btn" class="btn btn-black"><i class="fas fa-pen-to-square"></i> Edit Profile</button>
                         </div>
+                        <!-- Photo Upload -->
+                        <div class="exp-photo-area" id="exp-photo-area" title="Click to change profile photo">
+                            <input type="file" id="exp-photo-input" accept="image/*" style="display:none">
+                            <img id="exp-photo-preview" class="exp-photo-preview" alt="Profile photo">
+                            <div class="exp-photo-initial" id="exp-photo-initial">E</div>
+                            <div class="exp-photo-label"><span><i class="fas fa-camera"></i> Click to upload</span> a profile photo<br><small style="font-size:0.75rem;color:#9ca3af">JPG, PNG or WEBP · Max 2MB</small></div>
+                        </div>
                         <form id="expert-matrix-form">
                             <div class="form-grid">
                                 <div class="input-group">
@@ -863,6 +1139,23 @@
         </div>
     </main>
 
+    <!-- Expert Toast Container -->
+    <div id="exp-toast-container"></div>
+
+    <!-- Profile Lightbox Overlay -->
+    <div id="profile-lightbox" class="profile-lightbox-overlay" role="dialog" aria-modal="true" aria-label="Profile picture">
+        <div class="profile-lightbox-card">
+            <div class="profile-lightbox-avatar" id="lightbox-avatar-display">S</div>
+            <div>
+                <div class="profile-lightbox-name" id="lightbox-user-name">Staff</div>
+                <div class="profile-lightbox-role">Artisan</div>
+            </div>
+            <button class="profile-lightbox-close" id="lightbox-close-btn" aria-label="Close">
+                <i class="fas fa-xmark"></i>
+            </button>
+        </div>
+    </div>
+
     <footer style="margin-top: auto; border-top: 1px solid var(--exp-border); padding: 3rem 0; background: #ffffff;">
         <div class="container text-center">
             <p style="color: var(--exp-muted); font-weight: 700; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase;">STYLE CORNER WORKER PAGE &copy; 2026</p>
@@ -871,6 +1164,20 @@
 
     <script src="js/common.js"></script>
     <script>
+        // ── Expert Toast ──
+        window.showExpToast = (msg, type = 'info', duration = 3500) => {
+            const icons = { success: 'fa-circle-check', error: 'fa-circle-exclamation', info: 'fa-bell' };
+            const container = document.getElementById('exp-toast-container');
+            const t = document.createElement('div');
+            t.className = `exp-toast ${type}`;
+            t.innerHTML = `<i class="fas ${icons[type]||icons.info}"></i><span>${msg}</span>`;
+            container.appendChild(t);
+            requestAnimationFrame(() => { requestAnimationFrame(() => t.classList.add('show')); });
+            setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 400); }, duration);
+        };
+        // Also expose as showToast so common.js can use it
+        window.showToast = window.showExpToast;
+
         document.addEventListener('DOMContentLoaded', () => {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -878,19 +1185,145 @@
                 return;
             }
             let user = {};
+            let lastNotifCount = 0;
 
-            const refreshWorkspace = async () => {
-                document.getElementById('sidebar-user-name').textContent = `${user.firstname || 'Staff'} ${user.lastname || ''}`;
-                document.querySelectorAll('.expert-avatar').forEach(el => el.textContent = (user.firstname ? user.firstname.charAt(0) : 'S'));
+            // ── Profile Lightbox Logic ──
+            const lightbox = document.getElementById('profile-lightbox');
+            const lightboxCloseBtn = document.getElementById('lightbox-close-btn');
+
+            const openLightbox = () => lightbox.classList.add('active');
+            const closeLightbox = () => lightbox.classList.remove('active');
+
+            document.querySelectorAll('.expert-avatar').forEach(el => {
+                el.addEventListener('click', openLightbox);
+            });
+
+            lightboxCloseBtn.addEventListener('click', closeLightbox);
+
+            lightbox.addEventListener('click', (e) => {
+                if (e.target === lightbox) closeLightbox();
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeLightbox();
+            });
+
+            // ── Photo Upload Logic ──
+            const expPhotoArea = document.getElementById('exp-photo-area');
+            const expPhotoInput = document.getElementById('exp-photo-input');
+            if (expPhotoArea && expPhotoInput) {
+                expPhotoArea.addEventListener('click', () => expPhotoInput.click());
+                expPhotoInput.addEventListener('change', async () => {
+                    const file = expPhotoInput.files[0];
+                    if (!file) return;
+                    if (file.size > 2 * 1024 * 1024) {
+                        window.showToast('Image must be under 2MB', 'error');
+                        return;
+                    }
+                    const reader = new FileReader();
+                    reader.onload = async (ev) => {
+                        const base64 = ev.target.result;
+                        const prevEl = document.getElementById('exp-photo-preview');
+                        const initEl = document.getElementById('exp-photo-initial');
+                        if (prevEl) { prevEl.src = base64; prevEl.style.display = 'block'; }
+                        if (initEl) initEl.style.display = 'none';
+                        window.showToast('Saving profile photo...', 'info', 2000);
+                        try {
+                            const res = await fetch('/api/users/profile', {
+                                method: 'PUT',
+                                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                                body: JSON.stringify({ photoUrl: base64, avatarUrl: base64 })
+                            });
+                            if (!res.ok) throw new Error('Failed to update photo');
+                            const updated = await res.json();
+                            user = updated;
+                            localStorage.setItem('mockUser', JSON.stringify(updated));
+                            refreshWorkspace();
+                            window.showToast('Profile photo updated!', 'success');
+                        } catch (e) {
+                            window.showToast('Failed to save photo. Try again.', 'error');
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            // ── Notification Bell Logic ──
+            const expNotifBtn = document.getElementById('exp-notif-btn');
+            const expNotifBadge = document.getElementById('exp-notif-badge');
+            if (expNotifBtn) {
+                expNotifBtn.addEventListener('click', () => {
+                    if (expNotifBadge) expNotifBadge.style.display = 'none';
+                    window.showToast('Notifications are up to date.', 'info');
+                });
+            }
+
+            const refreshWorkspace = async (showSkeleton = true) => {
+                const fullName = `${user.firstname || 'Staff'} ${user.lastname || ''}`.trim();
+                const initial = user.firstname ? user.firstname.charAt(0).toUpperCase() : 'S';
+                const currentPhoto = user.photoUrl || user.avatarUrl;
+                document.getElementById('sidebar-user-name').textContent = fullName;
+                document.querySelectorAll('.expert-avatar').forEach(el => {
+                    if (currentPhoto) {
+                        el.innerHTML = `<img src="${currentPhoto}" alt="${fullName}" style="width:100%;height:100%;object-fit:cover;border-radius:18px;">`;
+                    } else {
+                        el.textContent = initial;
+                    }
+                });
+                // Sync lightbox content
+                const lbAvatar = document.getElementById('lightbox-avatar-display');
+                if (lbAvatar) {
+                    if (currentPhoto) {
+                        lbAvatar.innerHTML = `<img src="${currentPhoto}" alt="${fullName}">`;
+                    } else {
+                        lbAvatar.textContent = initial;
+                    }
+                }
+                const lbName = document.getElementById('lightbox-user-name');
+                if (lbName) lbName.textContent = fullName;
+
+                // Sync settings photo display
+                const expPrev = document.getElementById('exp-photo-preview');
+                const expInit = document.getElementById('exp-photo-initial');
+                if (expPrev && expInit) {
+                    if (currentPhoto) {
+                        expPrev.src = currentPhoto;
+                        expPrev.style.display = 'block';
+                        expInit.style.display = 'none';
+                    } else {
+                        expInit.textContent = initial;
+                        expInit.style.display = 'flex';
+                        expPrev.style.display = 'none';
+                    }
+                }
+
                 document.getElementById('set-firstname').value = user.firstname || '';
                 document.getElementById('set-lastname').value = user.lastname || '';
+
+                const sList = document.getElementById('live-bookings-list');
+                const aList = document.getElementById('live-alerts-list');
+                const hBody = document.getElementById('history-tbody');
+
+                if (showSkeleton) {
+                    if (sList) {
+                        sList.innerHTML = `
+                            <div class="skeleton-action-row"><div class="skeleton skeleton-line med"></div><div class="skeleton" style="width:90px;height:36px;border-radius:8px;"></div></div>
+                            <div class="skeleton-action-row"><div class="skeleton skeleton-line short"></div><div class="skeleton" style="width:90px;height:36px;border-radius:8px;"></div></div>
+                        `;
+                    }
+                    if (aList) {
+                        aList.innerHTML = `<div class="skeleton-action-row"><div class="skeleton skeleton-line med"></div><div class="skeleton" style="width:90px;height:36px;border-radius:8px;"></div></div>`;
+                    }
+                }
 
                 let bks = [];
                 let ords = [];
                 try {
                     const token = localStorage.getItem('token');
-                    const bksRes = await fetch('/api/bookings', { headers: { 'Authorization': `Bearer ${token}` } });
-                    const ordsRes = await fetch('/api/orders', { headers: { 'Authorization': `Bearer ${token}` } });
+                    const [bksRes, ordsRes] = await Promise.all([
+                        fetch('/api/bookings', { headers: { 'Authorization': `Bearer ${token}` } }),
+                        fetch('/api/orders', { headers: { 'Authorization': `Bearer ${token}` } })
+                    ]);
                     if (bksRes.ok) bks = await bksRes.json();
                     if (ordsRes.ok) ords = await ordsRes.json();
                 } catch (e) {
@@ -904,62 +1337,95 @@
                 const activeAcceptedBks = bks.filter(b => b && b.status === 'accepted' && (b.staff === user.firstname || !b.staff));
                 const pendingOrds = ords.filter(o => o && (o.status === 'paid' || o.status === 'pending'));
 
+                // Notification Bell Check
+                const currentPendingCount = pendingBks.length;
+                if (lastNotifCount !== 0 && currentPendingCount > lastNotifCount) {
+                    window.showToast('New client booking request received!', 'info');
+                    if (expNotifBadge) {
+                        expNotifBadge.textContent = currentPendingCount;
+                        expNotifBadge.style.display = 'flex';
+                    }
+                } else if (currentPendingCount > 0 && expNotifBadge) {
+                    expNotifBadge.textContent = currentPendingCount;
+                    expNotifBadge.style.display = 'flex';
+                }
+                lastNotifCount = currentPendingCount;
+
                 document.getElementById('pending-services-count').textContent = pendingBks.length + activeAcceptedBks.length;
                 document.getElementById('alert-count').textContent = pendingOrds.length;
 
-                const sList = document.getElementById('live-bookings-list');
                 const allActiveBks = [...activeAcceptedBks, ...pendingBks];
 
-                if (allActiveBks.length > 0) {
-                    sList.innerHTML = allActiveBks.map(b => {
-                        if (b.status === 'accepted') {
-                            return `
-                            <div class="action-row" style="border-left: 4px solid #10b981; background: rgba(16, 185, 129, 0.04);">
-                                <div>
-                                    <span style="font-size: 0.7rem; font-weight: 800; color: #10b981; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 2px;">● ONGOING SESSION</span>
-                                    <h4>${b.clientName} <span>| ${b.service}</span></h4>
-                                    <p><i class="fas fa-calendar-days"></i> ${b.date} • ${b.time}</p>
-                                </div>
-                                <button class="btn complete-btn" data-id="${b._id}" style="font-size: 0.8rem; padding: 0.65rem 1.25rem; background: #10b981; color: white; border: none; font-weight: 700; border-radius: 8px;">FINISH & COMPLETE</button>
+                if (sList) {
+                    if (allActiveBks.length > 0) {
+                        sList.innerHTML = allActiveBks.map(b => {
+                            if (b.status === 'accepted') {
+                                return `
+                                <div class="action-row" style="border-left: 4px solid #10b981; background: rgba(16, 185, 129, 0.04);">
+                                    <div>
+                                        <span style="font-size: 0.7rem; font-weight: 800; color: #10b981; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 2px;">● ONGOING SESSION</span>
+                                        <h4>${b.clientName} <span>| ${b.service}</span></h4>
+                                        <p><i class="fas fa-calendar-days"></i> ${b.date} • ${b.time}</p>
+                                    </div>
+                                    <button class="btn complete-btn" data-id="${b._id}" style="font-size: 0.8rem; padding: 0.65rem 1.25rem; background: #10b981; color: white; border: none; font-weight: 700; border-radius: 8px;">FINISH & COMPLETE</button>
+                                </div>`;
+                            } else {
+                                return `
+                                <div class="action-row">
+                                    <div>
+                                        <h4>${b.clientName} <span>| ${b.service}</span></h4>
+                                        <p><i class="fas fa-calendar-days"></i> ${b.date} • ${b.time}</p>
+                                    </div>
+                                    <button class="btn btn-blue accept-btn" data-id="${b._id}" style="font-size: 0.8rem; padding: 0.65rem 1.5rem;">ACCEPT</button>
+                                </div>`;
+                            }
+                        }).join('');
+                    } else {
+                        sList.innerHTML = `
+                            <div class="exp-empty-state">
+                                <i class="fas fa-briefcase" style="font-size: 2.5rem; color: var(--exp-muted); margin-bottom: 1rem; opacity: 0.4;"></i>
+                                <h4>No Active Jobs Right Now</h4>
+                                <p>New client appointments will appear here in real time as they arrive.</p>
                             </div>`;
-                        } else {
-                            return `
-                            <div class="action-row">
-                                <div>
-                                    <h4>${b.clientName} <span>| ${b.service}</span></h4>
-                                    <p><i class="fas fa-calendar-days"></i> ${b.date} • ${b.time}</p>
-                                </div>
-                                <button class="btn btn-blue accept-btn" data-id="${b._id}" style="font-size: 0.8rem; padding: 0.65rem 1.5rem;">ACCEPT</button>
+                    }
+                }
+
+                if (aList) {
+                    if (pendingOrds.length > 0) {
+                        aList.innerHTML = pendingOrds.map(o => `
+                        <div class="action-row" style="border-left: 4px solid #ef4444;">
+                            <div>
+                                <h4>Order <span>| ${o.item}</span></h4>
+                                <p><i class="fas fa-truck-ramp-box"></i> SHIP TO: ${o.address}</p>
+                            </div>
+                            <button class="btn btn-black ship-btn" data-id="${o._id}" style="font-size: 0.8rem; padding: 0.65rem 1.5rem; border: 1.5px solid #ef4444; background: none; color: #ef4444;">SHIP NOW</button>
+                        </div>`).join('');
+                    } else {
+                        aList.innerHTML = `
+                            <div class="exp-empty-state">
+                                <i class="fas fa-box-open" style="font-size: 2.5rem; color: var(--exp-muted); margin-bottom: 1rem; opacity: 0.4;"></i>
+                                <h4>All Orders Dispatched</h4>
+                                <p>No orders pending shipment right now. Great job!</p>
                             </div>`;
-                        }
-                    }).join('');
-                } else { sList.innerHTML = '<p style="color: var(--exp-muted); font-weight: 500; font-size: 0.95rem; text-align: center; padding: 1.5rem;">No active jobs or pending requests right now.</p>'; }
+                    }
+                }
 
-                const aList = document.getElementById('live-alerts-list');
-                if (pendingOrds.length > 0) {
-                    aList.innerHTML = pendingOrds.map(o => `
-                    <div class="action-row" style="border-left: 4px solid #ef4444;">
-                        <div>
-                            <h4>Order <span>| ${o.item}</span></h4>
-                            <p><i class="fas fa-truck-ramp-box"></i> SHIP TO: ${o.address}</p>
-                        </div>
-                        <button class="btn btn-black ship-btn" data-id="${o._id}" style="font-size: 0.8rem; padding: 0.65rem 1.5rem; border: 1.5px solid #ef4444; background: none; color: #ef4444;">SHIP NOW</button>
-                    </div>`).join('');
-                } else { aList.innerHTML = '<p style="color: var(--exp-muted); font-weight: 500; font-size: 0.95rem; text-align: center; padding: 1.5rem;">No orders to ship.</p>'; }
-
-                const hBody = document.getElementById('history-tbody');
-                const done = [
-                    ...bks.filter(b => b.status === 'completed').map(b => ({ cat: 'Appointment Completed', detail: `${b.clientName} (${b.service})`, time: b.date })),
-                    ...ords.filter(o => o.status === 'shipped').map(o => ({ cat: 'Order Sent', detail: o.item, time: 'Done' }))
-                ];
-                if (done.length > 0) {
-                    hBody.innerHTML = done.map(t => `
-                        <tr>
-                            <td style="font-weight: 700; color: #171717;">${t.cat}</td>
-                            <td>${t.detail}</td>
-                            <td style="text-align: right; color: var(--exp-accent); font-weight: 700;">${t.time}</td>
-                        </tr>`).join('');
-                } else { hBody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 3rem 0; color: var(--exp-muted);">No history yet.</td></tr>'; }
+                if (hBody) {
+                    const done = [
+                        ...bks.filter(b => b.status === 'completed').map(b => ({ cat: 'Appointment Completed', detail: `${b.clientName} (${b.service})`, time: b.date })),
+                        ...ords.filter(o => o.status === 'shipped').map(o => ({ cat: 'Order Sent', detail: o.item, time: 'Done' }))
+                    ];
+                    if (done.length > 0) {
+                        hBody.innerHTML = done.map(t => `
+                            <tr>
+                                <td style="font-weight: 700; color: #171717;">${t.cat}</td>
+                                <td>${t.detail}</td>
+                                <td style="text-align: right; color: var(--exp-accent); font-weight: 700;">${t.time}</td>
+                            </tr>`).join('');
+                    } else {
+                        hBody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 3rem 0; color: var(--exp-muted);"><i class="fas fa-clock-rotate-left" style="font-size: 2rem; display: block; margin-bottom: 0.75rem; opacity: 0.4;"></i>No completed sessions yet. Finished tasks will show here.</td></tr>';
+                    }
+                }
 
                 addEvents();
             };
@@ -1117,6 +1583,11 @@
                 .catch(err => {
                     console.warn('Expert auth check background sync:', err);
                 });
+
+            // Auto-refresh data every 20 seconds
+            setInterval(() => {
+                refreshWorkspace(false);
+            }, 20000);
         });
     </script>
 </body>

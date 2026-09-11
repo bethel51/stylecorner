@@ -100,6 +100,116 @@
             box-shadow: 0 8px 16px rgba(0,0,0,0.3);
             border: 2px solid var(--dash-accent);
             text-transform: uppercase;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .user-id-icon:hover,
+        .user-id-icon:active {
+            transform: scale(1.08);
+            box-shadow: 0 12px 28px rgba(212,175,55,0.35);
+        }
+
+        /* ── Profile Lightbox ── */
+        .profile-lightbox-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0);
+            backdrop-filter: blur(0px);
+            -webkit-backdrop-filter: blur(0px);
+            transition: background 0.35s ease, backdrop-filter 0.35s ease;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        .profile-lightbox-overlay.active {
+            background: rgba(0, 0, 0, 0.72);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            pointer-events: all;
+            opacity: 1;
+        }
+
+        .profile-lightbox-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.25rem;
+            transform: scale(0.7) translateY(30px);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease;
+            opacity: 0;
+        }
+
+        .profile-lightbox-overlay.active .profile-lightbox-card {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+        .profile-lightbox-avatar {
+            width: 160px;
+            height: 160px;
+            background: linear-gradient(135deg, #222222, #171717);
+            color: var(--dash-accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            text-transform: uppercase;
+            border: 4px solid var(--dash-accent);
+            box-shadow: 0 24px 60px rgba(0,0,0,0.5), 0 0 0 8px rgba(212,175,55,0.12);
+        }
+
+        .profile-lightbox-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .profile-lightbox-name {
+            color: #ffffff;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 1.35rem;
+            text-align: center;
+            letter-spacing: -0.01em;
+        }
+
+        .profile-lightbox-role {
+            color: var(--dash-accent);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+        }
+
+        .profile-lightbox-close {
+            margin-top: 0.5rem;
+            background: rgba(255,255,255,0.1);
+            border: 1.5px solid rgba(255,255,255,0.2);
+            color: #ffffff;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.25s ease, transform 0.25s ease;
+        }
+
+        .profile-lightbox-close:hover {
+            background: rgba(255,255,255,0.2);
+            transform: rotate(90deg);
         }
 
         .user-name-title {
@@ -723,6 +833,256 @@
                 font-size: 0.7rem;
             }
         }
+
+        /* ── Skeleton Loaders ── */
+        @keyframes shimmer {
+            0% { background-position: -600px 0; }
+            100% { background-position: 600px 0; }
+        }
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 600px 100%;
+            animation: shimmer 1.4s infinite;
+            border-radius: 8px;
+        }
+        .skeleton-card {
+            background: #fff;
+            border: 1px solid var(--dash-border);
+            border-radius: 20px;
+            padding: 2.25rem 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .skeleton-line { height: 14px; border-radius: 6px; }
+        .skeleton-line.short { width: 40%; }
+        .skeleton-line.med { width: 65%; }
+        .skeleton-line.full { width: 100%; }
+        .skeleton-row {
+            background: #fff;
+            border: 1px solid var(--dash-border);
+            border-radius: 14px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* ── Empty States ── */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 2rem;
+            text-align: center;
+            background: #fff;
+            border: 1px solid var(--dash-border);
+            border-radius: 20px;
+        }
+        .empty-state svg { margin-bottom: 1.25rem; opacity: 0.5; }
+        .empty-state h4 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--dash-text);
+            margin-bottom: 0.4rem;
+        }
+        .empty-state p { color: var(--dash-muted); font-size: 0.9rem; margin-bottom: 1.25rem; }
+        .empty-state a, .empty-state button {
+            background: #171717;
+            color: #d4af37;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 0.825rem;
+            padding: 0.65rem 1.35rem;
+            border-radius: 10px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .empty-state a:hover, .empty-state button:hover { opacity: 0.85; }
+
+        /* ── Notification Bell ── */
+        .notif-bell-wrap {
+            position: relative;
+            margin-top: 0.75rem;
+            display: flex;
+            justify-content: center;
+        }
+        .notif-bell-btn {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #8e8e93;
+            width: 40px; height: 40px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+        }
+        .notif-bell-btn:hover { background: rgba(212,175,55,0.12); color: #d4af37; }
+        .notif-badge {
+            position: absolute; top: -4px; right: -4px;
+            background: #ef4444;
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.6rem; font-weight: 800;
+            width: 16px; height: 16px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            display: none;
+        }
+
+        /* ── Toast Notifications ── */
+        #toast-container {
+            position: fixed;
+            top: 6rem; right: 1.25rem;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+            pointer-events: none;
+        }
+        .toast-item {
+            background: #1a1a1a;
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 0.875rem;
+            padding: 0.85rem 1.25rem;
+            border-radius: 14px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            pointer-events: all;
+            transform: translateX(110%);
+            transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+            max-width: 320px;
+            border-left: 4px solid #d4af37;
+        }
+        .toast-item.show { transform: translateX(0); }
+        .toast-item.success { border-left-color: #10b981; }
+        .toast-item.error { border-left-color: #ef4444; }
+        .toast-item.info { border-left-color: #3b82f6; }
+        .toast-item i { font-size: 1rem; flex-shrink: 0; }
+
+        /* ── Photo Upload ── */
+        .photo-upload-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            padding: 2rem;
+            border: 2px dashed var(--dash-border);
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            cursor: pointer;
+            transition: border-color 0.25s;
+            background: #fafafa;
+        }
+        .photo-upload-area:hover { border-color: var(--dash-accent); background: var(--dash-accent-soft); }
+        .photo-upload-preview {
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--dash-accent);
+            display: none;
+        }
+        .photo-upload-initial {
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg,#222,#171717);
+            color: var(--dash-accent);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.75rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            border: 3px solid var(--dash-accent);
+        }
+        .photo-upload-label {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 0.875rem;
+            color: var(--dash-muted);
+        }
+        .photo-upload-label span { color: var(--dash-accent); }
+
+        /* ── Modals (Cancel + Review) ── */
+        .sc-modal-overlay {
+            position: fixed; inset: 0; z-index: 9998;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(6px);
+            display: flex; align-items: center; justify-content: center;
+            padding: 1rem;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .sc-modal-overlay.open { opacity: 1; pointer-events: all; }
+        .sc-modal-box {
+            background: #fff;
+            border-radius: 24px;
+            padding: 2.5rem;
+            width: 100%; max-width: 440px;
+            transform: scale(0.85) translateY(20px);
+            transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
+            box-shadow: 0 32px 80px rgba(0,0,0,0.2);
+        }
+        .sc-modal-overlay.open .sc-modal-box { transform: scale(1) translateY(0); }
+        .sc-modal-box h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.35rem; font-weight: 800;
+            margin-bottom: 0.5rem; color: var(--dash-text);
+        }
+        .sc-modal-box p { color: var(--dash-muted); font-size: 0.9rem; margin-bottom: 1.75rem; }
+        .sc-modal-actions { display: flex; gap: 0.75rem; }
+        .sc-modal-actions button {
+            flex: 1; padding: 0.8rem 1rem;
+            border-radius: 12px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700; font-size: 0.9rem;
+            cursor: pointer; border: none;
+            transition: all 0.2s;
+        }
+        .sc-modal-btn-cancel { background: #f3f4f6; color: #374151; }
+        .sc-modal-btn-cancel:hover { background: #e5e7eb; }
+        .sc-modal-btn-danger { background: #ef4444; color: #fff; }
+        .sc-modal-btn-danger:hover { background: #dc2626; }
+        .sc-modal-btn-primary { background: #171717; color: #d4af37; }
+        .sc-modal-btn-primary:hover { background: #d4af37; color: #171717; }
+
+        /* ── Star Rating ── */
+        .star-rating { display: flex; gap: 0.4rem; margin-bottom: 1.25rem; }
+        .star-rating i {
+            font-size: 1.75rem;
+            color: #e5e7eb;
+            cursor: pointer;
+            transition: color 0.15s, transform 0.15s;
+        }
+        .star-rating i.active, .star-rating i:hover { color: #d4af37; transform: scale(1.15); }
+        .review-textarea {
+            width: 100%;
+            min-height: 90px;
+            border: 1.5px solid var(--dash-border);
+            border-radius: 12px;
+            padding: 0.85rem 1rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            color: var(--dash-text);
+            resize: vertical;
+            margin-bottom: 1.5rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .review-textarea:focus { border-color: var(--dash-accent); }
     </style>
 </head>
 <body class="page-dashboard">
@@ -752,6 +1112,12 @@
                     <div class="user-id-icon">U</div>
                     <h3 id="sidebar-user-name" class="user-name-title">User</h3>
                     <span class="user-role-badge">Customer</span>
+                    <div class="notif-bell-wrap">
+                        <button class="notif-bell-btn" id="notif-bell-btn" title="Notifications">
+                            <i class="fas fa-bell"></i>
+                            <span class="notif-badge" id="notif-badge">0</span>
+                        </button>
+                    </div>
                 </div>
                 <nav class="dash-nav">
                     <a href="#" class="dash-nav-link active" data-tab="overview"><i class="fas fa-grid-2"></i> Overview</a>
@@ -843,6 +1209,13 @@
                             <h3>Atelier Credentials</h3>
                             <button id="edit-profile-btn" class="btn-action btn-dark"><i class="fas fa-pen-to-square"></i> Edit Info</button>
                         </div>
+                        <!-- Photo Upload -->
+                        <div class="photo-upload-area" id="photo-upload-area" title="Click to change profile photo">
+                            <input type="file" id="photo-file-input" accept="image/*" style="display:none">
+                            <img id="photo-upload-preview" class="photo-upload-preview" alt="Profile photo">
+                            <div class="photo-upload-initial" id="photo-upload-initial">U</div>
+                            <div class="photo-upload-label"><span><i class="fas fa-camera"></i> Click to upload</span> a profile photo<br><small style="font-size:0.75rem;color:#9ca3af;">JPG, PNG or WEBP · Max 2MB</small></div>
+                        </div>
                         <form id="profile-form">
                             <div class="input-row">
                                 <div class="field-box">
@@ -873,6 +1246,55 @@
         </div>
     </main>
 
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <!-- Cancel Booking Modal -->
+    <div class="sc-modal-overlay" id="cancel-modal">
+        <div class="sc-modal-box">
+            <h3><i class="fas fa-calendar-xmark" style="color:#ef4444;margin-right:0.5rem"></i>Cancel Booking?</h3>
+            <p>This action cannot be undone. Your booking will be marked as cancelled and you'll receive a confirmation.</p>
+            <div class="sc-modal-actions">
+                <button class="sc-modal-btn-cancel" id="cancel-modal-close">Keep Booking</button>
+                <button class="sc-modal-btn-danger" id="cancel-modal-confirm"><i class="fas fa-xmark"></i> Yes, Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Review Modal -->
+    <div class="sc-modal-overlay" id="review-modal">
+        <div class="sc-modal-box">
+            <h3><i class="fas fa-star" style="color:#d4af37;margin-right:0.5rem"></i>Leave a Review</h3>
+            <p id="review-modal-subtitle">Rate your experience</p>
+            <div class="star-rating" id="star-rating">
+                <i class="fas fa-star" data-val="1"></i>
+                <i class="fas fa-star" data-val="2"></i>
+                <i class="fas fa-star" data-val="3"></i>
+                <i class="fas fa-star" data-val="4"></i>
+                <i class="fas fa-star" data-val="5"></i>
+            </div>
+            <textarea class="review-textarea" id="review-comment" placeholder="Tell us about your experience (optional)..."></textarea>
+            <div class="sc-modal-actions">
+                <button class="sc-modal-btn-cancel" id="review-modal-close">Maybe Later</button>
+                <button class="sc-modal-btn-primary" id="review-modal-submit"><i class="fas fa-paper-plane"></i> Submit Review</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Lightbox Overlay -->
+    <div id="profile-lightbox" class="profile-lightbox-overlay" role="dialog" aria-modal="true" aria-label="Profile picture">
+        <div class="profile-lightbox-card">
+            <div class="profile-lightbox-avatar" id="lightbox-avatar-display">U</div>
+            <div>
+                <div class="profile-lightbox-name" id="lightbox-user-name">User</div>
+                <div class="profile-lightbox-role">Customer</div>
+            </div>
+            <button class="profile-lightbox-close" id="lightbox-close-btn" aria-label="Close">
+                <i class="fas fa-xmark"></i>
+            </button>
+        </div>
+    </div>
+
     <footer style="margin-top: auto; border-top: 1px solid var(--dash-border); padding: 3rem 0; background: #ffffff;">
         <div class="container text-center">
             <p style="color: var(--dash-muted); font-weight: 700; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase;">&copy; 2026 STYLE CORNER DASHBOARD</p>
@@ -881,6 +1303,18 @@
 
     <script src="js/common.js"></script>
     <script>
+        // ── Toast System ──
+        window.showToast = (msg, type = 'info', duration = 3500) => {
+            const icons = { success: 'fa-circle-check', error: 'fa-circle-exclamation', info: 'fa-bell' };
+            const container = document.getElementById('toast-container');
+            const t = document.createElement('div');
+            t.className = `toast-item ${type}`;
+            t.innerHTML = `<i class="fas ${icons[type] || icons.info}"></i><span>${msg}</span>`;
+            container.appendChild(t);
+            requestAnimationFrame(() => { requestAnimationFrame(() => t.classList.add('show')); });
+            setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 400); }, duration);
+        };
+
         document.addEventListener('DOMContentLoaded', () => {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -888,45 +1322,204 @@
                 return;
             }
             let user = {};
+            let cancelTargetId = null;
+            let reviewTargetBooking = null;
+            let selectedRating = 0;
+            let lastNotifCount = 0;
+
+            // ── Skeleton helpers ──
+            const skeletonCard = () => `<div class="skeleton-card"><div class="skeleton skeleton-line short"></div><div class="skeleton skeleton-line med"></div><div class="skeleton skeleton-line full" style="height:36px;margin-top:0.5rem"></div></div>`;
+            const skeletonRow = () => `<div class="skeleton-row"><div style="flex:1;display:flex;flex-direction:column;gap:0.5rem"><div class="skeleton skeleton-line med"></div><div class="skeleton skeleton-line short"></div></div><div class="skeleton skeleton-line" style="width:70px;height:28px;border-radius:20px"></div></div>`;
+
+            // ── Empty States ──
+            const emptyBookings = () => `<div class="empty-state"><svg width="64" height="64" viewBox="0 0 64 64" fill="none"><rect x="8" y="12" width="48" height="44" rx="8" fill="#f3f4f6"/><rect x="20" y="6" width="6" height="12" rx="3" fill="#d4af37"/><rect x="38" y="6" width="6" height="12" rx="3" fill="#d4af37"/><line x1="16" y1="28" x2="48" y2="28" stroke="#e5e7eb" stroke-width="2"/><rect x="18" y="34" width="10" height="10" rx="3" fill="#e5e7eb"/></svg><h4>No appointments yet</h4><p>Book your first styling session at Style Corner.</p><a href="booking.html"><i class="fas fa-calendar-plus"></i> Book a Visit</a></div>`;
+            const emptyOrders = () => `<div class="empty-state"><svg width="64" height="64" viewBox="0 0 64 64" fill="none"><rect x="10" y="18" width="44" height="38" rx="8" fill="#f3f4f6"/><path d="M22 18V14a10 10 0 0120 0v4" stroke="#d4af37" stroke-width="3" stroke-linecap="round"/><circle cx="32" cy="34" r="4" fill="#d4af37"/></svg><h4>No orders placed</h4><p>Explore our boutique and order premium styling products.</p><a href="store.html"><i class="fas fa-bag-shopping"></i> Visit Boutique</a></div>`;
 
             const reloadUI = () => {
-                document.getElementById('sidebar-user-name').textContent = `${user.firstname || 'User'} ${user.lastname || ''}`;
+                const fullName = `${user.firstname || 'User'} ${user.lastname || ''}`.trim();
+                const initial = user.firstname ? user.firstname.charAt(0).toUpperCase() : 'U';
+                document.getElementById('sidebar-user-name').textContent = fullName;
                 document.getElementById('user-display-name').textContent = user.firstname || 'User';
-                document.querySelectorAll('.user-id-icon').forEach(el => el.textContent = (user.firstname ? user.firstname.charAt(0) : 'U'));
+                const avatarUrl = user.avatarUrl || user.photoUrl || '';
+                document.querySelectorAll('.user-id-icon').forEach(el => {
+                    if (avatarUrl) {
+                        el.innerHTML = `<img src="${avatarUrl}" alt="${fullName}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+                    } else { el.textContent = initial; }
+                });
+                const lbAvatar = document.getElementById('lightbox-avatar-display');
+                if (lbAvatar) {
+                    if (avatarUrl) { lbAvatar.innerHTML = `<img src="${avatarUrl}" alt="${fullName}">`; }
+                    else { lbAvatar.textContent = initial; }
+                }
+                const lbName = document.getElementById('lightbox-user-name');
+                if (lbName) lbName.textContent = fullName;
                 document.getElementById('cust-firstname').value = user.firstname || '';
                 document.getElementById('cust-lastname').value = user.lastname || '';
                 document.getElementById('cust-email').value = user.email || '';
                 document.getElementById('cust-phone').value = user.phone || '';
+                // Sync photo upload area
+                const initEl = document.getElementById('photo-upload-initial');
+                const prevEl = document.getElementById('photo-upload-preview');
+                if (initEl && prevEl) {
+                    if (avatarUrl) { prevEl.src = avatarUrl; prevEl.style.display = 'block'; initEl.style.display = 'none'; }
+                    else { initEl.textContent = initial; prevEl.style.display = 'none'; initEl.style.display = 'flex'; }
+                }
             };
+
+            // ── Profile Lightbox ──
+            const lightbox = document.getElementById('profile-lightbox');
+            const lightboxCloseBtn = document.getElementById('lightbox-close-btn');
+            const openLightbox = () => lightbox.classList.add('active');
+            const closeLightbox = () => lightbox.classList.remove('active');
+            document.querySelectorAll('.user-id-icon').forEach(el => el.addEventListener('click', openLightbox));
+            lightboxCloseBtn.addEventListener('click', closeLightbox);
+            lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+            document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeLightbox(); closeAllModals(); } });
+
+            // ── Photo Upload ──
+            const photoArea = document.getElementById('photo-upload-area');
+            const photoInput = document.getElementById('photo-file-input');
+            photoArea.addEventListener('click', () => photoInput.click());
+            photoInput.addEventListener('change', async () => {
+                const file = photoInput.files[0];
+                if (!file) return;
+                if (file.size > 2 * 1024 * 1024) { window.showToast('Image must be under 2MB', 'error'); return; }
+                const reader = new FileReader();
+                reader.onload = async (ev) => {
+                    const base64 = ev.target.result;
+                    const prevEl = document.getElementById('photo-upload-preview');
+                    const initEl = document.getElementById('photo-upload-initial');
+                    prevEl.src = base64; prevEl.style.display = 'block'; initEl.style.display = 'none';
+                    window.showToast('Uploading photo...', 'info', 2000);
+                    try {
+                        const res = await fetch('/api/users/profile', {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                            body: JSON.stringify({ avatarUrl: base64 })
+                        });
+                        if (!res.ok) throw new Error('Upload failed');
+                        const updated = await res.json();
+                        user = updated; localStorage.setItem('mockUser', JSON.stringify(updated));
+                        reloadUI();
+                        window.showToast('Profile photo updated!', 'success');
+                    } catch (e) { window.showToast('Failed to save photo. Try again.', 'error'); }
+                };
+                reader.readAsDataURL(file);
+            });
+
+            // ── Cancel Booking Modal ──
+            const cancelModal = document.getElementById('cancel-modal');
+            const closeAllModals = () => {
+                cancelModal.classList.remove('open');
+                document.getElementById('review-modal').classList.remove('open');
+            };
+            document.getElementById('cancel-modal-close').addEventListener('click', closeAllModals);
+            document.getElementById('cancel-modal-confirm').addEventListener('click', async () => {
+                if (!cancelTargetId) return;
+                const btn = document.getElementById('cancel-modal-confirm');
+                btn.textContent = 'Cancelling...';
+                btn.disabled = true;
+                try {
+                    const res = await fetch(`/api/bookings/${cancelTargetId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                        body: JSON.stringify({ status: 'cancelled' })
+                    });
+                    if (!res.ok) throw new Error('Failed');
+                    window.showToast('Booking cancelled successfully.', 'success');
+                    closeAllModals();
+                    refreshData();
+                } catch (e) { window.showToast('Could not cancel booking. Try again.', 'error'); }
+                finally { btn.textContent = 'Yes, Cancel'; btn.disabled = false; cancelTargetId = null; }
+            });
+
+            // ── Review Modal ──
+            const reviewModal = document.getElementById('review-modal');
+            const stars = reviewModal.querySelectorAll('.star-rating i');
+            stars.forEach(s => {
+                s.addEventListener('mouseover', () => { stars.forEach((st, i) => st.classList.toggle('active', i <= parseInt(s.dataset.val) - 1)); });
+                s.addEventListener('mouseleave', () => { stars.forEach((st, i) => st.classList.toggle('active', i < selectedRating)); });
+                s.addEventListener('click', () => { selectedRating = parseInt(s.dataset.val); stars.forEach((st, i) => st.classList.toggle('active', i < selectedRating)); });
+            });
+            document.getElementById('review-modal-close').addEventListener('click', closeAllModals);
+            document.getElementById('review-modal-submit').addEventListener('click', async () => {
+                if (!selectedRating) { window.showToast('Please select a star rating first.', 'error'); return; }
+                const btn = document.getElementById('review-modal-submit');
+                btn.textContent = 'Submitting...';
+                btn.disabled = true;
+                try {
+                    const res = await fetch('/api/reviews', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                        body: JSON.stringify({
+                            bookingId: reviewTargetBooking._id,
+                            stylistName: reviewTargetBooking.staff || reviewTargetBooking.stylist || 'Style Corner',
+                            serviceName: reviewTargetBooking.service,
+                            rating: selectedRating,
+                            comment: document.getElementById('review-comment').value
+                        })
+                    });
+                    if (!res.ok) throw new Error('Submit failed');
+                    localStorage.setItem('sc_reviewed_' + reviewTargetBooking._id, 'true');
+                    window.showToast('Thank you for your review! ⭐', 'success');
+                    closeAllModals();
+                    selectedRating = 0; document.getElementById('review-comment').value = '';
+                    stars.forEach(s => s.classList.remove('active'));
+                    refreshData();
+                } catch (e) { window.showToast('Failed to submit review.', 'error'); }
+                finally { btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Review'; btn.disabled = false; }
+            });
+
+            // ── Notifications Polling ──
+            const pollNotifications = async () => {
+                try {
+                    const res = await fetch('/api/notifications', { headers: { 'Authorization': `Bearer ${token}` } });
+                    if (!res.ok) return;
+                    const { notifications, unreadCount } = await res.json();
+                    const badge = document.getElementById('notif-badge');
+                    if (badge) {
+                        badge.textContent = unreadCount;
+                        badge.style.display = unreadCount > 0 ? 'flex' : 'none';
+                    }
+                    if (unreadCount > lastNotifCount && lastNotifCount > 0) {
+                        const newest = notifications.find(n => !n.read);
+                        if (newest) window.showToast(newest.title + ': ' + newest.message, 'info', 5000);
+                    }
+                    lastNotifCount = unreadCount;
+                } catch(e) { /* silent */ }
+            };
+            pollNotifications();
+            setInterval(pollNotifications, 30000);
+
+            document.getElementById('notif-bell-btn').addEventListener('click', async () => {
+                // Mark all as read
+                try {
+                    await fetch('/api/notifications/read-all', { method: 'PUT', headers: { 'Authorization': `Bearer ${token}` } });
+                    const badge = document.getElementById('notif-badge');
+                    if (badge) badge.style.display = 'none';
+                    lastNotifCount = 0;
+                    window.showToast('All notifications marked as read.', 'success', 2000);
+                } catch(e) {}
+            });
 
             // Load cached user data immediately if present
             const cachedUserStr = localStorage.getItem('mockUser');
             if (cachedUserStr) {
-                try {
-                    user = JSON.parse(cachedUserStr);
-                    reloadUI();
-                    refreshData();
-                } catch (e) {}
+                try { user = JSON.parse(cachedUserStr); reloadUI(); refreshData(); } catch (e) {}
             }
 
-            // Sync with backend in background
+            // Sync with backend
             fetch('/api/auth/me', { headers: { 'Authorization': `Bearer ${token}` } })
                 .then(res => res.ok ? res.json() : null)
                 .then(data => {
                     if (data && data.role) {
-                        if (data.role === 'staff') {
-                            window.location.href = 'expert-dashboard.html';
-                            return;
-                        }
+                        if (data.role === 'staff') { window.location.href = 'expert-dashboard.html'; return; }
                         user = data;
                         localStorage.setItem('mockUser', JSON.stringify(data));
-                        reloadUI();
-                        refreshData();
+                        reloadUI(); refreshData();
                     }
                 })
-                .catch(err => {
-                    console.warn('Customer auth check background sync:', err);
-                });
+                .catch(err => console.warn('Customer auth sync:', err));
 
             let historyChart = null;
             let spendingChart = null;
@@ -938,42 +1531,8 @@
                 Chart.defaults.color = '#171717';
                 Chart.defaults.font.family = 'Outfit';
                 Chart.defaults.font.weight = 600;
-                
-                historyChart = new Chart(historyCtx, { 
-                    type: 'bar', 
-                    data: { 
-                        labels: ['Jan', 'Feb', 'Mar', 'Apr'], 
-                        datasets: [{ 
-                            label: 'Visits', 
-                            data: [2, 3, 1, 4], 
-                            backgroundColor: '#d4af37',
-                            borderRadius: 6
-                        }] 
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: { legend: { display: false } }
-                    }
-                });
-                
-                spendingChart = new Chart(spendingCtx, { 
-                    type: 'line', 
-                    data: { 
-                        labels: ['Jan', 'Feb', 'Mar', 'Apr'], 
-                        datasets: [{ 
-                            label: 'Spent', 
-                            data: [15000, 25000, 12000, 45000], 
-                            borderColor: '#d4af37', 
-                            backgroundColor: 'rgba(212, 175, 55, 0.05)',
-                            fill: true,
-                            tension: 0.4 
-                        }] 
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: { legend: { display: false } }
-                    }
-                });
+                historyChart = new Chart(historyCtx, { type: 'bar', data: { labels: ['Jan', 'Feb', 'Mar', 'Apr'], datasets: [{ label: 'Visits', data: [2, 3, 1, 4], backgroundColor: '#d4af37', borderRadius: 6 }] }, options: { responsive: true, plugins: { legend: { display: false } } } });
+                spendingChart = new Chart(spendingCtx, { type: 'line', data: { labels: ['Jan', 'Feb', 'Mar', 'Apr'], datasets: [{ label: 'Spent', data: [15000, 25000, 12000, 45000], borderColor: '#d4af37', backgroundColor: 'rgba(212, 175, 55, 0.05)', fill: true, tension: 0.4 }] }, options: { responsive: true, plugins: { legend: { display: false } } } });
             };
 
             document.querySelectorAll('.dash-nav-link').forEach(link => {
@@ -1003,240 +1562,180 @@
                 const origText = btn.textContent;
                 btn.textContent = 'Saving...';
                 btn.disabled = true;
-
                 try {
                     const res = await fetch('/api/users/profile', {
                         method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`
-                        },
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                         body: JSON.stringify({
                             firstname: document.getElementById('cust-firstname').value,
                             lastname: document.getElementById('cust-lastname').value,
                             phone: document.getElementById('cust-phone').value
                         })
                     });
-                    
                     if (!res.ok) throw new Error('Failed to update profile');
-                    
                     const updatedUser = await res.json();
+                    user = updatedUser;
                     localStorage.setItem('mockUser', JSON.stringify(updatedUser));
-                    
-                    profI.forEach(i => i.disabled = true); 
-                    actionU.style.display = 'none'; 
+                    profI.forEach(i => i.disabled = true);
+                    actionU.style.display = 'none';
                     editB.style.display = 'inline-flex';
-                    
-                    document.getElementById('user-display-name').textContent = updatedUser.firstname || 'Valued Client';
-                    document.getElementById('sidebar-user-name').textContent = `${updatedUser.firstname || 'User'} ${updatedUser.lastname || ''}`.trim();
-                    if (window.showToast) window.showToast("Credentials updated successfully.", "success");
+                    reloadUI();
+                    window.showToast('Credentials updated successfully.', 'success');
                 } catch (error) {
-                    if (window.showToast) window.showToast(error.message, 'error');
-                } finally {
-                    btn.textContent = origText;
-                    btn.disabled = false;
-                }
+                    window.showToast(error.message, 'error');
+                } finally { btn.textContent = origText; btn.disabled = false; }
             });
 
             const refreshData = async () => {
-                let bks = [];
-                let ords = [];
+                // Show skeletons while loading
+                const apptsL = document.getElementById('appointments-list');
+                const ordersL = document.getElementById('orders-list');
+                if (apptsL && apptsL.children.length === 0) apptsL.innerHTML = [1,2,3].map(skeletonRow).join('');
+                if (ordersL && ordersL.children.length === 0) ordersL.innerHTML = [1,2].map(skeletonRow).join('');
+
+                let bks = [], ords = [];
                 try {
-                    const token = localStorage.getItem('token');
                     const bksRes = await fetch('/api/bookings', { headers: { 'Authorization': `Bearer ${token}` } });
                     const ordsRes = await fetch('/api/orders', { headers: { 'Authorization': `Bearer ${token}` } });
                     if (bksRes.ok) bks = await bksRes.json();
                     if (ordsRes.ok) ords = await ordsRes.json();
-                } catch (e) { console.error('Error fetching data', e); }
+                } catch (e) { console.error('Fetch error', e); }
 
                 if (!Array.isArray(bks)) bks = [];
                 if (!Array.isArray(ords)) ords = [];
-                const uBks = [...bks];
 
-                document.getElementById('stat-bookings').textContent = uBks.length;
+                document.getElementById('stat-bookings').textContent = bks.length;
                 document.getElementById('stat-orders').textContent = ords.length;
 
-                // Check for unacknowledged completed appointments to notify customer
-                const completedBks = uBks.filter(b => b && b.status === 'completed');
-                const unacknowledgedCompleted = completedBks.filter(b => localStorage.getItem('sc_final_completed_' + b._id) !== 'true');
+                // Completion banner
+                const completedBks = bks.filter(b => b && b.status === 'completed');
+                const unacknowledged = completedBks.filter(b => localStorage.getItem('sc_final_completed_' + b._id) !== 'true');
                 const bannerEl = document.getElementById('completion-notification-banner');
-                
                 if (bannerEl) {
-                    if (unacknowledgedCompleted.length > 0) {
-                        const latestCompleted = unacknowledgedCompleted[0];
+                    if (unacknowledged.length > 0) {
+                        const latest = unacknowledged[0];
                         bannerEl.style.display = 'flex';
-                        
                         bannerEl.innerHTML = `
-                            <div style="display: flex; align-items: center; gap: 1rem;">
-                                <div style="width: 42px; height: 42px; border-radius: 12px; background: #10b981; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0;">
-                                    <i class="fas fa-circle-check"></i>
-                                </div>
+                            <div style="display:flex;align-items:center;gap:1rem">
+                                <div style="width:42px;height:42px;border-radius:12px;background:#10b981;color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0"><i class="fas fa-circle-check"></i></div>
                                 <div>
-                                    <h4 style="font-family: 'Outfit'; font-size: 1.05rem; font-weight: 800; color: #065f46; margin: 0 0 0.2rem;">Service Completed & Verified! 🎉</h4>
-                                    <p style="color: #047857; font-size: 0.875rem; margin: 0;">Your appointment for <strong>${latestCompleted.service}</strong> ${latestCompleted.staff || latestCompleted.stylist ? 'with <strong>' + (latestCompleted.staff || latestCompleted.stylist) + '</strong>' : ''} has been completed.</p>
+                                    <h4 style="font-family:'Outfit';font-size:1.05rem;font-weight:800;color:#065f46;margin:0 0 0.2rem">Service Completed! 🎉</h4>
+                                    <p style="color:#047857;font-size:0.875rem;margin:0">Your <strong>${latest.service}</strong> session has been completed.</p>
                                 </div>
                             </div>
-                            <button type="button" class="mark-completed-final-btn" data-id="${latestCompleted._id}" style="font-family: 'Outfit'; font-size: 0.8rem; font-weight: 800; background: #10b981; color: #ffffff; border: none; padding: 0.55rem 1.15rem; border-radius: 50px; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; display: inline-flex; align-items: center; gap: 0.45rem; flex-shrink: 0; box-shadow: 0 4px 14px rgba(16,185,129,0.35); transition: all 0.25s ease;">
-                                <i class="fas fa-check-double"></i> MARK COMPLETED FINAL
-                            </button>
-                        `;
+                            <button type="button" class="mark-completed-final-btn" data-id="${latest._id}" style="font-family:'Outfit';font-size:0.8rem;font-weight:800;background:#10b981;color:#fff;border:none;padding:0.55rem 1.15rem;border-radius:50px;text-transform:uppercase;cursor:pointer;display:inline-flex;align-items:center;gap:0.45rem;flex-shrink:0">
+                                <i class="fas fa-check-double"></i> CONFIRM
+                            </button>`;
+                        bannerEl.querySelector('.mark-completed-final-btn').addEventListener('click', async () => {
+                            const bId = latest._id;
+                            localStorage.setItem('sc_final_completed_' + bId, 'true');
+                            bannerEl.style.display = 'none';
+                            window.showToast('Service confirmed as completed!', 'success');
+                            refreshData();
+                        });
+                    } else { bannerEl.style.display = 'none'; }
+                }
 
-                        // Add click listener for MARK COMPLETED FINAL button
-                        const finalBtn = bannerEl.querySelector('.mark-completed-final-btn');
-                        if (finalBtn) {
-                            finalBtn.addEventListener('click', async () => {
-                                const bId = finalBtn.dataset.id;
-                                localStorage.setItem('sc_final_completed_' + bId, 'true');
-                                bannerEl.style.display = 'none'; // Message disappears immediately once marked final!
-                                if (window.showToast) window.showToast('✓ Service confirmed as Completed Final!', 'success');
-                                
-                                try {
-                                    const token = localStorage.getItem('token');
-                                    await fetch(`/api/bookings/${bId}`, {
-                                        method: 'PUT',
-                                        headers: { 
-                                            'Content-Type': 'application/json',
-                                            'Authorization': `Bearer ${token}`
-                                        },
-                                        body: JSON.stringify({ clientAcknowledged: true, status: 'completed' })
-                                    });
-                                } catch (e) {
-                                    console.log('Background ack error', e);
-                                }
-                                refreshData();
+                // Bookings list
+                if (apptsL) {
+                    if (bks.length > 0) {
+                        apptsL.innerHTML = [...bks].reverse().map(b => {
+                            const isCompleted = b.status === 'completed';
+                            const isFinal = localStorage.getItem('sc_final_completed_' + b._id) === 'true';
+                            const isReviewed = localStorage.getItem('sc_reviewed_' + b._id) === 'true';
+                            const canCancel = b.status === 'pending' || b.status === 'accepted';
+
+                            let actions = '';
+                            if (canCancel) {
+                                actions = `<button class="cancel-bk-btn" data-id="${b._id}" style="background:none;border:1px solid #ef4444;color:#ef4444;font-family:'Outfit';font-weight:700;font-size:0.75rem;padding:0.3rem 0.75rem;border-radius:8px;cursor:pointer;transition:all 0.2s" onmouseover="this.style.background='#ef4444';this.style.color='#fff'" onmouseout="this.style.background='none';this.style.color='#ef4444'"><i class="fas fa-xmark"></i> Cancel</button>`;
+                            } else if (isCompleted && isFinal && !isReviewed) {
+                                actions = `<button class="review-bk-btn" data-id="${b._id}" data-service="${b.service}" data-stylist="${b.staff||b.stylist||''}" style="background:#d4af37;border:none;color:#171717;font-family:'Outfit';font-weight:700;font-size:0.75rem;padding:0.3rem 0.75rem;border-radius:8px;cursor:pointer"><i class="fas fa-star"></i> Review</button>`;
+                            } else if (isCompleted && isReviewed) {
+                                actions = `<span style="color:#10b981;font-family:'Outfit';font-size:0.75rem;font-weight:700"><i class="fas fa-circle-check"></i> Reviewed</span>`;
+                            } else {
+                                actions = `<span class="badge-status ${b.status||'pending'}">${b.status||'pending'}</span>`;
+                            }
+
+                            return `<div class="booking-item-row" style="${isCompleted?'border-left:4px solid #10b981':''};display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.75rem">
+                                <div>
+                                    <h5 style="font-family:'Outfit';font-weight:800;margin:0">${b.service}</h5>
+                                    <p style="font-size:0.85rem;color:#6b7280;margin:4px 0 0"><i class="fas fa-calendar-days"></i> ${b.date} • ${b.time}${b.staff||b.stylist?' • '+((b.staff||b.stylist)):''}</p>
+                                </div>
+                                <div style="display:flex;align-items:center;gap:0.5rem">${actions}</div>
+                            </div>`;
+                        }).join('');
+
+                        // Wire cancel buttons
+                        apptsL.querySelectorAll('.cancel-bk-btn').forEach(btn => {
+                            btn.addEventListener('click', () => {
+                                cancelTargetId = btn.dataset.id;
+                                cancelModal.classList.add('open');
                             });
-                        }
+                        });
+                        // Wire review buttons
+                        apptsL.querySelectorAll('.review-bk-btn').forEach(btn => {
+                            btn.addEventListener('click', () => {
+                                reviewTargetBooking = { _id: btn.dataset.id, service: btn.dataset.service, staff: btn.dataset.stylist };
+                                selectedRating = 0;
+                                stars.forEach(s => s.classList.remove('active'));
+                                document.getElementById('review-comment').value = '';
+                                document.getElementById('review-modal-subtitle').textContent = `Rate your ${btn.dataset.service} experience`;
+                                reviewModal.classList.add('open');
+                            });
+                        });
                     } else {
-                        bannerEl.style.display = 'none';
+                        apptsL.innerHTML = emptyBookings();
                     }
                 }
 
-                const apptsL = document.getElementById('appointments-list');
-                if (uBks.length > 0) {
-                    apptsL.innerHTML = uBks.reverse().map(b => {
-                        const isCompleted = b.status === 'completed';
-                        const isFinal = localStorage.getItem('sc_final_completed_' + b._id) === 'true';
-                        
-                        let badgeHTML = `<span class="badge-status ${b.status || 'pending'}">${b.status || 'pending'}</span>`;
-                        if (isCompleted) {
-                            if (isFinal) {
-                                badgeHTML = `<button type="button" onclick="toggleFinalStatus('${b._id}')" style="background: #065f46; color: #ffffff; border: 1px solid #34d399; font-family: 'Outfit'; font-weight: 800; font-size: 0.75rem; padding: 0.35rem 0.85rem; border-radius: 50px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem; text-transform: uppercase;">
-                                                <i class="fas fa-circle-check" style="color:#34d399;"></i> COMPLETED FINAL
-                                             </button>`;
-                            } else {
-                                badgeHTML = `<button type="button" onclick="confirmFinalStatus('${b._id}')" style="background: #10b981; color: #ffffff; border: none; font-family: 'Outfit'; font-weight: 800; font-size: 0.75rem; padding: 0.35rem 0.85rem; border-radius: 50px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem; text-transform: uppercase; box-shadow: 0 3px 10px rgba(16,185,129,0.3);">
-                                                <i class="fas fa-check-double"></i> MARK FINAL
-                                             </button>`;
-                            }
-                        }
-                        
-                        return `
-                        <div class="booking-item-row" style="${isCompleted ? 'border-left: 4px solid #10b981;' : ''}">
-                            <div>
-                                <h5 style="font-family: 'Outfit'; font-weight: 800;">${b.service}</h5>
-                                <p style="font-size: 0.85rem; color: #6b7280;"><i class="fas fa-calendar-days"></i> ${b.date} • ${b.time} ${b.staff || b.stylist ? '• Expert: ' + (b.staff || b.stylist) : ''}</p>
-                            </div>
-                            ${badgeHTML}
-                        </div>`;
-                    }).join('');
-                } else { 
-                    apptsL.innerHTML = `
-                        <div style="text-align: center; padding: 2rem 1rem;">
-                            <p style="color: var(--dash-muted); margin-bottom: 1rem;">No appointments scheduled yet.</p>
-                            <a href="booking.html" class="btn" style="background: #171717; color: #d4af37; font-family: 'Outfit'; font-weight: 700; font-size: 0.8rem; padding: 0.65rem 1.25rem; border-radius: 8px; text-decoration: none; display: inline-block;">+ Book Your First Visit</a>
-                        </div>`; 
-                }
-
-                // Render Orders List
-                const ordersL = document.getElementById('orders-list');
+                // Orders list
                 if (ordersL) {
                     if (ords.length > 0) {
                         ordersL.innerHTML = [...ords].reverse().map(o => `
-                            <div class="booking-item-row" style="display:flex; justify-content:space-between; align-items:center; padding:1.25rem; background:#fff; border-radius:14px; margin-bottom:1rem; border:1px solid #e5e7eb;">
+                            <div class="booking-item-row" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.75rem">
                                 <div>
-                                    <h5 style="font-family:'Outfit'; font-size:1.05rem; font-weight:800; color:#171717; margin-bottom:0.25rem;">${o.item}</h5>
-                                    <p style="font-size:0.85rem; color:#6b7280; margin:0;"><i class="fas fa-truck"></i> Ship to: ${o.address || 'Address on file'} ${o.paymentRef ? '• Ref: ' + o.paymentRef : ''}</p>
+                                    <h5 style="font-family:'Outfit';font-size:1.05rem;font-weight:800;color:#171717;margin:0">${o.item}</h5>
+                                    <p style="font-size:0.85rem;color:#6b7280;margin:4px 0 0"><i class="fas fa-truck"></i> ${o.trackingStatus || o.status || 'Processing'} ${o.estimatedDelivery ? '• Est: '+o.estimatedDelivery : ''}</p>
                                 </div>
-                                <div style="text-align:right;">
-                                    <span style="font-family:'Outfit'; font-size:1.1rem; font-weight:800; color:#171717; display:block;">₦${(o.price || 0).toLocaleString()}</span>
-                                    <span class="badge-status ${o.status || 'paid'}" style="text-transform:uppercase; font-size:0.75rem; font-weight:800;">${o.status || 'paid'}</span>
+                                <div style="text-align:right;display:flex;flex-direction:column;gap:0.4rem;align-items:flex-end">
+                                    <span style="font-family:'Outfit';font-size:1.05rem;font-weight:800;color:#171717">₦${(o.totalPrice||o.price||0).toLocaleString()}</span>
+                                    <a href="order-tracking.html?id=${o._id}" style="font-family:'Outfit';font-size:0.75rem;font-weight:700;color:#d4af37;text-decoration:none;border:1px solid rgba(212,175,55,0.3);padding:0.25rem 0.65rem;border-radius:8px"><i class="fas fa-location-dot"></i> Track</a>
                                 </div>
                             </div>`).join('');
                     } else {
-                        ordersL.innerHTML = `
-                            <div style="text-align: center; padding: 2.5rem 1rem; background:#fff; border-radius:16px;">
-                                <p style="color: var(--dash-muted); margin-bottom: 1rem;">You haven't placed any boutique orders yet.</p>
-                                <a href="store.html" class="btn" style="background: #171717; color: #d4af37; font-family: 'Outfit'; font-weight: 700; font-size: 0.8rem; padding: 0.65rem 1.25rem; border-radius: 8px; text-decoration: none; display: inline-block;">+ Visit Boutique Store</a>
-                            </div>`;
+                        ordersL.innerHTML = emptyOrders();
                     }
                 }
 
-                const lB = uBks[0]; const lO = ords[0];
-                if (lB) { 
-                    if (lB.status === 'completed') {
-                        document.getElementById('overview-booking-preview').innerHTML = `
-                            <div class="card-preview-content" style="border-left: 4px solid #10b981; padding-left: 0.85rem;">
-                                <span style="font-weight: 800; font-size: 1.1rem; color: #171717;">${lB.service}</span>
-                                <p style="color: #10b981; font-weight: 700; margin-top: 0.25rem; font-size: 0.85rem;"><i class="fas fa-circle-check"></i> Service Completed & Verified</p>
-                            </div>`;
-                    } else {
-                        document.getElementById('overview-booking-preview').innerHTML = `
-                            <div class="card-preview-content">
-                                <span style="font-weight: 700; font-size: 1.1rem; color: #171717;">${lB.service}</span>
-                                <p><i class="fas fa-clock"></i> Scheduled for ${lB.date} at ${lB.time}</p>
-                            </div>`;
-                    }
+                // Overview previews
+                const lB = bks[0]; const lO = ords[0];
+                if (lB) {
+                    document.getElementById('overview-booking-preview').innerHTML = lB.status === 'completed'
+                        ? `<div style="border-left:4px solid #10b981;padding-left:0.85rem"><span style="font-weight:800;font-size:1.1rem">${lB.service}</span><p style="color:#10b981;font-weight:700;margin-top:0.25rem;font-size:0.85rem"><i class="fas fa-circle-check"></i> Completed</p></div>`
+                        : `<div><span style="font-weight:700;font-size:1.1rem">${lB.service}</span><p><i class="fas fa-clock"></i> ${lB.date} at ${lB.time}</p></div>`;
                 } else {
-                    document.getElementById('overview-booking-preview').innerHTML = `
-                        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                            <span style="color: var(--dash-muted); font-size: 0.9rem;">No upcoming styling visits.</span>
-                            <a href="booking.html" style="color: var(--dash-accent); font-family: 'Outfit'; font-weight: 800; font-size: 0.8rem; text-decoration: none; text-transform: uppercase;">+ Book Now</a>
-                        </div>`;
+                    document.getElementById('overview-booking-preview').innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;width:100%"><span style="color:var(--dash-muted)">No upcoming visits.</span><a href="booking.html" style="color:var(--dash-accent);font-family:'Outfit';font-weight:800;font-size:0.8rem;text-decoration:none;text-transform:uppercase">+ Book Now</a></div>`;
                 }
                 if (lO) {
-                    document.getElementById('overview-order-preview').innerHTML = `
-                        <div class="card-preview-content" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                            <div>
-                                <span style="font-weight: 800; font-size: 1.1rem; color: #171717; font-family: 'Outfit'; display: block;">${lO.item}</span>
-                                <p style="color: #10b981; font-weight: 700; text-transform: uppercase; font-size: 0.8rem; margin-top: 0.2rem;">
-                                    <i class="fas fa-truck"></i> Status: ${lO.status}
-                                </p>
-                            </div>
-                            <span style="font-family: 'Outfit'; font-size: 1.1rem; font-weight: 800; color: #171717;">₦${(lO.price || 0).toLocaleString()}</span>
-                        </div>`;
+                    document.getElementById('overview-order-preview').innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;width:100%"><div><span style="font-weight:800;font-size:1.1rem;font-family:'Outfit';display:block">${lO.item}</span><p style="color:#10b981;font-weight:700;text-transform:uppercase;font-size:0.8rem;margin-top:0.2rem"><i class="fas fa-truck"></i> ${lO.trackingStatus||lO.status}</p></div><a href="order-tracking.html?id=${lO._id}" style="font-family:'Outfit';font-size:0.8rem;font-weight:700;color:#d4af37;text-decoration:none">Track <i class="fas fa-arrow-right"></i></a></div>`;
                 } else {
-                    document.getElementById('overview-order-preview').innerHTML = '<span style="color: var(--dash-muted);">No recent boutique orders.</span>';
+                    document.getElementById('overview-order-preview').innerHTML = '<span style="color:var(--dash-muted)">No recent boutique orders.</span>';
                 }
             };
 
             window.confirmFinalStatus = async (bId) => {
                 localStorage.setItem('sc_final_completed_' + bId, 'true');
-                if (window.showToast) window.showToast('✓ Service marked as Completed Final!', 'success');
-                const bannerEl = document.getElementById('completion-notification-banner');
-                if (bannerEl) bannerEl.style.display = 'none';
-                
-                try {
-                    const token = localStorage.getItem('token');
-                    await fetch(`/api/bookings/${bId}`, {
-                        method: 'PUT',
-                        headers: { 
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`
-                        },
-                        body: JSON.stringify({ clientAcknowledged: true, status: 'completed' })
-                    });
-                } catch (e) {
-                    console.log('Background ack error', e);
-                }
+                window.showToast('Service marked as Completed Final!', 'success');
                 refreshData();
             };
 
-            window.toggleFinalStatus = (bId) => {
-                if (window.showToast) window.showToast('✓ Appointment is confirmed & finalized.', 'info');
-            };
+            window.toggleFinalStatus = () => window.showToast('Appointment is confirmed & finalized.', 'info');
 
             document.querySelector('.logout-link').addEventListener('click', (e) => {
-                e.preventDefault(); localStorage.removeItem('token'); localStorage.removeItem('mockUser'); window.location.href = 'index.html';
+                e.preventDefault();
+                localStorage.removeItem('token');
+                localStorage.removeItem('mockUser');
+                window.location.href = 'index.html';
             });
         });
     </script>

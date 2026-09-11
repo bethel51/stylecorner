@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Command Centre | Style Corner Atelier</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --adm-bg: #f8f9fa;
+            --adm-surface: #ffffff;
+            --adm-dark: #121212;
+            --adm-sidebar: #171717;
+            --adm-accent: #d4af37;
+            --adm-accent-hover: #b5952f;
+            --adm-accent-soft: rgba(212, 175, 55, 0.1);
+            --adm-text: #171717;
+            --adm-muted: #6b7280;
+            --adm-border: rgba(0, 0, 0, 0.08);
+            --adm-success: #10b981;
+            --adm-danger: #ef4444;
+            --adm-warning: #f59e0b;
+            --adm-blue: #3b82f6;
+        }
+
+        body.page-admin {
+            background-color: var(--adm-bg);
+            color: var(--adm-text);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--adm-border) !important;
+            height: 5.5rem;
+        }
+
+        .admin-layout {
+            max-width: 1380px;
+            margin: 7rem auto 4rem;
+            padding: 0 1.5rem;
+        }
+
+        /* Top Command Header */
+        .admin-hero {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1.25rem;
+        }
+        .admin-hero-title h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.1rem;
+            font-weight: 900;
+            color: var(--adm-text);
+            margin: 0 0 0.35rem;
+            letter-spacing: -0.01em;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .admin-hero-title p {
+            color: var(--adm-muted);
+            margin: 0;
+            font-size: 0.95rem;
+        }
+        .admin-badge {
+            background: var(--adm-dark);
+            color: var(--adm-accent);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 0.3rem 0.75rem;
+            border-radius: 8px;
+            border: 1px solid var(--adm-accent);
+        }
+
+        .admin-header-actions {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+        .adm-btn {
+            padding: 0.75rem 1.4rem;
+            border-radius: 12px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            text-decoration: none;
+        }
+        .adm-btn-primary {
+            background: var(--adm-dark);
+            color: var(--adm-accent);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+        }
+        .adm-btn-primary:hover {
+            background: #262626;
+            transform: translateY(-1px);
+        }
+        .adm-btn-outline {
+            background: #fff;
+            color: var(--adm-text);
+            border: 1.5px solid var(--adm-border);
+        }
+        .adm-btn-outline:hover {
+            border-color: var(--adm-accent);
+            color: var(--adm-accent);
+        }
+
+        /* KPI Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+        .metric-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 1.75rem 1.5rem;
+            border: 1px solid var(--adm-border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+            position: relative;
+            overflow: hidden;
+        }
+        .metric-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .metric-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.825rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--adm-muted);
+        }
+        .metric-icon-wrap {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        .metric-val {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--adm-text);
+            line-height: 1.1;
+            margin-bottom: 0.35rem;
+        }
+        .metric-sub {
+            font-size: 0.8rem;
+            color: var(--adm-muted);
+            font-weight: 500;
+        }
+
+        /* Navigation Tabs */
+        .admin-nav-tabs {
+            display: flex;
+            gap: 0.5rem;
+            border-bottom: 2px solid var(--adm-border);
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            padding-bottom: 2px;
+        }
+        .adm-tab-link {
+            padding: 0.85rem 1.5rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 0.92rem;
+            color: var(--adm-muted);
+            text-decoration: none;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .adm-tab-link:hover {
+            color: var(--adm-text);
+        }
+        .adm-tab-link.active {
+            color: var(--adm-text);
+            border-bottom-color: var(--adm-accent);
+            background: rgba(212,175,55,0.06);
+        }
+
+        /* Data Tables Card */
+        .adm-table-card {
+            background: #fff;
+            border-radius: 24px;
+            border: 1px solid var(--adm-border);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.03);
+            overflow: hidden;
+            margin-bottom: 2.5rem;
+        }
+        .adm-table-header {
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--adm-border);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .adm-table-header h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 800;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .adm-search-filter {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+        .adm-search-input {
+            padding: 0.6rem 1rem;
+            border-radius: 10px;
+            border: 1px solid var(--adm-border);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            outline: none;
+            width: 220px;
+        }
+        .adm-search-input:focus {
+            border-color: var(--adm-accent);
+        }
+
+        .adm-table-wrap {
+            width: 100%;
+            overflow-x: auto;
+        }
+        table.adm-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+        table.adm-table th {
+            background: #faf9f6;
+            padding: 1rem 1.5rem;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--adm-muted);
+            border-bottom: 1px solid var(--adm-border);
+        }
+        table.adm-table td {
+            padding: 1.15rem 1.5rem;
+            border-bottom: 1px solid var(--adm-border);
+            font-size: 0.9rem;
+            vertical-align: middle;
+        }
+        table.adm-table tr:last-child td {
+            border-bottom: none;
+        }
+        table.adm-table tr:hover td {
+            background: rgba(250, 249, 246, 0.6);
+        }
+
+        /* Status Pills */
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.35rem 0.85rem;
+            border-radius: 30px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .pill-pending { background: rgba(245, 158, 11, 0.12); color: #b45309; }
+        .pill-accepted { background: rgba(59, 130, 246, 0.12); color: #1d4ed8; }
+        .pill-completed { background: rgba(16, 185, 129, 0.12); color: #047857; }
+        .pill-cancelled { background: rgba(239, 68, 68, 0.12); color: #b91c1c; }
+
+        .pill-placed { background: rgba(245, 158, 11, 0.12); color: #b45309; }
+        .pill-processing { background: rgba(59, 130, 246, 0.12); color: #1d4ed8; }
+        .pill-transit { background: rgba(212, 175, 55, 0.18); color: #92400e; }
+        .pill-delivered { background: rgba(16, 185, 129, 0.12); color: #047857; }
+
+        /* Action Buttons within rows */
+        .row-btn {
+            padding: 0.4rem 0.75rem;
+            border-radius: 8px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid var(--adm-border);
+            background: #fff;
+            color: var(--adm-text);
+            transition: all 0.15s;
+        }
+        .row-btn:hover {
+            border-color: var(--adm-accent);
+            color: var(--adm-accent);
+        }
+        .row-btn-primary {
+            background: var(--adm-dark);
+            color: var(--adm-accent);
+            border: none;
+        }
+        .row-btn-primary:hover {
+            background: #262626;
+            color: #fff;
+        }
+
+        /* Specialists Grid */
+        .specialist-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            padding: 1.5rem 2rem;
+        }
+        .specialist-card {
+            background: #faf9f6;
+            border: 1px solid var(--adm-border);
+            border-radius: 18px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+        .spec-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--adm-dark);
+            color: var(--adm-accent);
+            border: 2px solid var(--adm-accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+        .spec-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .spec-meta h4 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 1.05rem;
+            margin: 0 0 0.2rem;
+        }
+        .spec-meta p {
+            color: var(--adm-muted);
+            font-size: 0.8rem;
+            margin: 0 0 0.5rem;
+        }
+
+        /* Modal Overlay */
+        .adm-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(6px);
+            z-index: 99999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+        .adm-modal-overlay.active { display: flex; }
+        .adm-modal-box {
+            background: #fff;
+            border-radius: 24px;
+            padding: 2.25rem;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+        }
+        .adm-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .adm-modal-header h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin: 0;
+        }
+        .adm-modal-close {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            color: var(--adm-muted);
+            cursor: pointer;
+        }
+        .adm-form-group {
+            margin-bottom: 1.25rem;
+        }
+        .adm-form-group label {
+            display: block;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 0.825rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--adm-muted);
+            margin-bottom: 0.4rem;
+        }
+        .adm-form-input, .adm-form-select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            border: 1.5px solid var(--adm-border);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            outline: none;
+            box-sizing: border-box;
+        }
+        .adm-form-input:focus, .adm-form-select:focus {
+            border-color: var(--adm-accent);
+        }
+
+        /* Toast Container */
+        #adm-toast-container {
+            position: fixed;
+            top: 6rem;
+            right: 1.5rem;
+            z-index: 999999;
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+            pointer-events: none;
+        }
+        .adm-toast {
+            background: #171717;
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 0.875rem;
+            padding: 0.85rem 1.25rem;
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            pointer-events: all;
+            border-left: 4px solid var(--adm-accent);
+            transform: translateX(120%);
+            transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
+        }
+        .adm-toast.show { transform: translateX(0); }
+        .adm-toast.success { border-left-color: var(--adm-success); }
+        .adm-toast.error { border-left-color: var(--adm-danger); }
+    </style>
+</head>
+<body class="page-admin">
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <svg class="logo-icon" viewBox="0 0 100 100">
+                    <path d="M30 20 H70 L80 50 L70 80 H30 L20 50 Z" fill="none" stroke="currentColor" stroke-width="4" />
+                    <circle cx="50" cy="50" r="5" fill="currentColor" />
+                </svg>
+                STYLE<span>CORNER</span>
+            </a>
+            <nav class="nav">
+                <a href="index.html">Home</a>
+                <a href="services.html">Services</a>
+                <a href="store.html">Store</a>
+                <a href="#" id="admin-logout-btn" class="cta">Logout</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="admin-layout">
+        <!-- Command Header -->
+        <div class="admin-hero">
+            <div class="admin-hero-title">
+                <h1>Command Centre <span class="admin-badge">Atelier Admin</span></h1>
+                <p>Real-time platform operations, appointments schedule, orders dispatch and artisan management.</p>
+            </div>
+            <div class="admin-header-actions">
+                <button class="adm-btn adm-btn-outline" onclick="loadAdminData()"><i class="fas fa-rotate"></i> Refresh Data</button>
+                <a href="expert-dashboard.html" class="adm-btn adm-btn-primary"><i class="fas fa-briefcase"></i> Staff Portal</a>
+            </div>
+        </div>
+
+        <!-- Metrics Row -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-card-top">
+                    <span class="metric-title">Gross Volume</span>
+                    <div class="metric-icon-wrap" style="background:rgba(212,175,55,0.12);color:var(--adm-accent);">
+                        <i class="fas fa-naira-sign"></i>
+                    </div>
+                </div>
+                <div class="metric-val" id="metric-revenue">₦0</div>
+                <div class="metric-sub">Bookings & Store sales combined</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-card-top">
+                    <span class="metric-title">Total Bookings</span>
+                    <div class="metric-icon-wrap" style="background:rgba(59,130,246,0.12);color:var(--adm-blue);">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                </div>
+                <div class="metric-val" id="metric-bookings">0</div>
+                <div class="metric-sub"><span id="metric-pending-bks" style="color:var(--adm-warning);font-weight:700;">0</span> pending assignments</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-card-top">
+                    <span class="metric-title">Store Orders</span>
+                    <div class="metric-icon-wrap" style="background:rgba(16,185,129,0.12);color:var(--adm-success);">
+                        <i class="fas fa-truck-fast"></i>
+                    </div>
+                </div>
+                <div class="metric-val" id="metric-orders">0</div>
+                <div class="metric-sub"><span id="metric-pending-ords" style="color:var(--adm-danger);font-weight:700;">0</span> awaiting shipment</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-card-top">
+                    <span class="metric-title">Active Specialists</span>
+                    <div class="metric-icon-wrap" style="background:rgba(168,85,247,0.12);color:#a855f7;">
+                        <i class="fas fa-users-gear"></i>
+                    </div>
+                </div>
+                <div class="metric-val" id="metric-specialists">0</div>
+                <div class="metric-sub">Certified atelier artisans</div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="admin-nav-tabs">
+            <a href="#" class="adm-tab-link active" data-tab="tab-bookings">
+                <i class="fas fa-calendar-days"></i> Appointments (<span id="count-tab-bks">0</span>)
+            </a>
+            <a href="#" class="adm-tab-link" data-tab="tab-orders">
+                <i class="fas fa-box-open"></i> Store Orders & Tracking (<span id="count-tab-ords">0</span>)
+            </a>
+            <a href="#" class="adm-tab-link" data-tab="tab-team">
+                <i class="fas fa-user-shield"></i> Artisans & Specialists (<span id="count-tab-team">0</span>)
+            </a>
+        </div>
+
+        <!-- TAB 1: Bookings Management -->
+        <div id="tab-bookings" class="adm-tab-pane">
+            <div class="adm-table-card">
+                <div class="adm-table-header">
+                    <h3><i class="fas fa-scissors" style="color:var(--adm-accent)"></i> Client Appointments</h3>
+                    <div class="adm-search-filter">
+                        <input type="text" id="filter-bookings" class="adm-search-input" placeholder="Search client or service...">
+                    </div>
+                </div>
+                <div class="adm-table-wrap">
+                    <table class="adm-table">
+                        <thead>
+                            <tr>
+                                <th>Client</th>
+                                <th>Service</th>
+                                <th>Specialist</th>
+                                <th>Date & Time</th>
+                                <th>Price</th>
+                                <th>Status</th>
+                                <th style="text-align:right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bookings-tbody">
+                            <tr><td colspan="7" style="text-align:center;padding:3rem 0;color:var(--adm-muted);">Loading appointments...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: Orders & Tracking Management -->
+        <div id="tab-orders" class="adm-tab-pane" style="display:none;">
+            <div class="adm-table-card">
+                <div class="adm-table-header">
+                    <h3><i class="fas fa-truck-ramp-box" style="color:var(--adm-accent)"></i> Orders Fulfillment & Tracking</h3>
+                    <div class="adm-search-filter">
+                        <input type="text" id="filter-orders" class="adm-search-input" placeholder="Search order ID or client...">
+                    </div>
+                </div>
+                <div class="adm-table-wrap">
+                    <table class="adm-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Items</th>
+                                <th>Total</th>
+                                <th>Tracking Status</th>
+                                <th>Tracking #</th>
+                                <th style="text-align:right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-tbody">
+                            <tr><td colspan="7" style="text-align:center;padding:3rem 0;color:var(--adm-muted);">Loading orders...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: Specialists Roster -->
+        <div id="tab-team" class="adm-tab-pane" style="display:none;">
+            <div class="adm-table-card">
+                <div class="adm-table-header">
+                    <h3><i class="fas fa-id-card-clip" style="color:var(--adm-accent)"></i> Registered Specialists</h3>
+                </div>
+                <div class="specialist-cards-grid" id="specialists-grid">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal: Update Order Tracking -->
+    <div id="tracking-modal" class="adm-modal-overlay">
+        <div class="adm-modal-box">
+            <div class="adm-modal-header">
+                <h3>Update Order Tracking</h3>
+                <button class="adm-modal-close" onclick="closeTrackingModal()">&times;</button>
+            </div>
+            <form id="tracking-form">
+                <input type="hidden" id="modal-order-id">
+                <div class="adm-form-group">
+                    <label>Tracking Status</label>
+                    <select id="modal-tracking-status" class="adm-form-select">
+                        <option value="Order Placed">Order Placed</option>
+                        <option value="Processing">Processing</option>
+                        <option value="In Transit">In Transit</option>
+                        <option value="Out for Delivery">Out for Delivery</option>
+                        <option value="Delivered">Delivered</option>
+                    </select>
+                </div>
+                <div class="adm-form-group">
+                    <label>Tracking Number</label>
+                    <input type="text" id="modal-tracking-number" class="adm-form-input" placeholder="e.g. SC-84920491">
+                </div>
+                <div class="adm-form-group">
+                    <label>Estimated Delivery</label>
+                    <input type="text" id="modal-estimated-delivery" class="adm-form-input" placeholder="e.g. Tomorrow by 3:00 PM">
+                </div>
+                <div style="display:flex;gap:0.75rem;margin-top:1.5rem;">
+                    <button type="button" class="adm-btn adm-btn-outline" style="flex:1" onclick="closeTrackingModal()">Cancel</button>
+                    <button type="submit" class="adm-btn adm-btn-primary" style="flex:1">Save & Dispatch</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="adm-toast-container"></div>
+
+    <script src="js/common.js"></script>
+    <script>
+        let allBookings = [];
+        let allOrders = [];
+        let allSpecialists = [];
+
+        function showAdmToast(msg, type = 'info') {
+            const container = document.getElementById('adm-toast-container');
+            const t = document.createElement('div');
+            t.className = `adm-toast ${type}`;
+            const icon = type === 'success' ? 'fa-circle-check' : (type === 'error' ? 'fa-circle-exclamation' : 'fa-bell');
+            t.innerHTML = `<i class="fas ${icon}"></i><span>${msg}</span>`;
+            container.appendChild(t);
+            requestAnimationFrame(() => requestAnimationFrame(() => t.classList.add('show')));
+            setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 400); }, 3500);
+        }
+
+        async function loadAdminData() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            try {
+                const [bksRes, ordsRes, specsRes] = await Promise.all([
+                    fetch('/api/bookings', { headers: { 'Authorization': `Bearer ${token}` } }),
+                    fetch('/api/orders', { headers: { 'Authorization': `Bearer ${token}` } }),
+                    fetch('/api/specialists')
+                ]);
+
+                if (bksRes.ok) allBookings = await bksRes.json();
+                if (ordsRes.ok) allOrders = await ordsRes.json();
+                if (specsRes.ok) allSpecialists = await specsRes.json();
+
+                if (!Array.isArray(allBookings)) allBookings = [];
+                if (!Array.isArray(allOrders)) allOrders = [];
+                if (!Array.isArray(allSpecialists)) allSpecialists = [];
+
+                renderMetrics();
+                renderBookings();
+                renderOrders();
+                renderSpecialists();
+            } catch (err) {
+                console.error('Error fetching admin telemetry:', err);
+                showAdmToast('Failed to retrieve latest records.', 'error');
+            }
+        }
+
+        function renderMetrics() {
+            // Gross volume
+            const ordRevenue = allOrders.reduce((sum, o) => sum + (o.totalPrice || o.price || 0), 0);
+            const bksRevenue = allBookings
+                .filter(b => b.status === 'completed' || b.status === 'accepted')
+                .reduce((sum, b) => sum + (parseFloat((b.price || '0').replace(/[^0-9.]/g, '')) || 0), 0);
+            
+            const totalGross = ordRevenue + bksRevenue;
+            document.getElementById('metric-revenue').textContent = `₦${Number(totalGross).toLocaleString()}`;
+            document.getElementById('metric-bookings').textContent = allBookings.length;
+            document.getElementById('metric-orders').textContent = allOrders.length;
+            document.getElementById('metric-specialists').textContent = allSpecialists.length;
+
+            const pendingBks = allBookings.filter(b => b.status === 'pending').length;
+            const pendingOrds = allOrders.filter(o => o.status === 'paid' || o.trackingStatus === 'Order Placed' || !o.trackingStatus).length;
+
+            document.getElementById('metric-pending-bks').textContent = pendingBks;
+            document.getElementById('metric-pending-ords').textContent = pendingOrds;
+
+            document.getElementById('count-tab-bks').textContent = allBookings.length;
+            document.getElementById('count-tab-ords').textContent = allOrders.length;
+            document.getElementById('count-tab-team').textContent = allSpecialists.length;
+        }
+
+        function renderBookings(filter = '') {
+            const tbody = document.getElementById('bookings-tbody');
+            const q = filter.toLowerCase();
+            const list = allBookings.filter(b => 
+                (b.clientName || '').toLowerCase().includes(q) ||
+                (b.service || '').toLowerCase().includes(q) ||
+                (b.stylist || '').toLowerCase().includes(q)
+            );
+
+            if (list.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:3rem 0;color:var(--adm-muted);">No appointments found.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = list.map(b => {
+                const statusClass = b.status === 'completed' ? 'pill-completed' : (b.status === 'accepted' ? 'pill-accepted' : (b.status === 'cancelled' ? 'pill-cancelled' : 'pill-pending'));
+                return `
+                    <tr>
+                        <td>
+                            <strong style="display:block;font-family:'Outfit'">${b.clientName || 'Client'}</strong>
+                            <small style="color:var(--adm-muted)">${b.clientEmail || ''}</small>
+                        </td>
+                        <td>${b.service}</td>
+                        <td><span style="font-weight:700;color:var(--adm-text)">${b.stylist || 'Any Specialist'}</span></td>
+                        <td>${b.date} · ${b.time}</td>
+                        <td><strong>${b.price || '₦0'}</strong></td>
+                        <td><span class="pill ${statusClass}">${b.status || 'pending'}</span></td>
+                        <td style="text-align:right">
+                            ${b.status === 'pending' ? `
+                                <button class="row-btn row-btn-primary" onclick="updateBookingStatus('${b._id}', 'accepted')">Accept</button>
+                            ` : ''}
+                            ${b.status === 'accepted' ? `
+                                <button class="row-btn row-btn-primary" style="background:#10b981;color:#fff" onclick="updateBookingStatus('${b._id}', 'completed')">Complete</button>
+                            ` : ''}
+                            ${b.status !== 'cancelled' && b.status !== 'completed' ? `
+                                <button class="row-btn" style="color:#ef4444" onclick="updateBookingStatus('${b._id}', 'cancelled')">Cancel</button>
+                            ` : ''}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderOrders(filter = '') {
+            const tbody = document.getElementById('orders-tbody');
+            const q = filter.toLowerCase();
+            const list = allOrders.filter(o => 
+                (o._id || '').toLowerCase().includes(q) ||
+                (o.name || '').toLowerCase().includes(q) ||
+                (o.item || '').toLowerCase().includes(q) ||
+                (o.trackingNumber || '').toLowerCase().includes(q)
+            );
+
+            if (list.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:3rem 0;color:var(--adm-muted);">No orders found.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = list.map(o => {
+                const shortId = (o._id || '').slice(-6).toUpperCase();
+                const trk = o.trackingStatus || 'Order Placed';
+                let pillClass = 'pill-placed';
+                if (trk.includes('Transit')) pillClass = 'pill-transit';
+                if (trk.includes('Process')) pillClass = 'pill-processing';
+                if (trk.includes('Deliver')) pillClass = 'pill-delivered';
+
+                return `
+                    <tr>
+                        <td>
+                            <a href="order-tracking.html?id=${o._id}" style="color:var(--adm-accent);font-weight:800;font-family:'Outfit';text-decoration:none">#${shortId}</a>
+                        </td>
+                        <td>
+                            <strong style="display:block;font-family:'Outfit'">${o.name || 'Customer'}</strong>
+                            <small style="color:var(--adm-muted)">${o.email || o.phone || ''}</small>
+                        </td>
+                        <td>${o.item || 'Luxury Item'}</td>
+                        <td><strong>₦${Number(o.totalPrice || o.price || 0).toLocaleString()}</strong></td>
+                        <td><span class="pill ${pillClass}">${trk}</span></td>
+                        <td><code style="font-size:0.8rem;background:#f3f4f6;padding:2px 6px;border-radius:6px">${o.trackingNumber || 'Pending'}</code></td>
+                        <td style="text-align:right">
+                            <button class="row-btn row-btn-primary" onclick="openTrackingModal('${o._id}', '${trk}', '${o.trackingNumber||''}', '${o.estimatedDelivery||''}')">
+                                <i class="fas fa-pen-to-square"></i> Update Tracking
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderSpecialists() {
+            const grid = document.getElementById('specialists-grid');
+            if (allSpecialists.length === 0) {
+                grid.innerHTML = '<p style="color:var(--adm-muted);grid-column:1/-1;text-align:center;padding:2rem;">No registered specialists found.</p>';
+                return;
+            }
+
+            grid.innerHTML = allSpecialists.map(s => {
+                const name = `${s.firstname || ''} ${s.lastname || ''}`.trim() || 'Specialist';
+                const initial = name.charAt(0).toUpperCase();
+                const photo = s.photoUrl || s.avatarUrl;
+                const specs = Array.isArray(s.specialties) ? s.specialties.join(', ') : (s.specialties || 'All-round Artisan');
+
+                return `
+                    <div class="specialist-card">
+                        <div class="spec-avatar">
+                            ${photo ? `<img src="${photo}" alt="${name}">` : initial}
+                        </div>
+                        <div class="spec-meta">
+                            <h4>${name}</h4>
+                            <p>${s.title || 'Master Artisan'}</p>
+                            <small style="display:block;color:var(--adm-accent);font-weight:700;margin-bottom:0.4rem;">${specs}</small>
+                            <a href="expert-profile.html?id=${s._id}" style="font-size:0.75rem;font-weight:700;color:var(--adm-muted);text-decoration:none">
+                                View Public Profile <i class="fas fa-arrow-up-right-from-square"></i>
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function updateBookingStatus(id, newStatus) {
+            try {
+                const token = localStorage.getItem('token');
+                const res = await fetch(`/api/bookings/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ status: newStatus })
+                });
+                if (!res.ok) throw new Error('Update failed');
+                showAdmToast(`Booking marked as ${newStatus}!`, 'success');
+                loadAdminData();
+            } catch (e) {
+                showAdmToast('Failed to update booking status.', 'error');
+            }
+        }
+
+        function openTrackingModal(orderId, currentStatus, trackingNum, estDelivery) {
+            document.getElementById('modal-order-id').value = orderId;
+            document.getElementById('modal-tracking-status').value = currentStatus || 'Order Placed';
+            document.getElementById('modal-tracking-number').value = trackingNum || `SC-${orderId.slice(-6).toUpperCase()}`;
+            document.getElementById('modal-estimated-delivery').value = estDelivery || '2 - 3 Business Days';
+            document.getElementById('tracking-modal').classList.add('active');
+        }
+
+        function closeTrackingModal() {
+            document.getElementById('tracking-modal').classList.remove('active');
+        }
+
+        document.getElementById('tracking-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const orderId = document.getElementById('modal-order-id').value;
+            const trackingStatus = document.getElementById('modal-tracking-status').value;
+            const trackingNumber = document.getElementById('modal-tracking-number').value.trim();
+            const estimatedDelivery = document.getElementById('modal-estimated-delivery').value.trim();
+
+            try {
+                const token = localStorage.getItem('token');
+                const res = await fetch(`/api/orders/${orderId}/tracking`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ trackingStatus, trackingNumber, estimatedDelivery, status: trackingStatus === 'Delivered' ? 'delivered' : 'processing' })
+                });
+                if (!res.ok) throw new Error('Tracking update failed');
+                showAdmToast('Order tracking updated successfully!', 'success');
+                closeTrackingModal();
+                loadAdminData();
+            } catch (err) {
+                showAdmToast('Failed to update tracking information.', 'error');
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadAdminData();
+
+            // Tab navigation
+            document.querySelectorAll('.adm-tab-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.querySelectorAll('.adm-tab-link').forEach(l => l.classList.remove('active'));
+                    document.querySelectorAll('.adm-tab-pane').forEach(p => p.style.display = 'none');
+                    link.classList.add('active');
+                    document.getElementById(link.dataset.tab).style.display = 'block';
+                });
+            });
+
+            // Filters
+            document.getElementById('filter-bookings').addEventListener('input', (e) => {
+                renderBookings(e.target.value);
+            });
+            document.getElementById('filter-orders').addEventListener('input', (e) => {
+                renderOrders(e.target.value);
+            });
+
+            // Logout
+            document.getElementById('admin-logout-btn').addEventListener('click', (e) => {
+                e.preventDefault();
+                localStorage.removeItem('token');
+                localStorage.removeItem('mockUser');
+                window.location.href = 'index.html';
+            });
+        });
+    </script>
+</body>
+</html>

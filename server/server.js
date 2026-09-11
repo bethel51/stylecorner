@@ -505,10 +505,21 @@ app.post('/api/admin/delete-user-by-email', async (req, res) => {
 // Get all specialists (staff)
 app.get('/api/specialists', async (req, res) => {
   try {
-    const specialists = await User.find({ role: 'staff' });
+    const specialists = await User.find({ role: 'staff' }).select('-password');
     res.status(200).json(specialists);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch specialists' });
+  }
+});
+
+// Get a single specialist by ID (public profile page)
+app.get('/api/specialists/:id', async (req, res) => {
+  try {
+    const specialist = await User.findOne({ _id: req.params.id, role: 'staff' }).select('-password');
+    if (!specialist) return res.status(404).json({ error: 'Specialist not found' });
+    res.status(200).json(specialist);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch specialist' });
   }
 });
 
@@ -793,6 +804,32 @@ app.get('/api/orders', authenticateToken, async (req, res) => {
     res.status(200).json(orders);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch orders' });
+  }
+});
+
+// Get single order by ID or Tracking Number
+app.get('/api/orders/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    let order = null;
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      order = await Order.findById(id).lean();
+    }
+    if (!order) {
+      order = await Order.findOne({ 
+        $or: [
+          { trackingNumber: id },
+          { trackingNumber: new RegExp('^' + id + '$', 'i') }
+        ] 
+      }).lean();
+    }
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    res.status(200).json(order);
+  } catch (error) {
+    console.error('Error fetching order by ID:', error);
+    res.status(500).json({ error: 'Failed to fetch order details' });
   }
 });
 

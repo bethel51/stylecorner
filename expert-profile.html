@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Specialist Profile | Style Corner Luxury Atelier</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --exp-bg: #faf9f6;
+            --exp-surface: #ffffff;
+            --exp-accent: #d4af37;
+            --exp-accent-hover: #b5952f;
+            --exp-accent-soft: rgba(212, 175, 55, 0.1);
+            --exp-dark: #121212;
+            --exp-text: #171717;
+            --exp-muted: #6b7280;
+            --exp-border: rgba(0, 0, 0, 0.08);
+            --exp-card-shadow: 0 16px 40px rgba(0,0,0,0.03);
+        }
+
+        body.page-expert-profile {
+            background-color: var(--exp-bg);
+            background-image: radial-gradient(circle at 100% 0%, #ffffff 0%, #faf9f6 100%);
+            color: var(--exp-text);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.9) !important;
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+            height: 5.5rem;
+        }
+
+        .profile-container {
+            max-width: 1060px;
+            margin: 7.5rem auto 5rem;
+            padding: 0 1.5rem;
+        }
+
+        /* Hero Banner Card */
+        .profile-hero {
+            background: linear-gradient(135deg, #171717 0%, #202020 100%);
+            border-radius: 28px;
+            padding: 3.5rem 3rem;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 24px 60px rgba(0,0,0,0.18);
+            margin-bottom: 2.5rem;
+        }
+        .profile-hero::after {
+            content: '';
+            position: absolute;
+            top: -40px;
+            right: -40px;
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(212,175,55,0.15) 0%, rgba(212,175,55,0) 70%);
+            pointer-events: none;
+        }
+
+        .hero-layout {
+            display: flex;
+            align-items: center;
+            gap: 2.5rem;
+            position: relative;
+            z-index: 2;
+            flex-wrap: wrap;
+        }
+
+        .expert-avatar-wrap {
+            position: relative;
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            border: 3.5px solid var(--exp-accent);
+            box-shadow: 0 12px 30px rgba(212,175,55,0.3);
+            overflow: hidden;
+            background: #262626;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Outfit', sans-serif;
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--exp-accent);
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+        .expert-avatar-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-details {
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--exp-accent);
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            padding: 0.35rem 0.85rem;
+            border-radius: 20px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.85rem;
+        }
+
+        .expert-display-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.4rem;
+            font-weight: 900;
+            line-height: 1.15;
+            margin: 0 0 0.35rem;
+            color: #ffffff;
+            letter-spacing: -0.01em;
+        }
+
+        .expert-display-role {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            color: #9ca3af;
+            font-weight: 500;
+            margin: 0 0 1.25rem;
+        }
+
+        .hero-stats-row {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .hero-stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .stat-number {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+        .stat-number i { color: var(--exp-accent); font-size: 1rem; }
+        .stat-label {
+            font-size: 0.75rem;
+            color: #8e8e93;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.15rem;
+        }
+
+        .hero-action {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .btn-book-now {
+            background: var(--exp-accent);
+            color: #171717;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 800;
+            padding: 1rem 2rem;
+            border-radius: 16px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            box-shadow: 0 10px 24px rgba(212,175,55,0.3);
+            transition: all 0.25s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-book-now:hover {
+            background: #fff;
+            color: #171717;
+            transform: translateY(-2px);
+            box-shadow: 0 14px 30px rgba(255,255,255,0.25);
+        }
+
+        /* Two Column Content Grid */
+        .profile-content-grid {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 2rem;
+        }
+        @media (max-width: 900px) {
+            .profile-content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Section Cards */
+        .sc-card {
+            background: #fff;
+            border-radius: 24px;
+            padding: 2.25rem 2rem;
+            border: 1px solid var(--exp-border);
+            box-shadow: var(--exp-card-shadow);
+            margin-bottom: 2rem;
+        }
+        .sc-card-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--exp-text);
+            margin: 0 0 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .sc-card-title i { color: var(--exp-accent); }
+
+        .about-text {
+            color: #4b5563;
+            line-height: 1.7;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Specialties Chips */
+        .specialties-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.65rem;
+            margin-bottom: 1.5rem;
+        }
+        .spec-chip {
+            background: #faf9f6;
+            border: 1px solid var(--exp-border);
+            border-radius: 12px;
+            padding: 0.5rem 1rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--exp-text);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .spec-chip i { color: var(--exp-accent); }
+
+        /* Portfolio Gallery */
+        .portfolio-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+        .portfolio-item {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            aspect-ratio: 1;
+            background: #f3f4f6;
+            border: 1px solid var(--exp-border);
+            cursor: pointer;
+        }
+        .portfolio-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+        .portfolio-item:hover img {
+            transform: scale(1.08);
+        }
+        .portfolio-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            opacity: 0;
+            transition: opacity 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.5rem;
+        }
+        .portfolio-item:hover .portfolio-overlay {
+            opacity: 1;
+        }
+
+        /* Reviews List */
+        .reviews-summary {
+            background: #faf9f6;
+            border-radius: 18px;
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--exp-border);
+        }
+        .reviews-score {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.25rem;
+            font-weight: 900;
+            color: var(--exp-text);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .reviews-score i { color: var(--exp-accent); font-size: 1.75rem; }
+        .reviews-count {
+            color: var(--exp-muted);
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .review-card {
+            border-bottom: 1px solid var(--exp-border);
+            padding: 1.25rem 0;
+        }
+        .review-card:last-child { border-bottom: none; }
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.4rem;
+        }
+        .reviewer-name {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 0.92rem;
+            color: var(--exp-text);
+        }
+        .review-stars {
+            color: var(--exp-accent);
+            font-size: 0.85rem;
+            display: flex;
+            gap: 2px;
+        }
+        .review-text {
+            color: #4b5563;
+            font-size: 0.88rem;
+            line-height: 1.5;
+            margin: 0 0 0.25rem;
+        }
+        .review-date {
+            color: var(--exp-muted);
+            font-size: 0.75rem;
+        }
+
+        /* Sidebar Info Card */
+        .side-info-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+        .side-info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.85rem;
+        }
+        .side-info-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--exp-accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        .side-info-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--exp-muted);
+            margin-bottom: 0.2rem;
+            font-weight: 700;
+        }
+        .side-info-value {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--exp-text);
+        }
+
+        /* Lightbox modal for gallery / avatar */
+        .lightbox-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(10px);
+            z-index: 99999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .lightbox-modal.active { display: flex; }
+        .lightbox-modal img {
+            max-width: 90%;
+            max-height: 85vh;
+            border-radius: 16px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            border: 2px solid var(--exp-accent);
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 2rem;
+            right: 2.5rem;
+            color: #fff;
+            font-size: 2rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+    </style>
+</head>
+<body class="page-expert-profile">
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <svg class="logo-icon" viewBox="0 0 100 100">
+                    <path d="M30 20 H70 L80 50 L70 80 H30 L20 50 Z" fill="none" stroke="currentColor" stroke-width="4" />
+                    <circle cx="50" cy="50" r="5" fill="currentColor" />
+                </svg>
+                STYLE<span>CORNER</span>
+            </a>
+            <nav class="nav">
+                <a href="index.html">Home</a>
+                <a href="services.html">Services</a>
+                <a href="store.html">Store</a>
+                <a href="customer-dashboard.html" class="cta">Dashboard</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="profile-container">
+        <!-- Hero Banner -->
+        <div class="profile-hero">
+            <div class="hero-layout">
+                <div class="expert-avatar-wrap" id="specialist-avatar" title="Click to view full photo">
+                    <span id="specialist-initial">S</span>
+                </div>
+                <div class="hero-details">
+                    <div class="verified-badge">
+                        <i class="fas fa-certificate"></i> Verified Style Artisan
+                    </div>
+                    <h1 class="expert-display-name" id="specialist-name">Artisan Specialist</h1>
+                    <div class="expert-display-role" id="specialist-role">Certified Master Stylist & Groomer</div>
+                    
+                    <div class="hero-stats-row">
+                        <div class="hero-stat-item">
+                            <span class="stat-number"><i class="fas fa-star"></i> <span id="stat-rating">4.9</span></span>
+                            <span class="stat-label">Rating</span>
+                        </div>
+                        <div class="hero-stat-item">
+                            <span class="stat-number" id="stat-sessions">340+</span>
+                            <span class="stat-label">Sessions Completed</span>
+                        </div>
+                        <div class="hero-stat-item">
+                            <span class="stat-number">99.4%</span>
+                            <span class="stat-label">Satisfaction Rate</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-action">
+                    <a href="services.html" id="book-specialist-btn" class="btn-book-now">
+                        <i class="fas fa-calendar-check"></i> Book Appointment
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Profile Grid -->
+        <div class="profile-content-grid">
+            <div class="profile-main-col">
+                <!-- Biography Card -->
+                <div class="sc-card">
+                    <h3 class="sc-card-title"><i class="fas fa-quote-left"></i> About the Artisan</h3>
+                    <p class="about-text" id="specialist-bio">
+                        Dedicated to luxury grooming, bespoke scalp architecture, and precision aesthetic design. Specializing in modern fades, hair braiding, and artisan beard treatments tailored to each client's individual bone structure and lifestyle.
+                    </p>
+                    <h4 style="font-family:'Outfit';font-size:0.95rem;font-weight:700;margin:0 0 0.75rem;color:var(--exp-text);">Core Craft Specialties</h4>
+                    <div class="specialties-grid" id="specialties-container">
+                        <div class="spec-chip"><i class="fas fa-scissors"></i> Precision Hair Styling</div>
+                        <div class="spec-chip"><i class="fas fa-wand-magic-sparkles"></i> Scalp Therapy & Conditioning</div>
+                        <div class="spec-chip"><i class="fas fa-comb"></i> Bespoke Braiding & Twists</div>
+                        <div class="spec-chip"><i class="fas fa-spray-can-sparkles"></i> Royal Beard Elixir Grooming</div>
+                    </div>
+                </div>
+
+                <!-- Portfolio Showcase -->
+                <div class="sc-card">
+                    <h3 class="sc-card-title"><i class="fas fa-camera-retro"></i> Lookbook & Portfolio</h3>
+                    <div class="portfolio-gallery" id="portfolio-gallery">
+                        <div class="portfolio-item" onclick="openLightbox('img/hero.png')">
+                            <img src="img/hero.png" alt="Artisan Cut">
+                            <div class="portfolio-overlay"><i class="fas fa-magnifying-glass-plus"></i></div>
+                        </div>
+                        <div class="portfolio-item" onclick="openLightbox('img/banner.png')">
+                            <img src="img/banner.png" alt="Luxury Grooming">
+                            <div class="portfolio-overlay"><i class="fas fa-magnifying-glass-plus"></i></div>
+                        </div>
+                        <div class="portfolio-item" onclick="openLightbox('img/hero.png')">
+                            <img src="img/hero.png" alt="Texture Shaping">
+                            <div class="portfolio-overlay"><i class="fas fa-magnifying-glass-plus"></i></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Client Reviews Card -->
+                <div class="sc-card">
+                    <h3 class="sc-card-title"><i class="fas fa-comments"></i> Verified Client Feedback</h3>
+                    <div class="reviews-summary">
+                        <div>
+                            <div class="reviews-score"><i class="fas fa-star"></i> <span id="summary-rating-number">4.9</span></div>
+                            <div class="reviews-count" id="summary-reviews-count">Based on 28 verified visits</div>
+                        </div>
+                        <a href="services.html" class="btn-book-now" style="font-size:0.85rem;padding:0.65rem 1.25rem;">Leave a Review</a>
+                    </div>
+                    <div id="reviews-list">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar Info Column -->
+            <div class="profile-side-col">
+                <div class="sc-card">
+                    <h3 class="sc-card-title"><i class="fas fa-circle-info"></i> Atelier Information</h3>
+                    <div class="side-info-list">
+                        <div class="side-info-item">
+                            <div class="side-info-icon"><i class="fas fa-location-dot"></i></div>
+                            <div>
+                                <div class="side-info-label">Main Atelier</div>
+                                <div class="side-info-value">Style Corner Luxury Studio, Victoria Island, Lagos</div>
+                            </div>
+                        </div>
+                        <div class="side-info-item">
+                            <div class="side-info-icon"><i class="fas fa-clock"></i></div>
+                            <div>
+                                <div class="side-info-label">Working Hours</div>
+                                <div class="side-info-value">Tue – Sun · 9:00 AM – 7:30 PM</div>
+                            </div>
+                        </div>
+                        <div class="side-info-item">
+                            <div class="side-info-icon"><i class="fas fa-shield-check"></i></div>
+                            <div>
+                                <div class="side-info-label">Accreditation</div>
+                                <div class="side-info-value">Certified Master Professional & Stylist Guild Fellow</div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr style="border:none;border-top:1px solid var(--exp-border);margin:1.75rem 0;">
+                    <a href="services.html" id="side-book-btn" class="btn-book-now" style="width:100%;">
+                        Book a Session
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox-modal" class="lightbox-modal" onclick="closeLightbox()">
+        <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+        <img id="lightbox-img" src="" alt="Zoomed portfolio piece" onclick="event.stopPropagation()">
+    </div>
+
+    <footer style="margin-top:auto;border-top:1px solid var(--exp-border);padding:2.5rem 0;background:#ffffff;">
+        <div class="container text-center">
+            <p style="color:var(--exp-muted);font-weight:700;font-size:0.75rem;letter-spacing:2px;text-transform:uppercase;">STYLE CORNER ATELIER &copy; 2026</p>
+        </div>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script>
+        function openLightbox(src) {
+            const modal = document.getElementById('lightbox-modal');
+            const img = document.getElementById('lightbox-img');
+            img.src = src;
+            modal.classList.add('active');
+        }
+        function closeLightbox() {
+            document.getElementById('lightbox-modal').classList.remove('active');
+        }
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+        });
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const params = new URLSearchParams(window.location.search);
+            const specialistId = params.get('id');
+            const queryName = params.get('name') || params.get('stylist');
+
+            let specialist = null;
+
+            try {
+                if (specialistId) {
+                    const res = await fetch(`/api/specialists/${specialistId}`);
+                    if (res.ok) specialist = await res.json();
+                }
+
+                if (!specialist) {
+                    // Try fetching all specialists to match by name or pick the first one
+                    const allRes = await fetch('/api/specialists');
+                    if (allRes.ok) {
+                        const all = await allRes.json();
+                        if (Array.isArray(all) && all.length > 0) {
+                            if (queryName) {
+                                specialist = all.find(s => `${s.firstname || ''} ${s.lastname || ''}`.toLowerCase().includes(queryName.toLowerCase()));
+                            }
+                            if (!specialist) specialist = all[0];
+                        }
+                    }
+                }
+            } catch (err) {
+                console.warn('Specialist profile fetch error:', err);
+            }
+
+            const fullName = specialist 
+                ? `${specialist.firstname || ''} ${specialist.lastname || ''}`.trim() || 'Verified Specialist'
+                : queryName || 'Artisan Stylist';
+            
+            const initial = fullName.charAt(0).toUpperCase() || 'S';
+            const role = specialist?.title || specialist?.roleTitle || 'Certified Master Stylist';
+            const photo = specialist?.photoUrl || specialist?.avatarUrl;
+
+            document.getElementById('specialist-name').textContent = fullName;
+            document.getElementById('specialist-role').textContent = role;
+            document.title = `${fullName} — Specialist Profile | Style Corner`;
+
+            const avatarWrap = document.getElementById('specialist-avatar');
+            if (photo) {
+                avatarWrap.innerHTML = `<img src="${photo}" alt="${fullName}">`;
+                avatarWrap.onclick = () => openLightbox(photo);
+            } else {
+                avatarWrap.textContent = initial;
+            }
+
+            if (specialist?.bio) {
+                document.getElementById('specialist-bio').textContent = specialist.bio;
+            }
+
+            // Sync booking link with specialist name preselected
+            const bookHref = `services.html?stylist=${encodeURIComponent(fullName)}`;
+            document.getElementById('book-specialist-btn').href = bookHref;
+            document.getElementById('side-book-btn').href = bookHref;
+
+            // Fetch Reviews
+            let reviews = [];
+            try {
+                const revRes = await fetch(`/api/reviews/specialist/${encodeURIComponent(fullName)}`);
+                if (revRes.ok) reviews = await revRes.json();
+            } catch (e) {}
+
+            const defaultReviews = [
+                { customerName: 'Damilola O.', rating: 5, comment: 'Exceptional attention to detail. My fade and beard conditioning were flawless. A true master.', date: '3 days ago' },
+                { customerName: 'Marcus E.', rating: 5, comment: 'The scalp therapy session was incredible. Very calm atelier atmosphere and utmost professionalism.', date: '1 week ago' },
+                { customerName: 'Zainab B.', rating: 5, comment: 'Always prompt, courteous, and highly skilled. Best artisan experience in Victoria Island.', date: '2 weeks ago' }
+            ];
+
+            const displayReviews = (Array.isArray(reviews) && reviews.length > 0) ? reviews : defaultReviews;
+            const avgRating = (displayReviews.reduce((sum, r) => sum + (r.rating || 5), 0) / displayReviews.length).toFixed(1);
+
+            document.getElementById('stat-rating').textContent = avgRating;
+            document.getElementById('summary-rating-number').textContent = avgRating;
+            document.getElementById('summary-reviews-count').textContent = `Based on ${displayReviews.length} verified visits`;
+
+            const revListEl = document.getElementById('reviews-list');
+            revListEl.innerHTML = displayReviews.map(r => `
+                <div class="review-card">
+                    <div class="review-header">
+                        <span class="reviewer-name">${r.customerName || 'Verified Client'}</span>
+                        <span class="review-stars">
+                            ${Array.from({ length: 5 }, (_, i) => `<i class="fa${i < (r.rating || 5) ? 's' : 'r'} fa-star"></i>`).join('')}
+                        </span>
+                    </div>
+                    <p class="review-text">"${r.comment || 'Outstanding service and master craftsmanship.'}"</p>
+                    <span class="review-date">${r.date ? r.date : (r.createdAt ? new Date(r.createdAt).toLocaleDateString() : 'Verified Client')}</span>
+                </div>
+            `).join('');
+        });
+    </script>
+</body>
+</html>
