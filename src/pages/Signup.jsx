@@ -5,15 +5,13 @@ import { useAuth } from '../context/AuthContext';
 import { PageContainer } from '../components/common/PageContainer';
 
 const EXPERT_SERVICES = [
-  { id: 'barber', label: 'Barber', icon: '💈' },
-  { id: 'lash', label: 'Lash Tech', icon: '👁️' },
-  { id: 'nail', label: 'Nail Tech', icon: '💅' },
-  { id: 'wig_install', label: 'Wig Installer', icon: '💇‍♀️' },
-  { id: 'wig_revamp', label: 'Wig Revamper', icon: '✨' },
-  { id: 'makeup', label: 'Makeup Artist', icon: '💄' },
-  { id: 'braider', label: 'Hair Stylist (Braider)', icon: '🪢' },
-  { id: 'pedicure', label: 'Pedicure', icon: '🦶' },
-  { id: 'manicure', label: 'Manicure', icon: '💅' },
+  { id: 'nail_tech', label: 'Nail Tech', icon: '💅', desc: 'Gel extensions, nail architecture & 3D nail art' },
+  { id: 'lash_tech', label: 'Lash Tech', icon: '👁️', desc: 'Classic, hybrid & volume silk lash extensions' },
+  { id: 'hair_braider', label: 'Hair Braider', icon: '🪢', desc: 'Knotless box braids, goddess braids & twists' },
+  { id: 'hair_barber', label: 'Hair Barber', icon: '💈', desc: 'Precision fades, line-ups & beard sculpting' },
+  { id: 'frontal_wig_install', label: 'Frontal Wig Installation', icon: '💇‍♀️', desc: 'Lace melting, custom frontal install & styling' },
+  { id: 'manicure_pedicure', label: 'Manicure plus Pedicure', icon: '🦶', desc: 'Exfoliation, massage, cuticle prep & gel polish' },
+  { id: 'wig_revamper', label: 'Wig Revamper', icon: '✨', desc: 'Deep washing, lace restoration & hot-comb revamp' },
 ];
 
 const MAX_SERVICES = 2;
@@ -45,7 +43,7 @@ export const Signup = () => {
         return prev.filter(s => s !== label);
       }
       if (prev.length >= MAX_SERVICES) {
-        showToast(`You can select up to ${MAX_SERVICES} services.`, 'error');
+        showToast(`Strictly maximum 2 services allowed. Deselect one to choose a different service.`, 'error');
         return prev;
       }
       return [...prev, label];
@@ -59,9 +57,15 @@ export const Signup = () => {
       return;
     }
 
-    if (role === 'staff' && selectedServices.length === 0) {
-      showToast('Please select at least one service specialty.', 'error');
-      return;
+    if (role === 'staff') {
+      if (selectedServices.length === 0) {
+        showToast('Please select up to 2 services you offer.', 'error');
+        return;
+      }
+      if (selectedServices.length > MAX_SERVICES) {
+        showToast(`Strictly select not more than ${MAX_SERVICES} services.`, 'error');
+        return;
+      }
     }
 
     setSubmitting(true);
@@ -139,18 +143,36 @@ export const Signup = () => {
 
           {/* Service Selection for Experts */}
           {role === 'staff' && (
-            <div style={{ marginTop: '0.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-                <label className="app-label" style={{ margin: 0 }}>Your Specialties *</label>
+            <div style={{
+              marginTop: '1rem',
+              padding: '1rem',
+              borderRadius: '16px',
+              background: 'linear-gradient(135deg, rgba(212,175,55,0.06) 0%, rgba(0,0,0,0.02) 100%)',
+              border: '1.5px solid rgba(212,175,55,0.3)',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
+                <label className="app-label" style={{ margin: 0, color: '#171717', fontWeight: 800 }}>
+                  Services You Offer *
+                </label>
                 <span style={{
-                  fontSize: '0.72rem', fontWeight: 700, color: selectedServices.length >= MAX_SERVICES ? '#d4af37' : '#9ca3af',
+                  fontSize: '0.72rem',
+                  fontWeight: 900,
+                  color: selectedServices.length === MAX_SERVICES ? '#10b981' : '#d4af37',
                   fontFamily: 'Outfit',
+                  background: selectedServices.length === MAX_SERVICES ? 'rgba(16,185,129,0.12)' : 'rgba(212,175,55,0.15)',
+                  padding: '0.2rem 0.6rem',
+                  borderRadius: '50px',
+                  border: selectedServices.length === MAX_SERVICES ? '1px solid rgba(16,185,129,0.3)' : '1px solid rgba(212,175,55,0.3)',
                 }}>
-                  {selectedServices.length}/{MAX_SERVICES} selected
+                  {selectedServices.length}/{MAX_SERVICES} Selected {selectedServices.length === MAX_SERVICES && '✓'}
                 </span>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
+              <p style={{ fontSize: '0.76rem', color: '#6b7280', margin: '0 0 0.85rem', lineHeight: 1.4 }}>
+                Choose up to <strong>2 services</strong> you specialize in. Strictly not more than two services per verified expert account.
+              </p>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '0.55rem' }}>
                 {EXPERT_SERVICES.map(service => {
                   const isSelected = selectedServices.includes(service.label);
                   const isDisabled = !isSelected && selectedServices.length >= MAX_SERVICES;
@@ -163,49 +185,74 @@ export const Signup = () => {
                       style={{
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '0.5rem',
-                        padding: '0.65rem 0.75rem',
-                        borderRadius: '12px',
+                        justifyContent: 'space-between',
+                        gap: '0.75rem',
+                        padding: '0.75rem 0.9rem',
+                        borderRadius: '14px',
                         border: isSelected
                           ? '1.5px solid #d4af37'
-                          : '1.5px solid rgba(0,0,0,0.1)',
+                          : '1px solid rgba(0,0,0,0.08)',
                         backgroundColor: isSelected
-                          ? 'rgba(212,175,55,0.1)'
-                          : isDisabled ? 'rgba(0,0,0,0.02)' : '#f9fafb',
+                          ? 'rgba(212,175,55,0.12)'
+                          : isDisabled ? 'rgba(0,0,0,0.02)' : '#ffffff',
                         cursor: isDisabled ? 'not-allowed' : 'pointer',
                         textAlign: 'left',
-                        transition: 'all 0.15s ease',
-                        opacity: isDisabled ? 0.4 : 1,
-                        position: 'relative',
+                        transition: 'all 0.2s ease',
+                        opacity: isDisabled ? 0.45 : 1,
+                        boxShadow: isSelected ? '0 4px 14px rgba(212,175,55,0.15)' : 'none',
                       }}
                     >
-                      <span style={{ fontSize: '1.1rem', lineHeight: 1, flexShrink: 0 }}>{service.icon}</span>
-                      <span style={{
-                        fontSize: '0.75rem', fontWeight: isSelected ? 700 : 500,
-                        color: isSelected ? '#92700a' : '#374151',
-                        fontFamily: 'Outfit', lineHeight: 1.3,
-                        flex: 1,
-                      }}>
-                        {service.label}
-                      </span>
-                      {isSelected && (
-                        <div style={{
-                          width: '18px', height: '18px', borderRadius: '50%',
-                          backgroundColor: '#d4af37', display: 'flex',
-                          alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-                        }}>
-                          <Check size={11} color="#000" strokeWidth={3} />
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', minWidth: 0 }}>
+                        <span style={{ fontSize: '1.3rem', lineHeight: 1, flexShrink: 0 }}>{service.icon}</span>
+                        <div style={{ minWidth: 0 }}>
+                          <span style={{
+                            display: 'block',
+                            fontSize: '0.82rem',
+                            fontWeight: isSelected ? 800 : 600,
+                            color: isSelected ? '#171717' : '#374151',
+                            fontFamily: 'Outfit',
+                          }}>
+                            {service.label}
+                          </span>
+                          <span style={{
+                            display: 'block',
+                            fontSize: '0.68rem',
+                            color: isSelected ? '#785c00' : '#9ca3af',
+                            marginTop: '0.1rem',
+                          }}>
+                            {service.desc}
+                          </span>
                         </div>
-                      )}
+                      </div>
+
+                      <div style={{
+                        width: '20px',
+                        height: '20px',
+                        borderRadius: '50%',
+                        border: isSelected ? 'none' : '1.5px solid #d1d5db',
+                        backgroundColor: isSelected ? '#d4af37' : 'transparent',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0,
+                      }}>
+                        {isSelected && <Check size={12} color="#000" strokeWidth={3} />}
+                      </div>
                     </button>
                   );
                 })}
               </div>
 
               {selectedServices.length > 0 && (
-                <div style={{ marginTop: '0.75rem', padding: '0.6rem 0.85rem', borderRadius: '10px', backgroundColor: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.2)' }}>
-                  <p style={{ fontSize: '0.75rem', color: '#92700a', fontWeight: 600, margin: 0, fontFamily: 'Outfit' }}>
-                    ✓ Selected: {selectedServices.join(' · ')}
+                <div style={{
+                  marginTop: '0.85rem',
+                  padding: '0.65rem 0.9rem',
+                  borderRadius: '12px',
+                  backgroundColor: selectedServices.length === MAX_SERVICES ? 'rgba(16,185,129,0.08)' : 'rgba(212,175,55,0.1)',
+                  border: selectedServices.length === MAX_SERVICES ? '1px solid rgba(16,185,129,0.3)' : '1px solid rgba(212,175,55,0.3)',
+                }}>
+                  <p style={{ fontSize: '0.74rem', color: selectedServices.length === MAX_SERVICES ? '#059669' : '#92700a', fontWeight: 700, margin: 0, fontFamily: 'Outfit' }}>
+                    {selectedServices.length === MAX_SERVICES ? '✓ Selected (Maximum 2 reached):' : 'Selected:'} {selectedServices.join(' · ')}
                   </p>
                 </div>
               )}

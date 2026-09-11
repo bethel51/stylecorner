@@ -154,6 +154,16 @@ app.post('/api/auth/register', async (req, res) => {
     const otpCode = Math.floor(100000 + Math.random() * 900000).toString(); // 6 digit code
     const otpExpiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
 
+    let expertSpecialties = [];
+    if (role === 'staff' || role === 'expert') {
+      expertSpecialties = services
+        ? (Array.isArray(services) ? services : String(services).split(',').map(s => s.trim()).filter(Boolean))
+        : [];
+      if (expertSpecialties.length > 2) {
+        return res.status(400).json({ error: 'Experts are strictly allowed to offer a maximum of 2 services.' });
+      }
+    }
+
     const user = new User({
       firstname: firstname.trim(),
       lastname: (lastname || '').trim(),
@@ -161,7 +171,8 @@ app.post('/api/auth/register', async (req, res) => {
       phone: (phone || '').trim(),
       password: hashedPassword,
       role: (role === 'staff' || role === 'expert') ? 'staff' : 'customer',
-      specialties: services ? (Array.isArray(services) ? services : services.split(',').map(s => s.trim())) : [],
+      specialties: expertSpecialties,
+      services: expertSpecialties.map(spec => ({ name: spec, price: '15000' })),
       isVerified: false,
       otpCode,
       otpExpiresAt

@@ -40,15 +40,13 @@ const NIGERIAN_STATES = [
 ];
 
 const SERVICES = [
-  { id: 's0', title: 'Barber', price: 8000, duration: '30 mins', category: 'Barbing', icon: '💈', desc: 'Precision fades, line-ups, beard sculpting & shape-ups by a certified barber.' },
-  { id: 's1', title: 'Wig Installer', price: 25000, duration: '90 mins', category: 'Hair', icon: '✂️', desc: 'Flawless frontal & closure installation, lace melting & knots bleaching.' },
-  { id: 's2', title: 'Wig Revamper', price: 15000, duration: '60 mins', category: 'Hair', icon: '✨', desc: 'Deep wig washing, lace restoration & custom hot-comb restyling.' },
-  { id: 's3', title: 'Hair Stylist (Braider)', price: 35000, duration: '120 mins', category: 'Hair', icon: '🪮', desc: 'Knotless box braids, goddess braids & loc maintenance.' },
-  { id: 's4', title: 'Lash Tech', price: 20000, duration: '60 mins', category: 'Lashes', icon: '👁️', desc: 'Classic, hybrid & volume silk lash extensions.' },
-  { id: 's5', title: 'Nail Tech', price: 18000, duration: '60 mins', category: 'Nails', icon: '💅', desc: 'Acrylic extensions, gel art architecture & nail prep.' },
-  { id: 's6', title: 'Makeup Artist', price: 30000, duration: '60 mins', category: 'Makeup', icon: '💄', desc: 'Full glam executive, event & bridal skin prep.' },
-  { id: 's7', title: 'Manicure', price: 12000, duration: '40 mins', category: 'Nails', icon: '🧼', desc: 'Nail shaping, cuticle trimming & gel polish finish.' },
-  { id: 's8', title: 'Pedicure', price: 15000, duration: '50 mins', category: 'Nails', icon: '🦶', desc: 'Spa foot soak, callus removal & massage polish.' },
+  { id: 's1', title: 'Nail Tech', price: 18000, duration: '60 mins', category: 'Nails', icon: '💅', desc: 'Acrylic extensions, gel art architecture & nail prep.' },
+  { id: 's2', title: 'Lash Tech', price: 20000, duration: '60 mins', category: 'Lashes', icon: '👁️', desc: 'Classic, hybrid & volume silk lash extensions.' },
+  { id: 's3', title: 'Hair Braider', price: 35000, duration: '120 mins', category: 'Hair', icon: '🪢', desc: 'Knotless box braids, goddess braids & loc maintenance.' },
+  { id: 's4', title: 'Hair Barber', price: 8000, duration: '30 mins', category: 'Barbing', icon: '💈', desc: 'Precision fades, line-ups, beard sculpting & shape-ups by a certified barber.' },
+  { id: 's5', title: 'Frontal Wig Installation', price: 25000, duration: '90 mins', category: 'Hair', icon: '💇‍♀️', desc: 'Flawless frontal wig installation, lace melting & knots bleaching.' },
+  { id: 's6', title: 'Manicure plus Pedicure', price: 22000, duration: '75 mins', category: 'Nails', icon: '🦶', desc: 'Complete spa hand & foot care, exfoliation scrub, massage & gel finish.' },
+  { id: 's7', title: 'Wig Revamper', price: 15000, duration: '60 mins', category: 'Hair', icon: '✨', desc: 'Deep wig washing, lace restoration & custom hot-comb restyling.' },
 ];
 
 export const Booking = () => {
