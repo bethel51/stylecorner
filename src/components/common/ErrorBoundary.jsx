@@ -19,13 +19,21 @@ export class ErrorBoundary extends React.Component {
       msg.includes('dynamically imported module') ||
       msg.includes('Loading chunk') ||
       msg.includes('MIME type') ||
-      msg.includes('Failed to fetch')
+      msg.includes('Failed to fetch') ||
+      msg.includes('itemCount') ||
+      msg.includes('destructure')
     ) {
       const hasReloaded = sessionStorage.getItem('chunk_reload_retry');
       if (!hasReloaded) {
         sessionStorage.setItem('chunk_reload_retry', 'true');
-        console.warn('[PWA] Module script import error detected. Auto-refreshing page for new build update...');
-        window.location.reload();
+        console.warn('[PWA] Stale asset or bundle error detected. Purging cache and reloading fresh build...');
+        if ('caches' in window) {
+          caches.keys().then((names) => Promise.all(names.map((n) => caches.delete(n)))).finally(() => {
+            window.location.reload();
+          });
+        } else {
+          window.location.reload();
+        }
       }
     }
   }
@@ -65,17 +73,23 @@ export class ErrorBoundary extends React.Component {
           </div>
 
           <h2 style={{ fontSize: '1.5rem', fontWeight: 800, margin: '0 0 0.5rem 0', color: '#ffffff' }}>
-            Something went wrong
+            Application Update Available
           </h2>
           <p style={{ color: '#9ca3af', fontSize: '0.9rem', maxWidth: '420px', marginBottom: '1.5rem', lineHeight: '1.5' }}>
-            {this.state.error?.message || 'An unexpected rendering error occurred. Please reload.'}
+            A newer version of Style Corner was deployed. Click below to load the latest update.
           </p>
 
           <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', justifyContent: 'center' }}>
             <button
               onClick={() => {
                 this.setState({ hasError: false, error: null });
-                window.location.reload();
+                if ('caches' in window) {
+                  caches.keys().then((names) => Promise.all(names.map((n) => caches.delete(n)))).finally(() => {
+                    window.location.reload();
+                  });
+                } else {
+                  window.location.reload();
+                }
               }}
               style={{
                 display: 'inline-flex',
@@ -91,7 +105,7 @@ export class ErrorBoundary extends React.Component {
                 cursor: 'pointer',
               }}
             >
-              <RefreshCw size={16} /> Reload Page
+              <RefreshCw size={16} /> Update & Reload Page
             </button>
             <a
               href="/"

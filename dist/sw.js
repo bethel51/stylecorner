@@ -1,4 +1,4 @@
-const CACHE_NAME = 'style-corner-v6';
+const CACHE_NAME = 'style-corner-v8';
 const PRECACHE_ASSETS = [
   '/',
   '/index.html',
@@ -9,12 +9,12 @@ const PRECACHE_ASSETS = [
 
 // 1. Install Event — Pre-cache critical app shell and skip waiting immediately
 self.addEventListener('install', (event) => {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(PRECACHE_ASSETS);
     })
   );
-  self.skipWaiting();
 });
 
 // 2. Activate Event — Immediately claim clients and purge old cache versions
@@ -24,19 +24,18 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         cacheNames.map((name) => {
           if (name !== CACHE_NAME) {
-            console.log('[PWA SW] Purging old cache:', name);
+            console.log('[PWA SW] Purging old cache version:', name);
             return caches.delete(name);
           }
         })
       );
-    })
+    }).then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
 // Message Event — Force activate if requested by app
 self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
+  if (event.data && (event.data.type === 'SKIP_WAITING' || event.data.type === 'PURGE_CACHE')) {
     self.skipWaiting();
   }
 });
@@ -86,6 +85,8 @@ self.addEventListener('fetch', (event) => {
         if (networkResponse && networkResponse.status === 200) {
           const resClone = networkResponse.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(event.request, resClone));
+        } else if (networkResponse && (networkResponse.status === 404 || networkResponse.status >= 400)) {
+          caches.open(CACHE_NAME).then((cache) => cache.delete(event.request));
         }
         return networkResponse;
       }).catch((err) => {
