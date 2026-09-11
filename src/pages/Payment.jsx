@@ -54,7 +54,7 @@ export const Payment = () => {
     setSubmitting(true);
     try {
       await api.payWithWallet(amount, checkoutData.orderId, checkoutData.bookingId, checkoutData.description || checkoutData.title);
-      showToast('Payment verified successfully via Atelier Wallet! 🎉', 'success');
+      showToast(checkoutData.bookingId ? 'Payment verified! Request sent to specialist to accept.' : 'Order payment verified via Atelier Wallet! 🎉', 'success');
       navigate('/customer-dashboard', { replace: true });
     } catch (err) {
       showToast(err.message || 'Payment failed', 'error');
@@ -63,14 +63,20 @@ export const Payment = () => {
     }
   };
 
-  const handleCardPay = (e) => {
+  const handleCardPay = async (e) => {
     e.preventDefault();
     setSubmitting(true);
-    setTimeout(() => {
-      showToast('Card payment verified successfully! 🎉', 'success');
-      setSubmitting(false);
+    try {
+      if (checkoutData.bookingId) {
+        await api.updateBookingStatus(checkoutData.bookingId, { paymentStatus: 'paid_card', status: 'pending' });
+      }
+      showToast(checkoutData.bookingId ? 'Card payment verified! Request sent to specialist to accept.' : 'Card payment verified successfully! 🎉', 'success');
       navigate('/customer-dashboard', { replace: true });
-    }, 1200);
+    } catch (err) {
+      showToast(err.message || 'Payment processing failed', 'error');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleTopUpSubmit = async (e) => {
@@ -302,13 +308,19 @@ export const Payment = () => {
             </div>
 
             <button
-              onClick={() => {
+              onClick={async () => {
                 setSubmitting(true);
-                setTimeout(() => {
-                  showToast('Bank transfer payment verified! 🎉', 'success');
-                  setSubmitting(false);
+                try {
+                  if (checkoutData.bookingId) {
+                    await api.updateBookingStatus(checkoutData.bookingId, { paymentStatus: 'paid_transfer', status: 'pending' });
+                  }
+                  showToast(checkoutData.bookingId ? 'Transfer logged! Request sent to specialist to accept.' : 'Bank transfer payment verified! 🎉', 'success');
                   navigate('/customer-dashboard', { replace: true });
-                }, 1500);
+                } catch (err) {
+                  showToast(err.message || 'Transfer logging failed', 'error');
+                } finally {
+                  setSubmitting(false);
+                }
               }}
               disabled={submitting}
               className="app-btn app-btn-primary"

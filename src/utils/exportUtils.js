@@ -75,7 +75,7 @@ export const exportBookingsToCSV = (bookings = []) => {
       cleanField(b.clientEmail || b.email || ''),
       cleanField(b.phone || b.clientPhone || ''),
       cleanField(b.serviceName || b.service || ''),
-      cleanField(b.stylist || 'Any Specialist'),
+      cleanField(b.stylist || 'Verified Specialist'),
       cleanField(b.date || 'TBD'),
       cleanField(b.time || 'TBD'),
       cleanField(b.status || 'pending'),

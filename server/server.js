@@ -502,10 +502,13 @@ app.post('/api/admin/delete-user-by-email', async (req, res) => {
   }
 });
 
-// Get all specialists (staff)
+// Get all specialists (staff who have successfully registered)
 app.get('/api/specialists', async (req, res) => {
   try {
-    const specialists = await User.find({ role: 'staff' }).select('-password');
+    const specialists = await User.find({
+      role: { $in: ['staff', 'expert'] },
+      $or: [{ isVerified: true }, { isVerified: { $exists: false } }]
+    }).select('-password');
     res.status(200).json(specialists);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch specialists' });
@@ -615,7 +618,7 @@ app.post('/api/ai/match-specialist', async (req, res) => {
     res.status(500).json({ error: 'AI Specialist Matcher temporary error' });
   }
 });
-// Get all bookings (Filtered by Role)
+// Get all bookings (Filtered by Role: Experts only see their bookings; Customers see their bookings; Admin sees all)
 app.get('/api/bookings', authenticateToken, async (req, res) => {
   try {
     let query = {};
@@ -623,14 +626,26 @@ app.get('/api/bookings', authenticateToken, async (req, res) => {
       const userEmail = (req.user.email || '').trim();
       query = { clientEmail: new RegExp('^' + userEmail + '$', 'i') };
     } else if (req.user.role === 'staff') {
-      const staffName = (req.user.firstname || '').trim();
-      query = {
-        $or: [
-          { status: 'pending' },
-          { stylist: new RegExp(staffName, 'i') },
-          { stylist: 'Any Specialist' },
-        ],
-      };
+      const staffFirst = (req.user.firstname || '').trim();
+      const staffLast = (req.user.lastname || '').trim();
+      const staffFull = `${staffFirst} ${staffLast}`.trim();
+      const staffEmail = (req.user.email || '').trim().toLowerCase();
+
+      const orClauses = [
+        { stylistId: req.user._id },
+        { stylistEmail: new RegExp('^' + staffEmail + '$', 'i') },
+        { stylist: new RegExp(staffFirst, 'i') },
+        { staff: new RegExp(staffFirst, 'i') }
+      ];
+      if (staffLast) {
+        orClauses.push({ stylist: new RegExp(staffLast, 'i') });
+      }
+      if (staffFull) {
+        orClauses.push({ stylist: new RegExp(staffFull, 'i') });
+      }
+      query = { $or: orClauses };
+    } else if (req.user.role === 'admin') {
+      query = {}; // Admin can see all bookings
     }
     const bookings = await Booking.find(query).sort({ createdAt: -1 });
     res.status(200).json(bookings);
@@ -642,45 +657,106 @@ app.get('/api/bookings', authenticateToken, async (req, res) => {
 // Create a new booking
 app.post('/api/bookings', authenticateToken, async (req, res) => {
   try {
-    // Prevent Double Booking Stylist for exact date and time
-    if (req.body.stylist && req.body.stylist !== 'Any Specialist') {
-      const existingStylistBooking = await Booking.findOne({
-        stylist: req.body.stylist,
-        date: req.body.date,
-        time: req.body.time,
-        status: { $in: ['pending', 'accepted'] }
-      });
-      if (existingStylistBooking) {
-        return res.status(400).json({ error: 'This specialist is already booked for that specific date and time.' });
-      }
+    const { stylist, stylistId, stylistEmail, date, time, service } = req.body;
+
+    if (!stylist) {
+      return res.status(400).json({ error: 'Please select a preferred specialist.' });
     }
 
-    const booking = new Booking(req.body);
+    // Prevent Double Booking Stylist for exact date and time
+    const existingStylistBooking = await Booking.findOne({
+      $or: [
+        ...(stylistId ? [{ stylistId }] : []),
+        { stylist: stylist }
+      ],
+      date: date,
+      time: time,
+      status: { $in: ['pending', 'accepted'] }
+    });
+    if (existingStylistBooking) {
+      return res.status(400).json({ error: 'This specialist is already booked for that specific date and time.' });
+    }
+
+    const bookingPayload = {
+      ...req.body,
+      status: 'pending',
+      paymentStatus: req.body.paymentStatus || 'pending_payment'
+    };
+
+    const booking = new Booking(bookingPayload);
     const savedBooking = await booking.save();
     
     // 1. Notify Customer
-    await sendNotificationSafe(savedBooking.clientEmail, "Booking Confirmed", `Hi ${savedBooking.clientName},\n\nYour booking for ${savedBooking.service} on ${savedBooking.date} at ${savedBooking.time} has been received.`);
+    await sendNotificationSafe(
+      savedBooking.clientEmail,
+      "Booking Request Submitted ✂️",
+      `Hi ${savedBooking.clientName},\n\nYour appointment request for ${savedBooking.service} with ${savedBooking.stylist} on ${savedBooking.date} at ${savedBooking.time} has been submitted.\n\nYour specialist will review and accept your booking shortly.`
+    );
     
-    // 2. Notify Salon Admin / Manager
+    await createInAppNotification({
+      userEmail: savedBooking.clientEmail,
+      title: 'Booking Request Submitted 📅',
+      message: `Your booking for ${savedBooking.service} on ${savedBooking.date} at ${savedBooking.time} is awaiting specialist acceptance.`,
+      type: 'booking',
+      bookingId: savedBooking._id
+    });
+
+    // 2. Notify Assigned Specialist (Email & In-App)
+    let targetStylistEmail = savedBooking.stylistEmail;
+    if (!targetStylistEmail) {
+      try {
+        const staffUser = await User.findOne({
+          $or: [
+            ...(savedBooking.stylistId ? [{ _id: savedBooking.stylistId }] : []),
+            { firstname: new RegExp(savedBooking.stylist, 'i'), role: 'staff' }
+          ]
+        });
+        targetStylistEmail = staffUser?.email;
+      } catch (e) {}
+    }
+
+    if (targetStylistEmail) {
+      await sendNotificationSafe(
+        targetStylistEmail,
+        `⚡ New Booking Request Alert: ${savedBooking.clientName}`,
+        `SPECIALIST NOTIFICATION\n\nYou have a new booking request waiting for your acceptance!\n\nDetails:\n- Client: ${savedBooking.clientName} (${savedBooking.clientEmail})\n- Phone: ${savedBooking.clientPhone || 'N/A'}\n- Service: ${savedBooking.service}\n- Scheduled: ${savedBooking.date} at ${savedBooking.time}\n- Price: ₦${Number(savedBooking.price).toLocaleString()}\n\nPlease log in to your Expert Dashboard to Accept or Decline this request.`
+      );
+      await createInAppNotification({
+        userEmail: targetStylistEmail,
+        title: '⚡ New Booking Request Awaiting Acceptance!',
+        message: `${savedBooking.clientName} requested ${savedBooking.service} on ${savedBooking.date} at ${savedBooking.time}. Tap to Accept or Decline.`,
+        type: 'booking',
+        bookingId: savedBooking._id
+      });
+    }
+
+    // 3. Notify Salon Admin / Manager
     const adminEmail = process.env.ADMIN_EMAIL || process.env.EMAIL_USER || process.env.BREVO_SMTP_LOGIN;
     if (adminEmail && adminEmail !== savedBooking.clientEmail) {
       await sendNotificationSafe(
         adminEmail,
         `🔔 New Salon Booking Alert: ${savedBooking.clientName}`,
-        `ADMIN NOTIFICATION\n\nNew Booking Details:\n- Client: ${savedBooking.clientName} (${savedBooking.clientEmail})\n- Phone: ${savedBooking.clientPhone || 'N/A'}\n- Service: ${savedBooking.service}\n- Specialist: ${savedBooking.stylist}\n- Date & Time: ${savedBooking.date} at ${savedBooking.time}\n- Price: $${savedBooking.price}`
+        `ADMIN NOTIFICATION\n\nNew Booking Details:\n- Client: ${savedBooking.clientName} (${savedBooking.clientEmail})\n- Phone: ${savedBooking.clientPhone || 'N/A'}\n- Service: ${savedBooking.service}\n- Specialist: ${savedBooking.stylist}\n- Date & Time: ${savedBooking.date} at ${savedBooking.time}\n- Price: ₦${Number(savedBooking.price).toLocaleString()}`
       );
     }
 
     res.status(201).json(savedBooking);
   } catch (error) {
+    console.error('Save booking error:', error);
     res.status(500).json({ error: 'Failed to save booking' });
   }
 });
 
-// Update a booking status
+// Update a booking status (Accept, Reject, Complete)
 app.put('/api/bookings/:id', authenticateToken, async (req, res) => {
   try {
     const updateObj = typeof req.body === 'string' ? { status: req.body } : req.body;
+    
+    // If expert accepts, record their name as staff who accepted
+    if (req.user.role === 'staff' && (updateObj.status === 'accepted' || updateObj.status === 'confirmed')) {
+      updateObj.staff = `${req.user.firstname || ''} ${req.user.lastname || ''}`.trim() || req.user.email;
+    }
+
     const updated = await Booking.findByIdAndUpdate(req.params.id, updateObj, { new: true });
     if (!updated) {
       return res.status(404).json({ error: 'Booking not found' });
@@ -689,15 +765,48 @@ app.put('/api/bookings/:id', authenticateToken, async (req, res) => {
     const newStatus = updateObj.status || updated.status;
     if (newStatus === 'confirmed' || newStatus === 'accepted') {
       if (updated.clientEmail) {
-        await sendNotificationSafe(updated.clientEmail, "Booking Confirmed!", `Hi ${updated.clientName || 'Client'},\n\nGreat news! Your booking for ${updated.service} on ${updated.date} at ${updated.time} has been confirmed!`);
+        await sendNotificationSafe(
+          updated.clientEmail,
+          "Booking Accepted! ✂️",
+          `Hi ${updated.clientName || 'Client'},\n\nGreat news! Your booking for ${updated.service} with ${updated.stylist} on ${updated.date} at ${updated.time} has been ACCEPTED!\n\nWe look forward to giving you an exceptional experience!`
+        );
+        await createInAppNotification({
+          userEmail: updated.clientEmail,
+          title: 'Booking Accepted! 🎉',
+          message: `Your specialist ${updated.stylist} has accepted your booking for ${updated.service} on ${updated.date} at ${updated.time}.`,
+          type: 'booking',
+          bookingId: updated._id
+        });
       }
     } else if (newStatus === 'completed') {
       if (updated.clientEmail) {
-        await sendNotificationSafe(updated.clientEmail, "Service Completed!", `Hi ${updated.clientName || 'Client'},\n\nYour scheduled service (${updated.service}) has been completed. Thanks for choosing Style Corner!`);
+        await sendNotificationSafe(
+          updated.clientEmail,
+          "Service Completed! ✨",
+          `Hi ${updated.clientName || 'Client'},\n\nYour scheduled service (${updated.service}) has been completed. Thanks for choosing Style Corner!`
+        );
+        await createInAppNotification({
+          userEmail: updated.clientEmail,
+          title: 'Service Completed! ✨',
+          message: `Your appointment for ${updated.service} with ${updated.stylist} is complete. Rate your experience on your dashboard!`,
+          type: 'booking',
+          bookingId: updated._id
+        });
       }
     } else if (newStatus === 'cancelled' || newStatus === 'rejected') {
       if (updated.clientEmail) {
-        await sendNotificationSafe(updated.clientEmail, "Booking Request Update", `Hi ${updated.clientName || 'Client'},\n\nYour booking request status has been updated to ${newStatus}.`);
+        await sendNotificationSafe(
+          updated.clientEmail,
+          "Booking Request Update",
+          `Hi ${updated.clientName || 'Client'},\n\nYour booking request for ${updated.service} on ${updated.date} at ${updated.time} could not be accepted by ${updated.stylist}.\n\nPlease visit Style Corner to select another time or specialist.`
+        );
+        await createInAppNotification({
+          userEmail: updated.clientEmail,
+          title: 'Booking Request Declined',
+          message: `Your booking request for ${updated.service} with ${updated.stylist} was declined. You can reschedule anytime.`,
+          type: 'booking',
+          bookingId: updated._id
+        });
       }
     }
     res.status(200).json(updated);
@@ -1437,7 +1546,8 @@ app.post('/api/wallet/pay', authenticateToken, async (req, res) => {
       await Order.findByIdAndUpdate(orderId, { $set: { paymentStatus: 'paid_wallet', status: 'processing' } });
     }
     if (bookingId) {
-      await Booking.findByIdAndUpdate(bookingId, { $set: { paymentStatus: 'paid_wallet', status: 'accepted' } });
+      // Keep booking status as 'pending' so the expert receives the incoming request and can Accept or Decline!
+      await Booking.findByIdAndUpdate(bookingId, { $set: { paymentStatus: 'paid_wallet', status: 'pending' } });
     }
 
     await createInAppNotification({

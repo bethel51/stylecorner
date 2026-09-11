@@ -1695,7 +1695,7 @@ export const AdminDashboard = () => {
               <div><span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase' }}>Client</span><br />{selectedBooking.clientName || selectedBooking.user?.firstname || 'Guest'}</div>
               <div><span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase' }}>Email</span><br />{selectedBooking.clientEmail || selectedBooking.email || 'N/A'}</div>
               <div><span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase' }}>Phone</span><br />{selectedBooking.phone || selectedBooking.clientPhone || 'N/A'}</div>
-              <div><span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase' }}>Stylist</span><br /><span style={{ color: '#b5952f', fontWeight: 600 }}>{selectedBooking.stylist || 'Any Specialist'}</span></div>
+              <div><span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase' }}>Stylist</span><br /><span style={{ color: '#b5952f', fontWeight: 600 }}>{selectedBooking.stylist || 'Verified Specialist'}</span></div>
               <div><span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase' }}>Date & Time</span><br />{selectedBooking.date || 'TBD'} at {selectedBooking.time || 'TBD'}</div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase' }}>Status: </span><StatusBadge status={selectedBooking.status || 'pending'} /></div>
             </div>

@@ -462,7 +462,7 @@ export const CustomerDashboard = () => {
                   {upcomingBooking.serviceName || upcomingBooking.service || 'Salon Service'}
                 </h4>
                 <div style={{ fontSize: '0.8rem', color: '#d1d5db', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                  <Sparkles size={12} color="#d4af37" /> Specialist: <strong style={{ color: '#d4af37' }}>{upcomingBooking.stylist || 'Any Specialist'}</strong>
+                  <Sparkles size={12} color="#d4af37" /> Specialist: <strong style={{ color: '#d4af37' }}>{upcomingBooking.stylist || 'Verified Specialist'}</strong>
                 </div>
                 <div style={{ fontSize: '0.76rem', color: '#9ca3af', marginTop: '0.25rem' }}>
                   📅 {upcomingBooking.date || 'Scheduled'} at {upcomingBooking.time || 'TBD'}

@@ -23,6 +23,7 @@ import {
   Shield,
   Download,
   Plus,
+  MapPin,
   Trash2,
   AlertTriangle,
   History,
@@ -511,6 +512,274 @@ export const ExpertDashboard = () => {
         </div>
 
         {/* ══════════════════════════════════════════════
+            INCOMING BOOKING REQUESTS (Awaiting Acceptance)
+        ══════════════════════════════════════════════ */}
+        <div
+          style={{
+            background: pendingBookings.length > 0
+              ? 'linear-gradient(135deg, #1c1917 0%, #292524 100%)'
+              : '#ffffff',
+            border: pendingBookings.length > 0
+              ? '1.5px solid rgba(245, 158, 11, 0.5)'
+              : '1px solid rgba(0, 0, 0, 0.07)',
+            borderRadius: '22px',
+            padding: '1.25rem',
+            marginBottom: '1rem',
+            boxShadow: pendingBookings.length > 0
+              ? '0 12px 32px rgba(245, 158, 11, 0.15)'
+              : '0 4px 16px rgba(0,0,0,0.04)',
+            color: pendingBookings.length > 0 ? '#ffffff' : '#171717',
+            transition: 'all 0.3s ease',
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <div style={{
+                width: '32px', height: '32px', borderRadius: '10px',
+                background: pendingBookings.length > 0 ? 'rgba(245, 158, 11, 0.2)' : 'rgba(212, 175, 55, 0.12)',
+                color: pendingBookings.length > 0 ? '#f59e0b' : '#d4af37',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <Sparkles size={16} />
+              </div>
+              <div>
+                <h3 style={{
+                  fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 900, margin: 0,
+                  color: pendingBookings.length > 0 ? '#ffffff' : '#171717',
+                }}>
+                  Incoming Booking Requests
+                </h3>
+                <span style={{ fontSize: '0.72rem', color: pendingBookings.length > 0 ? '#d6d3d1' : '#6b7280' }}>
+                  {pendingBookings.length > 0
+                    ? `${pendingBookings.length} request(s) awaiting your decision`
+                    : 'All client requests up to date'}
+                </span>
+              </div>
+            </div>
+
+            {pendingBookings.length > 0 && (
+              <span style={{
+                background: '#f59e0b', color: '#171717',
+                fontSize: '0.7rem', fontFamily: 'Outfit', fontWeight: 900,
+                padding: '0.25rem 0.65rem', borderRadius: '50px',
+                textTransform: 'uppercase', letterSpacing: '0.05em',
+              }}>
+                Action Required
+              </span>
+            )}
+          </div>
+
+          {pendingBookings.length === 0 ? (
+            <div style={{
+              background: 'rgba(0,0,0,0.02)',
+              borderRadius: '16px',
+              padding: '1.25rem 1rem',
+              textAlign: 'center',
+              border: '1px dashed rgba(0,0,0,0.08)',
+            }}>
+              <CheckCircle size={28} color="#10b981" style={{ margin: '0 auto 0.4rem', display: 'block', opacity: 0.8 }} />
+              <p style={{ fontFamily: 'Outfit', fontSize: '0.85rem', fontWeight: 800, color: '#171717', margin: '0 0 0.2rem' }}>
+                No Pending Booking Requests
+              </p>
+              <p style={{ fontSize: '0.75rem', color: '#6b7280', margin: 0 }}>
+                When customers book an appointment with you, their requests will appear here with Accept and Decline options.
+              </p>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+              {pendingBookings.map((b) => (
+                <div
+                  key={b._id}
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.06)',
+                    border: '1px solid rgba(245, 158, 11, 0.35)',
+                    borderRadius: '16px',
+                    padding: '1rem',
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.65rem', gap: '0.5rem', flexWrap: 'wrap' }}>
+                    <div style={{ minWidth: 0, flex: 1 }}>
+                      <h4 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 900, color: '#ffffff', margin: 0 }}>
+                        {b.clientName || 'Client'}
+                      </h4>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.75rem', color: '#d6d3d1', marginTop: '0.2rem', flexWrap: 'wrap' }}>
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                          <Mail size={11} color="#f59e0b" /> {b.clientEmail}
+                        </span>
+                        {b.clientPhone && (
+                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
+                            <span>• {b.clientPhone}</span>
+                            <button
+                              type="button"
+                              onClick={() => openClientWhatsApp(b.clientPhone, b.clientName)}
+                              style={{ background: 'rgba(34,197,94,0.2)', border: '1px solid rgba(34,197,94,0.4)', color: '#4ade80', padding: '0.12rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 800, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem' }}
+                            >
+                              <MessageSquare size={10} /> WhatsApp
+                            </button>
+                            <a
+                              href={`tel:${b.clientPhone}`}
+                              style={{ background: 'rgba(59,130,246,0.2)', border: '1px solid rgba(59,130,246,0.4)', color: '#60a5fa', padding: '0.12rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 800, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem', textDecoration: 'none' }}
+                            >
+                              <Phone size={10} /> Call
+                            </a>
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div style={{ textAlign: 'right' }}>
+                      <span style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 900, color: '#f59e0b', display: 'block' }}>
+                        ₦{Number(b.price).toLocaleString()}
+                      </span>
+                      <span style={{ fontSize: '0.65rem', background: 'rgba(16,185,129,0.2)', color: '#34d399', padding: '0.15rem 0.5rem', borderRadius: '50px', fontWeight: 800 }}>
+                        {b.paymentStatus === 'paid_wallet' || b.paymentStatus === 'paid_card' || b.paymentStatus === 'paid_transfer' ? '✓ Paid by Client' : 'Payment Awaiting Settlement'}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div style={{ background: 'rgba(0,0,0,0.3)', borderRadius: '12px', padding: '0.65rem 0.85rem', marginBottom: '0.85rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
+                    <div>
+                      <div style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.85rem', color: '#ffffff' }}>
+                        ✂️ {b.service}
+                      </div>
+                      <div style={{ fontSize: '0.72rem', color: '#a8a29e', marginTop: '0.15rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                        <Clock size={11} color="#f59e0b" /> {b.date} at {b.time}
+                        {b.location && (
+                          <span style={{ marginLeft: '0.5rem', display: 'inline-flex', alignItems: 'center', gap: '0.2rem' }}>
+                            <MapPin size={11} color="#f59e0b" /> {b.location}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Accept / Decline Action Buttons */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '0.65rem' }}>
+                    <button
+                      onClick={() => handleUpdateStatus(b._id, 'accepted')}
+                      disabled={updatingId === b._id}
+                      className="app-btn app-btn-primary"
+                      style={{ minHeight: '44px', borderRadius: '12px', fontSize: '0.85rem', fontWeight: 900, gap: '0.4rem' }}
+                    >
+                      <CheckCircle size={16} />
+                      <span>{updatingId === b._id ? 'Updating...' : 'Accept Booking'}</span>
+                    </button>
+
+                    <button
+                      onClick={() => handleUpdateStatus(b._id, 'rejected')}
+                      disabled={updatingId === b._id}
+                      style={{
+                        background: 'rgba(239, 68, 68, 0.15)',
+                        border: '1.5px solid rgba(239, 68, 68, 0.4)',
+                        color: '#f87171',
+                        borderRadius: '12px',
+                        minHeight: '44px',
+                        fontSize: '0.82rem',
+                        fontWeight: 800,
+                        fontFamily: 'Outfit',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '0.35rem',
+                      }}
+                    >
+                      <XCircle size={16} />
+                      <span>Decline</span>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* ══════════════════════════════════════════════
+            CONFIRMED APPOINTMENTS (Mark Completed)
+        ══════════════════════════════════════════════ */}
+        {acceptedBookings.length > 0 && (
+          <div
+            style={{
+              background: '#ffffff',
+              border: '1.5px solid rgba(16, 185, 129, 0.3)',
+              borderRadius: '22px',
+              padding: '1.25rem',
+              marginBottom: '1rem',
+              boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <div style={{
+                  width: '32px', height: '32px', borderRadius: '10px',
+                  background: 'rgba(16, 185, 129, 0.12)', color: '#10b981',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>
+                  <Calendar size={16} />
+                </div>
+                <div>
+                  <h3 style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 900, color: '#171717', margin: 0 }}>
+                    Active Confirmed Appointments ({acceptedBookings.length})
+                  </h3>
+                  <span style={{ fontSize: '0.72rem', color: '#6b7280' }}>
+                    Accepted appointments ready for service completion
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              {acceptedBookings.map((b) => (
+                <div
+                  key={b._id}
+                  style={{
+                    background: '#fafafa',
+                    border: '1px solid rgba(0,0,0,0.08)',
+                    borderRadius: '16px',
+                    padding: '0.9rem',
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.55rem', gap: '0.5rem', flexWrap: 'wrap' }}>
+                    <div>
+                      <h4 style={{ fontFamily: 'Outfit', fontSize: '0.95rem', fontWeight: 800, color: '#171717', margin: 0 }}>
+                        {b.clientName || 'Client'} — <span style={{ color: '#b5952f' }}>{b.service}</span>
+                      </h4>
+                      <div style={{ fontSize: '0.72rem', color: '#6b7280', marginTop: '0.2rem', display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
+                        <span>📅 {b.date} at {b.time}</span>
+                        {b.clientPhone && (
+                          <button
+                            type="button"
+                            onClick={() => openClientWhatsApp(b.clientPhone, b.clientName)}
+                            style={{ background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.25)', color: '#16a34a', padding: '0.1rem 0.4rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 800, fontFamily: 'Outfit' }}
+                          >
+                            WhatsApp
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <span style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 900, color: '#171717' }}>
+                        ₦{Number(b.price).toLocaleString()}
+                      </span>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => handleUpdateStatus(b._id, 'completed')}
+                    disabled={updatingId === b._id}
+                    className="app-btn app-btn-accent"
+                    style={{ width: '100%', minHeight: '40px', borderRadius: '12px', fontSize: '0.82rem', fontWeight: 900, gap: '0.35rem' }}
+                  >
+                    <CheckCircle size={15} />
+                    <span>{updatingId === b._id ? 'Updating...' : 'Mark Service Completed'}</span>
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ══════════════════════════════════════════════
             SECTION 3 — MY EXPERT SERVICES & OFFERINGS
         ══════════════════════════════════════════════ */}
         <div
@@ -957,7 +1226,7 @@ export const ExpertDashboard = () => {
                           className="app-btn app-btn-outline"
                           style={{ flex: '1 1 auto', minHeight: '42px', fontSize: '0.78rem', borderColor: '#ef4444', color: '#ef4444', borderRadius: '12px', minWidth: '90px' }}
                         >
-                          <XCircle size={14} /> Reject
+                          <XCircle size={14} /> Decline
                         </button>
                       </>
                     )}
@@ -976,6 +1245,12 @@ export const ExpertDashboard = () => {
                     {b.status === 'completed' && (
                       <div style={{ width: '100%', textAlign: 'center', fontSize: '0.75rem', color: '#10b981', fontFamily: 'Outfit', fontWeight: 800, padding: '0.45rem', background: 'rgba(16,185,129,0.08)', borderRadius: '10px' }}>
                         ✓ Completed & Settled
+                      </div>
+                    )}
+
+                    {(b.status === 'rejected' || b.status === 'cancelled') && (
+                      <div style={{ width: '100%', textAlign: 'center', fontSize: '0.75rem', color: '#ef4444', fontFamily: 'Outfit', fontWeight: 800, padding: '0.45rem', background: 'rgba(239,68,68,0.08)', borderRadius: '10px' }}>
+                        ✕ Request Declined
                       </div>
                     )}
                   </div>

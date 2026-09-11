@@ -55,7 +55,7 @@ export const Booking = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const initialService = searchParams.get('service') || '';
-  const initialStylist = searchParams.get('stylist') || 'Any Specialist';
+  const queryStylist = searchParams.get('stylist') || '';
 
   const { user, isAuthenticated, showToast, role } = useAuth();
 
@@ -68,7 +68,10 @@ export const Booking = () => {
 
   const [activeStep, setActiveStep] = useState(1);
   const [selectedService, setSelectedService] = useState(initialService || SERVICES[0].title);
-  const [stylist, setStylist] = useState(initialStylist);
+  const [stylist, setStylist] = useState(queryStylist);
+  const [selectedSpecialist, setSelectedSpecialist] = useState(null);
+  const [specialistsList, setSpecialistsList] = useState([]);
+  const [loadingSpecialists, setLoadingSpecialists] = useState(true);
   const [location, setLocation] = useState('Lagos State');
   const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
   const [time, setTime] = useState('10:00 AM');
@@ -85,25 +88,38 @@ export const Booking = () => {
     }
   }, [initialService]);
 
-  const [specialistsList, setSpecialistsList] = useState([
-    { name: 'Any Specialist', role: 'First Available Expert', rating: 5.0, image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80' },
-  ]);
-
   useEffect(() => {
+    setLoadingSpecialists(true);
     api.getSpecialists()
       .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          const mapped = data.map((s) => ({
+        if (Array.isArray(data)) {
+          // Strictly load only registered verified expert accounts
+          const verifiedStaff = data.filter((s) => s.role === 'staff' || s.isVerified === true);
+          const mapped = verifiedStaff.map((s) => ({
+            id: s._id,
+            firstname: s.firstname || '',
+            lastname: s.lastname || '',
+            email: s.email || '',
             name: `${s.firstname || ''} ${s.lastname || ''}`.trim() || 'Verified Specialist',
-            role: s.title || s.roleTitle || 'Certified Specialist',
+            role: s.title || s.roleTitle || (Array.isArray(s.specialties) && s.specialties[0]) || 'Certified Specialist',
             rating: s.rating || 5.0,
             image: s.avatarUrl || s.profileImage || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
           }));
-          setSpecialistsList([{ name: 'Any Specialist', role: 'First Available Expert', rating: 5.0, image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80' }, ...mapped]);
+          setSpecialistsList(mapped);
+
+          if (mapped.length > 0) {
+            const found = queryStylist
+              ? mapped.find(m => m.name.toLowerCase().includes(queryStylist.toLowerCase()) || queryStylist.toLowerCase().includes(m.name.toLowerCase()))
+              : null;
+            const target = found || mapped[0];
+            setStylist(target.name);
+            setSelectedSpecialist(target);
+          }
         }
       })
-      .catch((err) => console.warn('Could not load dynamic specialists list:', err.message));
-  }, []);
+      .catch((err) => console.warn('Could not load registered specialists list:', err.message))
+      .finally(() => setLoadingSpecialists(false));
+  }, [queryStylist]);
 
   const getPrice = (title) => {
     const match = SERVICES.find((s) => s.title === title);
@@ -129,16 +145,21 @@ export const Booking = () => {
       return;
     }
 
-    if (!selectedService) {
-      showToast('Please select a service.', 'error');
+    if (!stylist) {
+      showToast('Please select a preferred verified specialist.', 'error');
+      setActiveStep(2);
       return;
     }
+
+    const currentSpecialist = selectedSpecialist || specialistsList.find(s => s.name === stylist) || specialistsList[0];
 
     const bookingPayload = {
       clientName: `${user.firstname || ''} ${user.lastname || ''}`.trim() || 'Client',
       clientEmail: user.email,
       clientPhone: user.phone || 'N/A',
-      stylist: stylist,
+      stylist: currentSpecialist?.name || stylist,
+      stylistId: currentSpecialist?.id || undefined,
+      stylistEmail: currentSpecialist?.email || undefined,
       service: appliedVoucher ? `${selectedService} [Loyalty Voucher -₦25,000]` : selectedService,
       location: location,
       price: totalPrice,
@@ -364,60 +385,87 @@ export const Booking = () => {
 
               {/* Visual Artisan Selector Cards */}
               <div style={{ marginBottom: '1.25rem' }}>
-                <label className="app-label" style={{ marginBottom: '0.65rem', display: 'block' }}>
-                  Select Preferred Artisan
-                </label>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-                  {specialistsList.slice(0, 4).map((sp, idx) => {
-                    const isSelected = stylist === sp.name;
-                    return (
-                      <div
-                        key={idx}
-                        onClick={() => setStylist(sp.name)}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                          padding: '0.75rem 0.9rem',
-                          borderRadius: '14px',
-                          background: isSelected ? 'rgba(212,175,55,0.12)' : '#f8fafc',
-                          border: isSelected ? '2px solid #d4af37' : '1px solid rgba(0,0,0,0.08)',
-                          cursor: 'pointer',
-                          transition: 'all 0.15s ease'
-                        }}
-                      >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                          <OptimizedImage
-                            src={sp.image}
-                            alt={sp.name}
-                            style={{
-                              width: '42px',
-                              height: '42px',
-                              borderRadius: '50%',
-                              objectFit: 'cover',
-                              border: isSelected ? '2px solid #d4af37' : '1px solid rgba(0,0,0,0.1)'
-                            }}
-                          />
-                          <div>
-                            <h4 style={{ fontFamily: 'Outfit', fontSize: '0.9rem', fontWeight: 800, color: '#171717', margin: 0 }}>
-                              {sp.name}
-                            </h4>
-                            <span style={{ fontSize: '0.72rem', color: '#6b7280', fontFamily: 'Outfit' }}>
-                              {sp.role}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.65rem' }}>
+                  <label className="app-label" style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                    <ShieldCheck size={14} color="#d4af37" /> Select Verified Artisan ({specialistsList.length})
+                  </label>
+                  <span style={{ fontSize: '0.7rem', color: '#10b981', fontWeight: 800 }}>✓ Verified Only</span>
+                </div>
+
+                {loadingSpecialists ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+                    <div className="skeleton" style={{ height: '64px', borderRadius: '14px' }} />
+                    <div className="skeleton" style={{ height: '64px', borderRadius: '14px' }} />
+                  </div>
+                ) : specialistsList.length === 0 ? (
+                  <div style={{ textAlign: 'center', padding: '1.5rem 1rem', background: '#fafafa', borderRadius: '16px', border: '1px dashed rgba(212,175,55,0.4)' }}>
+                    <p style={{ fontFamily: 'Outfit', fontWeight: 800, color: '#171717', margin: '0 0 0.3rem' }}>
+                      No Verified Experts Available Yet
+                    </p>
+                    <p style={{ fontSize: '0.78rem', color: '#6b7280', margin: 0 }}>
+                      Only verified experts who have successfully registered an account with Style Corner are listed.
+                    </p>
+                  </div>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                    {specialistsList.map((sp, idx) => {
+                      const isSelected = stylist === sp.name;
+                      return (
+                        <div
+                          key={sp.id || idx}
+                          onClick={() => {
+                            setStylist(sp.name);
+                            setSelectedSpecialist(sp);
+                          }}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            padding: '0.75rem 0.9rem',
+                            borderRadius: '14px',
+                            background: isSelected ? 'rgba(212,175,55,0.12)' : '#f8fafc',
+                            border: isSelected ? '2px solid #d4af37' : '1px solid rgba(0,0,0,0.08)',
+                            cursor: 'pointer',
+                            transition: 'all 0.15s ease'
+                          }}
+                        >
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', minWidth: 0 }}>
+                            <OptimizedImage
+                              src={sp.image}
+                              alt={sp.name}
+                              style={{
+                                width: '44px',
+                                height: '44px',
+                                borderRadius: '50%',
+                                objectFit: 'cover',
+                                border: isSelected ? '2px solid #d4af37' : '1px solid rgba(0,0,0,0.1)',
+                                flexShrink: 0
+                              }}
+                            />
+                            <div style={{ minWidth: 0, overflow: 'hidden' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                                <h4 style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 800, color: '#171717', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                  {sp.name}
+                                </h4>
+                                <ShieldCheck size={13} color="#d4af37" style={{ flexShrink: 0 }} />
+                              </div>
+                              <span style={{ fontSize: '0.72rem', color: '#6b7280', fontFamily: 'Outfit', display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                {sp.role}
+                              </span>
+                            </div>
+                          </div>
+
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}>
+                            <span style={{ display: 'flex', alignItems: 'center', gap: '0.15rem', fontSize: '0.75rem', color: '#f59e0b', fontWeight: 800 }}>
+                              <Star size={12} fill="#f59e0b" /> {sp.rating}
                             </span>
+                            {isSelected && <CheckCircle2 size={18} color="#b5952f" />}
                           </div>
                         </div>
-
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                          <span style={{ display: 'flex', alignItems: 'center', gap: '0.15rem', fontSize: '0.75rem', color: '#f59e0b', fontWeight: 800 }}>
-                            <Star size={12} fill="#f59e0b" /> {sp.rating}
-                          </span>
-                          {isSelected && <CheckCircle2 size={18} color="#b5952f" />}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
 
               {/* Location Picker */}
