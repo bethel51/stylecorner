@@ -87,19 +87,21 @@ export const Payment = () => {
         amount: Math.round(amount * 100),
         currency: 'NGN',
         ref: 'SC-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
-        callback: async (response) => {
-          try {
-            await api.verifyPaystackPayment({
-              reference: response.reference,
-              bookingId: checkoutData.bookingId,
-              orderId: checkoutData.orderId,
-              amount
-            });
-            showToast(checkoutData.bookingId ? 'Payment verified via Paystack! Specialist will review & accept.' : 'Order payment verified via Paystack! 🎉', 'success');
-            navigate('/customer-dashboard', { replace: true });
-          } catch (err) {
-            showToast(err.message || 'Payment verification failed', 'error');
-          }
+        callback: function(response) {
+          (async () => {
+            try {
+              await api.verifyPaystackPayment({
+                reference: response.reference,
+                bookingId: checkoutData.bookingId,
+                orderId: checkoutData.orderId,
+                amount
+              });
+              showToast(checkoutData.bookingId ? 'Payment verified via Paystack! Specialist will review & accept.' : 'Order payment verified via Paystack! 🎉', 'success');
+              navigate('/customer-dashboard', { replace: true });
+            } catch (err) {
+              showToast(err.message || 'Payment verification failed', 'error');
+            }
+          })();
         },
         onClose: () => {
           showToast('Payment window closed.', 'accent');
@@ -132,20 +134,22 @@ export const Payment = () => {
           amount: Math.round(addVal * 100),
           currency: 'NGN',
           ref: 'TOPUP-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
-          callback: async (response) => {
-            try {
-              const res = await api.verifyPaystackPayment({
-                reference: response.reference,
-                isTopup: true,
-                amount: addVal
-              });
-              setWalletBalance(res.walletBalance);
-              showToast(`Wallet credited with ₦${addVal.toLocaleString()} via Paystack! 🎉`, 'success');
-              setShowTopupModal(false);
-              setTopupAmount('');
-            } catch (err) {
-              showToast(err.message || 'Top-up verification failed', 'error');
-            }
+          callback: function(response) {
+            (async () => {
+              try {
+                const res = await api.verifyPaystackPayment({
+                  reference: response.reference,
+                  isTopup: true,
+                  amount: addVal
+                });
+                setWalletBalance(res.walletBalance);
+                showToast(`Wallet credited with ₦${addVal.toLocaleString()} via Paystack! 🎉`, 'success');
+                setShowTopupModal(false);
+                setTopupAmount('');
+              } catch (err) {
+                showToast(err.message || 'Top-up verification failed', 'error');
+              }
+            })();
           },
           onClose: () => {
             showToast('Top-up cancelled', 'accent');

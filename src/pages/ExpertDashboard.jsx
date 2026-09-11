@@ -593,21 +593,23 @@ export const ExpertDashboard = () => {
           amount: Math.round(amt * 100),
           currency: 'NGN',
           ref: 'EXP-TOPUP-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
-          callback: async (response) => {
-            try {
-              const res = await api.verifyPaystackPayment({
-                reference: response.reference,
-                isTopup: true,
-                amount: amt,
-              });
-              setWalletBalance(res.walletBalance);
-              showToast(`Wallet credited with ₦${amt.toLocaleString()} via Paystack! 🎉`, 'success');
-              setShowTopupModal(false);
-              setTopupAmount('');
-              fetchWalletData();
-            } catch (err) {
-              showToast(err.message || 'Top-up verification failed', 'error');
-            }
+          callback: function(response) {
+            (async () => {
+              try {
+                const res = await api.verifyPaystackPayment({
+                  reference: response.reference,
+                  isTopup: true,
+                  amount: amt,
+                });
+                setWalletBalance(res.walletBalance);
+                showToast(`Wallet credited with ₦${amt.toLocaleString()} via Paystack! 🎉`, 'success');
+                setShowTopupModal(false);
+                setTopupAmount('');
+                fetchWalletData();
+              } catch (err) {
+                showToast(err.message || 'Top-up verification failed', 'error');
+              }
+            })();
           },
           onClose: () => {
             showToast('Top-up cancelled', 'accent');
