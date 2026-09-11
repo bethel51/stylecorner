@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Wallet, CreditCard, Landmark, ShieldCheck, CheckCircle2, Lock, ArrowLeft, Plus, Copy, Sparkles } from 'lucide-react';
+import { Wallet, CreditCard, Landmark, ShieldCheck, CheckCircle2, Lock, ArrowLeft, Plus, Sparkles } from 'lucide-react';
 import { PageContainer } from '../components/common/PageContainer';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
@@ -69,17 +69,6 @@ export const Payment = () => {
     try {
       const config = await api.getPaystackConfig();
       const pKey = config.publicKey;
-
-      if (!window.PaystackPop || !pKey || pKey === 'pk_test_placeholder_key') {
-        if (checkoutData.bookingId) {
-          await api.updateBookingStatus(checkoutData.bookingId, { paymentStatus: 'paid_card', status: 'pending' });
-        } else if (checkoutData.orderId) {
-          await api.updateOrderStatus(checkoutData.orderId, { paymentStatus: 'paid_card', status: 'processing' });
-        }
-        showToast(checkoutData.bookingId ? 'Payment confirmed! Request sent to specialist to accept.' : 'Card payment confirmed successfully! 🎉', 'success');
-        navigate('/customer-dashboard', { replace: true });
-        return;
-      }
 
       const handler = window.PaystackPop.setup({
         key: pKey,
@@ -362,53 +351,66 @@ export const Payment = () => {
 
         {/* ── METHOD 3: BANK TRANSFER / USSD ── */}
         {activeMethod === 'transfer' && (
-          <div className="app-card" style={{ padding: '1.25rem', borderRadius: '20px' }}>
-            <div style={{ background: '#faf9f5', border: '1px dashed rgba(212,175,55,0.4)', borderRadius: '16px', padding: '1.1rem', marginBottom: '1.25rem', textAlign: 'center' }}>
-              <span style={{ fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 800, color: '#b5952f', textTransform: 'uppercase' }}>
-                DIRECT BANK TRANSFER ACCOUNT
+          <div className="app-card" style={{ padding: '1.4rem', borderRadius: '20px', textAlign: 'center' }}>
+            <div
+              style={{
+                width: '56px',
+                height: '56px',
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, rgba(212,175,55,0.15) 0%, rgba(180,140,30,0.15) 100%)',
+                border: '1px solid rgba(212,175,55,0.3)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 1rem',
+              }}
+            >
+              <Landmark size={28} color="#d4af37" />
+            </div>
+
+            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.2rem', fontWeight: 900, color: '#171717', margin: '0 0 0.5rem' }}>
+              Bank Transfer &amp; USSD
+            </h3>
+            <p style={{ color: '#6b7280', fontSize: '0.82rem', maxWidth: '300px', margin: '0 auto 1.25rem', lineHeight: 1.5 }}>
+              Pay securely via bank transfer, USSD, or mobile banking using Paystack — Nigeria's most trusted payment gateway.
+            </p>
+
+            <div style={{ background: '#f8fafc', border: '1px solid rgba(0,0,0,0.06)', borderRadius: '14px', padding: '0.85rem 1rem', marginBottom: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '0.82rem', color: '#64748b', fontWeight: 600 }}>Amount Due</span>
+              <span style={{ fontFamily: 'Outfit', fontSize: '1.2rem', fontWeight: 900, color: '#0f172a' }}>
+                ₦{amount.toLocaleString()}
               </span>
-              <h3 style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 900, color: '#171717', margin: '0.2rem 0 0.5rem' }}>
-                Style Corner Atelier / Wema Bank
-              </h3>
-              <div style={{ fontSize: '1.6rem', fontFamily: 'monospace', fontWeight: 900, color: '#171717', background: '#ffffff', padding: '0.5rem', borderRadius: '10px', border: '1px solid rgba(0,0,0,0.1)', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                <span>9876543210</span>
-                <button
-                  type="button"
-                  onClick={() => {
-                    navigator.clipboard.writeText('9876543210');
-                    showToast('Account number copied to clipboard! 📋', 'success');
-                  }}
-                  style={{ background: 'rgba(212,175,55,0.15)', border: 'none', color: '#b5952f', borderRadius: '6px', padding: '4px 8px', cursor: 'pointer' }}
-                >
-                  <Copy size={14} />
-                </button>
-              </div>
-              <p style={{ color: '#6b7280', fontSize: '0.78rem', margin: 0 }}>
-                Transfer exactly <strong>₦{amount.toLocaleString()}</strong> to complete your order.
-              </p>
             </div>
 
             <button
-              onClick={async () => {
-                setSubmitting(true);
-                try {
-                  if (checkoutData.bookingId) {
-                    await api.updateBookingStatus(checkoutData.bookingId, { paymentStatus: 'paid_transfer', status: 'pending' });
-                  }
-                  showToast(checkoutData.bookingId ? 'Transfer logged! Request sent to specialist to accept.' : 'Bank transfer payment verified! 🎉', 'success');
-                  navigate('/customer-dashboard', { replace: true });
-                } catch (err) {
-                  showToast(err.message || 'Transfer logging failed', 'error');
-                } finally {
-                  setSubmitting(false);
-                }
-              }}
+              type="button"
+              onClick={handlePaystackCheckout}
               disabled={submitting}
-              className="app-btn app-btn-primary"
-              style={{ width: '100%', minHeight: '48px', borderRadius: '14px', fontSize: '0.92rem', fontWeight: 900 }}
+              className="app-btn app-btn-accent"
+              style={{
+                width: '100%',
+                minHeight: '50px',
+                borderRadius: '14px',
+                fontSize: '0.95rem',
+                fontWeight: 900,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.5rem',
+                background: 'linear-gradient(135deg, #d4af37 0%, #b5952f 100%)',
+                color: '#fff',
+                border: 'none',
+                boxShadow: '0 8px 20px -4px rgba(212,175,55,0.4)'
+              }}
             >
-              {submitting ? 'Confirming Transfer...' : 'I Have Transferred the Money'}
+              <Landmark size={20} />
+              <span>{submitting ? 'Opening Paystack...' : `Pay ₦${amount.toLocaleString()} via Paystack`}</span>
             </button>
+
+            <div style={{ marginTop: '0.85rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', color: '#94a3b8', fontSize: '0.72rem' }}>
+              <Lock size={12} />
+              <span>Paystack supports GTBank, UBA, Zenith, Access &amp; all major banks</span>
+            </div>
           </div>
         )}
       </div>

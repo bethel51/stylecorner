@@ -1601,11 +1601,7 @@ app.put('/api/specialists/portfolio', authenticateToken, async (req, res) => {
 app.get('/api/wallet', authenticateToken, async (req, res) => {
   try {
     const userDoc = await User.findById(req.user._id).select('walletBalance email firstname lastname');
-    let balance = userDoc?.walletBalance ?? 0;
-    if (balance === 50000) {
-      balance = 0;
-      await User.findByIdAndUpdate(req.user._id, { $set: { walletBalance: 0 } });
-    }
+    const balance = userDoc?.walletBalance ?? 0;
     res.status(200).json({ walletBalance: balance });
   } catch (error) {
     console.error('Fetch wallet error:', error);
@@ -1624,7 +1620,7 @@ app.post('/api/wallet/topup', authenticateToken, async (req, res) => {
     const userDoc = await User.findById(req.user._id);
     if (!userDoc) return res.status(404).json({ error: 'User not found' });
 
-    const currentBal = (userDoc.walletBalance === 50000 ? 0 : (userDoc.walletBalance ?? 0));
+    const currentBal = userDoc.walletBalance ?? 0;
     const newBal = currentBal + amount;
     userDoc.walletBalance = newBal;
     await userDoc.save();
@@ -1655,7 +1651,7 @@ app.post('/api/wallet/pay', authenticateToken, async (req, res) => {
     const userDoc = await User.findById(req.user._id);
     if (!userDoc) return res.status(404).json({ error: 'User not found' });
 
-    const currentBal = (userDoc.walletBalance === 50000 ? 0 : (userDoc.walletBalance ?? 0));
+    const currentBal = userDoc.walletBalance ?? 0;
     if (currentBal < amount) {
       return res.status(400).json({ error: `Insufficient wallet balance (₦${currentBal.toLocaleString()}). Please top up first.` });
     }
