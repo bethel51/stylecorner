@@ -1037,32 +1037,24 @@
                 </div>
 
                 <!-- Tab: My Work -->
-                <div id="tab-live-hub" class="tab-content">
                     <div class="metric-grid">
                         <div class="metric-card">
-                            <span class="title">New Bookings</span>
+                            <span class="title">Active & Pending Bookings</span>
                             <span class="digit" id="pending-services-count">0</span>
                         </div>
                         <div class="metric-card">
-                            <span class="title">To Ship</span>
-                            <span class="digit" id="alert-count" style="color: #ef4444;">0</span>
+                            <span class="title">Completed Appointments</span>
+                            <span class="digit" id="completed-services-count" style="color: #10b981;">0</span>
                         </div>
                         <div class="metric-card">
-                            <span class="title">Atelier Rating</span>
-                            <span class="digit" style="font-size: 2rem; font-weight: 800; color: var(--exp-accent);">98.4%</span>
+                            <span class="title">Client Satisfaction</span>
+                            <span class="digit" style="font-size: 2rem; font-weight: 800; color: var(--exp-accent);">99.4%</span>
                         </div>
                     </div>
 
                     <div style="margin-top: 3.5rem;">
-                        <h3 class="coming-section-title"><i class="fas fa-calendar-check" style="color: var(--exp-accent); margin-right: 0.5rem;"></i> Scheduled Appointments</h3>
+                        <h3 class="coming-section-title"><i class="fas fa-calendar-check" style="color: var(--exp-accent); margin-right: 0.5rem;"></i> Scheduled Appointments & Booking Requests</h3>
                         <div id="live-bookings-list">
-                            <!-- Injected by JS -->
-                        </div>
-                    </div>
-
-                    <div style="margin-top: 3.5rem;">
-                        <h3 class="coming-section-title"><i class="fas fa-box-open" style="color: #ef4444; margin-right: 0.5rem;"></i> Store Orders to Ship</h3>
-                        <div id="live-alerts-list">
                             <!-- Injected by JS -->
                         </div>
                     </div>
@@ -1301,7 +1293,6 @@
                 document.getElementById('set-lastname').value = user.lastname || '';
 
                 const sList = document.getElementById('live-bookings-list');
-                const aList = document.getElementById('live-alerts-list');
                 const hBody = document.getElementById('history-tbody');
 
                 if (showSkeleton) {
@@ -1311,36 +1302,27 @@
                             <div class="skeleton-action-row"><div class="skeleton skeleton-line short"></div><div class="skeleton" style="width:90px;height:36px;border-radius:8px;"></div></div>
                         `;
                     }
-                    if (aList) {
-                        aList.innerHTML = `<div class="skeleton-action-row"><div class="skeleton skeleton-line med"></div><div class="skeleton" style="width:90px;height:36px;border-radius:8px;"></div></div>`;
-                    }
                 }
 
                 let bks = [];
-                let ords = [];
                 try {
                     const token = localStorage.getItem('token');
-                    const [bksRes, ordsRes] = await Promise.all([
-                        fetch('/api/bookings', { headers: { 'Authorization': `Bearer ${token}` } }),
-                        fetch('/api/orders', { headers: { 'Authorization': `Bearer ${token}` } })
-                    ]);
+                    const bksRes = await fetch('/api/bookings', { headers: { 'Authorization': `Bearer ${token}` } });
                     if (bksRes.ok) bks = await bksRes.json();
-                    if (ordsRes.ok) ords = await ordsRes.json();
                 } catch (e) {
                     console.error('Error fetching data', e);
                 }
 
                 if (!Array.isArray(bks)) bks = [];
-                if (!Array.isArray(ords)) ords = [];
 
                 const pendingBks = bks.filter(b => b && b.status === 'pending');
                 const activeAcceptedBks = bks.filter(b => b && b.status === 'accepted' && (b.staff === user.firstname || !b.staff));
-                const pendingOrds = ords.filter(o => o && (o.status === 'paid' || o.status === 'pending'));
+                const completedBks = bks.filter(b => b && b.status === 'completed' && (b.staff === user.firstname || !b.staff));
 
-                // Notification Bell Check
+                // Notification Bell Check for new appointments
                 const currentPendingCount = pendingBks.length;
                 if (lastNotifCount !== 0 && currentPendingCount > lastNotifCount) {
-                    window.showToast('New client booking request received!', 'info');
+                    window.showToast('New client appointment request received!', 'info');
                     if (expNotifBadge) {
                         expNotifBadge.textContent = currentPendingCount;
                         expNotifBadge.style.display = 'flex';
@@ -1351,8 +1333,10 @@
                 }
                 lastNotifCount = currentPendingCount;
 
-                document.getElementById('pending-services-count').textContent = pendingBks.length + activeAcceptedBks.length;
-                document.getElementById('alert-count').textContent = pendingOrds.length;
+                const pendingCounterEl = document.getElementById('pending-services-count');
+                const completedCounterEl = document.getElementById('completed-services-count');
+                if (pendingCounterEl) pendingCounterEl.textContent = pendingBks.length + activeAcceptedBks.length;
+                if (completedCounterEl) completedCounterEl.textContent = completedBks.length;
 
                 const allActiveBks = [...activeAcceptedBks, ...pendingBks];
 
@@ -1384,46 +1368,22 @@
                         sList.innerHTML = `
                             <div class="exp-empty-state">
                                 <i class="fas fa-briefcase" style="font-size: 2.5rem; color: var(--exp-muted); margin-bottom: 1rem; opacity: 0.4;"></i>
-                                <h4>No Active Jobs Right Now</h4>
-                                <p>New client appointments will appear here in real time as they arrive.</p>
-                            </div>`;
-                    }
-                }
-
-                if (aList) {
-                    if (pendingOrds.length > 0) {
-                        aList.innerHTML = pendingOrds.map(o => `
-                        <div class="action-row" style="border-left: 4px solid #ef4444;">
-                            <div>
-                                <h4>Order <span>| ${o.item}</span></h4>
-                                <p><i class="fas fa-truck-ramp-box"></i> SHIP TO: ${o.address}</p>
-                            </div>
-                            <button class="btn btn-black ship-btn" data-id="${o._id}" style="font-size: 0.8rem; padding: 0.65rem 1.5rem; border: 1.5px solid #ef4444; background: none; color: #ef4444;">SHIP NOW</button>
-                        </div>`).join('');
-                    } else {
-                        aList.innerHTML = `
-                            <div class="exp-empty-state">
-                                <i class="fas fa-box-open" style="font-size: 2.5rem; color: var(--exp-muted); margin-bottom: 1rem; opacity: 0.4;"></i>
-                                <h4>All Orders Dispatched</h4>
-                                <p>No orders pending shipment right now. Great job!</p>
+                                <h4>No Active Bookings Right Now</h4>
+                                <p>New client appointment requests will appear here in real time.</p>
                             </div>`;
                     }
                 }
 
                 if (hBody) {
-                    const done = [
-                        ...bks.filter(b => b.status === 'completed').map(b => ({ cat: 'Appointment Completed', detail: `${b.clientName} (${b.service})`, time: b.date })),
-                        ...ords.filter(o => o.status === 'shipped').map(o => ({ cat: 'Order Sent', detail: o.item, time: 'Done' }))
-                    ];
-                    if (done.length > 0) {
-                        hBody.innerHTML = done.map(t => `
+                    if (completedBks.length > 0) {
+                        hBody.innerHTML = completedBks.map(t => `
                             <tr>
-                                <td style="font-weight: 700; color: #171717;">${t.cat}</td>
-                                <td>${t.detail}</td>
-                                <td style="text-align: right; color: var(--exp-accent); font-weight: 700;">${t.time}</td>
+                                <td style="font-weight: 700; color: #171717;">Appointment Completed</td>
+                                <td>${t.clientName} (${t.service})</td>
+                                <td style="text-align: right; color: var(--exp-accent); font-weight: 700;">${t.date || 'Completed'}</td>
                             </tr>`).join('');
                     } else {
-                        hBody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 3rem 0; color: var(--exp-muted);"><i class="fas fa-clock-rotate-left" style="font-size: 2rem; display: block; margin-bottom: 0.75rem; opacity: 0.4;"></i>No completed sessions yet. Finished tasks will show here.</td></tr>';
+                        hBody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 3rem 0; color: var(--exp-muted);"><i class="fas fa-clock-rotate-left" style="font-size: 2rem; display: block; margin-bottom: 0.75rem; opacity: 0.4;"></i>No completed sessions yet. Finished appointments will show here.</td></tr>';
                     }
                 }
 
@@ -1480,20 +1440,6 @@
                         } finally {
                             btn.disabled = false;
                         }
-                    });
-                });
-                document.querySelectorAll('.ship-btn').forEach(btn => {
-                    btn.addEventListener('click', async () => {
-                        const id = btn.dataset.id;
-                        await fetch(`/api/orders/${id}`, {
-                            method: 'PUT',
-                            headers: { 
-                                'Content-Type': 'application/json',
-                                'Authorization': `Bearer ${localStorage.getItem('token')}`
-                            },
-                            body: JSON.stringify({ status: 'shipped' })
-                        });
-                        window.showToast("Order Shipped.", "success"); refreshWorkspace();
                     });
                 });
             };

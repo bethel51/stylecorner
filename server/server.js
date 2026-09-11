@@ -792,13 +792,20 @@ app.get('/api/cron/send-reminders', async (req, res) => {
 // Run reminder check every hour
 setInterval(checkAndSendDayReminders, 60 * 60 * 1000);
 
-// Get all orders (Filtered by Role)
+// Get all orders (Filtered by Role: Customers see own orders; Admin manages all store orders; Staff/Experts do NOT see store orders)
 app.get('/api/orders', authenticateToken, async (req, res) => {
   try {
     let query = {};
     if (req.user.role === 'customer') {
       const userEmail = (req.user.email || '').trim();
       query = { email: new RegExp('^' + userEmail + '$', 'i') };
+    } else if (req.user.role === 'staff') {
+      // Experts/Staff only manage appointments/bookings. Store orders are strictly managed by Admin.
+      return res.status(200).json([]);
+    } else if (req.user.role === 'admin') {
+      query = {}; // Admin manages and sees all customer orders from the store
+    } else {
+      return res.status(200).json([]);
     }
     const orders = await Order.find(query).sort({ createdAt: -1 }).lean();
     res.status(200).json(orders);
@@ -882,9 +889,12 @@ app.post('/api/orders', authenticateToken, async (req, res) => {
   }
 });
 
-// Update an order status
+// Update an order status (Admin only)
 app.put('/api/orders/:id', authenticateToken, async (req, res) => {
   try {
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ error: 'Access denied. Only administrators can manage and ship store orders.' });
+    }
     const updateObj = typeof req.body === 'string' ? { status: req.body } : req.body;
     const updated = await Order.findByIdAndUpdate(req.params.id, updateObj, { new: true });
     if (!updated) {
@@ -922,9 +932,12 @@ app.put('/api/orders/:id', authenticateToken, async (req, res) => {
   }
 });
 
-// Update Order Tracking (Admin or System)
+// Update Order Tracking (Admin only)
 app.put('/api/orders/:id/tracking', authenticateToken, async (req, res) => {
   try {
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ error: 'Access denied. Only administrators can update order tracking.' });
+    }
     const { trackingStatus, trackingNumber, estimatedDelivery, status } = req.body;
     const updateFields = {};
     if (trackingStatus !== undefined) updateFields.trackingStatus = trackingStatus;

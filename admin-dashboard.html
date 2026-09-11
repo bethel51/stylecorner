@@ -623,6 +623,7 @@
                                 <th>Order ID</th>
                                 <th>Customer</th>
                                 <th>Items</th>
+                                <th>Delivery Address</th>
                                 <th>Total</th>
                                 <th>Tracking Status</th>
                                 <th>Tracking #</th>
@@ -630,7 +631,7 @@
                             </tr>
                         </thead>
                         <tbody id="orders-tbody">
-                            <tr><td colspan="7" style="text-align:center;padding:3rem 0;color:var(--adm-muted);">Loading orders...</td></tr>
+                            <tr><td colspan="8" style="text-align:center;padding:3rem 0;color:var(--adm-muted);">Loading customer store orders...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -811,11 +812,12 @@
                 (o._id || '').toLowerCase().includes(q) ||
                 (o.name || '').toLowerCase().includes(q) ||
                 (o.item || '').toLowerCase().includes(q) ||
+                (o.address || '').toLowerCase().includes(q) ||
                 (o.trackingNumber || '').toLowerCase().includes(q)
             );
 
             if (list.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:3rem 0;color:var(--adm-muted);">No orders found.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:3rem 0;color:var(--adm-muted);">No customer store orders found.</td></tr>';
                 return;
             }
 
@@ -827,27 +829,61 @@
                 if (trk.includes('Process')) pillClass = 'pill-processing';
                 if (trk.includes('Deliver')) pillClass = 'pill-delivered';
 
+                const addr = o.address || (o.houseNumber ? `${o.houseNumber} ${o.street}, ${o.lga}, ${o.state}` : 'Standard Lagos Delivery');
+
                 return `
                     <tr>
                         <td>
-                            <a href="order-tracking.html?id=${o._id}" style="color:var(--adm-accent);font-weight:800;font-family:'Outfit';text-decoration:none">#${shortId}</a>
+                            <a href="order-tracking.html?id=${o._id}" target="_blank" style="color:var(--adm-accent);font-weight:800;font-family:'Outfit';text-decoration:none" title="Open customer tracking view">
+                                #${shortId} <i class="fas fa-arrow-up-right-from-square" style="font-size:0.7rem"></i>
+                            </a>
                         </td>
                         <td>
                             <strong style="display:block;font-family:'Outfit'">${o.name || 'Customer'}</strong>
                             <small style="color:var(--adm-muted)">${o.email || o.phone || ''}</small>
                         </td>
-                        <td>${o.item || 'Luxury Item'}</td>
+                        <td><span style="font-weight:600">${o.item || 'Store Grooming Items'}</span></td>
+                        <td><small style="color:var(--adm-muted);max-width:200px;display:block;line-height:1.3">${addr}</small></td>
                         <td><strong>₦${Number(o.totalPrice || o.price || 0).toLocaleString()}</strong></td>
                         <td><span class="pill ${pillClass}">${trk}</span></td>
                         <td><code style="font-size:0.8rem;background:#f3f4f6;padding:2px 6px;border-radius:6px">${o.trackingNumber || 'Pending'}</code></td>
-                        <td style="text-align:right">
+                        <td style="text-align:right;white-space:nowrap;">
+                            ${(trk === 'Order Placed' || trk === 'Processing') ? `
+                                <button class="row-btn" style="background:#10b981;color:#fff;border:none;margin-right:4px;" onclick="quickUpdateOrder('${o._id}', 'In Transit')">
+                                    <i class="fas fa-truck"></i> Ship
+                                </button>
+                            ` : ''}
+                            ${(trk === 'In Transit' || trk === 'Out for Delivery') ? `
+                                <button class="row-btn" style="background:#3b82f6;color:#fff;border:none;margin-right:4px;" onclick="quickUpdateOrder('${o._id}', 'Delivered')">
+                                    <i class="fas fa-circle-check"></i> Delivered
+                                </button>
+                            ` : ''}
                             <button class="row-btn row-btn-primary" onclick="openTrackingModal('${o._id}', '${trk}', '${o.trackingNumber||''}', '${o.estimatedDelivery||''}')">
-                                <i class="fas fa-pen-to-square"></i> Update Tracking
+                                <i class="fas fa-pen-to-square"></i> Edit
                             </button>
                         </td>
                     </tr>
                 `;
             }).join('');
+        }
+
+        async function quickUpdateOrder(orderId, newTrackingStatus) {
+            try {
+                const token = localStorage.getItem('token');
+                const res = await fetch(`/api/orders/${orderId}/tracking`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({
+                        trackingStatus: newTrackingStatus,
+                        status: newTrackingStatus === 'Delivered' ? 'delivered' : 'shipped'
+                    })
+                });
+                if (!res.ok) throw new Error('Update failed');
+                showAdmToast(`Order #${orderId.slice(-6).toUpperCase()} updated to ${newTrackingStatus}!`, 'success');
+                loadAdminData();
+            } catch (err) {
+                showAdmToast('Failed to update order.', 'error');
+            }
         }
 
         function renderSpecialists() {
