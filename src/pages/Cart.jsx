@@ -22,7 +22,7 @@ import { LocationSelector } from '../components/store/LocationSelector';
 
 export const Cart = () => {
   const navigate = useNavigate();
-  const { cart, removeFromCart, updateQuantity, clearCart, subtotal } = useCart();
+  const { cart = [], removeFromCart = () => {}, updateQuantity = () => {}, clearCart = () => {}, subtotal = 0 } = useCart() || {};
   const { user, isAuthenticated, updateProfile, showToast } = useAuth();
 
   const [location, setLocation] = useState({

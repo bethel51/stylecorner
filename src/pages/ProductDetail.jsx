@@ -120,7 +120,7 @@ const DEFAULT_PRODUCTS = [
 export const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { addToCart, itemCount } = useCart();
+  const { addToCart = () => {}, itemCount = 0 } = useCart() || {};
   const { showToast } = useAuth();
 
   const [product, setProduct] = useState(null);

@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from '../context/AuthContext';
+import { CartProvider } from '../context/CartContext';
 import { ScrollToTop } from '../components/common/ScrollToTop';
 import { Shield } from 'lucide-react';
 
@@ -90,34 +91,35 @@ const AdminGuard = ({ children }) => {
 };
 
 // ── Standalone Admin Application ──
-// This is a completely isolated React app — no public website headers,
-// footers, navigation, context, or cart bleed through here.
+// This is a completely isolated React app with its own router and clean provider scope.
 export const AdminApp = () => (
   <AuthProvider>
-    <BrowserRouter>
-      <ScrollToTop />
-      <Suspense fallback={<AdminLoader />}>
-        <Routes>
-          {/* Admin login */}
-          <Route path="/admin/login" element={<AdminLogin />} />
+    <CartProvider>
+      <BrowserRouter>
+        <ScrollToTop />
+        <Suspense fallback={<AdminLoader />}>
+          <Routes>
+            {/* Admin login */}
+            <Route path="/admin/login" element={<AdminLogin />} />
 
-          {/* Protected admin dashboard */}
-          <Route
-            path="/admin"
-            element={
-              <AdminGuard>
-                <AdminDashboard />
-              </AdminGuard>
-            }
-          />
+            {/* Protected admin dashboard */}
+            <Route
+              path="/admin"
+              element={
+                <AdminGuard>
+                  <AdminDashboard />
+                </AdminGuard>
+              }
+            />
 
-          {/* Catch /admin/* sub-paths */}
-          <Route path="/admin/*" element={<Navigate to="/admin" replace />} />
+            {/* Catch /admin/* sub-paths */}
+            <Route path="/admin/*" element={<Navigate to="/admin" replace />} />
 
-          {/* Any unmatched path in admin context → dashboard */}
-          <Route path="*" element={<Navigate to="/admin" replace />} />
-        </Routes>
-      </Suspense>
-    </BrowserRouter>
+            {/* Any unmatched path in admin context → dashboard */}
+            <Route path="*" element={<Navigate to="/admin" replace />} />
+          </Routes>
+        </Suspense>
+      </BrowserRouter>
+    </CartProvider>
   </AuthProvider>
 );

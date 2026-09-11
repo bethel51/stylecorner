@@ -13,7 +13,7 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, isAuthenticated, role } = useAuth();
-  const { itemCount } = useCart();
+  const { itemCount = 0 } = useCart() || {};
   const [showImagePreview, setShowImagePreview] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);

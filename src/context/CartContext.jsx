@@ -1,18 +1,35 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-const CartContext = createContext();
+const defaultCartContext = {
+  cart: [],
+  addToCart: () => {},
+  removeFromCart: () => {},
+  updateQuantity: () => {},
+  clearCart: () => {},
+  subtotal: 0,
+  itemCount: 0,
+};
+
+const CartContext = createContext(defaultCartContext);
 
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState(() => {
-    const saved = localStorage.getItem('style_corner_cart');
-    return saved ? JSON.parse(saved) : [];
+    try {
+      const saved = localStorage.getItem('style_corner_cart');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      return [];
+    }
   });
 
   useEffect(() => {
-    localStorage.setItem('style_corner_cart', JSON.stringify(cart));
+    try {
+      localStorage.setItem('style_corner_cart', JSON.stringify(cart));
+    } catch (e) {}
   }, [cart]);
 
   const addToCart = (product, quantityToAdd = 1) => {
+    if (!product) return;
     setCart((prev) => {
       const qty = Number(quantityToAdd) || 1;
       const existing = prev.find((item) => item.id === product.id || item.title === product.title);
@@ -45,8 +62,12 @@ export const CartProvider = ({ children }) => {
 
   const clearCart = () => setCart([]);
 
-  const subtotal = cart.reduce((sum, item) => sum + (item.price || 0) * item.quantity, 0);
-  const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const subtotal = Array.isArray(cart)
+    ? cart.reduce((sum, item) => sum + (Number(item?.price) || 0) * (Number(item?.quantity) || 1), 0)
+    : 0;
+  const itemCount = Array.isArray(cart)
+    ? cart.reduce((sum, item) => sum + (Number(item?.quantity) || 1), 0)
+    : 0;
 
   return (
     <CartContext.Provider
@@ -65,4 +86,8 @@ export const CartProvider = ({ children }) => {
   );
 };
 
-export const useCart = () => useContext(CartContext);
+export const useCart = () => {
+  const context = useContext(CartContext);
+  return context || defaultCartContext;
+};
+

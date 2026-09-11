@@ -65,7 +65,7 @@ const DEFAULT_PRODUCTS = [
 
 export const Store = () => {
   const navigate = useNavigate();
-  const { addToCart, itemCount } = useCart();
+  const { addToCart = () => {}, itemCount = 0 } = useCart() || {};
   const { showToast } = useAuth();
   const [showCartSheet, setShowCartSheet] = useState(false);
   const [products, setProducts] = useState([]);

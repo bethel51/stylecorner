@@ -586,48 +586,46 @@ export const ExpertDashboard = () => {
       const config = await api.getPaystackConfig();
       const pKey = config.publicKey;
 
-      if (window.PaystackPop && pKey && pKey !== 'pk_test_placeholder_key') {
-        const handler = window.PaystackPop.setup({
-          key: pKey,
-          email: user?.email || 'expert@stylecorner.com',
-          amount: Math.round(amt * 100),
-          currency: 'NGN',
-          ref: 'EXP-TOPUP-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
-          callback: function(response) {
-            (async () => {
-              try {
-                const res = await api.verifyPaystackPayment({
-                  reference: response.reference,
-                  isTopup: true,
-                  amount: amt,
-                });
-                setWalletBalance(res.walletBalance);
-                showToast(`Wallet credited with ₦${amt.toLocaleString()} via Paystack! 🎉`, 'success');
-                setShowTopupModal(false);
-                setTopupAmount('');
-                fetchWalletData();
-              } catch (err) {
-                showToast(err.message || 'Top-up verification failed', 'error');
-              }
-            })();
-          },
-          onClose: () => {
-            showToast('Top-up cancelled', 'accent');
-            setTopupSubmitting(false);
-          },
-        });
-        handler.openIframe();
-      } else {
-        const res = await api.topupWallet(amt);
-        setWalletBalance(res.walletBalance);
-        showToast(`Wallet credited with ₦${amt.toLocaleString()}! New balance: ₦${res.walletBalance.toLocaleString()}`, 'success');
-        setShowTopupModal(false);
-        setTopupAmount('');
-        fetchWalletData();
+      if (!window.PaystackPop || !pKey) {
+        showToast('Paystack payment gateway is currently unavailable. Please try again shortly.', 'error');
+        setTopupSubmitting(false);
+        return;
       }
+
+      const handler = window.PaystackPop.setup({
+        key: pKey,
+        email: user?.email || 'expert@stylecorner.com',
+        amount: Math.round(amt * 100),
+        currency: 'NGN',
+        ref: 'EXP-TOPUP-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+        callback: function(response) {
+          (async () => {
+            try {
+              const res = await api.verifyPaystackPayment({
+                reference: response.reference,
+                isTopup: true,
+                amount: amt,
+              });
+              setWalletBalance(res.walletBalance);
+              showToast(`Wallet credited with ₦${amt.toLocaleString()} via Paystack! 🎉`, 'success');
+              setShowTopupModal(false);
+              setTopupAmount('');
+              fetchWalletData();
+            } catch (err) {
+              showToast(err.message || 'Top-up verification failed', 'error');
+            } finally {
+              setTopupSubmitting(false);
+            }
+          })();
+        },
+        onClose: () => {
+          showToast('Top-up cancelled', 'accent');
+          setTopupSubmitting(false);
+        },
+      });
+      handler.openIframe();
     } catch (err) {
       showToast(err.message || 'Top-up failed', 'error');
-    } finally {
       setTopupSubmitting(false);
     }
   };

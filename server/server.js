@@ -153,6 +153,17 @@ function authenticateToken(req, res, next) {
   });
 }
 
+// Middleware to protect admin routes
+function authenticateAdmin(req, res, next) {
+  authenticateToken(req, res, () => {
+    if (req.user?.role !== 'admin') {
+      return res.status(403).json({ error: 'Access denied. Administrator privileges required.' });
+    }
+    next();
+  });
+}
+
+
 // Register User
 app.post('/api/auth/register', async (req, res) => {
   try {
@@ -495,7 +506,7 @@ app.delete('/api/users/account', authenticateToken, async (req, res) => {
 });
 
 // Admin: Get all registered users
-app.get('/api/admin/users', async (req, res) => {
+app.get('/api/admin/users', authenticateAdmin, async (req, res) => {
   try {
     const users = await User.find({}, '-password').sort({ createdAt: -1 });
     res.status(200).json(users);
@@ -506,7 +517,7 @@ app.get('/api/admin/users', async (req, res) => {
 });
 
 // Admin: Delete user account by ID
-app.delete('/api/admin/users/:id', async (req, res) => {
+app.delete('/api/admin/users/:id', authenticateAdmin, async (req, res) => {
   try {
     const targetUser = await User.findById(req.params.id);
     if (!targetUser) return res.status(404).json({ error: 'User not found' });
@@ -526,7 +537,7 @@ app.delete('/api/admin/users/:id', async (req, res) => {
 });
 
 // Admin Delete User by Email Utility
-app.post('/api/admin/delete-user-by-email', async (req, res) => {
+app.post('/api/admin/delete-user-by-email', authenticateAdmin, async (req, res) => {
   try {
     const { email } = req.body;
     if (!email) return res.status(400).json({ error: 'Email is required' });
@@ -1439,61 +1450,8 @@ app.put('/api/products/:id', authenticateToken, async (req, res) => {
   }
 });
 
-// AI Specialist Matcher Endpoint
-app.post('/api/ai/match-specialist', async (req, res) => {
-  try {
-    const { query, service, location } = req.body;
-    
-    // Find verified staff users from MongoDB
-    const staffMembers = await User.find({ role: 'staff' }).select('-password');
-
-    if (staffMembers && staffMembers.length > 0) {
-      // Find staff whose title/services match requested service
-      const matched = staffMembers.find(s => {
-        const titleStr = (s.title || '').toLowerCase();
-        const servStr = Array.isArray(s.services) ? s.services.map(item => (item.name || item).toLowerCase()).join(' ') : '';
-        const searchStr = (service || '').toLowerCase();
-        return titleStr.includes(searchStr) || servStr.includes(searchStr);
-      }) || staffMembers[0];
-
-      const fullName = `${matched.firstname || ''} ${matched.lastname || ''}`.trim() || 'Verified Specialist';
-
-      return res.status(200).json({
-        match: {
-          id: matched._id,
-          name: fullName,
-          role: matched.title || 'Certified Atelier Specialist',
-          rating: 5.0,
-          matchScore: 98,
-          location: matched.location || location || 'Lagos, Nigeria',
-          rationale: `Matched based on verified track record in ${service || 'styling'} with top client ratings and executive service standards.`,
-          avatar: matched.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
-          primaryService: service || 'Hair Stylist (Braider)'
-        }
-      });
-    }
-
-    // Generic fallback if no staff members registered yet
-    return res.status(200).json({
-      match: {
-        name: 'Style Corner Atelier Specialist',
-        role: 'Verified Master Stylist',
-        rating: 5.0,
-        matchScore: 95,
-        location: location || 'Lagos, Nigeria',
-        rationale: `Matched based on your requested service (${service || 'beauty styling'}). Dedicated to bespoke client care and executive grooming.`,
-        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
-        primaryService: service || 'Hair Stylist (Braider)'
-      }
-    });
-  } catch (error) {
-    console.error('AI match specialist error:', error);
-    res.status(500).json({ error: 'Failed to match specialist' });
-  }
-});
-
 // Delete product (Admin)
-app.delete('/api/products/:id', authenticateToken, async (req, res) => {
+app.delete('/api/products/:id', authenticateAdmin, async (req, res) => {
   try {
     const deleted = await Product.findByIdAndDelete(req.params.id);
     if (!deleted) return res.status(404).json({ error: 'Product not found' });

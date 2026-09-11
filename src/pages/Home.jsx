@@ -26,7 +26,7 @@ import { api } from '../services/api';
 export const Home = () => {
   const navigate = useNavigate();
   const { isAuthenticated, showToast } = useAuth();
-  const { addToCart } = useCart();
+  const { addToCart = () => {} } = useCart() || {};
   const [showAiSheet, setShowAiSheet] = useState(false);
 
   const signatureServices = [
