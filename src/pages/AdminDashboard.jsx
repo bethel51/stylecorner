@@ -35,6 +35,9 @@ import {
   Bell,
   Download,
   Phone,
+  CreditCard,
+  Copy,
+  Check,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
@@ -48,11 +51,12 @@ export const AdminDashboard = () => {
   const navigate = useNavigate();
   const { user, logout, showToast } = useAuth();
 
-  const [activeTab, setActiveTab] = useState('orders'); // 'orders' | 'bookings' | 'users' | 'products'
+  const [activeTab, setActiveTab] = useState('orders'); // 'orders' | 'messages' | 'bookings' | 'users' | 'products' | 'payouts'
   const [bookings, setBookings] = useState([]);
   const [orders, setOrders] = useState([]);
   const [usersList, setUsersList] = useState([]);
   const [productsList, setProductsList] = useState([]);
+  const [withdrawalsList, setWithdrawalsList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState(null);
 
@@ -60,6 +64,7 @@ export const AdminDashboard = () => {
   const [orderStatusFilter, setOrderStatusFilter] = useState('all');
   const [bookingStatusFilter, setBookingStatusFilter] = useState('all');
   const [userRoleFilter, setUserRoleFilter] = useState('all');
+  const [payoutStatusFilter, setPayoutStatusFilter] = useState('all');
   const [datePeriodFilter, setDatePeriodFilter] = useState('all'); // 'all' | 'today' | 'week' | 'month'
   const [searchQuery, setSearchQuery] = useState('');
   
@@ -67,6 +72,9 @@ export const AdminDashboard = () => {
   const [selectedOrderForTracking, setSelectedOrderForTracking] = useState(null);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [userToDelete, setUserToDelete] = useState(null);
+  const [rejectionModalWithdrawal, setRejectionModalWithdrawal] = useState(null);
+  const [rejectionReasonInput, setRejectionReasonInput] = useState('');
+  const [copiedWithdrawalId, setCopiedWithdrawalId] = useState(null);
 
   // Product Modals State
   const [showProductModal, setShowProductModal] = useState(false);
@@ -140,16 +148,18 @@ export const AdminDashboard = () => {
   const fetchAdminData = async () => {
     setLoading(true);
     try {
-      const [bookingsData, ordersData, usersData, productsData] = await Promise.all([
+      const [bookingsData, ordersData, usersData, productsData, withdrawalsData] = await Promise.all([
         api.getBookings().catch(() => []),
         api.getOrders().catch(() => []),
         api.getAdminUsers().catch(() => []),
         api.getProducts().catch(() => []),
+        api.getAdminWithdrawals().catch(() => []),
       ]);
       setBookings(Array.isArray(bookingsData) ? bookingsData : []);
       setOrders(Array.isArray(ordersData) ? ordersData : []);
       setUsersList(Array.isArray(usersData) ? usersData : []);
       setProductsList(Array.isArray(productsData) ? productsData : []);
+      setWithdrawalsList(Array.isArray(withdrawalsData) ? withdrawalsData : []);
     } catch (err) {
       showToast('Failed to load admin data', 'error');
     } finally {
@@ -200,6 +210,52 @@ export const AdminDashboard = () => {
     } finally {
       setUpdatingId(null);
     }
+  };
+
+  // Payout / Withdrawal Actions
+  const handleSettlePayout = async (withdrawalId) => {
+    setUpdatingId(withdrawalId);
+    try {
+      await api.updateWithdrawalStatus(withdrawalId, { status: 'completed' });
+      setWithdrawalsList(prev => prev.map(w => w._id === withdrawalId ? { ...w, status: 'completed', settledAt: new Date() } : w));
+      showToast('Payout marked as settled & transferred!', 'success');
+    } catch (err) {
+      showToast(err.message || 'Failed to settle payout', 'error');
+    } finally {
+      setUpdatingId(null);
+    }
+  };
+
+  const handleConfirmRejectPayout = async () => {
+    if (!rejectionModalWithdrawal) return;
+    const withdrawalId = rejectionModalWithdrawal._id;
+    setUpdatingId(withdrawalId);
+    try {
+      await api.updateWithdrawalStatus(withdrawalId, {
+        status: 'rejected',
+        rejectionReason: rejectionReasonInput.trim() || 'Declined by administrator'
+      });
+      setWithdrawalsList(prev => prev.map(w => w._id === withdrawalId ? {
+        ...w,
+        status: 'rejected',
+        rejectionReason: rejectionReasonInput.trim() || 'Declined by administrator'
+      } : w));
+      setRejectionModalWithdrawal(null);
+      setRejectionReasonInput('');
+      showToast('Payout request declined and funds refunded to expert wallet.', 'success');
+    } catch (err) {
+      showToast(err.message || 'Failed to decline payout', 'error');
+    } finally {
+      setUpdatingId(null);
+    }
+  };
+
+  const handleCopyBankDetails = (w) => {
+    const text = `Bank: ${w.bankName}\nAccount Number: ${w.accountNumber}\nAccount Name: ${w.accountName}\nAmount: ₦${Number(w.amount).toLocaleString()}\nReference: ${w.reference}`;
+    navigator.clipboard.writeText(text);
+    setCopiedWithdrawalId(w._id);
+    showToast('Bank details copied to clipboard!', 'success');
+    setTimeout(() => setCopiedWithdrawalId(null), 2500);
   };
 
   // Product Actions
@@ -467,6 +523,39 @@ export const AdminDashboard = () => {
       (p.badge || '').toLowerCase().includes(q);
   });
 
+  const pendingPayoutsCount = withdrawalsList.filter(w => (w.status || 'processing') === 'processing').length;
+  const completedPayoutsCount = withdrawalsList.filter(w => w.status === 'completed').length;
+  const rejectedPayoutsCount = withdrawalsList.filter(w => w.status === 'rejected').length;
+
+  const totalPayoutsVolume = withdrawalsList
+    .filter(w => w.status === 'completed')
+    .reduce((sum, w) => sum + (Number(w.amount) || 0), 0);
+  const pendingPayoutsVolume = withdrawalsList
+    .filter(w => (w.status || 'processing') === 'processing')
+    .reduce((sum, w) => sum + (Number(w.amount) || 0), 0);
+
+  const filteredWithdrawals = withdrawalsList.filter(w => {
+    const status = (w.status || 'processing').toLowerCase();
+    const matchesStatus = payoutStatusFilter === 'all' || status === payoutStatusFilter.toLowerCase();
+    const q = searchQuery.trim().toLowerCase();
+    const expertStr = (w.expertName || '').toLowerCase();
+    const emailStr = (w.userEmail || '').toLowerCase();
+    const bankStr = (w.bankName || '').toLowerCase();
+    const accStr = (w.accountNumber || '').toLowerCase();
+    const accNameStr = (w.accountName || '').toLowerCase();
+    const refStr = (w.reference || '').toLowerCase();
+
+    const matchesSearch = !q ||
+      expertStr.includes(q) ||
+      emailStr.includes(q) ||
+      bankStr.includes(q) ||
+      accStr.includes(q) ||
+      accNameStr.includes(q) ||
+      refStr.includes(q);
+
+    return matchesStatus && matchesSearch;
+  });
+
   const kpiCards = [
     { label: datePeriodFilter === 'all' ? 'Store Revenue' : `Revenue (${datePeriodFilter})`, value: `₦${Number(totalRevenue).toLocaleString()}`, icon: DollarSign, color: '#d4af37', bg: 'rgba(212,175,55,0.1)' },
     { label: 'Total Orders', value: periodOrders.length, sub: `${pendingOrdersCount} pending`, icon: ShoppingBag, color: '#3b82f6', bg: 'rgba(59,130,246,0.1)' },
@@ -482,6 +571,7 @@ export const AdminDashboard = () => {
     { id: 'bookings', label: 'Salon Bookings', icon: Calendar, count: bookings.length },
     { id: 'users', label: 'User Accounts', icon: Users, count: usersList.length },
     { id: 'products', label: 'Manage Products', icon: Tag, count: productsList.length },
+    { id: 'payouts', label: 'Expert Payouts', icon: DollarSign, count: pendingPayoutsCount },
   ];
 
   return (
@@ -828,7 +918,9 @@ export const AdminDashboard = () => {
                     ? 'Search client, service, stylist...'
                     : activeTab === 'users'
                     ? 'Search name, email, phone...'
-                    : 'Search product title, badge, desc...'
+                    : activeTab === 'products'
+                    ? 'Search product title, badge, desc...'
+                    : 'Search expert, email, bank, account number, ref...'
                 }
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
@@ -905,27 +997,44 @@ export const AdminDashboard = () => {
             </div>
 
             {/* Scrollable Filter Chips with Live Counts */}
-            {activeTab !== 'products' && (
+            {activeTab !== 'products' && activeTab !== 'messages' && (
               <div style={{ display: 'flex', gap: '0.4rem', overflowX: 'auto', paddingBottom: '0.2rem', WebkitOverflowScrolling: 'touch' }}>
                 {(activeTab === 'orders'
                   ? ['all', 'pending', 'processing', 'shipped', 'completed']
                   : activeTab === 'bookings'
                   ? ['all', 'pending', 'confirmed', 'completed', 'cancelled']
-                  : ['all', 'customer', 'staff']
+                  : activeTab === 'users'
+                  ? ['all', 'customer', 'staff']
+                  : ['all', 'processing', 'completed', 'rejected']
                 ).map(status => {
                   const active =
                     activeTab === 'orders'
                       ? orderStatusFilter === status
                       : activeTab === 'bookings'
                       ? bookingStatusFilter === status
-                      : userRoleFilter === status;
-                  const labelDisplay = status === 'staff' ? 'experts' : status;
+                      : activeTab === 'users'
+                      ? userRoleFilter === status
+                      : payoutStatusFilter === status;
+
+                  const labelDisplay =
+                    activeTab === 'payouts'
+                      ? (status === 'processing' ? 'Pending Transfer' : status === 'completed' ? 'Settled' : status === 'rejected' ? 'Declined' : 'All Requests')
+                      : status === 'staff' ? 'experts' : status;
+
                   const countVal =
                     activeTab === 'orders'
-                      ? orderCounts[status] || 0
+                      ? (orderCounts[status] || 0)
                       : activeTab === 'bookings'
-                      ? bookingCounts[status] || 0
-                      : userCounts[status] || 0;
+                      ? (bookingCounts[status] || 0)
+                      : activeTab === 'users'
+                      ? (userCounts[status] || 0)
+                      : status === 'all'
+                      ? withdrawalsList.length
+                      : status === 'processing'
+                      ? pendingPayoutsCount
+                      : status === 'completed'
+                      ? completedPayoutsCount
+                      : rejectedPayoutsCount;
 
                   return (
                     <button
@@ -933,7 +1042,8 @@ export const AdminDashboard = () => {
                       onClick={() => {
                         if (activeTab === 'orders') setOrderStatusFilter(status);
                         else if (activeTab === 'bookings') setBookingStatusFilter(status);
-                        else setUserRoleFilter(status);
+                        else if (activeTab === 'users') setUserRoleFilter(status);
+                        else setPayoutStatusFilter(status);
                       }}
                       style={{
                         padding: '0.45rem 0.85rem', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 600,
@@ -1422,7 +1532,7 @@ export const AdminDashboard = () => {
                 })}
               </div>
             )
-          ) : (
+          ) : activeTab === 'products' ? (
             /* --- TAB 4: STORE PRODUCTS MANAGEMENT --- */
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.5rem' }}>
@@ -1558,6 +1668,235 @@ export const AdminDashboard = () => {
                       </div>
                     </div>
                   ))}
+                </div>
+              )}
+            </div>
+          ) : (
+            /* --- TAB 6: EXPERT PAYOUTS & WITHDRAWALS --- */
+            <div>
+              {/* Header & Metrics Banner */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.75rem' }}>
+                <div>
+                  <h3 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '1.1rem', color: '#0f172a', margin: 0 }}>
+                    Expert Payouts & Withdrawals ({filteredWithdrawals.length})
+                  </h3>
+                  <p style={{ fontSize: '0.78rem', color: '#64748b', margin: '0.15rem 0 0' }}>
+                    Review, transfer, and settle earnings requested by customers and specialists to their verified bank accounts.
+                  </p>
+                  <div style={{
+                    marginTop: '0.35rem',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.35rem',
+                    fontSize: '0.72rem',
+                    color: '#d4af37',
+                    fontWeight: 700,
+                    backgroundColor: 'rgba(212,175,55,0.08)',
+                    border: '1px solid rgba(212,175,55,0.25)',
+                    padding: '0.2rem 0.6rem',
+                    borderRadius: '50px'
+                  }}>
+                    🗓️ Standard Payout Window: Every 3rd Saturday of the Month (Admin instant settlement active)
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
+                  <div style={{
+                    backgroundColor: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.25)',
+                    padding: '0.45rem 0.85rem', borderRadius: '12px', display: 'flex', flexDirection: 'column'
+                  }}>
+                    <span style={{ fontSize: '0.65rem', color: '#b5952f', fontWeight: 700, textTransform: 'uppercase' }}>Awaiting Transfer</span>
+                    <span style={{ fontSize: '0.92rem', fontWeight: 900, color: '#0f172a', fontFamily: 'Outfit' }}>
+                      ₦{pendingPayoutsVolume.toLocaleString()} ({pendingPayoutsCount})
+                    </span>
+                  </div>
+                  <div style={{
+                    backgroundColor: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.25)',
+                    padding: '0.45rem 0.85rem', borderRadius: '12px', display: 'flex', flexDirection: 'column'
+                  }}>
+                    <span style={{ fontSize: '0.65rem', color: '#16a34a', fontWeight: 700, textTransform: 'uppercase' }}>Settled Volume</span>
+                    <span style={{ fontSize: '0.92rem', fontWeight: 900, color: '#0f172a', fontFamily: 'Outfit' }}>
+                      ₦{totalPayoutsVolume.toLocaleString()} ({completedPayoutsCount})
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {filteredWithdrawals.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '3.5rem 1.5rem', backgroundColor: '#ffffff', borderRadius: '18px', border: '1px dashed rgba(0,0,0,0.12)' }}>
+                  <DollarSign size={42} color="#94a3b8" style={{ marginBottom: '0.75rem' }} />
+                  <h3 style={{ color: '#0f172a', fontFamily: 'Outfit', margin: '0 0 0.25rem', fontSize: '1.05rem', fontWeight: 800 }}>No Payout Requests Found</h3>
+                  <p style={{ color: '#64748b', fontSize: '0.8rem' }}>
+                    {searchQuery || payoutStatusFilter !== 'all' ? 'Try changing your search or status filter.' : 'When specialists withdraw their earnings, payout requests will appear here.'}
+                  </p>
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  {filteredWithdrawals.map(w => {
+                    const isProcessing = (w.status || 'processing') === 'processing';
+                    const isCompleted = w.status === 'completed';
+                    const isRejected = w.status === 'rejected';
+                    const isCopied = copiedWithdrawalId === w._id;
+
+                    return (
+                      <div
+                        key={w._id}
+                        style={{
+                          backgroundColor: '#ffffff',
+                          borderRadius: '16px',
+                          padding: isMobile ? '1rem' : '1.35rem',
+                          border: isProcessing ? '1px solid rgba(212,175,55,0.35)' : '1px solid rgba(0,0,0,0.08)',
+                          boxShadow: '0 4px 16px rgba(0,0,0,0.02)',
+                          position: 'relative',
+                        }}
+                      >
+                        {/* Top Header Row */}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.85rem' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                            <div style={{
+                              width: '42px', height: '42px', borderRadius: '12px', flexShrink: 0,
+                              background: 'linear-gradient(135deg, #d4af37, #b5952f)',
+                              display: 'flex', alignItems: 'center', justifyContent: 'center',
+                              color: '#fff', fontWeight: 800, fontSize: '0.9rem'
+                            }}>
+                              {w.expertName?.charAt(0) || 'E'}
+                            </div>
+                            <div>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
+                                <h4 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.98rem', color: '#0f172a', margin: 0 }}>
+                                  {w.expertName || 'Specialist'}
+                                </h4>
+                                <span style={{
+                                  fontSize: '0.62rem', fontWeight: 800, padding: '0.1rem 0.45rem', borderRadius: '50px',
+                                  textTransform: 'uppercase', letterSpacing: '0.5px',
+                                  backgroundColor: 'rgba(212,175,55,0.15)', color: '#b5952f'
+                                }}>
+                                  Specialist Payout
+                                </span>
+                              </div>
+                              <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.1rem' }}>
+                                {w.userEmail} · Ref: <span style={{ fontFamily: 'monospace', color: '#0f172a' }}>{w.reference || w._id.slice(-6).toUpperCase()}</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div style={{ textAlign: isMobile ? 'left' : 'right' }}>
+                            <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#0f172a', fontFamily: 'Outfit' }}>
+                              ₦{Number(w.amount).toLocaleString()}
+                            </div>
+                            <div style={{ marginTop: '0.2rem' }}>
+                              {isProcessing && (
+                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.68rem', fontWeight: 800, padding: '0.2rem 0.6rem', borderRadius: '50px', backgroundColor: 'rgba(234,179,8,0.12)', color: '#ca8a04', border: '1px solid rgba(234,179,8,0.3)' }}>
+                                  <Clock size={11} /> Pending Transfer
+                                </span>
+                              )}
+                              {isCompleted && (
+                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.68rem', fontWeight: 800, padding: '0.2rem 0.6rem', borderRadius: '50px', backgroundColor: 'rgba(34,197,94,0.12)', color: '#16a34a', border: '1px solid rgba(34,197,94,0.3)' }}>
+                                  <CheckCircle size={11} /> Settled & Transferred
+                                </span>
+                              )}
+                              {isRejected && (
+                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.68rem', fontWeight: 800, padding: '0.2rem 0.6rem', borderRadius: '50px', backgroundColor: 'rgba(239,68,68,0.12)', color: '#ef4444', border: '1px solid rgba(239,68,68,0.3)' }}>
+                                  <XCircle size={11} /> Declined & Refunded
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Bank Account Details Card */}
+                        <div style={{
+                          backgroundColor: '#f8fafc',
+                          border: '1px solid rgba(0,0,0,0.06)',
+                          borderRadius: '12px',
+                          padding: '0.85rem 1rem',
+                          marginBottom: '0.85rem',
+                          display: 'grid',
+                          gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
+                          gap: '0.75rem',
+                          fontSize: '0.8rem'
+                        }}>
+                          <div>
+                            <span style={{ fontSize: '0.68rem', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.4px' }}>Bank Name</span>
+                            <div style={{ fontWeight: 700, color: '#0f172a', marginTop: '0.15rem' }}>{w.bankName || 'N/A'}</div>
+                          </div>
+                          <div>
+                            <span style={{ fontSize: '0.68rem', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.4px' }}>NUBAN Account Number</span>
+                            <div style={{ fontWeight: 800, color: '#0f172a', marginTop: '0.15rem', fontFamily: 'monospace', letterSpacing: '1px' }}>{w.accountNumber}</div>
+                          </div>
+                          <div>
+                            <span style={{ fontSize: '0.68rem', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.4px' }}>Account Holder Name</span>
+                            <div style={{ fontWeight: 700, color: '#0f172a', marginTop: '0.15rem' }}>{w.accountName}</div>
+                          </div>
+                        </div>
+
+                        {/* Settlement / Decline Notes */}
+                        {w.rejectionReason && (
+                          <div style={{ fontSize: '0.76rem', color: '#ef4444', backgroundColor: 'rgba(239,68,68,0.06)', padding: '0.5rem 0.75rem', borderRadius: '8px', border: '1px solid rgba(239,68,68,0.18)', marginBottom: '0.85rem' }}>
+                            <strong>Decline Reason:</strong> {w.rejectionReason} (₦{Number(w.amount).toLocaleString()} refunded to expert wallet)
+                          </div>
+                        )}
+                        {w.settledAt && (
+                          <div style={{ fontSize: '0.72rem', color: '#64748b', marginBottom: '0.85rem' }}>
+                            Settled on {new Date(w.settledAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                          </div>
+                        )}
+
+                        {/* Action Buttons Bar */}
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', flexWrap: 'wrap', gap: '0.5rem' }}>
+                          <button
+                            type="button"
+                            onClick={() => handleCopyBankDetails(w)}
+                            style={{
+                              padding: '0.45rem 0.85rem', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 700,
+                              backgroundColor: isCopied ? 'rgba(34,197,94,0.12)' : 'rgba(0,0,0,0.04)',
+                              color: isCopied ? '#16a34a' : '#334155',
+                              border: isCopied ? '1px solid rgba(34,197,94,0.3)' : '1px solid rgba(0,0,0,0.08)',
+                              cursor: 'pointer', fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.35rem'
+                            }}
+                          >
+                            {isCopied ? <Check size={13} /> : <Copy size={13} />}
+                            {isCopied ? 'Bank Details Copied!' : 'Copy Bank Details'}
+                          </button>
+
+                          {isProcessing && (
+                            <>
+                              <button
+                                type="button"
+                                disabled={updatingId === w._id}
+                                onClick={() => {
+                                  setRejectionModalWithdrawal(w);
+                                  setRejectionReasonInput('');
+                                }}
+                                style={{
+                                  padding: '0.45rem 0.85rem', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 700,
+                                  backgroundColor: 'rgba(239,68,68,0.1)', color: '#ef4444',
+                                  border: '1px solid rgba(239,68,68,0.25)', cursor: 'pointer', fontFamily: 'Outfit',
+                                  display: 'inline-flex', alignItems: 'center', gap: '0.35rem'
+                                }}
+                              >
+                                <XCircle size={13} /> Decline & Refund
+                              </button>
+
+                              <button
+                                type="button"
+                                disabled={updatingId === w._id}
+                                onClick={() => handleSettlePayout(w._id)}
+                                style={{
+                                  padding: '0.45rem 1rem', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 800,
+                                  backgroundColor: '#16a34a', color: '#ffffff',
+                                  border: 'none', cursor: 'pointer', fontFamily: 'Outfit',
+                                  display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
+                                  boxShadow: '0 2px 8px rgba(22,163,74,0.3)'
+                                }}
+                              >
+                                <CheckCircle size={13} /> {updatingId === w._id ? 'Updating...' : 'Mark Settled & Transferred'}
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </div>
@@ -2062,6 +2401,83 @@ export const AdminDashboard = () => {
         }}
       />
 
+      {/* Decline Payout Modal with Auto-Refund Notice */}
+      {rejectionModalWithdrawal && (
+        <div
+          onClick={() => setRejectionModalWithdrawal(null)}
+          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(6px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}
+        >
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{
+              backgroundColor: '#ffffff', borderRadius: '20px', border: '1px solid rgba(0,0,0,0.1)',
+              width: '100%', maxWidth: '460px', padding: '1.5rem', boxShadow: '0 20px 40px rgba(0,0,0,0.2)'
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <div style={{ width: '36px', height: '36px', borderRadius: '10px', backgroundColor: 'rgba(239,68,68,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <AlertTriangle size={18} color="#ef4444" />
+                </div>
+                <h3 style={{ color: '#0f172a', fontFamily: 'Outfit', fontWeight: 800, margin: 0, fontSize: '1.1rem' }}>Decline Payout Request</h3>
+              </div>
+              <button
+                onClick={() => setRejectionModalWithdrawal(null)}
+                style={{ background: 'rgba(0,0,0,0.06)', border: 'none', color: '#64748b', cursor: 'pointer', borderRadius: '50%', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >✕</button>
+            </div>
+
+            <p style={{ fontSize: '0.84rem', color: '#475569', lineHeight: 1.5, margin: '0 0 1rem' }}>
+              You are declining the payout of <strong style={{ color: '#0f172a' }}>₦{Number(rejectionModalWithdrawal.amount).toLocaleString()}</strong> for <strong style={{ color: '#0f172a' }}>{rejectionModalWithdrawal.expertName}</strong>.
+            </p>
+
+            <div style={{ backgroundColor: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.2)', padding: '0.75rem', borderRadius: '10px', marginBottom: '1rem', fontSize: '0.78rem', color: '#15803d' }}>
+              💡 <strong>Automatic Wallet Refund:</strong> ₦{Number(rejectionModalWithdrawal.amount).toLocaleString()} will be automatically credited back into their Atelier Wallet balance immediately.
+            </div>
+
+            <label className="app-label" style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#0f172a', marginBottom: '0.35rem' }}>
+              Reason for Declining (Sent to Expert)
+            </label>
+            <textarea
+              rows={3}
+              value={rejectionReasonInput}
+              onChange={e => setRejectionReasonInput(e.target.value)}
+              placeholder="e.g. Account name mismatch with NUBAN, incorrect bank, or specialist cancelled request..."
+              style={{
+                width: '100%', padding: '0.65rem 0.85rem', borderRadius: '10px',
+                border: '1px solid rgba(0,0,0,0.15)', fontSize: '0.82rem', fontFamily: 'Outfit',
+                outline: 'none', boxSizing: 'border-box', resize: 'vertical', marginBottom: '1.25rem'
+              }}
+            />
+
+            <div style={{ display: 'flex', gap: '0.6rem', justifyContent: 'flex-end' }}>
+              <button
+                type="button"
+                onClick={() => setRejectionModalWithdrawal(null)}
+                style={{
+                  padding: '0.6rem 1.1rem', borderRadius: '10px', backgroundColor: 'rgba(0,0,0,0.04)',
+                  border: '1px solid rgba(0,0,0,0.08)', color: '#475569', fontWeight: 700, fontSize: '0.82rem', cursor: 'pointer', fontFamily: 'Outfit'
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={updatingId === rejectionModalWithdrawal._id}
+                onClick={handleConfirmRejectPayout}
+                style={{
+                  padding: '0.6rem 1.1rem', borderRadius: '10px', backgroundColor: '#ef4444',
+                  border: 'none', color: '#ffffff', fontWeight: 800, fontSize: '0.82rem', cursor: 'pointer', fontFamily: 'Outfit',
+                  boxShadow: '0 4px 12px rgba(239,68,68,0.3)'
+                }}
+              >
+                {updatingId === rejectionModalWithdrawal._id ? 'Declining...' : 'Confirm Decline & Refund'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ── Mobile Fixed Bottom Nav Bar ── */}
       {isMobile && (
         <nav
@@ -2132,7 +2548,7 @@ export const AdminDashboard = () => {
                     whiteSpace: 'nowrap',
                   }}
                 >
-                  {item.id === 'orders' ? 'Orders' : item.id === 'messages' ? 'Inquiries' : item.id === 'bookings' ? 'Bookings' : item.id === 'users' ? 'Users' : 'Products'}
+                  {item.id === 'orders' ? 'Orders' : item.id === 'messages' ? 'Inquiries' : item.id === 'bookings' ? 'Bookings' : item.id === 'users' ? 'Users' : item.id === 'products' ? 'Products' : 'Payouts'}
                 </span>
               </button>
             );

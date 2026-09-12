@@ -20,6 +20,7 @@ const bookingSchema = new mongoose.Schema({
     enum: ['pending', 'accepted', 'completed', 'cancelled', 'rejected'], 
     default: 'pending' 
   },
+  reminderSent: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now }
 });
 

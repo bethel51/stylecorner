@@ -48,6 +48,7 @@ import { StatusBadge } from '../components/common/StatusBadge';
 import { SkeletonList } from '../components/common/SkeletonLoader';
 import { PopupModal } from '../components/common/PopupModal';
 import { BottomSheet } from '../components/common/BottomSheet';
+import { WithdrawFundsModal } from '../components/common/WithdrawFundsModal';
 import { ImagePreviewModal } from '../components/common/ImagePreviewModal';
 import { downloadBookingHistoryCSV, printBookingHistoryReport } from '../utils/bookingHistoryExport';
 
@@ -1069,6 +1070,24 @@ export const ExpertDashboard = () => {
             </div>
           </div>
 
+          {/* 3rd Saturday Payout Window Notice */}
+          <div style={{
+            background: 'rgba(212,175,55,0.08)',
+            border: '1px dashed rgba(212,175,55,0.3)',
+            borderRadius: '12px',
+            padding: '0.55rem 0.75rem',
+            marginBottom: '0.85rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            fontSize: '0.74rem',
+            color: '#d4af37',
+            fontFamily: 'Outfit',
+            fontWeight: 700
+          }}>
+            <Calendar size={14} /> Payout Schedule: Every 3rd Saturday of the month
+          </div>
+
           {/* Quick Action Buttons: Top Up + Withdraw Funds */}
           <div style={{ display: 'flex', gap: '0.65rem' }}>
             <button
@@ -2046,205 +2065,16 @@ export const ExpertDashboard = () => {
         </form>
       </PopupModal>
 
-      {/* ── WITHDRAW FUNDS MODAL (NIGERIAN BANK RESOLVER) ── */}
-      <PopupModal
+      {/* ── WITHDRAW FUNDS MODAL (3RD SATURDAY WINDOW ENFORCED) ── */}
+      <WithdrawFundsModal
         isOpen={showWithdrawModal}
-        onClose={() => {
-          setShowWithdrawModal(false);
-          setResolveError('');
+        onClose={() => setShowWithdrawModal(false)}
+        walletBalance={walletBalance}
+        onSuccess={(newBal) => {
+          setWalletBalance(newBal);
+          fetchDashboardData();
         }}
-        title="Withdraw Funds to Nigerian Bank"
-      >
-        <form onSubmit={handleWithdrawSubmit} style={{ padding: '0.5rem 0' }}>
-          {/* Current Withdrawable Balance Banner */}
-          <div style={{
-            background: '#fafaf9',
-            border: '1px solid rgba(212,175,55,0.3)',
-            borderRadius: '14px',
-            padding: '0.75rem 1rem',
-            marginBottom: '1rem',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center'
-          }}>
-            <div>
-              <div style={{ fontSize: '0.68rem', color: '#78716c', fontWeight: 800, textTransform: 'uppercase' }}>
-                Withdrawable Balance
-              </div>
-              <div style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 900, color: '#171717' }}>
-                ₦{Number(walletBalance).toLocaleString()}
-              </div>
-            </div>
-            <button
-              type="button"
-              onClick={() => setWithdrawAmount(String(walletBalance))}
-              style={{
-                background: 'rgba(212,175,55,0.15)',
-                border: '1px solid rgba(212,175,55,0.4)',
-                color: '#b5952f',
-                padding: '0.35rem 0.65rem',
-                borderRadius: '50px',
-                fontSize: '0.72rem',
-                fontFamily: 'Outfit',
-                fontWeight: 800,
-                cursor: 'pointer'
-              }}
-            >
-              Withdraw All
-            </button>
-          </div>
-
-          {/* Amount to Withdraw */}
-          <div className="app-input-group" style={{ marginBottom: '0.85rem' }}>
-            <label className="app-label">Withdrawal Amount (₦)</label>
-            <input
-              type="number"
-              min="1000"
-              max={walletBalance}
-              required
-              value={withdrawAmount}
-              onChange={(e) => setWithdrawAmount(e.target.value)}
-              placeholder="Minimum ₦1,000"
-              className="app-input"
-              style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 700 }}
-            />
-          </div>
-
-          {/* Select Nigerian Bank */}
-          <div className="app-input-group" style={{ marginBottom: '0.85rem' }}>
-            <label className="app-label">Select Destination Bank</label>
-            <select
-              value={selectedBankCode}
-              onChange={onBankChange}
-              required
-              className="app-input"
-              style={{ fontFamily: 'Outfit', fontSize: '0.85rem', fontWeight: 700 }}
-            >
-              <option value="">Select a Nigerian Bank...</option>
-              {banksList.map((b, idx) => (
-                <option key={`${b.code}-${idx}`} value={b.code}>
-                  {b.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* 10-Digit NUBAN Account Number */}
-          <div className="app-input-group" style={{ marginBottom: '0.85rem' }}>
-            <label className="app-label">10-Digit NUBAN Account Number</label>
-            <input
-              type="text"
-              maxLength={10}
-              required
-              value={accountNumber}
-              onChange={onAccountNumberChange}
-              placeholder="0123456789"
-              className="app-input"
-              style={{ fontFamily: 'monospace', fontSize: '1.05rem', fontWeight: 800, letterSpacing: '0.08em' }}
-            />
-          </div>
-
-          {/* Live Account Resolution Badge */}
-          {resolvingAccount && (
-            <div style={{
-              background: '#f8fafc',
-              border: '1px solid #cbd5e1',
-              borderRadius: '12px',
-              padding: '0.65rem 0.85rem',
-              marginBottom: '1rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              fontSize: '0.78rem',
-              color: '#64748b'
-            }}>
-              <RefreshCw size={14} style={{ animation: 'spin 1s linear infinite' }} />
-              <span>Verifying NUBAN account name via Paystack...</span>
-            </div>
-          )}
-
-          {accountResolved && accountName && (
-            <div style={{
-              background: 'rgba(16,185,129,0.08)',
-              border: '1.5px solid rgba(16,185,129,0.3)',
-              borderRadius: '12px',
-              padding: '0.65rem 0.85rem',
-              marginBottom: '1rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              fontSize: '0.82rem',
-              color: '#065f46',
-              fontWeight: 800
-            }}>
-              <CheckCircle2 size={16} color="#10b981" />
-              <div>
-                <span style={{ fontSize: '0.68rem', color: '#059669', display: 'block', fontWeight: 700, textTransform: 'uppercase' }}>
-                  Verified Account Holder
-                </span>
-                <span>{accountName}</span>
-              </div>
-            </div>
-          )}
-
-          {resolveError && (
-            <div style={{
-              background: 'rgba(239,68,68,0.08)',
-              border: '1px solid rgba(239,68,68,0.25)',
-              borderRadius: '12px',
-              padding: '0.65rem 0.85rem',
-              marginBottom: '1rem',
-              fontSize: '0.78rem',
-              color: '#b91c1c',
-              fontWeight: 600
-            }}>
-              ⚠️ {resolveError}
-            </div>
-          )}
-
-          {/* Zero Fee Notice */}
-          <div style={{
-            background: 'rgba(212,175,55,0.08)',
-            border: '1px solid rgba(212,175,55,0.2)',
-            borderRadius: '12px',
-            padding: '0.55rem 0.85rem',
-            marginBottom: '1.25rem',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.4rem',
-            fontSize: '0.72rem',
-            color: '#854d0e',
-            fontWeight: 700
-          }}>
-            <Building2 size={13} />
-            <span>Paystack Transfer Fee: ₦0 (100% covered by Style Corner Atelier)</span>
-          </div>
-
-          <button
-            type="submit"
-            disabled={withdrawSubmitting || !accountName || !withdrawAmount || Number(withdrawAmount) > walletBalance}
-            className="app-btn app-btn-primary"
-            style={{
-              width: '100%',
-              minHeight: '48px',
-              borderRadius: '14px',
-              fontWeight: 900,
-              fontSize: '0.92rem',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '0.45rem',
-              background: 'linear-gradient(135deg, #d4af37 0%, #b5952f 100%)',
-              color: '#111111',
-              border: 'none',
-              boxShadow: '0 8px 20px -4px rgba(212, 175, 55, 0.4)'
-            }}
-          >
-            <ArrowUpRight size={18} />
-            <span>{withdrawSubmitting ? 'Processing Transfer...' : `Authorize ₦${Number(withdrawAmount || 0).toLocaleString()} Payout`}</span>
-          </button>
-        </form>
-      </PopupModal>
+      />
 
       {/* ── WALLET TRANSACTION & PAYOUT LEDGER SHEET ── */}
       <BottomSheet

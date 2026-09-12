@@ -527,12 +527,36 @@ export const api = {
     return Array.isArray(data) ? data : [];
   },
 
+  getWithdrawalWindow: async () => {
+    const res = await fetchWithTimeout(`${API_BASE}/wallet/withdrawal-window`);
+    const data = await safeJson(res);
+    return data || { isOpen: false, nextThirdSaturday: 'the 3rd Saturday of the month' };
+  },
+
   getWalletWithdrawals: async () => {
     const res = await fetchWithTimeout(`${API_BASE}/wallet/withdrawals`, {
       headers: getAuthHeaders(),
     });
     const data = await safeJson(res);
     return Array.isArray(data) ? data : [];
+  },
+  getAdminWithdrawals: async (status) => {
+    const query = status && status !== 'all' ? `?status=${encodeURIComponent(status)}` : '';
+    const res = await fetchWithTimeout(`${API_BASE}/admin/withdrawals${query}`, {
+      headers: getAuthHeaders(),
+    });
+    const data = await safeJson(res);
+    return Array.isArray(data) ? data : [];
+  },
+  updateWithdrawalStatus: async (id, { status, rejectionReason }) => {
+    const res = await fetchWithTimeout(`${API_BASE}/admin/withdrawals/${id}/status`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ status, rejectionReason }),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Failed to update withdrawal status');
+    return data;
   },
   deleteOrder: async (id) => {
     const res = await fetchWithTimeout(`${API_BASE}/orders/${id}`, {

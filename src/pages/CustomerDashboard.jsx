@@ -25,7 +25,8 @@ import {
   MessageSquare,
   History,
   Activity,
-  Wallet
+  Wallet,
+  ArrowUpRight,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
@@ -35,6 +36,7 @@ import { StatusBadge } from '../components/common/StatusBadge';
 import { SkeletonList } from '../components/common/SkeletonLoader';
 import { BottomSheet } from '../components/common/BottomSheet';
 import { PopupModal } from '../components/common/PopupModal';
+import { WithdrawFundsModal } from '../components/common/WithdrawFundsModal';
 import { AISpecialistMatcherSheet } from '../components/booking/AISpecialistMatcherSheet';
 import { ImagePreviewModal } from '../components/common/ImagePreviewModal';
 import { OrderTrackingSheet } from '../components/store/OrderTrackingSheet';
@@ -60,6 +62,8 @@ export const CustomerDashboard = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEnlargedAvatar, setShowEnlargedAvatar] = useState(false);
   const [deletingAccount, setDeletingAccount] = useState(false);
+  const [showWithdrawModal, setShowWithdrawModal] = useState(false);
+  const [walletBalance, setWalletBalance] = useState(user?.walletBalance ?? 0);
 
   const [profileForm, setProfileForm] = useState({
     firstname: user?.firstname || '',
@@ -184,8 +188,6 @@ export const CustomerDashboard = () => {
       setSubmittingReview(false);
     }
   };
-
-  const [walletBalance, setWalletBalance] = useState(0);
 
   const fetchData = async () => {
     setLoading(true);
@@ -370,7 +372,7 @@ export const CustomerDashboard = () => {
             background: 'linear-gradient(135deg, rgba(212,175,55,0.15) 0%, rgba(0,0,0,0.4) 100%)',
             border: '1px solid rgba(212,175,55,0.4)', borderRadius: '16px',
             padding: '0.85rem 1rem', marginBottom: '0.75rem',
-            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.6rem',
           }}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#d4af37', fontFamily: 'Outfit', fontSize: '0.75rem', fontWeight: 800 }}>
@@ -379,19 +381,35 @@ export const CustomerDashboard = () => {
               <div style={{ fontFamily: 'Outfit', fontSize: '1.4rem', fontWeight: 900, color: '#ffffff', marginTop: '0.1rem' }}>
                 ₦{Number(walletBalance).toLocaleString()}
               </div>
+              <div style={{ fontSize: '0.68rem', color: '#9ca3af', marginTop: '0.15rem' }}>
+                🗓️ Payouts open every 3rd Saturday
+              </div>
             </div>
-            <button
-              onClick={() => navigate('/payment', { state: { title: 'Wallet Top-Up', amount: 0, description: 'Direct Wallet Credit' } })}
-              style={{
-                background: '#d4af37', color: '#171717', border: 'none',
-                padding: '0.45rem 0.85rem', borderRadius: '50px',
-                fontFamily: 'Outfit', fontWeight: 900, fontSize: '0.75rem',
-                cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem',
-                boxShadow: '0 4px 14px rgba(212,175,55,0.3)'
-              }}
-            >
-              <Plus size={13} /> Add Funds
-            </button>
+            <div style={{ display: 'flex', gap: '0.45rem', flexWrap: 'wrap' }}>
+              <button
+                onClick={() => navigate('/payment', { state: { title: 'Wallet Top-Up', amount: 0, description: 'Direct Wallet Credit' } })}
+                style={{
+                  background: '#d4af37', color: '#171717', border: 'none',
+                  padding: '0.45rem 0.85rem', borderRadius: '50px',
+                  fontFamily: 'Outfit', fontWeight: 900, fontSize: '0.75rem',
+                  cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem',
+                  boxShadow: '0 4px 14px rgba(212,175,55,0.3)'
+                }}
+              >
+                <Plus size={13} /> Add Funds
+              </button>
+              <button
+                onClick={() => setShowWithdrawModal(true)}
+                style={{
+                  background: 'rgba(255,255,255,0.1)', color: '#ffffff', border: '1px solid rgba(255,255,255,0.2)',
+                  padding: '0.45rem 0.85rem', borderRadius: '50px',
+                  fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.75rem',
+                  cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem'
+                }}
+              >
+                <ArrowUpRight size={13} /> Withdraw
+              </button>
+            </div>
           </div>
 
           {/* Bottom row: Loyalty bar */}
@@ -1356,6 +1374,14 @@ export const CustomerDashboard = () => {
           </form>
         )}
       </BottomSheet>
+      <WithdrawFundsModal
+        isOpen={showWithdrawModal}
+        onClose={() => setShowWithdrawModal(false)}
+        walletBalance={walletBalance}
+        onSuccess={(newBal) => {
+          if (updateProfile) updateProfile({ walletBalance: newBal });
+        }}
+      />
     </PageContainer>
   );
 };

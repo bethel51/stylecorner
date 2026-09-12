@@ -59,7 +59,7 @@ const safeLazy = (importFn) =>
   });
 
 // Lazy load remaining routes with ultra-fast bundle splitting
-const Services = safeLazy(routeLoaders['/services'].then ? () => routeLoaders['/services'] : () => import('./pages/Services').then(m => ({ default: m.Services })));
+const Services = safeLazy(() => import('./pages/Services').then(m => ({ default: m.Services })));
 const Experts = safeLazy(() => import('./pages/Experts').then(m => ({ default: m.Experts })));
 const Gallery = safeLazy(() => import('./pages/Gallery').then(m => ({ default: m.Gallery })));
 const Store = safeLazy(() => import('./pages/Store').then(m => ({ default: m.Store })));

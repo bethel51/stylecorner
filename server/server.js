@@ -56,7 +56,7 @@ async function sendNotification(to, subject, text) {
   if (!transporter) {
     throw new Error('Email transporter is not configured. Please check your .env credentials.');
   }
-  const fromAddress = process.env.EMAIL_USER || process.env.BREVO_SMTP_LOGIN;
+  const fromAddress = process.env.BREVO_SMTP_LOGIN || process.env.EMAIL_USER;
   const info = await transporter.sendMail({
       from: `"Style Corner" <${fromAddress}>`,
       to: to,
@@ -255,7 +255,11 @@ app.post('/api/auth/verify', async (req, res) => {
 
     // Issue token
     const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
-    res.status(200).json({ message: 'Verification successful', user, token });
+    const safeUser = user.toObject();
+    delete safeUser.password;
+    delete safeUser.otpCode;
+    delete safeUser.otpExpiresAt;
+    res.status(200).json({ message: 'Verification successful', user: safeUser, token });
   } catch (error) {
     console.error('Verification error:', error);
     res.status(500).json({ error: error.message || 'Verification failed' });
@@ -338,7 +342,11 @@ app.post('/api/auth/login', async (req, res) => {
     }
 
     const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
-    res.status(200).json({ user, token });
+    const safeUser = user.toObject();
+    delete safeUser.password;
+    delete safeUser.otpCode;
+    delete safeUser.otpExpiresAt;
+    res.status(200).json({ user: safeUser, token });
   } catch (error) {
     console.error('Login error:', error);
     res.status(500).json({ error: error.message || 'Login failed' });
@@ -799,14 +807,40 @@ app.post('/api/bookings', authenticateToken, async (req, res) => {
 // Update a booking status (Accept, Reject, Complete)
 app.put('/api/bookings/:id', authenticateToken, async (req, res) => {
   try {
-    const updateObj = typeof req.body === 'string' ? { status: req.body } : req.body;
-    
+    const booking = await Booking.findById(req.params.id);
+    if (!booking) {
+      return res.status(404).json({ error: 'Booking not found' });
+    }
+
+    const userEmail = (req.user.email || '').trim().toLowerCase();
+    const isAdmin = req.user.role === 'admin';
+    const isStaff = req.user.role === 'staff';
+    const isClient = booking.clientEmail?.trim().toLowerCase() === userEmail;
+
+    if (!isAdmin && !isStaff && !isClient) {
+      return res.status(403).json({ error: 'Unauthorized to update this booking' });
+    }
+
+    const rawStatus = typeof req.body === 'string' ? req.body : req.body.status;
+    const allowedStatuses = ['pending', 'accepted', 'completed', 'cancelled', 'rejected'];
+    if (rawStatus && !allowedStatuses.includes(rawStatus)) {
+      return res.status(400).json({ error: 'Invalid booking status' });
+    }
+
+    // Clients are only allowed to cancel bookings
+    if (isClient && !isAdmin && !isStaff && rawStatus && rawStatus !== 'cancelled') {
+      return res.status(403).json({ error: 'Clients are only permitted to cancel bookings' });
+    }
+
+    const updateObj = {};
+    if (rawStatus) updateObj.status = rawStatus;
+
     // If expert accepts, record their name as staff who accepted
     if (req.user.role === 'staff' && (updateObj.status === 'accepted' || updateObj.status === 'confirmed')) {
       updateObj.staff = `${req.user.firstname || ''} ${req.user.lastname || ''}`.trim() || req.user.email;
     }
 
-    const updated = await Booking.findByIdAndUpdate(req.params.id, updateObj, { new: true });
+    const updated = await Booking.findByIdAndUpdate(req.params.id, { $set: updateObj }, { new: true });
     if (!updated) {
       return res.status(404).json({ error: 'Booking not found' });
     }
@@ -945,6 +979,14 @@ app.delete('/api/bookings/clear-history', authenticateToken, async (req, res) =>
 // Delete a booking by ID
 app.delete('/api/bookings/:id', authenticateToken, async (req, res) => {
   try {
+    const booking = await Booking.findById(req.params.id);
+    if (!booking) return res.status(404).json({ error: 'Booking not found' });
+    const userEmail = (req.user.email || '').trim().toLowerCase();
+    const isOwner = booking.clientEmail?.trim().toLowerCase() === userEmail;
+    const isAdmin = req.user.role === 'admin';
+    if (!isOwner && !isAdmin) {
+      return res.status(403).json({ error: 'You can only delete your own bookings.' });
+    }
     await Booking.findByIdAndDelete(req.params.id);
     res.status(200).json({ message: 'Booking deleted' });
   } catch (error) {
@@ -994,7 +1036,7 @@ const checkAndSendDayReminders = async () => {
 };
 
 // Endpoint to manually or externally trigger day reminders
-app.get('/api/cron/send-reminders', async (req, res) => {
+app.get('/api/cron/send-reminders', authenticateAdmin, async (req, res) => {
   await checkAndSendDayReminders();
   res.status(200).json({ message: 'Appointment day reminders checked and sent.' });
 });
@@ -1400,7 +1442,7 @@ app.get('/api/products', async (req, res) => {
 });
 
 // Create product (Admin)
-app.post('/api/products', authenticateToken, async (req, res) => {
+app.post('/api/products', authenticateAdmin, async (req, res) => {
   try {
     const { title, price, rating, desc, badge, image, secondaryImage } = req.body;
     if (!title || price === undefined || !image) {
@@ -1424,7 +1466,7 @@ app.post('/api/products', authenticateToken, async (req, res) => {
 });
 
 // Update product (Admin)
-app.put('/api/products/:id', authenticateToken, async (req, res) => {
+app.put('/api/products/:id', authenticateAdmin, async (req, res) => {
   try {
     const { title, price, rating, desc, badge, image, secondaryImage } = req.body;
     const updated = await Product.findByIdAndUpdate(
@@ -1583,6 +1625,20 @@ app.post('/api/wallet/topup', authenticateToken, async (req, res) => {
     userDoc.walletBalance = newBal;
     await userDoc.save();
 
+    const topupRef = `WLT-TOP-${Date.now()}-${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
+    const txn = new Transaction({
+      userId: userDoc._id,
+      userEmail: userDoc.email,
+      userName: `${userDoc.firstname} ${userDoc.lastname || ''}`.trim(),
+      type: 'wallet_topup',
+      amount: amount,
+      direction: 'credit',
+      reference: topupRef,
+      status: 'success',
+      description: 'Direct wallet top-up'
+    });
+    await txn.save();
+
     await createInAppNotification({
       userEmail: userDoc.email,
       title: '💳 Wallet Top-Up Successful!',
@@ -1590,7 +1646,7 @@ app.post('/api/wallet/topup', authenticateToken, async (req, res) => {
       type: 'order',
     });
 
-    res.status(200).json({ message: 'Wallet top-up successful', walletBalance: newBal });
+    res.status(200).json({ message: 'Wallet top-up successful', walletBalance: newBal, reference: topupRef });
   } catch (error) {
     console.error('Wallet top-up error:', error);
     res.status(500).json({ error: 'Failed to top up wallet' });
@@ -1626,6 +1682,25 @@ app.post('/api/wallet/pay', authenticateToken, async (req, res) => {
       await Booking.findByIdAndUpdate(bookingId, { $set: { paymentStatus: 'paid_wallet', status: 'pending' } });
     }
 
+    const payRef = `WLT-PAY-${Date.now()}-${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
+    const txnType = bookingId ? 'service_payment' : 'store_purchase';
+    const payTxn = new Transaction({
+      userId: userDoc._id,
+      userEmail: userDoc.email,
+      userName: `${userDoc.firstname} ${userDoc.lastname || ''}`.trim(),
+      type: txnType,
+      amount: amount,
+      direction: 'debit',
+      reference: payRef,
+      status: 'success',
+      description: description || (bookingId ? 'Wallet payment for booking' : 'Wallet payment for store order'),
+      metadata: {
+        ...(bookingId ? { bookingId } : {}),
+        ...(orderId ? { orderId } : {})
+      }
+    });
+    await payTxn.save();
+
     await createInAppNotification({
       userEmail: userDoc.email,
       title: '💳 Payment Successful via Wallet!',
@@ -1634,7 +1709,7 @@ app.post('/api/wallet/pay', authenticateToken, async (req, res) => {
       orderId: orderId || null
     });
 
-    res.status(200).json({ message: 'Payment completed successfully', walletBalance: newBal });
+    res.status(200).json({ message: 'Payment completed successfully', walletBalance: newBal, reference: payRef });
   } catch (error) {
     console.error('Wallet payment error:', error);
     res.status(500).json({ error: 'Payment processing failed' });
@@ -1680,6 +1755,7 @@ app.post('/api/paystack/verify', authenticateToken, async (req, res) => {
         verifiedAmount = (paystackData.amount || 0) / 100; // Paystack delivers amount in kobo
       } catch (paystackErr) {
         console.error('Paystack live verification error:', paystackErr.message);
+        return res.status(502).json({ error: 'Unable to reach Paystack to verify payment. Please try again or contact support.' });
       }
     }
 
@@ -1896,13 +1972,81 @@ app.post('/api/paystack/resolve-account', authenticateToken, async (req, res) =>
   }
 });
 
-// ── EXPERT WITHDRAWAL & TRANSACTIONS ROUTES ── //
+// ── WITHDRAWAL & TRANSACTIONS ROUTES (3RD SATURDAY SCHEDULE) ── //
 
-// Request a Withdrawal from Atelier Wallet to Nigerian Bank
+// Helper: Calculate 3rd Saturday window & next occurrence
+function getThirdSaturdayInfo(now = new Date()) {
+  const dayOfWeek = now.getDay(); // 0 = Sun, 6 = Sat
+  const dayOfMonth = now.getDate();
+  const isOpen = (dayOfWeek === 6 && dayOfMonth >= 15 && dayOfMonth <= 21);
+
+  // Find next third Saturday
+  let nextThirdSat = null;
+  // Check this month
+  for (let d = 15; d <= 21; d++) {
+    const candidate = new Date(now.getFullYear(), now.getMonth(), d, 23, 59, 59, 999);
+    if (candidate.getDay() === 6) {
+      if (candidate >= now) {
+        nextThirdSat = candidate;
+      }
+      break;
+    }
+  }
+
+  // If this month's third Saturday has passed, get next month's
+  if (!nextThirdSat) {
+    const nextMonthYear = now.getMonth() === 11 ? now.getFullYear() + 1 : now.getFullYear();
+    const nextMonth = (now.getMonth() + 1) % 12;
+    for (let d = 15; d <= 21; d++) {
+      const candidate = new Date(nextMonthYear, nextMonth, d, 23, 59, 59, 999);
+      if (candidate.getDay() === 6) {
+        nextThirdSat = candidate;
+        break;
+      }
+    }
+  }
+
+  const nextDateFormatted = nextThirdSat.toLocaleDateString('en-US', {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric'
+  });
+
+  const msDiff = nextThirdSat.getTime() - now.getTime();
+  const daysUntil = Math.max(0, Math.ceil(msDiff / (1000 * 60 * 60 * 24)));
+
+  return {
+    isOpen,
+    nextThirdSaturday: nextDateFormatted,
+    daysUntilNext: daysUntil,
+    message: isOpen
+      ? 'The monthly withdrawal window is OPEN today! Requests are being accepted until 11:59 PM.'
+      : `Withdrawals open on the 3rd Saturday of every month. Next window: ${nextDateFormatted} (${daysUntil} day${daysUntil === 1 ? '' : 's'} away).`
+  };
+}
+
+// Get Withdrawal Window Status
+app.get('/api/wallet/withdrawal-window', (req, res) => {
+  const info = getThirdSaturdayInfo(new Date());
+  res.status(200).json(info);
+});
+
+// Request a Withdrawal from Atelier Wallet to Nigerian Bank (Customers & Experts on 3rd Saturday)
 app.post('/api/wallet/withdraw', authenticateToken, async (req, res) => {
   try {
     const { amount, bankName, bankCode, accountNumber, accountName } = req.body;
     const withdrawAmount = Number(amount);
+
+    // Enforce 3rd Saturday of the Month schedule (allow admin override)
+    const windowInfo = getThirdSaturdayInfo(new Date());
+    const allowAnytime = process.env.ALLOW_ANYTIME_WITHDRAWALS === 'true' || req.user.role === 'admin';
+    if (!windowInfo.isOpen && !allowAnytime) {
+      return res.status(403).json({
+        error: `Withdrawals can only be requested on the 3rd Saturday of every month. Next window opens on ${windowInfo.nextThirdSaturday}.`,
+        windowInfo
+      });
+    }
 
     if (!withdrawAmount || withdrawAmount < 1000) {
       return res.status(400).json({ error: 'Minimum withdrawal amount is ₦1,000' });
@@ -1927,10 +2071,11 @@ app.post('/api/wallet/withdraw', authenticateToken, async (req, res) => {
 
     const ref = `WD-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`;
 
+    const userDisplayName = `${user.firstname} ${user.lastname || ''}`.trim() || user.email;
     const withdrawal = new Withdrawal({
       userId: user._id,
       userEmail: user.email,
-      expertName: `${user.firstname} ${user.lastname || ''}`.trim(),
+      expertName: userDisplayName,
       amount: withdrawAmount,
       bankName: bankName.trim(),
       bankCode: bankCode || 'N/A',
@@ -2015,6 +2160,130 @@ app.get('/api/wallet/withdrawals', authenticateToken, async (req, res) => {
     res.status(200).json(withdrawals);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch withdrawals' });
+  }
+});
+
+// ── ADMIN WITHDRAWALS & PAYOUT MANAGEMENT ── //
+
+// Get all expert withdrawals (Admin only)
+app.get('/api/admin/withdrawals', authenticateAdmin, async (req, res) => {
+  try {
+    const { status } = req.query;
+    const query = {};
+    if (status && status !== 'all') {
+      query.status = status;
+    }
+    const withdrawals = await Withdrawal.find(query)
+      .sort({ createdAt: -1 })
+      .lean();
+    res.status(200).json(withdrawals);
+  } catch (error) {
+    console.error('Failed to fetch admin withdrawals:', error);
+    res.status(500).json({ error: 'Failed to fetch withdrawals' });
+  }
+});
+
+// Update withdrawal status (Settle/Complete or Reject & Refund)
+app.put('/api/admin/withdrawals/:id/status', authenticateAdmin, async (req, res) => {
+  try {
+    const { status, rejectionReason } = req.body;
+    if (!['completed', 'rejected', 'processing'].includes(status)) {
+      return res.status(400).json({ error: 'Invalid withdrawal status' });
+    }
+
+    const withdrawal = await Withdrawal.findById(req.params.id);
+    if (!withdrawal) {
+      return res.status(404).json({ error: 'Withdrawal record not found' });
+    }
+
+    if (withdrawal.status === 'completed') {
+      return res.status(400).json({ error: 'Withdrawal has already been marked completed.' });
+    }
+    if (withdrawal.status === 'rejected') {
+      return res.status(400).json({ error: 'Withdrawal has already been rejected and refunded.' });
+    }
+
+    withdrawal.status = status;
+
+    if (status === 'completed') {
+      withdrawal.settledAt = new Date();
+
+      // Update associated Transaction to success
+      await Transaction.findOneAndUpdate(
+        { reference: withdrawal.reference },
+        { $set: { status: 'success' } }
+      );
+
+      // Notify Expert
+      await createInAppNotification({
+        userEmail: withdrawal.userEmail,
+        title: '💸 Payout Settled & Transferred!',
+        message: `Your withdrawal of ₦${withdrawal.amount.toLocaleString()} to ${withdrawal.bankName} (${withdrawal.accountNumber}) has been completed.`,
+        type: 'order'
+      });
+
+      await sendNotificationSafe(
+        withdrawal.userEmail,
+        `Payout Completed: ₦${withdrawal.amount.toLocaleString()} 💸`,
+        `Hi ${withdrawal.expertName},\n\nYour withdrawal of ₦${withdrawal.amount.toLocaleString()} has been successfully processed and transferred to your bank account.\n\nBank: ${withdrawal.bankName}\nAccount: ${withdrawal.accountNumber} (${withdrawal.accountName})\nReference: ${withdrawal.reference}\n\nThank you for being a valued professional with Style Corner!`
+      );
+
+    } else if (status === 'rejected') {
+      withdrawal.rejectionReason = rejectionReason || 'Payout request rejected by admin';
+
+      // Refund the debited funds back to expert's wallet
+      const expert = await User.findById(withdrawal.userId);
+      if (expert) {
+        expert.walletBalance = (expert.walletBalance ?? 0) + withdrawal.amount;
+        await expert.save();
+
+        // Update original transaction to failed
+        await Transaction.findOneAndUpdate(
+          { reference: withdrawal.reference },
+          { $set: { status: 'failed', description: `Withdrawal rejected: ${withdrawal.rejectionReason}` } }
+        );
+
+        // Record a refund transaction
+        const refundRef = `REF-${withdrawal.reference}`;
+        const refundTxn = new Transaction({
+          userId: expert._id,
+          userEmail: expert.email,
+          userName: `${expert.firstname} ${expert.lastname || ''}`.trim(),
+          type: 'wallet_topup',
+          amount: withdrawal.amount,
+          direction: 'credit',
+          reference: refundRef,
+          status: 'success',
+          description: `Refund for rejected payout: ${withdrawal.rejectionReason}`,
+          metadata: { withdrawalId: withdrawal._id }
+        });
+        await refundTxn.save();
+      }
+
+      // Notify Expert
+      await createInAppNotification({
+        userEmail: withdrawal.userEmail,
+        title: '⚠️ Payout Request Declined',
+        message: `Your withdrawal of ₦${withdrawal.amount.toLocaleString()} was declined (${withdrawal.rejectionReason}). ₦${withdrawal.amount.toLocaleString()} has been refunded to your wallet.`,
+        type: 'order'
+      });
+
+      await sendNotificationSafe(
+        withdrawal.userEmail,
+        `Payout Request Declined — Funds Refunded to Wallet`,
+        `Hi ${withdrawal.expertName},\n\nYour withdrawal request of ₦${withdrawal.amount.toLocaleString()} (Ref: ${withdrawal.reference}) could not be completed.\n\nReason: ${withdrawal.rejectionReason}\n\nThe full amount of ₦${withdrawal.amount.toLocaleString()} has been refunded to your Atelier Wallet balance.\nPlease review your bank details or contact support if needed.`
+      );
+    }
+
+    await withdrawal.save();
+
+    res.status(200).json({
+      message: status === 'completed' ? 'Payout marked as settled!' : 'Payout declined and refunded to expert wallet.',
+      withdrawal
+    });
+  } catch (error) {
+    console.error('Failed to update withdrawal status:', error);
+    res.status(500).json({ error: 'Failed to update withdrawal status' });
   }
 });
 
