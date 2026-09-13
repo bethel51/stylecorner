@@ -1441,6 +1441,18 @@ app.get('/api/products', async (req, res) => {
   }
 });
 
+// Fetch single product by id
+app.get('/api/products/:id', async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({ error: 'Product not found' });
+    res.status(200).json(product);
+  } catch (error) {
+    console.error('Fetch product by id error:', error);
+    res.status(500).json({ error: 'Failed to fetch product' });
+  }
+});
+
 // Create product (Admin)
 app.post('/api/products', authenticateAdmin, async (req, res) => {
   try {

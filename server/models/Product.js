@@ -6,6 +6,7 @@ const productSchema = new mongoose.Schema({
   rating: { type: Number, default: 4.8 },
   desc: { type: String },
   badge: { type: String },
+  category: { type: String, default: 'General' },
   image: { type: String, required: true },
   secondaryImage: { type: String, default: '' },
   createdAt: { type: Date, default: Date.now }

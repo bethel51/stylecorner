@@ -567,4 +567,26 @@ export const api = {
     if (!res.ok) throw new Error(data?.error || 'Failed to delete order');
     return data;
   },
+  getProducts: async () => {
+    try {
+      const res = await fetchWithTimeout(`${API_BASE}/products`);
+      const data = await safeJson(res);
+      if (!res.ok) throw new Error(data?.error || 'Failed to fetch products');
+      return Array.isArray(data) ? data : [];
+    } catch (err) {
+      console.warn('Failed to fetch products:', err);
+      return [];
+    }
+  },
+  getProductById: async (id) => {
+    try {
+      const res = await fetchWithTimeout(`${API_BASE}/products/${id}`);
+      const data = await safeJson(res);
+      if (!res.ok) throw new Error(data?.error || 'Failed to fetch product');
+      return data;
+    } catch (err) {
+      console.warn('Failed to fetch product by id:', err);
+      return null;
+    }
+  },
 };
