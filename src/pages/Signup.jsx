@@ -91,54 +91,55 @@ export const Signup = () => {
           <div
             style={{
               width: '56px', height: '56px', borderRadius: '16px',
-              background: '#171717', color: '#d4af37',
+              background: '#151822', color: '#F5B942',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               margin: '0 auto 1rem',
-              border: '1.5px solid rgba(212,175,55,0.4)',
+              border: '1.5px solid rgba(245,185,66,0.3)',
             }}
           >
             {role === 'staff' ? <Scissors size={26} /> : <Sparkles size={26} />}
           </div>
-          <h2 style={{ fontFamily: 'Outfit', fontSize: '1.6rem', fontWeight: 800, color: '#171717' }}>
+          <h2 style={{ fontFamily: 'Outfit', fontSize: '1.6rem', fontWeight: 800, color: '#FFFFFF' }}>
             Create Your Account
           </h2>
-          <p style={{ color: '#6b7280', fontSize: '0.88rem', marginTop: '0.2rem' }}>
+          <p style={{ color: '#9AA2B3', fontSize: '0.88rem', marginTop: '0.2rem' }}>
             {role === 'staff'
               ? 'Join our artisan squad of elite grooming experts'
               : 'Unlock seamless mobile booking and grooming rewards'}
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="app-card" style={{ padding: '1.5rem' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
-            <div className="app-input-group">
-              <label className="app-label">First Name *</label>
+        <div style={{ background: '#151822', borderRadius: '24px', padding: '1.5rem', border: '1px solid rgba(255,255,255,0.06)', marginBottom: '1.25rem' }}>
+          <form onSubmit={handleSubmit}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1rem' }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#9AA2B3', marginBottom: '0.4rem', fontFamily: 'Outfit' }}>First Name *</label>
               <input type="text" name="firstname" value={form.firstname} onChange={handleChange}
-                placeholder="Alex" className="app-input" required />
+                placeholder="Alex" required style={{ width: '100%', padding: '0.8rem 0.9rem', borderRadius: '12px', background: '#0C0E14', border: '1px solid rgba(255,255,255,0.1)', color: '#FFFFFF', fontFamily: 'Outfit', fontSize: '0.88rem', outline: 'none' }} />
             </div>
-            <div className="app-input-group">
-              <label className="app-label">Last Name</label>
+            <div>
+              <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#9AA2B3', marginBottom: '0.4rem', fontFamily: 'Outfit' }}>Last Name</label>
               <input type="text" name="lastname" value={form.lastname} onChange={handleChange}
-                placeholder="Morgan" className="app-input" />
+                placeholder="Morgan" style={{ width: '100%', padding: '0.8rem 0.9rem', borderRadius: '12px', background: '#0C0E14', border: '1px solid rgba(255,255,255,0.1)', color: '#FFFFFF', fontFamily: 'Outfit', fontSize: '0.88rem', outline: 'none' }} />
             </div>
           </div>
 
-          <div className="app-input-group">
-            <label className="app-label">Email Address *</label>
+          <div style={{ marginBottom: '1rem' }}>
+            <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#9AA2B3', marginBottom: '0.4rem', fontFamily: 'Outfit' }}>Email Address *</label>
             <input type="email" name="email" value={form.email} onChange={handleChange}
-              placeholder="alex@example.com" className="app-input" required />
+              placeholder="alex@example.com" required style={{ width: '100%', padding: '0.8rem 0.9rem', borderRadius: '12px', background: '#0C0E14', border: '1px solid rgba(255,255,255,0.1)', color: '#FFFFFF', fontFamily: 'Outfit', fontSize: '0.88rem', outline: 'none' }} />
           </div>
 
-          <div className="app-input-group">
-            <label className="app-label">Phone Number</label>
+          <div style={{ marginBottom: '1rem' }}>
+            <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#9AA2B3', marginBottom: '0.4rem', fontFamily: 'Outfit' }}>Phone Number</label>
             <input type="tel" name="phone" value={form.phone} onChange={handleChange}
-              placeholder="+1 (555) 000-0000" className="app-input" />
+              placeholder="+234 800 000 0000" style={{ width: '100%', padding: '0.8rem 0.9rem', borderRadius: '12px', background: '#0C0E14', border: '1px solid rgba(255,255,255,0.1)', color: '#FFFFFF', fontFamily: 'Outfit', fontSize: '0.88rem', outline: 'none' }} />
           </div>
 
-          <div className="app-input-group">
-            <label className="app-label">Password *</label>
+          <div style={{ marginBottom: '1rem' }}>
+            <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#9AA2B3', marginBottom: '0.4rem', fontFamily: 'Outfit' }}>Password *</label>
             <input type="password" name="password" value={form.password} onChange={handleChange}
-              placeholder="••••••••" className="app-input" required />
+              placeholder="••••••••" required style={{ width: '100%', padding: '0.8rem 0.9rem', borderRadius: '12px', background: '#0C0E14', border: '1px solid rgba(255,255,255,0.1)', color: '#FFFFFF', fontFamily: 'Outfit', fontSize: '0.88rem', outline: 'none' }} />
           </div>
 
           {/* Service Selection for Experts */}
@@ -147,11 +148,11 @@ export const Signup = () => {
               marginTop: '1rem',
               padding: '1rem',
               borderRadius: '16px',
-              background: 'linear-gradient(135deg, rgba(212,175,55,0.06) 0%, rgba(0,0,0,0.02) 100%)',
-              border: '1.5px solid rgba(212,175,55,0.3)',
+              background: 'rgba(245,185,66,0.05)',
+              border: '1px solid rgba(245,185,66,0.2)',
             }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
-                <label className="app-label" style={{ margin: 0, color: '#171717', fontWeight: 800 }}>
+                <label style={{ margin: 0, color: '#FFFFFF', fontWeight: 700, fontSize: '0.82rem', fontFamily: 'Outfit' }}>
                   Services You Offer *
                 </label>
                 <span style={{
@@ -168,8 +169,8 @@ export const Signup = () => {
                 </span>
               </div>
 
-              <p style={{ fontSize: '0.76rem', color: '#6b7280', margin: '0 0 0.85rem', lineHeight: 1.4 }}>
-                Choose up to <strong>2 services</strong> you specialize in. Strictly not more than two services per verified expert account.
+              <p style={{ fontSize: '0.76rem', color: '#9AA2B3', margin: '0 0 0.85rem', lineHeight: 1.4 }}>
+                Choose up to <strong style={{ color: '#F5B942' }}>2 services</strong> you specialize in.
               </p>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '0.55rem' }}>
@@ -190,16 +191,15 @@ export const Signup = () => {
                         padding: '0.75rem 0.9rem',
                         borderRadius: '14px',
                         border: isSelected
-                          ? '1.5px solid #d4af37'
-                          : '1px solid rgba(0,0,0,0.08)',
+                          ? '1.5px solid #F5B942'
+                          : '1px solid rgba(255,255,255,0.08)',
                         backgroundColor: isSelected
-                          ? 'rgba(212,175,55,0.12)'
-                          : isDisabled ? 'rgba(0,0,0,0.02)' : '#ffffff',
+                          ? 'rgba(245,185,66,0.1)'
+                          : isDisabled ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.04)',
                         cursor: isDisabled ? 'not-allowed' : 'pointer',
                         textAlign: 'left',
                         transition: 'all 0.2s ease',
-                        opacity: isDisabled ? 0.45 : 1,
-                        boxShadow: isSelected ? '0 4px 14px rgba(212,175,55,0.15)' : 'none',
+                        opacity: isDisabled ? 0.4 : 1,
                       }}
                     >
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', minWidth: 0 }}>
@@ -208,8 +208,8 @@ export const Signup = () => {
                           <span style={{
                             display: 'block',
                             fontSize: '0.82rem',
-                            fontWeight: isSelected ? 800 : 600,
-                            color: isSelected ? '#171717' : '#374151',
+                            fontWeight: isSelected ? 700 : 600,
+                            color: isSelected ? '#F5B942' : '#FFFFFF',
                             fontFamily: 'Outfit',
                           }}>
                             {service.label}
@@ -217,7 +217,7 @@ export const Signup = () => {
                           <span style={{
                             display: 'block',
                             fontSize: '0.68rem',
-                            color: isSelected ? '#785c00' : '#9ca3af',
+                            color: '#9AA2B3',
                             marginTop: '0.1rem',
                           }}>
                             {service.desc}
@@ -226,17 +226,12 @@ export const Signup = () => {
                       </div>
 
                       <div style={{
-                        width: '20px',
-                        height: '20px',
-                        borderRadius: '50%',
-                        border: isSelected ? 'none' : '1.5px solid #d1d5db',
-                        backgroundColor: isSelected ? '#d4af37' : 'transparent',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexShrink: 0,
+                        width: '20px', height: '20px', borderRadius: '50%',
+                        border: isSelected ? 'none' : '1.5px solid rgba(255,255,255,0.2)',
+                        backgroundColor: isSelected ? '#F5B942' : 'transparent',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
                       }}>
-                        {isSelected && <Check size={12} color="#000" strokeWidth={3} />}
+                        {isSelected && <Check size={12} color="#0C0E14" strokeWidth={3} />}
                       </div>
                     </button>
                   );
@@ -262,8 +257,12 @@ export const Signup = () => {
           <button
             type="submit"
             disabled={submitting}
-            className="app-btn app-btn-primary"
-            style={{ marginTop: '1rem' }}
+            style={{
+              width: '100%', padding: '1rem', borderRadius: '16px', marginTop: '1.25rem',
+              background: submitting ? 'rgba(245,185,66,0.6)' : '#F5B942',
+              color: '#0C0E14', fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.95rem',
+              border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem'
+            }}
           >
             {submitting ? (
               <span>Creating Account...</span>
@@ -274,14 +273,15 @@ export const Signup = () => {
               </>
             )}
           </button>
-        </form>
+          </form>
+        </div>
 
         <div style={{ textAlign: 'center', marginTop: '1.25rem' }}>
-          <p style={{ color: '#6b7280', fontSize: '0.88rem' }}>
+          <p style={{ color: '#9AA2B3', fontSize: '0.88rem' }}>
             Already registered?{' '}
             <span
               onClick={() => navigate('/login')}
-              style={{ color: '#d4af37', fontWeight: 700, cursor: 'pointer', textDecoration: 'underline' }}
+              style={{ color: '#F5B942', fontWeight: 700, cursor: 'pointer' }}
             >
               Sign In
             </span>

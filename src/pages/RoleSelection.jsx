@@ -35,7 +35,7 @@ export const RoleSelection = () => {
             fontFamily: 'Outfit',
             fontSize: '1.75rem',
             fontWeight: 800,
-            color: '#171717',
+            color: '#FFFFFF',
             marginBottom: '0.5rem',
           }}
         >
@@ -44,7 +44,7 @@ export const RoleSelection = () => {
 
         <p
           style={{
-            color: '#6b7280',
+            color: '#9AA2B3',
             fontSize: '0.9rem',
             marginBottom: '2rem',
             lineHeight: 1.5,
@@ -65,21 +65,16 @@ export const RoleSelection = () => {
               alignItems: 'center',
               justifyContent: 'space-between',
               textAlign: 'left',
-              border: '2px solid rgba(0,0,0,0.06)',
+              border: '1px solid rgba(255,255,255,0.06)',
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
               <div
                 style={{
-                  width: '48px',
-                  height: '48px',
-                  borderRadius: '12px',
-                  background: '#171717',
-                  color: '#d4af37',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '1.25rem',
+                  width: '48px', height: '48px', borderRadius: '12px',
+                  background: 'rgba(255,255,255,0.06)',
+                  color: '#F5B942',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}
               >
                 <User size={22} />
@@ -87,20 +82,17 @@ export const RoleSelection = () => {
               <div>
                 <h3
                   style={{
-                    fontFamily: 'Outfit',
-                    fontSize: '1.1rem',
-                    fontWeight: 700,
-                    color: '#171717',
+                    fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 700, color: '#FFFFFF',
                   }}
                 >
                   Client / Customer
                 </h3>
-                <p style={{ color: '#6b7280', fontSize: '0.82rem', marginTop: '0.2rem' }}>
+                <p style={{ color: '#9AA2B3', fontSize: '0.82rem', marginTop: '0.2rem' }}>
                   Book visits, match AI specialists, buy grooming products.
                 </p>
               </div>
             </div>
-            <ArrowRight size={18} color="#d4af37" />
+            <ArrowRight size={18} color="#F5B942" />
           </div>
 
           {/* Expert / Staff Role Card */}
@@ -114,21 +106,16 @@ export const RoleSelection = () => {
               alignItems: 'center',
               justifyContent: 'space-between',
               textAlign: 'left',
-              border: '2px solid rgba(212,175,55,0.3)',
+              border: '1px solid rgba(245,185,66,0.25)',
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
               <div
                 style={{
-                  width: '48px',
-                  height: '48px',
-                  borderRadius: '12px',
-                  background: 'linear-gradient(135deg, #d4af37, #b5952f)',
-                  color: '#ffffff',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '1.25rem',
+                  width: '48px', height: '48px', borderRadius: '12px',
+                  background: 'linear-gradient(135deg, #F5B942, #d4941a)',
+                  color: '#0C0E14',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}
               >
                 <Scissors size={22} />
@@ -136,34 +123,26 @@ export const RoleSelection = () => {
               <div>
                 <h3
                   style={{
-                    fontFamily: 'Outfit',
-                    fontSize: '1.1rem',
-                    fontWeight: 700,
-                    color: '#171717',
+                    fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 700, color: '#FFFFFF',
                   }}
                 >
                   Expert / Technician
                 </h3>
-                <p style={{ color: '#6b7280', fontSize: '0.82rem', marginTop: '0.2rem' }}>
+                <p style={{ color: '#9AA2B3', fontSize: '0.82rem', marginTop: '0.2rem' }}>
                   Manage appointments, review requests, offer services.
                 </p>
               </div>
             </div>
-            <ArrowRight size={18} color="#171717" />
+            <ArrowRight size={18} color="#F5B942" />
           </div>
         </div>
 
         <div style={{ marginTop: '2rem' }}>
-          <p style={{ color: '#6b7280', fontSize: '0.88rem' }}>
+          <p style={{ color: '#9AA2B3', fontSize: '0.88rem' }}>
             Already have an account?{' '}
             <span
               onClick={() => navigate('/login')}
-              style={{
-                color: '#d4af37',
-                fontWeight: 700,
-                cursor: 'pointer',
-                textDecoration: 'underline',
-              }}
+              style={{ color: '#F5B942', fontWeight: 700, cursor: 'pointer' }}
             >
               Sign In
             </span>

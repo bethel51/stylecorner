@@ -215,23 +215,22 @@ export const ProductDetail = () => {
       <div style={{ paddingBottom: '3rem', maxWidth: '640px', margin: '0 auto' }}>
 
         {/* Top Header Navigation Bar */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
           <button
             onClick={() => navigate('/store')}
             style={{
-              background: '#ffffff',
-              border: '1px solid rgba(0,0,0,0.1)',
+              background: '#151822',
+              border: '1px solid rgba(255,255,255,0.08)',
               borderRadius: '12px',
               padding: '0.5rem 0.85rem',
               fontSize: '0.82rem',
               fontFamily: 'Outfit',
-              fontWeight: 800,
-              color: '#171717',
+              fontWeight: 700,
+              color: '#FFFFFF',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               gap: '0.4rem',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
             }}
           >
             <ArrowLeft size={16} /> Back to Store
@@ -244,12 +243,12 @@ export const ProductDetail = () => {
                 width: '38px',
                 height: '38px',
                 borderRadius: '12px',
-                background: '#ffffff',
-                border: '1px solid rgba(0,0,0,0.1)',
+                background: '#151822',
+                border: '1px solid rgba(255,255,255,0.08)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: '#6b7280',
+                color: '#9AA2B3',
                 cursor: 'pointer'
               }}
               title="Share product"
@@ -258,11 +257,11 @@ export const ProductDetail = () => {
             </button>
 
             <button
-              onClick={() => setShowCartSheet(true)}
+              onClick={() => navigate('/cart')}
               style={{
                 position: 'relative',
-                background: '#171717',
-                color: '#ffffff',
+                background: '#F5B942',
+                color: '#0C0E14',
                 border: 'none',
                 borderRadius: '12px',
                 padding: '0.5rem 0.85rem',
@@ -273,15 +272,14 @@ export const ProductDetail = () => {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.4rem',
-                boxShadow: '0 4px 14px rgba(0,0,0,0.15)'
               }}
             >
-              <ShoppingBag size={16} color="#d4af37" />
+              <ShoppingBag size={16} />
               <span>Cart</span>
               {itemCount > 0 && (
                 <span style={{
-                  background: '#d4af37',
-                  color: '#171717',
+                  background: '#0C0E14',
+                  color: '#F5B942',
                   fontSize: '0.7rem',
                   fontWeight: 900,
                   borderRadius: '50px',
@@ -296,11 +294,10 @@ export const ProductDetail = () => {
 
         {/* ── Product Media Gallery ── */}
         <div style={{
-          background: '#ffffff',
-          borderRadius: '22px',
+          background: '#151822',
+          borderRadius: '24px',
           padding: '1rem',
-          border: '1px solid rgba(0,0,0,0.07)',
-          boxShadow: '0 6px 24px rgba(0,0,0,0.04)',
+          border: '1px solid rgba(255,255,255,0.06)',
           marginBottom: '1.25rem',
           position: 'relative'
         }}>
@@ -310,15 +307,15 @@ export const ProductDetail = () => {
               position: 'absolute',
               top: '1.5rem',
               left: '1.5rem',
-              background: 'rgba(17,17,17,0.85)',
+              background: 'rgba(12,14,20,0.85)',
               backdropFilter: 'blur(6px)',
-              color: '#d4af37',
+              color: '#F5B942',
               fontSize: '0.72rem',
               fontFamily: 'Outfit',
               fontWeight: 800,
               padding: '0.25rem 0.75rem',
               borderRadius: '50px',
-              border: '1px solid rgba(212,175,55,0.4)',
+              border: '1px solid rgba(245,185,66,0.3)',
               zIndex: 2,
               textTransform: 'uppercase'
             }}>
@@ -339,15 +336,14 @@ export const ProductDetail = () => {
               width: '40px',
               height: '40px',
               borderRadius: '50%',
-              background: 'rgba(255,255,255,0.9)',
-              border: 'none',
+              background: 'rgba(12,14,20,0.8)',
+              border: '1px solid rgba(255,255,255,0.1)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.12)',
               zIndex: 2,
-              color: isWishlisted ? '#ef4444' : '#6b7280'
+              color: isWishlisted ? '#ef4444' : '#FFFFFF'
             }}
           >
             <Heart size={18} fill={isWishlisted ? '#ef4444' : 'none'} />
@@ -357,9 +353,9 @@ export const ProductDetail = () => {
           <div style={{
             width: '100%',
             height: '320px',
-            borderRadius: '16px',
+            borderRadius: '18px',
             overflow: 'hidden',
-            background: '#f8fafc',
+            background: '#0C0E14',
             marginBottom: product.secondaryImage ? '0.85rem' : 0
           }}>
             <OptimizedImage
@@ -384,8 +380,8 @@ export const ProductDetail = () => {
                   borderRadius: '12px',
                   overflow: 'hidden',
                   cursor: 'pointer',
-                  border: selectedImage === product.image ? '2.5px solid #d4af37' : '1px solid rgba(0,0,0,0.1)',
-                  opacity: selectedImage === product.image ? 1 : 0.65,
+                  border: selectedImage === product.image ? '2px solid #F5B942' : '1px solid rgba(255,255,255,0.1)',
+                  opacity: selectedImage === product.image ? 1 : 0.6,
                   transition: 'all 0.2s ease'
                 }}
               >
@@ -400,8 +396,8 @@ export const ProductDetail = () => {
                   borderRadius: '12px',
                   overflow: 'hidden',
                   cursor: 'pointer',
-                  border: selectedImage === product.secondaryImage ? '2.5px solid #d4af37' : '1px solid rgba(0,0,0,0.1)',
-                  opacity: selectedImage === product.secondaryImage ? 1 : 0.65,
+                  border: selectedImage === product.secondaryImage ? '2px solid #F5B942' : '1px solid rgba(255,255,255,0.1)',
+                  opacity: selectedImage === product.secondaryImage ? 1 : 0.6,
                   transition: 'all 0.2s ease'
                 }}
               >
@@ -413,54 +409,53 @@ export const ProductDetail = () => {
 
         {/* ── Product Info & Actions Card ── */}
         <div style={{
-          background: '#ffffff',
-          borderRadius: '22px',
+          background: '#151822',
+          borderRadius: '24px',
           padding: '1.5rem',
-          border: '1px solid rgba(0,0,0,0.07)',
-          boxShadow: '0 6px 24px rgba(0,0,0,0.04)',
+          border: '1px solid rgba(255,255,255,0.06)',
           marginBottom: '1.25rem'
         }}>
           {/* Rating & Reviews */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.4rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#d4af37' }}>
-              <Star size={15} fill="#d4af37" />
-              <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '0.9rem', color: '#171717' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#F5B942' }}>
+              <Star size={15} fill="#F5B942" />
+              <span style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.9rem', color: '#FFFFFF' }}>
                 {product.rating || 4.9}
               </span>
             </div>
-            <span style={{ fontSize: '0.78rem', color: '#6b7280', fontFamily: 'Outfit' }}>
+            <span style={{ fontSize: '0.78rem', color: '#9AA2B3', fontFamily: 'Outfit' }}>
               ({product.reviewsCount || 112} verified customer reviews)
             </span>
           </div>
 
           {/* Title & Price */}
-          <h1 style={{ fontFamily: 'Outfit', fontSize: '1.45rem', fontWeight: 900, color: '#171717', margin: '0 0 0.5rem', lineHeight: 1.2 }}>
+          <h1 style={{ fontFamily: 'Outfit', fontSize: '1.45rem', fontWeight: 800, color: '#FFFFFF', margin: '0 0 0.5rem', lineHeight: 1.2 }}>
             {product.title}
           </h1>
 
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.6rem', marginBottom: '1rem' }}>
-            <span style={{ fontFamily: 'Outfit', fontSize: '1.75rem', fontWeight: 900, color: '#b5952f' }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.6rem', marginBottom: '1.1rem' }}>
+            <span style={{ fontFamily: 'Outfit', fontSize: '1.75rem', fontWeight: 900, color: '#F5B942' }}>
               ₦{Number(product.price).toLocaleString()}
             </span>
-            <span style={{ fontSize: '0.78rem', color: '#10b981', fontFamily: 'Outfit', fontWeight: 800, background: 'rgba(16,185,129,0.1)', padding: '0.15rem 0.5rem', borderRadius: '50px' }}>
-              In Stock & Ready for Delivery
+            <span style={{ fontSize: '0.75rem', color: '#10b981', fontFamily: 'Outfit', fontWeight: 800, background: 'rgba(16,185,129,0.1)', padding: '0.2rem 0.6rem', borderRadius: '50px' }}>
+              In Stock
             </span>
           </div>
 
           {/* Description */}
-          <p style={{ color: '#4b5563', fontSize: '0.9rem', lineHeight: 1.6, marginBottom: '1.25rem' }}>
+          <p style={{ color: '#9AA2B3', fontSize: '0.9rem', lineHeight: 1.6, marginBottom: '1.25rem' }}>
             {product.desc || 'Premium salon-grade grooming formula crafted for peak performance, scent, and texture control.'}
           </p>
 
           {/* Key Benefits List */}
           <div style={{
-            background: '#faf9f5',
+            background: 'rgba(255,255,255,0.03)',
             borderRadius: '16px',
             padding: '1rem',
-            border: '1px solid rgba(212,175,55,0.2)',
+            border: '1px solid rgba(255,255,255,0.06)',
             marginBottom: '1.5rem'
           }}>
-            <h4 style={{ fontFamily: 'Outfit', fontSize: '0.85rem', fontWeight: 800, color: '#171717', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.65rem' }}>
+            <h4 style={{ fontFamily: 'Outfit', fontSize: '0.8rem', fontWeight: 800, color: '#F5B942', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.65rem' }}>
               Key Product Highlights
             </h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
@@ -469,8 +464,8 @@ export const ProductDetail = () => {
                 'Provides long-lasting hold with lightweight texture',
                 'Suitable for daily salon styling or home maintenance'
               ]).map((benefit, idx) => (
-                <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.45rem', fontSize: '0.82rem', color: '#374151' }}>
-                  <div style={{ width: '18px', height: '18px', borderRadius: '50%', background: 'rgba(16,185,129,0.15)', color: '#059669', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '2px' }}>
+                <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.45rem', fontSize: '0.82rem', color: '#CBD5E1' }}>
+                  <div style={{ width: '18px', height: '18px', borderRadius: '50%', background: 'rgba(245,185,66,0.15)', color: '#F5B942', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '2px' }}>
                     <Check size={11} />
                   </div>
                   <span>{benefit}</span>
@@ -481,17 +476,17 @@ export const ProductDetail = () => {
 
           {/* Quantity Picker & Total */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
-            <span style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.85rem', color: '#171717' }}>
+            <span style={{ fontFamily: 'Outfit', fontWeight: 700, fontSize: '0.85rem', color: '#FFFFFF' }}>
               Quantity:
             </span>
 
             <div style={{
               display: 'flex',
               alignItems: 'center',
-              background: '#f3f4f6',
+              background: '#0C0E14',
               borderRadius: '12px',
               padding: '4px 8px',
-              border: '1px solid rgba(0,0,0,0.08)'
+              border: '1px solid rgba(255,255,255,0.08)'
             }}>
               <button
                 type="button"
@@ -500,19 +495,19 @@ export const ProductDetail = () => {
                   width: '32px',
                   height: '32px',
                   borderRadius: '8px',
-                  background: '#ffffff',
+                  background: '#1E2330',
+                  color: '#FFFFFF',
                   border: 'none',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   cursor: 'pointer',
-                  boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
                 }}
               >
                 <Minus size={14} />
               </button>
 
-              <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1rem', padding: '0 1rem', color: '#171717' }}>
+              <span style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '1rem', padding: '0 1rem', color: '#FFFFFF' }}>
                 {quantity}
               </span>
 
@@ -523,13 +518,13 @@ export const ProductDetail = () => {
                   width: '32px',
                   height: '32px',
                   borderRadius: '8px',
-                  background: '#ffffff',
+                  background: '#1E2330',
+                  color: '#FFFFFF',
                   border: 'none',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   cursor: 'pointer',
-                  boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
                 }}
               >
                 <Plus size={14} />
@@ -541,12 +536,17 @@ export const ProductDetail = () => {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             <button
               onClick={handleAddToCart}
-              className="app-btn app-btn-primary"
               style={{
                 width: '100%',
-                minHeight: '48px',
-                fontSize: '0.92rem',
-                borderRadius: '14px',
+                padding: '0.95rem',
+                borderRadius: '16px',
+                background: '#F5B942',
+                color: '#0C0E14',
+                fontFamily: 'Outfit',
+                fontWeight: 800,
+                fontSize: '0.95rem',
+                border: 'none',
+                cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -559,19 +559,24 @@ export const ProductDetail = () => {
 
             <button
               onClick={handleBuyNow}
-              className="app-btn app-btn-accent"
               style={{
                 width: '100%',
-                minHeight: '48px',
+                padding: '0.95rem',
+                borderRadius: '16px',
+                background: '#1E2330',
+                color: '#FFFFFF',
+                border: '1px solid rgba(255,255,255,0.1)',
+                fontFamily: 'Outfit',
+                fontWeight: 700,
                 fontSize: '0.92rem',
-                borderRadius: '14px',
+                cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '0.5rem'
               }}
             >
-              <Zap size={18} />
+              <Zap size={18} color="#F5B942" />
               <span>Buy Now (Instant Checkout)</span>
             </button>
           </div>
@@ -580,10 +585,10 @@ export const ProductDetail = () => {
         {/* ── Related Recommendations Grid ── */}
         <div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
-            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 900, color: '#171717', margin: 0 }}>
-              Recommended Grooming Essentials
+            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: '#FFFFFF', margin: 0 }}>
+              Recommended Products
             </h3>
-            <span style={{ fontSize: '0.72rem', color: '#d4af37', fontFamily: 'Outfit', fontWeight: 800 }}>
+            <span style={{ fontSize: '0.75rem', color: '#F5B942', fontFamily: 'Outfit', fontWeight: 700 }}>
               Handpicked Essentials
             </span>
           </div>
@@ -594,38 +599,36 @@ export const ProductDetail = () => {
                 key={rel.id}
                 onClick={() => { navigate(`/product/${rel.id}`); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                 style={{
-                  background: '#ffffff',
+                  background: '#151822',
                   borderRadius: '16px',
                   padding: '0.75rem',
-                  border: '1.5px solid rgba(212,175,55,0.25)',
+                  border: '1px solid rgba(255,255,255,0.06)',
                   cursor: 'pointer',
                   textAlign: 'left',
-                  boxShadow: '0 4px 16px rgba(0,0,0,0.03)',
-                  transition: 'all 0.2s ease',
                   display: 'flex',
                   flexDirection: 'column',
-                  justify: 'space-between'
+                  justifyContent: 'space-between'
                 }}
               >
                 <div>
-                  <div style={{ width: '100%', height: '95px', borderRadius: '12px', overflow: 'hidden', marginBottom: '0.5rem', background: '#faf9f5' }}>
+                  <div style={{ width: '100%', height: '100px', borderRadius: '12px', overflow: 'hidden', marginBottom: '0.5rem', background: '#0C0E14' }}>
                     <OptimizedImage src={rel.image} alt={rel.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
 
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.2rem' }}>
-                    <span style={{ fontSize: '0.65rem', color: '#16a34a', fontWeight: 800, fontFamily: 'Outfit' }}>● In Stock</span>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.15rem', color: '#d4af37', fontWeight: 800, fontSize: '0.72rem' }}>
-                      <Star size={11} fill="#d4af37" /><span>{rel.rating || 4.8}</span>
+                    <span style={{ fontSize: '0.65rem', color: '#10b981', fontWeight: 800, fontFamily: 'Outfit' }}>● In Stock</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.15rem', color: '#F5B942', fontWeight: 800, fontSize: '0.72rem' }}>
+                      <Star size={11} fill="#F5B942" /><span>{rel.rating || 4.8}</span>
                     </div>
                   </div>
 
-                  <h4 style={{ fontFamily: 'Outfit', fontSize: '0.82rem', fontWeight: 800, color: '#171717', margin: '0 0 0.3rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <h4 style={{ fontFamily: 'Outfit', fontSize: '0.82rem', fontWeight: 700, color: '#FFFFFF', margin: '0 0 0.3rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {rel.title}
                   </h4>
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.35rem' }}>
-                  <div style={{ fontFamily: 'Outfit', fontSize: '0.86rem', fontWeight: 900, color: '#171717' }}>
+                  <div style={{ fontFamily: 'Outfit', fontSize: '0.86rem', fontWeight: 800, color: '#F5B942' }}>
                     ₦{Number(rel.price).toLocaleString()}
                   </div>
                   <button
@@ -635,7 +638,7 @@ export const ProductDetail = () => {
                       showToast(`Added ${rel.title} to cart!`, 'success');
                     }}
                     style={{
-                      backgroundColor: '#171717', color: '#d4af37', border: '1px solid #d4af37',
+                      backgroundColor: '#F5B942', color: '#0C0E14', border: 'none',
                       borderRadius: '8px', padding: '0.3rem 0.5rem', fontFamily: 'Outfit',
                       fontWeight: 800, fontSize: '0.7rem', cursor: 'pointer', display: 'flex',
                       alignItems: 'center', gap: '0.2rem'

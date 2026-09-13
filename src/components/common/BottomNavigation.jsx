@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Home, Scissors, CalendarPlus, ShoppingBag, User, LayoutDashboard, Shield } from 'lucide-react';
+import { Home, Scissors, Plus, ShoppingBag, User, Sparkles, Users } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { preloadRoute } from '../../App';
 
@@ -28,15 +28,21 @@ export const BottomNavigation = () => {
     navigate('/booking');
   };
 
+  const isExpertsPath = location.pathname.startsWith('/experts');
+
   const navItems = [
     { label: 'Home', path: '/', icon: Home },
     { label: 'Services', path: '/services', icon: Scissors },
-    { label: 'Book', path: '/booking', icon: CalendarPlus, isCTA: true, onClick: handleBookClick },
-    { label: 'Store', path: '/store', icon: ShoppingBag },
+    { label: 'Book', path: '/booking', icon: Plus, isCTA: true, onClick: handleBookClick },
     {
-      label: isAuthenticated ? (role === 'admin' ? 'Admin' : role === 'staff' ? 'Dashboard' : 'Profile') : 'Sign In',
-      path: getDashboardPath(),
-      icon: isAuthenticated ? (role === 'admin' ? Shield : LayoutDashboard) : User,
+      label: isExpertsPath ? 'Stylists' : 'Store',
+      path: isExpertsPath ? '/experts' : '/store',
+      icon: isExpertsPath ? Users : ShoppingBag,
+    },
+    {
+      label: 'Profile',
+      path: isAuthenticated ? (role === 'staff' ? '/expert-dashboard' : role === 'admin' ? '/admin' : '/profile') : '/login',
+      icon: User,
     },
   ];
 
@@ -58,9 +64,10 @@ export const BottomNavigation = () => {
               onMouseEnter={handlePrefetch}
               onTouchStart={handlePrefetch}
               className="bottom-nav-cta"
-              title="Book Visit"
+              title="Book Appointment"
+              aria-label="Book Appointment"
             >
-              <Icon size={22} />
+              <Icon size={24} strokeWidth={2.8} />
             </button>
           );
         }

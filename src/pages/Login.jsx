@@ -63,21 +63,20 @@ export const Login = () => {
   return (
     <PageContainer title="Sign In">
       <div style={{ maxWidth: '440px', margin: '0.5rem auto 2rem' }}>
-        <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
           <div
             style={{
-              width: '60px',
-              height: '60px',
-              borderRadius: '18px',
-              background: 'linear-gradient(135deg, #1f1f1f, #121212)',
-              color: '#d4af37',
+              width: '64px',
+              height: '64px',
+              borderRadius: '20px',
+              background: 'linear-gradient(135deg, #151822, #0C0E14)',
+              color: '#F5B942',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              margin: '0 auto 1rem',
-              border: '1.5px solid rgba(212, 175, 55, 0.4)',
-              boxShadow: '0 10px 25px rgba(0,0,0,0.15)',
-              transition: 'all 0.3s ease',
+              margin: '0 auto 1.1rem',
+              border: '1.5px solid rgba(245, 185, 66, 0.35)',
+              boxShadow: '0 10px 30px rgba(245,185,66,0.15)',
             }}
           >
             <Sparkles size={28} />
@@ -88,25 +87,26 @@ export const Login = () => {
               fontFamily: 'Outfit',
               fontSize: '1.75rem',
               fontWeight: 800,
-              color: '#171717',
+              color: '#FFFFFF',
             }}
           >
             Welcome Back
           </h2>
-          <p style={{ color: '#6b7280', fontSize: '0.88rem', marginTop: '0.2rem' }}>
+          <p style={{ color: '#9AA2B3', fontSize: '0.88rem', marginTop: '0.25rem' }}>
             Access your appointments, profile & grooming dashboard
           </p>
         </div>
 
-        {/* Role Segmented Controller (Public Roles Only) */}
+        {/* Role Segmented Controller */}
         <div
           style={{
-            background: '#e5e7eb',
-            borderRadius: '14px',
+            background: '#151822',
+            borderRadius: '16px',
             padding: '4px',
             display: 'flex',
             marginBottom: '1.25rem',
-            gap: '2px',
+            gap: '4px',
+            border: '1px solid rgba(255,255,255,0.06)',
           }}
         >
           <button
@@ -114,16 +114,15 @@ export const Login = () => {
             onClick={() => setActiveRole('customer')}
             style={{
               flex: 1,
-              padding: '0.65rem 0.4rem',
-              borderRadius: '11px',
+              padding: '0.7rem 0.4rem',
+              borderRadius: '12px',
               border: 'none',
               fontFamily: 'Outfit',
               fontWeight: 700,
               fontSize: '0.85rem',
               cursor: 'pointer',
-              background: activeRole === 'customer' ? '#ffffff' : 'transparent',
-              color: activeRole === 'customer' ? '#171717' : '#6b7280',
-              boxShadow: activeRole === 'customer' ? '0 4px 12px rgba(0,0,0,0.06)' : 'none',
+              background: activeRole === 'customer' ? '#F5B942' : 'transparent',
+              color: activeRole === 'customer' ? '#0C0E14' : '#9AA2B3',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -140,16 +139,15 @@ export const Login = () => {
             onClick={() => setActiveRole('staff')}
             style={{
               flex: 1,
-              padding: '0.65rem 0.4rem',
-              borderRadius: '11px',
+              padding: '0.7rem 0.4rem',
+              borderRadius: '12px',
               border: 'none',
               fontFamily: 'Outfit',
               fontWeight: 700,
               fontSize: '0.85rem',
               cursor: 'pointer',
-              background: activeRole === 'staff' ? '#ffffff' : 'transparent',
-              color: activeRole === 'staff' ? '#171717' : '#6b7280',
-              boxShadow: activeRole === 'staff' ? '0 4px 12px rgba(0,0,0,0.06)' : 'none',
+              background: activeRole === 'staff' ? '#F5B942' : 'transparent',
+              color: activeRole === 'staff' ? '#0C0E14' : '#9AA2B3',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -162,75 +160,78 @@ export const Login = () => {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="app-card" style={{ padding: '1.5rem' }}>
-          <div className="app-input-group">
-            <label className="app-label">Email Address</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="name@example.com"
-              className="app-input"
-              required
-            />
-          </div>
-
-          <div className="app-input-group">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <label className="app-label">Password</label>
-              <span
-                onClick={() => navigate('/forgot-password')}
+        {/* Form Card */}
+        <div style={{ background: '#151822', borderRadius: '24px', padding: '1.5rem', border: '1px solid rgba(255,255,255,0.06)', marginBottom: '1.5rem' }}>
+          <form onSubmit={handleSubmit}>
+            <div style={{ marginBottom: '1rem' }}>
+              <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#9AA2B3', marginBottom: '0.5rem', fontFamily: 'Outfit' }}>Email Address</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="name@example.com"
+                required
                 style={{
-                  fontSize: '0.78rem',
-                  color: '#d4af37',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  marginBottom: '0.35rem',
+                  width: '100%', padding: '0.85rem 1rem', borderRadius: '14px',
+                  background: '#0C0E14', border: '1px solid rgba(255,255,255,0.1)',
+                  color: '#FFFFFF', fontFamily: 'Outfit', fontSize: '0.92rem', outline: 'none'
                 }}
-              >
-                Forgot Password?
-              </span>
+              />
             </div>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              className="app-input"
-              required
-            />
-          </div>
 
-          <button
-            type="submit"
-            disabled={submitting}
-            className="app-btn app-btn-primary"
-            style={{ marginTop: '0.5rem' }}
-          >
-            {submitting ? (
-              <span>Authenticating...</span>
-            ) : (
-              <>
-                <LogIn size={18} />
-                <span>
-                  Sign In as {activeRole === 'staff' ? 'Expert' : 'Customer'}
+            <div style={{ marginBottom: '1.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                <label style={{ fontSize: '0.8rem', fontWeight: 700, color: '#9AA2B3', fontFamily: 'Outfit' }}>Password</label>
+                <span
+                  onClick={() => navigate('/forgot-password')}
+                  style={{ fontSize: '0.78rem', color: '#F5B942', fontWeight: 600, cursor: 'pointer' }}
+                >
+                  Forgot Password?
                 </span>
-              </>
-            )}
-          </button>
-        </form>
+              </div>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+                style={{
+                  width: '100%', padding: '0.85rem 1rem', borderRadius: '14px',
+                  background: '#0C0E14', border: '1px solid rgba(255,255,255,0.1)',
+                  color: '#FFFFFF', fontFamily: 'Outfit', fontSize: '0.92rem', outline: 'none'
+                }}
+              />
+            </div>
 
-        <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>
-          <p style={{ color: '#6b7280', fontSize: '0.88rem' }}>
+            <button
+              type="submit"
+              disabled={submitting}
+              style={{
+                width: '100%', padding: '1rem', borderRadius: '16px',
+                background: submitting ? 'rgba(245,185,66,0.6)' : '#F5B942',
+                color: '#0C0E14', fontFamily: 'Outfit', fontWeight: 800,
+                fontSize: '0.95rem', border: 'none', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem'
+              }}
+            >
+              {submitting ? (
+                <span>Authenticating...</span>
+              ) : (
+                <>
+                  <LogIn size={18} />
+                  <span>Sign In as {activeRole === 'staff' ? 'Expert' : 'Customer'}</span>
+                </>
+              )}
+            </button>
+          </form>
+        </div>
+
+        <div style={{ textAlign: 'center' }}>
+          <p style={{ color: '#9AA2B3', fontSize: '0.88rem' }}>
             New to Style Corner?{' '}
             <span
               onClick={() => navigate('/role-selection')}
-              style={{
-                color: '#d4af37',
-                fontWeight: 700,
-                cursor: 'pointer',
-                textDecoration: 'underline',
-              }}
+              style={{ color: '#F5B942', fontWeight: 700, cursor: 'pointer' }}
             >
               Create an Account
             </span>

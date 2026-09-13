@@ -97,174 +97,345 @@ export const Home = () => {
   return (
     <PageContainer onOpenAiMatcher={() => setShowAiSheet(true)}>
 
-      {/* ── Editorial Luxury Hero Section ── */}
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const popularServices = [
+    {
+      id: 'srv-1',
+      title: 'Hair Styling',
+      price: 'From ₦5,000',
+      image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=400&q=80',
+      serviceName: 'Hair Styling',
+    },
+    {
+      id: 'srv-2',
+      title: 'Nails',
+      price: 'From ₦3,000',
+      image: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&w=400&q=80',
+      serviceName: 'Nail Tech',
+    },
+    {
+      id: 'srv-3',
+      title: 'Braids',
+      price: 'From ₦4,000',
+      image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=400&q=80',
+      serviceName: 'Hair Braider',
+    },
+    {
+      id: 'srv-4',
+      title: 'Skincare',
+      price: 'From ₦6,000',
+      image: 'https://images.unsplash.com/photo-1512290900672-1f5be50c76ba?auto=format&fit=crop&w=400&q=80',
+      serviceName: 'Skincare',
+    },
+    {
+      id: 'srv-5',
+      title: 'Makeup',
+      price: 'From ₦8,000',
+      image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=400&q=80',
+      serviceName: 'Makeup Artist',
+    },
+  ];
+
+  const handleSearchSubmit = (e) => {
+    if (e.key === 'Enter' && searchQuery.trim()) {
+      navigate(`/services?search=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
+  return (
+    <PageContainer onOpenAiMatcher={() => setShowAiSheet(true)}>
+
+      {/* ── Screen 1: Editorial Luxury Hero Section ── */}
       <div
         style={{
           position: 'relative',
           borderRadius: '24px',
           overflow: 'hidden',
-          backgroundImage: `url('https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1200&q=80&fm=webp')`,
+          backgroundImage: `url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=80')`,
           backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          padding: '2.75rem 1.5rem 2.25rem',
+          backgroundPosition: 'center top',
+          padding: '2.5rem 1.25rem 1.85rem',
           color: '#ffffff',
-          boxShadow: '0 20px 45px rgba(0,0,0,0.25)',
+          boxShadow: '0 15px 40px rgba(0,0,0,0.6)',
           marginBottom: '1.25rem',
         }}
       >
-        {/* Dark Editorial Overlay */}
+        {/* Dark Editorial Overlay with Warm Luxury Vignette */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
-            background: 'linear-gradient(135deg, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.55) 100%)',
+            background: 'linear-gradient(180deg, rgba(12, 14, 20, 0.45) 0%, rgba(12, 14, 20, 0.88) 60%, #0c0e14 100%)',
             zIndex: 1,
           }}
         />
 
         <div style={{ position: 'relative', zIndex: 2 }}>
-          <span
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.4rem',
-              background: 'rgba(212, 175, 55, 0.2)',
-              color: '#d4af37',
-              fontFamily: 'Outfit',
-              fontSize: '0.72rem',
-              fontWeight: 800,
-              padding: '0.35rem 0.85rem',
-              borderRadius: '50px',
-              textTransform: 'uppercase',
-              letterSpacing: '0.12em',
-              marginBottom: '1.25rem',
-              border: '1px solid rgba(212,175,55,0.4)',
-            }}
-          >
-            <Sparkles size={13} /> Style Corner
-          </span>
-
           <h1
             style={{
               fontFamily: 'Outfit',
-              fontSize: '2.35rem',
-              fontWeight: 900,
-              lineHeight: 1.08,
-              letterSpacing: '-0.03em',
+              fontSize: 'clamp(2rem, 7vw, 2.6rem)',
+              fontWeight: 800,
+              lineHeight: 1.12,
+              letterSpacing: '-0.02em',
               color: '#ffffff',
-              marginBottom: '1rem',
+              marginBottom: '0.65rem',
             }}
           >
-            Look Good,<br />
-            <span style={{ color: '#d4af37', fontStyle: 'italic', fontWeight: 700 }}>Feel Great.</span>
+            Your Style,<br />
+            <span style={{ color: '#f5b942' }}>Our Expertise.</span>
           </h1>
 
           <p
             style={{
-              color: '#e5e7eb',
-              fontSize: '0.9rem',
-              lineHeight: 1.6,
-              marginBottom: '1.75rem',
+              color: '#cbd5e1',
+              fontSize: '0.88rem',
+              lineHeight: 1.5,
+              marginBottom: '1.4rem',
               maxWidth: '340px',
               fontWeight: 400,
             }}
           >
-            Hair cuts, braids, nails, and grooming — all in one place. Book fast, get styled.
+            Book top stylists, get premium beauty services, and shop your favorite products — all in one place.
           </p>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-            <button
-              onClick={() => {
-  if (isAuthenticated) {
-    navigate('/booking');
-  } else {
-    navigate(`/login?redirect=${encodeURIComponent('/booking')}`);
-  }
-}}
-              className="app-btn app-btn-accent"
-              style={{
-                padding: '0.9rem 1.5rem',
-                fontSize: '0.88rem',
-                letterSpacing: '0.05em',
-                textTransform: 'uppercase',
-                fontFamily: 'Outfit',
-                fontWeight: 800,
-              }}
-            >
-              <Calendar size={18} />
-              <span>Book a Session</span>
-            </button>
+          {/* Search Pill Input */}
+          <div
+            className="search-pill-container"
+            style={{
+              marginBottom: '1.25rem',
+              background: 'rgba(23, 26, 37, 0.85)',
+              backdropFilter: 'blur(10px)',
+            }}
+          >
+            <Sparkles size={16} color="#f5b942" />
+            <input
+              type="text"
+              className="search-pill-input"
+              placeholder="Search for services, stylists, or products..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={handleSearchSubmit}
+            />
+          </div>
 
+          {/* 4 Quick Actions Row */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(4, 1fr)',
+              gap: '0.5rem',
+            }}
+          >
             <button
-              onClick={() => setShowAiSheet(true)}
-              className="app-btn"
+              onClick={() => navigate('/booking')}
               style={{
-                background: 'rgba(255,255,255,0.1)',
+                background: 'rgba(23, 26, 37, 0.9)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: '14px',
+                padding: '0.75rem 0.35rem',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '0.4rem',
+                cursor: 'pointer',
                 color: '#ffffff',
-                border: '1px solid rgba(255,255,255,0.2)',
-                backdropFilter: 'blur(10px)',
               }}
             >
-              <Sparkles size={18} color="#d4af37" />
-              <span>AI Stylist Finder</span>
+              <div
+                style={{
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '10px',
+                  background: 'rgba(245, 185, 66, 0.12)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#f5b942',
+                }}
+              >
+                <Calendar size={18} />
+              </div>
+              <span style={{ fontSize: '0.68rem', fontFamily: 'Outfit', fontWeight: 700, textAlign: 'center', lineHeight: 1.15 }}>
+                Book a Service
+              </span>
+            </button>
+
+            <button
+              onClick={() => navigate('/experts')}
+              style={{
+                background: 'rgba(23, 26, 37, 0.9)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: '14px',
+                padding: '0.75rem 0.35rem',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '0.4rem',
+                cursor: 'pointer',
+                color: '#ffffff',
+              }}
+            >
+              <div
+                style={{
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '10px',
+                  background: 'rgba(245, 185, 66, 0.12)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#f5b942',
+                }}
+              >
+                <Scissors size={18} />
+              </div>
+              <span style={{ fontSize: '0.68rem', fontFamily: 'Outfit', fontWeight: 700, textAlign: 'center', lineHeight: 1.15 }}>
+                Find a Stylist
+              </span>
+            </button>
+
+            <button
+              onClick={() => navigate('/store')}
+              style={{
+                background: 'rgba(23, 26, 37, 0.9)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: '14px',
+                padding: '0.75rem 0.35rem',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '0.4rem',
+                cursor: 'pointer',
+                color: '#ffffff',
+              }}
+            >
+              <div
+                style={{
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '10px',
+                  background: 'rgba(245, 185, 66, 0.12)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#f5b942',
+                }}
+              >
+                <ShoppingBag size={18} />
+              </div>
+              <span style={{ fontSize: '0.68rem', fontFamily: 'Outfit', fontWeight: 700, textAlign: 'center', lineHeight: 1.15 }}>
+                Shop Store
+              </span>
+            </button>
+
+            <button
+              onClick={() => navigate('/ai-stylist-finder')}
+              style={{
+                background: 'rgba(23, 26, 37, 0.9)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: '14px',
+                padding: '0.75rem 0.35rem',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '0.4rem',
+                cursor: 'pointer',
+                color: '#ffffff',
+              }}
+            >
+              <div
+                style={{
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '10px',
+                  background: 'rgba(245, 185, 66, 0.12)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#f5b942',
+                }}
+              >
+                <Sparkles size={18} />
+              </div>
+              <span style={{ fontSize: '0.68rem', fontFamily: 'Outfit', fontWeight: 700, textAlign: 'center', lineHeight: 1.15 }}>
+                AI Stylist Finder
+              </span>
             </button>
           </div>
         </div>
       </div>
 
-      {/* ── Glassmorphism Statistics Bar ── */}
-      <div
-        className="app-card"
-        style={{
-          background: 'rgba(255, 255, 255, 0.95)',
-          backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(212, 175, 55, 0.3)',
-          borderRadius: '20px',
-          padding: '1.25rem 1rem',
-          boxShadow: '0 12px 30px rgba(0,0,0,0.05)',
-          marginBottom: '1.5rem',
-        }}
-      >
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.5rem', textAlign: 'center' }}>
-          <div>
-            <span style={{ fontSize: '0.68rem', color: '#6b7280', fontFamily: 'Outfit', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', display: 'block', marginBottom: '0.2rem' }}>
-              Happy Clients
-            </span>
-            <div style={{ fontFamily: 'Outfit', fontSize: '1.5rem', fontWeight: 900, color: '#171717' }}>
-              1.2k+
-            </div>
-          </div>
+      {/* ── Screen 1: Popular Services Carousel ── */}
+      <div style={{ marginBottom: '1.75rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
+          <h2 style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+            Popular Services
+          </h2>
+          <button
+            onClick={() => navigate('/services')}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#f5b942',
+              fontFamily: 'Outfit',
+              fontWeight: 700,
+              fontSize: '0.82rem',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.15rem',
+            }}
+          >
+            See all <ChevronRight size={15} />
+          </button>
+        </div>
 
-          <div style={{ borderLeft: '1px solid rgba(0,0,0,0.08)', borderRight: '1px solid rgba(0,0,0,0.08)' }}>
-            <span style={{ fontSize: '0.68rem', color: '#6b7280', fontFamily: 'Outfit', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', display: 'block', marginBottom: '0.2rem' }}>
-              Service Rating
-            </span>
-            <div style={{ fontFamily: 'Outfit', fontSize: '1.5rem', fontWeight: 900, color: '#d4af37' }}>
-              A+ Quality
+        <div
+          style={{
+            display: 'flex',
+            gap: '0.75rem',
+            overflowX: 'auto',
+            paddingBottom: '0.4rem',
+            scrollSnapType: 'x mandatory',
+            WebkitOverflowScrolling: 'touch',
+          }}
+        >
+          {popularServices.map((service) => (
+            <div
+              key={service.id}
+              onClick={() => navigate(`/booking?service=${encodeURIComponent(service.serviceName)}`)}
+              style={{
+                flex: '0 0 130px',
+                scrollSnapAlign: 'start',
+                background: '#151822',
+                borderRadius: '16px',
+                overflow: 'hidden',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                cursor: 'pointer',
+                transition: 'transform 0.15s ease',
+              }}
+            >
+              <div style={{ height: '90px', width: '100%', overflow: 'hidden' }}>
+                <OptimizedImage
+                  src={service.image}
+                  alt={service.title}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+              </div>
+              <div style={{ padding: '0.65rem 0.6rem' }}>
+                <h4 style={{ fontFamily: 'Outfit', fontSize: '0.84rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.15rem' }}>
+                  {service.title}
+                </h4>
+                <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
+                  {service.price}
+                </span>
+              </div>
             </div>
-          </div>
-
-          <div>
-            <span style={{ fontSize: '0.68rem', color: '#6b7280', fontFamily: 'Outfit', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', display: 'block', marginBottom: '0.2rem' }}>
-              Master Stylists
-            </span>
-            <div style={{ fontFamily: 'Outfit', fontSize: '1.5rem', fontWeight: 900, color: '#171717' }}>
-              20+
-            </div>
-          </div>
+          ))}
         </div>
       </div>
-
-      {/* ── Signature Specialities Cards (Original Editorial Cards) ── */}
-      <div style={{ marginBottom: '1.75rem' }}>
-        <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
-          <span style={{ color: '#d4af37', fontSize: '0.75rem', fontFamily: 'Outfit', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.12em', display: 'block', marginBottom: '0.25rem' }}>
-            OUR SPECIALITIES
-          </span>
-          <h2 style={{ fontFamily: 'Outfit', fontSize: '1.6rem', fontWeight: 900, color: '#171717' }}>
-            Our Services
-          </h2>
-        </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
           {signatureServices.map((item, idx) => (
@@ -373,27 +544,25 @@ export const Home = () => {
           </h4>
           <p style={{ color: '#6b7280', fontSize: '0.82rem', marginTop: '0.15rem' }}>
             Tell us your style and our AI will match you with the right expert — instantly.
-          </p>
-        </div>
-        <ChevronRight size={18} color="#d4af37" />
+        <ChevronRight size={18} color="#f5b942" />
       </div>
 
       {/* ── Recommended Grooming Essentials Showcase ── */}
       <div style={{ marginBottom: '1.75rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
           <div>
-            <span style={{ color: '#d4af37', textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.68rem', fontFamily: 'Outfit', fontWeight: 800, display: 'block' }}>
+            <span style={{ color: '#f5b942', textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.68rem', fontFamily: 'Outfit', fontWeight: 800, display: 'block' }}>
               Atelier Boutique
             </span>
-            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.18rem', fontWeight: 900, color: '#171717', margin: 0 }}>
-              Recommended Grooming Essentials
+            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+              Recommended Essentials
             </h3>
           </div>
           <button
             onClick={() => navigate('/store')}
-            style={{ background: 'none', border: 'none', color: '#d4af37', fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.82rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.2rem' }}
+            style={{ background: 'none', border: 'none', color: '#f5b942', fontFamily: 'Outfit', fontWeight: 700, fontSize: '0.82rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.2rem' }}
           >
-            View All Store <ChevronRight size={15} />
+            View All <ChevronRight size={15} />
           </button>
         </div>
 
@@ -410,53 +579,33 @@ export const Home = () => {
               key={p.id}
               onClick={() => navigate(`/product/${p.id}`)}
               style={{
-                flex: '0 0 220px',
+                flex: '0 0 170px',
                 scrollSnapAlign: 'start',
-                background: '#ffffff',
-                borderRadius: '18px',
-                padding: '0.85rem',
-                border: '1.5px solid rgba(212,175,55,0.25)',
-                boxShadow: '0 8px 24px rgba(0,0,0,0.04)',
+                background: '#151822',
+                borderRadius: '16px',
+                padding: '0.75rem',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
                 cursor: 'pointer',
-                transition: 'transform 0.2s ease, boxShadow 0.2s ease',
+                transition: 'transform 0.2s ease',
                 display: 'flex',
                 flexDirection: 'column',
-                justify: 'space-between',
+                justifyContent: 'space-between',
                 position: 'relative'
               }}
             >
-              {/* Badge */}
-              {p.badge && (
-                <span style={{
-                  position: 'absolute', top: '14px', left: '14px', zIndex: 2,
-                  backgroundColor: '#171717', color: '#d4af37', fontSize: '0.65rem',
-                  fontFamily: 'Outfit', fontWeight: 900, padding: '0.2rem 0.55rem',
-                  borderRadius: '20px', border: '1px solid rgba(212,175,55,0.5)'
-                }}>
-                  {p.badge}
-                </span>
-              )}
-
               {/* Product Thumbnail */}
-              <div style={{ width: '100%', height: '130px', borderRadius: '14px', overflow: 'hidden', marginBottom: '0.65rem', backgroundColor: '#faf9f5' }}>
+              <div style={{ width: '100%', height: '120px', borderRadius: '12px', overflow: 'hidden', marginBottom: '0.65rem', backgroundColor: '#1c202d' }}>
                 <OptimizedImage src={p.image} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
 
               {/* Details */}
               <div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.2rem' }}>
-                  <span style={{ fontSize: '0.72rem', color: '#6b7280', fontFamily: 'Outfit', fontWeight: 600 }}>Grooming</span>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#d4af37', fontWeight: 800, fontSize: '0.76rem' }}>
-                    <Star size={12} fill="#d4af37" /><span>{p.rating}</span>
-                  </div>
-                </div>
-
-                <h4 style={{ fontFamily: 'Outfit', fontSize: '0.88rem', fontWeight: 800, color: '#171717', margin: '0 0 0.35rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <h4 style={{ fontFamily: 'Outfit', fontSize: '0.85rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.25rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {p.title}
                 </h4>
 
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.4rem' }}>
-                  <span style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 900, color: '#171717' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.35rem' }}>
+                  <span style={{ fontFamily: 'Outfit', fontSize: '0.88rem', fontWeight: 800, color: '#f5b942' }}>
                     ₦{Number(p.price).toLocaleString()}
                   </span>
                   <button
@@ -466,13 +615,19 @@ export const Home = () => {
                       showToast(`Added ${p.title} to cart!`, 'success');
                     }}
                     style={{
-                      backgroundColor: '#171717', color: '#d4af37', border: '1px solid #d4af37',
-                      borderRadius: '10px', padding: '0.35rem 0.65rem', fontFamily: 'Outfit',
-                      fontWeight: 800, fontSize: '0.72rem', cursor: 'pointer', display: 'flex',
-                      alignItems: 'center', gap: '0.25rem'
+                      width: '28px',
+                      height: '28px',
+                      borderRadius: '50%',
+                      backgroundColor: '#f5b942',
+                      color: '#0c0e14',
+                      border: 'none',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'pointer',
                     }}
                   >
-                    <Plus size={13} /> Add
+                    <Plus size={16} strokeWidth={2.5} />
                   </button>
                 </div>
               </div>
@@ -481,15 +636,15 @@ export const Home = () => {
         </div>
       </div>
 
-      {/* ── Master Stylists Showcase ── */}
+      {/* ── Top Stylists Showcase ── */}
       <div style={{ marginBottom: '1.5rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
-          <h3 style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 800, color: '#171717' }}>
-            Our Stylists
+          <h3 style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+            Top Stylists
           </h3>
           <button
             onClick={() => navigate('/experts')}
-            style={{ background: 'none', border: 'none', color: '#d4af37', fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.85rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.2rem' }}
+            style={{ background: 'none', border: 'none', color: '#f5b942', fontFamily: 'Outfit', fontWeight: 700, fontSize: '0.82rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.2rem' }}
           >
             View Team <ChevronRight size={16} />
           </button>
@@ -503,37 +658,36 @@ export const Home = () => {
                 className="app-card"
                 onClick={() => navigate(`/booking?stylist=${encodeURIComponent(sp.name.split(' ')[0])}`)}
                 onMouseEnter={() => preloadRoute('/booking')}
-                style={{ marginBottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}
+                style={{ marginBottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', background: '#151822', border: '1px solid rgba(255, 255, 255, 0.08)' }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
                   <OptimizedImage
                     src={sp.image}
                     alt={sp.name}
                     style={{
-                      width: '48px',
-                      height: '48px',
+                      width: '46px',
+                      height: '46px',
                       borderRadius: '50%',
                       objectFit: 'cover',
-                      border: '1.5px solid rgba(212,175,55,0.4)',
-                      boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                      border: '1.5px solid #f5b942',
                     }}
                   />
                   <div>
-                    <h4 style={{ fontFamily: 'Outfit', fontSize: '0.98rem', fontWeight: 700, color: '#171717' }}>{sp.name}</h4>
-                    <p style={{ color: '#d4af37', fontSize: '0.75rem', fontWeight: 700, fontFamily: 'Outfit' }}>{sp.specialty}</p>
+                    <h4 style={{ fontFamily: 'Outfit', fontSize: '0.95rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>{sp.name}</h4>
+                    <p style={{ color: '#94a3b8', fontSize: '0.75rem', fontWeight: 600, fontFamily: 'Outfit', margin: '0.1rem 0 0' }}>{sp.specialty}</p>
                   </div>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.15rem' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#d4af37', fontWeight: 800, fontSize: '0.85rem' }}>
-                    <Star size={13} fill="#d4af37" /><span>{sp.rating}</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#f5b942', fontWeight: 800, fontSize: '0.85rem' }}>
+                    <Star size={13} fill="#f5b942" /><span>{sp.rating}</span>
                   </div>
-                  <span style={{ fontSize: '0.7rem', color: '#9ca3af' }}>Book Now</span>
+                  <span style={{ fontSize: '0.72rem', color: '#f5b942', fontWeight: 700 }}>Book Now</span>
                 </div>
               </div>
             ))
           ) : (
-            <div className="app-card" style={{ textAlign: 'center', padding: '1.25rem', marginBottom: 0 }}>
-              <p style={{ fontSize: '0.82rem', color: '#6b7280', margin: '0 0 0.5rem' }}>
+            <div className="app-card" style={{ textAlign: 'center', padding: '1.25rem', marginBottom: 0, background: '#151822' }}>
+              <p style={{ fontSize: '0.82rem', color: '#94a3b8', margin: '0 0 0.5rem' }}>
                 All experts are verified dynamically upon registration.
               </p>
               <button
@@ -541,7 +695,7 @@ export const Home = () => {
                 className="app-btn app-btn-outline"
                 style={{ minHeight: '38px', fontSize: '0.78rem', width: 'auto', margin: '0 auto' }}
               >
-                Explore Experts Page
+                Explore Stylists
               </button>
             </div>
           )}

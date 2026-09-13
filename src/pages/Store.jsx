@@ -1,65 +1,78 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ShoppingBag, Plus, Star } from 'lucide-react';
+import {
+  ShoppingBag,
+  Search,
+  Plus,
+  Heart,
+  ChevronRight,
+  Sparkles,
+  Scissors,
+  Droplet,
+  Palette,
+  Wand2,
+} from 'lucide-react';
 import { PageContainer } from '../components/common/PageContainer';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
-import { CartSheet } from '../components/store/CartSheet';
 import { OptimizedImage } from '../components/common/OptimizedImage';
 import { preloadRoute } from '../App';
 import { api } from '../services/api';
 
-const DEFAULT_PRODUCTS = [
+const DEFAULT_STORE_PRODUCTS = [
   {
     id: 'p1',
-    title: 'Atelier Gold Pomade',
+    title: 'Hair Growth Oil',
+    category: 'Hair',
     price: 12000,
     rating: 4.9,
-    desc: 'Medium-hold matte finish pomade infused with organic argan oil.',
-    badge: 'Bestseller',
-    image: 'https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?auto=format&fit=crop&w=500&q=80',
+    image: 'https://images.unsplash.com/photo-1626285861696-9f0bf5a49c6d?auto=format&fit=crop&w=400&q=80',
+    desc: 'Botanical growth elixir formulated with rosemary and cold-pressed castor oil.',
   },
   {
     id: 'p2',
-    title: 'Botanical Beard Elixir',
-    price: 8500,
+    title: 'Face Serum',
+    category: 'Skincare',
+    price: 18000,
     rating: 4.8,
-    desc: 'Nourishing oil blend with jojoba and cedarwood fragrance.',
-    badge: 'Popular',
-    image: 'https://images.unsplash.com/photo-1626285861696-9f0bf5a49c6d?auto=format&fit=crop&w=500&q=80',
+    image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=400&q=80',
+    desc: 'Vitamin C & Hyaluronic acid brightening serum for radiant skin.',
   },
   {
     id: 'p3',
-    title: 'Sculpting Clay Wax',
+    title: 'Hair Mask',
+    category: 'Hair',
     price: 9500,
     rating: 4.9,
-    desc: 'High-hold textured clay wax for textured crops and modern fades.',
-    badge: 'New',
-    image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=500&q=80',
+    image: 'https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?auto=format&fit=crop&w=400&q=80',
+    desc: 'Deep conditioning argan butter mask for hydration and strand repair.',
   },
   {
     id: 'p4',
-    title: 'Scalp Revitalizing Shampoo',
-    price: 11000,
-    rating: 4.7,
-    desc: 'Sulfate-free tea tree shampoo for deep scalp hydration.',
-    image: 'https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=500&q=80',
+    title: 'Edge Control',
+    category: 'Hair',
+    price: 7000,
+    rating: 4.9,
+    image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=400&q=80',
+    desc: '24hr extreme hold edge tamer without flaking or residue.',
   },
   {
     id: 'p5',
-    title: 'Wooden Comb Set',
-    price: 6500,
-    rating: 4.9,
-    desc: 'Anti-static sandalwood comb set for precise hair and beard styling.',
-    image: 'https://images.unsplash.com/photo-1590159763121-7c9fd312190d?auto=format&fit=crop&w=500&q=80',
+    title: 'Face Mask',
+    category: 'Skincare',
+    price: 9500,
+    rating: 4.7,
+    image: 'https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=400&q=80',
+    desc: 'Purifying clay and tea tree detoxifying pore mask.',
   },
   {
     id: 'p6',
-    title: 'Silk Edge Wrap Scarf',
+    title: 'Silk Edge Wrap',
+    category: 'Tools',
     price: 5000,
     rating: 5.0,
-    desc: '100% mulberry silk wrap for protecting braid edges and locs.',
-    image: 'https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?auto=format&fit=crop&w=500&q=80',
+    image: 'https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?auto=format&fit=crop&w=400&q=80',
+    desc: '100% pure silk wrap band for protecting edges and braids.',
   },
 ];
 
@@ -67,38 +80,41 @@ export const Store = () => {
   const navigate = useNavigate();
   const { addToCart = () => {}, itemCount = 0 } = useCart() || {};
   const { showToast } = useAuth();
-  const [showCartSheet, setShowCartSheet] = useState(false);
-  const [products, setProducts] = useState([]);
-  const [hoveredImageMap, setHoveredImageMap] = useState({});
 
-  const fetchStoreProducts = async () => {
+  const [products, setProducts] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeCategory, setActiveCategory] = useState('All');
+  const [favorites, setFavorites] = useState({});
+
+  const categoryPills = [
+    { label: 'Hair', icon: Scissors, cat: 'Hair' },
+    { label: 'Skincare', icon: Droplet, cat: 'Skincare' },
+    { label: 'Makeup', icon: Palette, cat: 'Makeup' },
+    { label: 'Nails', icon: Wand2, cat: 'Nails' },
+    { label: 'Tools', icon: Sparkles, cat: 'Tools' },
+  ];
+
+  const fetchProducts = async () => {
     try {
       const data = await api.getProducts();
       if (Array.isArray(data) && data.length > 0) {
-        setProducts(data.map(p => ({ ...p, id: p._id || p.id })));
-        localStorage.setItem('cached_store_products', JSON.stringify(data));
+        setProducts(data.map((p) => ({ ...p, id: p._id || p.id })));
       } else {
-        const cached = localStorage.getItem('cached_store_products');
-        if (cached) {
-          try { setProducts(JSON.parse(cached)); } catch (e) { setProducts(DEFAULT_PRODUCTS); }
-        } else {
-          setProducts(DEFAULT_PRODUCTS);
-        }
+        setProducts(DEFAULT_STORE_PRODUCTS);
       }
     } catch (err) {
-      console.warn('Store product fetch warning, loading offline cache:', err.message);
-      const cached = localStorage.getItem('cached_store_products');
-      if (cached) {
-        try { setProducts(JSON.parse(cached)); } catch (e) { setProducts(DEFAULT_PRODUCTS); }
-      } else {
-        setProducts(DEFAULT_PRODUCTS);
-      }
+      setProducts(DEFAULT_STORE_PRODUCTS);
     }
   };
 
   useEffect(() => {
-    fetchStoreProducts();
+    fetchProducts();
   }, []);
+
+  const toggleFavorite = (id, e) => {
+    e.stopPropagation();
+    setFavorites((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
 
   const handleAdd = (p, e) => {
     if (e) e.stopPropagation();
@@ -106,32 +122,29 @@ export const Store = () => {
     showToast(`Added ${p.title} to cart!`, 'success');
   };
 
+  const filteredProducts = products.filter((p) => {
+    const matchesCategory =
+      activeCategory === 'All' ||
+      (p.category && p.category.toLowerCase() === activeCategory.toLowerCase());
+    const matchesSearch =
+      !searchQuery.trim() ||
+      p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (p.desc && p.desc.toLowerCase().includes(searchQuery.toLowerCase()));
+    return matchesCategory && matchesSearch;
+  });
+
   return (
-    <PageContainer title="Grooming Store" onOpenCart={() => navigate('/cart')}>
-      {/* Hero Store Banner */}
-      <div
-        style={{
-          background: 'linear-gradient(135deg, #171717 0%, #0d0d0d 100%)',
-          borderRadius: '20px',
-          padding: '1.1rem 1rem 1rem',
-          color: '#ffffff',
-          marginBottom: '1.25rem',
-          position: 'relative',
-          overflow: 'hidden',
-          border: '1.5px solid rgba(212,175,55,0.4)',
-          boxShadow: '0 12px 32px rgba(0,0,0,0.18)',
-        }}
-      >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.75rem', flexWrap: 'wrap' }}>
-          <div style={{ flex: '1 1 140px', minWidth: 0 }}>
-            <span style={{ fontSize: '0.65rem', fontFamily: 'Outfit', fontWeight: 800, color: '#d4af37', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-              ATELIER ESSENTIALS
-            </span>
-            <h2 style={{ fontFamily: 'Outfit', fontSize: 'clamp(1.05rem, 4vw, 1.3rem)', fontWeight: 900, margin: '0.2rem 0 0.2rem', color: '#ffffff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-              Style Corner Boutique
-            </h2>
-            <p style={{ color: '#a1a1aa', fontSize: '0.75rem', margin: 0 }}>
-              Handpicked pomades, botanical oils &amp; silk hair protection.
+    <PageContainer showBack={true} onOpenCart={() => navigate('/cart')}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+        
+        {/* Screen 4: Header */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+          <div>
+            <h1 style={{ fontFamily: 'Outfit', fontSize: '1.65rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.25rem' }}>
+              Style Store
+            </h1>
+            <p style={{ color: '#94a3b8', fontSize: '0.84rem', margin: 0 }}>
+              Premium beauty products, handpicked for you.
             </p>
           </div>
 
@@ -139,162 +152,328 @@ export const Store = () => {
             onClick={() => navigate('/cart')}
             style={{
               position: 'relative',
-              background: '#d4af37',
-              color: '#121212',
+              width: '40px',
+              height: '40px',
+              borderRadius: '50%',
+              background: '#151822',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#ffffff',
+              cursor: 'pointer',
+            }}
+            aria-label="Cart"
+          >
+            <ShoppingBag size={18} />
+            {itemCount > 0 && <span className="badge-dot" />}
+          </button>
+        </div>
+
+        {/* Search Bar */}
+        <div className="search-pill-container">
+          <Search size={16} color="#64748b" />
+          <input
+            type="text"
+            className="search-pill-input"
+            placeholder="Search products..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+
+        {/* 5 Circular Category Icons */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: '0.2rem 0.25rem',
+          }}
+        >
+          {categoryPills.map((item) => {
+            const Icon = item.icon;
+            const isSelected = activeCategory === item.cat;
+            return (
+              <button
+                key={item.label}
+                onClick={() => setActiveCategory(isSelected ? 'All' : item.cat)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '0.45rem',
+                  cursor: 'pointer',
+                  outline: 'none',
+                }}
+              >
+                <div
+                  style={{
+                    width: '52px',
+                    height: '52px',
+                    borderRadius: '50%',
+                    background: isSelected ? '#f5b942' : '#151822',
+                    border: `1px solid ${isSelected ? '#f5b942' : 'rgba(255, 255, 255, 0.08)'}`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: isSelected ? '#0c0e14' : '#f5b942',
+                    transition: 'all 0.2s ease',
+                  }}
+                >
+                  <Icon size={20} />
+                </div>
+                <span
+                  style={{
+                    fontFamily: 'Outfit',
+                    fontSize: '0.74rem',
+                    fontWeight: 700,
+                    color: isSelected ? '#f5b942' : '#94a3b8',
+                  }}
+                >
+                  {item.label}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Screen 4: Promo Banner "Glow Up Your Routine" */}
+        <div
+          style={{
+            background: 'linear-gradient(135deg, #fce8cc 0%, #ecd0a2 100%)',
+            borderRadius: '20px',
+            padding: '1.25rem 1.15rem',
+            color: '#1a160d',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            position: 'relative',
+            overflow: 'hidden',
+          }}
+        >
+          <div style={{ maxWidth: '60%', zIndex: 2 }}>
+            <h3
+              style={{
+                fontFamily: 'Outfit',
+                fontSize: '1.18rem',
+                fontWeight: 800,
+                lineHeight: 1.15,
+                marginBottom: '0.35rem',
+                color: '#1a160d',
+              }}
+            >
+              Glow Up<br />Your Routine
+            </h3>
+            <p
+              style={{
+                fontSize: '0.74rem',
+                lineHeight: 1.35,
+                color: '#52432a',
+                marginBottom: '0.75rem',
+              }}
+            >
+              Premium products for healthy hair, glowing skin and flawless looks.
+            </p>
+            <button
+              onClick={() => setActiveCategory('All')}
+              style={{
+                background: '#151822',
+                color: '#ffffff',
+                border: 'none',
+                borderRadius: '50px',
+                padding: '0.45rem 1rem',
+                fontFamily: 'Outfit',
+                fontWeight: 700,
+                fontSize: '0.76rem',
+                cursor: 'pointer',
+              }}
+            >
+              Shop Now
+            </button>
+          </div>
+
+          <div
+            style={{
+              width: '100px',
+              height: '100px',
+              borderRadius: '16px',
+              overflow: 'hidden',
+              flexShrink: 0,
+            }}
+          >
+            <OptimizedImage
+              src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=300&q=80"
+              alt="Promo Cosmetics"
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
+          </div>
+        </div>
+
+        {/* Featured Products Section Header */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h2 style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+            Featured Products
+          </h2>
+          <button
+            onClick={() => setActiveCategory('All')}
+            style={{
+              background: 'none',
               border: 'none',
-              borderRadius: '12px',
-              padding: '0.6rem 0.85rem',
+              color: '#f5b942',
               fontFamily: 'Outfit',
-              fontWeight: 900,
-              fontSize: '0.8rem',
+              fontWeight: 700,
+              fontSize: '0.82rem',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              gap: '0.35rem',
-              boxShadow: '0 6px 18px rgba(212,175,55,0.35)',
-              flexShrink: 0,
-              whiteSpace: 'nowrap',
+              gap: '0.15rem',
             }}
           >
-            <ShoppingBag size={15} />
-            <span>Cart</span>
-            {itemCount > 0 && (
-              <span
-                style={{
-                  background: '#121212',
-                  color: '#d4af37',
-                  fontSize: '0.7rem',
-                  borderRadius: '50px',
-                  padding: '0.1rem 0.4rem',
-                  fontWeight: 900,
-                }}
-              >
-                {itemCount}
-              </span>
-            )}
+            See all <ChevronRight size={15} />
           </button>
         </div>
-      </div>
 
-      {/* Products Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '0.75rem' }}>
-        {products.map((p) => {
-          const currentImg = hoveredImageMap[p.id] || p.image;
-          const hasSecondary = !!p.secondaryImage;
-
-          return (
+        {/* 2-Column Product Grid matching Screen 4 */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, 1fr)',
+            gap: '0.85rem',
+          }}
+        >
+          {filteredProducts.map((p) => (
             <div
               key={p.id}
               onClick={() => navigate(`/product/${p.id}`)}
-              onMouseEnter={() => preloadRoute('/product/p1')}
-              className="app-card"
+              onMouseEnter={() => preloadRoute(`/product/${p.id}`)}
               style={{
-                marginBottom: 0,
+                background: '#151822',
+                borderRadius: '18px',
                 padding: '0.75rem',
+                border: '1px solid rgba(255, 255, 255, 0.07)',
                 display: 'flex',
                 flexDirection: 'column',
-                justifyContent: 'space-between',
                 cursor: 'pointer',
-                transition: 'transform 0.15s ease, box-shadow 0.15s ease',
-                overflow: 'hidden',
+                position: 'relative',
+                transition: 'transform 0.15s ease',
               }}
             >
-              <div>
-                {/* Product Image Container with Dual Photo support */}
-                <div
-                  onMouseEnter={() => {
-                    if (p.secondaryImage) setHoveredImageMap(prev => ({ ...prev, [p.id]: p.secondaryImage }));
+              {/* Product Photo with Heart Favorite Icon */}
+              <div
+                style={{
+                  width: '100%',
+                  height: '135px',
+                  borderRadius: '14px',
+                  overflow: 'hidden',
+                  backgroundColor: '#1c202d',
+                  marginBottom: '0.65rem',
+                  position: 'relative',
+                }}
+              >
+                <OptimizedImage
+                  src={p.image}
+                  alt={p.title}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+
+                <button
+                  onClick={(e) => toggleFavorite(p.id, e)}
+                  style={{
+                    position: 'absolute',
+                    top: '8px',
+                    right: '8px',
+                    width: '30px',
+                    height: '30px',
+                    borderRadius: '50%',
+                    background: 'rgba(0, 0, 0, 0.45)',
+                    backdropFilter: 'blur(6px)',
+                    border: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    color: favorites[p.id] ? '#ef4444' : '#ffffff',
                   }}
-                  onMouseLeave={() => {
-                    setHoveredImageMap(prev => ({ ...prev, [p.id]: p.image }));
-                  }}
-                  style={{ position: 'relative', width: '100%', height: '120px', borderRadius: '10px', overflow: 'hidden', marginBottom: '0.65rem', background: '#f3f4f6' }}
+                  aria-label="Favorite"
                 >
-                  <OptimizedImage
-                    src={currentImg}
-                    alt={p.title}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  <Heart
+                    size={15}
+                    fill={favorites[p.id] ? '#ef4444' : 'none'}
+                    strokeWidth={favorites[p.id] ? 0 : 2}
                   />
-                  
-                  {p.badge && (
-                    <span
-                      style={{
-                        position: 'absolute',
-                        top: '5px',
-                        left: '5px',
-                        background: 'rgba(18, 18, 18, 0.85)',
-                        backdropFilter: 'blur(4px)',
-                        color: '#d4af37',
-                        fontSize: '0.6rem',
-                        fontFamily: 'Outfit',
-                        fontWeight: 800,
-                        padding: '0.12rem 0.4rem',
-                        borderRadius: '50px',
-                        textTransform: 'uppercase',
-                        border: '1px solid rgba(212,175,55,0.3)',
-                      }}
-                    >
-                      {p.badge}
-                    </span>
-                  )}
-
-                  {/* Dual Photo Indicator Pills */}
-                  {hasSecondary && (
-                    <div style={{ position: 'absolute', bottom: '5px', right: '5px', display: 'flex', gap: '3px' }}>
-                      <span
-                        onClick={(e) => { e.stopPropagation(); setHoveredImageMap(prev => ({ ...prev, [p.id]: p.image })); }}
-                        style={{
-                          width: '7px', height: '7px', borderRadius: '50%',
-                          background: currentImg === p.image ? '#d4af37' : 'rgba(255,255,255,0.7)',
-                          cursor: 'pointer', boxShadow: '0 1px 3px rgba(0,0,0,0.3)'
-                        }}
-                      />
-                      <span
-                        onClick={(e) => { e.stopPropagation(); setHoveredImageMap(prev => ({ ...prev, [p.id]: p.secondaryImage })); }}
-                        style={{
-                          width: '7px', height: '7px', borderRadius: '50%',
-                          background: currentImg === p.secondaryImage ? '#d4af37' : 'rgba(255,255,255,0.7)',
-                          cursor: 'pointer', boxShadow: '0 1px 3px rgba(0,0,0,0.3)'
-                        }}
-                      />
-                    </div>
-                  )}
-                </div>
-
-                <h3 style={{ fontFamily: 'Outfit', fontSize: 'clamp(0.8rem, 2.5vw, 0.95rem)', fontWeight: 800, color: '#171717', lineHeight: 1.25, margin: 0 }}>
-                  {p.title}
-                </h3>
-
-                <p style={{ color: '#6b7280', fontSize: '0.7rem', margin: '0.2rem 0 0.55rem', lineHeight: 1.3, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                  {p.desc}
-                </p>
+                </button>
               </div>
 
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem', flexWrap: 'wrap', gap: '0.2rem' }}>
-                  <span style={{ fontFamily: 'Outfit', fontSize: 'clamp(0.95rem, 3vw, 1.15rem)', fontWeight: 900, color: '#171717' }}>
-                    ₦{Number(p.price).toLocaleString()}
-                  </span>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#d4af37', fontSize: '0.72rem', fontWeight: 800 }}>
-                    <Star size={11} fill="#d4af37" />
-                    <span>{p.rating}</span>
-                  </div>
-                </div>
+              {/* Title */}
+              <h3
+                style={{
+                  fontFamily: 'Outfit',
+                  fontSize: '0.92rem',
+                  fontWeight: 800,
+                  color: '#ffffff',
+                  margin: '0 0 0.35rem',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {p.title}
+              </h3>
+
+              {/* Price & Gold (+) Add Button */}
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  marginTop: 'auto',
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: 'Outfit',
+                    fontSize: '0.92rem',
+                    fontWeight: 800,
+                    color: '#f5b942',
+                  }}
+                >
+                  ₦{Number(p.price).toLocaleString()}
+                </span>
 
                 <button
                   onClick={(e) => handleAdd(p, e)}
-                  className="app-btn app-btn-primary"
-                  style={{ minHeight: '34px', padding: '0.35rem', fontSize: '0.72rem' }}
+                  style={{
+                    width: '30px',
+                    height: '30px',
+                    borderRadius: '50%',
+                    backgroundColor: '#f5b942',
+                    color: '#0c0e14',
+                    border: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 12px rgba(245, 185, 66, 0.35)',
+                  }}
+                  aria-label={`Add ${p.title} to cart`}
                 >
-                  <Plus size={13} /> Add to Cart
+                  <Plus size={16} strokeWidth={2.5} />
                 </button>
               </div>
             </div>
-          );
-        })}
-      </div>
+          ))}
+        </div>
 
-      <CartSheet isOpen={showCartSheet} onClose={() => setShowCartSheet(false)} />
+        {filteredProducts.length === 0 && (
+          <div style={{ textAlign: 'center', padding: '2.5rem 1rem', color: '#94a3b8' }}>
+            <p>No products found for "{searchQuery}".</p>
+          </div>
+        )}
+
+      </div>
     </PageContainer>
   );
 };

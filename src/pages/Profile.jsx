@@ -2,29 +2,25 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   User,
-  Mail,
-  Phone,
   ShieldCheck,
-  Edit,
+  Calendar,
+  ShoppingBag,
+  Wallet,
+  Bell,
+  Settings as SettingsIcon,
+  HelpCircle,
+  ChevronRight,
   LogOut,
   Trash2,
-  MapPin,
-  Building,
-  Home,
+  Edit,
+  Camera,
   Check,
-  RefreshCw,
-  Sparkles,
-  ArrowLeft,
-  Calendar,
-  Award,
-  Shield
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { PageContainer } from '../components/common/PageContainer';
 import { uploadToCloudinary } from '../services/cloudinary';
-import { ImagePreviewModal } from '../components/common/ImagePreviewModal';
+import { OptimizedImage } from '../components/common/OptimizedImage';
 import { PopupModal } from '../components/common/PopupModal';
-import { LocationSelector } from '../components/store/LocationSelector';
 
 export const Profile = () => {
   const navigate = useNavigate();
@@ -35,21 +31,14 @@ export const Profile = () => {
     lastname: user?.lastname || '',
     phone: user?.phone || '',
     avatarUrl: user?.avatarUrl || '',
-    specialties: user?.specialties ? (Array.isArray(user.specialties) ? user.specialties.join(', ') : user.specialties) : '',
-  });
-
-  const [location, setLocation] = useState({
-    state: user?.state || 'Lagos',
-    lga: user?.lga || 'Ikeja',
-    street: user?.street || '',
-    houseNumber: user?.houseNumber || '',
   });
 
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [showEnlargedAvatar, setShowEnlargedAvatar] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showHelpModal, setShowHelpModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deletingAccount, setDeletingAccount] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -58,13 +47,6 @@ export const Profile = () => {
         lastname: user.lastname || '',
         phone: user.phone || '',
         avatarUrl: user.avatarUrl || '',
-        specialties: user.specialties ? (Array.isArray(user.specialties) ? user.specialties.join(', ') : user.specialties) : '',
-      });
-      setLocation({
-        state: user.state || 'Lagos',
-        lga: user.lga || 'Ikeja',
-        street: user.street || '',
-        houseNumber: user.houseNumber || '',
       });
     }
   }, [user]);
@@ -95,28 +77,19 @@ export const Profile = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSaveProfile = async (e) => {
     e.preventDefault();
     setSaving(true);
     try {
-      const specialtiesArr = profileForm.specialties
-        ? profileForm.specialties.split(',').map(s => s.trim()).filter(Boolean)
-        : [];
-
       await updateProfile({
         firstname: profileForm.firstname.trim(),
         lastname: profileForm.lastname.trim(),
         phone: profileForm.phone.trim(),
-        specialties: specialtiesArr,
-        state: location.state,
-        lga: location.lga,
-        street: location.street,
-        houseNumber: location.houseNumber,
       });
-
-      showToast('Profile and location details saved successfully!', 'success');
+      setShowEditModal(false);
+      showToast('Profile updated successfully!', 'success');
     } catch (err) {
-      showToast(err.message || 'Failed to save profile', 'error');
+      showToast(err.message || 'Failed to update profile.', 'error');
     } finally {
       setSaving(false);
     }
@@ -135,307 +108,343 @@ export const Profile = () => {
     }
   };
 
-  const isStaff = user?.role === 'staff';
-  const isAdmin = user?.role === 'admin';
-
-  const handleDashboardClick = () => {
-    if (isAdmin) {
-      navigate('/admin');
-    } else if (isStaff) {
-      navigate('/expert-dashboard');
-    } else {
-      navigate('/customer-dashboard');
-    }
-  };
+  const menuItems = [
+    {
+      id: 'my-profile',
+      label: 'My Profile',
+      icon: User,
+      onClick: () => setShowEditModal(true),
+    },
+    {
+      id: 'my-bookings',
+      label: 'My Bookings',
+      icon: Calendar,
+      onClick: () => navigate('/customer-dashboard'),
+    },
+    {
+      id: 'my-orders',
+      label: 'My Orders',
+      icon: ShoppingBag,
+      onClick: () => navigate('/customer-dashboard'),
+    },
+    {
+      id: 'wallet-payments',
+      label: 'Wallet & Payments',
+      icon: Wallet,
+      onClick: () => navigate('/wallet'),
+    },
+    {
+      id: 'notifications',
+      label: 'Notifications',
+      icon: Bell,
+      onClick: () => navigate('/notifications'),
+    },
+    {
+      id: 'settings',
+      label: 'Settings',
+      icon: SettingsIcon,
+      onClick: () => setShowEditModal(true),
+    },
+    {
+      id: 'help-support',
+      label: 'Help & Support',
+      icon: HelpCircle,
+      onClick: () => setShowHelpModal(true),
+    },
+  ];
 
   return (
-    <PageContainer title={`${isAdmin ? 'Admin' : isStaff ? 'Expert' : 'User'} Profile`}>
-      <div style={{ maxWidth: '720px', margin: '0 auto' }}>
+    <PageContainer showBack={true}>
+      <div style={{ maxWidth: '480px', margin: '0 auto', paddingBottom: '3rem' }}>
         
-        {/* Top Back & Navigation Banner */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+        {/* Screen 9: Profile Header Card */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            textAlign: 'center',
+            marginBottom: '1.5rem',
+          }}
+        >
+          {/* Avatar with Camera upload button */}
+          <div style={{ position: 'relative', marginBottom: '0.75rem' }}>
+            <div
+              style={{
+                width: '84px',
+                height: '84px',
+                borderRadius: '50%',
+                overflow: 'hidden',
+                border: '2.5px solid #f5b942',
+                backgroundColor: '#1c202d',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)',
+              }}
+            >
+              {user?.avatarUrl ? (
+                <OptimizedImage
+                  src={user.avatarUrl}
+                  alt={user?.firstname || 'Profile'}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+              ) : (
+                <span style={{ fontFamily: 'Outfit', fontSize: '2rem', fontWeight: 900, color: '#f5b942' }}>
+                  {user?.firstname?.charAt(0) || 'B'}
+                </span>
+              )}
+            </div>
+
+            <label
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                right: 0,
+                width: '28px',
+                height: '28px',
+                borderRadius: '50%',
+                background: '#f5b942',
+                color: '#0c0e14',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                border: '2px solid #0c0e14',
+              }}
+              title="Upload photo"
+            >
+              <Camera size={14} />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handlePhotoChange}
+                style={{ display: 'none' }}
+              />
+            </label>
+          </div>
+
+          {/* Name & Verified Badge */}
+          <h2 style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.25rem' }}>
+            {user ? `${user.firstname || ''} ${user.lastname || ''}`.trim() || 'Bethel Gela' : 'Bethel Gela'}
+          </h2>
+
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', color: '#f5b942', fontSize: '0.78rem', fontWeight: 700, fontFamily: 'Outfit' }}>
+            <ShieldCheck size={14} />
+            <span>Verified</span>
+          </div>
+
+          {/* Stat Counters: Bookings | Reviews | Favorites */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              width: '100%',
+              background: '#151822',
+              borderRadius: '16px',
+              padding: '0.85rem 0.5rem',
+              marginTop: '1.25rem',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+            }}
+          >
+            <div>
+              <div style={{ fontFamily: 'Outfit', fontSize: '1.2rem', fontWeight: 800, color: '#ffffff' }}>4</div>
+              <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '0.1rem' }}>Bookings</div>
+            </div>
+
+            <div style={{ borderLeft: '1px solid rgba(255, 255, 255, 0.08)', borderRight: '1px solid rgba(255, 255, 255, 0.08)' }}>
+              <div style={{ fontFamily: 'Outfit', fontSize: '1.2rem', fontWeight: 800, color: '#ffffff' }}>12</div>
+              <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '0.1rem' }}>Reviews</div>
+            </div>
+
+            <div>
+              <div style={{ fontFamily: 'Outfit', fontSize: '1.2rem', fontWeight: 800, color: '#ffffff' }}>3</div>
+              <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '0.1rem' }}>Favorites</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Screen 9: Menu List */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1.5rem' }}>
+          {menuItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <div
+                key={item.id}
+                onClick={item.onClick}
+                style={{
+                  background: '#151822',
+                  borderRadius: '16px',
+                  padding: '1rem',
+                  border: '1px solid rgba(255, 255, 255, 0.06)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  cursor: 'pointer',
+                  transition: 'background 0.15s ease',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                  <div
+                    style={{
+                      width: '36px',
+                      height: '36px',
+                      borderRadius: '10px',
+                      background: 'rgba(245, 185, 66, 0.12)',
+                      color: '#f5b942',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <Icon size={18} />
+                  </div>
+                  <span style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 700, color: '#ffffff' }}>
+                    {item.label}
+                  </span>
+                </div>
+
+                <ChevronRight size={18} color="#64748b" />
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Log Out & Delete Account Actions */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
           <button
-            onClick={handleDashboardClick}
+            onClick={logout}
+            className="app-btn app-btn-outline"
+            style={{ borderRadius: '14px', minHeight: '44px', color: '#f87171', borderColor: 'rgba(239, 68, 68, 0.3)' }}
+          >
+            <LogOut size={16} /> Sign Out
+          </button>
+
+          <button
+            onClick={() => setShowDeleteModal(true)}
             style={{
               background: 'none',
               border: 'none',
-              color: '#d4af37',
+              color: '#64748b',
               fontFamily: 'Outfit',
-              fontWeight: 800,
-              fontSize: '0.85rem',
+              fontSize: '0.78rem',
+              fontWeight: 600,
               cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.4rem',
+              padding: '0.5rem',
             }}
           >
-            <ArrowLeft size={16} /> Back to {isAdmin ? 'Admin Dashboard' : isStaff ? 'Expert Dashboard' : 'Dashboard'}
+            Delete Account Permanently
           </button>
         </div>
 
-        {/* Profile Card Header */}
-        <div
-          className="app-card"
-          style={{
-            background: 'linear-gradient(135deg, #1f1f1f 0%, #121212 100%)',
-            color: '#ffffff',
-            border: '1.5px solid rgba(212, 175, 55, 0.45)',
-            padding: '1.5rem',
-            borderRadius: '24px',
-            marginBottom: '1.5rem',
-            boxShadow: '0 16px 36px rgba(0,0,0,0.2)',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', flexWrap: 'wrap' }}>
-            {/* Avatar with click to view / upload */}
-            <div style={{ position: 'relative' }}>
-              <div
-                onClick={() => {
-                  if (user?.avatarUrl) setShowEnlargedAvatar(true);
-                }}
-                style={{
-                  width: '90px',
-                  height: '90px',
-                  borderRadius: '50%',
-                  background: profileForm.avatarUrl
-                    ? `url(${profileForm.avatarUrl}) center/cover no-repeat`
-                    : 'linear-gradient(135deg, #d4af37, #b5952f)',
-                  border: '3px solid #d4af37',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '2.2rem',
-                  fontFamily: 'Outfit',
-                  fontWeight: 900,
-                  color: '#ffffff',
-                  boxShadow: '0 8px 24px rgba(212,175,55,0.3)',
-                  cursor: user?.avatarUrl ? 'pointer' : 'default',
-                }}
-              >
-                {!profileForm.avatarUrl && (profileForm.firstname ? profileForm.firstname[0].toUpperCase() : 'U')}
-              </div>
+      </div>
 
-              <label
-                htmlFor="profile-page-avatar-upload"
-                style={{
-                  position: 'absolute',
-                  bottom: 0,
-                  right: 0,
-                  width: '30px',
-                  height: '30px',
-                  borderRadius: '50%',
-                  background: '#d4af37',
-                  color: '#121212',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
-                }}
-                title="Upload Photo"
-              >
-                <Edit size={14} />
-              </label>
-              <input
-                id="profile-page-avatar-upload"
-                type="file"
-                accept="image/*"
-                style={{ display: 'none' }}
-                disabled={uploadingPhoto}
-                onChange={handlePhotoChange}
-              />
-            </div>
-
-            {/* User Info Details */}
-            <div style={{ flex: 1 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-                <h2 style={{ fontFamily: 'Outfit', fontSize: '1.4rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
-                  {user?.firstname} {user?.lastname}
-                </h2>
-                <span
-                  style={{
-                    background: isAdmin ? 'rgba(22, 163, 74, 0.25)' : 'rgba(212, 175, 55, 0.2)',
-                    color: isAdmin ? '#4ade80' : '#d4af37',
-                    fontSize: '0.7rem',
-                    fontFamily: 'Outfit',
-                    fontWeight: 800,
-                    padding: '0.2rem 0.65rem',
-                    borderRadius: '50px',
-                    border: isAdmin ? '1px solid rgba(74, 222, 128, 0.4)' : '1px solid rgba(212,175,55,0.4)',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.05em',
-                  }}
-                >
-                  {isAdmin ? 'System Admin' : isStaff ? 'Styling Expert' : 'Atelier VIP Client'}
-                </span>
-              </div>
-
-              <p style={{ color: '#a1a1aa', fontSize: '0.85rem', margin: '0.35rem 0 0.5rem' }}>
-                📧 {user?.email}
-              </p>
-
-              {user?.phone && (
-                <p style={{ color: '#a1a1aa', fontSize: '0.85rem', margin: 0 }}>
-                  📞 {user.phone}
-                </p>
-              )}
-
-              {isAdmin && (
-                <button
-                  type="button"
-                  onClick={() => navigate('/admin')}
-                  className="app-btn app-btn-primary"
-                  style={{ marginTop: '0.75rem', gap: '0.5rem', padding: '0.4rem 0.9rem', fontSize: '0.82rem', width: 'fit-content' }}
-                >
-                  <Shield size={15} /> Open Admin Dashboard
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Profile Edit Form & Location Selector Form */}
-        <form onSubmit={handleSubmit}>
-          
-          {/* Section 1: Personal Details */}
-          <div className="app-card" style={{ marginBottom: '1.25rem', padding: '1.25rem' }}>
-            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: '#171717', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <User size={18} color="#d4af37" /> Personal Information
-            </h3>
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.85rem' }}>
-              <div className="app-input-group">
-                <label className="app-label">First Name *</label>
-                <input
-                  type="text"
-                  value={profileForm.firstname}
-                  onChange={(e) => setProfileForm({ ...profileForm, firstname: e.target.value })}
-                  className="app-input"
-                  required
-                />
-              </div>
-
-              <div className="app-input-group">
-                <label className="app-label">Last Name</label>
-                <input
-                  type="text"
-                  value={profileForm.lastname}
-                  onChange={(e) => setProfileForm({ ...profileForm, lastname: e.target.value })}
-                  className="app-input"
-                />
-              </div>
-            </div>
-
-            <div className="app-input-group">
-              <label className="app-label">Phone Number</label>
-              <input
-                type="tel"
-                value={profileForm.phone}
-                onChange={(e) => setProfileForm({ ...profileForm, phone: e.target.value })}
-                className="app-input"
-                placeholder="+234 800 000 0000"
-              />
-            </div>
-
-            {isStaff && (
-              <div className="app-input-group">
-                <label className="app-label">Specialties & Offerings (Comma separated)</label>
-                <input
-                  type="text"
-                  value={profileForm.specialties}
-                  onChange={(e) => setProfileForm({ ...profileForm, specialties: e.target.value })}
-                  className="app-input"
-                  placeholder="Skin Fades, Knotless Braids, Beard Elixirs, Gel Nails"
-                />
-              </div>
-            )}
+      {/* Edit Profile Modal */}
+      <PopupModal
+        isOpen={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        title="Edit Profile"
+      >
+        <form onSubmit={handleSaveProfile}>
+          <div className="app-input-group">
+            <label className="app-label">First Name</label>
+            <input
+              type="text"
+              className="app-input"
+              value={profileForm.firstname}
+              onChange={(e) => setProfileForm({ ...profileForm, firstname: e.target.value })}
+              required
+            />
           </div>
 
-          {/* Section 2: Saved Delivery Address */}
-          <div className="app-card" style={{ marginBottom: '1.25rem', padding: '1.25rem' }}>
-            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: '#171717', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <MapPin size={18} color="#d4af37" /> Default Delivery Location
-            </h3>
-            
-            <LocationSelector location={location} onChange={setLocation} />
+          <div className="app-input-group">
+            <label className="app-label">Last Name</label>
+            <input
+              type="text"
+              className="app-input"
+              value={profileForm.lastname}
+              onChange={(e) => setProfileForm({ ...profileForm, lastname: e.target.value })}
+              required
+            />
+          </div>
+
+          <div className="app-input-group">
+            <label className="app-label">Phone Number</label>
+            <input
+              type="tel"
+              className="app-input"
+              value={profileForm.phone}
+              onChange={(e) => setProfileForm({ ...profileForm, phone: e.target.value })}
+            />
           </div>
 
           <button
             type="submit"
             disabled={saving}
-            className="app-btn app-btn-primary"
-            style={{ marginBottom: '1.5rem', minHeight: '46px', fontSize: '0.9rem' }}
+            className="app-btn app-btn-accent"
+            style={{ marginTop: '1rem', borderRadius: '12px' }}
           >
-            {saving ? 'Saving Profile Changes...' : 'Save Profile Changes'}
+            {saving ? 'Saving...' : 'Save Changes'}
           </button>
         </form>
+      </PopupModal>
 
-        {/* Section 3: Account Actions */}
-        <div className="app-card" style={{ padding: '1.25rem', border: '1px solid rgba(239,68,68,0.2)' }}>
-          <h3 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: '#171717', marginBottom: '1rem' }}>
-            Account Controls
-          </h3>
-
-          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-            <button
-              onClick={logout}
-              className="app-btn app-btn-outline"
-              style={{ flex: 1, justifyContent: 'center', gap: '0.5rem', minHeight: '42px' }}
-            >
-              <LogOut size={16} /> Sign Out
-            </button>
-
-            <button
-              onClick={() => setShowDeleteModal(true)}
-              className="app-btn"
-              style={{
-                flex: 1,
-                background: 'rgba(239,68,68,0.08)',
-                color: '#ef4444',
-                border: '1px solid rgba(239,68,68,0.3)',
-                justifyContent: 'center',
-                gap: '0.5rem',
-                minHeight: '42px',
-              }}
-            >
-              <Trash2 size={16} /> Delete Account
-            </button>
+      {/* Help & Support Modal */}
+      <PopupModal
+        isOpen={showHelpModal}
+        onClose={() => setShowHelpModal(false)}
+        title="Help & Support"
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+          <p style={{ fontSize: '0.88rem', color: '#94a3b8', lineHeight: 1.5 }}>
+            Need assistance with your booking or order? Our StyleCorner concierge team is available 24/7.
+          </p>
+          <div style={{ background: '#1c202d', padding: '0.85rem', borderRadius: '12px' }}>
+            <span style={{ fontSize: '0.75rem', color: '#f5b942', fontWeight: 800, textTransform: 'uppercase' }}>Direct Support Email</span>
+            <div style={{ color: '#ffffff', fontWeight: 700, marginTop: '0.2rem' }}>support@stylecorner.com</div>
           </div>
+          <button
+            onClick={() => navigate('/contact')}
+            className="app-btn app-btn-accent"
+            style={{ borderRadius: '12px', minHeight: '44px' }}
+          >
+            Open Contact Form
+          </button>
         </div>
+      </PopupModal>
 
-      </div>
-
-      {/* Profile Picture Full Modal */}
-      <ImagePreviewModal
-        isOpen={showEnlargedAvatar}
-        onClose={() => setShowEnlargedAvatar(false)}
-        imageUrl={user?.avatarUrl}
-        title={`${user?.firstname || 'User'}'s Profile Picture`}
-      />
-
-      {/* Delete Account Modal */}
+      {/* Delete Account Confirmation Modal */}
       <PopupModal
         isOpen={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
         title="Delete Account?"
       >
-        <div style={{ textAlign: 'center', padding: '0.5rem 0' }}>
-          <h4 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: '#171717', marginBottom: '0.5rem' }}>
-            Permanent Account Deletion
-          </h4>
-          <p style={{ color: '#6b7280', fontSize: '0.85rem', marginBottom: '1.5rem' }}>
-            Are you sure you want to permanently delete your account? All data will be removed.
+        <div style={{ textAlign: 'center' }}>
+          <p style={{ fontSize: '0.88rem', color: '#f87171', marginBottom: '1.25rem' }}>
+            Are you sure you want to delete your account? This action is permanent and cannot be undone.
           </p>
           <div style={{ display: 'flex', gap: '0.65rem' }}>
-            <button onClick={() => setShowDeleteModal(false)} className="app-btn app-btn-outline" style={{ flex: 1 }}>
+            <button
+              type="button"
+              onClick={() => setShowDeleteModal(false)}
+              className="app-btn app-btn-outline"
+              style={{ flex: 1, borderRadius: '12px' }}
+            >
               Cancel
             </button>
-            <button onClick={handleDeleteAccount} disabled={deletingAccount} className="app-btn" style={{ flex: 1, background: '#ef4444', color: '#ffffff', border: 'none' }}>
-              {deletingAccount ? 'Deleting...' : 'Delete Permanently'}
+            <button
+              type="button"
+              onClick={handleDeleteAccount}
+              disabled={deletingAccount}
+              className="app-btn"
+              style={{ flex: 1, background: '#ef4444', color: '#ffffff', borderRadius: '12px' }}
+            >
+              {deletingAccount ? 'Deleting...' : 'Delete'}
             </button>
           </div>
         </div>
       </PopupModal>
+
     </PageContainer>
   );
 };

@@ -173,43 +173,42 @@ export const Payment = () => {
         {/* Order Summary Box */}
         <div
           style={{
-            background: 'linear-gradient(135deg, #171717 0%, #0d0d0d 100%)',
-            borderRadius: '20px',
-            padding: '1.25rem',
+            background: 'linear-gradient(135deg, #151822 0%, #0C0E14 100%)',
+            borderRadius: '24px',
+            padding: '1.35rem',
             marginBottom: '1.25rem',
-            border: '1.5px solid rgba(212,175,55,0.4)',
+            border: '1px solid rgba(245,185,66,0.25)',
             color: '#ffffff',
-            boxShadow: '0 12px 30px rgba(0,0,0,0.2)',
           }}
         >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.85rem' }}>
             <div>
-              <span style={{ fontSize: '0.68rem', fontFamily: 'Outfit', fontWeight: 800, color: '#d4af37', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+              <span style={{ fontSize: '0.65rem', fontFamily: 'Outfit', fontWeight: 800, color: '#F5B942', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                 SUMMARY RECEIPT
               </span>
-              <h3 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 900, margin: '0.2rem 0 0', color: '#ffffff' }}>
+              <h3 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, margin: '0.25rem 0 0', color: '#FFFFFF' }}>
                 {checkoutData.title || 'Style Corner Checkout'}
               </h3>
-              <p style={{ color: '#a1a1aa', fontSize: '0.78rem', margin: '0.15rem 0 0' }}>
+              <p style={{ color: '#9AA2B3', fontSize: '0.78rem', margin: '0.2rem 0 0' }}>
                 {checkoutData.description || 'Verified Atelier Service / Order'}
               </p>
             </div>
 
             <div style={{ textAlign: 'right' }}>
-              <span style={{ fontSize: '0.68rem', color: '#9ca3af', display: 'block', fontWeight: 700 }}>PAYABLE</span>
-              <span style={{ fontFamily: 'Outfit', fontSize: '1.5rem', fontWeight: 900, color: '#d4af37' }}>
+              <span style={{ fontSize: '0.65rem', color: '#9AA2B3', display: 'block', fontWeight: 700 }}>PAYABLE</span>
+              <span style={{ fontFamily: 'Outfit', fontSize: '1.6rem', fontWeight: 900, color: '#F5B942' }}>
                 ₦{amount.toLocaleString()}
               </span>
             </div>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(255,255,255,0.06)', borderRadius: '10px', padding: '0.45rem 0.75rem', fontSize: '0.72rem', color: '#10b981' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(16,185,129,0.08)', borderRadius: '10px', padding: '0.45rem 0.85rem', fontSize: '0.72rem', color: '#10b981', border: '1px solid rgba(16,185,129,0.2)' }}>
             <Lock size={12} /> 256-bit Bank Grade Encrypted Payment
           </div>
         </div>
 
         {/* Payment Methods Selector Tabs */}
-        <div style={{ display: 'flex', background: '#e2e8f0', borderRadius: '14px', padding: '4px', gap: '4px', marginBottom: '1.25rem' }}>
+        <div style={{ display: 'flex', background: '#151822', borderRadius: '16px', padding: '4px', gap: '4px', marginBottom: '1.25rem', border: '1px solid rgba(255,255,255,0.06)' }}>
           {[
             { id: 'wallet', label: '₦ Wallet', icon: Wallet },
             { id: 'card', label: 'Card', icon: CreditCard },
@@ -219,12 +218,11 @@ export const Payment = () => {
               key={m.id}
               onClick={() => setActiveMethod(m.id)}
               style={{
-                flex: 1, padding: '0.65rem 0.2rem', borderRadius: '11px', border: 'none',
-                fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.78rem', cursor: 'pointer',
+                flex: 1, padding: '0.65rem 0.2rem', borderRadius: '12px', border: 'none',
+                fontFamily: 'Outfit', fontWeight: 700, fontSize: '0.78rem', cursor: 'pointer',
                 transition: 'all 0.2s ease',
-                background: activeMethod === m.id ? '#171717' : 'transparent',
-                color: activeMethod === m.id ? '#d4af37' : '#475569',
-                boxShadow: activeMethod === m.id ? '0 4px 12px rgba(0,0,0,0.12)' : 'none',
+                background: activeMethod === m.id ? '#F5B942' : 'transparent',
+                color: activeMethod === m.id ? '#0C0E14' : '#9AA2B3',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem'
               }}
             >
@@ -236,19 +234,19 @@ export const Payment = () => {
 
         {/* ── METHOD 1: ATELIER DIGITAL WALLET ── */}
         {activeMethod === 'wallet' && (
-          <div className="app-card" style={{ padding: '1.25rem', borderRadius: '20px' }}>
-            <div style={{ background: '#faf9f5', border: '1.5px solid rgba(212,175,55,0.3)', borderRadius: '16px', padding: '1rem', marginBottom: '1.25rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
-                <span style={{ fontFamily: 'Outfit', fontSize: '0.8rem', fontWeight: 800, color: '#6b7280', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                  <Wallet size={15} color="#d4af37" /> Your Atelier Wallet Balance
+          <div style={{ background: '#151822', borderRadius: '24px', padding: '1.35rem', border: '1px solid rgba(255,255,255,0.06)' }}>
+            <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(245,185,66,0.2)', borderRadius: '18px', padding: '1.15rem', marginBottom: '1.25rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                <span style={{ fontFamily: 'Outfit', fontSize: '0.8rem', fontWeight: 700, color: '#9AA2B3', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                  <Wallet size={15} color="#F5B942" /> Atelier Wallet Balance
                 </span>
                 <button
                   type="button"
                   onClick={() => setShowTopupModal(true)}
                   style={{
-                    background: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.4)',
-                    color: '#b5952f', padding: '0.3rem 0.65rem', borderRadius: '50px',
-                    fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 800, cursor: 'pointer',
+                    background: 'rgba(245,185,66,0.12)', border: '1px solid rgba(245,185,66,0.3)',
+                    color: '#F5B942', padding: '0.3rem 0.75rem', borderRadius: '50px',
+                    fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 700, cursor: 'pointer',
                     display: 'flex', alignItems: 'center', gap: '0.25rem'
                   }}
                 >
@@ -256,17 +254,17 @@ export const Payment = () => {
                 </button>
               </div>
 
-              <div style={{ fontFamily: 'Outfit', fontSize: '1.8rem', fontWeight: 900, color: '#171717' }}>
+              <div style={{ fontFamily: 'Outfit', fontSize: '1.9rem', fontWeight: 900, color: '#F5B942' }}>
                 ₦{walletBalance.toLocaleString()}
               </div>
 
               {walletBalance < amount ? (
                 <div style={{ marginTop: '0.5rem', color: '#ef4444', fontSize: '0.75rem', fontWeight: 700 }}>
-                  ⚠️ Insufficient balance for this ₦{amount.toLocaleString()} transaction. Tap Top Up to add funds!
+                  ⚠️ Insufficient balance. Tap Top Up to add funds!
                 </div>
               ) : (
                 <div style={{ marginTop: '0.5rem', color: '#10b981', fontSize: '0.75rem', fontWeight: 700 }}>
-                  ✓ Sufficient balance available for instant 1-tap checkout.
+                  ✓ Sufficient balance — instant 1-tap checkout ready.
                 </div>
               )}
             </div>
@@ -274,148 +272,106 @@ export const Payment = () => {
             <button
               onClick={handleWalletPay}
               disabled={submitting}
-              className="app-btn app-btn-primary"
-              style={{ width: '100%', minHeight: '48px', borderRadius: '14px', fontSize: '0.92rem', fontWeight: 900 }}
+              style={{ width: '100%', padding: '1rem', borderRadius: '16px', background: '#F5B942', color: '#0C0E14', fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.95rem', border: 'none', cursor: 'pointer' }}
             >
-              {submitting ? 'Verifying Wallet Debit...' : `Pay ₦${amount.toLocaleString()} from Wallet`}
+              {submitting ? 'Verifying...' : `Pay ₦${amount.toLocaleString()} from Wallet`}
             </button>
           </div>
         )}
 
         {/* ── METHOD 2: DEBIT / CREDIT CARD (PAYSTACK) ── */}
         {activeMethod === 'card' && (
-          <div className="app-card" style={{ padding: '1.4rem', borderRadius: '20px', textAlign: 'center' }}>
+          <div style={{ background: '#151822', borderRadius: '24px', padding: '1.5rem', border: '1px solid rgba(255,255,255,0.06)', textAlign: 'center' }}>
             <div style={{
-              width: '56px',
-              height: '56px',
-              borderRadius: '50%',
-              background: 'linear-gradient(135deg, rgba(0, 195, 255, 0.15) 0%, rgba(212, 175, 55, 0.15) 100%)',
-              border: '1px solid rgba(0, 195, 255, 0.3)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              margin: '0 auto 1rem',
-              color: '#00c3aa'
+              width: '56px', height: '56px', borderRadius: '50%',
+              background: 'rgba(9,165,219,0.12)',
+              border: '1px solid rgba(9,165,219,0.3)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              margin: '0 auto 1rem', color: '#09a5db'
             }}>
               <CreditCard size={28} />
             </div>
 
-            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 900, color: '#171717', margin: '0 0 0.4rem' }}>
+            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.2rem', fontWeight: 800, color: '#FFFFFF', margin: '0 0 0.4rem' }}>
               Pay via Paystack
             </h3>
-            <p style={{ color: '#6b7280', fontSize: '0.82rem', maxWidth: '320px', margin: '0 auto 1.25rem', lineHeight: 1.5 }}>
-              Instant & secure payment supporting Mastercard, Visa, Verve, Apple Pay, Bank Transfer, & USSD.
+            <p style={{ color: '#9AA2B3', fontSize: '0.82rem', maxWidth: '300px', margin: '0 auto 1.25rem', lineHeight: 1.5 }}>
+              Secure payment — Mastercard, Visa, Verve, Apple Pay, Bank Transfer & USSD.
             </p>
 
             <div style={{
-              background: '#f8fafc',
-              border: '1px solid rgba(0,0,0,0.06)',
-              borderRadius: '14px',
-              padding: '0.85rem 1rem',
-              marginBottom: '1.25rem',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center'
+              background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)',
+              borderRadius: '14px', padding: '0.85rem 1rem', marginBottom: '1.25rem',
+              display: 'flex', justifyContent: 'space-between', alignItems: 'center'
             }}>
-              <span style={{ fontSize: '0.82rem', color: '#64748b', fontWeight: 600 }}>Amount Due</span>
-              <span style={{ fontFamily: 'Outfit', fontSize: '1.2rem', fontWeight: 900, color: '#0f172a' }}>
+              <span style={{ fontSize: '0.82rem', color: '#9AA2B3', fontWeight: 600 }}>Amount Due</span>
+              <span style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 900, color: '#FFFFFF' }}>
                 ₦{amount.toLocaleString()}
               </span>
             </div>
 
             <button
-              type="button"
-              onClick={handlePaystackCheckout}
-              disabled={submitting}
-              className="app-btn app-btn-accent"
+              type="button" onClick={handlePaystackCheckout} disabled={submitting}
               style={{
-                width: '100%',
-                minHeight: '50px',
-                borderRadius: '14px',
-                fontSize: '0.95rem',
-                fontWeight: 900,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.5rem',
+                width: '100%', padding: '1rem', borderRadius: '16px', fontSize: '0.95rem', fontWeight: 800,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
                 background: 'linear-gradient(135deg, #09a5db 0%, #00c3aa 100%)',
-                color: '#fff',
-                border: 'none',
-                boxShadow: '0 8px 20px -4px rgba(0, 195, 170, 0.4)'
+                color: '#fff', border: 'none', cursor: 'pointer',
               }}
             >
               <ShieldCheck size={20} />
-              <span>{submitting ? 'Connecting to Paystack...' : `Pay ₦${amount.toLocaleString()} with Paystack`}</span>
+              <span>{submitting ? 'Connecting...' : `Pay ₦${amount.toLocaleString()} with Paystack`}</span>
             </button>
 
-            <div style={{ marginTop: '0.85rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', color: '#94a3b8', fontSize: '0.72rem' }}>
+            <div style={{ marginTop: '0.85rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', color: '#64748b', fontSize: '0.72rem' }}>
               <Lock size={12} />
-              <span>256-Bit SSL Encrypted & PCI-DSS Level 1 Certified</span>
+              <span>256-Bit SSL Encrypted & PCI-DSS Certified</span>
             </div>
           </div>
         )}
 
         {/* ── METHOD 3: BANK TRANSFER / USSD ── */}
         {activeMethod === 'transfer' && (
-          <div className="app-card" style={{ padding: '1.4rem', borderRadius: '20px', textAlign: 'center' }}>
-            <div
-              style={{
-                width: '56px',
-                height: '56px',
-                borderRadius: '50%',
-                background: 'linear-gradient(135deg, rgba(212,175,55,0.15) 0%, rgba(180,140,30,0.15) 100%)',
-                border: '1px solid rgba(212,175,55,0.3)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                margin: '0 auto 1rem',
-              }}
-            >
-              <Landmark size={28} color="#d4af37" />
+          <div style={{ background: '#151822', borderRadius: '24px', padding: '1.5rem', border: '1px solid rgba(255,255,255,0.06)', textAlign: 'center' }}>
+            <div style={{
+              width: '56px', height: '56px', borderRadius: '50%',
+              background: 'rgba(245,185,66,0.1)',
+              border: '1px solid rgba(245,185,66,0.25)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem',
+            }}>
+              <Landmark size={28} color="#F5B942" />
             </div>
 
-            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.2rem', fontWeight: 900, color: '#171717', margin: '0 0 0.5rem' }}>
-              Bank Transfer &amp; USSD
+            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.2rem', fontWeight: 800, color: '#FFFFFF', margin: '0 0 0.5rem' }}>
+              Bank Transfer & USSD
             </h3>
-            <p style={{ color: '#6b7280', fontSize: '0.82rem', maxWidth: '300px', margin: '0 auto 1.25rem', lineHeight: 1.5 }}>
-              Pay securely via bank transfer, USSD, or mobile banking using Paystack — Nigeria's most trusted payment gateway.
+            <p style={{ color: '#9AA2B3', fontSize: '0.82rem', maxWidth: '300px', margin: '0 auto 1.25rem', lineHeight: 1.5 }}>
+              Pay via bank transfer, USSD, or mobile banking — powered by Paystack.
             </p>
 
-            <div style={{ background: '#f8fafc', border: '1px solid rgba(0,0,0,0.06)', borderRadius: '14px', padding: '0.85rem 1rem', marginBottom: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: '0.82rem', color: '#64748b', fontWeight: 600 }}>Amount Due</span>
-              <span style={{ fontFamily: 'Outfit', fontSize: '1.2rem', fontWeight: 900, color: '#0f172a' }}>
+            <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '14px', padding: '0.85rem 1rem', marginBottom: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '0.82rem', color: '#9AA2B3', fontWeight: 600 }}>Amount Due</span>
+              <span style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 900, color: '#FFFFFF' }}>
                 ₦{amount.toLocaleString()}
               </span>
             </div>
 
             <button
-              type="button"
-              onClick={handlePaystackCheckout}
-              disabled={submitting}
-              className="app-btn app-btn-accent"
+              type="button" onClick={handlePaystackCheckout} disabled={submitting}
               style={{
-                width: '100%',
-                minHeight: '50px',
-                borderRadius: '14px',
-                fontSize: '0.95rem',
-                fontWeight: 900,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.5rem',
-                background: 'linear-gradient(135deg, #d4af37 0%, #b5952f 100%)',
-                color: '#fff',
-                border: 'none',
-                boxShadow: '0 8px 20px -4px rgba(212,175,55,0.4)'
+                width: '100%', padding: '1rem', borderRadius: '16px', fontSize: '0.95rem', fontWeight: 800,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
+                background: 'linear-gradient(135deg, #F5B942 0%, #d4941a 100%)',
+                color: '#0C0E14', border: 'none', cursor: 'pointer',
               }}
             >
               <Landmark size={20} />
               <span>{submitting ? 'Opening Paystack...' : `Pay ₦${amount.toLocaleString()} via Paystack`}</span>
             </button>
 
-            <div style={{ marginTop: '0.85rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', color: '#94a3b8', fontSize: '0.72rem' }}>
+            <div style={{ marginTop: '0.85rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', color: '#64748b', fontSize: '0.72rem' }}>
               <Lock size={12} />
-              <span>Paystack supports GTBank, UBA, Zenith, Access &amp; all major banks</span>
+              <span>GTBank, UBA, Zenith, Access & all major banks supported</span>
             </div>
           </div>
         )}
@@ -425,16 +381,16 @@ export const Payment = () => {
       {showTopupModal && (
         <div
           onClick={() => setShowTopupModal(false)}
-          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}
+          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            style={{ backgroundColor: '#ffffff', borderRadius: '20px', padding: '1.35rem', width: '100%', maxWidth: '400px', boxShadow: '0 20px 40px rgba(0,0,0,0.2)' }}
+            style={{ background: '#151822', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '24px', padding: '1.5rem', width: '100%', maxWidth: '400px' }}
           >
-            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 800, color: '#171717', margin: '0 0 0.3rem' }}>
+            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 800, color: '#FFFFFF', margin: '0 0 0.3rem' }}>
               💳 Top Up Atelier Wallet
             </h3>
-            <p style={{ color: '#6b7280', fontSize: '0.8rem', margin: '0 0 1rem' }}>
+            <p style={{ color: '#9AA2B3', fontSize: '0.8rem', margin: '0 0 1.1rem' }}>
               Credit your digital wallet for instant 1-tap checkout.
             </p>
 
@@ -443,14 +399,13 @@ export const Payment = () => {
               <div style={{ display: 'flex', gap: '0.4rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
                 {[5000, 10000, 20000, 50000].map((chip) => (
                   <button
-                    type="button"
-                    key={chip}
+                    type="button" key={chip}
                     onClick={() => setTopupAmount(String(chip))}
                     style={{
-                      flex: 1, minWidth: '70px', padding: '0.45rem 0.3rem', borderRadius: '8px',
-                      border: topupAmount === String(chip) ? '1.5px solid #d4af37' : '1px solid rgba(0,0,0,0.1)',
-                      background: topupAmount === String(chip) ? '#171717' : '#fafafa',
-                      color: topupAmount === String(chip) ? '#d4af37' : '#171717',
+                      flex: 1, minWidth: '70px', padding: '0.5rem 0.3rem', borderRadius: '10px',
+                      border: topupAmount === String(chip) ? '1.5px solid #F5B942' : '1px solid rgba(255,255,255,0.1)',
+                      background: topupAmount === String(chip) ? '#F5B942' : 'rgba(255,255,255,0.04)',
+                      color: topupAmount === String(chip) ? '#0C0E14' : '#FFFFFF',
                       fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.78rem', cursor: 'pointer'
                     }}
                   >
@@ -459,32 +414,31 @@ export const Payment = () => {
                 ))}
               </div>
 
-              <div className="app-input-group" style={{ marginBottom: '1.25rem' }}>
-                <label className="app-label">Top Up Amount (₦)</label>
+              <div style={{ marginBottom: '1.25rem' }}>
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#9AA2B3', marginBottom: '0.4rem', fontFamily: 'Outfit' }}>Top Up Amount (₦)</label>
                 <input
-                  type="number"
-                  placeholder="e.g. 20000"
+                  type="number" placeholder="e.g. 20000"
                   value={topupAmount}
                   onChange={(e) => setTopupAmount(e.target.value)}
-                  className="app-input"
                   required
+                  style={{
+                    width: '100%', padding: '0.75rem 1rem', borderRadius: '12px',
+                    background: '#0C0E14', border: '1px solid rgba(255,255,255,0.1)',
+                    color: '#FFFFFF', fontFamily: 'Outfit', fontSize: '0.95rem', outline: 'none'
+                  }}
                 />
               </div>
 
               <div style={{ display: 'flex', gap: '0.65rem' }}>
                 <button
-                  type="button"
-                  onClick={() => setShowTopupModal(false)}
-                  className="app-btn app-btn-outline"
-                  style={{ flex: 1 }}
+                  type="button" onClick={() => setShowTopupModal(false)}
+                  style={{ flex: 1, padding: '0.85rem', borderRadius: '14px', background: 'transparent', border: '1px solid rgba(255,255,255,0.12)', color: '#FFFFFF', fontFamily: 'Outfit', fontWeight: 700, cursor: 'pointer', fontSize: '0.9rem' }}
                 >
                   Cancel
                 </button>
                 <button
-                  type="submit"
-                  disabled={submitting}
-                  className="app-btn app-btn-accent"
-                  style={{ flex: 1 }}
+                  type="submit" disabled={submitting}
+                  style={{ flex: 1, padding: '0.85rem', borderRadius: '14px', background: '#F5B942', color: '#0C0E14', fontFamily: 'Outfit', fontWeight: 800, border: 'none', cursor: 'pointer', fontSize: '0.9rem' }}
                 >
                   {submitting ? 'Crediting...' : 'Confirm Top-Up'}
                 </button>

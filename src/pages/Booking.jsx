@@ -7,12 +7,12 @@ import {
   Sparkles,
   User,
   CheckCircle2,
-  MapPin,
   Check,
   Star,
   ShieldCheck,
   ChevronRight,
-  Plus
+  ArrowLeft,
+  ArrowRight,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
@@ -20,33 +20,60 @@ import { PageContainer } from '../components/common/PageContainer';
 import { AISpecialistMatcherSheet } from '../components/booking/AISpecialistMatcherSheet';
 import { OptimizedImage } from '../components/common/OptimizedImage';
 
-const NIGERIAN_STATES = [
-  'Lagos State',
-  'FCT – Abuja',
-  'Rivers State (Port Harcourt)',
-  'Oyo State (Ibadan)',
-  'Ogun State',
-  'Anambra State',
-  'Delta State',
-  'Enugu State',
-  'Edo State',
-  'Kano State',
-  'Kaduna State',
-  'Akwa Ibom State',
-  'Cross River State',
-  'Abia State',
-  'Osun State',
-  'Ondo State',
+const SERVICES = [
+  {
+    id: 's1',
+    title: 'Hair Styling',
+    price: 5000,
+    duration: '60 mins',
+    desc: 'Wash, blow dry, straightening, silk press & hair treatment.',
+  },
+  {
+    id: 's2',
+    title: 'Nail Tech',
+    price: 3000,
+    duration: '45 mins',
+    desc: 'Manicure, pedicure, nail art, and cuticle restoration.',
+  },
+  {
+    id: 's3',
+    title: 'Braids',
+    price: 4000,
+    duration: '90 mins',
+    desc: 'Cornrows, box braids, knotless braids & protective twists.',
+  },
+  {
+    id: 's4',
+    title: 'Skincare',
+    price: 6000,
+    duration: '60 mins',
+    desc: 'Deep pore facial, hydra exfoliation & skin brightening treatment.',
+  },
+  {
+    id: 's5',
+    title: 'Makeup',
+    price: 8000,
+    duration: '60 mins',
+    desc: 'Flawless glam beat, photoshoot makeup & brow sculpting.',
+  },
 ];
 
-const SERVICES = [
-  { id: 's1', title: 'Nail Tech', price: 18000, duration: '60 mins', category: 'Nails', icon: '💅', desc: 'Acrylic extensions, gel art architecture & nail prep.' },
-  { id: 's2', title: 'Lash Tech', price: 20000, duration: '60 mins', category: 'Lashes', icon: '👁️', desc: 'Classic, hybrid & volume silk lash extensions.' },
-  { id: 's3', title: 'Hair Braider', price: 35000, duration: '120 mins', category: 'Hair', icon: '🪢', desc: 'Knotless box braids, goddess braids & loc maintenance.' },
-  { id: 's4', title: 'Hair Barber', price: 8000, duration: '30 mins', category: 'Barbing', icon: '💈', desc: 'Precision fades, line-ups, beard sculpting & shape-ups by a certified barber.' },
-  { id: 's5', title: 'Frontal Wig Installation', price: 25000, duration: '90 mins', category: 'Hair', icon: '💇‍♀️', desc: 'Flawless frontal wig installation, lace melting & knots bleaching.' },
-  { id: 's6', title: 'Manicure plus Pedicure', price: 22000, duration: '75 mins', category: 'Nails', icon: '🦶', desc: 'Complete spa hand & foot care, exfoliation scrub, massage & gel finish.' },
-  { id: 's7', title: 'Wig Revamper', price: 15000, duration: '60 mins', category: 'Hair', icon: '✨', desc: 'Deep wig washing, lace restoration & custom hot-comb restyling.' },
+const DATES = [
+  { day: 'Fri', date: '22', full: '2026-08-22' },
+  { day: 'Sat', date: '23', full: '2026-08-23' },
+  { day: 'Sun', date: '24', full: '2026-08-24' },
+  { day: 'Mon', date: '25', full: '2026-08-25' },
+  { day: 'Tue', date: '26', full: '2026-08-26' },
+  { day: 'Wed', date: '27', full: '2026-08-27' },
+];
+
+const TIMESLOTS = [
+  '9:00 AM',
+  '11:00 AM',
+  '1:00 PM',
+  '3:00 PM',
+  '5:00 PM',
+  '7:00 PM',
 ];
 
 export const Booking = () => {
@@ -64,15 +91,15 @@ export const Booking = () => {
     }
   }, [isAuthenticated, role, navigate]);
 
-  const [activeStep, setActiveStep] = useState(1);
+  const [activeStep, setActiveStep] = useState(1); // 1: Service/Date, 2: Stylist, 3: Location, 4: Confirm
   const [selectedService, setSelectedService] = useState(initialService || SERVICES[0].title);
-  const [stylist, setStylist] = useState(queryStylist);
+  const [selectedDate, setSelectedDate] = useState(DATES[1].full);
+  const [selectedTime, setSelectedTime] = useState('11:00 AM');
+  const [stylist, setStylist] = useState(queryStylist || 'Zainab A.');
   const [selectedSpecialist, setSelectedSpecialist] = useState(null);
   const [specialistsList, setSpecialistsList] = useState([]);
   const [loadingSpecialists, setLoadingSpecialists] = useState(true);
   const [location, setLocation] = useState('Lagos State');
-  const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
-  const [time, setTime] = useState('10:00 AM');
   const [promoCode, setPromoCode] = useState('');
   const [appliedVoucher, setAppliedVoucher] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -80,7 +107,9 @@ export const Booking = () => {
 
   useEffect(() => {
     if (initialService) {
-      const match = SERVICES.find(s => s.title.toLowerCase() === initialService.toLowerCase() || s.title.toLowerCase().includes(initialService.toLowerCase()));
+      const match = SERVICES.find((s) =>
+        s.title.toLowerCase().includes(initialService.toLowerCase())
+      );
       if (match) setSelectedService(match.title);
       else setSelectedService(initialService);
     }
@@ -90,24 +119,20 @@ export const Booking = () => {
     setLoadingSpecialists(true);
     api.getSpecialists()
       .then((data) => {
-        if (Array.isArray(data)) {
-          // Strictly load only registered verified expert accounts
+        if (Array.isArray(data) && data.length > 0) {
           const verifiedStaff = data.filter((s) => s.role === 'staff' || s.isVerified === true);
           const mapped = verifiedStaff.map((s) => ({
             id: s._id,
-            firstname: s.firstname || '',
-            lastname: s.lastname || '',
-            email: s.email || '',
             name: `${s.firstname || ''} ${s.lastname || ''}`.trim() || 'Verified Specialist',
-            role: s.title || s.roleTitle || (Array.isArray(s.specialties) && s.specialties[0]) || 'Certified Specialist',
-            rating: s.rating || 5.0,
+            role: s.title || 'Certified Stylist',
+            rating: s.rating || 4.9,
             image: s.avatarUrl || s.profileImage || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
           }));
           setSpecialistsList(mapped);
 
           if (mapped.length > 0) {
             const found = queryStylist
-              ? mapped.find(m => m.name.toLowerCase().includes(queryStylist.toLowerCase()) || queryStylist.toLowerCase().includes(m.name.toLowerCase()))
+              ? mapped.find((m) => m.name.toLowerCase().includes(queryStylist.toLowerCase()))
               : null;
             const target = found || mapped[0];
             setStylist(target.name);
@@ -115,21 +140,35 @@ export const Booking = () => {
           }
         }
       })
-      .catch((err) => console.warn('Could not load registered specialists list:', err.message))
+      .catch(() => {})
       .finally(() => setLoadingSpecialists(false));
   }, [queryStylist]);
 
   const getPrice = (title) => {
-    const match = SERVICES.find((s) => s.title === title);
-    return match ? match.price : 20000;
+    const match = SERVICES.find((s) => s.title.toLowerCase() === title.toLowerCase());
+    return match ? match.price : 5000;
   };
 
   const rawTotalPrice = getPrice(selectedService);
-  const discountAmount = appliedVoucher ? 25000 : 0;
+  const discountAmount = appliedVoucher ? 2000 : 0;
   const totalPrice = Math.max(0, rawTotalPrice - discountAmount);
 
+  const handleNextStep = () => {
+    if (activeStep < 4) {
+      setActiveStep((prev) => prev + 1);
+    }
+  };
+
+  const handlePrevStep = () => {
+    if (activeStep > 1) {
+      setActiveStep((prev) => prev - 1);
+    } else {
+      navigate(-1);
+    }
+  };
+
   const handleBookingSubmit = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
 
     if (!isAuthenticated) {
       showToast('Please sign in to complete your booking session.', 'error');
@@ -143,41 +182,34 @@ export const Booking = () => {
       return;
     }
 
-    if (!stylist) {
-      showToast('Please select a preferred verified specialist.', 'error');
-      setActiveStep(2);
-      return;
-    }
-
-    const currentSpecialist = selectedSpecialist || specialistsList.find(s => s.name === stylist) || specialistsList[0];
+    const currentSpecialist = selectedSpecialist || specialistsList.find((s) => s.name === stylist) || { name: stylist || 'Zainab A.' };
 
     const bookingPayload = {
       clientName: `${user.firstname || ''} ${user.lastname || ''}`.trim() || 'Client',
       clientEmail: user.email,
       clientPhone: user.phone || 'N/A',
-      stylist: currentSpecialist?.name || stylist,
-      stylistId: currentSpecialist?.id || undefined,
-      stylistEmail: currentSpecialist?.email || undefined,
-      service: appliedVoucher ? `${selectedService} [Loyalty Voucher -₦25,000]` : selectedService,
+      stylist: currentSpecialist.name,
+      stylistId: currentSpecialist.id || undefined,
+      service: appliedVoucher ? `${selectedService} [Voucher Applied]` : selectedService,
       location: location,
       price: totalPrice,
       discountApplied: discountAmount,
-      date: date,
-      time: time,
+      date: selectedDate,
+      time: selectedTime,
       status: 'pending',
     };
 
     setSubmitting(true);
     try {
       const createdBooking = await api.createBooking(bookingPayload);
-      showToast('Session scheduled! Proceeding to Payment...', 'success');
+      showToast('Appointment scheduled! Proceeding to Payment...', 'success');
       navigate('/payment', {
         state: {
           bookingId: createdBooking?._id,
           title: `Booking: ${selectedService}`,
           amount: totalPrice,
-          description: `Specialist: ${stylist} · Date: ${date} at ${time}`
-        }
+          description: `Stylist: ${currentSpecialist.name} · Date: ${selectedDate} at ${selectedTime}`,
+        },
       });
     } catch (err) {
       showToast(err.message || 'Failed to submit booking', 'error');
@@ -185,510 +217,450 @@ export const Booking = () => {
     }
   };
 
-  const timeslots = [
-    '09:00 AM',
-    '10:00 AM',
-    '11:30 AM',
-    '01:00 PM',
-    '02:30 PM',
-    '04:00 PM',
-    '05:30 PM',
-  ];
-
   return (
-    <PageContainer title="Book a Session" onOpenAiMatcher={() => setShowAiSheet(true)}>
-      <div style={{ maxWidth: '520px', margin: '0 auto', paddingBottom: '2rem' }}>
+    <PageContainer showBack={true}>
+      <div style={{ maxWidth: '480px', margin: '0 auto', paddingBottom: '3rem' }}>
+        
+        {/* Screen 6: Top Header */}
+        <div style={{ marginBottom: '1.25rem' }}>
+          <h1 style={{ fontFamily: 'Outfit', fontSize: '1.65rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.25rem' }}>
+            Book Appointment
+          </h1>
+        </div>
 
-        {/* ── AI SPECIALIST MATCHER CALLOUT BANNER ── */}
+        {/* 4-Step Stepper Header matching Screen 6 */}
         <div
-          className="app-card"
-          onClick={() => setShowAiSheet(true)}
           style={{
-            cursor: 'pointer',
-            background: 'linear-gradient(135deg, #171717 0%, #0a0a0a 100%)',
-            color: '#ffffff',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            border: '1.5px solid rgba(212,175,55,0.5)',
-            borderRadius: '20px',
-            padding: '1.1rem 1.25rem',
-            marginBottom: '1.25rem',
-            boxShadow: '0 10px 28px rgba(0,0,0,0.18)',
+            position: 'relative',
+            marginBottom: '1.75rem',
+            padding: '0 0.5rem',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-            <div
-              style={{
-                width: '44px',
-                height: '44px',
-                borderRadius: '14px',
-                background: 'rgba(212,175,55,0.2)',
-                color: '#d4af37',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0
-              }}
-            >
-              <Sparkles size={22} />
-            </div>
-            <div>
-              <h4 style={{ fontFamily: 'Outfit', fontSize: '0.98rem', fontWeight: 800, margin: 0, color: '#ffffff' }}>
-                AI Specialist Matcher
-              </h4>
-              <p style={{ color: '#a1a1aa', fontSize: '0.78rem', margin: '0.15rem 0 0' }}>
-                Match best specialist & auto-fill your booking schedule
-              </p>
-            </div>
-          </div>
-          <span
+          {/* Background Connecting Line */}
+          <div
             style={{
-              background: '#d4af37',
-              color: '#121212',
-              fontSize: '0.72rem',
-              fontFamily: 'Outfit',
-              fontWeight: 900,
-              padding: '0.35rem 0.75rem',
-              borderRadius: '50px',
-              textTransform: 'uppercase',
-              letterSpacing: '0.05em'
+              position: 'absolute',
+              top: '14px',
+              left: '25px',
+              right: '25px',
+              height: '2px',
+              background: '#232736',
+              zIndex: 1,
             }}
-          >
-            MATCH
-          </span>
-        </div>
+          />
 
-        {/* ── STEP PROGRESS BAR HEADER ── */}
-        <div
-          className="booking-step-bar"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr 1fr',
-            gap: '0.4rem',
-            marginBottom: '1.25rem',
-            textAlign: 'center'
-          }}
-        >
           {[
-            { num: 1, label: 'Service' },
-            { num: 2, label: 'Artisan' },
-            { num: 3, label: 'Schedule' },
-          ].map((s) => (
-            <div
-              key={s.num}
-              onClick={() => setActiveStep(s.num)}
-              style={{
-                padding: '0.6rem 0.25rem',
-                borderRadius: '12px',
-                background: activeStep === s.num ? '#171717' : '#ffffff',
-                border: activeStep === s.num ? '1.5px solid #d4af37' : '1px solid rgba(0,0,0,0.08)',
-                color: activeStep === s.num ? '#d4af37' : '#6b7280',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-              }}
-            >
-              <span style={{ fontFamily: 'Outfit', fontSize: '0.62rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.04em', display: 'block', marginBottom: '0.1rem' }}>
-                Step {s.num}
-              </span>
-              <span style={{ fontFamily: 'Outfit', fontSize: 'clamp(0.7rem, 2.5vw, 0.8rem)', fontWeight: 800 }}>
-                {s.label}
-              </span>
-            </div>
-          ))}
+            { step: 1, label: 'Service' },
+            { step: 2, label: 'Stylist' },
+            { step: 3, label: 'Date' },
+            { step: 4, label: 'Confirm' },
+          ].map((s) => {
+            const isCurrent = activeStep === s.step;
+            const isCompleted = activeStep > s.step;
+            return (
+              <div
+                key={s.step}
+                onClick={() => setActiveStep(s.step)}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  zIndex: 2,
+                  cursor: 'pointer',
+                }}
+              >
+                <div
+                  style={{
+                    width: '28px',
+                    height: '28px',
+                    borderRadius: '50%',
+                    background: isCurrent ? '#f5b942' : isCompleted ? '#272b3a' : '#151822',
+                    border: `1.5px solid ${isCurrent ? '#f5b942' : isCompleted ? '#f5b942' : '#2a2f40'}`,
+                    color: isCurrent ? '#0c0e14' : isCompleted ? '#f5b942' : '#64748b',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '0.78rem',
+                    fontFamily: 'Outfit',
+                    fontWeight: 800,
+                  }}
+                >
+                  {isCompleted ? <Check size={14} strokeWidth={3} /> : s.step}
+                </div>
+                <span
+                  style={{
+                    fontFamily: 'Outfit',
+                    fontSize: '0.72rem',
+                    fontWeight: 700,
+                    color: isCurrent ? '#f5b942' : '#94a3b8',
+                  }}
+                >
+                  {s.label}
+                </span>
+              </div>
+            );
+          })}
         </div>
 
-        <form onSubmit={handleBookingSubmit}>
+        {/* ── STEP 1: SELECT SERVICE & DATE/TIME (SCREEN 6 DESIGN) ── */}
+        {activeStep === 1 && (
+          <div>
+            {/* Select Service Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
+              <h2 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+                Select Service
+              </h2>
+              <button
+                onClick={() => navigate('/services')}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#f5b942',
+                  fontFamily: 'Outfit',
+                  fontWeight: 700,
+                  fontSize: '0.78rem',
+                  cursor: 'pointer',
+                }}
+              >
+                View all &gt;
+              </button>
+            </div>
 
-          {/* ── STEP 1: SERVICE SELECTION ── */}
-          {activeStep === 1 && (
-            <div className="app-card" style={{ padding: '1.25rem', borderRadius: '22px' }}>
-              <div style={{ marginBottom: '1rem' }}>
-                <span style={{ color: '#d4af37', fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                  STEP 1 OF 3
-                </span>
-                <h2 style={{ fontFamily: 'Outfit', fontSize: '1.35rem', fontWeight: 900, color: '#171717', margin: '0.1rem 0' }}>
-                  Choose Your Service
-                </h2>
-                <p style={{ color: '#6b7280', fontSize: '0.82rem', margin: 0 }}>
-                  Tap a service to select your booking session.
-                </p>
-              </div>
-
-              {/* Single Service Selection Grid */}
-              <div className="service-select-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem', marginBottom: '1.25rem' }}>
-                {SERVICES.map((s) => {
-                  const isSelected = selectedService === s.title;
-                  return (
-                    <div
-                      key={s.id}
-                      onClick={() => setSelectedService(s.title)}
-                      style={{
-                        padding: '0.75rem',
-                        borderRadius: '14px',
-                        background: isSelected ? 'rgba(212,175,55,0.12)' : '#f8fafc',
-                        border: isSelected ? '2px solid #d4af37' : '1px solid rgba(0,0,0,0.08)',
-                        cursor: 'pointer',
-                        transition: 'all 0.15s ease',
-                        position: 'relative',
-                        overflow: 'hidden',
-                      }}
-                    >
-                      {isSelected && (
-                        <div style={{ position: 'absolute', top: '6px', right: '6px', color: '#b5952f' }}>
-                          <CheckCircle2 size={14} />
-                        </div>
-                      )}
-                      <span style={{ fontSize: '1.1rem', display: 'block', marginBottom: '0.3rem' }}>{s.icon}</span>
-                      <h4 style={{ fontFamily: 'Outfit', fontSize: 'clamp(0.78rem, 2.5vw, 0.9rem)', fontWeight: 800, color: '#171717', margin: '0 0 0.1rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {s.title}
-                      </h4>
-                      <span style={{ fontFamily: 'Outfit', fontSize: 'clamp(0.82rem, 2.5vw, 0.95rem)', fontWeight: 900, color: '#b5952f', display: 'block' }}>
+            {/* Service Radio Cards */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.5rem' }}>
+              {SERVICES.slice(0, 3).map((s) => {
+                const isSelected = selectedService.toLowerCase().includes(s.title.toLowerCase()) || s.title.toLowerCase().includes(selectedService.toLowerCase());
+                return (
+                  <div
+                    key={s.id}
+                    onClick={() => setSelectedService(s.title)}
+                    style={{
+                      background: '#151822',
+                      borderRadius: '16px',
+                      padding: '1rem',
+                      border: `1.5px solid ${isSelected ? '#f5b942' : 'rgba(255, 255, 255, 0.08)'}`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      cursor: 'pointer',
+                      transition: 'border-color 0.15s ease',
+                    }}
+                  >
+                    <div style={{ flex: 1 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.2rem' }}>
+                        <h3 style={{ fontFamily: 'Outfit', fontSize: '0.96rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+                          {s.title}
+                        </h3>
+                      </div>
+                      <p style={{ fontSize: '0.74rem', color: '#94a3b8', margin: '0 0 0.4rem', lineHeight: 1.35 }}>
+                        {s.desc}
+                      </p>
+                      <span style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 800, color: '#f5b942' }}>
                         ₦{Number(s.price).toLocaleString()}
                       </span>
-                      <span style={{ fontSize: '0.68rem', color: '#6b7280', marginTop: '0.15rem', display: 'block' }}>
-                        ⏱ {s.duration}
-                      </span>
                     </div>
+
+                    <div
+                      style={{
+                        width: '22px',
+                        height: '22px',
+                        borderRadius: '50%',
+                        border: `1.5px solid ${isSelected ? '#f5b942' : '#394056'}`,
+                        background: isSelected ? '#f5b942' : 'transparent',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginLeft: '0.75rem',
+                      }}
+                    >
+                      {isSelected && <Check size={13} color="#0c0e14" strokeWidth={3} />}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Select Date & Time Section */}
+            <div style={{ marginBottom: '1.5rem' }}>
+              <h2 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.85rem' }}>
+                Select Date & Time
+              </h2>
+
+              {/* Day Pills Scroll */}
+              <div
+                style={{
+                  display: 'flex',
+                  gap: '0.55rem',
+                  overflowX: 'auto',
+                  paddingBottom: '0.85rem',
+                  WebkitOverflowScrolling: 'touch',
+                }}
+              >
+                {DATES.map((item) => {
+                  const isSelected = selectedDate === item.full;
+                  return (
+                    <button
+                      key={item.full}
+                      onClick={() => setSelectedDate(item.full)}
+                      style={{
+                        flex: '0 0 54px',
+                        height: '70px',
+                        borderRadius: '14px',
+                        background: isSelected ? '#f5b942' : '#151822',
+                        border: `1px solid ${isSelected ? '#f5b942' : 'rgba(255, 255, 255, 0.08)'}`,
+                        color: isSelected ? '#0c0e14' : '#ffffff',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '0.2rem',
+                        cursor: 'pointer',
+                        transition: 'all 0.15s ease',
+                      }}
+                    >
+                      <span style={{ fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 600, color: isSelected ? '#0c0e14' : '#94a3b8' }}>
+                        {item.day}
+                      </span>
+                      <span style={{ fontSize: '1.05rem', fontFamily: 'Outfit', fontWeight: 800 }}>
+                        {item.date}
+                      </span>
+                    </button>
                   );
                 })}
               </div>
 
-              <button
-                type="button"
-                onClick={() => setActiveStep(2)}
-                className="app-btn app-btn-accent"
-                style={{ width: '100%', borderRadius: '14px' }}
-              >
-                <span>Continue to Artisan & Location</span>
-                <ChevronRight size={18} />
-              </button>
-            </div>
-          )}
-
-          {/* ── STEP 2: ARTISAN & LOCATION ── */}
-          {activeStep === 2 && (
-            <div className="app-card" style={{ padding: '1.25rem', borderRadius: '22px' }}>
-              <div style={{ marginBottom: '1rem' }}>
-                <span style={{ color: '#d4af37', fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                  STEP 2 OF 3
-                </span>
-                <h2 style={{ fontFamily: 'Outfit', fontSize: '1.35rem', fontWeight: 900, color: '#171717', margin: '0.1rem 0' }}>
-                  Artisan & Location
-                </h2>
-                <p style={{ color: '#6b7280', fontSize: '0.82rem', margin: 0 }}>
-                  Select your preferred specialist and service state.
-                </p>
-              </div>
-
-              {/* Visual Artisan Selector Cards */}
-              <div style={{ marginBottom: '1.25rem' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.65rem' }}>
-                  <label className="app-label" style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                    <ShieldCheck size={14} color="#d4af37" /> Select Verified Artisan ({specialistsList.length})
-                  </label>
-                  <span style={{ fontSize: '0.7rem', color: '#10b981', fontWeight: 800 }}>✓ Verified Only</span>
-                </div>
-
-                {loadingSpecialists ? (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-                    <div className="skeleton" style={{ height: '64px', borderRadius: '14px' }} />
-                    <div className="skeleton" style={{ height: '64px', borderRadius: '14px' }} />
-                  </div>
-                ) : specialistsList.length === 0 ? (
-                  <div style={{ textAlign: 'center', padding: '1.5rem 1rem', background: '#fafafa', borderRadius: '16px', border: '1px dashed rgba(212,175,55,0.4)' }}>
-                    <p style={{ fontFamily: 'Outfit', fontWeight: 800, color: '#171717', margin: '0 0 0.3rem' }}>
-                      No Verified Experts Available Yet
-                    </p>
-                    <p style={{ fontSize: '0.78rem', color: '#6b7280', margin: 0 }}>
-                      Only verified experts who have successfully registered an account with Style Corner are listed.
-                    </p>
-                  </div>
-                ) : (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-                    {specialistsList.map((sp, idx) => {
-                      const isSelected = stylist === sp.name;
-                      return (
-                        <div
-                          key={sp.id || idx}
-                          onClick={() => {
-                            setStylist(sp.name);
-                            setSelectedSpecialist(sp);
-                          }}
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            padding: '0.75rem 0.9rem',
-                            borderRadius: '14px',
-                            background: isSelected ? 'rgba(212,175,55,0.12)' : '#f8fafc',
-                            border: isSelected ? '2px solid #d4af37' : '1px solid rgba(0,0,0,0.08)',
-                            cursor: 'pointer',
-                            transition: 'all 0.15s ease'
-                          }}
-                        >
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', minWidth: 0 }}>
-                            <OptimizedImage
-                              src={sp.image}
-                              alt={sp.name}
-                              style={{
-                                width: '44px',
-                                height: '44px',
-                                borderRadius: '50%',
-                                objectFit: 'cover',
-                                border: isSelected ? '2px solid #d4af37' : '1px solid rgba(0,0,0,0.1)',
-                                flexShrink: 0
-                              }}
-                            />
-                            <div style={{ minWidth: 0, overflow: 'hidden' }}>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                                <h4 style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 800, color: '#171717', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                                  {sp.name}
-                                </h4>
-                                <ShieldCheck size={13} color="#d4af37" style={{ flexShrink: 0 }} />
-                              </div>
-                              <span style={{ fontSize: '0.72rem', color: '#6b7280', fontFamily: 'Outfit', display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                                {sp.role}
-                              </span>
-                            </div>
-                          </div>
-
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}>
-                            <span style={{ display: 'flex', alignItems: 'center', gap: '0.15rem', fontSize: '0.75rem', color: '#f59e0b', fontWeight: 800 }}>
-                              <Star size={12} fill="#f59e0b" /> {sp.rating}
-                            </span>
-                            {isSelected && <CheckCircle2 size={18} color="#b5952f" />}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-
-              {/* Location Picker */}
-              <div className="app-input-group" style={{ marginBottom: '1.25rem' }}>
-                <label className="app-label" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                  <MapPin size={14} color="#d4af37" /> Service State / Location
-                </label>
-                <select
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  className="app-select"
-                >
-                  {NIGERIAN_STATES.map((st) => (
-                    <option key={st} value={st}>{st}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div style={{ display: 'flex', gap: '0.6rem' }}>
-                <button
-                  type="button"
-                  onClick={() => setActiveStep(1)}
-                  className="app-btn app-btn-outline"
-                  style={{ flex: 1, borderRadius: '14px' }}
-                >
-                  Back
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveStep(3)}
-                  className="app-btn app-btn-accent"
-                  style={{ flex: 2, borderRadius: '14px' }}
-                >
-                  <span>Continue to Time Slot</span>
-                  <ChevronRight size={18} />
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* ── STEP 3: DATE & TIME ── */}
-          {activeStep === 3 && (
-            <div className="app-card" style={{ padding: '1.25rem', borderRadius: '22px' }}>
-              <div style={{ marginBottom: '1rem' }}>
-                <span style={{ color: '#d4af37', fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                  STEP 3 OF 3
-                </span>
-                <h2 style={{ fontFamily: 'Outfit', fontSize: '1.35rem', fontWeight: 900, color: '#171717', margin: '0.1rem 0' }}>
-                  Appointment Schedule
-                </h2>
-                <p style={{ color: '#6b7280', fontSize: '0.82rem', margin: 0 }}>
-                  Pick your preferred date & time slot.
-                </p>
-              </div>
-
-              {/* Date Input */}
-              <div className="app-input-group" style={{ marginBottom: '1.25rem' }}>
-                <label className="app-label" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                  <CalendarIcon size={14} color="#d4af37" /> Select Date
-                </label>
-                <input
-                  type="date"
-                  value={date}
-                  min={new Date().toISOString().split('T')[0]}
-                  onChange={(e) => setDate(e.target.value)}
-                  className="app-input"
-                  required
-                />
-              </div>
-
-              {/* Time Slots Grid */}
-              <div className="app-input-group" style={{ marginBottom: '1.5rem' }}>
-                <label className="app-label" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                  <Clock size={14} color="#d4af37" /> Select Time Slot
-                </label>
-                <div className="timeslot-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.4rem' }}>
-                  {timeslots.map((ts) => (
-                    <button
-                      type="button"
-                      key={ts}
-                      onClick={() => setTime(ts)}
-                      style={{
-                        padding: '0.6rem 0.1rem',
-                        borderRadius: '10px',
-                        border: time === ts ? '1.5px solid #d4af37' : '1px solid rgba(0,0,0,0.08)',
-                        background: time === ts ? '#171717' : '#ffffff',
-                        color: time === ts ? '#d4af37' : '#171717',
-                        fontFamily: 'Outfit',
-                        fontWeight: 800,
-                        fontSize: 'clamp(0.68rem, 2.2vw, 0.78rem)',
-                        cursor: 'pointer',
-                        transition: 'all 0.15s ease',
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                      }}
-                    >
-                      {ts}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Summary Receipt Box */}
+              {/* Timeslot Chips */}
               <div
                 style={{
-                  background: '#171717',
-                  color: '#ffffff',
-                  borderRadius: '16px',
-                  padding: '1rem 1rem',
-                  border: '1.5px solid rgba(212,175,55,0.4)',
-                  marginBottom: '1.25rem',
-                  boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
-                  overflow: 'hidden',
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(3, 1fr)',
+                  gap: '0.55rem',
                 }}
               >
-                <div style={{ fontSize: '0.68rem', fontFamily: 'Outfit', fontWeight: 900, color: '#d4af37', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.35rem' }}>
-                  BOOKING SUMMARY
-                </div>
-                <h3 style={{ fontFamily: 'Outfit', fontSize: 'clamp(0.9rem, 3vw, 1.1rem)', fontWeight: 900, margin: '0 0 0.35rem', color: '#ffffff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                  {selectedService}
-                </h3>
-                <div style={{ fontSize: '0.75rem', color: '#a1a1aa', display: 'flex', flexDirection: 'column', gap: '0.15rem', marginBottom: '0.75rem' }}>
-                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>• Specialist: <strong style={{ color: '#ffffff' }}>{stylist}</strong></span>
-                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>• Location: <strong style={{ color: '#ffffff' }}>{location}</strong></span>
-                  <span>• Schedule: <strong style={{ color: '#ffffff' }}>{date} at {time}</strong></span>
-                </div>
-
-                {/* Voucher input */}
-                <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '0.6rem', marginBottom: '0.6rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
-                    <span style={{ fontSize: '0.72rem', color: '#d4af37', fontFamily: 'Outfit', fontWeight: 800 }}>
-                      🎁 Redeem Loyalty Voucher
-                    </span>
-                    {appliedVoucher && (
-                      <button type="button" onClick={() => setAppliedVoucher(false)} style={{ background: 'none', border: 'none', color: '#ef4444', fontSize: '0.68rem', cursor: 'pointer', fontWeight: 800 }}>
-                        Remove
-                      </button>
-                    )}
-                  </div>
-
-                  {appliedVoucher ? (
-                    <div style={{ background: 'rgba(212,175,55,0.2)', border: '1px solid #d4af37', borderRadius: '8px', padding: '0.4rem 0.6rem', fontSize: '0.72rem', color: '#d4af37', fontWeight: 800, display: 'flex', justifyContent: 'space-between' }}>
-                      <span>✓ ₦25,000 Voucher Applied</span>
-                      <span>-₦25,000</span>
-                    </div>
-                  ) : (
-                    <div style={{ display: 'flex', gap: '0.35rem' }}>
-                      <input
-                        type="text"
-                        placeholder="Voucher code (e.g. LOYALTY25K)"
-                        value={promoCode}
-                        onChange={(e) => setPromoCode(e.target.value)}
-                        style={{ flex: 1, padding: '0.35rem 0.55rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(255,255,255,0.08)', color: '#fff', fontSize: '0.75rem', fontFamily: 'Outfit' }}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (promoCode.trim().toUpperCase() === 'LOYALTY25K' || promoCode.trim().toUpperCase() === 'STYLEVIP' || promoCode.trim()) {
-                            setAppliedVoucher(true);
-                            showToast('₦25,000 Loyalty Voucher applied successfully!', 'success');
-                          } else {
-                            showToast('Please enter a valid voucher code.', 'error');
-                          }
-                        }}
-                        style={{ background: '#d4af37', color: '#171717', border: 'none', borderRadius: '8px', padding: '0.35rem 0.75rem', fontSize: '0.75rem', fontFamily: 'Outfit', fontWeight: 900, cursor: 'pointer' }}
-                      >
-                        Apply
-                      </button>
-                    </div>
-                  )}
-                </div>
-
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '0.6rem', flexWrap: 'wrap', gap: '0.25rem' }}>
-                  <span style={{ fontSize: '0.75rem', color: '#a1a1aa', fontFamily: 'Outfit', fontWeight: 700 }}>
-                    TOTAL PRICE:
-                  </span>
-                  <span style={{ fontFamily: 'Outfit', fontSize: 'clamp(1.3rem, 4vw, 1.65rem)', fontWeight: 900, color: '#d4af37' }}>
-                    ₦{Number(Math.max(0, totalPrice - (appliedVoucher ? 25000 : 0))).toLocaleString()}
-                  </span>
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', gap: '0.6rem' }}>
-                <button
-                  type="button"
-                  onClick={() => setActiveStep(2)}
-                  className="app-btn app-btn-outline"
-                  style={{ flex: 1, borderRadius: '14px' }}
-                >
-                  Back
-                </button>
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="app-btn app-btn-primary"
-                  style={{ flex: 2, borderRadius: '14px' }}
-                >
-                  {submitting ? (
-                    <span>Confirming...</span>
-                  ) : (
-                    <>
-                      <CheckCircle2 size={18} />
-                      <span>Confirm Session</span>
-                    </>
-                  )}
-                </button>
+                {TIMESLOTS.map((slot) => {
+                  const isSelected = selectedTime === slot;
+                  return (
+                    <button
+                      key={slot}
+                      onClick={() => setSelectedTime(slot)}
+                      style={{
+                        padding: '0.65rem 0.35rem',
+                        borderRadius: '12px',
+                        background: '#151822',
+                        border: `1.5px solid ${isSelected ? '#f5b942' : 'rgba(255, 255, 255, 0.08)'}`,
+                        color: isSelected ? '#f5b942' : '#ffffff',
+                        fontFamily: 'Outfit',
+                        fontSize: '0.8rem',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        transition: 'all 0.15s ease',
+                      }}
+                    >
+                      {slot}
+                    </button>
+                  );
+                })}
               </div>
             </div>
-          )}
 
-        </form>
+            {/* Sticky "Continue ->" Gold Button */}
+            <button
+              onClick={() => setActiveStep(2)}
+              className="app-btn app-btn-accent"
+              style={{
+                borderRadius: '16px',
+                padding: '0.95rem',
+                fontSize: '0.92rem',
+                boxShadow: '0 8px 24px rgba(245, 185, 66, 0.35)',
+              }}
+            >
+              <span>Continue</span>
+              <ArrowRight size={18} />
+            </button>
+          </div>
+        )}
+
+        {/* ── STEP 2: SELECT STYLIST ── */}
+        {activeStep === 2 && (
+          <div>
+            <h2 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.85rem' }}>
+              Select Stylist
+            </h2>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.5rem' }}>
+              {specialistsList.map((sp) => {
+                const isSelected = stylist === sp.name;
+                return (
+                  <div
+                    key={sp.id}
+                    onClick={() => {
+                      setStylist(sp.name);
+                      setSelectedSpecialist(sp);
+                    }}
+                    style={{
+                      background: '#151822',
+                      borderRadius: '16px',
+                      padding: '0.85rem 1rem',
+                      border: `1.5px solid ${isSelected ? '#f5b942' : 'rgba(255, 255, 255, 0.08)'}`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                      <OptimizedImage
+                        src={sp.image}
+                        alt={sp.name}
+                        style={{ width: '46px', height: '46px', borderRadius: '50%', objectFit: 'cover' }}
+                      />
+                      <div>
+                        <h4 style={{ fontFamily: 'Outfit', fontSize: '0.95rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+                          {sp.name}
+                        </h4>
+                        <span style={{ fontSize: '0.74rem', color: '#94a3b8' }}>{sp.role}</span>
+                      </div>
+                    </div>
+                    {isSelected && <CheckCircle2 size={20} color="#f5b942" />}
+                  </div>
+                );
+              })}
+            </div>
+
+            <div style={{ display: 'flex', gap: '0.65rem' }}>
+              <button
+                onClick={handlePrevStep}
+                className="app-btn app-btn-outline"
+                style={{ flex: 1, borderRadius: '14px' }}
+              >
+                Back
+              </button>
+              <button
+                onClick={handleNextStep}
+                className="app-btn app-btn-accent"
+                style={{ flex: 2, borderRadius: '14px' }}
+              >
+                <span>Continue</span>
+                <ArrowRight size={18} />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ── STEP 3: LOCATION & SCHEDULE ── */}
+        {activeStep === 3 && (
+          <div>
+            <h2 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.85rem' }}>
+              Service Location
+            </h2>
+
+            <div style={{ marginBottom: '1.5rem' }}>
+              <label className="app-label">State / Region</label>
+              <select
+                className="app-select"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+              >
+                <option value="Lagos State">Lagos State</option>
+                <option value="FCT – Abuja">FCT – Abuja</option>
+                <option value="Rivers State">Rivers State (Port Harcourt)</option>
+                <option value="Oyo State">Oyo State (Ibadan)</option>
+              </select>
+            </div>
+
+            <div style={{ display: 'flex', gap: '0.65rem' }}>
+              <button
+                onClick={handlePrevStep}
+                className="app-btn app-btn-outline"
+                style={{ flex: 1, borderRadius: '14px' }}
+              >
+                Back
+              </button>
+              <button
+                onClick={handleNextStep}
+                className="app-btn app-btn-accent"
+                style={{ flex: 2, borderRadius: '14px' }}
+              >
+                <span>Review & Confirm</span>
+                <ArrowRight size={18} />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ── STEP 4: REVIEW & CONFIRM BOOKING ── */}
+        {activeStep === 4 && (
+          <div>
+            <h2 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.85rem' }}>
+              Appointment Summary
+            </h2>
+
+            <div
+              style={{
+                background: '#151822',
+                borderRadius: '18px',
+                padding: '1.15rem',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                marginBottom: '1.5rem',
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.65rem' }}>
+                <span style={{ color: '#94a3b8', fontSize: '0.82rem' }}>Service:</span>
+                <span style={{ color: '#ffffff', fontWeight: 700, fontSize: '0.85rem' }}>{selectedService}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.65rem' }}>
+                <span style={{ color: '#94a3b8', fontSize: '0.82rem' }}>Stylist:</span>
+                <span style={{ color: '#ffffff', fontWeight: 700, fontSize: '0.85rem' }}>{stylist}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.65rem' }}>
+                <span style={{ color: '#94a3b8', fontSize: '0.82rem' }}>Date & Time:</span>
+                <span style={{ color: '#ffffff', fontWeight: 700, fontSize: '0.85rem' }}>{selectedDate} at {selectedTime}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.65rem' }}>
+                <span style={{ color: '#94a3b8', fontSize: '0.82rem' }}>Location:</span>
+                <span style={{ color: '#ffffff', fontWeight: 700, fontSize: '0.85rem' }}>{location}</span>
+              </div>
+              <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '0.75rem', display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: '#ffffff', fontWeight: 800 }}>Total Fee:</span>
+                <span style={{ color: '#f5b942', fontWeight: 800, fontSize: '1.1rem' }}>₦{totalPrice.toLocaleString()}</span>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '0.65rem' }}>
+              <button
+                onClick={handlePrevStep}
+                className="app-btn app-btn-outline"
+                style={{ flex: 1, borderRadius: '14px' }}
+              >
+                Back
+              </button>
+              <button
+                onClick={handleBookingSubmit}
+                disabled={submitting}
+                className="app-btn app-btn-accent"
+                style={{ flex: 2, borderRadius: '14px' }}
+              >
+                {submitting ? 'Confirming...' : 'Proceed to Payment'}
+              </button>
+            </div>
+          </div>
+        )}
+
       </div>
 
       <AISpecialistMatcherSheet
         isOpen={showAiSheet}
         onClose={() => setShowAiSheet(false)}
         onApplyMatch={(match) => {
-          if (match?.stylist) setStylist(match.stylist);
-          if (match?.service) setSelectedService(match.service);
-          if (match?.location) setLocation(match.location);
-          setActiveStep(3);
-          showToast(`Matched with ${match.stylist || 'Specialist'}! Date & time schedule ready.`, 'success');
+          setShowAiSheet(false);
+          if (match.stylist) setStylist(match.stylist);
+          if (match.service) setSelectedService(match.service);
         }}
       />
     </PageContainer>
   );
 };
-

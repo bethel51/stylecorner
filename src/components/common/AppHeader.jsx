@@ -55,7 +55,7 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
   return (
     <>
       <header className="app-header">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
           {showBack || (!isHome && location.pathname !== '/customer-dashboard' && location.pathname !== '/expert-dashboard') ? (
             <button
               className="app-header-btn"
@@ -68,23 +68,9 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
             <div
               onClick={() => navigate('/')}
               onMouseEnter={() => preloadRoute('/')}
-              style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+              style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.45rem' }}
             >
-              <div
-                style={{
-                  width: '32px',
-                  height: '32px',
-                  borderRadius: '8px',
-                  background: 'linear-gradient(135deg, #1f1f1f, #121212)',
-                  border: '1px solid rgba(212, 175, 55, 0.4)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#d4af37',
-                }}
-              >
-                <Sparkles size={16} />
-              </div>
+              <Sparkles size={18} fill="#f5b942" color="#f5b942" />
             </div>
           )}
 
@@ -92,47 +78,53 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
             {title ? (
               title
             ) : (
-              <span>
-                STYLE<span style={{ color: '#d4af37' }}>CORNER</span>
+              <span style={{ letterSpacing: '0.04em', fontWeight: 800, fontSize: '1.05rem' }}>
+                STYLE<span style={{ color: '#f5b942' }}>CORNER</span>
               </span>
             )}
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
           {onOpenAiMatcher && (
             <button
               className="app-header-btn"
               onClick={onOpenAiMatcher}
               title="AI Specialist Matcher"
-              style={{ color: '#d4af37', borderColor: 'rgba(212,175,55,0.3)' }}
+              style={{ color: '#f5b942', borderColor: 'rgba(245, 185, 66, 0.3)' }}
             >
-              <Sparkles size={18} />
-            </button>
-          )}
-
-          {isAuthenticated && (
-            <button
-              className="app-header-btn"
-              onClick={() => setShowNotifications(true)}
-              title="Notifications"
-              aria-label="Notifications"
-              style={{ position: 'relative', color: unreadCount > 0 ? '#d4af37' : undefined, borderColor: unreadCount > 0 ? '#d4af37' : undefined }}
-            >
-              <Bell size={18} />
-              {unreadCount > 0 && <span className="badge-dot" style={{ backgroundColor: '#ef4444' }} />}
+              <Sparkles size={17} />
             </button>
           )}
 
           <button
             className="app-header-btn"
-            onClick={onOpenCart || (() => navigate('/cart'))}
-            onMouseEnter={() => preloadRoute('/cart')}
-            aria-label="Store Cart"
+            onClick={() => {
+              if (isAuthenticated) {
+                setShowNotifications(true);
+              } else {
+                navigate('/login');
+              }
+            }}
+            title="Notifications"
+            aria-label="Notifications"
+            style={{ position: 'relative' }}
           >
-            <ShoppingBag size={18} />
-            {itemCount > 0 && <span className="badge-dot" />}
+            <Bell size={18} color="#ffffff" />
+            {unreadCount > 0 && <span className="badge-dot" />}
           </button>
+
+          {!isHome && (
+            <button
+              className="app-header-btn"
+              onClick={onOpenCart || (() => navigate('/cart'))}
+              onMouseEnter={() => preloadRoute('/cart')}
+              aria-label="Store Cart"
+            >
+              <ShoppingBag size={18} color="#ffffff" />
+              {itemCount > 0 && <span className="badge-dot" />}
+            </button>
+          )}
 
           <button
             className="app-header-btn"
@@ -140,12 +132,15 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
             onMouseEnter={() => preloadRoute(isAuthenticated ? '/profile' : '/login')}
             aria-label="User Profile"
             style={{
-              borderColor: isAuthenticated ? '#d4af37' : undefined,
+              borderColor: '#f5b942',
               overflow: 'hidden',
-              padding: user?.avatarUrl ? 0 : undefined,
+              padding: 0,
+              width: '36px',
+              height: '36px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
+              background: '#1c202e',
             }}
           >
             {user?.avatarUrl ? (
@@ -164,15 +159,15 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
                 style={{
                   fontFamily: 'Outfit',
                   fontWeight: 800,
-                  fontSize: '0.85rem',
-                  color: '#d4af37',
+                  fontSize: '0.82rem',
+                  color: '#f5b942',
                   textTransform: 'uppercase',
                 }}
               >
                 {user.firstname.charAt(0)}
               </span>
             ) : (
-              <User size={18} />
+              <User size={17} color="#f5b942" />
             )}
           </button>
         </div>

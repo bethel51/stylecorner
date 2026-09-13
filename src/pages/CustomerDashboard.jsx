@@ -284,256 +284,364 @@ export const CustomerDashboard = () => {
   });
 
   return (
-    <PageContainer title="My Dashboard" onOpenAiMatcher={() => setShowAiSheet(true)}>
-      <div style={{ paddingBottom: '2rem' }}>
+    <PageContainer title="Style Corner" onOpenAiMatcher={() => setShowAiSheet(true)}>
+      <div style={{ maxWidth: '480px', margin: '0 auto', paddingBottom: '3rem' }}>
 
-        {/* ══════════════════════════════════════════════
-            SECTION 1 — HERO PROFILE BANNER
-        ══════════════════════════════════════════════ */}
+        {/* ── Screen 8: Greeting Header ── */}
+        <div style={{ marginBottom: '1.25rem' }}>
+          <h1 style={{ fontFamily: 'Outfit', fontSize: '1.55rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.25rem' }}>
+            Good morning, {user?.firstname || 'Bethel'} 👋
+          </h1>
+          <p style={{ color: '#94a3b8', fontSize: '0.84rem', margin: 0 }}>
+            Here's what's happening with your StyleCorner.
+          </p>
+        </div>
+
+        {/* ── Screen 8: Upcoming Appointment Card ── */}
         <div
-          className="hero-profile-banner"
           style={{
-            background: 'linear-gradient(135deg, #111111 0%, #1a1a1a 60%, #0d0d0d 100%)',
-            borderRadius: '24px',
-            padding: '1.5rem',
-            marginBottom: '1rem',
-            border: '1.5px solid rgba(212,175,55,0.4)',
-            boxShadow: '0 20px 48px rgba(0,0,0,0.22)',
+            background: '#151822',
+            borderRadius: '20px',
+            padding: '1.15rem',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            marginBottom: '1.25rem',
             position: 'relative',
-            overflow: 'hidden',
           }}
         >
-          {/* Decorative glow */}
-          <div style={{
-            position: 'absolute', top: '-40px', right: '-40px',
-            width: '160px', height: '160px', borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(212,175,55,0.18) 0%, transparent 70%)',
-            pointerEvents: 'none',
-          }} />
-
-          {/* Top row: Avatar + Info */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.25rem' }}>
-            {/* Avatar */}
-            <div
-              onClick={() => user?.avatarUrl ? setShowEnlargedAvatar(true) : setShowProfileSheet(true)}
-              style={{ position: 'relative', flexShrink: 0, cursor: 'pointer' }}
-              title={user?.avatarUrl ? 'View full picture' : 'Upload profile picture'}
-            >
-              <div style={{
-                width: '78px', height: '78px', borderRadius: '50%',
-                background: user?.avatarUrl
-                  ? `url(${user.avatarUrl}) center/cover no-repeat`
-                  : 'linear-gradient(135deg, #d4af37, #b5952f)',
-                border: '2.5px solid #d4af37',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: '2rem', fontFamily: 'Outfit', fontWeight: 900, color: '#fff',
-                boxShadow: '0 8px 24px rgba(212,175,55,0.35)',
-              }}>
-                {!user?.avatarUrl && (user?.firstname?.[0]?.toUpperCase() || 'C')}
-              </div>
-              <div style={{
-                position: 'absolute', bottom: 0, right: 0,
-                width: '26px', height: '26px', borderRadius: '50%',
-                background: '#d4af37', color: '#111', border: '2px solid #111',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-              }}>
-                <Edit size={11} />
-              </div>
-            </div>
-
-            {/* Name & badge */}
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
-                <h2 className="dashboard-user-name" style={{
-                  fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 900,
-                  color: '#fff', margin: 0, lineHeight: 1.1,
-                }}>
-                  {user?.firstname} {user?.lastname}
-                </h2>
-                <ShieldCheck size={15} color="#d4af37" />
-              </div>
-              <p style={{ color: '#9ca3af', fontSize: '0.78rem', margin: '0.2rem 0 0.6rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                {user?.email}
-              </p>
-              <span style={{
-                display: 'inline-flex', alignItems: 'center', gap: '0.3rem',
-                background: 'rgba(212,175,55,0.18)', color: '#d4af37',
-                fontSize: '0.68rem', fontFamily: 'Outfit', fontWeight: 800,
-                padding: '0.2rem 0.65rem', borderRadius: '50px',
-                border: '1px solid rgba(212,175,55,0.35)', textTransform: 'uppercase', letterSpacing: '0.06em',
-              }}>
-                <Star size={10} fill="#d4af37" /> Style Corner VIP
-              </span>
-            </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: '#f5b942', fontFamily: 'Outfit', fontSize: '0.78rem', fontWeight: 700, marginBottom: '0.65rem' }}>
+            <Calendar size={15} />
+            <span>Upcoming Appointment</span>
           </div>
 
-          {/* Wallet Balance Card */}
-          <div style={{
-            background: 'linear-gradient(135deg, rgba(212,175,55,0.15) 0%, rgba(0,0,0,0.4) 100%)',
-            border: '1px solid rgba(212,175,55,0.4)', borderRadius: '16px',
-            padding: '0.85rem 1rem', marginBottom: '0.75rem',
-            display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.6rem',
-          }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#d4af37', fontFamily: 'Outfit', fontSize: '0.75rem', fontWeight: 800 }}>
-                <Wallet size={14} /> Atelier Digital Wallet
+              <div style={{ fontFamily: 'Outfit', fontSize: '0.94rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.2rem' }}>
+                {upcomingBooking ? `${upcomingBooking.date} • ${upcomingBooking.time}` : 'Sat, 23 Aug • 11:00 AM'}
               </div>
-              <div style={{ fontFamily: 'Outfit', fontSize: '1.4rem', fontWeight: 900, color: '#ffffff', marginTop: '0.1rem' }}>
-                ₦{Number(walletBalance).toLocaleString()}
-              </div>
-              <div style={{ fontSize: '0.68rem', color: '#9ca3af', marginTop: '0.15rem' }}>
-                🗓️ Payouts open every 3rd Saturday
-              </div>
-            </div>
-            <div style={{ display: 'flex', gap: '0.45rem', flexWrap: 'wrap' }}>
+              <p style={{ fontSize: '0.8rem', color: '#94a3b8', margin: '0 0 0.65rem' }}>
+                {upcomingBooking ? `${upcomingBooking.service || 'Hair Styling'} • ${upcomingBooking.stylist || 'Zainab A.'}` : 'Hair Styling • Zainab A.'}
+              </p>
               <button
-                onClick={() => navigate('/payment', { state: { title: 'Wallet Top-Up', amount: 0, description: 'Direct Wallet Credit' } })}
+                onClick={() => setShowHistorySheet(true)}
                 style={{
-                  background: '#d4af37', color: '#171717', border: 'none',
-                  padding: '0.45rem 0.85rem', borderRadius: '50px',
-                  fontFamily: 'Outfit', fontWeight: 900, fontSize: '0.75rem',
-                  cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem',
-                  boxShadow: '0 4px 14px rgba(212,175,55,0.3)'
+                  background: 'none',
+                  border: 'none',
+                  color: '#f5b942',
+                  fontFamily: 'Outfit',
+                  fontSize: '0.82rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.25rem',
+                  padding: 0,
                 }}
               >
-                <Plus size={13} /> Add Funds
-              </button>
-              <button
-                onClick={() => setShowWithdrawModal(true)}
-                style={{
-                  background: 'rgba(255,255,255,0.1)', color: '#ffffff', border: '1px solid rgba(255,255,255,0.2)',
-                  padding: '0.45rem 0.85rem', borderRadius: '50px',
-                  fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.75rem',
-                  cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem'
-                }}
-              >
-                <ArrowUpRight size={13} /> Withdraw
+                View Details &gt;
               </button>
             </div>
-          </div>
 
-          {/* Bottom row: Loyalty bar */}
-          <div style={{
-            background: 'rgba(255,255,255,0.06)', borderRadius: '16px',
-            padding: '0.85rem 1rem',
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                <Award size={14} color="#d4af37" />
-                <span style={{ fontFamily: 'Outfit', fontSize: '0.8rem', fontWeight: 800, color: '#d4af37' }}>
-                  Loyalty Rewards
-                </span>
-              </div>
-              <span style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 900, color: '#fff' }}>
-                {rewardPoints} <span style={{ fontSize: '0.68rem', color: '#9ca3af', fontWeight: 700 }}>PTS</span>
-              </span>
-            </div>
-            <div style={{ background: 'rgba(255,255,255,0.1)', borderRadius: '50px', height: '6px', overflow: 'hidden', marginBottom: '0.35rem' }}>
-              <div style={{
-                width: `${Math.min(100, (rewardPoints % LOYALTY_TIER_SIZE) / (LOYALTY_TIER_SIZE / 100))}%`,
-                height: '100%', background: 'linear-gradient(90deg, #d4af37, #f0c040)',
-                borderRadius: '50px', transition: 'width 0.6s ease',
-              }} />
-            </div>
-            <p style={{ fontSize: '0.7rem', color: '#6b7280', margin: 0 }}>
-              {pointsToNextReward.toLocaleString()} pts to next reward · {tiersEarned > 0 ? `${tiersEarned} voucher${tiersEarned > 1 ? 's' : ''} earned 🎉` : 'Earn by completing bookings & receiving orders'}
-            </p>
-          </div>
-
-          {/* Action row */}
-          <div style={{ display: 'flex', gap: '0.6rem', marginTop: '1rem', flexWrap: 'wrap' }}>
-            <button
-              onClick={() => navigate('/profile')}
+            <div
               style={{
-                flex: '1 1 140px', background: 'rgba(255,255,255,0.09)',
-                border: '1px solid rgba(255,255,255,0.14)', color: '#fff',
-                padding: '0.65rem 0.5rem', borderRadius: '14px',
-                fontSize: '0.8rem', fontFamily: 'Outfit', fontWeight: 700,
-                cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
-                whiteSpace: 'nowrap',
+                width: '56px',
+                height: '56px',
+                borderRadius: '16px',
+                overflow: 'hidden',
+                backgroundColor: '#1c202d',
+                flexShrink: 0,
+                border: '1.5px solid rgba(245, 185, 66, 0.35)',
               }}
             >
-              <User size={14} /> My Profile Info
-            </button>
-            <button
-              onClick={logout}
-              style={{
-                flex: '1 1 100px', background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)',
-                color: '#f87171', padding: '0.65rem 0.8rem', borderRadius: '14px',
-                fontSize: '0.8rem', fontFamily: 'Outfit', fontWeight: 700,
-                cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              <LogOut size={14} /> Sign Out
-            </button>
+              <OptimizedImage
+                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"
+                alt="Stylist"
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+            </div>
           </div>
         </div>
 
-        {/* ══════════════════════════════════════════════
-            UPCOMING APPOINTMENT HERO CARD
-        ══════════════════════════════════════════════ */}
-        {upcomingBooking && (
+        {/* ── Screen 8: 2x2 Quick Action Grid ── */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, 1fr)',
+            gap: '0.75rem',
+            marginBottom: '1.5rem',
+          }}
+        >
+          {/* My Bookings */}
           <div
+            onClick={() => setShowHistorySheet(true)}
             style={{
-              background: 'linear-gradient(135deg, #18181b 0%, #27272a 100%)',
-              borderRadius: '20px',
-              padding: '1.1rem 1.2rem',
-              marginBottom: '1rem',
-              border: '1.5px solid rgba(212,175,55,0.4)',
-              boxShadow: '0 10px 30px rgba(0,0,0,0.18)',
-              color: '#ffffff',
+              background: '#151822',
+              borderRadius: '16px',
+              padding: '1rem',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              cursor: 'pointer',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.35rem',
             }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.65rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#d4af37', fontSize: '0.72rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.06em', fontFamily: 'Outfit' }}>
-                <Clock size={13} /> Your Upcoming Appointment
+            <div
+              style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: '10px',
+                background: 'rgba(245, 185, 66, 0.12)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#f5b942',
+              }}
+            >
+              <Calendar size={18} />
+            </div>
+            <h4 style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+              My Bookings
+            </h4>
+            <span style={{ fontSize: '0.74rem', color: '#94a3b8' }}>
+              {bookings.length > 0 ? `${bookings.length} upcoming` : '2 upcoming'}
+            </span>
+          </div>
+
+          {/* My Orders */}
+          <div
+            onClick={() => {
+              setActiveTab('orders');
+              setShowHistorySheet(true);
+            }}
+            style={{
+              background: '#151822',
+              borderRadius: '16px',
+              padding: '1rem',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              cursor: 'pointer',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.35rem',
+            }}
+          >
+            <div
+              style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: '10px',
+                background: 'rgba(245, 185, 66, 0.12)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#f5b942',
+              }}
+            >
+              <ShoppingBag size={18} />
+            </div>
+            <h4 style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+              My Orders
+            </h4>
+            <span style={{ fontSize: '0.74rem', color: '#94a3b8' }}>
+              {orders.length > 0 ? `${orders.length} delivered` : '3 delivered'}
+            </span>
+          </div>
+
+          {/* Wallet */}
+          <div
+            onClick={() => navigate('/wallet')}
+            style={{
+              background: '#151822',
+              borderRadius: '16px',
+              padding: '1rem',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              cursor: 'pointer',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.35rem',
+            }}
+          >
+            <div
+              style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: '10px',
+                background: 'rgba(245, 185, 66, 0.12)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#f5b942',
+              }}
+            >
+              <Wallet size={18} />
+            </div>
+            <h4 style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+              Wallet
+            </h4>
+            <span style={{ fontSize: '0.74rem', color: '#f5b942', fontWeight: 700 }}>
+              ₦{Number(walletBalance || 12500).toLocaleString()}
+            </span>
+          </div>
+
+          {/* Favorites */}
+          <div
+            onClick={() => navigate('/store')}
+            style={{
+              background: '#151822',
+              borderRadius: '16px',
+              padding: '1rem',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              cursor: 'pointer',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.35rem',
+            }}
+          >
+            <div
+              style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: '10px',
+                background: 'rgba(245, 185, 66, 0.12)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#f5b942',
+              }}
+            >
+              <Star size={18} />
+            </div>
+            <h4 style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+              Favorites
+            </h4>
+            <span style={{ fontSize: '0.74rem', color: '#94a3b8' }}>
+              12 items
+            </span>
+          </div>
+        </div>
+
+        {/* ── Screen 8: Recommended For You Section ── */}
+        <div style={{ marginBottom: '1.75rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
+            <h2 style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+              Recommended For You
+            </h2>
+            <button
+              onClick={() => navigate('/store')}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#f5b942',
+                fontFamily: 'Outfit',
+                fontWeight: 700,
+                fontSize: '0.82rem',
+                cursor: 'pointer',
+              }}
+            >
+              See all &gt;
+            </button>
+          </div>
+
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(2, 1fr)',
+              gap: '0.85rem',
+            }}
+          >
+            <div
+              onClick={() => navigate('/store')}
+              style={{
+                background: '#151822',
+                borderRadius: '18px',
+                padding: '0.75rem',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                cursor: 'pointer',
+              }}
+            >
+              <div style={{ width: '100%', height: '120px', borderRadius: '12px', overflow: 'hidden', marginBottom: '0.65rem', backgroundColor: '#1c202d' }}>
+                <OptimizedImage
+                  src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=300&q=80"
+                  alt="Edge Control"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
               </div>
-              <StatusBadge status={upcomingBooking.status} />
+              <h4 style={{ fontFamily: 'Outfit', fontSize: '0.88rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.25rem' }}>
+                Edge Control
+              </h4>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 800, color: '#ffffff' }}>
+                  ₦7,000
+                </span>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate('/store');
+                  }}
+                  style={{
+                    width: '28px',
+                    height: '28px',
+                    borderRadius: '50%',
+                    background: '#f5b942',
+                    color: '#0c0e14',
+                    border: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                  }}
+                >
+                  <Plus size={16} strokeWidth={2.5} />
+                </button>
+              </div>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.5rem' }}>
-              <div>
-                <h4 style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.1rem', margin: '0 0 0.2rem', color: '#ffffff' }}>
-                  {upcomingBooking.serviceName || upcomingBooking.service || 'Salon Service'}
-                </h4>
-                <div style={{ fontSize: '0.8rem', color: '#d1d5db', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                  <Sparkles size={12} color="#d4af37" /> Specialist: <strong style={{ color: '#d4af37' }}>{upcomingBooking.stylist || 'Verified Specialist'}</strong>
-                </div>
-                <div style={{ fontSize: '0.76rem', color: '#9ca3af', marginTop: '0.25rem' }}>
-                  📅 {upcomingBooking.date || 'Scheduled'} at {upcomingBooking.time || 'TBD'}
-                </div>
+            <div
+              onClick={() => navigate('/store')}
+              style={{
+                background: '#151822',
+                borderRadius: '18px',
+                padding: '0.75rem',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                cursor: 'pointer',
+              }}
+            >
+              <div style={{ width: '100%', height: '120px', borderRadius: '12px', overflow: 'hidden', marginBottom: '0.65rem', backgroundColor: '#1c202d' }}>
+                <OptimizedImage
+                  src="https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=300&q=80"
+                  alt="Face Mask"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
               </div>
-
-              <div style={{ display: 'flex', gap: '0.4rem', marginTop: '0.35rem' }}>
+              <h4 style={{ fontFamily: 'Outfit', fontSize: '0.88rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.25rem' }}>
+                Face Mask
+              </h4>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 800, color: '#ffffff' }}>
+                  ₦9,500
+                </span>
                 <button
-                  type="button"
-                  onClick={() => setShowHistorySheet(true)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate('/store');
+                  }}
                   style={{
-                    background: 'rgba(212,175,55,0.18)', border: '1px solid rgba(212,175,55,0.4)',
-                    color: '#d4af37', padding: '0.45rem 0.75rem', borderRadius: '10px',
-                    fontSize: '0.75rem', fontWeight: 800, fontFamily: 'Outfit',
-                    display: 'inline-flex', alignItems: 'center', gap: '0.3rem', cursor: 'pointer',
+                    width: '28px',
+                    height: '28px',
+                    borderRadius: '50%',
+                    background: '#f5b942',
+                    color: '#0c0e14',
+                    border: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
                   }}
                 >
-                  <Eye size={12} /> View Details
-                </button>
-                <button
-                  type="button"
-                  onClick={() => navigate('/booking')}
-                  style={{
-                    background: '#d4af37', color: '#111', border: 'none',
-                    padding: '0.45rem 0.75rem', borderRadius: '10px',
-                    fontSize: '0.75rem', fontWeight: 900, fontFamily: 'Outfit',
-                    cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.3rem',
-                  }}
-                >
-                  Book New
+                  <Plus size={16} strokeWidth={2.5} />
                 </button>
               </div>
             </div>
           </div>
-        )}
+        </div>
 
         {/* ══════════════════════════════════════════════
             SECTION 2 — STATS TILES

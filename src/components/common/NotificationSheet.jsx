@@ -145,9 +145,9 @@ export const NotificationSheet = ({ isOpen, onClose, onSelectNotification }) => 
                     gap: '0.75rem',
                     padding: '0.85rem',
                     borderRadius: '14px',
-                    background: n.read ? '#ffffff' : '#faf9f5',
-                    border: n.read ? '1px solid rgba(0,0,0,0.06)' : '1.5px solid rgba(212,175,55,0.4)',
-                    boxShadow: n.read ? 'none' : '0 4px 12px rgba(212,175,55,0.08)',
+                    background: n.read ? '#171a25' : '#1c202d',
+                    border: n.read ? '1px solid rgba(255, 255, 255, 0.06)' : '1.5px solid rgba(245, 185, 66, 0.4)',
+                    boxShadow: n.read ? 'none' : '0 4px 14px rgba(245, 185, 66, 0.1)',
                     cursor: 'pointer',
                     position: 'relative',
                     transition: 'all 0.15s ease'
@@ -168,17 +168,17 @@ export const NotificationSheet = ({ isOpen, onClose, onSelectNotification }) => 
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
                       <h4 style={{
                         fontFamily: 'Outfit', fontSize: '0.85rem', fontWeight: n.read ? 700 : 900,
-                        color: '#0f172a', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'
+                        color: '#ffffff', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'
                       }}>
                         {n.title}
                       </h4>
-                      <span style={{ fontSize: '0.68rem', color: '#94a3b8', flexShrink: 0, fontWeight: 500 }}>
+                      <span style={{ fontSize: '0.68rem', color: '#64748b', flexShrink: 0, fontWeight: 500 }}>
                         {formatTimeAgo(n.createdAt)}
                       </span>
                     </div>
 
                     <p style={{
-                      fontSize: '0.78rem', color: '#475569', margin: '0.2rem 0 0',
+                      fontSize: '0.78rem', color: '#94a3b8', margin: '0.2rem 0 0',
                       lineHeight: 1.35, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden'
                     }}>
                       {n.message}

@@ -30,6 +30,9 @@ const routeLoaders = {
   '/payment': () => import('./pages/Payment'),
   '/policies': () => import('./pages/Policies'),
   '/profile': () => import('./pages/Profile'),
+  '/ai-stylist-finder': () => import('./pages/AiStylistFinder'),
+  '/wallet': () => import('./pages/Wallet'),
+  '/notifications': () => import('./pages/Notifications'),
 };
 
 // Global helper to prefetch route JavaScript chunk on hover/touchstart
@@ -79,6 +82,9 @@ const Profile = safeLazy(() => import('./pages/Profile').then(m => ({ default: m
 const ExpertProfile = safeLazy(() => import('./pages/ExpertProfile').then(m => ({ default: m.ExpertProfile })));
 const ProductDetail = safeLazy(() => import('./pages/ProductDetail').then(m => ({ default: m.ProductDetail })));
 const Cart = safeLazy(() => import('./pages/Cart').then(m => ({ default: m.Cart })));
+const AiStylistFinder = safeLazy(() => import('./pages/AiStylistFinder').then(m => ({ default: m.AiStylistFinder })));
+const Wallet = safeLazy(() => import('./pages/Wallet').then(m => ({ default: m.Wallet })));
+const Notifications = safeLazy(() => import('./pages/Notifications').then(m => ({ default: m.Notifications })));
 
 // Ultra-sleek Gold Page Loader Component
 const PageLoader = () => (
@@ -142,6 +148,8 @@ export const App = () => {
               <Route path="/cart" element={<Cart />} />
               <Route path="/product/:id" element={<ProductDetail />} />
               <Route path="/booking" element={<Booking />} />
+              <Route path="/ai-stylist-finder" element={<AiStylistFinder />} />
+              <Route path="/notifications" element={<Notifications />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
 
@@ -158,6 +166,14 @@ export const App = () => {
                 element={
                   <ProtectedRoute>
                     <Profile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/wallet"
+                element={
+                  <ProtectedRoute>
+                    <Wallet />
                   </ProtectedRoute>
                 }
               />
