@@ -298,69 +298,135 @@ export const CustomerDashboard = () => {
           </p>
         </div>
 
-        {/* ── Screen 8: Upcoming Appointment Card ── */}
-        <div
-          style={{
-            background: '#151822',
-            borderRadius: '20px',
-            padding: '1.15rem',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
-            marginBottom: '1.25rem',
-            position: 'relative',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: '#f5b942', fontFamily: 'Outfit', fontSize: '0.78rem', fontWeight: 700, marginBottom: '0.65rem' }}>
-            <Calendar size={15} />
-            <span>Upcoming Appointment</span>
-          </div>
-
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div>
-              <div style={{ fontFamily: 'Outfit', fontSize: '0.94rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.2rem' }}>
-                {upcomingBooking ? `${upcomingBooking.date} • ${upcomingBooking.time}` : 'Sat, 23 Aug • 11:00 AM'}
-              </div>
-              <p style={{ fontSize: '0.8rem', color: '#94a3b8', margin: '0 0 0.65rem' }}>
-                {upcomingBooking ? `${upcomingBooking.service || 'Hair Styling'} • ${upcomingBooking.stylist || 'Zainab A.'}` : 'Hair Styling • Zainab A.'}
-              </p>
-              <button
-                onClick={() => setShowHistorySheet(true)}
+        {/* ── Screen 8: Upcoming Appointment Card (Real Data) ── */}
+        {(() => {
+          const upcoming = bookings.find((b) => b.status === 'pending' || b.status === 'accepted' || b.status === 'confirmed');
+          if (upcoming) {
+            return (
+              <div
                 style={{
-                  background: 'none',
-                  border: 'none',
-                  color: '#f5b942',
-                  fontFamily: 'Outfit',
-                  fontSize: '0.82rem',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.25rem',
-                  padding: 0,
+                  background: '#151822',
+                  borderRadius: '20px',
+                  padding: '1.15rem',
+                  border: '1px solid rgba(245, 185, 66, 0.25)',
+                  marginBottom: '1.25rem',
+                  position: 'relative',
                 }}
               >
-                View Details &gt;
-              </button>
-            </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: '#f5b942', fontFamily: 'Outfit', fontSize: '0.78rem', fontWeight: 700, marginBottom: '0.65rem' }}>
+                  <Calendar size={15} />
+                  <span>Upcoming Appointment</span>
+                  <span style={{ marginLeft: 'auto', background: 'rgba(245, 185, 66, 0.15)', color: '#f5b942', padding: '0.15rem 0.5rem', borderRadius: '50px', fontSize: '0.68rem', textTransform: 'capitalize' }}>
+                    {upcoming.status}
+                  </span>
+                </div>
 
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div>
+                    <div style={{ fontFamily: 'Outfit', fontSize: '0.96rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.25rem' }}>
+                      {upcoming.date} {upcoming.time ? `• ${upcoming.time}` : ''}
+                    </div>
+                    <p style={{ fontSize: '0.82rem', color: '#94a3b8', margin: '0 0 0.65rem' }}>
+                      {upcoming.service || 'Salon Service'} {upcoming.stylist ? `• ${upcoming.stylist}` : ''}
+                    </p>
+                    <button
+                      onClick={() => setShowHistorySheet(true)}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        color: '#f5b942',
+                        fontFamily: 'Outfit',
+                        fontSize: '0.82rem',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.25rem',
+                        padding: 0,
+                      }}
+                    >
+                      View Details &gt;
+                    </button>
+                  </div>
+
+                  <div
+                    style={{
+                      width: '56px',
+                      height: '56px',
+                      borderRadius: '16px',
+                      overflow: 'hidden',
+                      backgroundColor: '#1c202d',
+                      flexShrink: 0,
+                      border: '1.5px solid rgba(245, 185, 66, 0.35)',
+                    }}
+                  >
+                    <OptimizedImage
+                      src={upcoming.stylistImage || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80'}
+                      alt="Stylist"
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                  </div>
+                </div>
+              </div>
+            );
+          }
+          return (
             <div
               style={{
-                width: '56px',
-                height: '56px',
-                borderRadius: '16px',
-                overflow: 'hidden',
-                backgroundColor: '#1c202d',
-                flexShrink: 0,
-                border: '1.5px solid rgba(245, 185, 66, 0.35)',
+                background: '#151822',
+                borderRadius: '20px',
+                padding: '1.15rem',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                marginBottom: '1.25rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '1rem',
               }}
             >
-              <OptimizedImage
-                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"
-                alt="Stylist"
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-              />
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: '#94a3b8', fontFamily: 'Outfit', fontSize: '0.78rem', fontWeight: 700, marginBottom: '0.25rem' }}>
+                  <Calendar size={15} color="#f5b942" />
+                  <span>Appointments</span>
+                </div>
+                <h4 style={{ fontFamily: 'Outfit', fontSize: '0.94rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.35rem' }}>
+                  No upcoming appointments
+                </h4>
+                <button
+                  onClick={() => navigate('/booking')}
+                  style={{
+                    background: '#f5b942',
+                    color: '#0c0e14',
+                    border: 'none',
+                    borderRadius: '50px',
+                    padding: '0.4rem 0.9rem',
+                    fontFamily: 'Outfit',
+                    fontSize: '0.76rem',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                  }}
+                >
+                  Book a Service
+                </button>
+              </div>
+              <div
+                style={{
+                  width: '52px',
+                  height: '52px',
+                  borderRadius: '16px',
+                  backgroundColor: 'rgba(245, 185, 66, 0.1)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#f5b942',
+                  flexShrink: 0,
+                }}
+              >
+                <Scissors size={24} />
+              </div>
             </div>
-          </div>
-        </div>
+          );
+        })()}
 
         {/* ── Screen 8: 2x2 Quick Action Grid ── */}
         <div
@@ -403,7 +469,7 @@ export const CustomerDashboard = () => {
               My Bookings
             </h4>
             <span style={{ fontSize: '0.74rem', color: '#94a3b8' }}>
-              {bookings.length > 0 ? `${bookings.length} upcoming` : '2 upcoming'}
+              {bookings.length} {bookings.length === 1 ? 'appointment' : 'appointments'}
             </span>
           </div>
 
@@ -442,7 +508,7 @@ export const CustomerDashboard = () => {
               My Orders
             </h4>
             <span style={{ fontSize: '0.74rem', color: '#94a3b8' }}>
-              {orders.length > 0 ? `${orders.length} delivered` : '3 delivered'}
+              {orders.length} {orders.length === 1 ? 'order' : 'orders'}
             </span>
           </div>
 
@@ -478,11 +544,11 @@ export const CustomerDashboard = () => {
               Wallet
             </h4>
             <span style={{ fontSize: '0.74rem', color: '#f5b942', fontWeight: 700 }}>
-              ₦{Number(walletBalance || 12500).toLocaleString()}
+              ₦{Number(walletBalance || 0).toLocaleString()}
             </span>
           </div>
 
-          {/* Favorites */}
+          {/* Store Essentials */}
           <div
             onClick={() => navigate('/store')}
             style={{
@@ -508,13 +574,13 @@ export const CustomerDashboard = () => {
                 color: '#f5b942',
               }}
             >
-              <Star size={18} />
+              <Sparkles size={18} />
             </div>
             <h4 style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
-              Favorites
+              Beauty Store
             </h4>
             <span style={{ fontSize: '0.74rem', color: '#94a3b8' }}>
-              12 items
+              Shop Essentials &gt;
             </span>
           </div>
         </div>
