@@ -580,11 +580,11 @@ export const AdminDashboard = () => {
       width: '100%',
       maxWidth: '100vw',
       overflowX: 'hidden',
-      backgroundColor: '#f8fafc',
+      backgroundColor: '#0c0e14',
       display: 'flex',
       flexDirection: isMobile ? 'column' : 'row',
       fontFamily: 'Outfit, sans-serif',
-      color: '#0f172a',
+      color: '#ffffff',
       boxSizing: 'border-box',
     }}>
 
@@ -593,7 +593,7 @@ export const AdminDashboard = () => {
         <div
           onClick={() => setIsMobileOpen(false)}
           style={{
-            position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)',
+            position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(6px)',
             zIndex: 40, transition: 'opacity 0.2s ease',
           }}
         />
@@ -603,8 +603,8 @@ export const AdminDashboard = () => {
       <aside style={{
         width: '260px',
         flexShrink: 0,
-        backgroundColor: '#ffffff',
-        borderRight: '1px solid rgba(0,0,0,0.08)',
+        backgroundColor: '#12151e',
+        borderRight: '1px solid rgba(255,255,255,0.08)',
         display: 'flex',
         flexDirection: 'column',
         position: 'fixed',
@@ -614,27 +614,27 @@ export const AdminDashboard = () => {
         zIndex: 50,
         transform: isMobile && !isMobileOpen ? 'translateX(-100%)' : 'translateX(0)',
         transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-        boxShadow: isMobile && isMobileOpen ? '0 0 30px rgba(0,0,0,0.15)' : 'none',
+        boxShadow: isMobile && isMobileOpen ? '0 0 40px rgba(0,0,0,0.6)' : 'none',
       }}>
         {/* Brand Header */}
-        <div style={{ padding: '1.25rem 1.25rem 1rem', borderBottom: '1px solid rgba(0,0,0,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ padding: '1.25rem 1.25rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.07)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
             <div style={{
               width: '36px', height: '36px', borderRadius: '10px',
-              background: 'linear-gradient(135deg, #d4af37, #b5952f)',
+              background: 'linear-gradient(135deg, #f5b942, #d4af37)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
-              <Shield size={18} color="#fff" />
+              <Shield size={18} color="#0c0e14" />
             </div>
             <div>
-              <div style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', lineHeight: 1 }}>Style Corner</div>
-              <div style={{ fontSize: '0.65rem', color: '#b5952f', fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase' }}>Admin Portal</div>
+              <div style={{ fontSize: '0.95rem', fontWeight: 800, color: '#ffffff', lineHeight: 1 }}>Style Corner</div>
+              <div style={{ fontSize: '0.65rem', color: '#f5b942', fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase' }}>Admin Portal</div>
             </div>
           </div>
           {isMobile && (
             <button
               onClick={() => setIsMobileOpen(false)}
-              style={{ background: 'none', border: 'none', color: '#64748b', padding: '0.25rem', cursor: 'pointer' }}
+              style={{ background: 'none', border: 'none', color: '#94a3b8', padding: '0.25rem', cursor: 'pointer' }}
             >
               <X size={20} />
             </button>
@@ -642,21 +642,21 @@ export const AdminDashboard = () => {
         </div>
 
         {/* Admin User Card */}
-        <div style={{ padding: '1rem 1.25rem', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
+        <div style={{ padding: '1rem 1.25rem', borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <div style={{
               width: '40px', height: '40px', borderRadius: '50%', flexShrink: 0,
-              background: user?.avatarUrl ? `url(${user.avatarUrl}) center/cover no-repeat` : 'linear-gradient(135deg, #d4af37, #b5952f)',
-              border: '2px solid rgba(212,175,55,0.4)',
+              background: user?.avatarUrl ? `url(${user.avatarUrl}) center/cover no-repeat` : 'linear-gradient(135deg, #f5b942, #b5952f)',
+              border: '2px solid rgba(245,185,66,0.5)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
-              {!user?.avatarUrl && <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#fff' }}>{user?.firstname?.charAt(0) || 'A'}</span>}
+              {!user?.avatarUrl && <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#0c0e14' }}>{user?.firstname?.charAt(0) || 'A'}</span>}
             </div>
             <div style={{ overflow: 'hidden' }}>
-              <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#0f172a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#ffffff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {user?.firstname || 'Admin'} {user?.lastname || ''}
               </div>
-              <div style={{ fontSize: '0.68rem', color: '#16a34a', fontWeight: 600 }}>● System Admin</div>
+              <div style={{ fontSize: '0.68rem', color: '#22c55e', fontWeight: 600 }}>● System Admin</div>
             </div>
           </div>
         </div>
@@ -673,9 +673,9 @@ export const AdminDashboard = () => {
               style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                 padding: '0.75rem 0.85rem', borderRadius: '12px', width: '100%',
-                border: activeTab === item.id ? '1px solid rgba(212,175,55,0.35)' : '1px solid transparent',
-                backgroundColor: activeTab === item.id ? 'rgba(212,175,55,0.12)' : 'transparent',
-                color: activeTab === item.id ? '#b5952f' : '#64748b',
+                border: activeTab === item.id ? '1px solid rgba(245,185,66,0.4)' : '1px solid transparent',
+                backgroundColor: activeTab === item.id ? 'rgba(245,185,66,0.12)' : 'transparent',
+                color: activeTab === item.id ? '#f5b942' : '#94a3b8',
                 cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s ease',
                 fontFamily: 'Outfit', fontWeight: activeTab === item.id ? 700 : 500, fontSize: '0.88rem',
               }}
@@ -686,8 +686,8 @@ export const AdminDashboard = () => {
               </div>
               <span style={{
                 fontSize: '0.72rem', fontWeight: 700, padding: '0.1rem 0.5rem',
-                borderRadius: '50px', backgroundColor: activeTab === item.id ? '#d4af37' : 'rgba(0,0,0,0.06)',
-                color: activeTab === item.id ? '#fff' : '#64748b',
+                borderRadius: '50px', backgroundColor: activeTab === item.id ? '#f5b942' : 'rgba(255,255,255,0.08)',
+                color: activeTab === item.id ? '#0c0e14' : '#94a3b8',
               }}>
                 {item.count}
               </span>
@@ -696,14 +696,14 @@ export const AdminDashboard = () => {
         </nav>
 
         {/* Sidebar Footer Controls */}
-        <div style={{ padding: '0.75rem', borderTop: '1px solid rgba(0,0,0,0.06)', display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+        <div style={{ padding: '0.75rem', borderTop: '1px solid rgba(255,255,255,0.07)', display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
           <button
             onClick={() => { fetchAdminData(); if (isMobile) setIsMobileOpen(false); }}
             style={{
               display: 'flex', alignItems: 'center', gap: '0.6rem',
               padding: '0.65rem 0.85rem', borderRadius: '10px', width: '100%',
-              backgroundColor: 'rgba(0,0,0,0.03)', border: '1px solid rgba(0,0,0,0.06)',
-              color: '#64748b', cursor: 'pointer', fontFamily: 'Outfit', fontSize: '0.82rem', fontWeight: 500,
+              backgroundColor: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
+              color: '#cbd5e1', cursor: 'pointer', fontFamily: 'Outfit', fontSize: '0.82rem', fontWeight: 500,
             }}
           >
             <RefreshCw size={14} /> Refresh Data
@@ -713,8 +713,8 @@ export const AdminDashboard = () => {
             style={{
               display: 'flex', alignItems: 'center', gap: '0.6rem',
               padding: '0.65rem 0.85rem', borderRadius: '10px', width: '100%',
-              backgroundColor: 'rgba(0,0,0,0.03)', border: '1px solid rgba(0,0,0,0.06)',
-              color: '#64748b', cursor: 'pointer', fontFamily: 'Outfit', fontSize: '0.82rem', fontWeight: 500,
+              backgroundColor: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
+              color: '#cbd5e1', cursor: 'pointer', fontFamily: 'Outfit', fontSize: '0.82rem', fontWeight: 500,
             }}
           >
             <Home size={14} /> Public Site
@@ -724,7 +724,7 @@ export const AdminDashboard = () => {
             style={{
               display: 'flex', alignItems: 'center', gap: '0.6rem',
               padding: '0.65rem 0.85rem', borderRadius: '10px', width: '100%',
-              backgroundColor: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)',
+              backgroundColor: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.25)',
               color: '#ef4444', cursor: 'pointer', fontFamily: 'Outfit', fontSize: '0.82rem', fontWeight: 600,
             }}
           >
@@ -744,13 +744,14 @@ export const AdminDashboard = () => {
         overflowY: 'auto',
         minHeight: '100vh',
         boxSizing: 'border-box',
+        backgroundColor: '#0c0e14',
       }}>
 
         {/* Top Header Bar */}
         <div style={{
           position: 'sticky', top: 0, zIndex: 10,
-          backgroundColor: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(12px)',
-          borderBottom: '1px solid rgba(0,0,0,0.08)',
+          backgroundColor: 'rgba(18,21,30,0.94)', backdropFilter: 'blur(16px)',
+          borderBottom: '1px solid rgba(255,255,255,0.08)',
           padding: isMobile ? '0.75rem 0.85rem' : '1rem 2rem',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           gap: '0.5rem',
@@ -762,8 +763,8 @@ export const AdminDashboard = () => {
               <button
                 onClick={() => setIsMobileOpen(true)}
                 style={{
-                  background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.08)',
-                  color: '#b5952f', padding: '0.45rem', borderRadius: '10px', cursor: 'pointer',
+                  background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
+                  color: '#f5b942', padding: '0.45rem', borderRadius: '10px', cursor: 'pointer',
                   display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
                 }}
               >
@@ -771,11 +772,11 @@ export const AdminDashboard = () => {
               </button>
             )}
             <div style={{ minWidth: 0, overflow: 'hidden' }}>
-              <h1 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: isMobile ? '1rem' : '1.3rem', color: '#0f172a', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                {activeTab === 'orders' ? 'Store Orders' : activeTab === 'messages' ? 'Order Inquiries' : activeTab === 'bookings' ? 'Salon Bookings' : activeTab === 'users' ? 'User Accounts' : 'Store Products'}
+              <h1 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: isMobile ? '1rem' : '1.3rem', color: '#ffffff', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {activeTab === 'orders' ? 'Store Orders' : activeTab === 'messages' ? 'Order Inquiries' : activeTab === 'bookings' ? 'Salon Bookings' : activeTab === 'users' ? 'User Accounts' : activeTab === 'products' ? 'Store Products' : 'Expert Payouts'}
               </h1>
-              <p style={{ color: '#64748b', fontSize: '0.75rem', margin: '0.1rem 0 0 0', display: isMobile ? 'none' : 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                {activeTab === 'orders' ? 'Manage customer orders in real-time' : activeTab === 'messages' ? 'Reply to customer inquiries and send instant real-time notifications' : activeTab === 'bookings' ? 'Manage appointment bookings' : activeTab === 'users' ? 'Manage registered client and expert accounts' : 'Upload and manage products displayed on the public store page'}
+              <p style={{ color: '#94a3b8', fontSize: '0.75rem', margin: '0.1rem 0 0 0', display: isMobile ? 'none' : 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {activeTab === 'orders' ? 'Manage customer orders in real-time' : activeTab === 'messages' ? 'Reply to customer inquiries and send instant real-time notifications' : activeTab === 'bookings' ? 'Manage appointment bookings' : activeTab === 'users' ? 'Manage registered client and expert accounts' : activeTab === 'products' ? 'Upload and manage products displayed on the public store page' : 'Review and settle expert earnings withdrawals'}
               </p>
             </div>
           </div>
@@ -785,11 +786,11 @@ export const AdminDashboard = () => {
               <button
                 onClick={handleOpenAddProduct}
                 style={{
-                  backgroundColor: '#d4af37', border: 'none', color: '#ffffff',
+                  backgroundColor: '#f5b942', border: 'none', color: '#0c0e14',
                   padding: isMobile ? '0.45rem 0.65rem' : '0.45rem 0.85rem', borderRadius: '10px', fontWeight: 800,
                   fontSize: isMobile ? '0.75rem' : '0.8rem', fontFamily: 'Outfit', cursor: 'pointer',
                   display: 'flex', alignItems: 'center', gap: '0.3rem',
-                  boxShadow: '0 4px 12px rgba(212,175,55,0.3)', flexShrink: 0,
+                  boxShadow: '0 4px 14px rgba(245,185,66,0.35)', flexShrink: 0,
                 }}
               >
                 <Plus size={15} /> {isMobile ? 'Add' : 'Add Product'}
@@ -799,8 +800,8 @@ export const AdminDashboard = () => {
               onClick={() => setShowNotificationSheet(true)}
               title="Notifications"
               style={{
-                background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.08)',
-                color: unreadNotifCount > 0 ? '#b5952f' : '#0f172a', padding: '0.45rem', borderRadius: '10px', cursor: 'pointer',
+                background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
+                color: unreadNotifCount > 0 ? '#f5b942' : '#ffffff', padding: '0.45rem', borderRadius: '10px', cursor: 'pointer',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', flexShrink: 0,
               }}
             >
@@ -821,16 +822,16 @@ export const AdminDashboard = () => {
               onClick={fetchAdminData}
               title="Refresh"
               style={{
-                background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.08)',
-                color: '#0f172a', padding: '0.45rem', borderRadius: '10px', cursor: 'pointer',
+                background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
+                color: '#ffffff', padding: '0.45rem', borderRadius: '10px', cursor: 'pointer',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
               }}
             >
               <RefreshCw size={15} />
             </button>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', backgroundColor: 'rgba(34,197,94,0.1)', padding: '0.3rem 0.5rem', borderRadius: '50px', border: '1px solid rgba(34,197,94,0.2)', flexShrink: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', backgroundColor: 'rgba(34,197,94,0.15)', padding: '0.3rem 0.5rem', borderRadius: '50px', border: '1px solid rgba(34,197,94,0.3)', flexShrink: 0 }}>
               <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#22c55e', boxShadow: '0 0 6px #22c55e' }} />
-              <span style={{ fontSize: '0.68rem', color: '#16a34a', fontWeight: 700 }}>Live</span>
+              <span style={{ fontSize: '0.68rem', color: '#22c55e', fontWeight: 700 }}>Live</span>
             </div>
           </div>
         </div>
@@ -849,20 +850,20 @@ export const AdminDashboard = () => {
           }}>
             {kpiCards.map((card, i) => (
               <div key={i} style={{
-                backgroundColor: '#ffffff', borderRadius: isMobile ? '14px' : '16px',
+                backgroundColor: '#151822', borderRadius: isMobile ? '14px' : '16px',
                 padding: isMobile ? '0.85rem 0.75rem' : '1.25rem',
-                border: '1px solid rgba(0,0,0,0.08)',
-                boxShadow: '0 4px 16px rgba(0,0,0,0.03)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                boxShadow: '0 4px 20px rgba(0,0,0,0.25)',
                 overflow: 'hidden',
                 boxSizing: 'border-box',
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
-                  <span style={{ fontSize: isMobile ? '0.66rem' : '0.75rem', color: '#64748b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.4px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{card.label}</span>
+                  <span style={{ fontSize: isMobile ? '0.66rem' : '0.75rem', color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.4px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{card.label}</span>
                   <div style={{ width: isMobile ? '28px' : '32px', height: isMobile ? '28px' : '32px', borderRadius: '8px', backgroundColor: card.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                     <card.icon size={isMobile ? 14 : 16} color={card.color} />
                   </div>
                 </div>
-                <div style={{ fontSize: isMobile ? '1.2rem' : '1.6rem', fontWeight: 800, color: card.color === '#d4af37' ? '#b5952f' : card.color, fontFamily: 'Outfit', lineHeight: 1.1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{card.value}</div>
+                <div style={{ fontSize: isMobile ? '1.2rem' : '1.6rem', fontWeight: 800, color: card.color === '#d4af37' ? '#f5b942' : card.color, fontFamily: 'Outfit', lineHeight: 1.1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{card.value}</div>
                 {card.sub && <div style={{ fontSize: '0.68rem', color: '#94a3b8', marginTop: '0.25rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{card.sub}</div>}
               </div>
             ))}
@@ -883,11 +884,11 @@ export const AdminDashboard = () => {
                   style={{
                     display: 'flex', alignItems: 'center', gap: '0.35rem',
                     padding: '0.5rem 0.85rem', borderRadius: '50px', flexShrink: 0,
-                    border: activeTab === item.id ? '1.5px solid #d4af37' : '1px solid rgba(0,0,0,0.1)',
-                    backgroundColor: activeTab === item.id ? '#171717' : '#ffffff',
-                    color: activeTab === item.id ? '#d4af37' : '#64748b',
+                    border: activeTab === item.id ? '1.5px solid #f5b942' : '1px solid rgba(255,255,255,0.1)',
+                    backgroundColor: activeTab === item.id ? '#f5b942' : '#151822',
+                    color: activeTab === item.id ? '#0c0e14' : '#94a3b8',
                     fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.78rem',
-                    cursor: 'pointer', boxShadow: activeTab === item.id ? '0 4px 12px rgba(0,0,0,0.12)' : 'none',
+                    cursor: 'pointer', boxShadow: activeTab === item.id ? '0 4px 14px rgba(245,185,66,0.3)' : 'none',
                     minHeight: '38px',
                   }}
                 >
@@ -895,8 +896,8 @@ export const AdminDashboard = () => {
                   <span>{item.label}</span>
                   <span style={{
                     fontSize: '0.68rem', fontWeight: 900, padding: '0.05rem 0.4rem',
-                    borderRadius: '50px', backgroundColor: activeTab === item.id ? '#d4af37' : 'rgba(0,0,0,0.06)',
-                    color: activeTab === item.id ? '#171717' : '#64748b',
+                    borderRadius: '50px', backgroundColor: activeTab === item.id ? '#0c0e14' : 'rgba(255,255,255,0.1)',
+                    color: activeTab === item.id ? '#f5b942' : '#94a3b8',
                   }}>
                     {item.count}
                   </span>
@@ -926,8 +927,8 @@ export const AdminDashboard = () => {
                 onChange={e => setSearchQuery(e.target.value)}
                 style={{
                   width: '100%', padding: '0.65rem 0.85rem 0.65rem 2.5rem', borderRadius: '10px',
-                  backgroundColor: '#ffffff', border: '1px solid rgba(0,0,0,0.12)',
-                  color: '#0f172a', fontSize: isMobile ? '16px' : '0.83rem', outline: 'none', fontFamily: 'Outfit',
+                  backgroundColor: '#151822', border: '1px solid rgba(255,255,255,0.12)',
+                  color: '#ffffff', fontSize: isMobile ? '16px' : '0.83rem', outline: 'none', fontFamily: 'Outfit',
                   boxSizing: 'border-box', minHeight: '44px',
                 }}
               />
@@ -950,9 +951,9 @@ export const AdminDashboard = () => {
                       borderRadius: '50px',
                       fontSize: '0.72rem',
                       fontWeight: datePeriodFilter === period.id ? 800 : 600,
-                      backgroundColor: datePeriodFilter === period.id ? '#d4af37' : '#ffffff',
-                      color: datePeriodFilter === period.id ? '#ffffff' : '#64748b',
-                      border: datePeriodFilter === period.id ? '1px solid #d4af37' : '1px solid rgba(0,0,0,0.1)',
+                      backgroundColor: datePeriodFilter === period.id ? '#f5b942' : '#151822',
+                      color: datePeriodFilter === period.id ? '#0c0e14' : '#94a3b8',
+                      border: datePeriodFilter === period.id ? '1px solid #f5b942' : '1px solid rgba(255,255,255,0.1)',
                       cursor: 'pointer',
                       fontFamily: 'Outfit',
                       flexShrink: 0,
@@ -980,14 +981,13 @@ export const AdminDashboard = () => {
                     gap: '0.35rem',
                     padding: '0.38rem 0.75rem',
                     borderRadius: '8px',
-                    backgroundColor: '#ffffff',
-                    border: '1px solid rgba(212,175,55,0.3)',
-                    color: '#b5952f',
+                    backgroundColor: 'rgba(245,185,66,0.12)',
+                    border: '1px solid rgba(245,185,66,0.3)',
+                    color: '#f5b942',
                     fontSize: '0.75rem',
                     fontWeight: 800,
                     fontFamily: 'Outfit',
                     cursor: 'pointer',
-                    boxShadow: '0 2px 6px rgba(0,0,0,0.02)',
                     flexShrink: 0,
                   }}
                 >
@@ -1048,9 +1048,9 @@ export const AdminDashboard = () => {
                       style={{
                         padding: '0.45rem 0.85rem', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 600,
                         textTransform: 'capitalize', cursor: 'pointer', flexShrink: 0,
-                        backgroundColor: active ? '#171717' : '#ffffff',
-                        color: active ? '#ffffff' : '#64748b',
-                        border: active ? '1px solid #171717' : '1px solid rgba(0,0,0,0.1)',
+                        backgroundColor: active ? '#f5b942' : '#151822',
+                        color: active ? '#0c0e14' : '#94a3b8',
+                        border: active ? '1px solid #f5b942' : '1px solid rgba(255,255,255,0.08)',
                         fontFamily: 'Outfit', transition: 'all 0.15s ease',
                         display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
                       }}
@@ -1058,8 +1058,8 @@ export const AdminDashboard = () => {
                       <span>{labelDisplay}</span>
                       <span style={{
                         fontSize: '0.66rem', fontWeight: 800, padding: '0.05rem 0.4rem', borderRadius: '50px',
-                        backgroundColor: active ? '#d4af37' : 'rgba(0,0,0,0.06)',
-                        color: active ? '#ffffff' : '#64748b',
+                        backgroundColor: active ? '#0c0e14' : 'rgba(255,255,255,0.08)',
+                        color: active ? '#f5b942' : '#94a3b8',
                       }}>
                         {countVal}
                       </span>
@@ -1074,15 +1074,15 @@ export const AdminDashboard = () => {
           {loading ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
               {[1, 2, 3].map(i => (
-                <div key={i} style={{ backgroundColor: '#ffffff', borderRadius: '14px', height: '110px', border: '1px solid rgba(0,0,0,0.06)' }} />
+                <div key={i} style={{ backgroundColor: '#151822', borderRadius: '14px', height: '110px', border: '1px solid rgba(255,255,255,0.08)' }} />
               ))}
             </div>
           ) : activeTab === 'orders' ? (
             filteredOrders.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '3rem 1.5rem', backgroundColor: '#ffffff', borderRadius: '18px', border: '1px dashed rgba(0,0,0,0.12)' }}>
+              <div style={{ textAlign: 'center', padding: '3rem 1.5rem', backgroundColor: '#151822', borderRadius: '18px', border: '1px dashed rgba(255,255,255,0.12)' }}>
                 <Package size={40} color="#94a3b8" style={{ marginBottom: '0.75rem' }} />
-                <h3 style={{ color: '#0f172a', fontFamily: 'Outfit', margin: '0 0 0.25rem', fontSize: '1.05rem' }}>No Orders Found</h3>
-                <p style={{ color: '#64748b', fontSize: '0.8rem' }}>{searchQuery || orderStatusFilter !== 'all' ? 'Try clearing your filters.' : 'Store orders will appear here once placed.'}</p>
+                <h3 style={{ color: '#ffffff', fontFamily: 'Outfit', margin: '0 0 0.25rem', fontSize: '1.05rem' }}>No Orders Found</h3>
+                <p style={{ color: '#94a3b8', fontSize: '0.8rem' }}>{searchQuery || orderStatusFilter !== 'all' ? 'Try clearing your filters.' : 'Store orders will appear here once placed.'}</p>
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
@@ -1091,28 +1091,28 @@ export const AdminDashboard = () => {
                     key={order._id}
                     onClick={() => setSelectedOrder(order)}
                     style={{
-                      backgroundColor: '#ffffff', borderRadius: '16px', padding: isMobile ? '1rem' : '1.25rem',
-                      border: '1px solid rgba(0,0,0,0.08)', cursor: 'pointer',
-                      boxShadow: '0 2px 10px rgba(0,0,0,0.02)',
+                      backgroundColor: '#151822', borderRadius: '16px', padding: isMobile ? '1rem' : '1.25rem',
+                      border: '1px solid rgba(255,255,255,0.08)', cursor: 'pointer',
+                      boxShadow: '0 4px 20px rgba(0,0,0,0.25)',
                       transition: 'border-color 0.2s ease, transform 0.15s ease',
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
                       <div>
-                        <div style={{ fontSize: '0.7rem', color: '#64748b', fontFamily: 'monospace', marginBottom: '0.15rem' }}>
+                        <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontFamily: 'monospace', marginBottom: '0.15rem' }}>
                           ORDER #{(order._id || '').slice(-6).toUpperCase()}
                         </div>
-                        <div style={{ fontSize: '0.98rem', fontWeight: 700, color: '#0f172a', fontFamily: 'Outfit' }}>
+                        <div style={{ fontSize: '0.98rem', fontWeight: 700, color: '#ffffff', fontFamily: 'Outfit' }}>
                           {order.name || order.customerInfo?.name || 'Store Customer'}
                         </div>
-                        <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.1rem', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '0.4rem' }}>
+                        <div style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '0.1rem', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '0.4rem' }}>
                           <span>{order.email || order.customerInfo?.email || ''} {(order.phone || order.customerInfo?.phone) ? `· ${order.phone || order.customerInfo?.phone}` : ''}</span>
                           {(order.phone || order.customerInfo?.phone) && (
                             <span style={{ display: 'inline-flex', gap: '0.3rem' }}>
                               <button
                                 type="button"
                                 onClick={(e) => { e.stopPropagation(); openWhatsApp(order.phone || order.customerInfo?.phone, order.name || order.customerInfo?.name); }}
-                                style={{ background: 'rgba(34,197,94,0.12)', border: '1px solid rgba(34,197,94,0.3)', color: '#16a34a', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem' }}
+                                style={{ background: 'rgba(34,197,94,0.15)', border: '1px solid rgba(34,197,94,0.35)', color: '#22c55e', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem' }}
                                 title="Chat on WhatsApp"
                               >
                                 <MessageSquare size={10} /> WhatsApp
@@ -1120,7 +1120,7 @@ export const AdminDashboard = () => {
                               <a
                                 href={`tel:${order.phone || order.customerInfo?.phone}`}
                                 onClick={e => e.stopPropagation()}
-                                style={{ background: 'rgba(59,130,246,0.12)', border: '1px solid rgba(59,130,246,0.3)', color: '#2563eb', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem', textDecoration: 'none' }}
+                                style={{ background: 'rgba(59,130,246,0.15)', border: '1px solid rgba(59,130,246,0.35)', color: '#60a5fa', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem', textDecoration: 'none' }}
                                 title="Call customer"
                               >
                                 <Phone size={10} /> Call
@@ -1130,14 +1130,14 @@ export const AdminDashboard = () => {
                         </div>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                        <span style={{ fontSize: '1.05rem', fontWeight: 800, color: '#b5952f', fontFamily: 'Outfit' }}>
+                        <span style={{ fontSize: '1.05rem', fontWeight: 800, color: '#f5b942', fontFamily: 'Outfit' }}>
                           ₦{Number(order.totalPrice || order.price || 0).toLocaleString()}
                         </span>
                         <StatusBadge status={order.status || 'pending'} />
                       </div>
                     </div>
 
-                    <div style={{ fontSize: '0.76rem', color: '#64748b', marginBottom: '0.85rem' }}>
+                    <div style={{ fontSize: '0.76rem', color: '#94a3b8', marginBottom: '0.85rem' }}>
                       {Array.isArray(order.items) && order.items.length > 0 ? (
                         <>
                           {order.items.slice(0, 3).map((item, idx) => (
@@ -1145,19 +1145,19 @@ export const AdminDashboard = () => {
                               • {item.name || item.title || 'Product'} ×{item.quantity || 1}
                             </span>
                           ))}
-                          {order.items.length > 3 && <span style={{ color: '#b5952f' }}>+{order.items.length - 3} more</span>}
+                          {order.items.length > 3 && <span style={{ color: '#f5b942' }}>+{order.items.length - 3} more</span>}
                         </>
                       ) : (
                         <span>• {order.item || 'Store Item'}</span>
                       )}
                     </div>
 
-                    <div style={{ display: 'flex', gap: '0.45rem', flexWrap: 'wrap', paddingTop: '0.65rem', borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+                    <div style={{ display: 'flex', gap: '0.45rem', flexWrap: 'wrap', paddingTop: '0.65rem', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
                       {order.status !== 'shipped' && order.status !== 'completed' && (
                         <button
                           disabled={updatingId === order._id}
                           onClick={(e) => handleUpdateOrderStatus(order._id, 'shipped', e)}
-                          style={{ flex: isMobile ? '1 1 calc(50% - 0.45rem)' : '1 1 120px', minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '10px', backgroundColor: '#d4af37', color: '#fff', fontWeight: 800, fontSize: '0.78rem', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
+                          style={{ flex: isMobile ? '1 1 calc(50% - 0.45rem)' : '1 1 120px', minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '10px', backgroundColor: '#f5b942', color: '#0c0e14', fontWeight: 800, fontSize: '0.78rem', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
                         >
                           <Truck size={13} /> Mark Shipped
                         </button>
@@ -1166,21 +1166,21 @@ export const AdminDashboard = () => {
                         <button
                           disabled={updatingId === order._id}
                           onClick={(e) => handleUpdateOrderStatus(order._id, 'completed', e)}
-                          style={{ flex: isMobile ? '1 1 calc(50% - 0.45rem)' : '1 1 120px', minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '10px', backgroundColor: '#16a34a', color: '#fff', fontWeight: 800, fontSize: '0.78rem', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
+                          style={{ flex: isMobile ? '1 1 calc(50% - 0.45rem)' : '1 1 120px', minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '10px', backgroundColor: '#22c55e', color: '#0c0e14', fontWeight: 800, fontSize: '0.78rem', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
                         >
                           <CheckCircle size={13} /> Mark Completed
                         </button>
                       )}
                       <button
                         onClick={(e) => { e.stopPropagation(); setSelectedOrderForTracking(order); }}
-                        style={{ flex: isMobile ? '1 1 calc(50% - 0.45rem)' : '1 1 140px', minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '10px', backgroundColor: 'rgba(212,175,55,0.15)', color: '#b5952f', fontWeight: 800, fontSize: '0.78rem', border: '1px solid rgba(212,175,55,0.4)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
+                        style={{ flex: isMobile ? '1 1 calc(50% - 0.45rem)' : '1 1 140px', minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '10px', backgroundColor: 'rgba(245,185,66,0.12)', color: '#f5b942', fontWeight: 800, fontSize: '0.78rem', border: '1px solid rgba(245,185,66,0.3)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
                       >
                         <Truck size={13} /> Track & Manage
                       </button>
 
                       <button
                         onClick={(e) => { e.stopPropagation(); setSelectedOrder(order); }}
-                        style={{ flex: isMobile ? '1 1 100%' : '0 0 auto', minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '10px', backgroundColor: 'rgba(0,0,0,0.04)', color: '#334155', fontWeight: 700, fontSize: '0.78rem', border: '1px solid rgba(0,0,0,0.08)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
+                        style={{ flex: isMobile ? '1 1 100%' : '0 0 auto', minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '10px', backgroundColor: 'rgba(255,255,255,0.06)', color: '#cbd5e1', fontWeight: 700, fontSize: '0.78rem', border: '1px solid rgba(255,255,255,0.1)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
                       >
                         <Eye size={13} /> Details
                       </button>
@@ -1192,10 +1192,10 @@ export const AdminDashboard = () => {
           ) : activeTab === 'messages' ? (
             /* --- TAB 2: CUSTOMER ORDER MESSAGES & INQUIRIES --- */
             ordersWithMessages.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '3.5rem 1.5rem', backgroundColor: '#ffffff', borderRadius: '18px', border: '1px dashed rgba(0,0,0,0.12)' }}>
+              <div style={{ textAlign: 'center', padding: '3.5rem 1.5rem', backgroundColor: '#151822', borderRadius: '18px', border: '1px dashed rgba(255,255,255,0.12)' }}>
                 <MessageSquare size={42} color="#94a3b8" style={{ marginBottom: '0.75rem' }} />
-                <h3 style={{ color: '#0f172a', fontFamily: 'Outfit', margin: '0 0 0.25rem', fontSize: '1.05rem', fontWeight: 800 }}>No Order Messages Yet</h3>
-                <p style={{ color: '#64748b', fontSize: '0.8rem' }}>When customers message about their store orders, their conversations and inquiries will appear here.</p>
+                <h3 style={{ color: '#ffffff', fontFamily: 'Outfit', margin: '0 0 0.25rem', fontSize: '1.05rem', fontWeight: 800 }}>No Order Messages Yet</h3>
+                <p style={{ color: '#94a3b8', fontSize: '0.8rem' }}>When customers message about their store orders, their conversations and inquiries will appear here.</p>
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -1207,37 +1207,37 @@ export const AdminDashboard = () => {
                     <div
                       key={order._id}
                       style={{
-                        backgroundColor: '#ffffff',
+                        backgroundColor: '#151822',
                         borderRadius: '18px',
                         padding: isMobile ? '1rem' : '1.35rem',
-                        border: '1px solid rgba(0,0,0,0.08)',
-                        boxShadow: '0 4px 16px rgba(0,0,0,0.02)'
+                        border: '1px solid rgba(255,255,255,0.08)',
+                        boxShadow: '0 4px 20px rgba(0,0,0,0.25)'
                       }}
                     >
                       {/* Customer & Order Header */}
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.85rem', paddingBottom: '0.75rem', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.85rem', paddingBottom: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
                         <div>
-                          <div style={{ fontSize: '0.7rem', color: '#64748b', fontFamily: 'monospace', marginBottom: '0.15rem' }}>
+                          <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontFamily: 'monospace', marginBottom: '0.15rem' }}>
                             ORDER #{(order._id || '').slice(-6).toUpperCase()}
                           </div>
-                          <h4 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '1rem', color: '#0f172a', margin: 0 }}>
+                          <h4 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '1rem', color: '#ffffff', margin: 0 }}>
                             {order.name || order.customerInfo?.name || 'Store Customer'}
                           </h4>
-                          <div style={{ fontSize: '0.76rem', color: '#64748b', marginTop: '0.1rem', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '0.4rem' }}>
+                          <div style={{ fontSize: '0.76rem', color: '#94a3b8', marginTop: '0.1rem', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '0.4rem' }}>
                             <span>{order.email} {order.phone ? `· ${order.phone}` : ''}</span>
                             {order.phone && (
                               <span style={{ display: 'inline-flex', gap: '0.3rem' }}>
                                 <button
                                   type="button"
                                   onClick={() => openWhatsApp(order.phone, order.name || order.customerInfo?.name)}
-                                  style={{ background: 'rgba(34,197,94,0.12)', border: '1px solid rgba(34,197,94,0.3)', color: '#16a34a', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem' }}
+                                  style={{ background: 'rgba(34,197,94,0.15)', border: '1px solid rgba(34,197,94,0.35)', color: '#22c55e', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem' }}
                                   title="Chat on WhatsApp"
                                 >
                                   <MessageSquare size={10} /> WhatsApp
                                 </button>
                                 <a
                                   href={`tel:${order.phone}`}
-                                  style={{ background: 'rgba(59,130,246,0.12)', border: '1px solid rgba(59,130,246,0.3)', color: '#2563eb', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem', textDecoration: 'none' }}
+                                  style={{ background: 'rgba(59,130,246,0.15)', border: '1px solid rgba(59,130,246,0.35)', color: '#60a5fa', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem', textDecoration: 'none' }}
                                   title="Call customer"
                                 >
                                   <Phone size={10} /> Call
@@ -1248,7 +1248,7 @@ export const AdminDashboard = () => {
                         </div>
 
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                          <span style={{ fontSize: '0.95rem', fontWeight: 900, color: '#b5952f', fontFamily: 'Outfit' }}>
+                          <span style={{ fontSize: '0.95rem', fontWeight: 900, color: '#f5b942', fontFamily: 'Outfit' }}>
                             ₦{Number(order.totalPrice || order.price || 0).toLocaleString()}
                           </span>
                           <StatusBadge status={order.status || 'pending'} />
@@ -1256,8 +1256,8 @@ export const AdminDashboard = () => {
                       </div>
 
                       {/* Items Purchased Summary */}
-                      <div style={{ fontSize: '0.76rem', color: '#475569', backgroundColor: '#faf9f6', padding: '0.5rem 0.75rem', borderRadius: '10px', marginBottom: '1rem', border: '1px solid rgba(212,175,55,0.2)' }}>
-                        <strong style={{ color: '#0f172a' }}>Purchased Items: </strong>
+                      <div style={{ fontSize: '0.76rem', color: '#cbd5e1', backgroundColor: '#1c202d', padding: '0.5rem 0.75rem', borderRadius: '10px', marginBottom: '1rem', border: '1px solid rgba(255,255,255,0.08)' }}>
+                        <strong style={{ color: '#f5b942' }}>Purchased Items: </strong>
                         {Array.isArray(order.items) && order.items.length > 0 ? (
                           order.items.map(i => `${i.name || i.title} (x${i.quantity || 1})`).join(', ')
                         ) : (
@@ -1277,16 +1277,16 @@ export const AdminDashboard = () => {
                                 maxWidth: '85%',
                                 padding: '0.6rem 0.85rem',
                                 borderRadius: isAdminSender ? '14px 14px 2px 14px' : '14px 14px 14px 2px',
-                                backgroundColor: isAdminSender ? '#171717' : '#f1f5f9',
-                                color: isAdminSender ? '#ffffff' : '#0f172a',
-                                border: isAdminSender ? '1px solid #d4af37' : '1px solid rgba(0,0,0,0.06)'
+                                backgroundColor: isAdminSender ? '#232938' : '#1c202d',
+                                color: '#ffffff',
+                                border: isAdminSender ? '1px solid rgba(245,185,66,0.35)' : '1px solid rgba(255,255,255,0.08)'
                               }}
                             >
-                              <div style={{ fontSize: '0.65rem', fontWeight: 800, color: isAdminSender ? '#d4af37' : '#64748b', marginBottom: '0.15rem' }}>
+                              <div style={{ fontSize: '0.65rem', fontWeight: 800, color: isAdminSender ? '#f5b942' : '#94a3b8', marginBottom: '0.15rem' }}>
                                 {isAdminSender ? '👑 Admin Support' : `👤 ${m.sender || 'Customer'}`}
                               </div>
                               <div style={{ fontSize: '0.82rem', lineHeight: 1.35 }}>{m.text}</div>
-                              <div style={{ fontSize: '0.62rem', color: isAdminSender ? '#a1a1aa' : '#94a3b8', marginTop: '0.2rem', textAlign: 'right' }}>
+                              <div style={{ fontSize: '0.62rem', color: isAdminSender ? '#cbd5e1' : '#94a3b8', marginTop: '0.2rem', textAlign: 'right' }}>
                                 {m.createdAt ? new Date(m.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
                               </div>
                             </div>
@@ -1306,7 +1306,8 @@ export const AdminDashboard = () => {
                           onChange={(e) => setReplyInputMap({ ...replyInputMap, [order._id]: e.target.value })}
                           style={{
                             flex: isMobile ? '1 1 100%' : 1, padding: '0.65rem 0.85rem', borderRadius: '10px',
-                            border: '1px solid rgba(0,0,0,0.12)', fontSize: isMobile ? '16px' : '0.82rem',
+                            backgroundColor: '#1c202d', border: '1px solid rgba(255,255,255,0.12)', color: '#ffffff',
+                            fontSize: isMobile ? '16px' : '0.82rem',
                             outline: 'none', fontFamily: 'Outfit', minHeight: '44px', boxSizing: 'border-box'
                           }}
                         />
@@ -1314,7 +1315,7 @@ export const AdminDashboard = () => {
                           type="submit"
                           disabled={sendingReplyId === order._id || !replyText.trim()}
                           style={{
-                            backgroundColor: '#d4af37', color: '#ffffff', border: 'none',
+                            backgroundColor: '#f5b942', color: '#0c0e14', border: 'none',
                             padding: '0.65rem 1rem', borderRadius: '10px', fontWeight: 800,
                             fontSize: '0.82rem', fontFamily: 'Outfit', cursor: replyText.trim() ? 'pointer' : 'not-allowed',
                             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
@@ -1328,7 +1329,7 @@ export const AdminDashboard = () => {
                           type="button"
                           onClick={() => setSelectedOrderForTracking(order)}
                           style={{
-                            backgroundColor: 'rgba(0,0,0,0.04)', color: '#334155', border: '1px solid rgba(0,0,0,0.08)',
+                            backgroundColor: 'rgba(255,255,255,0.06)', color: '#cbd5e1', border: '1px solid rgba(255,255,255,0.1)',
                             padding: '0.65rem 0.85rem', borderRadius: '10px', fontWeight: 600,
                             fontSize: '0.82rem', fontFamily: 'Outfit', cursor: 'pointer',
                             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
@@ -1345,10 +1346,10 @@ export const AdminDashboard = () => {
             )
           ) : activeTab === 'bookings' ? (
             filteredBookings.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '3rem 1.5rem', backgroundColor: '#ffffff', borderRadius: '18px', border: '1px dashed rgba(0,0,0,0.12)' }}>
-                <Calendar size={40} color="#94a3b8" style={{ marginBottom: '0.75rem' }} />
-                <h3 style={{ color: '#0f172a', fontFamily: 'Outfit', margin: '0 0 0.25rem', fontSize: '1.05rem' }}>No Bookings Found</h3>
-                <p style={{ color: '#64748b', fontSize: '0.8rem' }}>{searchQuery || bookingStatusFilter !== 'all' ? 'Try clearing your filters.' : 'Customer appointments will appear here.'}</p>
+              <div style={{ textAlign: 'center', padding: '3rem 1.5rem', backgroundColor: '#151822', borderRadius: '18px', border: '1px dashed rgba(245,185,66,0.2)' }}>
+                <Calendar size={40} color="#f5b942" style={{ marginBottom: '0.75rem' }} />
+                <h3 style={{ color: '#ffffff', fontFamily: 'Outfit', margin: '0 0 0.25rem', fontSize: '1.05rem', fontWeight: 800 }}>No Bookings Found</h3>
+                <p style={{ color: '#94a3b8', fontSize: '0.8rem' }}>{searchQuery || bookingStatusFilter !== 'all' ? 'Try clearing your filters.' : 'Customer appointments will appear here.'}</p>
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
@@ -1357,18 +1358,18 @@ export const AdminDashboard = () => {
                     key={b._id}
                     onClick={() => setSelectedBooking(b)}
                     style={{
-                      backgroundColor: '#ffffff', borderRadius: '16px', padding: isMobile ? '1rem' : '1.25rem',
-                      border: '1px solid rgba(0,0,0,0.08)', cursor: 'pointer',
-                      boxShadow: '0 2px 10px rgba(0,0,0,0.02)',
+                      backgroundColor: '#151822', borderRadius: '16px', padding: isMobile ? '1rem' : '1.25rem',
+                      border: '1px solid rgba(255,255,255,0.08)', cursor: 'pointer',
+                      boxShadow: '0 4px 20px rgba(0,0,0,0.25)',
                       transition: 'border-color 0.2s ease, transform 0.15s ease',
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '0.65rem', flexWrap: 'wrap', gap: '0.5rem' }}>
                       <div>
-                        <div style={{ fontSize: '0.98rem', fontWeight: 700, color: '#0f172a', fontFamily: 'Outfit' }}>
+                        <div style={{ fontSize: '0.98rem', fontWeight: 700, color: '#ffffff', fontFamily: 'Outfit' }}>
                           {b.serviceName || b.service || 'Grooming Service'}
                         </div>
-                        <div style={{ fontSize: '0.76rem', color: '#b5952f', marginTop: '0.15rem', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '0.4rem' }}>
+                        <div style={{ fontSize: '0.76rem', color: '#f5b942', marginTop: '0.15rem', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '0.4rem' }}>
                           <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
                             <Users size={12} /> {b.clientName || b.user?.firstname || 'Guest'} {b.phone || b.clientPhone ? `· ${b.phone || b.clientPhone}` : ''}
                           </span>
@@ -1377,7 +1378,7 @@ export const AdminDashboard = () => {
                               <button
                                 type="button"
                                 onClick={(e) => { e.stopPropagation(); openWhatsApp(b.phone || b.clientPhone, b.clientName || b.user?.firstname); }}
-                                style={{ background: 'rgba(34,197,94,0.12)', border: '1px solid rgba(34,197,94,0.3)', color: '#16a34a', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem' }}
+                                style={{ background: 'rgba(34,197,94,0.15)', border: '1px solid rgba(34,197,94,0.35)', color: '#4ade80', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem' }}
                                 title="Chat on WhatsApp"
                               >
                                 <MessageSquare size={10} /> WhatsApp
@@ -1385,7 +1386,7 @@ export const AdminDashboard = () => {
                               <a
                                 href={`tel:${b.phone || b.clientPhone}`}
                                 onClick={e => e.stopPropagation()}
-                                style={{ background: 'rgba(59,130,246,0.12)', border: '1px solid rgba(59,130,246,0.3)', color: '#2563eb', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem', textDecoration: 'none' }}
+                                style={{ background: 'rgba(59,130,246,0.15)', border: '1px solid rgba(59,130,246,0.35)', color: '#60a5fa', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem', textDecoration: 'none' }}
                                 title="Call client"
                               >
                                 <Phone size={10} /> Call
@@ -1397,17 +1398,17 @@ export const AdminDashboard = () => {
                       <StatusBadge status={b.status || 'pending'} />
                     </div>
 
-                    <div style={{ display: 'flex', gap: '1rem', fontSize: '0.76rem', color: '#64748b', marginBottom: '0.85rem', flexWrap: 'wrap' }}>
-                      <span><Clock size={12} style={{ verticalAlign: 'middle', marginRight: '3px' }} />{b.date || 'TBD'} at {b.time || 'TBD'}</span>
-                      <span><Sparkles size={12} style={{ verticalAlign: 'middle', marginRight: '3px' }} />Stylist: {b.stylist || 'Any'}</span>
+                    <div style={{ display: 'flex', gap: '1rem', fontSize: '0.76rem', color: '#94a3b8', marginBottom: '0.85rem', flexWrap: 'wrap' }}>
+                      <span><Clock size={12} style={{ verticalAlign: 'middle', marginRight: '3px', color: '#f5b942' }} />{b.date || 'TBD'} at {b.time || 'TBD'}</span>
+                      <span><Sparkles size={12} style={{ verticalAlign: 'middle', marginRight: '3px', color: '#f5b942' }} />Stylist: {b.stylist || 'Any'}</span>
                     </div>
 
-                    <div style={{ display: 'flex', gap: '0.45rem', flexWrap: 'wrap', paddingTop: '0.65rem', borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+                    <div style={{ display: 'flex', gap: '0.45rem', flexWrap: 'wrap', paddingTop: '0.65rem', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
                       {b.status !== 'confirmed' && b.status !== 'completed' && b.status !== 'cancelled' && (
                         <button
                           disabled={updatingId === b._id}
                           onClick={(e) => handleUpdateBookingStatus(b._id, 'confirmed', e)}
-                          style={{ flex: 1, minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: '#d4af37', color: '#fff', fontWeight: 700, fontSize: '0.78rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+                          style={{ flex: 1, minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: '#d4af37', color: '#0c0e14', fontWeight: 800, fontSize: '0.78rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
                         >
                           Confirm
                         </button>
@@ -1425,14 +1426,14 @@ export const AdminDashboard = () => {
                         <button
                           disabled={updatingId === b._id}
                           onClick={(e) => handleUpdateBookingStatus(b._id, 'cancelled', e)}
-                          style={{ minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: 'rgba(239,68,68,0.1)', color: '#ef4444', fontWeight: 600, fontSize: '0.78rem', border: '1px solid rgba(239,68,68,0.2)', cursor: 'pointer', fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+                          style={{ minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: 'rgba(239,68,68,0.15)', color: '#f87171', fontWeight: 600, fontSize: '0.78rem', border: '1px solid rgba(239,68,68,0.3)', cursor: 'pointer', fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
                         >
                           Cancel
                         </button>
                       )}
                       <button
                         onClick={(e) => { e.stopPropagation(); setSelectedBooking(b); }}
-                        style={{ minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: 'rgba(0,0,0,0.04)', color: '#334155', fontWeight: 600, fontSize: '0.78rem', border: '1px solid rgba(0,0,0,0.08)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
+                        style={{ minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: 'rgba(255,255,255,0.06)', color: '#f1f5f9', fontWeight: 600, fontSize: '0.78rem', border: '1px solid rgba(255,255,255,0.12)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
                       >
                         <Eye size={13} /> View Details
                       </button>
@@ -1444,10 +1445,10 @@ export const AdminDashboard = () => {
           ) : activeTab === 'users' ? (
             /* --- TAB 3: USER ACCOUNTS MANAGEMENT --- */
             filteredUsers.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '3rem 1.5rem', backgroundColor: '#ffffff', borderRadius: '18px', border: '1px dashed rgba(0,0,0,0.12)' }}>
-                <Users size={40} color="#94a3b8" style={{ marginBottom: '0.75rem' }} />
-                <h3 style={{ color: '#0f172a', fontFamily: 'Outfit', margin: '0 0 0.25rem', fontSize: '1.05rem' }}>No Accounts Found</h3>
-                <p style={{ color: '#64748b', fontSize: '0.8rem' }}>{searchQuery || userRoleFilter !== 'all' ? 'Try clearing your search or role filter.' : 'Registered user accounts will appear here.'}</p>
+              <div style={{ textAlign: 'center', padding: '3rem 1.5rem', backgroundColor: '#151822', borderRadius: '18px', border: '1px dashed rgba(245,185,66,0.2)' }}>
+                <Users size={40} color="#f5b942" style={{ marginBottom: '0.75rem' }} />
+                <h3 style={{ color: '#ffffff', fontFamily: 'Outfit', margin: '0 0 0.25rem', fontSize: '1.05rem', fontWeight: 800 }}>No Accounts Found</h3>
+                <p style={{ color: '#94a3b8', fontSize: '0.8rem' }}>{searchQuery || userRoleFilter !== 'all' ? 'Try clearing your search or role filter.' : 'Registered user accounts will appear here.'}</p>
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
@@ -1456,54 +1457,54 @@ export const AdminDashboard = () => {
                   const fullName = `${u.firstname || ''} ${u.lastname || ''}`.trim() || 'User Account';
                   return (
                     <div key={u._id} style={{
-                      backgroundColor: '#ffffff', borderRadius: '16px', padding: isMobile ? '1rem' : '1.25rem',
-                      border: '1px solid rgba(0,0,0,0.08)', boxShadow: '0 2px 10px rgba(0,0,0,0.02)',
+                      backgroundColor: '#151822', borderRadius: '16px', padding: isMobile ? '1rem' : '1.25rem',
+                      border: '1px solid rgba(255,255,255,0.08)', boxShadow: '0 4px 20px rgba(0,0,0,0.25)',
                     }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
                           <div style={{
                             width: '46px', height: '46px', borderRadius: '50%', flexShrink: 0,
-                            background: u.avatarUrl ? `url(${u.avatarUrl}) center/cover no-repeat` : (isStaff ? 'linear-gradient(135deg, #d4af37, #b5952f)' : 'linear-gradient(135deg, #cbd5e1, #94a3b8)'),
-                            border: isStaff ? '2px solid #d4af37' : '1px solid rgba(0,0,0,0.1)',
+                            background: u.avatarUrl ? `url(${u.avatarUrl}) center/cover no-repeat` : (isStaff ? 'linear-gradient(135deg, #d4af37, #b5952f)' : 'linear-gradient(135deg, #334155, #1e293b)'),
+                            border: isStaff ? '2px solid #f5b942' : '1px solid rgba(255,255,255,0.15)',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
                           }}>
                             {!u.avatarUrl && <span style={{ fontSize: '1rem', fontWeight: 800, color: '#fff' }}>{u.firstname?.charAt(0) || 'U'}</span>}
                           </div>
                           <div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
-                              <h4 style={{ color: '#0f172a', fontFamily: 'Outfit', fontWeight: 800, margin: 0, fontSize: '0.98rem' }}>
+                              <h4 style={{ color: '#ffffff', fontFamily: 'Outfit', fontWeight: 800, margin: 0, fontSize: '0.98rem' }}>
                                 {fullName}
                               </h4>
                               <span style={{
                                 fontSize: '0.65rem', fontWeight: 800, padding: '0.15rem 0.5rem', borderRadius: '50px',
                                 textTransform: 'uppercase', letterSpacing: '0.5px',
-                                backgroundColor: isStaff ? 'rgba(212,175,55,0.18)' : 'rgba(59,130,246,0.12)',
-                                color: isStaff ? '#b5952f' : '#2563eb',
-                                border: isStaff ? '1px solid rgba(212,175,55,0.3)' : '1px solid rgba(59,130,246,0.3)',
+                                backgroundColor: isStaff ? 'rgba(245,185,66,0.18)' : 'rgba(59,130,246,0.15)',
+                                color: isStaff ? '#f5b942' : '#60a5fa',
+                                border: isStaff ? '1px solid rgba(245,185,66,0.35)' : '1px solid rgba(59,130,246,0.35)',
                               }}>
                                 {isStaff ? 'Expert Stylist' : 'Customer'}
                               </span>
                               {u.isVerified && (
-                                <span style={{ fontSize: '0.65rem', color: '#16a34a', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+                                <span style={{ fontSize: '0.65rem', color: '#4ade80', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
                                   <UserCheck size={11} /> Verified
                                 </span>
                               )}
                             </div>
-                            <div style={{ fontSize: '0.78rem', color: '#64748b', marginTop: '0.15rem', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '0.4rem' }}>
+                            <div style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: '0.15rem', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '0.4rem' }}>
                               <span>{u.email || 'No email'} {u.phone ? `· ${u.phone}` : ''}</span>
                               {u.phone && (
                                 <span style={{ display: 'inline-flex', gap: '0.3rem' }}>
                                   <button
                                     type="button"
                                     onClick={() => openWhatsApp(u.phone, fullName)}
-                                    style={{ background: 'rgba(34,197,94,0.12)', border: '1px solid rgba(34,197,94,0.3)', color: '#16a34a', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem' }}
+                                    style={{ background: 'rgba(34,197,94,0.15)', border: '1px solid rgba(34,197,94,0.35)', color: '#4ade80', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem' }}
                                     title="Chat on WhatsApp"
                                   >
                                     <MessageSquare size={10} /> WhatsApp
                                   </button>
                                   <a
                                     href={`tel:${u.phone}`}
-                                    style={{ background: 'rgba(59,130,246,0.12)', border: '1px solid rgba(59,130,246,0.3)', color: '#2563eb', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem', textDecoration: 'none' }}
+                                    style={{ background: 'rgba(59,130,246,0.15)', border: '1px solid rgba(59,130,246,0.35)', color: '#60a5fa', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem', textDecoration: 'none' }}
                                     title="Call user"
                                   >
                                     <Phone size={10} /> Call
@@ -1518,8 +1519,8 @@ export const AdminDashboard = () => {
                           onClick={() => setUserToDelete(u)}
                           style={{
                             padding: '0.55rem 0.85rem', borderRadius: '10px', minHeight: '44px',
-                            backgroundColor: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)',
-                            color: '#ef4444', fontWeight: 700, fontSize: '0.78rem',
+                            backgroundColor: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)',
+                            color: '#f87171', fontWeight: 700, fontSize: '0.78rem',
                             cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
                             fontFamily: 'Outfit', transition: 'all 0.15s ease', flexShrink: 0,
                           }}
@@ -1537,17 +1538,17 @@ export const AdminDashboard = () => {
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.5rem' }}>
                 <div>
-                  <h3 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '1.1rem', color: '#0f172a', margin: 0 }}>
+                  <h3 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '1.1rem', color: '#ffffff', margin: 0 }}>
                     Manage Store Products ({filteredProducts.length})
                   </h3>
-                  <p style={{ fontSize: '0.78rem', color: '#64748b', margin: '0.15rem 0 0' }}>
+                  <p style={{ fontSize: '0.78rem', color: '#94a3b8', margin: '0.15rem 0 0' }}>
                     Products added here are live on the public store page.
                   </p>
                 </div>
                 <button
                   onClick={handleOpenAddProduct}
                   style={{
-                    backgroundColor: '#d4af37', border: 'none', color: '#ffffff',
+                    backgroundColor: '#d4af37', border: 'none', color: '#0c0e14',
                     padding: '0.6rem 1.1rem', borderRadius: '10px', fontWeight: 800,
                     fontSize: '0.82rem', fontFamily: 'Outfit', cursor: 'pointer',
                     display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
@@ -1559,13 +1560,13 @@ export const AdminDashboard = () => {
               </div>
 
               {filteredProducts.length === 0 ? (
-                <div style={{ textAlign: 'center', padding: '3.5rem 1.5rem', backgroundColor: '#ffffff', borderRadius: '18px', border: '1px dashed rgba(0,0,0,0.12)' }}>
-                  <Tag size={42} color="#94a3b8" style={{ marginBottom: '0.75rem' }} />
-                  <h3 style={{ color: '#0f172a', fontFamily: 'Outfit', margin: '0 0 0.25rem', fontSize: '1.05rem', fontWeight: 800 }}>No Products Found</h3>
-                  <p style={{ color: '#64748b', fontSize: '0.8rem', marginBottom: '1.25rem' }}>{searchQuery ? 'Try clearing your search term.' : 'Click below to upload products to your public store page.'}</p>
+                <div style={{ textAlign: 'center', padding: '3.5rem 1.5rem', backgroundColor: '#151822', borderRadius: '18px', border: '1px dashed rgba(245,185,66,0.2)' }}>
+                  <Tag size={42} color="#f5b942" style={{ marginBottom: '0.75rem' }} />
+                  <h3 style={{ color: '#ffffff', fontFamily: 'Outfit', margin: '0 0 0.25rem', fontSize: '1.05rem', fontWeight: 800 }}>No Products Found</h3>
+                  <p style={{ color: '#94a3b8', fontSize: '0.8rem', marginBottom: '1.25rem' }}>{searchQuery ? 'Try clearing your search term.' : 'Click below to upload products to your public store page.'}</p>
                   <button
                     onClick={handleOpenAddProduct}
-                    style={{ backgroundColor: '#d4af37', color: '#fff', border: 'none', padding: '0.65rem 1.25rem', borderRadius: '10px', fontWeight: 800, fontSize: '0.85rem', fontFamily: 'Outfit', cursor: 'pointer' }}
+                    style={{ backgroundColor: '#d4af37', color: '#0c0e14', border: 'none', padding: '0.65rem 1.25rem', borderRadius: '10px', fontWeight: 800, fontSize: '0.85rem', fontFamily: 'Outfit', cursor: 'pointer' }}
                   >
                     + Add Product Now
                   </button>
@@ -1576,61 +1577,62 @@ export const AdminDashboard = () => {
                     <div
                       key={p._id || p.id}
                       style={{
-                        backgroundColor: '#ffffff', borderRadius: '16px', padding: '1rem',
-                        border: '1px solid rgba(0,0,0,0.08)', boxShadow: '0 2px 10px rgba(0,0,0,0.02)',
+                        backgroundColor: '#151822', borderRadius: '16px', padding: '1rem',
+                        border: '1px solid rgba(255,255,255,0.08)', boxShadow: '0 4px 20px rgba(0,0,0,0.25)',
                         display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
                       }}
                     >
                       <div>
                         {/* Product Image preview */}
-                        <div style={{ position: 'relative', width: '100%', height: '140px', borderRadius: '12px', overflow: 'hidden', marginBottom: '0.75rem', backgroundColor: '#f1f5f9' }}>
+                        <div style={{ position: 'relative', width: '100%', height: '140px', borderRadius: '12px', overflow: 'hidden', marginBottom: '0.75rem', backgroundColor: '#1c202d' }}>
                           <img src={p.image} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                           {p.badge && (
                             <span style={{
                               position: 'absolute', top: '8px', left: '8px',
-                              backgroundColor: 'rgba(15,23,42,0.85)', backdropFilter: 'blur(4px)',
-                              color: '#d4af37', fontSize: '0.65rem', fontWeight: 800,
+                              backgroundColor: 'rgba(12,14,20,0.88)', backdropFilter: 'blur(4px)',
+                              color: '#f5b942', fontSize: '0.65rem', fontWeight: 800,
                               padding: '0.15rem 0.55rem', borderRadius: '50px',
-                              border: '1px solid rgba(212,175,55,0.3)', fontFamily: 'Outfit'
+                              border: '1px solid rgba(245,185,66,0.35)', fontFamily: 'Outfit'
                             }}>
                               {p.badge}
                             </span>
                           )}
                           <span style={{
                             position: 'absolute', bottom: '8px', right: '8px',
-                            backgroundColor: '#ffffff', color: '#0f172a', fontWeight: 900,
+                            backgroundColor: '#10131b', color: '#f5b942', fontWeight: 900,
                             fontSize: '0.95rem', padding: '0.2rem 0.6rem', borderRadius: '8px',
-                            boxShadow: '0 2px 8px rgba(0,0,0,0.15)', fontFamily: 'Outfit'
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.5)', fontFamily: 'Outfit',
+                            border: '1px solid rgba(245,185,66,0.3)'
                           }}>
                             ₦{Number(p.price).toLocaleString()}
                           </span>
                         </div>
 
-                        <h4 style={{ fontFamily: 'Outfit', fontWeight: 800, color: '#0f172a', fontSize: '0.98rem', margin: '0 0 0.25rem' }}>
+                        <h4 style={{ fontFamily: 'Outfit', fontWeight: 800, color: '#ffffff', fontSize: '0.98rem', margin: '0 0 0.25rem' }}>
                           {p.title}
                         </h4>
 
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: '#d4af37', fontSize: '0.75rem', fontWeight: 700, marginBottom: '0.4rem' }}>
-                          <Star size={12} fill="#d4af37" />
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: '#f5b942', fontSize: '0.75rem', fontWeight: 700, marginBottom: '0.4rem' }}>
+                          <Star size={12} fill="#f5b942" />
                           <span>{p.rating || 4.8}</span>
                         </div>
 
-                        <p style={{ color: '#64748b', fontSize: '0.78rem', margin: '0 0 0.85rem', lineHeight: 1.35, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                        <p style={{ color: '#94a3b8', fontSize: '0.78rem', margin: '0 0 0.85rem', lineHeight: 1.35, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                           {p.desc || 'No description provided.'}
                         </p>
                       </div>
 
                       {/* Action buttons */}
-                      <div style={{ display: 'flex', gap: '0.35rem', paddingTop: '0.65rem', borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+                      <div style={{ display: 'flex', gap: '0.35rem', paddingTop: '0.65rem', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
                         <button
                           type="button"
                           onClick={(e) => handleToggleProductStock(p, e)}
                           disabled={updatingId === (p._id || p.id)}
                           style={{
                             flex: 1, padding: '0.45rem 0.4rem', borderRadius: '8px', minHeight: '44px',
-                            backgroundColor: p.badge === 'Out of Stock' ? 'rgba(239,68,68,0.1)' : 'rgba(34,197,94,0.1)',
-                            border: p.badge === 'Out of Stock' ? '1px solid rgba(239,68,68,0.3)' : '1px solid rgba(34,197,94,0.3)',
-                            color: p.badge === 'Out of Stock' ? '#ef4444' : '#16a34a',
+                            backgroundColor: p.badge === 'Out of Stock' ? 'rgba(239,68,68,0.15)' : 'rgba(34,197,94,0.15)',
+                            border: p.badge === 'Out of Stock' ? '1px solid rgba(239,68,68,0.35)' : '1px solid rgba(34,197,94,0.35)',
+                            color: p.badge === 'Out of Stock' ? '#f87171' : '#4ade80',
                             fontWeight: 800, fontSize: '0.72rem',
                             cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
                             fontFamily: 'Outfit', whiteSpace: 'nowrap'
@@ -1643,8 +1645,8 @@ export const AdminDashboard = () => {
                           onClick={() => handleOpenEditProduct(p)}
                           style={{
                             padding: '0.5rem 0.75rem', borderRadius: '8px', minHeight: '44px',
-                            backgroundColor: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)',
-                            color: '#b5952f', fontWeight: 700, fontSize: '0.75rem',
+                            backgroundColor: 'rgba(245,185,66,0.15)', border: '1px solid rgba(245,185,66,0.35)',
+                            color: '#f5b942', fontWeight: 700, fontSize: '0.75rem',
                             cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem',
                             fontFamily: 'Outfit'
                           }}
@@ -1656,8 +1658,8 @@ export const AdminDashboard = () => {
                           onClick={() => setProductToDelete(p)}
                           style={{
                             padding: '0.5rem 0.65rem', borderRadius: '8px', minHeight: '44px',
-                            backgroundColor: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)',
-                            color: '#ef4444', fontWeight: 700, fontSize: '0.75rem',
+                            backgroundColor: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)',
+                            color: '#f87171', fontWeight: 700, fontSize: '0.75rem',
                             cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem',
                             fontFamily: 'Outfit'
                           }}
@@ -1677,10 +1679,10 @@ export const AdminDashboard = () => {
               {/* Header & Metrics Banner */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.75rem' }}>
                 <div>
-                  <h3 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '1.1rem', color: '#0f172a', margin: 0 }}>
+                  <h3 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '1.1rem', color: '#ffffff', margin: 0 }}>
                     Expert Payouts & Withdrawals ({filteredWithdrawals.length})
                   </h3>
-                  <p style={{ fontSize: '0.78rem', color: '#64748b', margin: '0.15rem 0 0' }}>
+                  <p style={{ fontSize: '0.78rem', color: '#94a3b8', margin: '0.15rem 0 0' }}>
                     Review, transfer, and settle earnings requested by customers and specialists to their verified bank accounts.
                   </p>
                   <div style={{
@@ -1689,10 +1691,10 @@ export const AdminDashboard = () => {
                     alignItems: 'center',
                     gap: '0.35rem',
                     fontSize: '0.72rem',
-                    color: '#d4af37',
+                    color: '#f5b942',
                     fontWeight: 700,
-                    backgroundColor: 'rgba(212,175,55,0.08)',
-                    border: '1px solid rgba(212,175,55,0.25)',
+                    backgroundColor: 'rgba(245,185,66,0.1)',
+                    border: '1px solid rgba(245,185,66,0.3)',
                     padding: '0.2rem 0.6rem',
                     borderRadius: '50px'
                   }}>
@@ -1701,20 +1703,20 @@ export const AdminDashboard = () => {
                 </div>
                 <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
                   <div style={{
-                    backgroundColor: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.25)',
+                    backgroundColor: 'rgba(245,185,66,0.1)', border: '1px solid rgba(245,185,66,0.3)',
                     padding: '0.45rem 0.85rem', borderRadius: '12px', display: 'flex', flexDirection: 'column'
                   }}>
-                    <span style={{ fontSize: '0.65rem', color: '#b5952f', fontWeight: 700, textTransform: 'uppercase' }}>Awaiting Transfer</span>
-                    <span style={{ fontSize: '0.92rem', fontWeight: 900, color: '#0f172a', fontFamily: 'Outfit' }}>
+                    <span style={{ fontSize: '0.65rem', color: '#f5b942', fontWeight: 700, textTransform: 'uppercase' }}>Awaiting Transfer</span>
+                    <span style={{ fontSize: '0.92rem', fontWeight: 900, color: '#ffffff', fontFamily: 'Outfit' }}>
                       ₦{pendingPayoutsVolume.toLocaleString()} ({pendingPayoutsCount})
                     </span>
                   </div>
                   <div style={{
-                    backgroundColor: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.25)',
+                    backgroundColor: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.3)',
                     padding: '0.45rem 0.85rem', borderRadius: '12px', display: 'flex', flexDirection: 'column'
                   }}>
-                    <span style={{ fontSize: '0.65rem', color: '#16a34a', fontWeight: 700, textTransform: 'uppercase' }}>Settled Volume</span>
-                    <span style={{ fontSize: '0.92rem', fontWeight: 900, color: '#0f172a', fontFamily: 'Outfit' }}>
+                    <span style={{ fontSize: '0.65rem', color: '#4ade80', fontWeight: 700, textTransform: 'uppercase' }}>Settled Volume</span>
+                    <span style={{ fontSize: '0.92rem', fontWeight: 900, color: '#ffffff', fontFamily: 'Outfit' }}>
                       ₦{totalPayoutsVolume.toLocaleString()} ({completedPayoutsCount})
                     </span>
                   </div>
@@ -1722,10 +1724,10 @@ export const AdminDashboard = () => {
               </div>
 
               {filteredWithdrawals.length === 0 ? (
-                <div style={{ textAlign: 'center', padding: '3.5rem 1.5rem', backgroundColor: '#ffffff', borderRadius: '18px', border: '1px dashed rgba(0,0,0,0.12)' }}>
-                  <DollarSign size={42} color="#94a3b8" style={{ marginBottom: '0.75rem' }} />
-                  <h3 style={{ color: '#0f172a', fontFamily: 'Outfit', margin: '0 0 0.25rem', fontSize: '1.05rem', fontWeight: 800 }}>No Payout Requests Found</h3>
-                  <p style={{ color: '#64748b', fontSize: '0.8rem' }}>
+                <div style={{ textAlign: 'center', padding: '3.5rem 1.5rem', backgroundColor: '#151822', borderRadius: '18px', border: '1px dashed rgba(245,185,66,0.2)' }}>
+                  <DollarSign size={42} color="#f5b942" style={{ marginBottom: '0.75rem' }} />
+                  <h3 style={{ color: '#ffffff', fontFamily: 'Outfit', margin: '0 0 0.25rem', fontSize: '1.05rem', fontWeight: 800 }}>No Payout Requests Found</h3>
+                  <p style={{ color: '#94a3b8', fontSize: '0.8rem' }}>
                     {searchQuery || payoutStatusFilter !== 'all' ? 'Try changing your search or status filter.' : 'When specialists withdraw their earnings, payout requests will appear here.'}
                   </p>
                 </div>
@@ -1741,11 +1743,11 @@ export const AdminDashboard = () => {
                       <div
                         key={w._id}
                         style={{
-                          backgroundColor: '#ffffff',
+                          backgroundColor: '#151822',
                           borderRadius: '16px',
                           padding: isMobile ? '1rem' : '1.35rem',
-                          border: isProcessing ? '1px solid rgba(212,175,55,0.35)' : '1px solid rgba(0,0,0,0.08)',
-                          boxShadow: '0 4px 16px rgba(0,0,0,0.02)',
+                          border: isProcessing ? '1px solid rgba(245,185,66,0.4)' : '1px solid rgba(255,255,255,0.08)',
+                          boxShadow: '0 4px 20px rgba(0,0,0,0.25)',
                           position: 'relative',
                         }}
                       >
@@ -1756,46 +1758,47 @@ export const AdminDashboard = () => {
                               width: '42px', height: '42px', borderRadius: '12px', flexShrink: 0,
                               background: 'linear-gradient(135deg, #d4af37, #b5952f)',
                               display: 'flex', alignItems: 'center', justifyContent: 'center',
-                              color: '#fff', fontWeight: 800, fontSize: '0.9rem'
+                              color: '#0c0e14', fontWeight: 800, fontSize: '0.9rem'
                             }}>
                               {w.expertName?.charAt(0) || 'E'}
                             </div>
                             <div>
                               <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
-                                <h4 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.98rem', color: '#0f172a', margin: 0 }}>
+                                <h4 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.98rem', color: '#ffffff', margin: 0 }}>
                                   {w.expertName || 'Specialist'}
                                 </h4>
                                 <span style={{
                                   fontSize: '0.62rem', fontWeight: 800, padding: '0.1rem 0.45rem', borderRadius: '50px',
                                   textTransform: 'uppercase', letterSpacing: '0.5px',
-                                  backgroundColor: 'rgba(212,175,55,0.15)', color: '#b5952f'
+                                  backgroundColor: 'rgba(245,185,66,0.15)', color: '#f5b942',
+                                  border: '1px solid rgba(245,185,66,0.35)'
                                 }}>
                                   Specialist Payout
                                 </span>
                               </div>
-                              <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.1rem' }}>
-                                {w.userEmail} · Ref: <span style={{ fontFamily: 'monospace', color: '#0f172a' }}>{w.reference || w._id.slice(-6).toUpperCase()}</span>
+                              <div style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '0.1rem' }}>
+                                {w.userEmail} · Ref: <span style={{ fontFamily: 'monospace', color: '#f5b942' }}>{w.reference || w._id.slice(-6).toUpperCase()}</span>
                               </div>
                             </div>
                           </div>
 
                           <div style={{ textAlign: isMobile ? 'left' : 'right' }}>
-                            <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#0f172a', fontFamily: 'Outfit' }}>
+                            <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#ffffff', fontFamily: 'Outfit' }}>
                               ₦{Number(w.amount).toLocaleString()}
                             </div>
                             <div style={{ marginTop: '0.2rem' }}>
                               {isProcessing && (
-                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.68rem', fontWeight: 800, padding: '0.2rem 0.6rem', borderRadius: '50px', backgroundColor: 'rgba(234,179,8,0.12)', color: '#ca8a04', border: '1px solid rgba(234,179,8,0.3)' }}>
+                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.68rem', fontWeight: 800, padding: '0.2rem 0.6rem', borderRadius: '50px', backgroundColor: 'rgba(234,179,8,0.15)', color: '#facc15', border: '1px solid rgba(234,179,8,0.35)' }}>
                                   <Clock size={11} /> Pending Transfer
                                 </span>
                               )}
                               {isCompleted && (
-                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.68rem', fontWeight: 800, padding: '0.2rem 0.6rem', borderRadius: '50px', backgroundColor: 'rgba(34,197,94,0.12)', color: '#16a34a', border: '1px solid rgba(34,197,94,0.3)' }}>
+                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.68rem', fontWeight: 800, padding: '0.2rem 0.6rem', borderRadius: '50px', backgroundColor: 'rgba(34,197,94,0.15)', color: '#4ade80', border: '1px solid rgba(34,197,94,0.35)' }}>
                                   <CheckCircle size={11} /> Settled & Transferred
                                 </span>
                               )}
                               {isRejected && (
-                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.68rem', fontWeight: 800, padding: '0.2rem 0.6rem', borderRadius: '50px', backgroundColor: 'rgba(239,68,68,0.12)', color: '#ef4444', border: '1px solid rgba(239,68,68,0.3)' }}>
+                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.68rem', fontWeight: 800, padding: '0.2rem 0.6rem', borderRadius: '50px', backgroundColor: 'rgba(239,68,68,0.15)', color: '#f87171', border: '1px solid rgba(239,68,68,0.35)' }}>
                                   <XCircle size={11} /> Declined & Refunded
                                 </span>
                               )}
@@ -1805,8 +1808,8 @@ export const AdminDashboard = () => {
 
                         {/* Bank Account Details Card */}
                         <div style={{
-                          backgroundColor: '#f8fafc',
-                          border: '1px solid rgba(0,0,0,0.06)',
+                          backgroundColor: '#10131b',
+                          border: '1px solid rgba(255,255,255,0.06)',
                           borderRadius: '12px',
                           padding: '0.85rem 1rem',
                           marginBottom: '0.85rem',
@@ -1817,26 +1820,26 @@ export const AdminDashboard = () => {
                         }}>
                           <div>
                             <span style={{ fontSize: '0.68rem', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.4px' }}>Bank Name</span>
-                            <div style={{ fontWeight: 700, color: '#0f172a', marginTop: '0.15rem' }}>{w.bankName || 'N/A'}</div>
+                            <div style={{ fontWeight: 700, color: '#ffffff', marginTop: '0.15rem' }}>{w.bankName || 'N/A'}</div>
                           </div>
                           <div>
                             <span style={{ fontSize: '0.68rem', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.4px' }}>NUBAN Account Number</span>
-                            <div style={{ fontWeight: 800, color: '#0f172a', marginTop: '0.15rem', fontFamily: 'monospace', letterSpacing: '1px' }}>{w.accountNumber}</div>
+                            <div style={{ fontWeight: 800, color: '#f5b942', marginTop: '0.15rem', fontFamily: 'monospace', letterSpacing: '1px' }}>{w.accountNumber}</div>
                           </div>
                           <div>
                             <span style={{ fontSize: '0.68rem', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.4px' }}>Account Holder Name</span>
-                            <div style={{ fontWeight: 700, color: '#0f172a', marginTop: '0.15rem' }}>{w.accountName}</div>
+                            <div style={{ fontWeight: 700, color: '#ffffff', marginTop: '0.15rem' }}>{w.accountName}</div>
                           </div>
                         </div>
 
                         {/* Settlement / Decline Notes */}
                         {w.rejectionReason && (
-                          <div style={{ fontSize: '0.76rem', color: '#ef4444', backgroundColor: 'rgba(239,68,68,0.06)', padding: '0.5rem 0.75rem', borderRadius: '8px', border: '1px solid rgba(239,68,68,0.18)', marginBottom: '0.85rem' }}>
+                          <div style={{ fontSize: '0.76rem', color: '#f87171', backgroundColor: 'rgba(239,68,68,0.1)', padding: '0.5rem 0.75rem', borderRadius: '8px', border: '1px solid rgba(239,68,68,0.25)', marginBottom: '0.85rem' }}>
                             <strong>Decline Reason:</strong> {w.rejectionReason} (₦{Number(w.amount).toLocaleString()} refunded to expert wallet)
                           </div>
                         )}
                         {w.settledAt && (
-                          <div style={{ fontSize: '0.72rem', color: '#64748b', marginBottom: '0.85rem' }}>
+                          <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginBottom: '0.85rem' }}>
                             Settled on {new Date(w.settledAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                           </div>
                         )}
@@ -1848,9 +1851,9 @@ export const AdminDashboard = () => {
                             onClick={() => handleCopyBankDetails(w)}
                             style={{
                               padding: '0.45rem 0.85rem', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 700,
-                              backgroundColor: isCopied ? 'rgba(34,197,94,0.12)' : 'rgba(0,0,0,0.04)',
-                              color: isCopied ? '#16a34a' : '#334155',
-                              border: isCopied ? '1px solid rgba(34,197,94,0.3)' : '1px solid rgba(0,0,0,0.08)',
+                              backgroundColor: isCopied ? 'rgba(34,197,94,0.15)' : 'rgba(255,255,255,0.06)',
+                              color: isCopied ? '#4ade80' : '#f1f5f9',
+                              border: isCopied ? '1px solid rgba(34,197,94,0.35)' : '1px solid rgba(255,255,255,0.12)',
                               cursor: 'pointer', fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.35rem'
                             }}
                           >
@@ -1869,8 +1872,8 @@ export const AdminDashboard = () => {
                                 }}
                                 style={{
                                   padding: '0.45rem 0.85rem', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 700,
-                                  backgroundColor: 'rgba(239,68,68,0.1)', color: '#ef4444',
-                                  border: '1px solid rgba(239,68,68,0.25)', cursor: 'pointer', fontFamily: 'Outfit',
+                                  backgroundColor: 'rgba(239,68,68,0.15)', color: '#f87171',
+                                  border: '1px solid rgba(239,68,68,0.3)', cursor: 'pointer', fontFamily: 'Outfit',
                                   display: 'inline-flex', alignItems: 'center', gap: '0.35rem'
                                 }}
                               >
@@ -1910,69 +1913,69 @@ export const AdminDashboard = () => {
       {selectedOrder && (
         <div
           onClick={() => setSelectedOrder(null)}
-          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(6px)', zIndex: 9999, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', padding: isMobile ? '0' : '1rem' }}
+          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)', zIndex: 9999, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', padding: isMobile ? '0' : '1rem' }}
         >
           <div
             onClick={e => e.stopPropagation()}
             style={{
-              backgroundColor: '#ffffff',
+              backgroundColor: '#151822',
               borderRadius: isMobile ? '20px 20px 0 0' : '20px',
-              border: '1px solid rgba(0,0,0,0.1)',
+              border: '1px solid rgba(255,255,255,0.1)',
               width: '100%', maxWidth: isMobile ? '100%' : '480px',
               maxHeight: isMobile ? '92vh' : '85vh',
               overflowY: 'auto',
               padding: isMobile ? '1.25rem 1.25rem calc(1.25rem + env(safe-area-inset-bottom, 0px))' : '1.5rem',
-              boxShadow: '0 -8px 40px rgba(0,0,0,0.15)',
+              boxShadow: '0 -8px 40px rgba(0,0,0,0.5)',
             }}
           >
             {/* Drag handle on mobile */}
-            {isMobile && <div style={{ width: '36px', height: '4px', borderRadius: '2px', backgroundColor: 'rgba(0,0,0,0.15)', margin: '0 auto 1rem' }} />}
+            {isMobile && <div style={{ width: '36px', height: '4px', borderRadius: '2px', backgroundColor: 'rgba(255,255,255,0.2)', margin: '0 auto 1rem' }} />}
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <h3 style={{ color: '#0f172a', fontFamily: 'Outfit', fontWeight: 800, margin: 0, fontSize: '1.1rem' }}>Order Details</h3>
+              <h3 style={{ color: '#ffffff', fontFamily: 'Outfit', fontWeight: 800, margin: 0, fontSize: '1.1rem' }}>Order Details</h3>
               <button
                 onClick={() => setSelectedOrder(null)}
-                style={{ background: 'rgba(0,0,0,0.06)', border: 'none', color: '#64748b', cursor: 'pointer', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem' }}
+                style={{ background: 'rgba(255,255,255,0.06)', border: 'none', color: '#94a3b8', cursor: 'pointer', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem' }}
               >✕</button>
             </div>
 
-            <div style={{ fontSize: '0.7rem', color: '#64748b', fontFamily: 'monospace', marginBottom: '0.85rem' }}>
+            <div style={{ fontSize: '0.7rem', color: '#f5b942', fontFamily: 'monospace', marginBottom: '0.85rem' }}>
               ORDER #{(selectedOrder._id || '').slice(-6).toUpperCase()}
             </div>
 
-            <div style={{ display: 'grid', gap: '0.45rem', fontSize: '0.83rem', color: '#334155', marginBottom: '1rem', backgroundColor: '#fafafa', padding: '0.85rem', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.06)' }}>
-              <div><span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase' }}>Customer</span><br />{selectedOrder.customerInfo?.name || selectedOrder.name || 'N/A'}</div>
+            <div style={{ display: 'grid', gap: '0.45rem', fontSize: '0.83rem', color: '#cbd5e1', marginBottom: '1rem', backgroundColor: '#10131b', padding: '0.85rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.06)' }}>
+              <div><span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase' }}>Customer</span><br /><strong style={{ color: '#ffffff' }}>{selectedOrder.customerInfo?.name || selectedOrder.name || 'N/A'}</strong></div>
               <div><span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase' }}>Email</span><br />{selectedOrder.customerInfo?.email || selectedOrder.email || 'N/A'}</div>
               <div><span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase' }}>Phone</span><br />{selectedOrder.customerInfo?.phone || selectedOrder.phone || 'N/A'}</div>
               <div><span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase' }}>Address</span><br />{selectedOrder.customerInfo?.address || selectedOrder.address || 'N/A'}</div>
             </div>
 
-            <div style={{ borderTop: '1px solid rgba(0,0,0,0.08)', paddingTop: '0.85rem', marginBottom: '0.85rem' }}>
-              <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#b5952f', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '0.5rem' }}>Items Ordered</div>
+            <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '0.85rem', marginBottom: '0.85rem' }}>
+              <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#f5b942', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '0.5rem' }}>Items Ordered</div>
               {Array.isArray(selectedOrder.items) && selectedOrder.items.length > 0 ? (
                 selectedOrder.items.map((item, i) => (
-                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.45rem 0', fontSize: '0.82rem', color: '#334155', borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
+                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.45rem 0', fontSize: '0.82rem', color: '#cbd5e1', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
                     <span>{item.name || item.title} × {item.quantity || 1}</span>
-                    <span style={{ color: '#0f172a', fontWeight: 600 }}>₦{Number((item.price || 0) * (item.quantity || 1)).toLocaleString()}</span>
+                    <span style={{ color: '#ffffff', fontWeight: 600 }}>₦{Number((item.price || 0) * (item.quantity || 1)).toLocaleString()}</span>
                   </div>
                 ))
               ) : (
-                <div style={{ padding: '0.45rem 0', fontSize: '0.82rem', color: '#0f172a' }}>
+                <div style={{ padding: '0.45rem 0', fontSize: '0.82rem', color: '#ffffff' }}>
                   {selectedOrder.item || 'Grooming Products'}
                 </div>
               )}
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1rem', fontWeight: 800, color: '#0f172a', paddingTop: '0.65rem', borderTop: '1px solid rgba(0,0,0,0.08)', marginBottom: '1rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1rem', fontWeight: 800, color: '#ffffff', paddingTop: '0.65rem', borderTop: '1px solid rgba(255,255,255,0.08)', marginBottom: '1rem' }}>
               <span>Total Paid</span>
-              <span style={{ color: '#b5952f' }}>₦{Number(selectedOrder.totalPrice || selectedOrder.price || 0).toLocaleString()}</span>
+              <span style={{ color: '#f5b942' }}>₦{Number(selectedOrder.totalPrice || selectedOrder.price || 0).toLocaleString()}</span>
             </div>
 
             <div style={{ display: 'flex', gap: '0.5rem' }}>
               {selectedOrder.status !== 'shipped' && selectedOrder.status !== 'completed' && (
                 <button
                   onClick={(e) => handleUpdateOrderStatus(selectedOrder._id, 'shipped', e)}
-                  style={{ flex: 1, minHeight: '48px', borderRadius: '12px', backgroundColor: '#d4af37', color: '#fff', fontWeight: 800, fontSize: '0.85rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit' }}
+                  style={{ flex: 1, minHeight: '48px', borderRadius: '12px', backgroundColor: '#d4af37', color: '#0c0e14', fontWeight: 800, fontSize: '0.85rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit' }}
                 >
                   Mark Shipped
                 </button>
@@ -1987,7 +1990,7 @@ export const AdminDashboard = () => {
               )}
               <button
                 onClick={() => setSelectedOrder(null)}
-                style={{ minHeight: '48px', padding: '0.6rem 1rem', borderRadius: '12px', backgroundColor: 'rgba(0,0,0,0.04)', color: '#64748b', fontWeight: 600, fontSize: '0.85rem', border: '1px solid rgba(0,0,0,0.08)', cursor: 'pointer', fontFamily: 'Outfit' }}
+                style={{ minHeight: '48px', padding: '0.6rem 1rem', borderRadius: '12px', backgroundColor: 'rgba(255,255,255,0.06)', color: '#94a3b8', fontWeight: 600, fontSize: '0.85rem', border: '1px solid rgba(255,255,255,0.12)', cursor: 'pointer', fontFamily: 'Outfit' }}
               >
                 Close
               </button>
@@ -2000,41 +2003,41 @@ export const AdminDashboard = () => {
       {selectedBooking && (
         <div
           onClick={() => setSelectedBooking(null)}
-          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(6px)', zIndex: 9999, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', padding: isMobile ? '0' : '1rem' }}
+          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)', zIndex: 9999, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', padding: isMobile ? '0' : '1rem' }}
         >
           <div
             onClick={e => e.stopPropagation()}
             style={{
-              backgroundColor: '#ffffff',
+              backgroundColor: '#151822',
               borderRadius: isMobile ? '20px 20px 0 0' : '20px',
-              border: '1px solid rgba(0,0,0,0.1)',
+              border: '1px solid rgba(255,255,255,0.1)',
               width: '100%', maxWidth: isMobile ? '100%' : '480px',
               maxHeight: isMobile ? '92vh' : '85vh',
               overflowY: 'auto',
               padding: isMobile ? '1.25rem 1.25rem calc(1.25rem + env(safe-area-inset-bottom, 0px))' : '1.5rem',
-              boxShadow: '0 -8px 40px rgba(0,0,0,0.15)',
+              boxShadow: '0 -8px 40px rgba(0,0,0,0.5)',
             }}
           >
-            {isMobile && <div style={{ width: '36px', height: '4px', borderRadius: '2px', backgroundColor: 'rgba(0,0,0,0.15)', margin: '0 auto 1rem' }} />}
+            {isMobile && <div style={{ width: '36px', height: '4px', borderRadius: '2px', backgroundColor: 'rgba(255,255,255,0.2)', margin: '0 auto 1rem' }} />}
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <h3 style={{ color: '#0f172a', fontFamily: 'Outfit', fontWeight: 800, margin: 0, fontSize: '1.1rem' }}>Booking Details</h3>
+              <h3 style={{ color: '#ffffff', fontFamily: 'Outfit', fontWeight: 800, margin: 0, fontSize: '1.1rem' }}>Booking Details</h3>
               <button
                 onClick={() => setSelectedBooking(null)}
-                style={{ background: 'rgba(0,0,0,0.06)', border: 'none', color: '#64748b', cursor: 'pointer', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem' }}
+                style={{ background: 'rgba(255,255,255,0.06)', border: 'none', color: '#94a3b8', cursor: 'pointer', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem' }}
               >✕</button>
             </div>
 
-            <div style={{ fontSize: '0.7rem', color: '#64748b', fontFamily: 'monospace', marginBottom: '0.85rem' }}>
+            <div style={{ fontSize: '0.7rem', color: '#f5b942', fontFamily: 'monospace', marginBottom: '0.85rem' }}>
               BOOKING #{(selectedBooking._id || '').slice(-6).toUpperCase()}
             </div>
 
-            <div style={{ display: 'grid', gap: '0.5rem', fontSize: '0.83rem', color: '#334155', marginBottom: '1rem', backgroundColor: '#fafafa', padding: '0.85rem', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.06)' }}>
-              <div><span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase' }}>Service</span><br /><strong style={{ color: '#0f172a' }}>{selectedBooking.serviceName || selectedBooking.service}</strong></div>
+            <div style={{ display: 'grid', gap: '0.5rem', fontSize: '0.83rem', color: '#cbd5e1', marginBottom: '1rem', backgroundColor: '#10131b', padding: '0.85rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.06)' }}>
+              <div><span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase' }}>Service</span><br /><strong style={{ color: '#ffffff' }}>{selectedBooking.serviceName || selectedBooking.service}</strong></div>
               <div><span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase' }}>Client</span><br />{selectedBooking.clientName || selectedBooking.user?.firstname || 'Guest'}</div>
               <div><span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase' }}>Email</span><br />{selectedBooking.clientEmail || selectedBooking.email || 'N/A'}</div>
               <div><span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase' }}>Phone</span><br />{selectedBooking.phone || selectedBooking.clientPhone || 'N/A'}</div>
-              <div><span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase' }}>Stylist</span><br /><span style={{ color: '#b5952f', fontWeight: 600 }}>{selectedBooking.stylist || 'Verified Specialist'}</span></div>
+              <div><span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase' }}>Stylist</span><br /><span style={{ color: '#f5b942', fontWeight: 600 }}>{selectedBooking.stylist || 'Verified Specialist'}</span></div>
               <div><span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase' }}>Date & Time</span><br />{selectedBooking.date || 'TBD'} at {selectedBooking.time || 'TBD'}</div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><span style={{ color: '#94a3b8', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase' }}>Status: </span><StatusBadge status={selectedBooking.status || 'pending'} /></div>
             </div>
@@ -2043,7 +2046,7 @@ export const AdminDashboard = () => {
               {selectedBooking.status !== 'confirmed' && selectedBooking.status !== 'completed' && selectedBooking.status !== 'cancelled' && (
                 <button
                   onClick={(e) => handleUpdateBookingStatus(selectedBooking._id, 'confirmed', e)}
-                  style={{ flex: 1, minHeight: '48px', borderRadius: '12px', backgroundColor: '#d4af37', color: '#fff', fontWeight: 800, fontSize: '0.85rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit' }}
+                  style={{ flex: 1, minHeight: '48px', borderRadius: '12px', backgroundColor: '#d4af37', color: '#0c0e14', fontWeight: 800, fontSize: '0.85rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit' }}
                 >
                   Confirm Booking
                 </button>
@@ -2058,7 +2061,7 @@ export const AdminDashboard = () => {
               )}
               <button
                 onClick={() => setSelectedBooking(null)}
-                style={{ minHeight: '48px', padding: '0.6rem 1rem', borderRadius: '12px', backgroundColor: 'rgba(0,0,0,0.04)', color: '#64748b', fontWeight: 600, fontSize: '0.85rem', border: '1px solid rgba(0,0,0,0.08)', cursor: 'pointer', fontFamily: 'Outfit' }}
+                style={{ minHeight: '48px', padding: '0.6rem 1rem', borderRadius: '12px', backgroundColor: 'rgba(255,255,255,0.06)', color: '#94a3b8', fontWeight: 600, fontSize: '0.85rem', border: '1px solid rgba(255,255,255,0.12)', cursor: 'pointer', fontFamily: 'Outfit' }}
               >
                 Close
               </button>
@@ -2071,37 +2074,37 @@ export const AdminDashboard = () => {
       {userToDelete && (
         <div
           onClick={() => setUserToDelete(null)}
-          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(6px)', zIndex: 9999, display: 'flex', alignItems: isMobile ? 'flex-end' : 'center', justifyContent: 'center', padding: isMobile ? '0' : '1rem' }}
+          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)', zIndex: 9999, display: 'flex', alignItems: isMobile ? 'flex-end' : 'center', justifyContent: 'center', padding: isMobile ? '0' : '1rem' }}
         >
           <div
             onClick={e => e.stopPropagation()}
             style={{
-              backgroundColor: '#ffffff',
+              backgroundColor: '#151822',
               borderRadius: isMobile ? '20px 20px 0 0' : '20px',
               border: '1px solid rgba(239,68,68,0.3)',
               width: '100%', maxWidth: isMobile ? '100%' : '420px',
               padding: isMobile ? '1.5rem 1.5rem calc(1.5rem + env(safe-area-inset-bottom, 0px))' : '1.5rem',
-              textAlign: 'center', boxShadow: '0 -8px 40px rgba(0,0,0,0.15)',
+              textAlign: 'center', boxShadow: '0 -8px 40px rgba(0,0,0,0.5)',
             }}
           >
-            {isMobile && <div style={{ width: '36px', height: '4px', borderRadius: '2px', backgroundColor: 'rgba(0,0,0,0.15)', margin: '0 auto 1.25rem' }} />}
+            {isMobile && <div style={{ width: '36px', height: '4px', borderRadius: '2px', backgroundColor: 'rgba(255,255,255,0.2)', margin: '0 auto 1.25rem' }} />}
 
-            <div style={{ width: '54px', height: '54px', borderRadius: '50%', backgroundColor: 'rgba(239,68,68,0.1)', color: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
+            <div style={{ width: '54px', height: '54px', borderRadius: '50%', backgroundColor: 'rgba(239,68,68,0.15)', color: '#f87171', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
               <AlertTriangle size={28} />
             </div>
 
-            <h3 style={{ color: '#0f172a', fontFamily: 'Outfit', fontWeight: 800, margin: '0 0 0.5rem', fontSize: '1.15rem' }}>
+            <h3 style={{ color: '#ffffff', fontFamily: 'Outfit', fontWeight: 800, margin: '0 0 0.5rem', fontSize: '1.15rem' }}>
               Delete User Account?
             </h3>
 
-            <p style={{ color: '#64748b', fontSize: '0.85rem', lineHeight: 1.6, marginBottom: '1.5rem' }}>
-              Are you sure you want to delete <strong style={{ color: '#0f172a' }}>{userToDelete.firstname} ({userToDelete.email})</strong>? All their profile data and bookings will be wiped.
+            <p style={{ color: '#94a3b8', fontSize: '0.85rem', lineHeight: 1.6, marginBottom: '1.5rem' }}>
+              Are you sure you want to delete <strong style={{ color: '#ffffff' }}>{userToDelete.firstname} ({userToDelete.email})</strong>? All their profile data and bookings will be wiped.
             </p>
 
             <div style={{ display: 'flex', gap: '0.65rem' }}>
               <button
                 onClick={() => setUserToDelete(null)}
-                style={{ flex: 1, minHeight: '50px', borderRadius: '12px', backgroundColor: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.08)', color: '#64748b', fontWeight: 600, fontSize: '0.88rem', cursor: 'pointer', fontFamily: 'Outfit' }}
+                style={{ flex: 1, minHeight: '50px', borderRadius: '12px', backgroundColor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', color: '#94a3b8', fontWeight: 600, fontSize: '0.88rem', cursor: 'pointer', fontFamily: 'Outfit' }}
               >
                 Cancel
               </button>
@@ -2121,48 +2124,48 @@ export const AdminDashboard = () => {
       {showProductModal && (
         <div
           onClick={() => setShowProductModal(false)}
-          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(6px)', zIndex: 9999, display: 'flex', alignItems: isMobile ? 'flex-end' : 'center', justifyContent: 'center', padding: isMobile ? '0' : '1rem' }}
+          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)', zIndex: 9999, display: 'flex', alignItems: isMobile ? 'flex-end' : 'center', justifyContent: 'center', padding: isMobile ? '0' : '1rem' }}
         >
           <div
             onClick={e => e.stopPropagation()}
             style={{
-              backgroundColor: '#ffffff',
+              backgroundColor: '#151822',
               borderRadius: isMobile ? '20px 20px 0 0' : '20px',
-              border: '1px solid rgba(0,0,0,0.1)',
+              border: '1px solid rgba(255,255,255,0.12)',
               width: '100%', maxWidth: isMobile ? '100%' : '480px',
               maxHeight: isMobile ? '95vh' : '90vh',
               overflowY: 'auto',
               padding: isMobile ? '1.25rem 1.25rem calc(1.25rem + env(safe-area-inset-bottom, 0px))' : '1.5rem',
-              boxShadow: '0 -8px 40px rgba(0,0,0,0.15)',
+              boxShadow: '0 -8px 40px rgba(0,0,0,0.5)',
             }}
           >
-            {isMobile && <div style={{ width: '36px', height: '4px', borderRadius: '2px', backgroundColor: 'rgba(0,0,0,0.15)', margin: '0 auto 1rem' }} />}
+            {isMobile && <div style={{ width: '36px', height: '4px', borderRadius: '2px', backgroundColor: 'rgba(255,255,255,0.2)', margin: '0 auto 1rem' }} />}
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <h3 style={{ color: '#0f172a', fontFamily: 'Outfit', fontWeight: 800, margin: 0, fontSize: '1.15rem' }}>
+              <h3 style={{ color: '#ffffff', fontFamily: 'Outfit', fontWeight: 800, margin: 0, fontSize: '1.15rem' }}>
                 {editingProduct ? 'Edit Product' : 'Add New Product'}
               </h3>
               <button
                 onClick={() => setShowProductModal(false)}
-                style={{ background: 'rgba(0,0,0,0.06)', border: 'none', color: '#64748b', cursor: 'pointer', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem' }}
+                style={{ background: 'rgba(255,255,255,0.06)', border: 'none', color: '#94a3b8', cursor: 'pointer', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem' }}
               >✕</button>
             </div>
 
             <form onSubmit={handleProductSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
               {/* Dual Product Photos Section */}
-              <div style={{ background: '#faf9f5', padding: '0.85rem', borderRadius: '12px', border: '1px solid rgba(212,175,55,0.2)' }}>
-                <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#171717', marginBottom: '0.65rem', fontFamily: 'Outfit' }}>
+              <div style={{ background: '#10131b', padding: '0.85rem', borderRadius: '12px', border: '1px solid rgba(245,185,66,0.25)' }}>
+                <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#f5b942', marginBottom: '0.65rem', fontFamily: 'Outfit' }}>
                   📸 Product Photos (Up to 2 Photos)
                 </div>
 
                 {/* Photo 1: Primary Image */}
                 <div style={{ marginBottom: '0.85rem' }}>
-                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#334155', marginBottom: '0.25rem', fontFamily: 'Outfit' }}>
+                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '0.25rem', fontFamily: 'Outfit' }}>
                     Photo 1: Primary Main Image *
                   </label>
 
                   {productForm.image && (
-                    <div style={{ position: 'relative', width: '100%', height: '110px', borderRadius: '8px', overflow: 'hidden', marginBottom: '0.4rem', border: '1px solid rgba(0,0,0,0.1)' }}>
+                    <div style={{ position: 'relative', width: '100%', height: '110px', borderRadius: '8px', overflow: 'hidden', marginBottom: '0.4rem', border: '1px solid rgba(255,255,255,0.1)' }}>
                       <img src={productForm.image} alt="Main Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     </div>
                   )}
@@ -2173,14 +2176,14 @@ export const AdminDashboard = () => {
                       placeholder="Primary image URL..."
                       value={productForm.image}
                       onChange={e => setProductForm({ ...productForm, image: e.target.value })}
-                      style={{ flex: 1, padding: '0.6rem 0.75rem', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.12)', fontSize: '16px', fontFamily: 'Outfit', outline: 'none', minHeight: '44px', boxSizing: 'border-box' }}
+                      style={{ flex: 1, padding: '0.6rem 0.75rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.12)', backgroundColor: '#151822', color: '#ffffff', fontSize: '16px', fontFamily: 'Outfit', outline: 'none', minHeight: '44px', boxSizing: 'border-box' }}
                     />
                     <label
                       htmlFor="product-image-upload-1"
                       style={{
                         cursor: uploadingProductImage ? 'not-allowed' : 'pointer',
-                        backgroundColor: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.4)',
-                        color: '#b5952f', padding: '0.6rem 0.75rem', borderRadius: '8px', minHeight: '44px',
+                        backgroundColor: 'rgba(245,185,66,0.15)', border: '1px solid rgba(245,185,66,0.35)',
+                        color: '#f5b942', padding: '0.6rem 0.75rem', borderRadius: '8px', minHeight: '44px',
                         fontSize: '0.75rem', fontWeight: 800, fontFamily: 'Outfit',
                         display: 'inline-flex', alignItems: 'center', gap: '0.3rem', flexShrink: 0, boxSizing: 'border-box'
                       }}
@@ -2201,12 +2204,12 @@ export const AdminDashboard = () => {
 
                 {/* Photo 2: Secondary Image */}
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#334155', marginBottom: '0.25rem', fontFamily: 'Outfit' }}>
+                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '0.25rem', fontFamily: 'Outfit' }}>
                     Photo 2: Secondary / Detail Image (Optional)
                   </label>
 
                   {productForm.secondaryImage && (
-                    <div style={{ position: 'relative', width: '100%', height: '110px', borderRadius: '8px', overflow: 'hidden', marginBottom: '0.4rem', border: '1px solid rgba(0,0,0,0.1)' }}>
+                    <div style={{ position: 'relative', width: '100%', height: '110px', borderRadius: '8px', overflow: 'hidden', marginBottom: '0.4rem', border: '1px solid rgba(255,255,255,0.1)' }}>
                       <img src={productForm.secondaryImage} alt="Secondary Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     </div>
                   )}
@@ -2217,14 +2220,14 @@ export const AdminDashboard = () => {
                       placeholder="Secondary image URL..."
                       value={productForm.secondaryImage}
                       onChange={e => setProductForm({ ...productForm, secondaryImage: e.target.value })}
-                      style={{ flex: 1, padding: '0.6rem 0.75rem', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.12)', fontSize: '16px', fontFamily: 'Outfit', outline: 'none', minHeight: '44px', boxSizing: 'border-box' }}
+                      style={{ flex: 1, padding: '0.6rem 0.75rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.12)', backgroundColor: '#151822', color: '#ffffff', fontSize: '16px', fontFamily: 'Outfit', outline: 'none', minHeight: '44px', boxSizing: 'border-box' }}
                     />
                     <label
                       htmlFor="product-image-upload-2"
                       style={{
                         cursor: uploadingSecondaryImage ? 'not-allowed' : 'pointer',
-                        backgroundColor: 'rgba(59,130,246,0.12)', border: '1px solid rgba(59,130,246,0.3)',
-                        color: '#3b82f6', padding: '0.6rem 0.75rem', borderRadius: '8px', minHeight: '44px',
+                        backgroundColor: 'rgba(59,130,246,0.15)', border: '1px solid rgba(59,130,246,0.35)',
+                        color: '#60a5fa', padding: '0.6rem 0.75rem', borderRadius: '8px', minHeight: '44px',
                         fontSize: '0.75rem', fontWeight: 800, fontFamily: 'Outfit',
                         display: 'inline-flex', alignItems: 'center', gap: '0.3rem', flexShrink: 0, boxSizing: 'border-box'
                       }}
@@ -2245,20 +2248,20 @@ export const AdminDashboard = () => {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#334155', marginBottom: '0.3rem', fontFamily: 'Outfit' }}>Product Title *</label>
+                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '0.3rem', fontFamily: 'Outfit' }}>Product Title *</label>
                 <input
                   type="text"
                   placeholder="e.g. Atelier Gold Pomade"
                   value={productForm.title}
                   onChange={e => setProductForm({ ...productForm, title: e.target.value })}
                   required
-                  style={{ width: '100%', padding: '0.7rem 0.85rem', borderRadius: '10px', border: '1px solid rgba(0,0,0,0.12)', fontSize: '16px', fontFamily: 'Outfit', outline: 'none', boxSizing: 'border-box', minHeight: '48px' }}
+                  style={{ width: '100%', padding: '0.7rem 0.85rem', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.12)', backgroundColor: '#10131b', color: '#ffffff', fontSize: '16px', fontFamily: 'Outfit', outline: 'none', boxSizing: 'border-box', minHeight: '48px' }}
                 />
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#334155', marginBottom: '0.3rem', fontFamily: 'Outfit' }}>Price (₦) *</label>
+                  <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '0.3rem', fontFamily: 'Outfit' }}>Price (₦) *</label>
                   <input
                     type="number"
                     step="1"
@@ -2267,24 +2270,24 @@ export const AdminDashboard = () => {
                     value={productForm.price}
                     onChange={e => setProductForm({ ...productForm, price: e.target.value })}
                     required
-                    style={{ width: '100%', padding: '0.7rem 0.85rem', borderRadius: '10px', border: '1px solid rgba(0,0,0,0.12)', fontSize: '16px', fontFamily: 'Outfit', outline: 'none', boxSizing: 'border-box', minHeight: '48px' }}
+                    style={{ width: '100%', padding: '0.7rem 0.85rem', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.12)', backgroundColor: '#10131b', color: '#ffffff', fontSize: '16px', fontFamily: 'Outfit', outline: 'none', boxSizing: 'border-box', minHeight: '48px' }}
                   />
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#334155', marginBottom: '0.3rem', fontFamily: 'Outfit' }}>Badge</label>
+                  <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '0.3rem', fontFamily: 'Outfit' }}>Badge</label>
                   <input
                     type="text"
                     placeholder="Bestseller / New"
                     value={productForm.badge}
                     onChange={e => setProductForm({ ...productForm, badge: e.target.value })}
-                    style={{ width: '100%', padding: '0.7rem 0.85rem', borderRadius: '10px', border: '1px solid rgba(0,0,0,0.12)', fontSize: '16px', fontFamily: 'Outfit', outline: 'none', boxSizing: 'border-box', minHeight: '48px' }}
+                    style={{ width: '100%', padding: '0.7rem 0.85rem', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.12)', backgroundColor: '#10131b', color: '#ffffff', fontSize: '16px', fontFamily: 'Outfit', outline: 'none', boxSizing: 'border-box', minHeight: '48px' }}
                   />
                 </div>
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#334155', marginBottom: '0.3rem', fontFamily: 'Outfit' }}>Rating (1.0 – 5.0)</label>
+                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '0.3rem', fontFamily: 'Outfit' }}>Rating (1.0 – 5.0)</label>
                 <input
                   type="number"
                   step="0.1"
@@ -2292,18 +2295,18 @@ export const AdminDashboard = () => {
                   max="5"
                   value={productForm.rating}
                   onChange={e => setProductForm({ ...productForm, rating: e.target.value })}
-                  style={{ width: '100%', padding: '0.7rem 0.85rem', borderRadius: '10px', border: '1px solid rgba(0,0,0,0.12)', fontSize: '16px', fontFamily: 'Outfit', outline: 'none', boxSizing: 'border-box', minHeight: '48px' }}
+                  style={{ width: '100%', padding: '0.7rem 0.85rem', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.12)', backgroundColor: '#10131b', color: '#ffffff', fontSize: '16px', fontFamily: 'Outfit', outline: 'none', boxSizing: 'border-box', minHeight: '48px' }}
                 />
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#334155', marginBottom: '0.3rem', fontFamily: 'Outfit' }}>Description</label>
+                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '0.3rem', fontFamily: 'Outfit' }}>Description</label>
                 <textarea
                   rows="3"
                   placeholder="Short product description..."
                   value={productForm.desc}
                   onChange={e => setProductForm({ ...productForm, desc: e.target.value })}
-                  style={{ width: '100%', padding: '0.7rem 0.85rem', borderRadius: '10px', border: '1px solid rgba(0,0,0,0.12)', fontSize: '16px', fontFamily: 'Outfit', outline: 'none', boxSizing: 'border-box', resize: 'vertical' }}
+                  style={{ width: '100%', padding: '0.7rem 0.85rem', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.12)', backgroundColor: '#10131b', color: '#ffffff', fontSize: '16px', fontFamily: 'Outfit', outline: 'none', boxSizing: 'border-box', resize: 'vertical' }}
                 />
               </div>
 
@@ -2311,14 +2314,14 @@ export const AdminDashboard = () => {
                 <button
                   type="button"
                   onClick={() => setShowProductModal(false)}
-                  style={{ flex: 1, minHeight: '50px', borderRadius: '12px', backgroundColor: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.08)', color: '#64748b', fontWeight: 600, fontSize: '0.88rem', cursor: 'pointer', fontFamily: 'Outfit' }}
+                  style={{ flex: 1, minHeight: '50px', borderRadius: '12px', backgroundColor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', color: '#94a3b8', fontWeight: 600, fontSize: '0.88rem', cursor: 'pointer', fontFamily: 'Outfit' }}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={updatingId === 'product_submit'}
-                  style={{ flex: 1, minHeight: '50px', borderRadius: '12px', backgroundColor: '#d4af37', border: 'none', color: '#ffffff', fontWeight: 800, fontSize: '0.88rem', cursor: 'pointer', fontFamily: 'Outfit' }}
+                  style={{ flex: 1, minHeight: '50px', borderRadius: '12px', backgroundColor: '#d4af37', border: 'none', color: '#0c0e14', fontWeight: 800, fontSize: '0.88rem', cursor: 'pointer', fontFamily: 'Outfit' }}
                 >
                   {updatingId === 'product_submit' ? 'Saving...' : editingProduct ? 'Save Changes' : 'Upload Product'}
                 </button>
@@ -2332,37 +2335,37 @@ export const AdminDashboard = () => {
       {productToDelete && (
         <div
           onClick={() => setProductToDelete(null)}
-          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(6px)', zIndex: 9999, display: 'flex', alignItems: isMobile ? 'flex-end' : 'center', justifyContent: 'center', padding: isMobile ? '0' : '1rem' }}
+          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)', zIndex: 9999, display: 'flex', alignItems: isMobile ? 'flex-end' : 'center', justifyContent: 'center', padding: isMobile ? '0' : '1rem' }}
         >
           <div
             onClick={e => e.stopPropagation()}
             style={{
-              backgroundColor: '#ffffff',
+              backgroundColor: '#151822',
               borderRadius: isMobile ? '20px 20px 0 0' : '20px',
               border: '1px solid rgba(239,68,68,0.3)',
               width: '100%', maxWidth: isMobile ? '100%' : '420px',
               padding: isMobile ? '1.5rem 1.5rem calc(1.5rem + env(safe-area-inset-bottom, 0px))' : '1.5rem',
-              textAlign: 'center', boxShadow: '0 -8px 40px rgba(0,0,0,0.15)',
+              textAlign: 'center', boxShadow: '0 -8px 40px rgba(0,0,0,0.5)',
             }}
           >
-            {isMobile && <div style={{ width: '36px', height: '4px', borderRadius: '2px', backgroundColor: 'rgba(0,0,0,0.15)', margin: '0 auto 1.25rem' }} />}
+            {isMobile && <div style={{ width: '36px', height: '4px', borderRadius: '2px', backgroundColor: 'rgba(255,255,255,0.2)', margin: '0 auto 1.25rem' }} />}
 
-            <div style={{ width: '54px', height: '54px', borderRadius: '50%', backgroundColor: 'rgba(239,68,68,0.1)', color: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
+            <div style={{ width: '54px', height: '54px', borderRadius: '50%', backgroundColor: 'rgba(239,68,68,0.15)', color: '#f87171', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
               <AlertTriangle size={28} />
             </div>
 
-            <h3 style={{ color: '#0f172a', fontFamily: 'Outfit', fontWeight: 800, margin: '0 0 0.5rem', fontSize: '1.15rem' }}>
+            <h3 style={{ color: '#ffffff', fontFamily: 'Outfit', fontWeight: 800, margin: '0 0 0.5rem', fontSize: '1.15rem' }}>
               Delete Product?
             </h3>
 
-            <p style={{ color: '#64748b', fontSize: '0.85rem', lineHeight: 1.6, marginBottom: '1.5rem' }}>
-              Are you sure you want to remove <strong style={{ color: '#0f172a' }}>"{productToDelete.title}"</strong> from the public store page?
+            <p style={{ color: '#94a3b8', fontSize: '0.85rem', lineHeight: 1.6, marginBottom: '1.5rem' }}>
+              Are you sure you want to remove <strong style={{ color: '#ffffff' }}>"{productToDelete.title}"</strong> from the public store page?
             </p>
 
             <div style={{ display: 'flex', gap: '0.65rem' }}>
               <button
                 onClick={() => setProductToDelete(null)}
-                style={{ flex: 1, minHeight: '50px', borderRadius: '12px', backgroundColor: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.08)', color: '#64748b', fontWeight: 600, fontSize: '0.88rem', cursor: 'pointer', fontFamily: 'Outfit' }}
+                style={{ flex: 1, minHeight: '50px', borderRadius: '12px', backgroundColor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', color: '#94a3b8', fontWeight: 600, fontSize: '0.88rem', cursor: 'pointer', fontFamily: 'Outfit' }}
               >
                 Cancel
               </button>
@@ -2405,37 +2408,37 @@ export const AdminDashboard = () => {
       {rejectionModalWithdrawal && (
         <div
           onClick={() => setRejectionModalWithdrawal(null)}
-          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(6px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}
+          style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}
         >
           <div
             onClick={e => e.stopPropagation()}
             style={{
-              backgroundColor: '#ffffff', borderRadius: '20px', border: '1px solid rgba(0,0,0,0.1)',
-              width: '100%', maxWidth: '460px', padding: '1.5rem', boxShadow: '0 20px 40px rgba(0,0,0,0.2)'
+              backgroundColor: '#151822', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.12)',
+              width: '100%', maxWidth: '460px', padding: '1.5rem', boxShadow: '0 20px 40px rgba(0,0,0,0.5)'
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <div style={{ width: '36px', height: '36px', borderRadius: '10px', backgroundColor: 'rgba(239,68,68,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <AlertTriangle size={18} color="#ef4444" />
+                <div style={{ width: '36px', height: '36px', borderRadius: '10px', backgroundColor: 'rgba(239,68,68,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <AlertTriangle size={18} color="#f87171" />
                 </div>
-                <h3 style={{ color: '#0f172a', fontFamily: 'Outfit', fontWeight: 800, margin: 0, fontSize: '1.1rem' }}>Decline Payout Request</h3>
+                <h3 style={{ color: '#ffffff', fontFamily: 'Outfit', fontWeight: 800, margin: 0, fontSize: '1.1rem' }}>Decline Payout Request</h3>
               </div>
               <button
                 onClick={() => setRejectionModalWithdrawal(null)}
-                style={{ background: 'rgba(0,0,0,0.06)', border: 'none', color: '#64748b', cursor: 'pointer', borderRadius: '50%', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                style={{ background: 'rgba(255,255,255,0.06)', border: 'none', color: '#94a3b8', cursor: 'pointer', borderRadius: '50%', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               >✕</button>
             </div>
 
-            <p style={{ fontSize: '0.84rem', color: '#475569', lineHeight: 1.5, margin: '0 0 1rem' }}>
-              You are declining the payout of <strong style={{ color: '#0f172a' }}>₦{Number(rejectionModalWithdrawal.amount).toLocaleString()}</strong> for <strong style={{ color: '#0f172a' }}>{rejectionModalWithdrawal.expertName}</strong>.
+            <p style={{ fontSize: '0.84rem', color: '#cbd5e1', lineHeight: 1.5, margin: '0 0 1rem' }}>
+              You are declining the payout of <strong style={{ color: '#f5b942' }}>₦{Number(rejectionModalWithdrawal.amount).toLocaleString()}</strong> for <strong style={{ color: '#ffffff' }}>{rejectionModalWithdrawal.expertName}</strong>.
             </p>
 
-            <div style={{ backgroundColor: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.2)', padding: '0.75rem', borderRadius: '10px', marginBottom: '1rem', fontSize: '0.78rem', color: '#15803d' }}>
+            <div style={{ backgroundColor: 'rgba(34,197,94,0.12)', border: '1px solid rgba(34,197,94,0.3)', padding: '0.75rem', borderRadius: '10px', marginBottom: '1rem', fontSize: '0.78rem', color: '#4ade80' }}>
               💡 <strong>Automatic Wallet Refund:</strong> ₦{Number(rejectionModalWithdrawal.amount).toLocaleString()} will be automatically credited back into their Atelier Wallet balance immediately.
             </div>
 
-            <label className="app-label" style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#0f172a', marginBottom: '0.35rem' }}>
+            <label className="app-label" style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#f5b942', marginBottom: '0.35rem' }}>
               Reason for Declining (Sent to Expert)
             </label>
             <textarea
@@ -2445,8 +2448,8 @@ export const AdminDashboard = () => {
               placeholder="e.g. Account name mismatch with NUBAN, incorrect bank, or specialist cancelled request..."
               style={{
                 width: '100%', padding: '0.65rem 0.85rem', borderRadius: '10px',
-                border: '1px solid rgba(0,0,0,0.15)', fontSize: '0.82rem', fontFamily: 'Outfit',
-                outline: 'none', boxSizing: 'border-box', resize: 'vertical', marginBottom: '1.25rem'
+                border: '1px solid rgba(255,255,255,0.12)', backgroundColor: '#10131b', color: '#ffffff',
+                fontSize: '0.82rem', fontFamily: 'Outfit', outline: 'none', boxSizing: 'border-box', resize: 'vertical', marginBottom: '1.25rem'
               }}
             />
 
@@ -2455,8 +2458,8 @@ export const AdminDashboard = () => {
                 type="button"
                 onClick={() => setRejectionModalWithdrawal(null)}
                 style={{
-                  padding: '0.6rem 1.1rem', borderRadius: '10px', backgroundColor: 'rgba(0,0,0,0.04)',
-                  border: '1px solid rgba(0,0,0,0.08)', color: '#475569', fontWeight: 700, fontSize: '0.82rem', cursor: 'pointer', fontFamily: 'Outfit'
+                  padding: '0.6rem 1.1rem', borderRadius: '10px', backgroundColor: 'rgba(255,255,255,0.06)',
+                  border: '1px solid rgba(255,255,255,0.12)', color: '#94a3b8', fontWeight: 700, fontSize: '0.82rem', cursor: 'pointer', fontFamily: 'Outfit'
                 }}
               >
                 Cancel
@@ -2487,14 +2490,14 @@ export const AdminDashboard = () => {
             left: 0,
             right: 0,
             zIndex: 45,
-            backgroundColor: 'rgba(255, 255, 255, 0.96)',
+            backgroundColor: 'rgba(12, 14, 20, 0.95)',
             backdropFilter: 'blur(16px)',
-            borderTop: '1px solid rgba(0, 0, 0, 0.08)',
+            borderTop: '1px solid rgba(255, 255, 255, 0.08)',
             padding: '0.4rem 0.5rem calc(0.4rem + env(safe-area-inset-bottom, 0px))',
             display: 'flex',
             justifyContent: 'space-around',
             alignItems: 'center',
-            boxShadow: '0 -4px 20px rgba(0, 0, 0, 0.05)',
+            boxShadow: '0 -4px 20px rgba(0, 0, 0, 0.4)',
           }}
         >
           {navItems.map(item => {
@@ -2515,20 +2518,20 @@ export const AdminDashboard = () => {
                   cursor: 'pointer',
                   position: 'relative',
                   flex: 1,
-                  color: isActive ? '#b5952f' : '#64748b',
+                  color: isActive ? '#f5b942' : '#94a3b8',
                   transition: 'all 0.15s ease',
                 }}
               >
                 <div style={{ position: 'relative' }}>
-                  <item.icon size={18} color={isActive ? '#b5952f' : '#64748b'} />
+                  <item.icon size={18} color={isActive ? '#f5b942' : '#94a3b8'} />
                   {item.count > 0 && (
                     <span
                       style={{
                         position: 'absolute',
                         top: '-4px',
                         right: '-8px',
-                        backgroundColor: isActive ? '#d4af37' : 'rgba(0,0,0,0.15)',
-                        color: isActive ? '#fff' : '#0f172a',
+                        backgroundColor: isActive ? '#f5b942' : 'rgba(255,255,255,0.15)',
+                        color: isActive ? '#0c0e14' : '#ffffff',
                         fontSize: '0.58rem',
                         fontWeight: 800,
                         padding: '0.05rem 0.3rem',
@@ -2565,11 +2568,11 @@ export const AdminDashboard = () => {
               padding: '0.35rem 0.25rem',
               borderRadius: '10px',
               cursor: 'pointer',
-              color: '#64748b',
+              color: '#94a3b8',
               flex: 1,
             }}
           >
-            <Menu size={18} color="#64748b" />
+            <Menu size={18} color="#94a3b8" />
             <span style={{ fontSize: '0.62rem', fontWeight: 500, fontFamily: 'Outfit', whiteSpace: 'nowrap' }}>
               Menu
             </span>
