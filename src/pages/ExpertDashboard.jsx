@@ -30,6 +30,9 @@ import {
   ChevronRight,
   Camera,
   X,
+  Plus,
+  ImageIcon,
+  BookOpen,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
@@ -414,6 +417,14 @@ export const ExpertDashboard = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deletingAccount, setDeletingAccount] = useState(false);
 
+  // Portfolio / Lookbook State
+  const [portfolio, setPortfolio] = useState([]);
+  const [portfolioServices, setPortfolioServices] = useState([]);
+  const [activePortfolioService, setActivePortfolioService] = useState(null);
+  const [uploadingPortfolio, setUploadingPortfolio] = useState(false);
+  const [deletingPortfolioId, setDeletingPortfolioId] = useState(null);
+  const portfolioUploadRef = useRef(null);
+
   const fetchWalletData = async () => {
     try {
       const [balRes, txRes] = await Promise.allSettled([
@@ -430,6 +441,28 @@ export const ExpertDashboard = () => {
       console.warn('Wallet fetch notice:', e);
     }
   };
+
+  const fetchPortfolio = useCallback(async () => {
+    try {
+      const data = await api.getPortfolio();
+      setPortfolio(data.portfolio || []);
+      const svcList = (data.services || []).map(s => s.name || s).filter(Boolean);
+      // fallback to specialties if services array is empty
+      const fallback = data.specialties || [];
+      const merged = svcList.length > 0 ? svcList : fallback;
+      setPortfolioServices(merged.length > 0 ? merged : ['General']);
+      if (!activePortfolioService) {
+        setActivePortfolioService(merged[0] || 'General');
+      }
+    } catch (err) {
+      console.warn('Portfolio fetch notice:', err.message);
+      // Use user services as fallback list
+      const userServices = (user?.services || []).map(s => s.name || s).filter(Boolean);
+      const list = userServices.length > 0 ? userServices : ['General'];
+      setPortfolioServices(list);
+      if (!activePortfolioService) setActivePortfolioService(list[0]);
+    }
+  }, [user, activePortfolioService]);
 
   const fetchDashboardData = async () => {
     setLoading(true);
@@ -448,6 +481,7 @@ export const ExpertDashboard = () => {
 
   useEffect(() => {
     fetchDashboardData();
+    fetchPortfolio();
   }, []);
 
   // Photo uploads via Cloudinary
@@ -487,6 +521,47 @@ export const ExpertDashboard = () => {
       showToast(err.message || 'Failed to upload cover.', 'error');
     } finally {
       setUploadingCover(false);
+    }
+  };
+
+  // Portfolio Upload & Delete
+  const handlePortfolioUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      showToast('Please select a valid image file.', 'error');
+      return;
+    }
+    const service = activePortfolioService || 'General';
+    const sameSvcSamples = portfolio.filter(p => p.service === service);
+    if (sameSvcSamples.length >= 3) {
+      showToast(`Max 3 samples reached for "${service}". Delete one to add more.`, 'error');
+      return;
+    }
+    setUploadingPortfolio(true);
+    try {
+      const imageUrl = await uploadToCloudinary(file);
+      const updatedUser = await api.addPortfolioSample({ imageUrl, service });
+      setPortfolio(updatedUser.portfolio || []);
+      showToast('Portfolio sample added!', 'success');
+    } catch (err) {
+      showToast(err.message || 'Failed to upload sample.', 'error');
+    } finally {
+      setUploadingPortfolio(false);
+      if (e.target) e.target.value = '';
+    }
+  };
+
+  const handlePortfolioDelete = async (sampleId) => {
+    setDeletingPortfolioId(sampleId);
+    try {
+      const updatedUser = await api.deletePortfolioSample(sampleId);
+      setPortfolio(updatedUser.portfolio || []);
+      showToast('Sample removed.', 'accent');
+    } catch (err) {
+      showToast(err.message || 'Failed to delete sample.', 'error');
+    } finally {
+      setDeletingPortfolioId(null);
     }
   };
 
@@ -1141,6 +1216,252 @@ export const ExpertDashboard = () => {
           >
             <Download size={14} /> Export Records
           </button>
+        </div>
+
+        {/* ── 6. Portfolio Work & Lookbook ── */}
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.85rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <BookOpen size={15} color="#f5b942" />
+              <h3 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+                Portfolio Work & Lookbook
+              </h3>
+            </div>
+            <span
+              style={{
+                fontSize: '0.7rem',
+                fontFamily: 'Outfit',
+                fontWeight: 700,
+                color: '#64748b',
+                background: '#151822',
+                border: '1px solid rgba(255,255,255,0.08)',
+                padding: '0.2rem 0.6rem',
+                borderRadius: '50px',
+              }}
+            >
+              Max 3 per service
+            </span>
+          </div>
+
+          {/* Service Tabs */}
+          {portfolioServices.length > 0 && (
+            <div
+              style={{
+                display: 'flex',
+                gap: '0.5rem',
+                overflowX: 'auto',
+                paddingBottom: '0.35rem',
+                marginBottom: '1rem',
+                scrollbarWidth: 'none',
+              }}
+            >
+              {portfolioServices.map((svc) => {
+                const isActive = activePortfolioService === svc;
+                const count = portfolio.filter(p => p.service === svc).length;
+                return (
+                  <button
+                    key={svc}
+                    onClick={() => setActivePortfolioService(svc)}
+                    style={{
+                      background: isActive ? '#f5b942' : '#151822',
+                      color: isActive ? '#0c0e14' : '#94a3b8',
+                      border: `1px solid ${isActive ? '#f5b942' : 'rgba(255,255,255,0.08)'}`,
+                      borderRadius: '50px',
+                      padding: '0.35rem 0.9rem',
+                      fontFamily: 'Outfit',
+                      fontSize: '0.76rem',
+                      fontWeight: isActive ? 800 : 600,
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.35rem',
+                      transition: 'all 0.15s ease',
+                      flexShrink: 0,
+                    }}
+                  >
+                    <span>{svc}</span>
+                    <span
+                      style={{
+                        background: isActive ? 'rgba(12,14,20,0.25)' : 'rgba(255,255,255,0.08)',
+                        padding: '0.1rem 0.4rem',
+                        borderRadius: '50px',
+                        fontSize: '0.68rem',
+                      }}
+                    >
+                      {count}/3
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Samples Grid for Active Service */}
+          {(() => {
+            const service = activePortfolioService || 'General';
+            const samples = portfolio.filter(p => p.service === service);
+            const canAdd = samples.length < 3;
+            const slots = [...samples, ...(canAdd ? [{ _placeholder: true }] : [])];
+
+            return (
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(3, 1fr)',
+                  gap: '0.65rem',
+                }}
+              >
+                {slots.map((item, idx) =>
+                  item._placeholder ? (
+                    // Upload slot
+                    <label
+                      key="upload"
+                      style={{
+                        aspectRatio: '1 / 1',
+                        borderRadius: '16px',
+                        border: '2px dashed rgba(245, 185, 66, 0.35)',
+                        background: 'rgba(245, 185, 66, 0.04)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: uploadingPortfolio ? 'not-allowed' : 'pointer',
+                        gap: '0.4rem',
+                        transition: 'all 0.2s ease',
+                      }}
+                    >
+                      {uploadingPortfolio ? (
+                        <>
+                          <div
+                            style={{
+                              width: '22px', height: '22px',
+                              borderRadius: '50%',
+                              border: '2px solid rgba(245,185,66,0.3)',
+                              borderTopColor: '#f5b942',
+                              animation: 'spin 0.7s linear infinite',
+                            }}
+                          />
+                          <span style={{ fontSize: '0.68rem', color: '#f5b942', fontFamily: 'Outfit', fontWeight: 700 }}>Uploading…</span>
+                        </>
+                      ) : (
+                        <>
+                          <Plus size={20} color="#f5b942" />
+                          <span style={{ fontSize: '0.68rem', color: '#94a3b8', fontFamily: 'Outfit', fontWeight: 600, textAlign: 'center', lineHeight: 1.3 }}>Add Sample</span>
+                        </>
+                      )}
+                      <input
+                        ref={portfolioUploadRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={handlePortfolioUpload}
+                        style={{ display: 'none' }}
+                        disabled={uploadingPortfolio}
+                      />
+                    </label>
+                  ) : (
+                    // Sample image card
+                    <div
+                      key={item._id || idx}
+                      style={{
+                        aspectRatio: '1 / 1',
+                        borderRadius: '16px',
+                        overflow: 'hidden',
+                        position: 'relative',
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        background: '#151822',
+                      }}
+                    >
+                      <img
+                        src={item.imageUrl}
+                        alt={`${service} sample ${idx + 1}`}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          display: 'block',
+                        }}
+                        loading="lazy"
+                      />
+                      {/* Delete overlay */}
+                      <button
+                        onClick={() => handlePortfolioDelete(item._id)}
+                        disabled={deletingPortfolioId === item._id}
+                        style={{
+                          position: 'absolute',
+                          top: '6px',
+                          right: '6px',
+                          width: '26px',
+                          height: '26px',
+                          borderRadius: '50%',
+                          background: deletingPortfolioId === item._id ? 'rgba(0,0,0,0.7)' : 'rgba(239,68,68,0.85)',
+                          border: 'none',
+                          color: '#ffffff',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          cursor: deletingPortfolioId === item._id ? 'not-allowed' : 'pointer',
+                          backdropFilter: 'blur(4px)',
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
+                        }}
+                      >
+                        {deletingPortfolioId === item._id ? (
+                          <div style={{
+                            width: '12px', height: '12px',
+                            borderRadius: '50%',
+                            border: '2px solid rgba(255,255,255,0.3)',
+                            borderTopColor: '#fff',
+                            animation: 'spin 0.7s linear infinite',
+                          }} />
+                        ) : (
+                          <X size={13} />
+                        )}
+                      </button>
+                    </div>
+                  )
+                )}
+
+                {/* Fill remaining empty visual slots if < 3 with ghosted placeholders */}
+                {Array.from({ length: Math.max(0, 3 - slots.length) }).map((_, i) => (
+                  <div
+                    key={`ghost-${i}`}
+                    style={{
+                      aspectRatio: '1 / 1',
+                      borderRadius: '16px',
+                      border: '1px dashed rgba(255,255,255,0.07)',
+                      background: 'rgba(255,255,255,0.02)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <ImageIcon size={18} color="rgba(255,255,255,0.08)" />
+                  </div>
+                ))}
+              </div>
+            );
+          })()}
+
+          {/* Empty state when expert has no services set up */}
+          {portfolioServices.length === 0 && (
+            <div
+              style={{
+                background: '#151822',
+                borderRadius: '20px',
+                padding: '2rem 1.25rem',
+                textAlign: 'center',
+                border: '1px solid rgba(255,255,255,0.08)',
+              }}
+            >
+              <BookOpen size={36} color="#f5b942" style={{ marginBottom: '0.65rem', opacity: 0.7 }} />
+              <h4 style={{ fontFamily: 'Outfit', fontWeight: 800, color: '#ffffff', margin: '0 0 0.35rem', fontSize: '0.95rem' }}>
+                No Services Set Up
+              </h4>
+              <p style={{ fontSize: '0.78rem', color: '#64748b', margin: 0 }}>
+                Update your profile with the services you offer to start uploading portfolio samples.
+              </p>
+            </div>
+          )}
         </div>
 
       </div>

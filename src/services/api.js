@@ -158,6 +158,37 @@ export const api = {
     return data;
   },
 
+  // Portfolio / Lookbook Management
+  getPortfolio: async () => {
+    const res = await fetchWithTimeout(`${API_BASE}/users/portfolio`, {
+      headers: getAuthHeaders(),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Failed to fetch portfolio');
+    return data || { portfolio: [], services: [], specialties: [] };
+  },
+
+  addPortfolioSample: async ({ imageUrl, service }) => {
+    const res = await fetchWithTimeout(`${API_BASE}/users/portfolio`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ imageUrl, service }),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Failed to add portfolio sample');
+    return data;
+  },
+
+  deletePortfolioSample: async (sampleId) => {
+    const res = await fetchWithTimeout(`${API_BASE}/users/portfolio/${sampleId}`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Failed to delete portfolio sample');
+    return data;
+  },
+
   deleteAccount: async () => {
     const res = await fetchWithTimeout(`${API_BASE}/users/account`, {
       method: 'DELETE',

@@ -495,6 +495,65 @@ app.put('/api/users/profile', authenticateToken, async (req, res) => {
   }
 });
 
+// ─── Portfolio / Lookbook Management ─────────────────────────────────────────
+
+// GET — fetch expert's portfolio
+app.get('/api/users/portfolio', authenticateToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select('portfolio specialties services');
+    res.status(200).json({ portfolio: user.portfolio || [], services: user.services || [], specialties: user.specialties || [] });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch portfolio' });
+  }
+});
+
+// POST — add a portfolio sample (max 3 per service)
+app.post('/api/users/portfolio', authenticateToken, async (req, res) => {
+  try {
+    const { imageUrl, service } = req.body;
+    if (!imageUrl) return res.status(400).json({ error: 'Image URL is required.' });
+
+    const user = await User.findById(req.user._id);
+    const serviceName = (service || 'General').trim();
+
+    // Enforce max 3 samples per service
+    const existing = (user.portfolio || []).filter(p => p.service === serviceName);
+    if (existing.length >= 3) {
+      return res.status(400).json({ error: `You have reached the maximum of 3 samples for "${serviceName}". Delete an existing one to add a new sample.` });
+    }
+
+    user.portfolio.push({ service: serviceName, imageUrl });
+    await user.save();
+
+    const updatedUser = await User.findById(req.user._id).select('-password');
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    console.error('Add portfolio error:', error);
+    res.status(500).json({ error: 'Failed to add portfolio sample' });
+  }
+});
+
+// DELETE — remove a portfolio sample by its MongoDB sub-document _id
+app.delete('/api/users/portfolio/:sampleId', authenticateToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    const { sampleId } = req.params;
+
+    const before = user.portfolio.length;
+    user.portfolio = user.portfolio.filter(p => p._id.toString() !== sampleId);
+    if (user.portfolio.length === before) {
+      return res.status(404).json({ error: 'Portfolio sample not found.' });
+    }
+
+    await user.save();
+    const updatedUser = await User.findById(req.user._id).select('-password');
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    console.error('Delete portfolio error:', error);
+    res.status(500).json({ error: 'Failed to delete portfolio sample' });
+  }
+});
+
 // Delete user account permanently
 app.delete('/api/users/account', authenticateToken, async (req, res) => {
   try {
