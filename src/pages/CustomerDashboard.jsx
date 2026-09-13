@@ -42,6 +42,7 @@ import { ImagePreviewModal } from '../components/common/ImagePreviewModal';
 import { OrderTrackingSheet } from '../components/store/OrderTrackingSheet';
 import { LocationSelector } from '../components/store/LocationSelector';
 import { downloadBookingHistoryCSV, printBookingHistoryReport } from '../utils/bookingHistoryExport';
+import { OptimizedImage } from '../components/common/OptimizedImage';
 
 export const CustomerDashboard = () => {
   const navigate = useNavigate();

@@ -1,7 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { ErrorBoundary } from './components/common/ErrorBoundary.jsx';
+import { OptimizedImage } from './components/common/OptimizedImage.jsx';
 import './index.css';
+
+if (typeof window !== 'undefined') {
+  window.OptimizedImage = OptimizedImage;
+  globalThis.OptimizedImage = OptimizedImage;
+}
 
 // ── Path-based app selection: admin vs public ──
 // Admin portal is completely standalone – no shared providers, headers, or routes.
