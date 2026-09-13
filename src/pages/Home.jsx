@@ -94,9 +94,6 @@ export const Home = () => {
       .catch((err) => console.warn('Home specialists fetch:', err.message));
   }, []);
 
-  return (
-    <PageContainer onOpenAiMatcher={() => setShowAiSheet(true)}>
-
   const [searchQuery, setSearchQuery] = useState('');
 
   const popularServices = [
@@ -437,6 +434,13 @@ export const Home = () => {
         </div>
       </div>
 
+      {/* ── Signature Experiences ── */}
+      <div style={{ marginBottom: '1.75rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
+          <h2 style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+            Featured Experiences
+          </h2>
+        </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
           {signatureServices.map((item, idx) => (
             <div
@@ -539,11 +543,13 @@ export const Home = () => {
           <Sparkles size={24} />
         </div>
         <div style={{ flex: 1 }}>
-          <h4 style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 800, color: '#171717' }}>
+          <h4 style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 800, color: '#ffffff' }}>
             Not sure which stylist to pick?
           </h4>
-          <p style={{ color: '#6b7280', fontSize: '0.82rem', marginTop: '0.15rem' }}>
+          <p style={{ color: '#a1a1aa', fontSize: '0.82rem', marginTop: '0.15rem' }}>
             Tell us your style and our AI will match you with the right expert — instantly.
+          </p>
+        </div>
         <ChevronRight size={18} color="#f5b942" />
       </div>
 
