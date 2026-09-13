@@ -32,7 +32,7 @@ export class ErrorBoundary extends React.Component {
     }
   }
 
-  performHardReload = async () => {
+  performHardReload = async (targetPath = null) => {
     this.setState({ isPurging: true });
     try {
       // 1. Unregister all active service workers completely
@@ -51,8 +51,9 @@ export class ErrorBoundary extends React.Component {
     } catch (err) {
       console.warn('[ErrorBoundary] Hard reload cleanup error:', err);
     } finally {
-      // 4. Force browser navigation to fresh URL with cache-bust query param
-      const cleanUrl = window.location.origin + window.location.pathname + '?bust=' + Date.now();
+      // 4. Force browser navigation to target or fresh URL with cache-bust query param
+      const dest = typeof targetPath === 'string' ? targetPath : window.location.pathname;
+      const cleanUrl = window.location.origin + dest + (dest.includes('?') ? '&' : '?') + 'bust=' + Date.now();
       window.location.replace(cleanUrl);
     }
   };
@@ -60,6 +61,12 @@ export class ErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       const errorMsg = String(this.state.error?.message || this.state.error || 'Unknown UI Error');
+      const isChunkOrModuleError =
+        errorMsg.includes('Importing a module script failed') ||
+        errorMsg.includes('dynamically imported module') ||
+        errorMsg.includes('Loading chunk') ||
+        errorMsg.includes('MIME type') ||
+        errorMsg.includes('Failed to fetch');
 
       return (
         <div
@@ -94,15 +101,17 @@ export class ErrorBoundary extends React.Component {
           </div>
 
           <h2 style={{ fontSize: '1.5rem', fontWeight: 800, margin: '0 0 0.5rem 0', color: '#ffffff' }}>
-            Application Update Available
+            {isChunkOrModuleError ? 'Application Update Available' : 'Something went wrong'}
           </h2>
           <p style={{ color: '#94a3b8', fontSize: '0.9rem', maxWidth: '420px', marginBottom: '1.5rem', lineHeight: '1.5' }}>
-            A newer version of Style Corner was deployed. Tap below to clear cached files and load the fresh update.
+            {isChunkOrModuleError
+              ? 'A newer version of Style Corner was deployed. Tap below to clear cached files and load the fresh update.'
+              : 'An unexpected issue occurred while rendering this view. Tap below to reload or return home.'}
           </p>
 
           <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '1.5rem' }}>
             <button
-              onClick={this.performHardReload}
+              onClick={() => this.performHardReload()}
               disabled={this.state.isPurging}
               style={{
                 display: 'inline-flex',
@@ -120,13 +129,13 @@ export class ErrorBoundary extends React.Component {
               }}
             >
               <RefreshCw size={16} className={this.state.isPurging ? 'spin' : ''} />
-              {this.state.isPurging ? 'Purging Cache & Reloading...' : 'Update & Reload Page'}
+              {this.state.isPurging ? 'Purging Cache & Reloading...' : (isChunkOrModuleError ? 'Update & Reload Page' : 'Reload Page')}
             </button>
             <a
               href="/"
               onClick={(e) => {
                 e.preventDefault();
-                this.performHardReload();
+                this.performHardReload('/');
               }}
               style={{
                 display: 'inline-flex',

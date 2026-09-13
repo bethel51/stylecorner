@@ -27,6 +27,7 @@ import {
   Activity,
   Wallet,
   ArrowUpRight,
+  Scissors,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
