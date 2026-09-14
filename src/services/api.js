@@ -472,6 +472,16 @@ export const api = {
     return Array.isArray(data) ? data : [];
   },
 
+  getMyReviews: async () => {
+    const res = await fetchWithTimeout(`${API_BASE}/reviews/my`, {
+      headers: getAuthHeaders(),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Failed to fetch my reviews');
+    return Array.isArray(data) ? data : [];
+  },
+
+
   // Wallet API
   getWalletBalance: async () => {
     const res = await fetchWithTimeout(`${API_BASE}/wallet`, {

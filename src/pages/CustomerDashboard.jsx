@@ -293,12 +293,18 @@ export const CustomerDashboard = () => {
         {/* ── Screen 8: Greeting Header ── */}
         <div style={{ marginBottom: '1.25rem' }}>
           <h1 style={{ fontFamily: 'Outfit', fontSize: '1.55rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.25rem' }}>
-            Good morning, {user?.firstname || 'Bethel'} 👋
+            {(() => {
+              const hour = new Date().getHours();
+              const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+              const name = user?.firstname || user?.email?.split('@')[0] || 'there';
+              return `${greeting}, ${name} 👋`;
+            })()}
           </h1>
           <p style={{ color: '#94a3b8', fontSize: '0.84rem', margin: 0 }}>
             Here's what's happening with your StyleCorner.
           </p>
         </div>
+
 
         {/* ── Screen 8: Upcoming Appointment Card (Real Data) ── */}
         {(() => {
@@ -480,30 +486,43 @@ export const CustomerDashboard = () => {
           </div>
           <div className="dashboard-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '0.65rem' }}>
             {[
-              { label: 'Bookings', value: bookings.length, color: '#d4af37', bg: 'rgba(212,175,55,0.08)', border: 'rgba(212,175,55,0.25)', action: () => setShowHistorySheet(true) },
-              { label: 'Orders', value: orders.length, color: '#3b82f6', bg: 'rgba(59,130,246,0.08)', border: 'rgba(59,130,246,0.2)', action: () => { setActiveTab('orders'); setShowHistorySheet(true); } },
-              { label: 'Completed', value: completedCount, color: '#10b981', bg: 'rgba(16,185,129,0.08)', border: 'rgba(16,185,129,0.2)', action: () => setShowHistorySheet(true) },
-            ].map((stat) => (
-              <div
-                key={stat.label}
-                onClick={stat.action}
-                style={{
-                  background: stat.bg, border: `1px solid ${stat.border}`,
-                  borderRadius: '18px', padding: '1rem 0.5rem', textAlign: 'center', cursor: 'pointer',
-                }}
-              >
-                <div style={{
-                  fontFamily: 'Outfit', fontSize: '2rem', fontWeight: 900, color: stat.color, lineHeight: 1,
-                }}>
-                  {stat.value}
+              { label: 'Bookings', value: bookings.length, color: '#f5b942', icon: Calendar, bg: 'linear-gradient(145deg, rgba(245,185,66,0.08) 0%, #151822 100%)', border: 'rgba(245,185,66,0.22)', action: () => setShowHistorySheet(true) },
+              { label: 'Orders', value: orders.length, color: '#60a5fa', icon: ShoppingBag, bg: 'linear-gradient(145deg, rgba(96,165,250,0.08) 0%, #151822 100%)', border: 'rgba(96,165,250,0.2)', action: () => { setActiveTab('orders'); setShowHistorySheet(true); } },
+              { label: 'Completed', value: completedCount, color: '#10b981', icon: CheckCircle, bg: 'linear-gradient(145deg, rgba(16,185,129,0.08) 0%, #151822 100%)', border: 'rgba(16,185,129,0.2)', action: () => setShowHistorySheet(true) },
+            ].map((stat) => {
+              const Icon = stat.icon;
+              return (
+                <div
+                  key={stat.label}
+                  onClick={stat.action}
+                  style={{
+                    background: stat.bg,
+                    border: `1px solid ${stat.border}`,
+                    borderRadius: '18px',
+                    padding: '0.9rem 0.5rem',
+                    textAlign: 'center',
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 16px rgba(0,0,0,0.2)',
+                    transition: 'transform 0.15s ease',
+                  }}
+                >
+                  <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '24px', height: '24px', borderRadius: '50%', background: 'rgba(255,255,255,0.06)', color: stat.color, marginBottom: '0.3rem' }}>
+                    <Icon size={12} />
+                  </div>
+                  <div style={{
+                    fontFamily: 'Outfit', fontSize: '1.75rem', fontWeight: 900, color: stat.color, lineHeight: 1,
+                  }}>
+                    {stat.value}
+                  </div>
+                  <div style={{ fontSize: '0.68rem', fontFamily: 'Outfit', fontWeight: 800, color: '#94a3b8', marginTop: '0.35rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                    {stat.label}
+                  </div>
                 </div>
-                <div style={{ fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 800, color: '#6b7280', marginTop: '0.3rem', textTransform: 'uppercase' }}>
-                  {stat.label}
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
+
 
         {/* ══════════════════════════════════════════════
             SECTION 3 — CATEGORIES

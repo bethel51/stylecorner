@@ -1646,6 +1646,21 @@ app.get('/api/reviews/specialist/:name', async (req, res) => {
   }
 });
 
+// Get reviews submitted by the logged-in customer
+app.get('/api/reviews/my', authenticateToken, async (req, res) => {
+  try {
+    const userEmail = (req.user.email || '').trim().toLowerCase();
+    const reviews = await Review.find({
+      customerEmail: new RegExp('^' + userEmail + '$', 'i')
+    }).sort({ createdAt: -1 }).lean();
+    res.status(200).json(reviews || []);
+  } catch (error) {
+    console.error('Fetch my reviews error:', error);
+    res.status(500).json({ error: 'Failed to fetch reviews' });
+  }
+});
+
+
 // Update Specialist Portfolio Gallery (Staff feature)
 app.put('/api/specialists/portfolio', authenticateToken, async (req, res) => {
   try {

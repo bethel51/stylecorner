@@ -15,12 +15,15 @@ import {
   Edit,
   Camera,
   Check,
+  Sparkles,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { PageContainer } from '../components/common/PageContainer';
 import { uploadToCloudinary } from '../services/cloudinary';
 import { OptimizedImage } from '../components/common/OptimizedImage';
 import { PopupModal } from '../components/common/PopupModal';
+import { api } from '../services/api';
+import { getFavoritesCount, subscribeToFavorites } from '../utils/favorites';
 
 export const Profile = () => {
   const navigate = useNavigate();
@@ -39,6 +42,56 @@ export const Profile = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deletingAccount, setDeletingAccount] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  const [stats, setStats] = useState({
+    bookings: 0,
+    reviews: 0,
+    favorites: getFavoritesCount(),
+  });
+  const [loadingStats, setLoadingStats] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchUserStats = async () => {
+      setLoadingStats(true);
+      try {
+        const isStaff = user?.role === 'staff' || user?.role === 'expert';
+        const fullName = `${user?.firstname || ''} ${user?.lastname || ''}`.trim() || user?.firstname || '';
+        
+        const [bookingsRes, reviewsRes] = await Promise.all([
+          api.getBookings().catch(() => []),
+          isStaff
+            ? (fullName ? api.getSpecialistReviews(fullName).catch(() => []) : Promise.resolve([]))
+            : api.getMyReviews().catch(() => []),
+        ]);
+
+        if (isMounted) {
+          setStats({
+            bookings: Array.isArray(bookingsRes) ? bookingsRes.length : 0,
+            reviews: Array.isArray(reviewsRes) ? reviewsRes.length : 0,
+            favorites: getFavoritesCount(),
+          });
+        }
+      } catch (err) {
+        console.warn('Profile stats fetch notice:', err);
+      } finally {
+        if (isMounted) setLoadingStats(false);
+      }
+    };
+
+    fetchUserStats();
+
+    const unsub = subscribeToFavorites((_, count) => {
+      if (isMounted) {
+        setStats((prev) => ({ ...prev, favorites: count }));
+      }
+    });
+
+    return () => {
+      isMounted = false;
+      unsub();
+    };
+  }, [user]);
 
   useEffect(() => {
     if (user) {
@@ -108,7 +161,19 @@ export const Profile = () => {
     }
   };
 
+  const isStaff = user?.role === 'staff' || user?.role === 'expert';
+
   const menuItems = [
+    ...(isStaff
+      ? [
+          {
+            id: 'expert-studio',
+            label: 'Specialist Studio Dashboard',
+            icon: Sparkles,
+            onClick: () => navigate('/expert-dashboard'),
+          },
+        ]
+      : []),
     {
       id: 'my-profile',
       label: 'My Profile',
@@ -117,16 +182,17 @@ export const Profile = () => {
     },
     {
       id: 'my-bookings',
-      label: 'My Bookings',
+      label: isStaff ? 'Client Appointments' : 'My Bookings',
       icon: Calendar,
-      onClick: () => navigate('/customer-dashboard'),
+      onClick: () => navigate(isStaff ? '/expert-dashboard' : '/customer-dashboard'),
     },
     {
       id: 'my-orders',
-      label: 'My Orders',
+      label: isStaff ? 'Shop Boutique' : 'My Orders',
       icon: ShoppingBag,
-      onClick: () => navigate('/customer-dashboard'),
+      onClick: () => navigate(isStaff ? '/store' : '/customer-dashboard'),
     },
+
     {
       id: 'wallet-payments',
       label: 'Wallet & Payments',
@@ -226,43 +292,76 @@ export const Profile = () => {
 
           {/* Name & Verified Badge */}
           <h2 style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.25rem' }}>
-            {user ? `${user.firstname || ''} ${user.lastname || ''}`.trim() || 'Bethel Gela' : 'Bethel Gela'}
+            {user ? (`${user.firstname || ''} ${user.lastname || ''}`.trim() || user.email?.split('@')[0] || 'Valued Member') : 'Guest User'}
           </h2>
 
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', color: '#f5b942', fontSize: '0.78rem', fontWeight: 700, fontFamily: 'Outfit' }}>
-            <ShieldCheck size={14} />
-            <span>Verified</span>
-          </div>
+          {(user?.role === 'staff' || user?.isVerified) && (
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', color: '#f5b942', fontSize: '0.78rem', fontWeight: 700, fontFamily: 'Outfit' }}>
+              <ShieldCheck size={14} />
+              <span>Verified {user?.role === 'staff' ? 'Specialist' : 'Member'}</span>
+            </div>
+          )}
 
-          {/* Stat Counters: Bookings | Reviews | Favorites */}
+          {/* Stat Counters: Bookings | Reviews | Favorites (100% Real Dynamic Live Data) */}
           <div
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(3, 1fr)',
               width: '100%',
-              background: '#151822',
-              borderRadius: '16px',
-              padding: '0.85rem 0.5rem',
+              background: 'linear-gradient(145deg, #151822 0%, #10131b 100%)',
+              borderRadius: '20px',
+              padding: '0.95rem 0.5rem',
               marginTop: '1.25rem',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
+              border: '1px solid rgba(245, 185, 66, 0.15)',
+              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.25)',
             }}
           >
-            <div>
-              <div style={{ fontFamily: 'Outfit', fontSize: '1.2rem', fontWeight: 800, color: '#ffffff' }}>4</div>
-              <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '0.1rem' }}>Bookings</div>
+            <div
+              onClick={() => navigate(isStaff ? '/expert-dashboard' : '/customer-dashboard')}
+              style={{ cursor: 'pointer', textAlign: 'center' }}
+              title="View bookings"
+            >
+              <div style={{ fontFamily: 'Outfit', fontSize: '1.35rem', fontWeight: 900, color: '#ffffff', lineHeight: 1 }}>
+                {loadingStats ? '…' : stats.bookings}
+              </div>
+              <div style={{ fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 700, color: '#94a3b8', marginTop: '0.35rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                Bookings
+              </div>
             </div>
 
-            <div style={{ borderLeft: '1px solid rgba(255, 255, 255, 0.08)', borderRight: '1px solid rgba(255, 255, 255, 0.08)' }}>
-              <div style={{ fontFamily: 'Outfit', fontSize: '1.2rem', fontWeight: 800, color: '#ffffff' }}>12</div>
-              <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '0.1rem' }}>Reviews</div>
+            <div
+              onClick={() => navigate(isStaff ? '/expert-dashboard' : '/customer-dashboard')}
+              style={{
+                borderLeft: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRight: '1px solid rgba(255, 255, 255, 0.08)',
+                cursor: 'pointer',
+                textAlign: 'center',
+              }}
+              title="View reviews"
+            >
+              <div style={{ fontFamily: 'Outfit', fontSize: '1.35rem', fontWeight: 900, color: '#f5b942', lineHeight: 1 }}>
+                {loadingStats ? '…' : stats.reviews}
+              </div>
+              <div style={{ fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 700, color: '#94a3b8', marginTop: '0.35rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                Reviews
+              </div>
             </div>
 
-            <div>
-              <div style={{ fontFamily: 'Outfit', fontSize: '1.2rem', fontWeight: 800, color: '#ffffff' }}>3</div>
-              <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '0.1rem' }}>Favorites</div>
+            <div
+              onClick={() => navigate('/store')}
+              style={{ cursor: 'pointer', textAlign: 'center' }}
+              title="View saved favorites in Boutique"
+            >
+              <div style={{ fontFamily: 'Outfit', fontSize: '1.35rem', fontWeight: 900, color: '#ffffff', lineHeight: 1 }}>
+                {stats.favorites}
+              </div>
+              <div style={{ fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 700, color: '#94a3b8', marginTop: '0.35rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                Favorites
+              </div>
             </div>
           </div>
         </div>
+
 
         {/* Screen 9: Menu List */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1.5rem' }}>

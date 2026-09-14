@@ -18,6 +18,7 @@ import {
 import { PageContainer } from '../components/common/PageContainer';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { isFavorite, toggleFavorite } from '../utils/favorites';
 import { CartSheet } from '../components/store/CartSheet';
 import { OptimizedImage } from '../components/common/OptimizedImage';
 import { preloadRoute } from '../App';
@@ -129,7 +130,11 @@ export const ProductDetail = () => {
   const [quantity, setQuantity] = useState(1);
   const [showCartSheet, setShowCartSheet] = useState(false);
   const [allProducts, setAllProducts] = useState(DEFAULT_PRODUCTS);
-  const [isWishlisted, setIsWishlisted] = useState(false);
+  const [isWishlisted, setIsWishlisted] = useState(isFavorite(id));
+
+  useEffect(() => {
+    setIsWishlisted(isFavorite(id));
+  }, [id]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -326,9 +331,11 @@ export const ProductDetail = () => {
           {/* Wishlist Button */}
           <button
             onClick={() => {
-              setIsWishlisted(!isWishlisted);
-              showToast(isWishlisted ? 'Removed from saved items' : 'Saved to your favorites!', 'accent');
+              const next = toggleFavorite(id);
+              setIsWishlisted(next);
+              showToast(next ? 'Saved to your favorites!' : 'Removed from saved items', 'accent');
             }}
+
             style={{
               position: 'absolute',
               top: '1.5rem',

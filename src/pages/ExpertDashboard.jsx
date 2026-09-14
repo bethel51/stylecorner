@@ -397,6 +397,8 @@ export const ExpertDashboard = () => {
   const { user, logout, updateProfile, deleteAccount, showToast } = useAuth();
 
   const [bookings, setBookings] = useState([]);
+  const [reviews, setReviews] = useState([]);
+  const [showReviewsSheet, setShowReviewsSheet] = useState(false);
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState(null);
   const [isAvailable, setIsAvailable] = useState(true);
@@ -410,6 +412,7 @@ export const ExpertDashboard = () => {
   const [topupAmount, setTopupAmount] = useState('');
   const [topupSubmitting, setTopupSubmitting] = useState(false);
   const [showWalletHistorySheet, setShowWalletHistorySheet] = useState(false);
+
 
   // Profile Photos & Modals
   const [showAvatarSheet, setShowAvatarSheet] = useState(false);
@@ -468,17 +471,21 @@ export const ExpertDashboard = () => {
   const fetchDashboardData = async () => {
     setLoading(true);
     try {
-      const [bookingsData] = await Promise.all([
+      const fullName = `${user?.firstname || ''} ${user?.lastname || ''}`.trim() || user?.firstname || '';
+      const [bookingsData, reviewsData] = await Promise.all([
         api.getBookings().catch(() => []),
+        fullName ? api.getSpecialistReviews(fullName).catch(() => []) : Promise.resolve([]),
         fetchWalletData(),
       ]);
       setBookings(Array.isArray(bookingsData) ? bookingsData : []);
+      setReviews(Array.isArray(reviewsData) ? reviewsData : []);
     } catch (err) {
       showToast(err.message || 'Failed to load dashboard data', 'error');
     } finally {
       setLoading(false);
     }
   };
+
 
   useEffect(() => {
     fetchDashboardData();
@@ -656,6 +663,12 @@ export const ExpertDashboard = () => {
     () => completedBookings.reduce((sum, b) => sum + (Number(b.price) || 0), 0),
     [completedBookings]
   );
+  const averageRating = useMemo(() => {
+    if (!reviews || reviews.length === 0) return user?.rating ? Number(user.rating).toFixed(1) : null;
+    const sum = reviews.reduce((acc, r) => acc + (Number(r.rating) || 5), 0);
+    return (sum / reviews.length).toFixed(1);
+  }, [reviews, user]);
+
 
   const filteredBookings = useMemo(() => {
     if (filterTab === 'today') return bookings.filter((b) => isToday(b.date || b.createdAt));
@@ -773,43 +786,69 @@ export const ExpertDashboard = () => {
 
             <div style={{ flex: 1, minWidth: 0 }}>
               <h2 style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.15rem', lineHeight: 1.2 }}>
-                {user?.firstname || 'Stylist'} {user?.lastname || ''}
+                {user?.firstname || 'Specialist'} {user?.lastname || ''}
               </h2>
-              <p style={{ color: '#f5b942', fontSize: '0.78rem', fontFamily: 'Outfit', fontWeight: 700, margin: '0 0 0.45rem' }}>
+              <p style={{ color: '#f5b942', fontSize: '0.78rem', fontFamily: 'Outfit', fontWeight: 700, margin: '0 0 0.35rem' }}>
                 {user?.title ? user.title.toUpperCase() : 'SALON & BEAUTY SPECIALIST'}
               </p>
 
-              {/* Status Switcher Toggle Pill */}
-              <button
-                type="button"
-                onClick={() => {
-                  const next = !isAvailable;
-                  setIsAvailable(next);
-                  showToast(next ? 'Status set to: Accepting Bookings' : 'Status set to: On Break', 'accent');
-                }}
-                style={{
-                  background: isAvailable ? 'rgba(16, 185, 129, 0.16)' : 'rgba(239, 68, 68, 0.16)',
-                  border: isAvailable ? '1px solid rgba(16, 185, 129, 0.35)' : '1px solid rgba(239, 68, 68, 0.35)',
-                  color: isAvailable ? '#10b981' : '#f87171',
-                  fontSize: '0.7rem',
-                  fontFamily: 'Outfit',
-                  fontWeight: 800,
-                  padding: '0.2rem 0.65rem',
-                  borderRadius: '50px',
-                  cursor: 'pointer',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.35rem',
-                }}
-              >
-                <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: isAvailable ? '#10b981' : '#ef4444' }} />
-                <span>{isAvailable ? 'ACCEPTING BOOKINGS' : 'ON BREAK'}</span>
-              </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', flexWrap: 'wrap' }}>
+                {/* Real Rating & Review Count Badge */}
+                <button
+                  type="button"
+                  onClick={() => setShowReviewsSheet(true)}
+                  style={{
+                    background: 'rgba(245, 185, 66, 0.12)',
+                    border: '1px solid rgba(245, 185, 66, 0.3)',
+                    color: '#f5b942',
+                    fontSize: '0.7rem',
+                    fontFamily: 'Outfit',
+                    fontWeight: 800,
+                    padding: '0.2rem 0.6rem',
+                    borderRadius: '50px',
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.3rem',
+                  }}
+                  title="View client reviews"
+                >
+                  <Star size={11} fill="#f5b942" />
+                  <span>{averageRating ? `${averageRating} (${reviews.length} ${reviews.length === 1 ? 'review' : 'reviews'})` : `${reviews.length} reviews`}</span>
+                </button>
+
+                {/* Status Switcher Toggle Pill */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const next = !isAvailable;
+                    setIsAvailable(next);
+                    showToast(next ? 'Status set to: Accepting Bookings' : 'Status set to: On Break', 'accent');
+                  }}
+                  style={{
+                    background: isAvailable ? 'rgba(16, 185, 129, 0.16)' : 'rgba(239, 68, 68, 0.16)',
+                    border: isAvailable ? '1px solid rgba(16, 185, 129, 0.35)' : '1px solid rgba(239, 68, 68, 0.35)',
+                    color: isAvailable ? '#10b981' : '#f87171',
+                    fontSize: '0.7rem',
+                    fontFamily: 'Outfit',
+                    fontWeight: 800,
+                    padding: '0.2rem 0.65rem',
+                    borderRadius: '50px',
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.35rem',
+                  }}
+                >
+                  <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: isAvailable ? '#10b981' : '#ef4444' }} />
+                  <span>{isAvailable ? 'ACCEPTING BOOKINGS' : 'ON BREAK'}</span>
+                </button>
+              </div>
             </div>
           </div>
 
           {/* Quick Profile Controls Bar */}
-          <div style={{ display: 'flex', gap: '0.65rem', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '0.85rem' }}>
+          <div style={{ display: 'flex', gap: '0.55rem', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '0.85rem' }}>
             <button
               onClick={() => navigate(`/expert-profile?name=${encodeURIComponent(`${user?.firstname || ''} ${user?.lastname || ''}`.trim() || 'Specialist')}`)}
               style={{
@@ -817,9 +856,9 @@ export const ExpertDashboard = () => {
                 background: '#1c202d',
                 border: '1px solid rgba(255, 255, 255, 0.08)',
                 color: '#ffffff',
-                padding: '0.55rem 0.75rem',
+                padding: '0.55rem 0.6rem',
                 borderRadius: '12px',
-                fontSize: '0.78rem',
+                fontSize: '0.76rem',
                 fontFamily: 'Outfit',
                 fontWeight: 700,
                 cursor: 'pointer',
@@ -829,7 +868,29 @@ export const ExpertDashboard = () => {
                 gap: '0.35rem',
               }}
             >
-              <Sparkles size={14} color="#f5b942" /> View Public Page
+              <Sparkles size={13} color="#f5b942" /> View Page
+            </button>
+
+            <button
+              onClick={() => setShowReviewsSheet(true)}
+              style={{
+                flex: 1,
+                background: '#1c202d',
+                border: '1px solid rgba(245, 185, 66, 0.25)',
+                color: '#f5b942',
+                padding: '0.55rem 0.6rem',
+                borderRadius: '12px',
+                fontSize: '0.76rem',
+                fontFamily: 'Outfit',
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.35rem',
+              }}
+            >
+              <MessageSquare size={13} /> Reviews ({reviews.length})
             </button>
 
             <button
@@ -840,7 +901,7 @@ export const ExpertDashboard = () => {
                 color: '#f87171',
                 padding: '0.55rem 0.85rem',
                 borderRadius: '12px',
-                fontSize: '0.78rem',
+                fontSize: '0.76rem',
                 fontFamily: 'Outfit',
                 fontWeight: 700,
                 cursor: 'pointer',
@@ -848,11 +909,13 @@ export const ExpertDashboard = () => {
                 alignItems: 'center',
                 gap: '0.35rem',
               }}
+              title="Sign Out"
             >
-              <LogOut size={14} /> Sign Out
+              <LogOut size={13} /> Sign Out
             </button>
           </div>
         </div>
+
 
         {/* ── 2. Atelier Wallet & Payout Card ── */}
         <div
@@ -948,25 +1011,37 @@ export const ExpertDashboard = () => {
             </span>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.65rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem' }}>
             {/* Pending */}
             <div
               onClick={() => setFilterTab('pending')}
               style={{
-                background: '#151822',
-                borderRadius: '16px',
-                padding: '0.85rem 0.4rem',
-                textAlign: 'center',
+                background: filterTab === 'pending'
+                  ? 'linear-gradient(145deg, rgba(245, 185, 66, 0.12) 0%, #151822 100%)'
+                  : 'linear-gradient(145deg, #151822 0%, #10131b 100%)',
+                borderRadius: '18px',
+                padding: '1rem',
                 cursor: 'pointer',
                 border: filterTab === 'pending' ? '1.5px solid #f5b942' : '1px solid rgba(255, 255, 255, 0.08)',
-                transition: 'all 0.15s ease',
+                boxShadow: filterTab === 'pending' ? '0 6px 20px rgba(245, 185, 66, 0.15)' : 'none',
+                transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                position: 'relative',
+                overflow: 'hidden',
               }}
             >
-              <div style={{ fontFamily: 'Outfit', fontSize: '1.45rem', fontWeight: 900, color: '#f5b942', lineHeight: 1 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                <span style={{ fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                  Pending
+                </span>
+                <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'rgba(245, 185, 66, 0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#f5b942' }}>
+                  <Clock size={14} />
+                </div>
+              </div>
+              <div style={{ fontFamily: 'Outfit', fontSize: '1.85rem', fontWeight: 900, color: '#f5b942', lineHeight: 1 }}>
                 {pendingBookings.length}
               </div>
-              <div style={{ fontSize: '0.68rem', fontFamily: 'Outfit', fontWeight: 700, color: '#94a3b8', marginTop: '0.35rem', textTransform: 'uppercase' }}>
-                Pending
+              <div style={{ fontSize: '0.68rem', color: '#64748b', marginTop: '0.35rem' }}>
+                {pendingBookings.length === 1 ? '1 client waiting' : `${pendingBookings.length} clients waiting`}
               </div>
             </div>
 
@@ -974,20 +1049,32 @@ export const ExpertDashboard = () => {
             <div
               onClick={() => setFilterTab('accepted')}
               style={{
-                background: '#151822',
-                borderRadius: '16px',
-                padding: '0.85rem 0.4rem',
-                textAlign: 'center',
+                background: filterTab === 'accepted'
+                  ? 'linear-gradient(145deg, rgba(16, 185, 129, 0.12) 0%, #151822 100%)'
+                  : 'linear-gradient(145deg, #151822 0%, #10131b 100%)',
+                borderRadius: '18px',
+                padding: '1rem',
                 cursor: 'pointer',
                 border: filterTab === 'accepted' ? '1.5px solid #10b981' : '1px solid rgba(255, 255, 255, 0.08)',
-                transition: 'all 0.15s ease',
+                boxShadow: filterTab === 'accepted' ? '0 6px 20px rgba(16, 185, 129, 0.15)' : 'none',
+                transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                position: 'relative',
+                overflow: 'hidden',
               }}
             >
-              <div style={{ fontFamily: 'Outfit', fontSize: '1.45rem', fontWeight: 900, color: '#10b981', lineHeight: 1 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                <span style={{ fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                  Confirmed
+                </span>
+                <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'rgba(16, 185, 129, 0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#10b981' }}>
+                  <CheckCircle size={14} />
+                </div>
+              </div>
+              <div style={{ fontFamily: 'Outfit', fontSize: '1.85rem', fontWeight: 900, color: '#10b981', lineHeight: 1 }}>
                 {acceptedBookings.length}
               </div>
-              <div style={{ fontSize: '0.68rem', fontFamily: 'Outfit', fontWeight: 700, color: '#94a3b8', marginTop: '0.35rem', textTransform: 'uppercase' }}>
-                Confirmed
+              <div style={{ fontSize: '0.68rem', color: '#64748b', marginTop: '0.35rem' }}>
+                Active bookings scheduled
               </div>
             </div>
 
@@ -995,44 +1082,67 @@ export const ExpertDashboard = () => {
             <div
               onClick={() => setFilterTab('completed')}
               style={{
-                background: '#151822',
-                borderRadius: '16px',
-                padding: '0.85rem 0.4rem',
-                textAlign: 'center',
+                background: filterTab === 'completed'
+                  ? 'linear-gradient(145deg, rgba(96, 165, 250, 0.12) 0%, #151822 100%)'
+                  : 'linear-gradient(145deg, #151822 0%, #10131b 100%)',
+                borderRadius: '18px',
+                padding: '1rem',
                 cursor: 'pointer',
                 border: filterTab === 'completed' ? '1.5px solid #60a5fa' : '1px solid rgba(255, 255, 255, 0.08)',
-                transition: 'all 0.15s ease',
+                boxShadow: filterTab === 'completed' ? '0 6px 20px rgba(96, 165, 250, 0.15)' : 'none',
+                transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                position: 'relative',
+                overflow: 'hidden',
               }}
             >
-              <div style={{ fontFamily: 'Outfit', fontSize: '1.45rem', fontWeight: 900, color: '#60a5fa', lineHeight: 1 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                <span style={{ fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                  Completed
+                </span>
+                <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'rgba(96, 165, 250, 0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#60a5fa' }}>
+                  <Sparkles size={14} />
+                </div>
+              </div>
+              <div style={{ fontFamily: 'Outfit', fontSize: '1.85rem', fontWeight: 900, color: '#60a5fa', lineHeight: 1 }}>
                 {completedBookings.length}
               </div>
-              <div style={{ fontSize: '0.68rem', fontFamily: 'Outfit', fontWeight: 700, color: '#94a3b8', marginTop: '0.35rem', textTransform: 'uppercase' }}>
-                Completed
+              <div style={{ fontSize: '0.68rem', color: '#64748b', marginTop: '0.35rem' }}>
+                Successful sessions
               </div>
             </div>
 
             {/* Revenue */}
             <div
-              onClick={() => setFilterTab('completed')}
+              onClick={() => setShowWalletHistorySheet(true)}
               style={{
-                background: '#151822',
-                borderRadius: '16px',
-                padding: '0.85rem 0.4rem',
-                textAlign: 'center',
+                background: 'linear-gradient(145deg, #151822 0%, #10131b 100%)',
+                borderRadius: '18px',
+                padding: '1rem',
                 cursor: 'pointer',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
+                border: '1px solid rgba(245, 185, 66, 0.18)',
+                transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                position: 'relative',
+                overflow: 'hidden',
               }}
             >
-              <div style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 900, color: '#f5b942', lineHeight: 1.35 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                <span style={{ fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                  Revenue
+                </span>
+                <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'rgba(245, 185, 66, 0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#f5b942' }}>
+                  <DollarSign size={14} />
+                </div>
+              </div>
+              <div style={{ fontFamily: 'Outfit', fontSize: '1.35rem', fontWeight: 900, color: '#f5b942', lineHeight: 1.1 }}>
                 ₦{Number(totalRevenue).toLocaleString()}
               </div>
-              <div style={{ fontSize: '0.68rem', fontFamily: 'Outfit', fontWeight: 700, color: '#94a3b8', marginTop: '0.15rem', textTransform: 'uppercase' }}>
-                Revenue
+              <div style={{ fontSize: '0.68rem', color: '#64748b', marginTop: '0.35rem' }}>
+                Completed revenue
               </div>
             </div>
           </div>
         </div>
+
 
         {/* ── 4. Client Appointments & Requests Hub ── */}
         <div>
@@ -1625,7 +1735,103 @@ export const ExpertDashboard = () => {
         </div>
       </BottomSheet>
 
+      {/* 4. Request Payout / Withdraw Funds Modal */}
+      <WithdrawFundsModal
+
+        isOpen={showWithdrawModal}
+        onClose={() => setShowWithdrawModal(false)}
+        walletBalance={walletBalance}
+        onSuccess={() => {
+          fetchWalletData();
+          fetchDashboardData();
+        }}
+      />
+
+      {/* 5. Client Reviews Bottom Sheet */}
+      <BottomSheet
+        isOpen={showReviewsSheet}
+        onClose={() => setShowReviewsSheet(false)}
+        title="Client Reviews & Ratings"
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', maxHeight: '70vh', overflowY: 'auto' }}>
+          {/* Summary Card */}
+          <div
+            style={{
+              background: 'linear-gradient(135deg, rgba(245, 185, 66, 0.12) 0%, #151822 100%)',
+              border: '1px solid rgba(245, 185, 66, 0.25)',
+              borderRadius: '16px',
+              padding: '1rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <div>
+              <div style={{ fontFamily: 'Outfit', fontSize: '1.75rem', fontWeight: 900, color: '#f5b942', lineHeight: 1 }}>
+                {averageRating || '5.0'} ★
+              </div>
+              <div style={{ fontSize: '0.74rem', color: '#94a3b8', marginTop: '0.2rem' }}>
+                Overall Specialist Rating
+              </div>
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 800, color: '#ffffff' }}>
+                {reviews.length}
+              </div>
+              <div style={{ fontSize: '0.72rem', color: '#64748b' }}>
+                Total Verified Reviews
+              </div>
+            </div>
+          </div>
+
+          {reviews.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '2.5rem 1rem', color: '#64748b' }}>
+              <Star size={36} color="#f5b942" style={{ marginBottom: '0.6rem', opacity: 0.5 }} />
+              <h4 style={{ fontFamily: 'Outfit', fontSize: '0.98rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.35rem' }}>
+                No reviews yet
+              </h4>
+              <p style={{ margin: 0, fontSize: '0.8rem', color: '#94a3b8' }}>
+                When clients complete appointments with you, their ratings and feedback will appear here in real-time.
+              </p>
+            </div>
+          ) : (
+            reviews.map((r, idx) => (
+              <div
+                key={r._id || idx}
+                style={{
+                  background: '#151822',
+                  borderRadius: '16px',
+                  padding: '1rem',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                  <span style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 800, color: '#ffffff' }}>
+                    {r.customerName || 'Verified Client'}
+                  </span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#f5b942', fontSize: '0.8rem', fontWeight: 800, fontFamily: 'Outfit' }}>
+                    <Star size={12} fill="#f5b942" />
+                    <span>{Number(r.rating || 5).toFixed(1)}</span>
+                  </div>
+                </div>
+
+                <div style={{ fontSize: '0.74rem', color: '#64748b', marginBottom: '0.45rem' }}>
+                  Service: <span style={{ color: '#94a3b8', fontWeight: 600 }}>{r.serviceName || 'Specialist Appointment'}</span> • {r.createdAt ? new Date(r.createdAt).toLocaleDateString() : 'Recent'}
+                </div>
+
+                {r.comment && (
+                  <p style={{ margin: 0, fontSize: '0.82rem', color: '#cbd5e1', lineHeight: 1.4, fontStyle: 'italic' }}>
+                    "{r.comment}"
+                  </p>
+                )}
+              </div>
+            ))
+          )}
+        </div>
+      </BottomSheet>
+
     </PageContainer>
   );
 };
+
 export default ExpertDashboard;

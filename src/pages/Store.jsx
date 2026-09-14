@@ -21,6 +21,7 @@ import { OptimizedImage } from '../components/common/OptimizedImage';
 import { preloadRoute } from '../App';
 import { api } from '../services/api';
 import { SkeletonGrid } from '../components/common/SkeletonLoader';
+import { getFavorites, toggleFavorite as toggleFavUtil, subscribeToFavorites } from '../utils/favorites';
 
 // Intelligent category inferrer for items lacking an explicit category in DB
 const inferProductCategory = (p) => {
@@ -110,7 +111,13 @@ export const Store = () => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
   const [activeCategory, setActiveCategory] = useState(searchParams.get('cat') || 'All');
-  const [favorites, setFavorites] = useState({});
+  const [favorites, setFavorites] = useState(getFavorites());
+
+  useEffect(() => {
+    return subscribeToFavorites((newFavs) => {
+      setFavorites({ ...newFavs });
+    });
+  }, []);
 
   const categoryPills = [
     { label: 'All', icon: Layers, cat: 'All' },
@@ -156,8 +163,10 @@ export const Store = () => {
 
   const toggleFavorite = (id, e) => {
     if (e) e.stopPropagation();
-    setFavorites((prev) => ({ ...prev, [id]: !prev[id] }));
+    const isNowFav = toggleFavUtil(id);
+    showToast(isNowFav ? 'Saved to favorites' : 'Removed from favorites', 'accent');
   };
+
 
   const handleAdd = (p, e) => {
     if (e) e.stopPropagation();

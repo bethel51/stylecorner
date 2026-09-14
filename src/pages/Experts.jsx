@@ -6,6 +6,7 @@ import { Avatar } from '../components/common/Avatar';
 import { SkeletonGrid } from '../components/common/SkeletonLoader';
 import { preloadRoute } from '../App';
 import { api } from '../services/api';
+import { getFavorites, toggleFavorite as toggleFavUtil, subscribeToFavorites } from '../utils/favorites';
 
 const EXPERT_CATEGORIES = ['All', 'Hair', 'Nails', 'Braids', 'Makeup'];
 
@@ -15,7 +16,13 @@ export const Experts = () => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
-  const [favorites, setFavorites] = useState({});
+  const [favorites, setFavorites] = useState(getFavorites());
+
+  useEffect(() => {
+    return subscribeToFavorites((newFavs) => {
+      setFavorites({ ...newFavs });
+    });
+  }, []);
 
   const categories = EXPERT_CATEGORIES;
 
@@ -63,8 +70,9 @@ export const Experts = () => {
 
   const toggleFavorite = (id, e) => {
     e.stopPropagation();
-    setFavorites((prev) => ({ ...prev, [id]: !prev[id] }));
+    toggleFavUtil(id);
   };
+
 
   const filteredStylists = useMemo(() => {
     return team.filter((s) => {

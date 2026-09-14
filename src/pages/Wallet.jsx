@@ -422,9 +422,10 @@ export const Wallet = () => {
               letterSpacing: '0.1em',
             }}
           >
-            BETHEL-VIP
+            {user?.firstname ? `${user.firstname.toUpperCase()}-VIP` : 'STYLECORNER-VIP'}
           </div>
         </div>
+
       </PopupModal>
 
       {/* 3rd Saturday Withdraw Modal */}
