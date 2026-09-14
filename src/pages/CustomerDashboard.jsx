@@ -432,285 +432,41 @@ export const CustomerDashboard = () => {
           );
         })()}
 
-        {/* ── Screen 8: 2x2 Quick Action Grid ── */}
+
+
+        {/* ── Beauty Store Promo Banner ── */}
         <div
+          onClick={() => navigate('/store')}
           style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(2, 1fr)',
-            gap: '0.75rem',
-            marginBottom: '1.5rem',
+            background: 'linear-gradient(135deg, #151822 0%, #1c202d 100%)',
+            borderRadius: '20px',
+            padding: '1.15rem 1.25rem',
+            border: '1px solid rgba(245, 185, 66, 0.2)',
+            marginBottom: '1rem',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '1rem',
+            position: 'relative',
+            overflow: 'hidden',
           }}
         >
-          {/* My Bookings */}
-          <div
-            onClick={() => setShowHistorySheet(true)}
-            style={{
-              background: '#151822',
-              borderRadius: '16px',
-              padding: '1rem',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              cursor: 'pointer',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '0.35rem',
-            }}
-          >
-            <div
-              style={{
-                width: '36px',
-                height: '36px',
-                borderRadius: '10px',
-                background: 'rgba(245, 185, 66, 0.12)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#f5b942',
-              }}
-            >
-              <Calendar size={18} />
+          <div style={{ position: 'absolute', top: '-20px', right: '-20px', width: '100px', height: '100px', borderRadius: '50%', background: 'rgba(245,185,66,0.06)', pointerEvents: 'none' }} />
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.3rem' }}>
+              <ShoppingBag size={15} color="#f5b942" />
+              <span style={{ fontFamily: 'Outfit', fontSize: '0.72rem', fontWeight: 800, color: '#f5b942', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Beauty Store</span>
             </div>
-            <h4 style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
-              My Bookings
-            </h4>
-            <span style={{ fontSize: '0.74rem', color: '#94a3b8' }}>
-              {bookings.length} {bookings.length === 1 ? 'appointment' : 'appointments'}
-            </span>
+            <h3 style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.2rem' }}>Hair, Nails & Grooming</h3>
+            <p style={{ fontSize: '0.78rem', color: '#64748b', margin: 0 }}>Shop premium beauty products →</p>
           </div>
-
-          {/* My Orders */}
-          <div
-            onClick={() => {
-              setActiveTab('orders');
-              setShowHistorySheet(true);
-            }}
-            style={{
-              background: '#151822',
-              borderRadius: '16px',
-              padding: '1rem',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              cursor: 'pointer',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '0.35rem',
-            }}
-          >
-            <div
-              style={{
-                width: '36px',
-                height: '36px',
-                borderRadius: '10px',
-                background: 'rgba(245, 185, 66, 0.12)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#f5b942',
-              }}
-            >
-              <ShoppingBag size={18} />
-            </div>
-            <h4 style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
-              My Orders
-            </h4>
-            <span style={{ fontSize: '0.74rem', color: '#94a3b8' }}>
-              {orders.length} {orders.length === 1 ? 'order' : 'orders'}
-            </span>
-          </div>
-
-          {/* Wallet */}
-          <div
-            onClick={() => navigate('/wallet')}
-            style={{
-              background: '#151822',
-              borderRadius: '16px',
-              padding: '1rem',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              cursor: 'pointer',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '0.35rem',
-            }}
-          >
-            <div
-              style={{
-                width: '36px',
-                height: '36px',
-                borderRadius: '10px',
-                background: 'rgba(245, 185, 66, 0.12)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#f5b942',
-              }}
-            >
-              <Wallet size={18} />
-            </div>
-            <h4 style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
-              Wallet
-            </h4>
-            <span style={{ fontSize: '0.74rem', color: '#f5b942', fontWeight: 700 }}>
-              ₦{Number(walletBalance || 0).toLocaleString()}
-            </span>
-          </div>
-
-          {/* Store Essentials */}
-          <div
-            onClick={() => navigate('/store')}
-            style={{
-              background: '#151822',
-              borderRadius: '16px',
-              padding: '1rem',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              cursor: 'pointer',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '0.35rem',
-            }}
-          >
-            <div
-              style={{
-                width: '36px',
-                height: '36px',
-                borderRadius: '10px',
-                background: 'rgba(245, 185, 66, 0.12)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#f5b942',
-              }}
-            >
-              <Sparkles size={18} />
-            </div>
-            <h4 style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
-              Beauty Store
-            </h4>
-            <span style={{ fontSize: '0.74rem', color: '#94a3b8' }}>
-              Shop Essentials &gt;
-            </span>
-          </div>
-        </div>
-
-        {/* ── Screen 8: Recommended For You Section ── */}
-        <div style={{ marginBottom: '1.75rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
-            <h2 style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
-              Recommended For You
-            </h2>
-            <button
-              onClick={() => navigate('/store')}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: '#f5b942',
-                fontFamily: 'Outfit',
-                fontWeight: 700,
-                fontSize: '0.82rem',
-                cursor: 'pointer',
-              }}
-            >
-              See all &gt;
-            </button>
-          </div>
-
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(2, 1fr)',
-              gap: '0.85rem',
-            }}
-          >
-            <div
-              onClick={() => navigate('/store')}
-              style={{
-                background: '#151822',
-                borderRadius: '18px',
-                padding: '0.75rem',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                cursor: 'pointer',
-              }}
-            >
-              <div style={{ width: '100%', height: '120px', borderRadius: '12px', overflow: 'hidden', marginBottom: '0.65rem', backgroundColor: '#1c202d' }}>
-                <OptimizedImage
-                  src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=300&q=80"
-                  alt="Edge Control"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                />
-              </div>
-              <h4 style={{ fontFamily: 'Outfit', fontSize: '0.88rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.25rem' }}>
-                Edge Control
-              </h4>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 800, color: '#ffffff' }}>
-                  ₦7,000
-                </span>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    navigate('/store');
-                  }}
-                  style={{
-                    width: '28px',
-                    height: '28px',
-                    borderRadius: '50%',
-                    background: '#f5b942',
-                    color: '#0c0e14',
-                    border: 'none',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                  }}
-                >
-                  <Plus size={16} strokeWidth={2.5} />
-                </button>
-              </div>
-            </div>
-
-            <div
-              onClick={() => navigate('/store')}
-              style={{
-                background: '#151822',
-                borderRadius: '18px',
-                padding: '0.75rem',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                cursor: 'pointer',
-              }}
-            >
-              <div style={{ width: '100%', height: '120px', borderRadius: '12px', overflow: 'hidden', marginBottom: '0.65rem', backgroundColor: '#1c202d' }}>
-                <OptimizedImage
-                  src="https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=300&q=80"
-                  alt="Face Mask"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                />
-              </div>
-              <h4 style={{ fontFamily: 'Outfit', fontSize: '0.88rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.25rem' }}>
-                Face Mask
-              </h4>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 800, color: '#ffffff' }}>
-                  ₦9,500
-                </span>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    navigate('/store');
-                  }}
-                  style={{
-                    width: '28px',
-                    height: '28px',
-                    borderRadius: '50%',
-                    background: '#f5b942',
-                    color: '#0c0e14',
-                    border: 'none',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                  }}
-                >
-                  <Plus size={16} strokeWidth={2.5} />
-                </button>
-              </div>
-            </div>
+          <div style={{
+            width: '48px', height: '48px', borderRadius: '14px',
+            background: 'rgba(245,185,66,0.12)', border: '1px solid rgba(245,185,66,0.25)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+          }}>
+            <Sparkles size={22} color="#f5b942" />
           </div>
         </div>
 
@@ -750,18 +506,17 @@ export const CustomerDashboard = () => {
         </div>
 
         {/* ══════════════════════════════════════════════
-            SECTION 3 — CATEGORIES (MATCHING USER SCREENSHOT)
+            SECTION 3 — CATEGORIES
         ══════════════════════════════════════════════ */}
         <div style={{
-          background: '#ffffff',
+          background: '#151822',
           borderRadius: '22px',
           padding: '1.1rem 1rem',
           marginBottom: '1rem',
-          border: '1px solid rgba(0,0,0,0.06)',
-          boxShadow: '0 4px 16px rgba(0,0,0,0.03)',
+          border: '1px solid rgba(255,255,255,0.08)',
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
-            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: '#171717', margin: 0 }}>
+            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
               Categories
             </h3>
             <button
@@ -769,7 +524,7 @@ export const CustomerDashboard = () => {
               style={{
                 background: 'none',
                 border: 'none',
-                color: '#ec4899',
+                color: '#f5b942',
                 fontFamily: 'Outfit',
                 fontWeight: 700,
                 fontSize: '0.85rem',
@@ -897,25 +652,24 @@ export const CustomerDashboard = () => {
                   flexShrink: 0
                 }}
               >
-                <div
+              <div
                   style={{
-                    width: '74px',
-                    height: '74px',
-                    borderRadius: '20px',
-                    background: cat.bg,
-                    border: '1px solid rgba(236,72,153,0.12)',
+                    width: '64px',
+                    height: '64px',
+                    borderRadius: '18px',
+                    background: 'rgba(245,185,66,0.1)',
+                    border: '1px solid rgba(245,185,66,0.18)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.03)',
-                    transition: 'transform 0.15s ease, box-shadow 0.15s ease'
+                    transition: 'transform 0.15s ease, background 0.15s ease',
                   }}
-                  onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.05)'; e.currentTarget.style.boxShadow = '0 8px 20px rgba(236,72,153,0.18)'; }}
-                  onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.03)'; }}
+                  onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.07)'; e.currentTarget.style.background = 'rgba(245,185,66,0.18)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.background = 'rgba(245,185,66,0.1)'; }}
                 >
                   {cat.icon}
                 </div>
-                <span style={{ fontFamily: 'Outfit', fontSize: '0.78rem', fontWeight: 700, color: '#374151' }}>
+                <span style={{ fontFamily: 'Outfit', fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8' }}>
                   {cat.label}
                 </span>
               </div>
@@ -927,9 +681,8 @@ export const CustomerDashboard = () => {
             SECTION 4 — QUICK ACTION SHORTCUTS (ICON CARDS)
         ══════════════════════════════════════════════ */}
         <div style={{
-          background: '#fff', border: '1px solid rgba(0,0,0,0.07)',
+          background: '#151822', border: '1px solid rgba(255,255,255,0.08)',
           borderRadius: '22px', padding: '1.1rem', marginBottom: '1rem',
-          boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
         }}>
           <div style={sectionLabel}>
             <div style={sectionIcon('#171717', '#d4af37')}><Sparkles size={13} /></div>
@@ -1002,10 +755,10 @@ export const CustomerDashboard = () => {
                   {item.icon}
                 </div>
                 <div>
-                  <div style={{ fontFamily: 'Outfit', fontSize: '0.88rem', fontWeight: 800, color: item.textColor || '#171717', lineHeight: 1.1 }}>
+                  <div style={{ fontFamily: 'Outfit', fontSize: '0.88rem', fontWeight: 800, color: item.textColor || '#ffffff', lineHeight: 1.1 }}>
                     {item.label}
                   </div>
-                  <div style={{ fontSize: '0.7rem', color: item.subColor || '#6b7280', marginTop: '0.15rem', fontWeight: 600 }}>
+                  <div style={{ fontSize: '0.7rem', color: item.subColor || '#64748b', marginTop: '0.15rem', fontWeight: 600 }}>
                     {item.sub}
                   </div>
                 </div>
@@ -1015,16 +768,15 @@ export const CustomerDashboard = () => {
         </div>
 
         {/* ══════════════════════════════════════════════
-            SECTION 4 — ACCOUNT SETTINGS
+            SECTION 5 — ACCOUNT SETTINGS
         ══════════════════════════════════════════════ */}
         <div style={{
-          background: '#fff', border: '1px solid rgba(239,68,68,0.18)',
+          background: '#151822', border: '1px solid rgba(239,68,68,0.2)',
           borderRadius: '22px', padding: '1.1rem',
-          boxShadow: '0 4px 16px rgba(0,0,0,0.03)',
         }}>
           <div style={sectionLabel}>
-            <div style={sectionIcon('rgba(239,68,68,0.1)', '#ef4444')}><AlertTriangle size={13} /></div>
-            <span style={sectionTitle}>Account Settings</span>
+            <div style={sectionIcon('rgba(239,68,68,0.15)', '#ef4444')}><AlertTriangle size={13} /></div>
+            <span style={{ ...sectionTitle, color: '#94a3b8' }}>Account Settings</span>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
@@ -1091,8 +843,9 @@ export const CustomerDashboard = () => {
 
           {/* Tab Switcher */}
           <div style={{
-            display: 'flex', background: '#f3f4f6',
+            display: 'flex', background: '#1c202d',
             borderRadius: '14px', padding: '4px', gap: '4px', marginBottom: '1.1rem',
+            border: '1px solid rgba(255,255,255,0.06)',
           }}>
             {[
               { id: 'bookings', label: 'Appointments', icon: <Calendar size={14} />, count: bookings.length },
@@ -1105,17 +858,17 @@ export const CustomerDashboard = () => {
                   flex: 1, padding: '0.6rem', borderRadius: '11px', border: 'none',
                   fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.82rem',
                   cursor: 'pointer', transition: 'all 0.2s ease',
-                  background: activeTab === tab.id ? '#fff' : 'transparent',
-                  color: activeTab === tab.id ? '#171717' : '#6b7280',
-                  boxShadow: activeTab === tab.id ? '0 2px 10px rgba(0,0,0,0.08)' : 'none',
+                  background: activeTab === tab.id ? '#151822' : 'transparent',
+                  color: activeTab === tab.id ? '#ffffff' : '#64748b',
+                  boxShadow: activeTab === tab.id ? '0 2px 10px rgba(0,0,0,0.3)' : 'none',
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
                 }}
               >
                 {tab.icon}
                 {tab.label}
                 <span style={{
-                  background: activeTab === tab.id ? '#171717' : 'rgba(0,0,0,0.08)',
-                  color: activeTab === tab.id ? '#d4af37' : '#6b7280',
+                  background: activeTab === tab.id ? 'rgba(245,185,66,0.2)' : 'rgba(255,255,255,0.08)',
+                  color: activeTab === tab.id ? '#f5b942' : '#64748b',
                   borderRadius: '50px', padding: '0 0.4rem', fontSize: '0.7rem', fontWeight: 900,
                 }}>
                   {tab.count}
@@ -1147,17 +900,17 @@ export const CustomerDashboard = () => {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                   {bookings.map((b) => (
                     <div key={b._id} style={{
-                      border: '1px solid rgba(0,0,0,0.07)', borderRadius: '16px',
-                      padding: '0.9rem', background: '#fafafa', overflow: 'hidden',
+                      border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px',
+                      padding: '0.9rem', background: '#151822', overflow: 'hidden',
                     }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.55rem', gap: '0.4rem', flexWrap: 'wrap' }}>
                         <div style={{ flex: '1 1 0%', minWidth: 0 }}>
-                          <h4 style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 800, color: '#171717', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          <h4 style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 800, color: '#ffffff', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                             {b.service}
                           </h4>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', marginTop: '0.2rem', fontSize: '0.72rem', color: '#6b7280', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', marginTop: '0.2rem', fontSize: '0.72rem', color: '#64748b', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                             <Sparkles size={10} color="#d4af37" style={{ flexShrink: 0 }} />
-                            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Specialist: <strong style={{ color: '#171717' }}>{b.stylist}</strong></span>
+                            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Specialist: <strong style={{ color: '#94a3b8' }}>{b.stylist}</strong></span>
                           </div>
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.25rem', flexShrink: 0 }}>
@@ -1170,21 +923,21 @@ export const CustomerDashboard = () => {
 
                       <div style={{
                         display: 'flex', alignItems: 'center', gap: '0.35rem',
-                        background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.2)',
+                        background: 'rgba(245,185,66,0.08)', border: '1px solid rgba(245,185,66,0.18)',
                         borderRadius: '10px', padding: '0.45rem 0.65rem', marginBottom: '0.55rem',
-                        fontSize: '0.75rem', color: '#171717', fontWeight: 700, overflow: 'hidden',
+                        fontSize: '0.75rem', color: '#ffffff', fontWeight: 700, overflow: 'hidden',
                       }}>
                         <Clock size={12} color="#d4af37" style={{ flexShrink: 0 }} />
                         <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{b.date} at {b.time}</span>
                       </div>
 
                       {b.status === 'accepted' && (
-                        <div style={{ padding: '0.4rem 0.65rem', background: 'rgba(16,185,129,0.09)', border: '1px solid rgba(16,185,129,0.25)', borderRadius: '10px', fontSize: '0.72rem', color: '#065f46', fontWeight: 700, marginBottom: '0.45rem' }}>
+                        <div style={{ padding: '0.4rem 0.65rem', background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.25)', borderRadius: '10px', fontSize: '0.72rem', color: '#10b981', fontWeight: 700, marginBottom: '0.45rem' }}>
                           ✓ Accepted by {b.stylist}
                         </div>
                       )}
                       {b.status === 'completed' && (
-                        <div style={{ padding: '0.4rem 0.65rem', background: 'rgba(16,185,129,0.09)', border: '1px solid rgba(16,185,129,0.25)', borderRadius: '10px', fontSize: '0.72rem', color: '#065f46', fontWeight: 700, marginBottom: '0.45rem' }}>
+                        <div style={{ padding: '0.4rem 0.65rem', background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.25)', borderRadius: '10px', fontSize: '0.72rem', color: '#10b981', fontWeight: 700, marginBottom: '0.45rem' }}>
                           ✓ Service rendered successfully
                         </div>
                       )}
@@ -1248,15 +1001,15 @@ export const CustomerDashboard = () => {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                   {orders.map((o) => (
                     <div key={o._id} style={{
-                      border: '1px solid rgba(0,0,0,0.07)', borderRadius: '16px',
-                      padding: '0.9rem', background: '#fafafa', overflow: 'hidden',
+                      border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px',
+                      padding: '0.9rem', background: '#151822', overflow: 'hidden',
                     }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.55rem', gap: '0.4rem', flexWrap: 'wrap' }}>
                         <div style={{ flex: '1 1 0%', minWidth: 0 }}>
-                          <h4 style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 800, color: '#171717', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          <h4 style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 800, color: '#ffffff', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                             {o.item || 'Grooming Product'}
                           </h4>
-                          <p style={{ color: '#9ca3af', fontSize: '0.7rem', margin: '0.15rem 0 0' }}>
+                          <p style={{ color: '#64748b', fontSize: '0.7rem', margin: '0.15rem 0 0' }}>
                             Order #{String(o._id).slice(-6).toUpperCase()}
                           </p>
                           {o.address && (
@@ -1272,7 +1025,7 @@ export const CustomerDashboard = () => {
                           </div>
                         </div>
                       </div>
-                      <div style={{ borderTop: '1px solid rgba(0,0,0,0.06)', paddingTop: '0.55rem', display: 'flex', gap: '0.5rem' }}>
+                      <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '0.55rem', display: 'flex', gap: '0.5rem' }}>
                         <button
                           onClick={() => { setShowHistorySheet(false); setSelectedOrderForTracking(o); }}
                           className="app-btn app-btn-accent"
@@ -1346,7 +1099,7 @@ export const CustomerDashboard = () => {
                   <div key={idx} style={{
                     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                     padding: '0.7rem 0.75rem', borderRadius: '14px',
-                    background: '#fafafa', border: '1px solid rgba(0,0,0,0.06)',
+                    background: '#151822', border: '1px solid rgba(255,255,255,0.08)',
                     gap: '0.5rem', overflow: 'hidden',
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flex: '1 1 0%', minWidth: 0, overflow: 'hidden' }}>
@@ -1359,10 +1112,10 @@ export const CustomerDashboard = () => {
                       </div>
                       <div style={{ minWidth: 0, overflow: 'hidden' }}>
                         <div style={{
-                          fontFamily: 'Outfit', fontSize: '0.82rem', fontWeight: 800, color: '#171717',
+                          fontFamily: 'Outfit', fontSize: '0.82rem', fontWeight: 800, color: '#ffffff',
                           overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                         }}>{item.title}</div>
-                        <div style={{ fontSize: '0.68rem', color: '#6b7280', marginTop: '0.1rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.sub}</div>
+                        <div style={{ fontSize: '0.68rem', color: '#64748b', marginTop: '0.1rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.sub}</div>
                       </div>
                     </div>
                     <div style={{ flexShrink: 0 }}>

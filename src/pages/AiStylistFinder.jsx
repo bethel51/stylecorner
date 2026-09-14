@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Sparkles, ArrowLeft, ArrowRight, Star, X, Check } from 'lucide-react';
 import { PageContainer } from '../components/common/PageContainer';
-import { OptimizedImage } from '../components/common/OptimizedImage';
 import { Avatar } from '../components/common/Avatar';
 import { api } from '../services/api';
 
@@ -73,47 +72,80 @@ export const AiStylistFinder = () => {
           </p>
         </div>
 
-        {/* Hero Image with Gold Sparkle Overlay */}
+        {/* Luxury AI Matching Visual Hero Banner */}
         <div
           style={{
             position: 'relative',
             width: '100%',
-            height: '240px',
+            padding: '2rem 1.5rem',
             borderRadius: '24px',
             overflow: 'hidden',
-            backgroundColor: '#151822',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
+            background: 'linear-gradient(135deg, #181c28 0%, #12151e 50%, #0c0e14 100%)',
+            border: '1px solid rgba(245, 185, 66, 0.3)',
+            boxShadow: '0 12px 32px rgba(0, 0, 0, 0.45)',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            minHeight: '200px',
+            boxSizing: 'border-box',
           }}
         >
-          <OptimizedImage
-            src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80"
-            alt="AI Matcher Stylist"
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-          />
+          {/* Subtle Ambient Radial Glow */}
           <div
             style={{
               position: 'absolute',
-              inset: 0,
-              background: 'linear-gradient(180deg, rgba(12, 14, 20, 0.2) 0%, rgba(12, 14, 20, 0.7) 100%)',
-            }}
-          />
-          <div
-            style={{
-              position: 'absolute',
-              top: '16px',
-              right: '16px',
-              width: '38px',
-              height: '38px',
+              top: '-30%',
+              right: '-15%',
+              width: '240px',
+              height: '240px',
               borderRadius: '50%',
-              background: 'rgba(245, 185, 66, 0.2)',
-              border: '1px solid rgba(245, 185, 66, 0.5)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#f5b942',
+              background: 'radial-gradient(circle, rgba(245, 185, 66, 0.18) 0%, rgba(0,0,0,0) 70%)',
+              pointerEvents: 'none',
             }}
-          >
-            <Sparkles size={20} />
+          />
+          <div
+            style={{
+              position: 'absolute',
+              bottom: '-20%',
+              left: '-10%',
+              width: '200px',
+              height: '200px',
+              borderRadius: '50%',
+              background: 'radial-gradient(circle, rgba(212, 175, 55, 0.12) 0%, rgba(0,0,0,0) 70%)',
+              pointerEvents: 'none',
+            }}
+          />
+
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                background: 'rgba(245, 185, 66, 0.15)',
+                border: '1px solid rgba(245, 185, 66, 0.35)',
+                borderRadius: '50px',
+                padding: '0.3rem 0.8rem',
+                color: '#f5b942',
+                fontFamily: 'Outfit',
+                fontSize: '0.74rem',
+                fontWeight: 800,
+                letterSpacing: '0.05em',
+                textTransform: 'uppercase',
+                marginBottom: '0.85rem',
+              }}
+            >
+              <Sparkles size={14} />
+              <span>Smart Precision Matching</span>
+            </div>
+
+            <h2 style={{ fontFamily: 'Outfit', fontSize: '1.35rem', fontWeight: 900, color: '#ffffff', margin: '0 0 0.4rem', lineHeight: 1.25 }}>
+              Match With Your Ideal Stylist in Seconds
+            </h2>
+
+            <p style={{ color: '#94a3b8', fontSize: '0.82rem', margin: 0, lineHeight: 1.45, maxWidth: '340px' }}>
+              Our AI engine matches your specific hair texture, desired service & location to vetted luxury specialists.
+            </p>
           </div>
         </div>
 
@@ -239,25 +271,18 @@ export const AiStylistFinder = () => {
               style={{
                 position: 'relative',
                 width: '100%',
-                height: '180px',
+                padding: '1.75rem 1rem',
                 borderRadius: '20px',
-                overflow: 'hidden',
                 marginBottom: '1.25rem',
-                backgroundColor: '#151822',
+                background: 'linear-gradient(135deg, rgba(245, 185, 66, 0.12) 0%, rgba(21, 24, 34, 0.95) 100%)',
+                border: '1px solid rgba(245, 185, 66, 0.35)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxSizing: 'border-box',
               }}
             >
-              <OptimizedImage
-                src={matchResult.avatar}
-                alt={matchResult.name}
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-              />
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  background: 'linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(14, 17, 25, 0.9) 100%)',
-                }}
-              />
               <div
                 style={{
                   position: 'absolute',
@@ -266,8 +291,19 @@ export const AiStylistFinder = () => {
                   color: '#f5b942',
                 }}
               >
-                <Sparkles size={24} />
+                <Sparkles size={22} />
               </div>
+
+              <Avatar
+                src={matchResult.avatar}
+                name={matchResult.name}
+                size={84}
+                borderRadius="50%"
+                style={{
+                  border: '3px solid #f5b942',
+                  boxShadow: '0 8px 24px rgba(245, 185, 66, 0.35)',
+                }}
+              />
             </div>
 
             {/* Headline & Subtitle */}
@@ -293,22 +329,13 @@ export const AiStylistFinder = () => {
                 marginBottom: '1.25rem',
               }}
             >
-              <div
-                style={{
-                  width: '54px',
-                  height: '54px',
-                  borderRadius: '14px',
-                  overflow: 'hidden',
-                  flexShrink: 0,
-                  border: '1.5px solid #f5b942',
-                }}
-              >
-                <OptimizedImage
-                  src={matchResult.avatar}
-                  alt={matchResult.name}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                />
-              </div>
+              <Avatar
+                src={matchResult.avatar}
+                name={matchResult.name}
+                size={54}
+                borderRadius="14px"
+                style={{ border: '1.5px solid #f5b942', flexShrink: 0 }}
+              />
 
               <div style={{ flex: 1, minWidth: 0 }}>
                 <h3 style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.2rem' }}>

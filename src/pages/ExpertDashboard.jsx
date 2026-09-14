@@ -37,6 +37,7 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import { uploadToCloudinary } from '../services/cloudinary';
+import { Avatar } from '../components/common/Avatar';
 import { PageContainer } from '../components/common/PageContainer';
 import { StatusBadge } from '../components/common/StatusBadge';
 import { SkeletonList } from '../components/common/SkeletonLoader';
@@ -740,23 +741,16 @@ export const ExpertDashboard = () => {
               title="Tap to update profile avatar"
             >
               <input type="file" accept="image/*" onChange={handlePhotoUpload} style={{ display: 'none' }} />
-              <div
+              <Avatar
+                src={user?.avatarUrl || ''}
+                name={`${user?.firstname || 'S'} ${user?.lastname || ''}`}
+                size={68}
+                borderRadius="50%"
                 style={{
-                  width: '68px',
-                  height: '68px',
-                  borderRadius: '50%',
-                  background: user?.avatarUrl
-                    ? `url(${user.avatarUrl}) center/cover no-repeat`
-                    : 'linear-gradient(135deg, #f5b942, #d99a26)',
                   border: '2.5px solid #f5b942',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
                   boxShadow: '0 4px 16px rgba(245, 185, 66, 0.25)',
                 }}
-              >
-                {!user?.avatarUrl && <Scissors size={28} color="#0c0e14" />}
-              </div>
+              />
               <div
                 style={{
                   position: 'absolute',

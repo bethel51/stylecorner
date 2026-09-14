@@ -265,10 +265,10 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
           <div
             style={{
               padding: '1.1rem 0.95rem',
-              background: '#ffffff',
-              border: '2px solid #d4af37',
+              background: 'linear-gradient(145deg, #181c28 0%, #12151e 100%)',
+              border: '1.5px solid rgba(245, 185, 66, 0.45)',
               borderRadius: '18px',
-              boxShadow: '0 10px 28px rgba(212,175,55,0.18)',
+              boxShadow: '0 10px 28px rgba(0, 0, 0, 0.4)',
               position: 'relative',
               overflow: 'hidden',
               boxSizing: 'border-box'
@@ -280,7 +280,7 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
                   fontFamily: 'Outfit',
                   fontSize: '0.68rem',
                   fontWeight: 900,
-                  color: '#b5952f',
+                  color: '#f5b942',
                   textTransform: 'uppercase',
                   letterSpacing: '0.06em',
                   display: 'flex',
@@ -288,12 +288,13 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
                   gap: '0.25rem'
                 }}
               >
-                <Sparkles size={12} color="#d4af37" /> AI RECOMMENDED MATCH
+                <Sparkles size={12} color="#f5b942" /> AI RECOMMENDED MATCH
               </span>
 
               <span style={{
-                background: '#10b981',
-                color: '#ffffff',
+                background: 'rgba(16, 185, 129, 0.2)',
+                color: '#10b981',
+                border: '1px solid rgba(16, 185, 129, 0.4)',
                 fontFamily: 'Outfit',
                 fontWeight: 900,
                 fontSize: '0.7rem',
@@ -312,23 +313,24 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
                 name={matchResult.name || 'Specialist'}
                 size={56}
                 borderRadius="50%"
+                style={{ border: '2px solid #f5b942' }}
               />
 
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                  <h3 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 900, color: '#171717', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <h3 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 900, color: '#ffffff', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {matchResult.name}
                   </h3>
-                  <ShieldCheck size={15} color="#d4af37" style={{ flexShrink: 0 }} />
+                  <ShieldCheck size={15} color="#f5b942" style={{ flexShrink: 0 }} />
                 </div>
-                <p style={{ color: '#6b7280', fontSize: '0.78rem', fontFamily: 'Outfit', fontWeight: 600, margin: '0.1rem 0 0.2rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <p style={{ color: '#f5b942', fontSize: '0.78rem', fontFamily: 'Outfit', fontWeight: 700, margin: '0.1rem 0 0.2rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {matchResult.role || 'Certified Atelier Specialist'}
                 </p>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.72rem', color: '#4b5563' }}>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#f59e0b', fontWeight: 800 }}>
-                    <Star size={11} fill="#f59e0b" /> {matchResult.rating || 5.0}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.72rem', color: '#94a3b8' }}>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#f5b942', fontWeight: 800 }}>
+                    <Star size={11} fill="#f5b942" /> {matchResult.rating || 5.0}
                   </span>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#6b7280' }}>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#94a3b8' }}>
                     <MapPin size={11} /> {matchResult.location || preferredState}
                   </span>
                 </div>
@@ -337,12 +339,12 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
 
             {/* Rationale explanation */}
             <div style={{
-              background: '#faf9f5',
+              background: 'rgba(245, 185, 66, 0.08)',
               padding: '0.65rem 0.75rem',
               borderRadius: '12px',
-              border: '1px solid rgba(212,175,55,0.2)',
+              border: '1px solid rgba(245, 185, 66, 0.2)',
               fontSize: '0.78rem',
-              color: '#374151',
+              color: '#cbd5e1',
               lineHeight: 1.45,
               marginBottom: '0.85rem'
             }}>

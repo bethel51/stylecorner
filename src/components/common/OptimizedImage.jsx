@@ -33,8 +33,10 @@ export const OptimizedImage = ({
     ...style,
   };
 
+  const DEFAULT_FALLBACK = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100%' height='100%' fill='%23151822'/><circle cx='50' cy='50' r='20' fill='%23222736'/></svg>";
+
   const displaySrc = hasError
-    ? fallbackSrc || 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=400&q=70&fm=webp'
+    ? (fallbackSrc || DEFAULT_FALLBACK)
     : src;
 
   return (
