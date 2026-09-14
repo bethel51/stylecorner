@@ -151,9 +151,9 @@ export const CartSheet = ({ isOpen, onClose }) => {
                   justifyContent: 'space-between',
                   gap: '0.65rem',
                   padding: '0.75rem 0.85rem',
-                  background: '#faf9f6',
+                  background: '#151822',
                   borderRadius: '16px',
-                  border: '1px solid rgba(0,0,0,0.06)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
                   boxSizing: 'border-box',
                   width: '100%'
                 }}
@@ -170,7 +170,7 @@ export const CartSheet = ({ isOpen, onClose }) => {
                         borderRadius: '12px',
                         objectFit: 'cover',
                         flexShrink: 0,
-                        border: '1px solid rgba(0,0,0,0.06)'
+                        border: '1px solid rgba(255, 255, 255, 0.08)'
                       }}
                     />
                   )}
@@ -179,7 +179,7 @@ export const CartSheet = ({ isOpen, onClose }) => {
                       fontFamily: 'Outfit',
                       fontSize: '0.86rem',
                       fontWeight: 800,
-                      color: '#171717',
+                      color: '#ffffff',
                       margin: 0,
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
@@ -188,7 +188,7 @@ export const CartSheet = ({ isOpen, onClose }) => {
                     }}>
                       {item.title}
                     </h4>
-                    <span style={{ fontSize: '0.82rem', color: '#d4af37', fontWeight: 900, marginTop: '0.15rem', display: 'block' }}>
+                    <span style={{ fontSize: '0.82rem', color: '#f5b942', fontWeight: 900, marginTop: '0.15rem', display: 'block' }}>
                       ₦{Number(item.price).toLocaleString()}
                     </span>
                   </div>
@@ -200,9 +200,9 @@ export const CartSheet = ({ isOpen, onClose }) => {
                     style={{
                       display: 'flex',
                       alignItems: 'center',
-                      background: '#ffffff',
+                      background: '#1c202d',
                       borderRadius: '10px',
-                      border: '1px solid rgba(0,0,0,0.1)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
                       padding: '3px 5px',
                     }}
                   >
@@ -213,12 +213,12 @@ export const CartSheet = ({ isOpen, onClose }) => {
                       style={{
                         background: 'none', border: 'none', cursor: 'pointer',
                         padding: '6px 8px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        color: '#4b5563'
+                        color: '#94a3b8'
                       }}
                     >
                       <Minus size={12} />
                     </button>
-                    <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '0.85rem', padding: '0 4px', color: '#171717' }}>
+                    <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '0.85rem', padding: '0 4px', color: '#ffffff' }}>
                       {item.quantity}
                     </span>
                     <button
@@ -228,7 +228,7 @@ export const CartSheet = ({ isOpen, onClose }) => {
                       style={{
                         background: 'none', border: 'none', cursor: 'pointer',
                         padding: '6px 8px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        color: '#4b5563'
+                        color: '#94a3b8'
                       }}
                     >
                       <Plus size={12} />
@@ -240,8 +240,8 @@ export const CartSheet = ({ isOpen, onClose }) => {
                     aria-label="Remove item"
                     onClick={() => removeFromCart(item.id || item.title)}
                     style={{
-                      background: 'rgba(239,68,68,0.08)',
-                      border: '1px solid rgba(239,68,68,0.2)',
+                      background: 'rgba(239,68,68,0.12)',
+                      border: '1px solid rgba(239,68,68,0.3)',
                       borderRadius: '10px',
                       color: '#ef4444',
                       cursor: 'pointer',
@@ -260,18 +260,18 @@ export const CartSheet = ({ isOpen, onClose }) => {
           </div>
 
           {/* Checkout Form */}
-          <form onSubmit={handleCheckout} style={{ borderTop: '1px solid rgba(0,0,0,0.08)', paddingTop: '1rem' }}>
+          <form onSubmit={handleCheckout} style={{ borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '1rem' }}>
             <div style={{ marginBottom: '1.25rem' }}>
-              <h4 style={{ fontFamily: 'Outfit', fontSize: '0.88rem', fontWeight: 800, color: '#171717', marginBottom: '0.65rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+              <h4 style={{ fontFamily: 'Outfit', fontSize: '0.88rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.65rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
                 📍 Delivery Location Details
               </h4>
               <LocationSelector location={location} onChange={setLocation} />
             </div>
 
             {/* Voucher & Promo Code Section */}
-            <div style={{ background: '#faf9f5', border: '1px dashed rgba(212,175,55,0.4)', borderRadius: '14px', padding: '0.75rem 0.85rem', marginBottom: '1rem' }}>
+            <div style={{ background: 'rgba(245, 185, 66, 0.06)', border: '1px dashed rgba(245, 185, 66, 0.35)', borderRadius: '14px', padding: '0.75rem 0.85rem', marginBottom: '1rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
-                <span style={{ fontFamily: 'Outfit', fontSize: '0.78rem', fontWeight: 800, color: '#b5952f', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                <span style={{ fontFamily: 'Outfit', fontSize: '0.78rem', fontWeight: 800, color: '#f5b942', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
                   🎁 Loyalty Voucher & Promo
                 </span>
                 {appliedVoucher ? (
@@ -282,7 +282,7 @@ export const CartSheet = ({ isOpen, onClose }) => {
               </div>
 
               {appliedVoucher ? (
-                <div style={{ background: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.4)', borderRadius: '10px', padding: '0.5rem 0.75rem', color: '#856404', fontSize: '0.78rem', fontFamily: 'Outfit', fontWeight: 800, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ background: 'rgba(245,185,66,0.15)', border: '1px solid rgba(245,185,66,0.4)', borderRadius: '10px', padding: '0.5rem 0.75rem', color: '#f5b942', fontSize: '0.78rem', fontFamily: 'Outfit', fontWeight: 800, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span>✓ ₦25,000 Loyalty Voucher Applied!</span>
                   <span style={{ color: '#10b981', fontWeight: 900 }}>-₦25,000</span>
                 </div>
@@ -293,7 +293,7 @@ export const CartSheet = ({ isOpen, onClose }) => {
                     placeholder="Enter voucher code (e.g. LOYALTY25K)"
                     value={promoCode}
                     onChange={(e) => setPromoCode(e.target.value)}
-                    style={{ flex: 1, padding: '0.45rem 0.65rem', borderRadius: '10px', border: '1px solid rgba(0,0,0,0.15)', fontSize: '0.78rem', fontFamily: 'Outfit' }}
+                    style={{ flex: 1, padding: '0.55rem 0.75rem', borderRadius: '10px', border: '1px solid rgba(255, 255, 255, 0.12)', background: '#1c202d', color: '#ffffff', fontSize: '0.85rem', fontFamily: 'Outfit' }}
                   />
                   <button
                     type="button"
@@ -305,7 +305,7 @@ export const CartSheet = ({ isOpen, onClose }) => {
                         showToast('Please enter a valid promo or voucher code.', 'error');
                       }
                     }}
-                    style={{ background: '#171717', color: '#d4af37', border: 'none', borderRadius: '10px', padding: '0.45rem 0.85rem', fontSize: '0.78rem', fontFamily: 'Outfit', fontWeight: 900, cursor: 'pointer' }}
+                    style={{ background: '#f5b942', color: '#0c0e14', border: 'none', borderRadius: '10px', padding: '0.45rem 0.85rem', fontSize: '0.78rem', fontFamily: 'Outfit', fontWeight: 900, cursor: 'pointer' }}
                   >
                     Apply
                   </button>
@@ -320,11 +320,11 @@ export const CartSheet = ({ isOpen, onClose }) => {
                 flexDirection: 'column',
                 gap: '0.35rem',
                 padding: '0.75rem 0',
-                borderTop: '1px dashed rgba(0,0,0,0.1)',
+                borderTop: '1px dashed rgba(255, 255, 255, 0.1)',
                 marginBottom: '0.85rem'
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', color: '#6b7280' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', color: '#94a3b8' }}>
                 <span>Subtotal</span>
                 <span>₦{Number(subtotal).toLocaleString()}</span>
               </div>
@@ -335,10 +335,10 @@ export const CartSheet = ({ isOpen, onClose }) => {
                 </div>
               )}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '0.2rem' }}>
-                <span style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.9rem', color: '#171717', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                <span style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.9rem', color: '#ffffff', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                   Final Total
                 </span>
-                <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.35rem', color: '#171717' }}>
+                <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.35rem', color: '#f5b942' }}>
                   ₦{Number(Math.max(0, subtotal - (appliedVoucher ? 25000 : 0))).toLocaleString()}
                 </span>
               </div>

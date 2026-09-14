@@ -119,7 +119,23 @@ html, body {
 @media (max-width: 768px) {
   html, body, #root {
     width: 100%;
+    max-width: 100vw;
     overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* Prevent iOS Safari automatic viewport zoom on input focus */
+  .app-input,
+  .app-select,
+  .app-textarea,
+  .search-pill-input,
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="tel"],
+  input[type="number"],
+  input[type="search"] {
+    font-size: 16px !important;
   }
 
   .app-viewport {
@@ -127,6 +143,7 @@ html, body {
     max-width: 100% !important;
     box-shadow: none !important;
     min-height: 100vh;
+    min-height: 100dvh;
     height: auto;
   }
 
@@ -146,6 +163,11 @@ html, body {
     transform: none !important;
     padding-left: 0.25rem !important;
     padding-right: 0.25rem !important;
+  }
+
+  .page-content {
+    padding: 0.85rem !important;
+    padding-bottom: calc(1.75rem + env(safe-area-inset-bottom)) !important;
   }
 }
 

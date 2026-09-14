@@ -212,7 +212,7 @@ export const WithdrawFundsModal = ({
                 fontSize: '0.78rem',
                 fontWeight: 800,
                 fontFamily: 'Outfit',
-                color: windowInfo.isOpen ? '#15803d' : '#854d0e',
+                color: windowInfo.isOpen ? '#10b981' : '#f5b942',
               }}
             >
               {windowInfo.isOpen
@@ -222,7 +222,7 @@ export const WithdrawFundsModal = ({
             <div
               style={{
                 fontSize: '0.72rem',
-                color: windowInfo.isOpen ? '#166534' : '#713f12',
+                color: windowInfo.isOpen ? '#a7f3d0' : '#cbd5e1',
                 marginTop: '0.15rem',
                 lineHeight: 1.4,
               }}
@@ -237,8 +237,8 @@ export const WithdrawFundsModal = ({
         {/* Current Withdrawable Balance Banner */}
         <div
           style={{
-            background: '#fafaf9',
-            border: '1px solid rgba(212,175,55,0.3)',
+            background: '#1a1e2b',
+            border: '1px solid rgba(245, 185, 66, 0.3)',
             borderRadius: '14px',
             padding: '0.75rem 1rem',
             marginBottom: '1rem',
@@ -248,10 +248,10 @@ export const WithdrawFundsModal = ({
           }}
         >
           <div>
-            <div style={{ fontSize: '0.68rem', color: '#78716c', fontWeight: 800, textTransform: 'uppercase' }}>
+            <div style={{ fontSize: '0.68rem', color: '#94a3b8', fontWeight: 800, textTransform: 'uppercase' }}>
               Withdrawable Balance
             </div>
-            <div style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 900, color: '#171717' }}>
+            <div style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 900, color: '#ffffff' }}>
               ₦{Number(walletBalance).toLocaleString()}
             </div>
           </div>
@@ -259,9 +259,9 @@ export const WithdrawFundsModal = ({
             type="button"
             onClick={() => setWithdrawAmount(String(walletBalance))}
             style={{
-              background: 'rgba(212,175,55,0.15)',
-              border: '1px solid rgba(212,175,55,0.4)',
-              color: '#b5952f',
+              background: 'rgba(245, 185, 66, 0.15)',
+              border: '1px solid rgba(245, 185, 66, 0.4)',
+              color: '#f5b942',
               padding: '0.35rem 0.65rem',
               borderRadius: '50px',
               fontSize: '0.72rem',
@@ -328,8 +328,8 @@ export const WithdrawFundsModal = ({
         {resolvingAccount && (
           <div
             style={{
-              background: '#f8fafc',
-              border: '1px dashed #94a3b8',
+              background: '#1a1e2b',
+              border: '1px dashed rgba(245, 185, 66, 0.4)',
               borderRadius: '12px',
               padding: '0.75rem',
               marginBottom: '1rem',
@@ -337,7 +337,7 @@ export const WithdrawFundsModal = ({
               alignItems: 'center',
               gap: '0.5rem',
               fontSize: '0.8rem',
-              color: '#64748b',
+              color: '#94a3b8',
             }}
           >
             <Clock size={16} className="spin-slow" />
@@ -348,8 +348,8 @@ export const WithdrawFundsModal = ({
         {accountName && !resolvingAccount && (
           <div
             style={{
-              background: 'rgba(34,197,94,0.08)',
-              border: '1.5px solid rgba(34,197,94,0.4)',
+              background: 'rgba(16, 185, 129, 0.1)',
+              border: '1.5px solid rgba(16, 185, 129, 0.4)',
               borderRadius: '12px',
               padding: '0.75rem 1rem',
               marginBottom: '1rem',
@@ -358,12 +358,12 @@ export const WithdrawFundsModal = ({
               gap: '0.6rem',
             }}
           >
-            <ShieldCheck size={20} color="#16a34a" />
+            <ShieldCheck size={20} color="#10b981" />
             <div>
-              <div style={{ fontSize: '0.65rem', color: '#16a34a', fontWeight: 800, textTransform: 'uppercase' }}>
+              <div style={{ fontSize: '0.65rem', color: '#10b981', fontWeight: 800, textTransform: 'uppercase' }}>
                 Verified Account Name
               </div>
-              <div style={{ fontFamily: 'Outfit', fontWeight: 900, color: '#0f172a', fontSize: '0.95rem' }}>
+              <div style={{ fontFamily: 'Outfit', fontWeight: 900, color: '#ffffff', fontSize: '0.95rem' }}>
                 {accountName}
               </div>
             </div>

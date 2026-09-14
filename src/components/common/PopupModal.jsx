@@ -55,21 +55,24 @@ export const PopupModal = ({ isOpen, onClose, title, children, maxWidth = '480px
           left: 0,
           right: 0,
           zIndex: 99999,
-          background: '#ffffff',
+          background: '#12151e',
+          borderTop: '1.5px solid rgba(245, 185, 66, 0.35)',
+          borderLeft: '1px solid rgba(255, 255, 255, 0.08)',
+          borderRight: '1px solid rgba(255, 255, 255, 0.08)',
           borderTopLeftRadius: '24px',
           borderTopRightRadius: '24px',
           display: 'flex',
           flexDirection: 'column',
-          boxShadow: '0 -12px 40px rgba(0,0,0,0.25)',
+          boxShadow: '0 -16px 50px rgba(0, 0, 0, 0.9)',
           animation: 'pmSlideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1)',
         }}
       >
         {/* Drag handle — fixed at top */}
         <div style={{
           flexShrink: 0,
-          padding: '0.6rem 1.25rem 0',
+          padding: '0.65rem 1.25rem 0',
         }}>
-          <div style={{ width: '40px', height: '4px', background: '#e5e7eb', borderRadius: '10px', margin: '0 auto 0.75rem' }} />
+          <div style={{ width: '42px', height: '4px', background: 'rgba(245, 185, 66, 0.35)', borderRadius: '10px', margin: '0 auto 0.75rem' }} />
         </div>
 
         {/* Header — fixed at top */}
@@ -79,10 +82,10 @@ export const PopupModal = ({ isOpen, onClose, title, children, maxWidth = '480px
           justifyContent: 'space-between',
           alignItems: 'center',
           padding: '0 1.25rem 0.75rem',
-          borderBottom: '1px solid rgba(0,0,0,0.06)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
         }}>
           {title && (
-            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 800, color: '#171717', margin: 0 }}>
+            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
               {title}
             </h3>
           )}
@@ -90,15 +93,15 @@ export const PopupModal = ({ isOpen, onClose, title, children, maxWidth = '480px
             onClick={onClose}
             aria-label="Close"
             style={{
-              background: 'rgba(0,0,0,0.06)',
-              border: 'none',
+              background: 'rgba(255, 255, 255, 0.08)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
               borderRadius: '50%',
               width: '32px',
               height: '32px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#6b7280',
+              color: '#94a3b8',
               cursor: 'pointer',
               marginLeft: 'auto',
               flexShrink: 0,
