@@ -115,8 +115,8 @@ export const ExpertProfile = () => {
         location: user.location || 'Lagos, Nigeria',
         experience: 'Verified Atelier Expert',
         bio: user.bio || 'Specialized in bespoke styling and executive client care.',
-        avatar: user.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
-        coverImage: user.coverImage || 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=800&q=80',
+        avatar: user.avatarUrl || '',
+        coverImage: user.coverImage || '/images/hero-bg.png',
         services: userServices
       };
       setExpert(userProfile);
@@ -147,8 +147,8 @@ export const ExpertProfile = () => {
                 location: matched.location || 'Lagos, Nigeria',
                 experience: 'Verified Atelier Expert',
                 bio: matched.bio || `Specialized in premium hair and beauty services.`,
-                avatar: matched.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
-                coverImage: matched.coverImage || 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=800&q=80',
+                avatar: matched.avatarUrl || '',
+                coverImage: matched.coverImage || '/images/hero-bg.png',
                 services: specs
               };
               setExpert(dynamicProfile);
@@ -463,14 +463,23 @@ export const ExpertProfile = () => {
               width: '78px',
               height: '78px',
               borderRadius: '50%',
-              background: `url(${expert.avatar}) center/cover no-repeat`,
+              background: expert.avatar
+                ? `url(${expert.avatar}) center/cover no-repeat`
+                : 'linear-gradient(135deg, #f5b942 0%, #c99326 100%)',
               border: '4px solid #151822',
               boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
               cursor: 'pointer',
-              display: 'block'
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#0c0e14',
+              fontFamily: 'Outfit',
+              fontWeight: 800,
+              fontSize: '1.65rem',
             }}
             title="Tap to change profile picture"
           >
+            {!expert.avatar && (expert.name ? expert.name.split(' ').map(n=>n[0]).slice(0,2).join('').toUpperCase() : 'E')}
             <input type="file" accept="image/*" onChange={handleUploadAvatar} style={{ display: 'none' }} />
             <div style={{
               position: 'absolute',
@@ -692,23 +701,19 @@ export const ExpertProfile = () => {
 
             {expert?.portfolio && Array.isArray(expert.portfolio) && expert.portfolio.length > 0 ? (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '0.65rem' }}>
-                {expert.portfolio.map((imgUrl, i) => (
-                  <div key={i} style={{ borderRadius: '12px', overflow: 'hidden', height: '110px', border: '1px solid rgba(255,255,255,0.08)', background: '#1c202d' }}>
-                    <img src={imgUrl} alt={`Portfolio ${i + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  </div>
-                ))}
+                {expert.portfolio.map((item, i) => {
+                  const imgUrl = typeof item === 'object' ? (item.imageUrl || item.url) : item;
+                  if (!imgUrl) return null;
+                  return (
+                    <div key={i} style={{ borderRadius: '12px', overflow: 'hidden', height: '110px', border: '1px solid rgba(255,255,255,0.08)', background: '#1c202d' }}>
+                      <img src={imgUrl} alt={`Portfolio ${i + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
+                  );
+                })}
               </div>
             ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.65rem' }}>
-                {[
-                  'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=300&q=80',
-                  'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=300&q=80',
-                  'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=300&q=80'
-                ].map((fallbackImg, i) => (
-                  <div key={i} style={{ borderRadius: '12px', overflow: 'hidden', height: '100px', border: '1px solid rgba(255,255,255,0.08)', background: '#1c202d' }}>
-                    <img src={fallbackImg} alt="Sample work" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  </div>
-                ))}
+              <div style={{ textAlign: 'center', padding: '1.75rem 1rem', background: '#10131b', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.06)' }}>
+                <p style={{ color: '#64748b', fontSize: '0.82rem', margin: 0 }}>No portfolio samples uploaded yet.</p>
               </div>
             )}
           </div>

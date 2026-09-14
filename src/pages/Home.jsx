@@ -84,7 +84,7 @@ export const Home = () => {
             specialty: Array.isArray(s.services) && s.services[0]
               ? (typeof s.services[0] === 'object' ? (s.services[0].name || s.services[0].title || 'Professional Styling') : String(s.services[0]))
               : (typeof s.services === 'string' ? s.services : 'Professional Hair & Grooming'),
-            image: s.avatarUrl || s.profileImage || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
+            image: s.avatarUrl || s.profileImage || '',
           }));
           setSpecialists(mapped.slice(0, 3));
         } else {
@@ -149,9 +149,9 @@ export const Home = () => {
           position: 'relative',
           borderRadius: '24px',
           overflow: 'hidden',
-          backgroundImage: `url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=80')`,
+          backgroundImage: `linear-gradient(180deg, rgba(12,14,20,0.4) 0%, rgba(12,14,20,0.85) 100%), url('/images/hero-bg.png')`,
           backgroundSize: 'cover',
-          backgroundPosition: 'center top',
+          backgroundPosition: 'center',
           padding: '2.5rem 1.25rem 1.85rem',
           color: '#ffffff',
           boxShadow: '0 15px 40px rgba(0,0,0,0.6)',

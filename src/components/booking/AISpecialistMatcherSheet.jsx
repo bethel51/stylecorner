@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Sparkles, Check, Wand2, User, Star, MapPin, ShieldCheck, RefreshCw, Calendar, ArrowRight } from 'lucide-react';
 import { BottomSheet } from '../common/BottomSheet';
 import { OptimizedImage } from '../common/OptimizedImage';
+import { Avatar } from '../common/Avatar';
 import { api } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 
@@ -55,7 +56,7 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
       const dynamicSpecs = await api.getSpecialists().catch(() => []);
       const matchedSpec = Array.isArray(dynamicSpecs) && dynamicSpecs.find(s => s.role === 'staff' || s.isVerified);
       
-      const fallbackAvatar = matchedSpec?.avatarUrl || matchedSpec?.profileImage || matchedSpec?.image || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80';
+      const fallbackAvatar = matchedSpec?.avatarUrl || matchedSpec?.profileImage || matchedSpec?.image || '';
 
       if (data.match) {
         const fullName = data.match.name || `${data.match.firstname || ''} ${data.match.lastname || ''}`.trim() || 'Verified Specialist';
@@ -91,7 +92,7 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
         matchScore: 96,
         location: preferredState,
         rationale: `Matched based on your preference for ${selectedService} (${vibe}) in ${preferredState}. Dedicated to high-precision styling and long-lasting results.`,
-        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
+        avatar: '',
         service: selectedService,
       });
     } finally {
@@ -111,8 +112,8 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
   };
 
   const avatarSrc = matchResult
-    ? (matchResult.avatar || matchResult.avatarUrl || matchResult.profileImage || matchResult.image || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80')
-    : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80';
+    ? (matchResult.avatar || matchResult.avatarUrl || matchResult.profileImage || matchResult.image || '')
+    : '';
 
   return (
     <BottomSheet isOpen={isOpen} onClose={onClose} title="AI Specialist Matcher">
@@ -306,18 +307,11 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
 
             {/* Profile Info */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.85rem' }}>
-              <OptimizedImage
+              <Avatar
                 src={avatarSrc}
-                alt={matchResult.name || 'Artisan Profile'}
-                style={{
-                  width: '56px',
-                  height: '56px',
-                  borderRadius: '50%',
-                  objectFit: 'cover',
-                  border: '2.5px solid #d4af37',
-                  flexShrink: 0,
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.12)'
-                }}
+                name={matchResult.name || 'Specialist'}
+                size={56}
+                borderRadius="50%"
               />
 
               <div style={{ flex: 1, minWidth: 0 }}>

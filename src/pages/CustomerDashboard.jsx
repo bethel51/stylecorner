@@ -40,6 +40,7 @@ import { PopupModal } from '../components/common/PopupModal';
 import { WithdrawFundsModal } from '../components/common/WithdrawFundsModal';
 import { AISpecialistMatcherSheet } from '../components/booking/AISpecialistMatcherSheet';
 import { ImagePreviewModal } from '../components/common/ImagePreviewModal';
+import { Avatar } from '../components/common/Avatar';
 import { OrderTrackingSheet } from '../components/store/OrderTrackingSheet';
 import { LocationSelector } from '../components/store/LocationSelector';
 import { downloadBookingHistoryCSV, printBookingHistoryReport } from '../utils/bookingHistoryExport';
@@ -361,10 +362,12 @@ export const CustomerDashboard = () => {
                       border: '1.5px solid rgba(245, 185, 66, 0.35)',
                     }}
                   >
-                    <OptimizedImage
-                      src={upcoming.stylistImage || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80'}
-                      alt="Stylist"
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    <Avatar
+                      src={upcoming.stylistImage}
+                      name={upcoming.stylist || 'Stylist'}
+                      size={56}
+                      borderRadius="16px"
+                      style={{ width: '100%', height: '100%' }}
                     />
                   </div>
                 </div>

@@ -1,67 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, SlidersHorizontal, Star, Heart } from 'lucide-react';
+import { Search, SlidersHorizontal, Star, Heart, Users } from 'lucide-react';
 import { PageContainer } from '../components/common/PageContainer';
-import { OptimizedImage } from '../components/common/OptimizedImage';
+import { Avatar } from '../components/common/Avatar';
 import { preloadRoute } from '../App';
 import { api } from '../services/api';
-
-const DEFAULT_STYLISTS = [
-  {
-    id: 's-1',
-    name: 'Zainab A.',
-    category: 'Hair',
-    specialty: 'Hair Stylist',
-    rating: 4.9,
-    reviewsCount: '200+',
-    image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
-  },
-  {
-    id: 's-2',
-    name: 'Tomi B.',
-    category: 'Nails',
-    specialty: 'Nail Technician',
-    rating: 4.8,
-    reviewsCount: '195+',
-    image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80',
-  },
-  {
-    id: 's-3',
-    name: 'Blessing E.',
-    category: 'Braids',
-    specialty: 'Braider',
-    rating: 4.9,
-    reviewsCount: '160+',
-    image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=400&q=80',
-  },
-  {
-    id: 's-4',
-    name: 'Dami S.',
-    category: 'Makeup',
-    specialty: 'Makeup Artist',
-    rating: 4.7,
-    reviewsCount: '76+',
-    image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=400&q=80',
-  },
-  {
-    id: 's-5',
-    name: 'Amina K.',
-    category: 'Hair',
-    specialty: 'Wig Artist',
-    rating: 5.0,
-    reviewsCount: '110+',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
-  },
-  {
-    id: 's-6',
-    name: 'Chioma N.',
-    category: 'Braids',
-    specialty: 'Master Braider',
-    rating: 4.9,
-    reviewsCount: '240+',
-    image: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=400&q=80',
-  },
-];
 
 export const Experts = () => {
   const navigate = useNavigate();
@@ -78,7 +21,7 @@ export const Experts = () => {
     api.getSpecialists()
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          const verifiedStaff = data.filter((spec) => spec.role === 'staff' || spec.isVerified === true);
+          const verifiedStaff = data.filter((spec) => spec.role === 'staff' || spec.role === 'expert' || spec.isVerified === true);
 
           const registeredTeam = verifiedStaff.map((spec) => {
             const fullName = `${spec.firstname || ''} ${spec.lastname || ''}`.trim() || 'Verified Specialist';
@@ -97,23 +40,20 @@ export const Experts = () => {
               name: fullName,
               category: category,
               specialty: spec.title || firstSpec,
-              rating: spec.rating || 4.9,
-              reviewsCount: `${spec.reviewsCount || 150}+`,
-              image: spec.avatarUrl || spec.profileImage || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
+              rating: spec.rating || 5.0,
+              reviewsCount: `${spec.reviewsCount || 0}+`,
+              image: spec.avatarUrl || spec.profileImage || '',
             };
           });
 
-          if (registeredTeam.length > 0) {
-            setTeam(registeredTeam);
-          } else {
-            setTeam(DEFAULT_STYLISTS);
-          }
+          setTeam(registeredTeam);
         } else {
-          setTeam(DEFAULT_STYLISTS);
+          setTeam([]);
         }
       })
-      .catch(() => {
-        setTeam(DEFAULT_STYLISTS);
+      .catch((err) => {
+        console.warn('Specialists fetch notice:', err.message);
+        setTeam([]);
       })
       .finally(() => setLoading(false));
   }, []);
@@ -236,10 +176,13 @@ export const Experts = () => {
                   backgroundColor: '#1c202d',
                 }}
               >
-                <OptimizedImage
+                <Avatar
                   src={stylist.image}
-                  alt={stylist.name}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  name={stylist.name}
+                  size={135}
+                  borderRadius="14px"
+                  fontSize="2.2rem"
+                  style={{ width: '100%', height: '100%' }}
                 />
                 <button
                   onClick={(e) => toggleFavorite(stylist.id, e)}
@@ -333,8 +276,14 @@ export const Experts = () => {
         </div>
 
         {filteredStylists.length === 0 && (
-          <div style={{ textAlign: 'center', padding: '2.5rem 1rem', color: '#94a3b8' }}>
-            <p>No stylists found for "{searchQuery}".</p>
+          <div style={{ textAlign: 'center', padding: '3rem 1.5rem', background: '#151822', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.08)', marginTop: '1rem' }}>
+            <Users size={36} color="#f5b942" style={{ opacity: 0.8, marginBottom: '0.65rem' }} />
+            <h4 style={{ fontFamily: 'Outfit', fontWeight: 800, color: '#ffffff', margin: '0 0 0.35rem', fontSize: '1rem' }}>
+              {searchQuery ? `No stylists found for "${searchQuery}"` : 'No Specialists Found'}
+            </h4>
+            <p style={{ color: '#94a3b8', fontSize: '0.82rem', margin: 0 }}>
+              {searchQuery ? 'Try searching for a different name or specialty.' : 'Check back soon for available stylists in this category.'}
+            </p>
           </div>
         )}
 

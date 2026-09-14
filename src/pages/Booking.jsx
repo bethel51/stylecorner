@@ -19,6 +19,7 @@ import { api } from '../services/api';
 import { PageContainer } from '../components/common/PageContainer';
 import { AISpecialistMatcherSheet } from '../components/booking/AISpecialistMatcherSheet';
 import { OptimizedImage } from '../components/common/OptimizedImage';
+import { Avatar } from '../components/common/Avatar';
 
 const SERVICES = [
   {
@@ -126,7 +127,7 @@ export const Booking = () => {
             name: `${s.firstname || ''} ${s.lastname || ''}`.trim() || 'Verified Specialist',
             role: s.title || 'Certified Stylist',
             rating: s.rating || 4.9,
-            image: s.avatarUrl || s.profileImage || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
+            image: s.avatarUrl || s.profileImage || '',
           }));
           setSpecialistsList(mapped);
 
@@ -513,10 +514,11 @@ export const Booking = () => {
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-                      <OptimizedImage
+                      <Avatar
                         src={sp.image}
-                        alt={sp.name}
-                        style={{ width: '46px', height: '46px', borderRadius: '50%', objectFit: 'cover' }}
+                        name={sp.name}
+                        size={46}
+                        borderRadius="50%"
                       />
                       <div>
                         <h4 style={{ fontFamily: 'Outfit', fontSize: '0.95rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>

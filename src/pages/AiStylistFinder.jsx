@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Sparkles, ArrowLeft, ArrowRight, Star, X, Check } from 'lucide-react';
 import { PageContainer } from '../components/common/PageContainer';
 import { OptimizedImage } from '../components/common/OptimizedImage';
+import { Avatar } from '../components/common/Avatar';
 import { api } from '../services/api';
 
 export const AiStylistFinder = () => {
@@ -31,25 +32,25 @@ export const AiStylistFinder = () => {
         matchedSpec = specialists.find((s) => s.role === 'staff' || s.isVerified) || specialists[0];
       }
 
-      const name = data?.match?.name || (matchedSpec ? `${matchedSpec.firstname || ''} ${matchedSpec.lastname || ''}`.trim() : 'Zainab A.');
-      const avatar = data?.match?.avatarUrl || matchedSpec?.avatarUrl || matchedSpec?.profileImage || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80';
+      const name = data?.match?.name || (matchedSpec ? `${matchedSpec.firstname || ''} ${matchedSpec.lastname || ''}`.trim() : 'Verified Style Specialist');
+      const avatar = data?.match?.avatarUrl || matchedSpec?.avatarUrl || matchedSpec?.profileImage || '';
 
       setMatchResult({
-        name: name || 'Zainab A.',
-        role: 'Hair Stylist',
-        rating: 4.9,
-        reviewsCount: '200+',
+        name: name || 'Verified Style Specialist',
+        role: matchedSpec?.title || `${lookingFor} Specialist`,
+        rating: matchedSpec?.rating || 5.0,
+        reviewsCount: `${matchedSpec?.reviewsCount || 24}+`,
         avatar: avatar,
         tags: [lookingFor, `${hairType} Hair`, `${preferredStyle} Styles`],
       });
       setShowMatchModal(true);
     } catch (err) {
       setMatchResult({
-        name: 'Zainab A.',
-        role: 'Hair Stylist',
-        rating: 4.9,
-        reviewsCount: '200+',
-        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
+        name: 'Verified Style Specialist',
+        role: `${lookingFor} Specialist`,
+        rating: 5.0,
+        reviewsCount: '24+',
+        avatar: '',
         tags: [lookingFor, `${hairType} Hair`, `${preferredStyle} Styles`],
       });
       setShowMatchModal(true);
