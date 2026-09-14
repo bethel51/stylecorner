@@ -23,44 +23,86 @@ import { OptimizedImage } from '../components/common/OptimizedImage';
 import { preloadRoute } from '../App';
 import { api } from '../services/api';
 
+const SIGNATURE_SERVICES = [
+  {
+    title: 'Premium Cuts',
+    subtitle: 'Barbering & Sculpting',
+    image: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=600&q=80',
+    path: '/services',
+    serviceName: 'Hair Cut Services',
+  },
+  {
+    title: 'Expert Braiding',
+    subtitle: 'Box Braids & Knotless',
+    image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=600&q=80',
+    path: '/services',
+    serviceName: 'Hair Braiding Services',
+  },
+  {
+    title: 'Lash & Nails',
+    subtitle: 'Gel Sets & Lash Artistry',
+    image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=600&q=70&fm=webp',
+    path: '/services',
+    serviceName: 'Lash & Nails Combo',
+  },
+];
+
+const DEFAULT_FEATURED_PRODUCTS = [
+  { id: 'p1', title: 'Atelier Gold Pomade', price: 12000, rating: 4.9, badge: 'Bestseller', image: 'https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?auto=format&fit=crop&w=500&q=80' },
+  { id: 'p2', title: 'Botanical Beard Elixir', price: 8500, rating: 4.8, badge: 'Popular', image: 'https://images.unsplash.com/photo-1626285861696-9f0bf5a49c6d?auto=format&fit=crop&w=500&q=80' },
+  { id: 'p3', title: 'Sculpting Clay Wax', price: 9500, rating: 4.9, badge: 'New', image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=500&q=80' },
+  { id: 'p4', title: 'Scalp Revitalizing Shampoo', price: 11000, rating: 4.7, image: 'https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=500&q=80' },
+  { id: 'p5', title: 'Wooden Comb Set', price: 6500, rating: 4.9, image: 'https://images.unsplash.com/photo-1590159763121-7c9fd312190d?auto=format&fit=crop&w=500&q=80' },
+];
+
+const POPULAR_SERVICES = [
+  {
+    id: 'srv-1',
+    title: 'Hair Styling',
+    price: 'From ₦5,000',
+    image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=400&q=80',
+    serviceName: 'Hair Styling',
+  },
+  {
+    id: 'srv-2',
+    title: 'Nails',
+    price: 'From ₦3,000',
+    image: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&w=400&q=80',
+    serviceName: 'Nail Tech',
+  },
+  {
+    id: 'srv-3',
+    title: 'Braids',
+    price: 'From ₦4,000',
+    image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=400&q=80',
+    serviceName: 'Hair Braider',
+  },
+  {
+    id: 'srv-4',
+    title: 'Skincare',
+    price: 'From ₦6,000',
+    image: 'https://images.unsplash.com/photo-1512290900672-1f5be50c76ba?auto=format&fit=crop&w=400&q=80',
+    serviceName: 'Skincare',
+  },
+  {
+    id: 'srv-5',
+    title: 'Makeup',
+    price: 'From ₦8,000',
+    image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=400&q=80',
+    serviceName: 'Makeup Artist',
+  },
+];
+
 export const Home = () => {
   const navigate = useNavigate();
   const { isAuthenticated, showToast } = useAuth();
   const { addToCart = () => {} } = useCart() || {};
   const [showAiSheet, setShowAiSheet] = useState(false);
 
-  const signatureServices = [
-    {
-      title: 'Premium Cuts',
-      subtitle: 'Barbering & Sculpting',
-      image: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=600&q=80',
-      path: '/services',
-      serviceName: 'Hair Cut Services',
-    },
-    {
-      title: 'Expert Braiding',
-      subtitle: 'Box Braids & Knotless',
-      image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=600&q=80',
-      path: '/services',
-      serviceName: 'Hair Braiding Services',
-    },
-    {
-      title: 'Lash & Nails',
-      subtitle: 'Gel Sets & Lash Artistry',
-      image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=600&q=70&fm=webp',
-      path: '/services',
-      serviceName: 'Lash & Nails Combo',
-    },
-  ];
+  const signatureServices = SIGNATURE_SERVICES;
 
   const [specialists, setSpecialists] = useState([]);
-  const [featuredProducts, setFeaturedProducts] = useState([
-    { id: 'p1', title: 'Atelier Gold Pomade', price: 12000, rating: 4.9, badge: 'Bestseller', image: 'https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?auto=format&fit=crop&w=500&q=80' },
-    { id: 'p2', title: 'Botanical Beard Elixir', price: 8500, rating: 4.8, badge: 'Popular', image: 'https://images.unsplash.com/photo-1626285861696-9f0bf5a49c6d?auto=format&fit=crop&w=500&q=80' },
-    { id: 'p3', title: 'Sculpting Clay Wax', price: 9500, rating: 4.9, badge: 'New', image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=500&q=80' },
-    { id: 'p4', title: 'Scalp Revitalizing Shampoo', price: 11000, rating: 4.7, image: 'https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=500&q=80' },
-    { id: 'p5', title: 'Wooden Comb Set', price: 6500, rating: 4.9, image: 'https://images.unsplash.com/photo-1590159763121-7c9fd312190d?auto=format&fit=crop&w=500&q=80' },
-  ]);
+  const [featuredProducts, setFeaturedProducts] = useState(DEFAULT_FEATURED_PRODUCTS);
 
   React.useEffect(() => {
     api.getProducts()
@@ -96,43 +138,7 @@ export const Home = () => {
 
   const [searchQuery, setSearchQuery] = useState('');
 
-  const popularServices = [
-    {
-      id: 'srv-1',
-      title: 'Hair Styling',
-      price: 'From ₦5,000',
-      image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=400&q=80',
-      serviceName: 'Hair Styling',
-    },
-    {
-      id: 'srv-2',
-      title: 'Nails',
-      price: 'From ₦3,000',
-      image: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&w=400&q=80',
-      serviceName: 'Nail Tech',
-    },
-    {
-      id: 'srv-3',
-      title: 'Braids',
-      price: 'From ₦4,000',
-      image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=400&q=80',
-      serviceName: 'Hair Braider',
-    },
-    {
-      id: 'srv-4',
-      title: 'Skincare',
-      price: 'From ₦6,000',
-      image: 'https://images.unsplash.com/photo-1512290900672-1f5be50c76ba?auto=format&fit=crop&w=400&q=80',
-      serviceName: 'Skincare',
-    },
-    {
-      id: 'srv-5',
-      title: 'Makeup',
-      price: 'From ₦8,000',
-      image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=400&q=80',
-      serviceName: 'Makeup Artist',
-    },
-  ];
+  const popularServices = POPULAR_SERVICES;
 
   const handleSearchSubmit = (e) => {
     if (e.key === 'Enter' && searchQuery.trim()) {

@@ -20,6 +20,7 @@ import { useAuth } from '../context/AuthContext';
 import { OptimizedImage } from '../components/common/OptimizedImage';
 import { preloadRoute } from '../App';
 import { api } from '../services/api';
+import { SkeletonGrid } from '../components/common/SkeletonLoader';
 
 // Intelligent category inferrer for items lacking an explicit category in DB
 const inferProductCategory = (p) => {
@@ -446,29 +447,8 @@ export const Store = () => {
           )}
         </div>
 
-        {/* Loading Skeleton */}
-        {loading && (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.85rem' }}>
-            {[1, 2, 3, 4].map((n) => (
-              <div
-                key={n}
-                style={{
-                  background: '#151822',
-                  borderRadius: '18px',
-                  padding: '0.75rem',
-                  height: '220px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '0.65rem',
-                }}
-              >
-                <div style={{ height: '130px', background: '#1c202d', borderRadius: '14px' }} className="image-skeleton-shimmer" />
-                <div style={{ height: '14px', width: '70%', background: '#1c202d', borderRadius: '4px' }} />
-                <div style={{ height: '16px', width: '45%', background: '#1c202d', borderRadius: '4px', marginTop: 'auto' }} />
-              </div>
-            ))}
-          </div>
-        )}
+        {/* Loading Skeleton Grid */}
+        {loading && <SkeletonGrid count={4} height={220} />}
 
         {/* 2-Column Product Grid */}
         {!loading && filteredProducts.length > 0 && (

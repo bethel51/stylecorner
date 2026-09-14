@@ -86,46 +86,68 @@ const AiStylistFinder = safeLazy(() => import('./pages/AiStylistFinder').then(m 
 const Wallet = safeLazy(() => import('./pages/Wallet').then(m => ({ default: m.Wallet })));
 const Notifications = safeLazy(() => import('./pages/Notifications').then(m => ({ default: m.Notifications })));
 
-// Ultra-sleek Gold Page Loader Component
-const PageLoader = () => (
+// Real simple, nice, fast and smooth PageLoader
+export const PageLoader = () => (
   <div
     style={{
-      minHeight: '75vh',
+      minHeight: '55vh',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: '1rem',
-      color: '#d4af37',
+      gap: '0.85rem',
+      padding: '2rem 1rem',
+      animation: 'fadeIn 0.15s ease-out',
     }}
   >
+    {/* High-speed indeterminate top loader bar */}
+    <div className="top-nav-loader" />
+
+    {/* Elegant smooth spinning gold ring */}
     <div
       style={{
-        width: '56px',
-        height: '56px',
-        borderRadius: '50%',
-        background: 'rgba(212, 175, 55, 0.12)',
-        border: '1.5px solid rgba(212, 175, 55, 0.4)',
+        position: 'relative',
+        width: '42px',
+        height: '42px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        boxShadow: '0 8px 24px rgba(212, 175, 55, 0.2)',
-        animation: 'pulse 1.2s infinite ease-in-out',
       }}
     >
-      <Scissors size={26} color="#d4af37" />
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          borderRadius: '50%',
+          border: '2.5px solid rgba(245, 185, 66, 0.15)',
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          borderRadius: '50%',
+          border: '2.5px solid transparent',
+          borderTopColor: '#f5b942',
+          borderRightColor: 'rgba(245, 185, 66, 0.6)',
+          animation: 'spin 0.65s linear infinite',
+        }}
+      />
+      <Scissors size={18} color="#f5b942" />
     </div>
+
     <span
       style={{
         fontFamily: 'Outfit',
-        fontSize: '0.85rem',
-        fontWeight: 800,
+        fontSize: '0.78rem',
+        fontWeight: 700,
         letterSpacing: '0.08em',
         textTransform: 'uppercase',
-        color: '#171717',
+        color: '#94a3b8',
+        margin: 0,
       }}
     >
-      Loading...
+      Style Corner
     </span>
   </div>
 );

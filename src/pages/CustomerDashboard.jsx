@@ -885,7 +885,7 @@ export const CustomerDashboard = () => {
               ) : bookings.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '2.5rem 1rem' }}>
                   <Calendar size={40} color="#e5e7eb" style={{ marginBottom: '0.75rem' }} />
-                  <h4 style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 800, color: '#171717', marginBottom: '0.4rem' }}>
+                  <h4 style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.4rem' }}>
                     No Bookings Yet
                   </h4>
                   <p style={{ color: '#9ca3af', fontSize: '0.82rem', marginBottom: '1.25rem' }}>
@@ -986,7 +986,7 @@ export const CustomerDashboard = () => {
               ) : orders.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '2.5rem 1rem' }}>
                   <ShoppingBag size={40} color="#e5e7eb" style={{ marginBottom: '0.75rem' }} />
-                  <h4 style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 800, color: '#171717', marginBottom: '0.4rem' }}>
+                  <h4 style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.4rem' }}>
                     No Orders Yet
                   </h4>
                   <p style={{ color: '#9ca3af', fontSize: '0.82rem', marginBottom: '1.25rem' }}>

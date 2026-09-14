@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, SlidersHorizontal, Star, Heart, Users } from 'lucide-react';
 import { PageContainer } from '../components/common/PageContainer';
 import { Avatar } from '../components/common/Avatar';
+import { SkeletonGrid } from '../components/common/SkeletonLoader';
 import { preloadRoute } from '../App';
 import { api } from '../services/api';
+
+const EXPERT_CATEGORIES = ['All', 'Hair', 'Nails', 'Braids', 'Makeup'];
 
 export const Experts = () => {
   const navigate = useNavigate();
@@ -14,7 +17,7 @@ export const Experts = () => {
   const [activeCategory, setActiveCategory] = useState('All');
   const [favorites, setFavorites] = useState({});
 
-  const categories = ['All', 'Hair', 'Nails', 'Braids', 'Makeup'];
+  const categories = EXPERT_CATEGORIES;
 
   useEffect(() => {
     setLoading(true);
@@ -63,14 +66,16 @@ export const Experts = () => {
     setFavorites((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
-  const filteredStylists = team.filter((s) => {
-    const matchesCategory = activeCategory === 'All' || s.category === activeCategory;
-    const matchesSearch =
-      !searchQuery.trim() ||
-      s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      s.specialty.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+  const filteredStylists = useMemo(() => {
+    return team.filter((s) => {
+      const matchesCategory = activeCategory === 'All' || s.category === activeCategory;
+      const matchesSearch =
+        !searchQuery.trim() ||
+        s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        s.specialty.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchesCategory && matchesSearch;
+    });
+  }, [team, activeCategory, searchQuery]);
 
   return (
     <PageContainer showBack={true}>
@@ -139,15 +144,19 @@ export const Experts = () => {
           ))}
         </div>
 
+        {/* Loading Skeletons */}
+        {loading && <SkeletonGrid count={4} height={230} />}
+
         {/* 2-Column Grid matching Screen 3 */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(2, 1fr)',
-            gap: '0.85rem',
-          }}
-        >
-          {filteredStylists.map((stylist) => (
+        {!loading && filteredStylists.length > 0 && (
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(2, 1fr)',
+              gap: '0.85rem',
+            }}
+          >
+            {filteredStylists.map((stylist) => (
             <div
               key={stylist.id}
               onClick={() => navigate(`/expert-profile?name=${encodeURIComponent(stylist.name)}`)}
@@ -274,8 +283,9 @@ export const Experts = () => {
             </div>
           ))}
         </div>
+      )}
 
-        {filteredStylists.length === 0 && (
+      {!loading && filteredStylists.length === 0 && (
           <div style={{ textAlign: 'center', padding: '3rem 1.5rem', background: '#151822', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.08)', marginTop: '1rem' }}>
             <Users size={36} color="#f5b942" style={{ opacity: 0.8, marginBottom: '0.65rem' }} />
             <h4 style={{ fontFamily: 'Outfit', fontWeight: 800, color: '#ffffff', margin: '0 0 0.35rem', fontSize: '1rem' }}>
