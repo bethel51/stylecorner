@@ -20,51 +20,91 @@ const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-prototype-key-12345';
 const PAYSTACK_SECRET_KEY = (process.env.PAYSTACK_SECRET_KEY || '').trim();
 const PAYSTACK_PUBLIC_KEY = (process.env.PAYSTACK_PUBLIC_KEY || '').trim();
 
-let transporter;
+let brevoTransporter = null;
+let gmailTransporter = null;
+
 if (process.env.BREVO_SMTP_HOST && process.env.BREVO_SMTP_KEY) {
-    transporter = nodemailer.createTransport({
-        host: process.env.BREVO_SMTP_HOST,
-        port: parseInt(process.env.BREVO_SMTP_PORT) || 587,
-        secure: parseInt(process.env.BREVO_SMTP_PORT) === 465,
-        auth: {
-            user: process.env.BREVO_SMTP_LOGIN,
-            pass: process.env.BREVO_SMTP_KEY
-        },
-        connectionTimeout: 10000,
-        greetingTimeout: 10000,
-        socketTimeout: 10000
-    });
-    console.log('Brevo SMTP Transporter configured.');
-} else if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
-    // Fallback to Gmail (works locally, blocked on cloud hosting)
-    transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS
-        },
-        connectionTimeout: 5000,
-        greetingTimeout: 5000,
-        socketTimeout: 5000
-    });
-    console.log('Gmail SMTP Transporter configured (fallback).');
-} else {
-    console.log('Email credentials not found in .env');
+  brevoTransporter = nodemailer.createTransport({
+    host: process.env.BREVO_SMTP_HOST,
+    port: parseInt(process.env.BREVO_SMTP_PORT) || 587,
+    secure: parseInt(process.env.BREVO_SMTP_PORT) === 465,
+    auth: {
+      user: process.env.BREVO_SMTP_LOGIN,
+      pass: process.env.BREVO_SMTP_KEY
+    },
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 10000
+  });
+  console.log('Brevo SMTP Transporter configured.');
+}
+
+if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+  gmailTransporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
+    },
+    connectionTimeout: 5000,
+    greetingTimeout: 5000,
+    socketTimeout: 5000
+  });
+  console.log('Gmail SMTP Transporter configured.');
+}
+
+if (!brevoTransporter && !gmailTransporter) {
+  console.log('Email credentials not found in .env');
 }
 
 async function sendNotification(to, subject, text) {
-  if (!transporter) {
+  if (!brevoTransporter && !gmailTransporter) {
     throw new Error('Email transporter is not configured. Please check your .env credentials.');
   }
-  const fromAddress = process.env.BREVO_SMTP_LOGIN || process.env.EMAIL_USER;
-  const info = await transporter.sendMail({
-      from: `"Style Corner" <${fromAddress}>`,
-      to: to,
-      subject: subject,
-      text: text
-  });
-  console.log('Email successfully sent to:', to);
-  return info;
+
+  // Use a valid sender address. Never use Brevo SMTP login (ad0edf001@smtp-brevo.com) as from address!
+  const senderEmail = process.env.EMAIL_SENDER || process.env.EMAIL_USER || 'support@stylecorner.com';
+  const mailOptions = {
+    from: `"Style Corner" <${senderEmail}>`,
+    to: to,
+    subject: subject,
+    text: text
+  };
+
+  let lastError = null;
+
+  // 1. Try Brevo SMTP first if configured
+  if (brevoTransporter) {
+    try {
+      const info = await brevoTransporter.sendMail(mailOptions);
+      console.log('Email successfully sent via Brevo to:', to);
+      return info;
+    } catch (brevoErr) {
+      lastError = brevoErr;
+      console.error('Brevo SMTP delivery failed:', brevoErr.message);
+      if (brevoErr.message.includes('525') || brevoErr.message.includes('Unauthorized IP')) {
+        console.warn('⚠️ [Brevo IP Restriction] Your server IP is not authorized in Brevo. In Brevo dashboard, navigate to Settings > Security > Authorized IPs and either deactivate IP restrictions or authorize your current IP.');
+      }
+    }
+  }
+
+  // 2. Fallback to Gmail SMTP if configured
+  if (gmailTransporter) {
+    try {
+      console.log('Attempting fallback email delivery via Gmail...');
+      const info = await gmailTransporter.sendMail(mailOptions);
+      console.log('Email successfully sent via Gmail fallback to:', to);
+      return info;
+    } catch (gmailErr) {
+      lastError = gmailErr;
+      console.error('Gmail SMTP fallback delivery failed:', gmailErr.message);
+      if (gmailErr.message.includes('535') || gmailErr.message.includes('BadCredentials')) {
+        console.warn('⚠️ [Gmail Auth] Invalid Gmail credentials. Ensure EMAIL_PASS is a valid 16-character Google App Password (not your normal Google account password).');
+      }
+    }
+  }
+
+  throw lastError || new Error('All configured email transports failed.');
 }
 
 async function sendNotificationSafe(to, subject, text) {
@@ -214,6 +254,8 @@ app.post('/api/auth/register', async (req, res) => {
 
     const savedUser = await user.save();
     
+    console.log(`\n==================================================\n[OTP DISPATCH - REGISTRATION]\nRecipient: ${savedUser.email} (${savedUser.firstname})\nCode: ${otpCode}\nExpires: 15 minutes\n==================================================\n`);
+
     // Send OTP Email safely without deleting the account if SMTP fails
     sendNotificationSafe(
       savedUser.email,
@@ -280,6 +322,8 @@ app.post('/api/auth/resend-otp', async (req, res) => {
     user.otpExpiresAt = new Date(Date.now() + 15 * 60 * 1000);
     await user.save();
 
+    console.log(`\n==================================================\n[OTP DISPATCH - RESEND]\nRecipient: ${user.email} (${user.firstname})\nCode: ${otpCode}\nExpires: 15 minutes\n==================================================\n`);
+
     await sendNotificationSafe(
       user.email,
       "Style Corner - Verification Code",
@@ -332,6 +376,8 @@ app.post('/api/auth/login', async (req, res) => {
       user.otpExpiresAt = new Date(Date.now() + 15 * 60 * 1000);
       await user.save();
       
+      console.log(`\n==================================================\n[OTP DISPATCH - UNVERIFIED LOGIN]\nRecipient: ${user.email} (${user.firstname})\nCode: ${otpCode}\nExpires: 15 minutes\n==================================================\n`);
+
       sendNotificationSafe(
         user.email,
         "Style Corner - Verify Your Account",
@@ -368,6 +414,8 @@ app.post('/api/auth/forgot-password', async (req, res) => {
     user.otpCode = otpCode;
     user.otpExpiresAt = new Date(Date.now() + 15 * 60 * 1000);
     await user.save();
+
+    console.log(`\n==================================================\n[OTP DISPATCH - FORGOT PASSWORD]\nRecipient: ${user.email} (${user.firstname})\nCode: ${otpCode}\nExpires: 15 minutes\n==================================================\n`);
 
     await sendNotificationSafe(
       user.email,
