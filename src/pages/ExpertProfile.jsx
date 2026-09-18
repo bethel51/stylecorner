@@ -524,7 +524,7 @@ export const ExpertProfile = () => {
   const isExpertUser = user?.role === 'staff' || (user?.firstname && expert.name.toLowerCase().includes(user.firstname.toLowerCase()));
 
   return (
-    <PageContainer hideHeader={true}>
+    <PageContainer hideHeader={true} noPadding={true}>
       <div style={{
         minHeight: '100vh',
         background: 'var(--color-bg)',

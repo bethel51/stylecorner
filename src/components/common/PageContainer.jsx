@@ -10,19 +10,32 @@ export const PageContainer = ({
   onOpenCart,
   children,
   desktopExpanded = true,
+  hideHeader = false,
+  hideNav = false,
+  noPadding = false,
 }) => {
   return (
     <div className="app-viewport desktop-expanded">
-      <AppHeader
-        title={title}
-        showBack={showBack}
-        onOpenAiMatcher={onOpenAiMatcher}
-        onOpenCart={onOpenCart}
-      />
-      <main className="page-scroll-container">
-        <div className="page-content page-enter">{children}</div>
+      {!hideHeader && (
+        <AppHeader
+          title={title}
+          showBack={showBack}
+          onOpenAiMatcher={onOpenAiMatcher}
+          onOpenCart={onOpenCart}
+        />
+      )}
+      <main
+        className="page-scroll-container"
+        style={hideHeader ? { paddingTop: 'env(safe-area-inset-top, 0px)' } : {}}
+      >
+        <div
+          className="page-content page-enter"
+          style={noPadding ? { padding: 0 } : {}}
+        >
+          {children}
+        </div>
       </main>
-      <BottomNavigation />
+      {!hideNav && <BottomNavigation />}
       <PwaInstallPrompt />
     </div>
   );
