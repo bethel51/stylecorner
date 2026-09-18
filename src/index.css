@@ -538,6 +538,13 @@ html, body {
   box-shadow: 0 0 0 3px var(--color-accent-soft);
 }
 
+/* Prevent iOS Safari automatic viewport zooming on input focus */
+@media (max-width: 640px) {
+  input, select, textarea, .app-input, .app-select, .app-textarea {
+    font-size: 16px !important;
+  }
+}
+
 /* Search Bar */
 .search-pill-container {
   display: flex;

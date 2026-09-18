@@ -12,6 +12,10 @@ export const ThemeProvider = ({ children }) => {
   useEffect(() => {
     localStorage.setItem('style_corner_theme', theme);
     document.documentElement.setAttribute('data-theme', theme);
+    const metaTheme = document.querySelector('meta[name="theme-color"]');
+    if (metaTheme) {
+      metaTheme.setAttribute('content', theme === 'dark' ? '#0c0e14' : '#f8f9fc');
+    }
   }, [theme]);
 
   const toggleTheme = () => {
