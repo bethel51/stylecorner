@@ -271,9 +271,32 @@ export const OrderTrackingSheet = ({ isOpen, onClose, order, onOrderUpdated, isA
             📍 <strong>Full Address:</strong> {order.address || `${order.houseNumber || ''}, ${order.street || ''}, ${order.lga || ''}, ${order.state || ''}`}
           </p>
           {order.phone && (
-            <p style={{ color: '#4b5563', fontSize: '0.78rem', marginTop: '0.2rem' }}>
-              📞 <strong>Recipient Contact:</strong> {order.phone} ({order.name || order.email})
-            </p>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.65rem', flexWrap: 'wrap', gap: '0.5rem', borderTop: '1px solid #e5e7eb', paddingTop: '0.65rem' }}>
+              <span style={{ color: '#4b5563', fontSize: '0.78rem' }}>
+                📞 <strong>Recipient:</strong> {order.phone} ({order.name || order.email})
+              </span>
+              <a
+                href={`https://wa.me/${order.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(`Hello ${order.name || 'Customer'}, regarding your Style Corner order #${String(order._id).slice(-6).toUpperCase()} (${order.trackingStatus || order.status}).`)}`}
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  background: 'rgba(34, 197, 94, 0.15)',
+                  border: '1px solid rgba(34, 197, 94, 0.4)',
+                  color: '#16a34a',
+                  borderRadius: '10px',
+                  padding: '0.35rem 0.75rem',
+                  fontSize: '0.74rem',
+                  fontWeight: 800,
+                  fontFamily: 'Outfit',
+                  textDecoration: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.3rem',
+                }}
+              >
+                <span>WhatsApp Delivery Update</span>
+              </a>
+            </div>
           )}
         </div>
 

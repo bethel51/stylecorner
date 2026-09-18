@@ -335,74 +335,151 @@ export const CustomerDashboard = () => {
         </div>
 
 
-        {/* ── Upcoming Appointment Card (Real Data) ── */}
+        {/* ── Upcoming Appointment Card (Real Data & Live Status Sync) ── */}
         {(() => {
           const upcoming = bookings.find((b) => b.status === 'pending' || b.status === 'accepted' || b.status === 'confirmed');
           if (upcoming) {
+            const isPending = upcoming.status === 'pending';
+            const isAccepted = upcoming.status === 'accepted' || upcoming.status === 'confirmed';
+
             return (
               <div
                 style={{
-                  background: 'var(--color-surface)',
-                  borderRadius: '20px',
-                  padding: '1.15rem',
-                  border: '1px solid var(--color-border-accent)',
+                  background: isPending
+                    ? 'linear-gradient(135deg, rgba(245, 185, 66, 0.08) 0%, var(--color-surface) 100%)'
+                    : 'linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, var(--color-surface) 100%)',
+                  borderRadius: '22px',
+                  padding: '1.25rem',
+                  border: `1.5px solid ${isPending ? 'rgba(245, 185, 66, 0.35)' : 'rgba(16, 185, 129, 0.4)'}`,
                   marginBottom: '1.25rem',
                   position: 'relative',
-                  boxShadow: 'var(--shadow-sm)',
+                  boxShadow: 'var(--shadow-md)',
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: 'var(--color-accent)', fontFamily: 'var(--font-heading)', fontSize: '0.78rem', fontWeight: 700, marginBottom: '0.65rem' }}>
-                  <Calendar size={15} />
-                  <span>Upcoming Appointment</span>
-                  <span style={{ marginLeft: 'auto', background: 'var(--color-accent-soft)', color: 'var(--color-accent)', padding: '0.2rem 0.6rem', borderRadius: '50px', fontSize: '0.68rem', fontWeight: 700, textTransform: 'capitalize' }}>
-                    {upcoming.status}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: isPending ? '#f5b942' : '#10b981', fontFamily: 'var(--font-heading)', fontSize: '0.8rem', fontWeight: 800 }}>
+                    <Calendar size={16} />
+                    <span>{isPending ? 'Appointment Request Awaiting Specialist' : 'Confirmed Appointment'}</span>
+                  </div>
+                  <span
+                    style={{
+                      background: isPending ? 'rgba(245, 185, 66, 0.15)' : 'rgba(16, 185, 129, 0.15)',
+                      color: isPending ? '#f5b942' : '#10b981',
+                      border: `1px solid ${isPending ? 'rgba(245, 185, 66, 0.3)' : 'rgba(16, 185, 129, 0.3)'}`,
+                      padding: '0.25rem 0.75rem',
+                      borderRadius: '50px',
+                      fontSize: '0.72rem',
+                      fontWeight: 800,
+                      fontFamily: 'Outfit',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.3rem',
+                    }}
+                  >
+                    {isPending ? (
+                      <>
+                        <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#f5b942', animation: 'pulse 1.5s infinite' }} />
+                        Awaiting Specialist
+                      </>
+                    ) : (
+                      <>
+                        <ShieldCheck size={13} />
+                        Specialist Accepted
+                      </>
+                    )}
                   </span>
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>
-                    <div style={{ fontFamily: 'var(--font-heading)', fontSize: '1rem', fontWeight: 700, color: 'var(--color-text-primary)', marginBottom: '0.25rem' }}>
-                      {upcoming.date} {upcoming.time ? `• ${upcoming.time}` : ''}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.85rem' }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontFamily: 'var(--font-heading)', fontSize: '1.08rem', fontWeight: 800, color: 'var(--color-text-primary)', marginBottom: '0.2rem', lineHeight: 1.25 }}>
+                      {upcoming.service || 'Bespoke Atelier Service'}
                     </div>
-                    <p style={{ fontSize: '0.82rem', color: 'var(--color-text-secondary)', margin: '0 0 0.65rem' }}>
-                      {upcoming.service || 'Salon Service'} {upcoming.stylist ? `• ${upcoming.stylist}` : ''}
+
+                    <p style={{ fontSize: '0.84rem', color: 'var(--color-text-secondary)', margin: '0 0 0.5rem', display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
+                      <span style={{ color: 'var(--color-text-primary)', fontWeight: 700 }}>
+                        {upcoming.date}
+                      </span>
+                      {upcoming.time && (
+                        <>
+                          <span>•</span>
+                          <span style={{ color: 'var(--color-accent)', fontWeight: 700 }}>{upcoming.time}</span>
+                        </>
+                      )}
+                      <span>•</span>
+                      <span>With {upcoming.stylist || 'Verified Specialist'}</span>
                     </p>
-                    <button
-                      onClick={() => setShowHistorySheet(true)}
-                      style={{
-                        background: 'none',
-                        border: 'none',
-                        color: 'var(--color-accent)',
-                        fontFamily: 'var(--font-heading)',
-                        fontSize: '0.82rem',
-                        fontWeight: 700,
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.25rem',
-                        padding: 0,
-                      }}
-                    >
-                      View Details &gt;
-                    </button>
+
+                    {upcoming.location && (
+                      <div style={{ fontSize: '0.76rem', color: 'var(--color-text-muted)', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                        <MapPin size={12} color="var(--color-accent)" />
+                        <span>{upcoming.location}</span>
+                        <span style={{ margin: '0 0.2rem' }}>•</span>
+                        <span style={{ fontWeight: 800, color: 'var(--color-accent)' }}>₦{Number(upcoming.price || 0).toLocaleString()}</span>
+                      </div>
+                    )}
+
+                    <div style={{ display: 'flex', gap: '0.65rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                      <button
+                        onClick={() => setShowHistorySheet(true)}
+                        style={{
+                          background: 'var(--color-card-surface)',
+                          border: '1px solid var(--color-border)',
+                          color: 'var(--color-text-primary)',
+                          borderRadius: '12px',
+                          padding: '0.4rem 0.85rem',
+                          fontFamily: 'var(--font-heading)',
+                          fontSize: '0.76rem',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                        }}
+                      >
+                        Session Details
+                      </button>
+
+                      {isAccepted && upcoming.stylist && (
+                        <a
+                          href={`https://wa.me/?text=${encodeURIComponent(`Hello ${upcoming.stylist}, I have a booking with you for ${upcoming.service} on ${upcoming.date} at ${upcoming.time} via Style Corner.`)}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          style={{
+                            background: 'rgba(34, 197, 94, 0.15)',
+                            border: '1px solid rgba(34, 197, 94, 0.4)',
+                            color: '#4ade80',
+                            borderRadius: '12px',
+                            padding: '0.4rem 0.85rem',
+                            fontFamily: 'var(--font-heading)',
+                            fontSize: '0.76rem',
+                            fontWeight: 800,
+                            textDecoration: 'none',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.35rem',
+                          }}
+                        >
+                          <MessageSquare size={13} /> Chat Specialist
+                        </a>
+                      )}
+                    </div>
                   </div>
 
                   <div
                     style={{
-                      width: '56px',
-                      height: '56px',
-                      borderRadius: '16px',
+                      width: '60px',
+                      height: '60px',
+                      borderRadius: '18px',
                       overflow: 'hidden',
                       backgroundColor: 'var(--color-card-surface)',
                       flexShrink: 0,
-                      border: '1.5px solid var(--color-border)',
+                      border: '2px solid var(--color-border)',
+                      boxShadow: 'var(--shadow-sm)',
                     }}
                   >
                     <Avatar
                       src={upcoming.stylistImage}
                       name={upcoming.stylist || 'Stylist'}
-                      size={56}
-                      borderRadius="16px"
+                      size={60}
+                      borderRadius="18px"
                       style={{ width: '100%', height: '100%' }}
                     />
                   </div>
