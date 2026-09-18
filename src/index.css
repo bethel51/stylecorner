@@ -1,9 +1,9 @@
 :root {
   --color-primary: #ffffff;
   --color-primary-light: #1e2230;
-  --color-accent: #f5b942;
-  --color-accent-hover: #ffca58;
-  --color-accent-soft: rgba(245, 185, 66, 0.16);
+  --color-accent: #d4af37; /* Refined Atelier Champagne Gold */
+  --color-accent-hover: #dfbc4b;
+  --color-accent-soft: rgba(212, 175, 55, 0.14);
   --color-bg: #0c0e14;
   --color-surface: #151822;
   --color-surface-hover: #1c202d;
@@ -15,7 +15,7 @@
   --color-text-muted: #64748b;
   --color-border: rgba(255, 255, 255, 0.08);
   --color-border-subtle: rgba(255, 255, 255, 0.05);
-  --color-border-accent: rgba(245, 185, 66, 0.35);
+  --color-border-accent: rgba(212, 175, 55, 0.28);
   
   --radius-sm: 10px;
   --radius-md: 18px;
@@ -25,13 +25,38 @@
   --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.35);
   --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.5);
   --shadow-lg: 0 20px 45px rgba(0, 0, 0, 0.65);
-  --shadow-accent: 0 10px 25px rgba(245, 185, 66, 0.28);
+  --shadow-accent: 0 10px 25px rgba(212, 175, 55, 0.22);
 
   --header-height: 60px;
   --bottom-nav-height: 70px;
   --sidebar-width: 240px;
-  --font-heading: 'Outfit', sans-serif;
-  --font-body: 'Inter', sans-serif;
+  --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+[data-theme="light"], .theme-light {
+  --color-primary: #0f172a;
+  --color-primary-light: #f1f5f9;
+  --color-accent: #b48c36; /* Sophisticated warm metallic bronze gold */
+  --color-accent-hover: #9c782b;
+  --color-accent-soft: rgba(180, 140, 54, 0.12);
+  --color-bg: #f8f9fc;
+  --color-surface: #ffffff;
+  --color-surface-hover: #f1f5f9;
+  --color-header-bg: rgba(255, 255, 255, 0.94);
+  --color-card-bg: #ffffff;
+  --color-card-surface: #f8fafc;
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-muted: #64748b;
+  --color-border: rgba(0, 0, 0, 0.08);
+  --color-border-subtle: rgba(0, 0, 0, 0.05);
+  --color-border-accent: rgba(180, 140, 54, 0.28);
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 16px 36px rgba(0, 0, 0, 0.08);
+  --shadow-accent: 0 8px 20px rgba(180, 140, 54, 0.15);
 }
 
 * {
@@ -219,8 +244,8 @@ html, body {
 
 .app-header-title {
   font-family: var(--font-heading);
-  font-weight: 800;
-  font-size: 1.15rem;
+  font-weight: 700;
+  font-size: 1.05rem;
   color: var(--color-text-primary);
   letter-spacing: -0.01em;
   display: flex;
@@ -233,7 +258,7 @@ html, body {
   height: 38px;
   border-radius: 50%;
   border: 1px solid var(--color-border);
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--color-card-surface);
   color: var(--color-text-primary);
   display: flex;
   align-items: center;
@@ -246,7 +271,7 @@ html, body {
 
 .app-header-btn:active {
   transform: scale(0.92);
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--color-surface-hover);
 }
 
 .badge-dot {
@@ -255,9 +280,9 @@ html, body {
   right: 7px;
   width: 7px;
   height: 7px;
-  background: #f5b942;
+  background: var(--color-accent);
   border-radius: 50%;
-  box-shadow: 0 0 6px #f5b942;
+  box-shadow: 0 0 6px var(--color-accent);
 }
 
 /* Bottom Navigation Bar */
@@ -269,7 +294,7 @@ html, body {
   width: 100%;
   max-width: 480px;
   height: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px));
-  background: rgba(15, 18, 25, 0.95);
+  background: var(--color-header-bg);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border-top: 1px solid var(--color-border);
@@ -299,7 +324,7 @@ html, body {
   align-items: center;
   justify-content: center;
   gap: 3px;
-  color: #64748b;
+  color: var(--color-text-muted);
   text-decoration: none;
   font-size: 0.72rem;
   font-family: var(--font-heading);
@@ -341,7 +366,7 @@ html, body {
 
 /* Floating Gold Center Button */
 .bottom-nav-cta {
-  background: linear-gradient(135deg, #f5b942 0%, #e09f2b 100%);
+  background: linear-gradient(135deg, var(--color-accent) 0%, #a8812c 100%);
   border: none;
   width: 48px;
   height: 48px;
@@ -352,7 +377,7 @@ html, body {
   align-items: center;
   justify-content: center;
   color: #0c0e14;
-  box-shadow: 0 6px 20px rgba(245, 185, 66, 0.45);
+  box-shadow: var(--shadow-accent);
   cursor: pointer;
   margin-top: -16px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -376,7 +401,7 @@ html, body {
   transition: transform 0.2s ease, border-color 0.2s ease;
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
-  color: #ffffff;
+  color: var(--color-text-primary);
 }
 
 .app-card:active {
@@ -384,7 +409,7 @@ html, body {
 }
 
 .glass-card {
-  background: rgba(21, 24, 34, 0.85);
+  background: var(--color-surface);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border: 1px solid var(--color-border);
@@ -417,7 +442,7 @@ html, body {
 .app-btn-primary {
   background: var(--color-accent);
   color: #0c0e14;
-  font-weight: 800;
+  font-weight: 700;
   box-shadow: var(--shadow-accent);
 }
 
@@ -427,9 +452,9 @@ html, body {
 }
 
 .app-btn-accent {
-  background: linear-gradient(135deg, #f5b942 0%, #e09f2b 100%);
+  background: linear-gradient(135deg, var(--color-accent) 0%, #b38b30 100%);
   color: #0c0e14;
-  font-weight: 800;
+  font-weight: 700;
   box-shadow: var(--shadow-accent);
 }
 
@@ -440,7 +465,7 @@ html, body {
 .app-btn-outline {
   background: transparent;
   border: 1.5px solid var(--color-border);
-  color: #ffffff;
+  color: var(--color-text-primary);
 }
 
 .app-btn-outline:active {
@@ -475,10 +500,10 @@ html, body {
   padding: 0.9rem 1rem;
   border-radius: var(--radius-md);
   border: 1.5px solid var(--color-border);
-  background: #171a25;
+  background: var(--color-card-surface);
   font-family: var(--font-body);
   font-size: 0.95rem;
-  color: #ffffff;
+  color: var(--color-text-primary);
   outline: none;
   transition: all 0.2s ease;
   min-height: 48px;
@@ -493,11 +518,11 @@ html, body {
   box-shadow: 0 0 0 3px var(--color-accent-soft);
 }
 
-/* Search Bar Styled for Dark Reference */
+/* Search Bar */
 .search-pill-container {
   display: flex;
   align-items: center;
-  background: #171a25;
+  background: var(--color-card-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-pill);
   padding: 0.65rem 1rem;
@@ -516,12 +541,12 @@ html, body {
   outline: none;
   font-family: var(--font-body);
   font-size: 0.88rem;
-  color: #ffffff;
+  color: var(--color-text-primary);
   width: 100%;
 }
 
 .search-pill-input::placeholder {
-  color: #64748b;
+  color: var(--color-text-muted);
 }
 
 /* Category Chips */
@@ -529,11 +554,11 @@ html, body {
   padding: 0.45rem 1rem;
   border-radius: var(--radius-pill);
   font-family: var(--font-heading);
-  font-weight: 700;
+  font-weight: 600;
   font-size: 0.8rem;
   border: 1px solid var(--color-border);
-  background: #171a25;
-  color: #94a3b8;
+  background: var(--color-card-surface);
+  color: var(--color-text-secondary);
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.15s ease;
@@ -544,7 +569,7 @@ html, body {
   background: var(--color-accent);
   color: #0c0e14;
   border-color: var(--color-accent);
-  font-weight: 800;
+  font-weight: 700;
 }
 
 /* Bottom Sheet Modal */
@@ -565,7 +590,7 @@ html, body {
   width: 100%;
   max-width: 480px;
   max-height: 90vh;
-  background: #151822;
+  background: var(--color-card-bg);
   border-top-left-radius: 24px;
   border-top-right-radius: 24px;
   border-top: 1px solid var(--color-border);
@@ -578,7 +603,7 @@ html, body {
   box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
   animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
-  color: #ffffff;
+  color: var(--color-text-primary);
 }
 
 @media (min-width: 1025px) {
@@ -591,7 +616,7 @@ html, body {
 .bottom-sheet-handle {
   width: 40px;
   height: 5px;
-  background: #2e3444;
+  background: var(--color-border);
   border-radius: 10px;
   margin: 0 auto 1.25rem;
 }
@@ -605,7 +630,7 @@ html, body {
   border-radius: var(--radius-pill);
   font-family: var(--font-heading);
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -634,9 +659,9 @@ html, body {
   border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
-/* Skeleton Loading in Dark Mode - Fast, Smooth, Luxury Shimmer */
+/* Skeleton Loading - Fast, Smooth, Luxury Shimmer */
 .skeleton {
-  background: linear-gradient(90deg, #151822 0%, #222838 50%, #151822 100%);
+  background: linear-gradient(90deg, var(--color-card-bg) 0%, var(--color-card-surface) 50%, var(--color-card-bg) 100%);
   background-size: 200% 100%;
   animation: skeletonPulse 1.1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   border-radius: var(--radius-sm);
@@ -676,11 +701,11 @@ html, body {
   transform: translateX(-50%);
   width: 90%;
   max-width: 420px;
-  background: #181a24;
-  color: #ffffff;
+  background: var(--color-card-bg);
+  color: var(--color-text-primary);
   padding: 0.9rem 1.25rem;
   border-radius: var(--radius-md);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  box-shadow: var(--shadow-md);
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -688,7 +713,7 @@ html, body {
   font-family: var(--font-body);
   z-index: 3000;
   animation: toastSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  border: 1px solid var(--color-accent);
+  border: 1px solid var(--color-border-accent);
 }
 
 @keyframes toastSlideUp {
@@ -1049,12 +1074,12 @@ button:active, .dashboard-quick-actions button:active {
   left: 0;
   width: 100%;
   height: 3px;
-  background: linear-gradient(90deg, transparent 0%, #f5b942 50%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, var(--color-accent) 50%, transparent 100%);
   background-size: 200% 100%;
   animation: topLoaderShimmer 0.9s cubic-bezier(0.4, 0, 0.2, 1) infinite;
   z-index: 99999;
   pointer-events: none;
-  box-shadow: 0 0 12px rgba(245, 185, 66, 0.6);
+  box-shadow: 0 0 12px var(--color-accent);
   will-change: transform;
 }
 
@@ -1066,7 +1091,7 @@ button:active, .dashboard-quick-actions button:active {
 .image-skeleton-shimmer {
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, #151822 0%, #222838 50%, #151822 100%);
+  background: linear-gradient(90deg, var(--color-card-bg) 0%, var(--color-card-surface) 50%, var(--color-card-bg) 100%);
   background-size: 200% 100%;
   animation: skeletonPulse 1.1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   border-radius: inherit;
@@ -1077,3 +1102,141 @@ button:active, .dashboard-quick-actions button:active {
 .optimized-image-wrapper.is-loaded .image-skeleton-shimmer {
   display: none;
 }
+
+/* ══════════════════════════════════════════════════════════════
+   LIGHT MODE SYSTEM OVERRIDES & ENHANCEMENTS
+   ══════════════════════════════════════════════════════════════ */
+[data-theme="light"] body,
+[data-theme="light"] #root,
+[data-theme="light"] .app-viewport {
+  background-color: #f8f9fc !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .app-header {
+  background: rgba(255, 255, 255, 0.94) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .app-header-btn {
+  background: rgba(0, 0, 0, 0.04) !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .app-header-btn:hover {
+  background: rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .bottom-nav {
+  background: rgba(255, 255, 255, 0.96) !important;
+  border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06) !important;
+}
+
+[data-theme="light"] .bottom-nav-item {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .bottom-nav-item.active {
+  color: #b48c36 !important;
+}
+
+[data-theme="light"] .bottom-nav-cta {
+  background: linear-gradient(135deg, #c89d3b 0%, #9e7622 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 6px 20px rgba(180, 140, 54, 0.3) !important;
+}
+
+[data-theme="light"] .app-card {
+  background: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .glass-card {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .app-input,
+[data-theme="light"] .app-select,
+[data-theme="light"] .app-textarea {
+  background: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.12) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .app-input::placeholder,
+[data-theme="light"] .app-textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+[data-theme="light"] .search-pill-container {
+  background: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+}
+
+[data-theme="light"] .search-pill-input {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .category-chip {
+  background: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  color: #475569 !important;
+}
+
+[data-theme="light"] .category-chip.active {
+  background: #b48c36 !important;
+  color: #ffffff !important;
+  border-color: #b48c36 !important;
+}
+
+[data-theme="light"] .bottom-sheet-content {
+  background: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  color: #0f172a !important;
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.12) !important;
+}
+
+[data-theme="light"] .bottom-sheet-handle {
+  background: #cbd5e1 !important;
+}
+
+[data-theme="light"] .popup-modal-content {
+  background: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  color: #0f172a !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15) !important;
+}
+
+[data-theme="light"] .app-btn-outline {
+  border-color: rgba(0, 0, 0, 0.15) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .app-btn-outline:active {
+  background: rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-theme="light"] .app-btn-accent {
+  background: linear-gradient(135deg, #c89d3b 0%, #9e7622 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 8px 24px rgba(180, 140, 54, 0.25) !important;
+}
+
+[data-theme="light"] .skeleton {
+  background: linear-gradient(90deg, #f1f5f9 0%, #e2e8f0 50%, #f1f5f9 100%) !important;
+  background-size: 200% 100% !important;
+}
+
+[data-theme="light"] .app-toast {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.12) !important;
+  border-color: rgba(180, 140, 54, 0.3) !important;
+}
+

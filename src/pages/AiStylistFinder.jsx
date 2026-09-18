@@ -390,7 +390,8 @@ export const AiStylistFinder = () => {
               <button
                 onClick={() => {
                   setShowMatchModal(false);
-                  navigate(`/booking?stylist=${encodeURIComponent(matchResult.name.split(' ')[0])}&service=${encodeURIComponent(lookingFor)}`);
+                  const serviceTitle = lookingFor === 'Hair' ? 'Hair Styling' : lookingFor === 'Nails' ? 'Nail Care' : lookingFor === 'Braids' ? 'Braids' : 'Makeup';
+                  navigate(`/booking?stylist=${encodeURIComponent(matchResult.name)}&service=${encodeURIComponent(serviceTitle)}`);
                 }}
                 className="app-btn app-btn-outline"
                 style={{ borderRadius: '14px', minHeight: '46px' }}

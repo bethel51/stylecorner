@@ -18,15 +18,13 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
   const [matchResult, setMatchResult] = useState(null);
 
   const categories = [
-    { id: 'barber', label: 'Barber', service: 'Barber' },
-    { id: 'wig_install', label: 'Wig Installer', service: 'Wig Installer' },
-    { id: 'wig_revamp', label: 'Wig Revamper', service: 'Wig Revamper' },
-    { id: 'braider', label: 'Hair Stylist (Braider)', service: 'Hair Stylist (Braider)' },
-    { id: 'lash', label: 'Lash Tech', service: 'Lash Tech' },
-    { id: 'nail', label: 'Nail Tech', service: 'Nail Tech' },
-    { id: 'makeup', label: 'Makeup Artist', service: 'Makeup Artist' },
-    { id: 'manicure', label: 'Manicure', service: 'Manicure' },
-    { id: 'pedicure', label: 'Pedicure', service: 'Pedicure' },
+    { id: 'hair_styling', label: 'Hair Styling', service: 'Hair Styling' },
+    { id: 'barber', label: 'Precision Barbing', service: 'Precision Barbing' },
+    { id: 'braids', label: 'Braids & Twists', service: 'Braids' },
+    { id: 'nails', label: 'Nail Care & Art', service: 'Nail Care' },
+    { id: 'skincare', label: 'Facials & Skincare', service: 'Skincare' },
+    { id: 'makeup', label: 'Glam Makeup', service: 'Makeup' },
+    { id: 'wig_install', label: 'Wig Installation & Revamp', service: 'Hair Styling' },
   ];
 
   const vibes = [
@@ -39,7 +37,7 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
     'Lagos State',
     'FCT – Abuja',
     'Rivers State (Port Harcourt)',
-    'At-Home VIP Service',
+    'Oyo State (Ibadan)',
   ];
 
   const handleRunMatch = async (e) => {
@@ -54,7 +52,7 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
     try {
       const data = await api.matchAiSpecialist(queryPayload, selectedService, '');
       const dynamicSpecs = await api.getSpecialists().catch(() => []);
-      const matchedSpec = Array.isArray(dynamicSpecs) && dynamicSpecs.find(s => s.role === 'staff' || s.isVerified);
+      const matchedSpec = Array.isArray(dynamicSpecs) && dynamicSpecs.find(s => s.role === 'staff' || s.role === 'expert' || s.isVerified);
       
       const fallbackAvatar = matchedSpec?.avatarUrl || matchedSpec?.profileImage || matchedSpec?.image || '';
 
@@ -63,20 +61,25 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
         setMatchResult({
           ...data.match,
           name: fullName,
+          id: data.match._id || data.match.id || matchedSpec?._id,
+          _id: data.match._id || data.match.id || matchedSpec?._id,
           avatar: data.match.avatarUrl || data.match.avatar || data.match.profileImage || data.match.image || fallbackAvatar,
           service: selectedService,
-          location: preferredState,
+          location: data.match.location || preferredState,
           vibe: vibe,
           matchScore: data.match.matchScore || 98,
           rationale: data.match.rationale || `Matched top verified specialist for ${selectedService} with ${vibe} styling in ${preferredState}.`,
         });
       } else {
-        const specName = matchedSpec ? `${matchedSpec.firstname || ''} ${matchedSpec.lastname || ''}`.trim() : 'Verified Style Specialist';
+        const specName = matchedSpec ? `${matchedSpec.firstname || ''} ${matchedSpec.lastname || ''}`.trim() : 'Zainab Adeleke';
 
         setMatchResult({
+          _id: matchedSpec?._id || 'spec_zainab',
+          id: matchedSpec?._id || 'spec_zainab',
           name: specName,
+          firstname: matchedSpec?.firstname || 'Zainab',
           role: matchedSpec?.title || matchedSpec?.roleTitle || 'Certified Atelier Specialist',
-          rating: matchedSpec?.rating || 5.0,
+          rating: matchedSpec?.rating || 4.95,
           matchScore: 98,
           location: preferredState,
           rationale: `Matched based on your preference for ${selectedService} (${vibe}) in ${preferredState}. Verified track record for top quality styling.`,
@@ -86,13 +89,16 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
       }
     } catch (err) {
       setMatchResult({
-        name: 'Verified Style Specialist',
+        _id: 'spec_zainab',
+        id: 'spec_zainab',
+        name: 'Zainab Adeleke',
+        firstname: 'Zainab',
         role: 'Certified Atelier Specialist',
-        rating: 5.0,
+        rating: 4.95,
         matchScore: 96,
         location: preferredState,
         rationale: `Matched based on your preference for ${selectedService} (${vibe}) in ${preferredState}. Dedicated to high-precision styling and long-lasting results.`,
-        avatar: '',
+        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
         service: selectedService,
       });
     } finally {
@@ -104,6 +110,8 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
     if (matchResult && onApplyMatch) {
       onApplyMatch({
         stylist: matchResult.name || 'Verified Specialist',
+        firstname: matchResult.firstname || (matchResult.name ? matchResult.name.split(' ')[0] : 'Specialist'),
+        stylistId: matchResult._id || matchResult.id || '',
         service: matchResult.service || category,
         location: matchResult.location || preferredState,
       });

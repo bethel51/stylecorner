@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ArrowLeft, ShoppingBag, User, Sparkles, Shield, Bell } from 'lucide-react';
+import { ArrowLeft, ShoppingBag, User, Sparkles, Shield, Bell, Sun, Moon } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
+import { useTheme } from '../../context/ThemeContext';
 import { api } from '../../services/api';
 import { ImagePreviewModal } from './ImagePreviewModal';
 import { NotificationSheet } from './NotificationSheet';
@@ -14,6 +15,7 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
   const location = useLocation();
   const { user, isAuthenticated, role } = useAuth();
   const { itemCount = 0 } = useCart() || {};
+  const { theme, toggleTheme, isDark } = useTheme();
   const [showImagePreview, setShowImagePreview] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -70,7 +72,7 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
               onMouseEnter={() => preloadRoute('/')}
               style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.45rem' }}
             >
-              <Sparkles size={18} fill="#f5b942" color="#f5b942" />
+              <Sparkles size={18} fill="var(--color-accent)" color="var(--color-accent)" />
             </div>
           )}
 
@@ -79,19 +81,29 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
               title
             ) : (
               <span style={{ letterSpacing: '0.04em', fontWeight: 800, fontSize: '1.05rem' }}>
-                STYLE<span style={{ color: '#f5b942' }}>CORNER</span>
+                STYLE<span style={{ color: 'var(--color-accent)' }}>CORNER</span>
               </span>
             )}
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
+          {/* Theme Toggle Button */}
+          <button
+            className="app-header-btn"
+            onClick={toggleTheme}
+            title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
+            aria-label="Toggle Theme"
+          >
+            {isDark ? <Sun size={17} color="var(--color-accent)" /> : <Moon size={17} color="var(--color-accent)" />}
+          </button>
+
           {onOpenAiMatcher && (
             <button
               className="app-header-btn"
               onClick={onOpenAiMatcher}
               title="AI Specialist Matcher"
-              style={{ color: '#f5b942', borderColor: 'rgba(245, 185, 66, 0.3)' }}
+              style={{ color: 'var(--color-accent)', borderColor: 'var(--color-border-accent)' }}
             >
               <Sparkles size={17} />
             </button>
@@ -110,7 +122,7 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
             aria-label="Notifications"
             style={{ position: 'relative' }}
           >
-            <Bell size={18} color="#ffffff" />
+            <Bell size={18} color="var(--color-text-primary)" />
             {unreadCount > 0 && <span className="badge-dot" />}
           </button>
 
@@ -121,7 +133,7 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
               onMouseEnter={() => preloadRoute('/cart')}
               aria-label="Store Cart"
             >
-              <ShoppingBag size={18} color="#ffffff" />
+              <ShoppingBag size={18} color="var(--color-text-primary)" />
               {itemCount > 0 && <span className="badge-dot" />}
             </button>
           )}
@@ -132,7 +144,7 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
             onMouseEnter={() => preloadRoute(isAuthenticated ? '/profile' : '/login')}
             aria-label="User Profile"
             style={{
-              borderColor: '#f5b942',
+              borderColor: 'var(--color-accent)',
               overflow: 'hidden',
               padding: 0,
               width: '36px',
@@ -140,7 +152,7 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              background: '#1c202e',
+              background: 'var(--color-card-surface)',
             }}
           >
             {user?.avatarUrl ? (

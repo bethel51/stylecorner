@@ -746,7 +746,12 @@ export const Home = () => {
         onClose={() => setShowAiSheet(false)}
         onApplyMatch={(match) => {
           setShowAiSheet(false);
-          navigate(`/booking?stylist=${encodeURIComponent(match.firstname)}`);
+          const params = new URLSearchParams();
+          if (match.stylist) params.append('stylist', match.stylist);
+          if (match.service) params.append('service', match.service);
+          if (match.location) params.append('location', match.location);
+          if (match.stylistId) params.append('stylistId', match.stylistId);
+          navigate(`/booking?${params.toString()}`);
         }}
       />
     </PageContainer>

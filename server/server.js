@@ -697,14 +697,78 @@ app.post('/api/ai/match-specialist', async (req, res) => {
     let staffMembers = [];
 
     try {
-      staffMembers = await User.find({ role: 'staff' });
+      staffMembers = await User.find({
+        role: { $in: ['staff', 'expert'] },
+        $or: [{ isVerified: true }, { isVerified: { $exists: false } }]
+      }).select('-password');
     } catch (e) {
-      console.log('MongoDB staff query fallback');
+      console.log('MongoDB staff query fallback:', e.message);
     }
 
     if (!staffMembers || staffMembers.length === 0) {
       staffMembers = [
-        { firstname: 'Verified', lastname: 'Artisan', specialties: ['Precision Hair Styling', 'Bespoke Grooming', 'Scalp Architecture'] }
+        {
+          _id: 'spec_zainab',
+          firstname: 'Zainab',
+          lastname: 'Adeleke',
+          title: 'Master Wig & Silk Press Artisan',
+          rating: 4.9,
+          location: 'Lagos State',
+          state: 'Lagos State',
+          avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
+          specialties: ['Hair Styling', 'Wig Installation & Styling', 'Braiding', 'Silk Press', 'Hair Treatment'],
+          services: [
+            { name: 'Hair Styling', price: '5000' },
+            { name: 'Wig Installation & Styling', price: '7000' },
+            { name: 'Braiding', price: '4000' }
+          ]
+        },
+        {
+          _id: 'spec_julian',
+          firstname: 'Julian',
+          lastname: 'Reed',
+          title: 'Executive Barber & Groomer',
+          rating: 4.9,
+          location: 'Lagos State',
+          state: 'Lagos State',
+          avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
+          specialties: ['Precision Barbing', 'Hair Cut', 'Beard Sculpting', 'Hot Towel Treatment', 'Hair Styling'],
+          services: [
+            { name: 'Precision Barbing', price: '5000' },
+            { name: 'Hair Styling', price: '5000' }
+          ]
+        },
+        {
+          _id: 'spec_amara',
+          firstname: 'Amara',
+          lastname: 'Okon',
+          title: 'Luxe Nail & Lash Architect',
+          rating: 5.0,
+          location: 'Lagos State',
+          state: 'Lagos State',
+          avatarUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80',
+          specialties: ['Nail Care', 'Nail Tech', 'Acrylic Extensions', 'Manicure', 'Pedicure', 'Gel Art'],
+          services: [
+            { name: 'Nail Care', price: '3000' },
+            { name: 'Manicure', price: '3000' },
+            { name: 'Pedicure', price: '4000' }
+          ]
+        },
+        {
+          _id: 'spec_tunde',
+          firstname: 'Tunde',
+          lastname: 'Bakare',
+          title: 'Editorial Makeup & Glow Specialist',
+          rating: 4.85,
+          location: 'FCT – Abuja',
+          state: 'FCT – Abuja',
+          avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80',
+          specialties: ['Makeup', 'Skincare', 'Bridal Glam', 'Hydra Facial', 'Skin Brightening'],
+          services: [
+            { name: 'Makeup', price: '8000' },
+            { name: 'Skincare', price: '6000' }
+          ]
+        }
       ];
     }
 
@@ -715,7 +779,7 @@ app.post('/api/ai/match-specialist', async (req, res) => {
     let maxScore = -1;
 
     staffMembers.forEach(staff => {
-      let score = 75; // baseline match score
+      let score = 78; // baseline match score
       const rawSpecs = staff.services || staff.specialties || [];
       const specsNames = rawSpecs.map(s => {
         if (typeof s === 'string') return s;
@@ -727,18 +791,24 @@ app.post('/api/ai/match-specialist', async (req, res) => {
       
       specs.forEach(s => {
         if (query.includes(s) || s.split(' ').some(w => w.length > 3 && query.includes(w))) {
-          score += 20;
+          score += 18;
         }
       });
 
-      if (query.includes('cut') || query.includes('fade') || query.includes('barber') || query.includes('trim')) {
-        if (specs.some(s => s.includes('cut') || s.includes('barber') || s.includes('fade'))) score += 15;
+      if (query.includes('cut') || query.includes('fade') || query.includes('barber') || query.includes('barbing') || query.includes('trim')) {
+        if (specs.some(s => s.includes('cut') || s.includes('barber') || s.includes('barbing') || s.includes('fade'))) score += 20;
       }
-      if (query.includes('braid') || query.includes('twist') || query.includes('cornrow') || query.includes('locs')) {
-        if (specs.some(s => s.includes('braid') || s.includes('cornrow'))) score += 15;
+      if (query.includes('braid') || query.includes('twist') || query.includes('cornrow') || query.includes('knotless')) {
+        if (specs.some(s => s.includes('braid') || s.includes('cornrow'))) score += 20;
       }
       if (query.includes('nail') || query.includes('acrylic') || query.includes('gel') || query.includes('manicure') || query.includes('pedicure')) {
-        if (specs.some(s => s.includes('nail') || s.includes('pedicure') || s.includes('gel'))) score += 15;
+        if (specs.some(s => s.includes('nail') || s.includes('pedicure') || s.includes('manicure') || s.includes('gel'))) score += 20;
+      }
+      if (query.includes('skin') || query.includes('facial') || query.includes('pore') || query.includes('glow')) {
+        if (specs.some(s => s.includes('skin') || s.includes('facial'))) score += 20;
+      }
+      if (query.includes('makeup') || query.includes('glam') || query.includes('beat')) {
+        if (specs.some(s => s.includes('makeup') || s.includes('glam'))) score += 20;
       }
 
       score = Math.min(99, score + (staff.firstname.length % 4));
@@ -755,23 +825,30 @@ app.post('/api/ai/match-specialist', async (req, res) => {
       ? bestMatch.services
       : (bestMatch.specialties && bestMatch.specialties.length > 0)
         ? bestMatch.specialties
-        : ['General Styling'];
+        : ['Professional Styling'];
 
     const specsDisplay = rawList.map(s => {
       if (typeof s === 'string') return s;
       if (s && typeof s === 'object') return s.name || s.title || s.service || '';
       return String(s || '');
-    }).filter(Boolean).join(', ') || 'General Styling';
+    }).filter(Boolean).join(', ') || 'Professional Styling';
 
-    const rationale = `${bestMatch.firstname} ${bestMatch.lastname || ''} is your top match based on expertise in ${specsDisplay}. Ideal match for ${primaryService || 'your requested style'}.`;
+    const fullName = `${bestMatch.firstname || ''} ${bestMatch.lastname || ''}`.trim() || 'Verified Specialist';
+    const rationale = `${fullName} is your top verified specialist based on proven expertise in ${specsDisplay}. Handpicked for ${primaryService || 'your requested session'}.`;
 
     res.status(200).json({
       match: {
+        _id: bestMatch._id || bestMatch.id,
+        id: bestMatch._id || bestMatch.id,
         firstname: bestMatch.firstname,
         lastname: bestMatch.lastname || '',
-        name: `${bestMatch.firstname} ${bestMatch.lastname || ''}`.trim(),
+        name: fullName,
+        title: bestMatch.title || 'Certified Atelier Specialist',
+        rating: bestMatch.rating || 4.9,
+        avatarUrl: bestMatch.avatarUrl || bestMatch.profileImage || '',
+        location: bestMatch.location || bestMatch.state || 'Lagos State',
         specialties: specsDisplay,
-        primaryService: primaryService || 'Precision Styling',
+        primaryService: primaryService || 'Hair Styling',
         secondaryService: secondaryService || '',
         matchScore: maxScore,
         rationale: rationale
@@ -782,6 +859,39 @@ app.post('/api/ai/match-specialist', async (req, res) => {
     res.status(500).json({ error: 'AI Specialist Matcher temporary error' });
   }
 });
+
+// Busy time slots checker for specialist on a given date (prevents double-booking conflicts upfront)
+app.get('/api/bookings/busy-slots', async (req, res) => {
+  try {
+    const { stylist, stylistId, date } = req.query;
+    if (!date) return res.status(200).json({ busySlots: [] });
+
+    const conditions = [];
+    if (stylistId && mongoose.Types.ObjectId.isValid(stylistId)) {
+      conditions.push({ stylistId: stylistId });
+    }
+    if (stylist) {
+      conditions.push({ stylist: new RegExp('^' + stylist.trim() + '$', 'i') });
+      conditions.push({ stylist: new RegExp(stylist.trim().split(' ')[0], 'i') });
+    }
+
+    const query = {
+      date: date,
+      status: { $in: ['pending', 'accepted', 'confirmed'] }
+    };
+
+    if (conditions.length > 0) {
+      query.$or = conditions;
+    }
+
+    const bookings = await Booking.find(query).select('time');
+    const busySlots = bookings.map(b => b.time).filter(Boolean);
+    res.status(200).json({ busySlots });
+  } catch (err) {
+    res.status(200).json({ busySlots: [] });
+  }
+});
+
 // Get all bookings (Filtered by Role: Experts only see their bookings; Customers see their bookings; Admin sees all)
 app.get('/api/bookings', authenticateToken, async (req, res) => {
   try {

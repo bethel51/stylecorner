@@ -28,8 +28,11 @@ import {
   Wallet,
   ArrowUpRight,
   Scissors,
+  Sun,
+  Moon,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import { api } from '../services/api';
 import { uploadToCloudinary } from '../services/cloudinary';
 import { PageContainer } from '../components/common/PageContainer';
@@ -49,6 +52,7 @@ import { OptimizedImage } from '../components/common/OptimizedImage';
 export const CustomerDashboard = () => {
   const navigate = useNavigate();
   const { user, logout, updateProfile, deleteAccount, showToast } = useAuth();
+  const { theme, toggleTheme, isDark } = useTheme();
 
   const [bookings, setBookings] = useState([]);
   const [orders, setOrders] = useState([]);
@@ -275,11 +279,11 @@ export const CustomerDashboard = () => {
   // Section label style helper
   const sectionLabel = {
     display: 'flex', alignItems: 'center', gap: '0.5rem',
-    marginBottom: '1rem',
+    marginBottom: '0.85rem',
   };
   const sectionTitle = {
-    fontFamily: 'Outfit', fontSize: '0.78rem', fontWeight: 900,
-    color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.08em',
+    fontFamily: 'var(--font-heading)', fontSize: '0.78rem', fontWeight: 700,
+    color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.08em',
   };
   const sectionIcon = (bg, color) => ({
     width: '26px', height: '26px', borderRadius: '8px',
@@ -290,51 +294,77 @@ export const CustomerDashboard = () => {
     <PageContainer title="Style Corner" onOpenAiMatcher={() => setShowAiSheet(true)}>
       <div style={{ maxWidth: '480px', margin: '0 auto', paddingBottom: '3rem' }}>
 
-        {/* ── Screen 8: Greeting Header ── */}
-        <div style={{ marginBottom: '1.25rem' }}>
-          <h1 style={{ fontFamily: 'Outfit', fontSize: '1.55rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.25rem' }}>
-            {(() => {
-              const hour = new Date().getHours();
-              const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
-              const name = user?.firstname || user?.email?.split('@')[0] || 'there';
-              return `${greeting}, ${name} 👋`;
-            })()}
-          </h1>
-          <p style={{ color: '#94a3b8', fontSize: '0.84rem', margin: 0 }}>
-            Here's what's happening with your StyleCorner.
-          </p>
+        {/* ── Greeting Header with Theme Switcher ── */}
+        <div style={{ marginBottom: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+          <div>
+            <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', fontWeight: 700, color: 'var(--color-text-primary)', margin: '0 0 0.2rem', letterSpacing: '-0.02em' }}>
+              {(() => {
+                const hour = new Date().getHours();
+                const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+                const name = user?.firstname || user?.email?.split('@')[0] || 'there';
+                return `${greeting}, ${name} 👋`;
+              })()}
+            </h1>
+            <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.82rem', margin: 0 }}>
+              Here's what's happening with your Style Corner.
+            </p>
+          </div>
+
+          <button
+            onClick={toggleTheme}
+            style={{
+              background: 'var(--color-surface)',
+              border: '1px solid var(--color-border)',
+              borderRadius: '20px',
+              padding: '0.35rem 0.65rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.35rem',
+              color: 'var(--color-text-secondary)',
+              fontSize: '0.72rem',
+              fontFamily: 'var(--font-heading)',
+              fontWeight: 600,
+              cursor: 'pointer',
+              flexShrink: 0,
+              boxShadow: 'var(--shadow-sm)',
+            }}
+          >
+            {isDark ? <Sun size={13} color="var(--color-accent)" /> : <Moon size={13} color="var(--color-accent)" />}
+            <span>{isDark ? 'Light' : 'Dark'}</span>
+          </button>
         </div>
 
 
-        {/* ── Screen 8: Upcoming Appointment Card (Real Data) ── */}
+        {/* ── Upcoming Appointment Card (Real Data) ── */}
         {(() => {
           const upcoming = bookings.find((b) => b.status === 'pending' || b.status === 'accepted' || b.status === 'confirmed');
           if (upcoming) {
             return (
               <div
                 style={{
-                  background: '#151822',
+                  background: 'var(--color-surface)',
                   borderRadius: '20px',
                   padding: '1.15rem',
-                  border: '1px solid rgba(245, 185, 66, 0.25)',
+                  border: '1px solid var(--color-border-accent)',
                   marginBottom: '1.25rem',
                   position: 'relative',
+                  boxShadow: 'var(--shadow-sm)',
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: '#f5b942', fontFamily: 'Outfit', fontSize: '0.78rem', fontWeight: 700, marginBottom: '0.65rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: 'var(--color-accent)', fontFamily: 'var(--font-heading)', fontSize: '0.78rem', fontWeight: 700, marginBottom: '0.65rem' }}>
                   <Calendar size={15} />
                   <span>Upcoming Appointment</span>
-                  <span style={{ marginLeft: 'auto', background: 'rgba(245, 185, 66, 0.15)', color: '#f5b942', padding: '0.15rem 0.5rem', borderRadius: '50px', fontSize: '0.68rem', textTransform: 'capitalize' }}>
+                  <span style={{ marginLeft: 'auto', background: 'var(--color-accent-soft)', color: 'var(--color-accent)', padding: '0.2rem 0.6rem', borderRadius: '50px', fontSize: '0.68rem', fontWeight: 700, textTransform: 'capitalize' }}>
                     {upcoming.status}
                   </span>
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div>
-                    <div style={{ fontFamily: 'Outfit', fontSize: '0.96rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.25rem' }}>
+                    <div style={{ fontFamily: 'var(--font-heading)', fontSize: '1rem', fontWeight: 700, color: 'var(--color-text-primary)', marginBottom: '0.25rem' }}>
                       {upcoming.date} {upcoming.time ? `• ${upcoming.time}` : ''}
                     </div>
-                    <p style={{ fontSize: '0.82rem', color: '#94a3b8', margin: '0 0 0.65rem' }}>
+                    <p style={{ fontSize: '0.82rem', color: 'var(--color-text-secondary)', margin: '0 0 0.65rem' }}>
                       {upcoming.service || 'Salon Service'} {upcoming.stylist ? `• ${upcoming.stylist}` : ''}
                     </p>
                     <button
@@ -342,8 +372,8 @@ export const CustomerDashboard = () => {
                       style={{
                         background: 'none',
                         border: 'none',
-                        color: '#f5b942',
-                        fontFamily: 'Outfit',
+                        color: 'var(--color-accent)',
+                        fontFamily: 'var(--font-heading)',
                         fontSize: '0.82rem',
                         fontWeight: 700,
                         cursor: 'pointer',
@@ -363,9 +393,9 @@ export const CustomerDashboard = () => {
                       height: '56px',
                       borderRadius: '16px',
                       overflow: 'hidden',
-                      backgroundColor: '#1c202d',
+                      backgroundColor: 'var(--color-card-surface)',
                       flexShrink: 0,
-                      border: '1.5px solid rgba(245, 185, 66, 0.35)',
+                      border: '1.5px solid var(--color-border)',
                     }}
                   >
                     <Avatar
@@ -383,36 +413,37 @@ export const CustomerDashboard = () => {
           return (
             <div
               style={{
-                background: '#151822',
+                background: 'var(--color-surface)',
                 borderRadius: '20px',
                 padding: '1.15rem',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
+                border: '1px solid var(--color-border)',
                 marginBottom: '1.25rem',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 gap: '1rem',
+                boxShadow: 'var(--shadow-sm)',
               }}
             >
               <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: '#94a3b8', fontFamily: 'Outfit', fontSize: '0.78rem', fontWeight: 700, marginBottom: '0.25rem' }}>
-                  <Calendar size={15} color="#f5b942" />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: 'var(--color-text-secondary)', fontFamily: 'var(--font-heading)', fontSize: '0.78rem', fontWeight: 700, marginBottom: '0.25rem' }}>
+                  <Calendar size={15} color="var(--color-accent)" />
                   <span>Appointments</span>
                 </div>
-                <h4 style={{ fontFamily: 'Outfit', fontSize: '0.94rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.35rem' }}>
+                <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '0.94rem', fontWeight: 700, color: 'var(--color-text-primary)', margin: '0 0 0.35rem' }}>
                   No upcoming appointments
                 </h4>
                 <button
                   onClick={() => navigate('/booking')}
                   style={{
-                    background: '#f5b942',
+                    background: 'var(--color-accent)',
                     color: '#0c0e14',
                     border: 'none',
                     borderRadius: '50px',
-                    padding: '0.4rem 0.9rem',
-                    fontFamily: 'Outfit',
+                    padding: '0.45rem 1rem',
+                    fontFamily: 'var(--font-heading)',
                     fontSize: '0.76rem',
-                    fontWeight: 800,
+                    fontWeight: 700,
                     cursor: 'pointer',
                   }}
                 >
@@ -421,18 +452,18 @@ export const CustomerDashboard = () => {
               </div>
               <div
                 style={{
-                  width: '52px',
-                  height: '52px',
+                  width: '50px',
+                  height: '50px',
                   borderRadius: '16px',
-                  backgroundColor: 'rgba(245, 185, 66, 0.1)',
+                  backgroundColor: 'var(--color-accent-soft)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#f5b942',
+                  color: 'var(--color-accent)',
                   flexShrink: 0,
                 }}
               >
-                <Scissors size={24} />
+                <Scissors size={22} />
               </div>
             </div>
           );
@@ -444,10 +475,10 @@ export const CustomerDashboard = () => {
         <div
           onClick={() => navigate('/store')}
           style={{
-            background: 'linear-gradient(135deg, #151822 0%, #1c202d 100%)',
+            background: 'var(--color-surface)',
             borderRadius: '20px',
             padding: '1.15rem 1.25rem',
-            border: '1px solid rgba(245, 185, 66, 0.2)',
+            border: '1px solid var(--color-border)',
             marginBottom: '1rem',
             cursor: 'pointer',
             display: 'flex',
@@ -456,23 +487,24 @@ export const CustomerDashboard = () => {
             gap: '1rem',
             position: 'relative',
             overflow: 'hidden',
+            boxShadow: 'var(--shadow-sm)',
           }}
         >
-          <div style={{ position: 'absolute', top: '-20px', right: '-20px', width: '100px', height: '100px', borderRadius: '50%', background: 'rgba(245,185,66,0.06)', pointerEvents: 'none' }} />
+          <div style={{ position: 'absolute', top: '-20px', right: '-20px', width: '100px', height: '100px', borderRadius: '50%', background: 'var(--color-accent-soft)', pointerEvents: 'none' }} />
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.3rem' }}>
-              <ShoppingBag size={15} color="#f5b942" />
-              <span style={{ fontFamily: 'Outfit', fontSize: '0.72rem', fontWeight: 800, color: '#f5b942', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Beauty Store</span>
+              <ShoppingBag size={14} color="var(--color-accent)" />
+              <span style={{ fontFamily: 'var(--font-heading)', fontSize: '0.72rem', fontWeight: 700, color: 'var(--color-accent)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Beauty Store</span>
             </div>
-            <h3 style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.2rem' }}>Hair, Nails & Grooming</h3>
-            <p style={{ fontSize: '0.78rem', color: '#64748b', margin: 0 }}>Shop premium beauty products →</p>
+            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '0.98rem', fontWeight: 700, color: 'var(--color-text-primary)', margin: '0 0 0.2rem' }}>Hair, Nails & Grooming</h3>
+            <p style={{ fontSize: '0.78rem', color: 'var(--color-text-muted)', margin: 0 }}>Shop premium beauty products &rarr;</p>
           </div>
           <div style={{
-            width: '48px', height: '48px', borderRadius: '14px',
-            background: 'rgba(245,185,66,0.12)', border: '1px solid rgba(245,185,66,0.25)',
+            width: '46px', height: '46px', borderRadius: '14px',
+            background: 'var(--color-accent-soft)', border: '1px solid var(--color-border-accent)',
             display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
           }}>
-            <Sparkles size={22} color="#f5b942" />
+            <Sparkles size={20} color="var(--color-accent)" />
           </div>
         </div>
 
@@ -481,14 +513,14 @@ export const CustomerDashboard = () => {
         ══════════════════════════════════════════════ */}
         <div style={{ marginBottom: '1rem' }}>
           <div style={sectionLabel}>
-            <div style={sectionIcon('rgba(212,175,55,0.15)', '#d4af37')}><Star size={13} /></div>
+            <div style={sectionIcon('var(--color-accent-soft)', 'var(--color-accent)')}><Star size={13} /></div>
             <span style={sectionTitle}>Overview</span>
           </div>
           <div className="dashboard-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '0.65rem' }}>
             {[
-              { label: 'Bookings', value: bookings.length, color: '#f5b942', icon: Calendar, bg: 'linear-gradient(145deg, rgba(245,185,66,0.08) 0%, #151822 100%)', border: 'rgba(245,185,66,0.22)', action: () => setShowHistorySheet(true) },
-              { label: 'Orders', value: orders.length, color: '#60a5fa', icon: ShoppingBag, bg: 'linear-gradient(145deg, rgba(96,165,250,0.08) 0%, #151822 100%)', border: 'rgba(96,165,250,0.2)', action: () => { setActiveTab('orders'); setShowHistorySheet(true); } },
-              { label: 'Completed', value: completedCount, color: '#10b981', icon: CheckCircle, bg: 'linear-gradient(145deg, rgba(16,185,129,0.08) 0%, #151822 100%)', border: 'rgba(16,185,129,0.2)', action: () => setShowHistorySheet(true) },
+              { label: 'Bookings', value: bookings.length, color: 'var(--color-accent)', icon: Calendar, action: () => setShowHistorySheet(true) },
+              { label: 'Orders', value: orders.length, color: '#38bdf8', icon: ShoppingBag, action: () => { setActiveTab('orders'); setShowHistorySheet(true); } },
+              { label: 'Completed', value: completedCount, color: '#10b981', icon: CheckCircle, action: () => setShowHistorySheet(true) },
             ].map((stat) => {
               const Icon = stat.icon;
               return (
@@ -496,25 +528,25 @@ export const CustomerDashboard = () => {
                   key={stat.label}
                   onClick={stat.action}
                   style={{
-                    background: stat.bg,
-                    border: `1px solid ${stat.border}`,
+                    background: 'var(--color-surface)',
+                    border: '1px solid var(--color-border)',
                     borderRadius: '18px',
                     padding: '0.9rem 0.5rem',
                     textAlign: 'center',
                     cursor: 'pointer',
-                    boxShadow: '0 4px 16px rgba(0,0,0,0.2)',
+                    boxShadow: 'var(--shadow-sm)',
                     transition: 'transform 0.15s ease',
                   }}
                 >
-                  <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '24px', height: '24px', borderRadius: '50%', background: 'rgba(255,255,255,0.06)', color: stat.color, marginBottom: '0.3rem' }}>
-                    <Icon size={12} />
+                  <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '50%', background: 'var(--color-card-surface)', color: stat.color, marginBottom: '0.35rem' }}>
+                    <Icon size={13} />
                   </div>
                   <div style={{
-                    fontFamily: 'Outfit', fontSize: '1.75rem', fontWeight: 900, color: stat.color, lineHeight: 1,
+                    fontFamily: 'var(--font-heading)', fontSize: '1.6rem', fontWeight: 800, color: stat.color, lineHeight: 1,
                   }}>
                     {stat.value}
                   </div>
-                  <div style={{ fontSize: '0.68rem', fontFamily: 'Outfit', fontWeight: 800, color: '#94a3b8', marginTop: '0.35rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  <div style={{ fontSize: '0.68rem', fontFamily: 'var(--font-heading)', fontWeight: 700, color: 'var(--color-text-secondary)', marginTop: '0.35rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                     {stat.label}
                   </div>
                 </div>
@@ -528,14 +560,15 @@ export const CustomerDashboard = () => {
             SECTION 3 — CATEGORIES
         ══════════════════════════════════════════════ */}
         <div style={{
-          background: '#151822',
+          background: 'var(--color-surface)',
           borderRadius: '22px',
           padding: '1.1rem 1rem',
           marginBottom: '1rem',
-          border: '1px solid rgba(255,255,255,0.08)',
+          border: '1px solid var(--color-border)',
+          boxShadow: 'var(--shadow-sm)',
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
-            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1rem', fontWeight: 700, color: 'var(--color-text-primary)', margin: 0 }}>
               Categories
             </h3>
             <button
@@ -543,14 +576,14 @@ export const CustomerDashboard = () => {
               style={{
                 background: 'none',
                 border: 'none',
-                color: '#f5b942',
-                fontFamily: 'Outfit',
+                color: 'var(--color-accent)',
+                fontFamily: 'var(--font-heading)',
                 fontWeight: 700,
-                fontSize: '0.85rem',
+                fontSize: '0.82rem',
                 cursor: 'pointer'
               }}
             >
-              View all
+              View all &gt;
             </button>
           </div>
 
@@ -565,99 +598,14 @@ export const CustomerDashboard = () => {
             }}
           >
             {[
-              {
-                label: 'Barber',
-                service: 'Barber',
-                icon: (
-                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#d4af37" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/>
-                    <line x1="20" y1="4" x2="8.12" y2="15.88"/>
-                    <line x1="14.47" y1="14.48" x2="20" y2="20"/>
-                    <line x1="8.12" y1="8.12" x2="12" y2="12"/>
-                  </svg>
-                ),
-                bg: '#FAF5F5'
-              },
-              {
-                label: 'Hair',
-                service: 'Hair Stylist (Braider)',
-                icon: (
-                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#d4af37" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/>
-                    <line x1="20" y1="4" x2="8.12" y2="15.88"/>
-                    <line x1="14.47" y1="14.48" x2="20" y2="20"/>
-                    <line x1="8.12" y1="8.12" x2="12" y2="12"/>
-                  </svg>
-                ),
-                bg: '#FAF5F5'
-              },
-              {
-                label: 'Nails',
-                service: 'Nail Tech',
-                icon: (
-                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ec4899" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M12 2v6"/><path d="M6 8h12v10a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8z"/>
-                    <path d="M9 2h6"/>
-                  </svg>
-                ),
-                bg: '#FAF5F5'
-              },
-              {
-                label: 'Lashes',
-                service: 'Lash Tech',
-                icon: (
-                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/>
-                    <circle cx="12" cy="12" r="3"/>
-                    <path d="M3 8l-1.5-2"/><path d="M7 5L6 2"/><path d="M12 4V1"/><path d="M17 5l1-3"/><path d="M21 8l1.5-2"/>
-                  </svg>
-                ),
-                bg: '#FAF5F5'
-              },
-              {
-                label: 'Makeup',
-                service: 'Makeup Artist',
-                icon: (
-                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M18 2l4 4-10 10H8v-4L18 2z"/><path d="M3 21h6"/>
-                    <path d="M15 5l4 4"/>
-                  </svg>
-                ),
-                bg: '#FAF5F5'
-              },
-              {
-                label: 'Wigs',
-                service: 'Wig Installer',
-                icon: (
-                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M2 4l3 12h14l3-12-6 7-4-5-4 5-6-7z"/>
-                  </svg>
-                ),
-                bg: '#FAF5F5'
-              },
-              {
-                label: 'Manicure',
-                service: 'Manicure',
-                icon: (
-                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v5"/>
-                    <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v6"/>
-                    <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/>
-                    <path d="M18 8a2 2 0 0 1 2 2v4a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.8-6-3l-3-4.5a2 2 0 0 1 3.2-2.4l1.8 2.4"/>
-                  </svg>
-                ),
-                bg: '#FAF5F5'
-              },
-              {
-                label: 'Pedicure',
-                service: 'Pedicure',
-                icon: (
-                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                  </svg>
-                ),
-                bg: '#FAF5F5'
-              },
+              { label: 'Barber', service: 'Barber' },
+              { label: 'Hair', service: 'Hair Stylist (Braider)' },
+              { label: 'Nails', service: 'Nail Tech' },
+              { label: 'Lashes', service: 'Lash Tech' },
+              { label: 'Makeup', service: 'Makeup Artist' },
+              { label: 'Wigs', service: 'Wig Installer' },
+              { label: 'Manicure', service: 'Manicure' },
+              { label: 'Pedicure', service: 'Pedicure' },
             ].map((cat) => (
               <div
                 key={cat.label}
@@ -671,24 +619,25 @@ export const CustomerDashboard = () => {
                   flexShrink: 0
                 }}
               >
-              <div
+                <div
                   style={{
-                    width: '64px',
-                    height: '64px',
-                    borderRadius: '18px',
-                    background: 'rgba(245,185,66,0.1)',
-                    border: '1px solid rgba(245,185,66,0.18)',
+                    width: '56px',
+                    height: '56px',
+                    borderRadius: '16px',
+                    background: 'var(--color-card-surface)',
+                    border: '1px solid var(--color-border)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    transition: 'transform 0.15s ease, background 0.15s ease',
+                    color: 'var(--color-accent)',
+                    transition: 'transform 0.15s ease, border-color 0.15s ease',
                   }}
-                  onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.07)'; e.currentTarget.style.background = 'rgba(245,185,66,0.18)'; }}
-                  onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.background = 'rgba(245,185,66,0.1)'; }}
+                  onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.05)'; e.currentTarget.style.borderColor = 'var(--color-accent)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.borderColor = 'var(--color-border)'; }}
                 >
-                  {cat.icon}
+                  <Scissors size={20} />
                 </div>
-                <span style={{ fontFamily: 'Outfit', fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8' }}>
+                <span style={{ fontFamily: 'var(--font-heading)', fontSize: '0.74rem', fontWeight: 600, color: 'var(--color-text-secondary)' }}>
                   {cat.label}
                 </span>
               </div>
@@ -697,89 +646,93 @@ export const CustomerDashboard = () => {
         </div>
 
         {/* ══════════════════════════════════════════════
-            SECTION 4 — QUICK ACTION SHORTCUTS (ICON CARDS)
+            SECTION 4 — QUICK ACTION SHORTCUTS
         ══════════════════════════════════════════════ */}
         <div style={{
-          background: '#151822', border: '1px solid rgba(255,255,255,0.08)',
-          borderRadius: '22px', padding: '1.1rem', marginBottom: '1rem',
+          background: 'var(--color-surface)',
+          border: '1px solid var(--color-border)',
+          borderRadius: '22px',
+          padding: '1.1rem',
+          marginBottom: '1rem',
+          boxShadow: 'var(--shadow-sm)',
         }}>
           <div style={sectionLabel}>
-            <div style={sectionIcon('#171717', '#d4af37')}><Sparkles size={13} /></div>
+            <div style={sectionIcon('var(--color-accent-soft)', 'var(--color-accent)')}><Sparkles size={13} /></div>
             <span style={sectionTitle}>Quick Shortcuts</span>
           </div>
 
-          <div className="dashboard-quick-actions" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+          <div className="dashboard-quick-actions" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem' }}>
             {[
               {
-                icon: <History size={22} />, label: 'My Bookings History',
-                sub: `View ${bookings.length} visits & orders`,
-                bg: 'rgba(212,175,55,0.12)', iconBg: '#d4af37', iconColor: '#fff',
-                border: 'rgba(212,175,55,0.4)', action: () => setShowHistorySheet(true),
+                icon: <History size={20} />, label: 'My Bookings',
+                sub: `${bookings.length} visits & orders`,
+                iconColor: 'var(--color-accent)', action: () => setShowHistorySheet(true),
               },
               {
-                icon: <Activity size={22} />, label: 'Recent Activity',
+                icon: <Activity size={20} />, label: 'Recent Activity',
                 sub: 'Live activity timeline',
-                bg: 'rgba(16,185,129,0.08)', iconBg: '#10b981', iconColor: '#fff',
-                border: 'rgba(16,185,129,0.3)', action: () => setShowActivitySheet(true),
+                iconColor: '#10b981', action: () => setShowActivitySheet(true),
               },
               {
-                icon: <Calendar size={22} />, label: 'Book a Visit',
+                icon: <Calendar size={20} />, label: 'Book a Visit',
                 sub: 'Hair, Nails, Braids',
-                bg: 'rgba(17,24,39,0.04)', iconBg: '#171717', iconColor: '#fff',
-                border: 'rgba(17,24,39,0.15)', action: () => navigate('/booking'),
+                iconColor: 'var(--color-accent)', action: () => navigate('/booking'),
               },
               {
-                icon: <Sparkles size={22} />, label: 'AI Matcher',
-                sub: 'Find your specialist',
-                bg: 'linear-gradient(135deg, #171717, #0d0d0d)', iconBg: '#d4af37', iconColor: '#171717',
-                border: 'rgba(212,175,55,0.5)', textColor: '#fff', subColor: '#a1a1aa',
-                action: () => setShowAiSheet(true),
+                icon: <Sparkles size={20} />, label: 'AI Matcher',
+                sub: 'Find matched artist',
+                iconColor: 'var(--color-accent)', action: () => setShowAiSheet(true),
               },
               {
-                icon: <Truck size={22} />, label: 'Track Delivery',
-                sub: 'Order status & details',
-                bg: 'rgba(59,130,246,0.08)', iconBg: 'rgba(59,130,246,0.15)', iconColor: '#3b82f6',
-                border: 'rgba(59,130,246,0.2)',
+                icon: <Truck size={20} />, label: 'Track Delivery',
+                sub: 'Order status & items',
+                iconColor: '#38bdf8',
                 action: () => {
                   if (orders.length > 0) setSelectedOrderForTracking(orders[0]);
                   else { showToast('No active orders. Visit the store first.', 'accent'); navigate('/store'); }
                 },
               },
               {
-                icon: <ShoppingBag size={22} />, label: 'Visit Store',
-                sub: 'Hair & grooming products',
-                bg: 'rgba(236,72,153,0.08)', iconBg: 'rgba(236,72,153,0.15)', iconColor: '#ec4899',
-                border: 'rgba(236,72,153,0.2)', action: () => navigate('/store'),
+                icon: <ShoppingBag size={20} />, label: 'Visit Store',
+                sub: 'Beauty & hair care',
+                iconColor: '#ec4899', action: () => navigate('/store'),
               },
             ].map((item) => (
               <button
                 key={item.label}
                 onClick={item.action}
                 style={{
-                  background: item.bg, border: `1.5px solid ${item.border}`,
-                  borderRadius: '18px', padding: '1.1rem 0.85rem',
-                  cursor: 'pointer', textAlign: 'left', display: 'flex',
-                  flexDirection: 'column', gap: '0.5rem',
+                  background: 'var(--color-card-surface)',
+                  border: '1px solid var(--color-border)',
+                  borderRadius: '16px',
+                  padding: '0.95rem 0.85rem',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.45rem',
                   transition: 'transform 0.15s ease, box-shadow 0.15s ease',
-                  minHeight: '102px',
+                  minHeight: '94px',
                 }}
-                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.08)'; }}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = 'var(--shadow-sm)'; }}
                 onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = ''; }}
               >
                 <div style={{
-                  width: '42px', height: '42px', borderRadius: '12px',
-                  background: item.iconBg, color: item.iconColor,
+                  width: '36px', height: '36px', borderRadius: '10px',
+                  background: 'var(--color-surface)',
+                  color: item.iconColor,
+                  border: '1px solid var(--color-border)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}>
                   {item.icon}
                 </div>
                 <div>
-                  <div style={{ fontFamily: 'Outfit', fontSize: '0.88rem', fontWeight: 800, color: item.textColor || '#ffffff', lineHeight: 1.1 }}>
+                  <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '0.86rem', fontWeight: 700, color: 'var(--color-text-primary)', margin: 0 }}>
                     {item.label}
-                  </div>
-                  <div style={{ fontSize: '0.7rem', color: item.subColor || '#64748b', marginTop: '0.15rem', fontWeight: 600 }}>
+                  </h4>
+                  <p style={{ fontSize: '0.72rem', color: 'var(--color-text-muted)', margin: '0.15rem 0 0' }}>
                     {item.sub}
-                  </div>
+                  </p>
                 </div>
               </button>
             ))}
@@ -1241,7 +1194,12 @@ export const CustomerDashboard = () => {
         onClose={() => setShowAiSheet(false)}
         onApplyMatch={(match) => {
           setShowAiSheet(false);
-          navigate(`/booking?stylist=${encodeURIComponent(match.firstname)}`);
+          const params = new URLSearchParams();
+          if (match.stylist) params.append('stylist', match.stylist);
+          if (match.service) params.append('service', match.service);
+          if (match.location) params.append('location', match.location);
+          if (match.stylistId) params.append('stylistId', match.stylistId);
+          navigate(`/booking?${params.toString()}`);
         }}
       />
 

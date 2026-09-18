@@ -240,6 +240,20 @@ export const api = {
     return data;
   },
 
+  getBusySlots: async (stylist, stylistId, date) => {
+    try {
+      const params = new URLSearchParams();
+      if (stylist) params.append('stylist', stylist);
+      if (stylistId) params.append('stylistId', stylistId);
+      if (date) params.append('date', date);
+      const res = await fetchWithTimeout(`${API_BASE}/bookings/busy-slots?${params.toString()}`);
+      const data = await safeJson(res);
+      return data?.busySlots || [];
+    } catch {
+      return [];
+    }
+  },
+
   createBooking: async (bookingData) => {
     const res = await fetchWithTimeout(`${API_BASE}/bookings`, {
       method: 'POST',
