@@ -24,18 +24,15 @@ export const Wallet = () => {
   const navigate = useNavigate();
   const { user, showToast } = useAuth();
 
-  const [walletBalance, setWalletBalance] = useState(user?.walletBalance ?? 12000);
+  const [walletBalance, setWalletBalance] = useState(user?.walletBalance ?? 0);
   const [showBalance, setShowBalance] = useState(true);
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
   const [showFundModal, setShowFundModal] = useState(false);
   const [showTransactionsModal, setShowTransactionsModal] = useState(false);
   const [showRewardsModal, setShowRewardsModal] = useState(false);
   const [fundAmount, setFundAmount] = useState('5000');
-  const [transactions, setTransactions] = useState([
-    { id: 'tx-1', type: 'Appointment Payment', amount: -5000, date: '23 Aug, 11:30 AM', status: 'Completed' },
-    { id: 'tx-2', type: 'Wallet Top-Up (Paystack)', amount: 12000, date: '20 Aug, 03:15 PM', status: 'Success' },
-    { id: 'tx-3', type: 'Store Order #SC1234', amount: -9500, date: '15 Aug, 09:20 AM', status: 'Completed' },
-  ]);
+  const [transactions, setTransactions] = useState([]);
+  const [loadingTx, setLoadingTx] = useState(false);
 
   const fetchBalance = async () => {
     try {
@@ -46,8 +43,21 @@ export const Wallet = () => {
     } catch (e) {}
   };
 
+  const fetchTransactions = async () => {
+    setLoadingTx(true);
+    try {
+      const data = await api.getWalletTransactions();
+      setTransactions(Array.isArray(data) ? data : []);
+    } catch (e) {
+      setTransactions([]);
+    } finally {
+      setLoadingTx(false);
+    }
+  };
+
   useEffect(() => {
     fetchBalance();
+    fetchTransactions();
   }, []);
 
   const handleFundWallet = (e) => {
@@ -73,7 +83,7 @@ export const Wallet = () => {
         
         {/* Screen 10: Header */}
         <div style={{ marginBottom: '1.25rem' }}>
-          <h1 style={{ fontFamily: 'Outfit', fontSize: '1.65rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+          <h1 style={{ fontFamily: 'Outfit', fontSize: '1.65rem', fontWeight: 800, color: 'var(--color-text-primary)', margin: 0 }}>
             Wallet & Payments
           </h1>
         </div>
@@ -81,16 +91,16 @@ export const Wallet = () => {
         {/* Screen 10: Wallet Balance Card */}
         <div
           style={{
-            background: '#151822',
+            background: 'var(--color-surface)',
             borderRadius: '22px',
             padding: '1.25rem',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
+            border: '1px solid var(--color-border)',
             marginBottom: '1.5rem',
             position: 'relative',
           }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.45rem' }}>
-            <span style={{ fontSize: '0.82rem', color: '#94a3b8', fontFamily: 'Outfit', fontWeight: 600 }}>
+            <span style={{ fontSize: '0.82rem', color: 'var(--color-text-secondary)', fontFamily: 'Outfit', fontWeight: 600 }}>
               Wallet Balance
             </span>
             <button
@@ -98,7 +108,7 @@ export const Wallet = () => {
               style={{
                 background: 'none',
                 border: 'none',
-                color: '#94a3b8',
+                color: 'var(--color-text-secondary)',
                 cursor: 'pointer',
                 padding: '4px',
               }}
@@ -113,7 +123,7 @@ export const Wallet = () => {
               fontFamily: 'Outfit',
               fontSize: '2.1rem',
               fontWeight: 900,
-              color: '#ffffff',
+              color: 'var(--color-text-primary)',
               marginBottom: '1.15rem',
               letterSpacing: '-0.02em',
             }}
@@ -158,14 +168,14 @@ export const Wallet = () => {
 
         {/* Payment Methods Section */}
         <div style={{ marginBottom: '1.5rem' }}>
-          <h2 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.85rem' }}>
+          <h2 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: 'var(--color-text-primary)', marginBottom: '0.85rem' }}>
             Payment Methods
           </h2>
 
           {/* Paystack Card */}
           <div
             style={{
-              background: '#151822',
+              background: 'var(--color-surface)',
               borderRadius: '16px',
               padding: '1rem',
               border: '1.5px solid #f5b942',
@@ -181,7 +191,7 @@ export const Wallet = () => {
                   width: '42px',
                   height: '42px',
                   borderRadius: '10px',
-                  background: '#1c202d',
+                  background: 'var(--color-surface-hover)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -191,10 +201,10 @@ export const Wallet = () => {
                 <CreditCard size={20} />
               </div>
               <div>
-                <h4 style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
-                  Paystack
+                <h4 style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 800, color: 'var(--color-text-primary)', margin: 0 }}>
+                  Paystack Secured Gateway
                 </h4>
-                <span style={{ fontSize: '0.78rem', color: '#94a3b8' }}>•••• 1234</span>
+                <span style={{ fontSize: '0.76rem', color: 'var(--color-text-secondary)' }}>Cards, Bank Transfer & USSD</span>
               </div>
             </div>
 
@@ -219,10 +229,10 @@ export const Wallet = () => {
             onClick={() => setShowFundModal(true)}
             style={{
               width: '100%',
-              background: '#151822',
+              background: 'var(--color-surface)',
               borderRadius: '16px',
               padding: '0.85rem 1rem',
-              border: '1px dashed rgba(255, 255, 255, 0.12)',
+              border: '1px dashed var(--color-border-accent)',
               display: 'flex',
               alignItems: 'center',
               gap: '0.65rem',
@@ -234,7 +244,7 @@ export const Wallet = () => {
             }}
           >
             <Plus size={16} />
-            <span>Add Card</span>
+            <span>Fund Wallet via Card / Transfer</span>
           </button>
         </div>
 
@@ -243,10 +253,10 @@ export const Wallet = () => {
           <div
             onClick={() => setShowTransactionsModal(true)}
             style={{
-              background: '#151822',
+              background: 'var(--color-surface)',
               borderRadius: '16px',
               padding: '1rem',
-              border: '1px solid rgba(255, 255, 255, 0.06)',
+              border: '1px solid var(--color-border)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
@@ -254,21 +264,21 @@ export const Wallet = () => {
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              <History size={18} color="#94a3b8" />
-              <span style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 700, color: '#ffffff' }}>
+              <History size={18} color="var(--color-text-secondary)" />
+              <span style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>
                 Transaction History
               </span>
             </div>
-            <ChevronRight size={18} color="#64748b" />
+            <ChevronRight size={18} color="var(--color-text-muted)" />
           </div>
 
           <div
             onClick={() => setShowRewardsModal(true)}
             style={{
-              background: '#151822',
+              background: 'var(--color-surface)',
               borderRadius: '16px',
               padding: '1rem',
-              border: '1px solid rgba(255, 255, 255, 0.06)',
+              border: '1px solid var(--color-border)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
@@ -277,11 +287,11 @@ export const Wallet = () => {
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
               <Gift size={18} color="#f5b942" />
-              <span style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 700, color: '#ffffff' }}>
+              <span style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>
                 Referral & Rewards
               </span>
             </div>
-            <ChevronRight size={18} color="#64748b" />
+            <ChevronRight size={18} color="var(--color-text-muted)" />
           </div>
         </div>
 
@@ -348,36 +358,55 @@ export const Wallet = () => {
         title="Transaction History"
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-          {transactions.map((tx) => (
-            <div
-              key={tx.id}
-              style={{
-                background: '#1c202d',
-                padding: '0.85rem',
-                borderRadius: '12px',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
-            >
-              <div>
-                <h4 style={{ fontFamily: 'Outfit', fontSize: '0.88rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.15rem' }}>
-                  {tx.type}
-                </h4>
-                <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>{tx.date}</span>
-              </div>
-              <span
+          {loadingTx ? (
+            <div style={{ textAlign: 'center', padding: '2rem', color: '#64748b', fontFamily: 'Outfit', fontSize: '0.85rem' }}>
+              Loading transactions...
+            </div>
+          ) : transactions.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '2rem' }}>
+              <History size={32} color="#64748b" style={{ marginBottom: '0.65rem', opacity: 0.6 }} />
+              <p style={{ fontFamily: 'Outfit', fontSize: '0.88rem', color: '#64748b', margin: 0 }}>
+                No transactions yet
+              </p>
+              <p style={{ fontFamily: 'Outfit', fontSize: '0.78rem', color: '#475569', marginTop: '0.25rem' }}>
+                Fund your wallet or book a service to get started
+              </p>
+            </div>
+          ) : (
+            transactions.map((tx, idx) => (
+              <div
+                key={tx._id || tx.id || idx}
                 style={{
-                  fontFamily: 'Outfit',
-                  fontSize: '0.92rem',
-                  fontWeight: 800,
-                  color: tx.amount > 0 ? '#10b981' : '#ffffff',
+                  background: 'var(--color-surface-hover)',
+                  padding: '0.85rem',
+                  borderRadius: '12px',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  border: '1px solid var(--color-border)',
                 }}
               >
-                {tx.amount > 0 ? `+₦${tx.amount.toLocaleString()}` : `-₦${Math.abs(tx.amount).toLocaleString()}`}
-              </span>
-            </div>
-          ))}
+                <div>
+                  <h4 style={{ fontFamily: 'Outfit', fontSize: '0.88rem', fontWeight: 800, color: 'var(--color-text-primary)', margin: '0 0 0.15rem' }}>
+                    {tx.type || tx.description || 'Transaction'}
+                  </h4>
+                  <span style={{ fontSize: '0.72rem', color: 'var(--color-text-secondary)' }}>
+                    {tx.date || (tx.createdAt ? new Date(tx.createdAt).toLocaleString('en-NG', { dateStyle: 'medium', timeStyle: 'short' }) : '')}
+                  </span>
+                </div>
+                <span
+                  style={{
+                    fontFamily: 'Outfit',
+                    fontSize: '0.92rem',
+                    fontWeight: 800,
+                    color: tx.amount > 0 ? '#10b981' : 'var(--color-text-primary)',
+                  }}
+                >
+                  {tx.amount > 0 ? `+₦${Number(tx.amount).toLocaleString()}` : `-₦${Math.abs(Number(tx.amount)).toLocaleString()}`}
+                </span>
+              </div>
+            ))
+          )}
         </div>
       </PopupModal>
 

@@ -171,14 +171,14 @@ export const LocationSelector = ({ location, onChange }) => {
         {/* State Select */}
         <div className="app-input-group" style={{ marginBottom: 0, minWidth: 0 }}>
           <label className="app-label" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.75rem' }}>
-            <MapPin size={13} color="#d4af37" /> State *
+            <MapPin size={13} color="var(--color-accent)" /> State *
           </label>
           <select
             value={location.state || 'Lagos'}
             onChange={handleStateChange}
-            className="app-input"
+            className="app-select"
             required
-            style={{ appearance: 'auto', background: '#ffffff', minWidth: 0, width: '100%', boxSizing: 'border-box' }}
+            style={{ minWidth: 0, width: '100%', boxSizing: 'border-box' }}
           >
             {NIGERIAN_STATES.map(st => (
               <option key={st.name} value={st.name}>
@@ -191,14 +191,14 @@ export const LocationSelector = ({ location, onChange }) => {
         {/* Local Government Area (LGA) Select */}
         <div className="app-input-group" style={{ marginBottom: 0, minWidth: 0 }}>
           <label className="app-label" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.75rem' }}>
-            <Building size={13} color="#d4af37" /> LGA / District *
+            <Building size={13} color="var(--color-accent)" /> LGA / District *
           </label>
           <select
             value={location.lga || selectedStateObj.lgas[0]}
             onChange={(e) => onChange({ ...location, lga: e.target.value })}
-            className="app-input"
+            className="app-select"
             required
-            style={{ appearance: 'auto', background: '#ffffff', minWidth: 0, width: '100%', boxSizing: 'border-box' }}
+            style={{ minWidth: 0, width: '100%', boxSizing: 'border-box' }}
           >
             {selectedStateObj.lgas.map(lga => (
               <option key={lga} value={lga}>

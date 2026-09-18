@@ -1,5 +1,5 @@
-import React, { Suspense, lazy } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import React, { Suspense, lazy, useRef } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { ThemeProvider } from './context/ThemeContext';
@@ -80,7 +80,7 @@ const ExpertDashboard = safeLazy(() => import('./pages/ExpertDashboard').then(m 
 const Payment = safeLazy(() => import('./pages/Payment').then(m => ({ default: m.Payment })));
 const Policies = safeLazy(() => import('./pages/Policies').then(m => ({ default: m.Policies })));
 const Profile = safeLazy(() => import('./pages/Profile').then(m => ({ default: m.Profile })));
-const ExpertProfile = safeLazy(() => import('./pages/ExpertProfile').then(m => ({ default: m.ExpertProfile })));
+const ExpertProfile = safeLazy(() => import('./pages/ExpertProfile').then(m => ({ default: m.ExpertProfile || m.default })));
 const ProductDetail = safeLazy(() => import('./pages/ProductDetail').then(m => ({ default: m.ProductDetail })));
 const Cart = safeLazy(() => import('./pages/Cart').then(m => ({ default: m.Cart })));
 const AiStylistFinder = safeLazy(() => import('./pages/AiStylistFinder').then(m => ({ default: m.AiStylistFinder })));
@@ -168,6 +168,36 @@ export const PageLoader = () => (
   </div>
 );
 
+/**
+ * PageTransition — wraps all routes so each pathname change gets a
+ * smooth iOS-style slide-in sweep (new page sweeps from right),
+ * replacing the old "pop & stick" snap behaviour.
+ */
+const PageTransition = ({ children }) => {
+  const location = useLocation();
+  const prevPath = useRef(location.pathname);
+
+  // Detect if we're going "back" by checking history state
+  const isBack = typeof window !== 'undefined' &&
+    window.history.state && window.history.state.idx !== undefined
+    ? window.history.state.idx < (PageTransition._lastIdx ?? window.history.state.idx)
+    : false;
+
+  if (typeof window !== 'undefined' && window.history.state?.idx !== undefined) {
+    PageTransition._lastIdx = window.history.state.idx;
+  }
+
+  return (
+    <div
+      key={location.pathname}
+      className={isBack ? 'page-sweep-back' : 'page-sweep-forward'}
+    >
+      {children}
+    </div>
+  );
+};
+PageTransition._lastIdx = undefined;
+
 export const App = () => {
   return (
     <ThemeProvider>
@@ -176,6 +206,7 @@ export const App = () => {
           <BrowserRouter>
             <ScrollToTop />
             <Suspense fallback={<PageLoader />}>
+            <PageTransition>
             <Routes>
               {/* Public Routes */}
               <Route path="/" element={<Home />} />
@@ -250,6 +281,7 @@ export const App = () => {
               {/* Fallback Catch-all */}
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
+            </PageTransition>
           </Suspense>
         </BrowserRouter>
       </CartProvider>

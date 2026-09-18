@@ -18,7 +18,11 @@ import {
   Plus,
   Trash2,
   Upload,
-  RefreshCw
+  RefreshCw,
+  BookOpen,
+  Clock,
+  Eye,
+  ExternalLink,
 } from 'lucide-react';
 import { PageContainer } from '../components/common/PageContainer';
 import { PopupModal } from '../components/common/PopupModal';
@@ -27,7 +31,155 @@ import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import { uploadToCloudinary } from '../services/cloudinary';
 
-const DEFAULT_EXPERT_PROFILES = [];
+const DEFAULT_EXPERT_PROFILES = [
+  {
+    id: 'spec_zainab',
+    name: 'Zainab Adeleke',
+    role: 'Master Wig & Silk Press Artisan',
+    rating: 4.95,
+    reviewsCount: 38,
+    location: 'Victoria Island, Lagos',
+    experience: '8+ Years Atelier Experience',
+    bio: 'Renowned master wig technician and silk press artisan known for precision lace melt, flawless styling, and non-damaging thermal treatments.',
+    avatar: '',
+    coverImage: '/images/hero-bg.png',
+    services: [
+      { name: 'HD Frontal Wig Installation & Customization', price: '₦28,000' },
+      { name: 'Silk Press & Botanical Scalp Treatment', price: '₦22,000' },
+      { name: 'Boho Knotless Braids with Curls', price: '₦35,000' }
+    ],
+    portfolio: [
+      {
+        _id: 'p_z1',
+        service: 'HD Frontal Wig Installation & Customization',
+        title: 'HD Invisible Lace Melt & Body Waves',
+        imageUrl: 'https://images.unsplash.com/photo-1580618672591-eb180b1a973f?auto=format&fit=crop&w=600&q=80',
+        description: 'Bleached knots, customized hairline, and bouncy 24-inch body wave barrel curls.',
+        duration: '2.5 hrs',
+        price: '₦28,000'
+      },
+      {
+        _id: 'p_z2',
+        service: 'Silk Press & Botanical Scalp Treatment',
+        title: 'Glass-Finish Silk Press & Steam Therapy',
+        imageUrl: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=600&q=80',
+        description: 'Deep hydration steam bath followed by titanium silk press with high shine serum.',
+        duration: '1.5 hrs',
+        price: '₦22,000'
+      },
+      {
+        _id: 'p_z3',
+        service: 'Boho Knotless Braids with Curls',
+        title: 'Waist-Length Boho Knotless Braids',
+        imageUrl: 'https://images.unsplash.com/photo-1582095133179-bfd08e2fc6b3?auto=format&fit=crop&w=600&q=80',
+        description: 'French curl human hair extensions blended with seamless knotless parting.',
+        duration: '4.5 hrs',
+        price: '₦35,000'
+      }
+    ]
+  },
+  {
+    id: 'spec_julian',
+    name: 'Julian Reed',
+    role: 'Executive Barber & Groomer',
+    rating: 4.9,
+    reviewsCount: 52,
+    location: 'Ikoyi, Lagos',
+    experience: '6+ Years Master Barber',
+    bio: 'Crafting surgical skin fades, hot towel beard sculpting, and executive gentlemen grooming tailored to your face structure.',
+    avatar: '',
+    coverImage: '/images/hero-bg.png',
+    services: [
+      { name: 'Executive Razor Skin Fade & Haircut', price: '₦15,000' },
+      { name: 'Beard Sculpting & Hot Towel Treatment', price: '₦12,000' },
+      { name: 'Atelier Royal Head Spa & Grooming', price: '₦25,000' }
+    ],
+    portfolio: [
+      {
+        _id: 'p_j1',
+        service: 'Executive Razor Skin Fade & Haircut',
+        title: 'Drop Fade with Surgical Lineup',
+        imageUrl: 'https://images.unsplash.com/photo-1622286342621-4bd786c2447c?auto=format&fit=crop&w=600&q=80',
+        description: 'Crisp mid-drop fade finished with straight razor hairline and matte pomade.',
+        duration: '45 mins',
+        price: '₦15,000'
+      },
+      {
+        _id: 'p_j2',
+        service: 'Beard Sculpting & Hot Towel Treatment',
+        title: 'Full Beard Contouring & Steam Infusion',
+        imageUrl: 'https://images.unsplash.com/photo-1621605815971-fbc98d665033?auto=format&fit=crop&w=600&q=80',
+        description: 'Eucalyptus hot towel wrap, organic beard butter treatment, and razor lineup.',
+        duration: '40 mins',
+        price: '₦12,000'
+      }
+    ]
+  },
+  {
+    id: 'spec_amara',
+    name: 'Amara Okon',
+    role: 'Luxe Nail & Lash Architect',
+    rating: 5.0,
+    reviewsCount: 44,
+    location: 'Lekki Phase 1, Lagos',
+    experience: '7+ Years Nail Artistry',
+    bio: 'Specializing in Russian manicures, sculptural acrylic extensions, 3D chrome nail art, and lightweight Russian volume lash sets.',
+    avatar: '',
+    coverImage: '/images/hero-bg.png',
+    services: [
+      { name: 'Russian Almond Acrylic Extensions & Chrome Art', price: '₦25,000' },
+      { name: 'Russian Volume Lightweight Lash Full Set', price: '₦30,000' },
+      { name: 'Luxe Gel Overlay & Spa Pedicure', price: '₦18,000' }
+    ],
+    portfolio: [
+      {
+        _id: 'p_a1',
+        service: 'Russian Almond Acrylic Extensions & Chrome Art',
+        title: 'Glazed Donut Almond Acrylic Sculpt',
+        imageUrl: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&w=600&q=80',
+        description: 'Flawless cuticle cleanup, sculptured almond shape, and chrome glaze powder.',
+        duration: '2 hrs',
+        price: '₦25,000'
+      },
+      {
+        _id: 'p_a2',
+        service: 'Russian Volume Lightweight Lash Full Set',
+        title: 'Wispy Hybrid Lash Architecture',
+        imageUrl: 'https://images.unsplash.com/photo-1583001931096-959e9a1a6223?auto=format&fit=crop&w=600&q=80',
+        description: 'Handmade 4D-6D volume fans created for a fluffy, textured feline cat-eye effect.',
+        duration: '2.5 hrs',
+        price: '₦30,000'
+      }
+    ]
+  },
+  {
+    id: 'spec_tunde',
+    name: 'Tunde Bakare',
+    role: 'Editorial Makeup & Glow Specialist',
+    rating: 4.85,
+    reviewsCount: 29,
+    location: 'Ikeja GRA, Lagos',
+    experience: '5+ Years Editorial Makeup',
+    bio: 'Mastering luminous skin finishes, soft editorial glamour, red carpet contouring, and bridal artistry.',
+    avatar: '',
+    coverImage: '/images/hero-bg.png',
+    services: [
+      { name: 'Soft Glam Editorial Makeup & Lashes', price: '₦25,000' },
+      { name: 'Bridal Glow Airbrush Transformation', price: '₦50,000' }
+    ],
+    portfolio: [
+      {
+        _id: 'p_t1',
+        service: 'Soft Glam Editorial Makeup & Lashes',
+        title: 'Golden Hour Soft Glam Finish',
+        imageUrl: 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=600&q=80',
+        description: 'Skin-first dewy coverage, diffused bronze eyeshadow, and nude ombré lip lacquer.',
+        duration: '1.5 hrs',
+        price: '₦25,000'
+      }
+    ]
+  }
+];
 
 const normalizeServices = (rawServices) => {
   if (!Array.isArray(rawServices) || rawServices.length === 0) {
@@ -61,6 +213,10 @@ export const ExpertProfile = () => {
   const [messageText, setMessageText] = useState('');
   const [sendingMsg, setSendingMsg] = useState(false);
 
+  // Lookbook Showcase States
+  const [portfolioFilter, setPortfolioFilter] = useState('All');
+  const [activePortfolioModal, setActivePortfolioModal] = useState(null);
+
   // Profile Edit Management States
   const [showEditSheet, setShowEditSheet] = useState(false);
   const [savingProfile, setSavingProfile] = useState(false);
@@ -80,6 +236,16 @@ export const ExpertProfile = () => {
   const [newServiceName, setNewServiceName] = useState('');
   const [newServicePrice, setNewServicePrice] = useState('');
 
+  const myFullName = user ? `${user.firstname || ''} ${user.lastname || ''}`.trim().toLowerCase() : '';
+  const searchLower = queryName.toLowerCase();
+  const hasExplicitQuery = searchParams.get('name') || searchParams.get('stylist') || searchParams.get('id');
+  const isViewingMyself = user && user.role === 'staff' && (
+    !hasExplicitQuery ||
+    searchLower === myFullName ||
+    (user._id && searchLower === String(user._id).toLowerCase()) ||
+    (user.firstname && searchLower === user.firstname.toLowerCase())
+  );
+
   useEffect(() => {
     if (queryName) {
       api.getSpecialistReviews(queryName)
@@ -87,7 +253,6 @@ export const ExpertProfile = () => {
         .catch(() => setReviewsList([]));
     }
 
-    const searchLower = queryName.toLowerCase();
     let found = DEFAULT_EXPERT_PROFILES.find(p => p.name.toLowerCase().includes(searchLower) || p.id.includes(searchLower));
 
     // Check if custom profile saved in localStorage
@@ -97,14 +262,18 @@ export const ExpertProfile = () => {
     if (customSaved) {
       try {
         const parsed = JSON.parse(customSaved);
-        const norm = { ...parsed, services: normalizeServices(parsed.services) };
+        const norm = {
+          ...parsed,
+          services: normalizeServices(parsed.services),
+          portfolio: parsed.portfolio || (found ? found.portfolio : [])
+        };
         setExpert(norm);
         setSelectedService(norm.services[0]);
         return;
       } catch (err) {}
     }
 
-    if (user && user.role === 'staff') {
+    if (isViewingMyself) {
       const userServices = normalizeServices(user.services);
       const userProfile = {
         id: user._id || searchLower.replace(/\s+/g, '-'),
@@ -117,7 +286,8 @@ export const ExpertProfile = () => {
         bio: user.bio || 'Specialized in bespoke styling and executive client care.',
         avatar: user.avatarUrl || '',
         coverImage: user.coverImage || '/images/hero-bg.png',
-        services: userServices
+        services: userServices,
+        portfolio: user.portfolio || []
       };
       setExpert(userProfile);
       setSelectedService(userProfile.services[0]);
@@ -125,7 +295,11 @@ export const ExpertProfile = () => {
     }
 
     if (found) {
-      const norm = { ...found, services: normalizeServices(found.services) };
+      const norm = {
+        ...found,
+        services: normalizeServices(found.services),
+        portfolio: found.portfolio || []
+      };
       setExpert(norm);
       setSelectedService(norm.services[0]);
     } else {
@@ -149,24 +323,33 @@ export const ExpertProfile = () => {
                 bio: matched.bio || `Specialized in premium hair and beauty services.`,
                 avatar: matched.avatarUrl || '',
                 coverImage: matched.coverImage || '/images/hero-bg.png',
-                services: specs
+                services: specs,
+                portfolio: matched.portfolio || []
               };
               setExpert(dynamicProfile);
               setSelectedService(dynamicProfile.services[0]);
               return;
             }
           }
-          const defaultNorm = { ...DEFAULT_EXPERT_PROFILES[0], services: normalizeServices(DEFAULT_EXPERT_PROFILES[0].services) };
+          const defaultNorm = {
+            ...DEFAULT_EXPERT_PROFILES[0],
+            services: normalizeServices(DEFAULT_EXPERT_PROFILES[0]?.services),
+            portfolio: DEFAULT_EXPERT_PROFILES[0]?.portfolio || []
+          };
           setExpert(defaultNorm);
           setSelectedService(defaultNorm.services[0]);
         })
         .catch(() => {
-          const defaultNorm = { ...DEFAULT_EXPERT_PROFILES[0], services: normalizeServices(DEFAULT_EXPERT_PROFILES[0].services) };
+          const defaultNorm = {
+            ...DEFAULT_EXPERT_PROFILES[0],
+            services: normalizeServices(DEFAULT_EXPERT_PROFILES[0]?.services),
+            portfolio: DEFAULT_EXPERT_PROFILES[0]?.portfolio || []
+          };
           setExpert(defaultNorm);
           setSelectedService(defaultNorm.services[0]);
         });
     }
-  }, [queryName, user]);
+  }, [queryName, user, isViewingMyself]);
 
   // Open Edit Sheet & Populate Form
   const handleOpenEditSheet = () => {
@@ -695,27 +878,208 @@ export const ExpertProfile = () => {
             border: '1px solid rgba(255, 255, 255, 0.08)',
             boxShadow: '0 4px 20px rgba(0,0,0,0.25)',
           }}>
-            <h3 style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.85rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <Sparkles size={16} color="#f5b942" /> Portfolio Work & Lookbook
-            </h3>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.85rem', flexWrap: 'wrap', gap: '0.4rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <Sparkles size={16} color="#f5b942" />
+                <h3 style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+                  Portfolio Work & Lookbook
+                </h3>
+                {expert?.portfolio && Array.isArray(expert.portfolio) && expert.portfolio.length > 0 && (
+                  <span style={{ fontSize: '0.68rem', color: '#f5b942', background: 'rgba(245, 185, 66, 0.12)', padding: '0.1rem 0.45rem', borderRadius: '50px', fontWeight: 800 }}>
+                    {expert.portfolio.length}
+                  </span>
+                )}
+              </div>
 
-            {expert?.portfolio && Array.isArray(expert.portfolio) && expert.portfolio.length > 0 ? (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '0.65rem' }}>
-                {expert.portfolio.map((item, i) => {
-                  const imgUrl = typeof item === 'object' ? (item.imageUrl || item.url) : item;
-                  if (!imgUrl) return null;
-                  return (
-                    <div key={i} style={{ borderRadius: '12px', overflow: 'hidden', height: '110px', border: '1px solid rgba(255,255,255,0.08)', background: '#1c202d' }}>
-                      <img src={imgUrl} alt={`Portfolio ${i + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              {isViewingMyself && (
+                <button
+                  type="button"
+                  onClick={() => navigate('/expert-dashboard#portfolio')}
+                  style={{
+                    background: 'rgba(245, 185, 66, 0.12)',
+                    color: '#f5b942',
+                    border: '1px solid rgba(245, 185, 66, 0.3)',
+                    borderRadius: '50px',
+                    padding: '0.25rem 0.65rem',
+                    fontSize: '0.72rem',
+                    fontFamily: 'Outfit',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.3rem',
+                  }}
+                >
+                  <Plus size={12} /> Manage / Add Work
+                </button>
+              )}
+            </div>
+
+            {(() => {
+              const specialistPortfolio = Array.isArray(expert?.portfolio) ? expert.portfolio : [];
+
+              if (specialistPortfolio.length === 0) {
+                return (
+                  <div style={{ textAlign: 'center', padding: '2rem 1rem', background: '#10131b', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.06)' }}>
+                    <BookOpen size={34} color="#f5b942" style={{ marginBottom: '0.5rem', opacity: 0.6 }} />
+                    <p style={{ color: '#ffffff', fontSize: '0.86rem', fontWeight: 700, margin: '0 0 0.3rem', fontFamily: 'Outfit' }}>
+                      {isViewingMyself ? 'Your Lookbook is Currently Empty' : 'No Portfolio Samples Uploaded Yet'}
+                    </p>
+                    <p style={{ color: '#64748b', fontSize: '0.78rem', margin: '0 0 1rem', lineHeight: 1.4 }}>
+                      {isViewingMyself
+                        ? 'Add pictures of your styling, client transformations, and techniques in your Expert Dashboard to attract more clients.'
+                        : 'This specialist has not published lookbook transformations yet. Book an appointment or contact directly.'}
+                    </p>
+                    {isViewingMyself && (
+                      <button
+                        type="button"
+                        onClick={() => navigate('/expert-dashboard#portfolio')}
+                        style={{
+                          background: '#f5b942',
+                          color: '#0c0e14',
+                          border: 'none',
+                          borderRadius: '50px',
+                          padding: '0.45rem 1rem',
+                          fontFamily: 'Outfit',
+                          fontSize: '0.78rem',
+                          fontWeight: 800,
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.35rem',
+                        }}
+                      >
+                        <Plus size={14} /> Log Work in Dashboard
+                      </button>
+                    )}
+                  </div>
+                );
+              }
+
+              const uniqueServices = ['All', ...new Set(specialistPortfolio.map(p => p.service || 'General').filter(Boolean))];
+              const displayedSamples = portfolioFilter === 'All'
+                ? specialistPortfolio
+                : specialistPortfolio.filter(p => (p.service || 'General') === portfolioFilter);
+
+              return (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  {/* Category Pills if more than 1 category */}
+                  {uniqueServices.length > 2 && (
+                    <div style={{ display: 'flex', gap: '0.35rem', overflowX: 'auto', paddingBottom: '0.2rem', scrollbarWidth: 'none' }}>
+                      {uniqueServices.map((cat) => {
+                        const active = portfolioFilter === cat;
+                        return (
+                          <button
+                            key={cat}
+                            type="button"
+                            onClick={() => setPortfolioFilter(cat)}
+                            style={{
+                              background: active ? '#f5b942' : '#10131b',
+                              color: active ? '#0c0e14' : '#94a3b8',
+                              border: `1px solid ${active ? '#f5b942' : 'rgba(255,255,255,0.08)'}`,
+                              borderRadius: '50px',
+                              padding: '0.2rem 0.65rem',
+                              fontSize: '0.7rem',
+                              fontFamily: 'Outfit',
+                              fontWeight: active ? 800 : 600,
+                              cursor: 'pointer',
+                              whiteSpace: 'nowrap',
+                            }}
+                          >
+                            {cat}
+                          </button>
+                        );
+                      })}
                     </div>
-                  );
-                })}
-              </div>
-            ) : (
-              <div style={{ textAlign: 'center', padding: '1.75rem 1rem', background: '#10131b', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.06)' }}>
-                <p style={{ color: '#64748b', fontSize: '0.82rem', margin: 0 }}>No portfolio samples uploaded yet.</p>
-              </div>
-            )}
+                  )}
+
+                  {/* Lookbook Grid */}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(115px, 1fr))', gap: '0.65rem' }}>
+                    {displayedSamples.map((item, i) => {
+                      const imgUrl = typeof item === 'object' ? (item.imageUrl || item.url) : item;
+                      if (!imgUrl) return null;
+                      const title = typeof item === 'object' ? (item.title || item.service || 'Client Style') : 'Client Style';
+                      const service = typeof item === 'object' ? item.service : '';
+
+                      return (
+                        <div
+                          key={i}
+                          onClick={() => setActivePortfolioModal(typeof item === 'object' ? item : { imageUrl: item, title })}
+                          style={{
+                            borderRadius: '14px',
+                            overflow: 'hidden',
+                            height: '125px',
+                            border: '1px solid rgba(255,255,255,0.08)',
+                            background: '#1c202d',
+                            position: 'relative',
+                            cursor: 'pointer',
+                            boxShadow: '0 4px 12px rgba(0,0,0,0.25)',
+                          }}
+                        >
+                          <img
+                            src={imgUrl}
+                            alt={title}
+                            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                            loading="lazy"
+                          />
+
+                          {/* Service Tag */}
+                          {service && (
+                            <div
+                              style={{
+                                position: 'absolute',
+                                top: '5px',
+                                left: '5px',
+                                background: 'rgba(12,14,20,0.8)',
+                                backdropFilter: 'blur(4px)',
+                                color: '#f5b942',
+                                fontSize: '0.58rem',
+                                fontWeight: 800,
+                                padding: '0.1rem 0.4rem',
+                                borderRadius: '50px',
+                                maxWidth: '80%',
+                                whiteSpace: 'nowrap',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                              }}
+                            >
+                              {service}
+                            </div>
+                          )}
+
+                          {/* Bottom Gradient with Style Title */}
+                          <div
+                            style={{
+                              position: 'absolute',
+                              bottom: 0,
+                              left: 0,
+                              right: 0,
+                              padding: '1.2rem 0.4rem 0.35rem',
+                              background: 'linear-gradient(to top, rgba(12,14,20,0.95) 0%, rgba(12,14,20,0.6) 60%, transparent 100%)',
+                            }}
+                          >
+                            <span
+                              style={{
+                                color: '#ffffff',
+                                fontSize: '0.68rem',
+                                fontFamily: 'Outfit',
+                                fontWeight: 700,
+                                display: 'block',
+                                whiteSpace: 'nowrap',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                              }}
+                            >
+                              {title}
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         </div>
 
@@ -1072,6 +1436,146 @@ export const ExpertProfile = () => {
           </button>
         </form>
       </PopupModal>
+
+      {/* ── LOOKBOOK SAMPLE DETAIL LIGHTBOX MODAL ── */}
+      {activePortfolioModal && (
+        <PopupModal
+          isOpen={!!activePortfolioModal}
+          onClose={() => setActivePortfolioModal(null)}
+          title={activePortfolioModal.title || 'Lookbook Transformation'}
+        >
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {/* Full Image */}
+            <div
+              style={{
+                width: '100%',
+                maxHeight: '320px',
+                borderRadius: '16px',
+                overflow: 'hidden',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                background: '#10131b',
+              }}
+            >
+              <img
+                src={activePortfolioModal.imageUrl || activePortfolioModal.url}
+                alt={activePortfolioModal.title || 'Lookbook sample'}
+                style={{ width: '100%', height: '100%', maxHeight: '320px', objectFit: 'contain', display: 'block' }}
+              />
+            </div>
+
+            {/* Title & Service Badges */}
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.4rem', flexWrap: 'wrap' }}>
+                {activePortfolioModal.service && (
+                  <span
+                    style={{
+                      background: 'rgba(245, 185, 66, 0.15)',
+                      color: '#f5b942',
+                      border: '1px solid rgba(245, 185, 66, 0.35)',
+                      borderRadius: '50px',
+                      padding: '0.15rem 0.6rem',
+                      fontSize: '0.72rem',
+                      fontFamily: 'Outfit',
+                      fontWeight: 800,
+                    }}
+                  >
+                    {activePortfolioModal.service}
+                  </span>
+                )}
+                <span style={{ fontSize: '0.74rem', color: '#64748b' }}>
+                  Atelier Verified Transformation
+                </span>
+              </div>
+
+              <h3 style={{ fontFamily: 'Outfit', fontSize: '1.2rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+                {activePortfolioModal.title || 'Client Transformation'}
+              </h3>
+            </div>
+
+            {/* Duration & Fee Pills */}
+            {(activePortfolioModal.duration || activePortfolioModal.price) && (
+              <div style={{ display: 'flex', gap: '0.75rem', background: '#151822', padding: '0.65rem 0.85rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.06)' }}>
+                {activePortfolioModal.duration && (
+                  <div>
+                    <div style={{ fontSize: '0.66rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Duration</div>
+                    <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#ffffff', fontFamily: 'Outfit' }}>{activePortfolioModal.duration}</div>
+                  </div>
+                )}
+                {activePortfolioModal.price && (
+                  <div style={{ marginLeft: activePortfolioModal.duration ? 'auto' : 0 }}>
+                    <div style={{ fontSize: '0.66rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Estimated Fee</div>
+                    <div style={{ fontSize: '0.92rem', fontWeight: 900, color: '#f5b942', fontFamily: 'Outfit' }}>
+                      {activePortfolioModal.price.startsWith('₦') ? activePortfolioModal.price : `₦${activePortfolioModal.price}`}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Styling Notes */}
+            {(activePortfolioModal.description || activePortfolioModal.clientNote) && (
+              <div style={{ background: 'rgba(255, 255, 255, 0.03)', borderRadius: '12px', padding: '0.85rem', border: '1px solid rgba(255,255,255,0.06)' }}>
+                <div style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: 700, marginBottom: '0.25rem' }}>
+                  Styling Notes & Technique
+                </div>
+                <p style={{ margin: 0, fontSize: '0.82rem', color: '#cbd5e1', lineHeight: 1.4, fontStyle: 'italic' }}>
+                  "{activePortfolioModal.description || activePortfolioModal.clientNote}"
+                </p>
+              </div>
+            )}
+
+            {/* Action Buttons */}
+            <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
+              <button
+                type="button"
+                onClick={() => {
+                  const targetSvc = activePortfolioModal.service || selectedService?.name || '';
+                  navigate(`/booking?stylist=${encodeURIComponent(expert.name)}${targetSvc ? `&service=${encodeURIComponent(targetSvc)}` : ''}`);
+                }}
+                style={{
+                  flex: 1,
+                  background: 'linear-gradient(135deg, #f5b942 0%, #e0a32d 100%)',
+                  color: '#0c0e14',
+                  border: 'none',
+                  borderRadius: '12px',
+                  padding: '0.75rem',
+                  fontFamily: 'Outfit',
+                  fontSize: '0.88rem',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.4rem',
+                  boxShadow: '0 4px 14px rgba(245, 185, 66, 0.3)',
+                }}
+              >
+                <Calendar size={15} /> Book This Style
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActivePortfolioModal(null)}
+                style={{
+                  background: '#1c202d',
+                  color: '#ffffff',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  borderRadius: '12px',
+                  padding: '0.75rem 1.25rem',
+                  fontFamily: 'Outfit',
+                  fontSize: '0.82rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                }}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </PopupModal>
+      )}
     </PageContainer>
   );
 };
+
+export default ExpertProfile;

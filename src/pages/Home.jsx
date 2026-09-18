@@ -20,6 +20,7 @@ import {
 import { PageContainer } from '../components/common/PageContainer';
 import { AISpecialistMatcherSheet } from '../components/booking/AISpecialistMatcherSheet';
 import { OptimizedImage } from '../components/common/OptimizedImage';
+import { Avatar } from '../components/common/Avatar';
 import { preloadRoute } from '../App';
 import { api } from '../services/api';
 
@@ -673,16 +674,11 @@ export const Home = () => {
                 style={{ marginBottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', background: '#151822', border: '1px solid rgba(255, 255, 255, 0.08)' }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-                  <OptimizedImage
+                  <Avatar
                     src={sp.image}
-                    alt={sp.name}
-                    style={{
-                      width: '46px',
-                      height: '46px',
-                      borderRadius: '50%',
-                      objectFit: 'cover',
-                      border: '1.5px solid #f5b942',
-                    }}
+                    name={sp.name}
+                    size={46}
+                    border="1.5px solid #f5b942"
                   />
                   <div>
                     <h4 style={{ fontFamily: 'Outfit', fontSize: '0.95rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>{sp.name}</h4>

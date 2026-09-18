@@ -112,6 +112,11 @@ export const AuthProvider = ({ children }) => {
     showToast('Your account has been permanently deleted.', 'accent');
   };
 
+  const updateUser = (userData) => {
+    setUser(userData);
+    localStorage.setItem('mockUser', JSON.stringify(userData));
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -123,6 +128,7 @@ export const AuthProvider = ({ children }) => {
         register,
         verifyOtp,
         updateProfile,
+        updateUser,
         deleteAccount,
         showToast,
         isAuthenticated: !!user,

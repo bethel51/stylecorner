@@ -168,11 +168,11 @@ export const api = {
     return data || { portfolio: [], services: [], specialties: [] };
   },
 
-  addPortfolioSample: async ({ imageUrl, service }) => {
+  addPortfolioSample: async ({ imageUrl, service, title, description, duration, price, clientNote }) => {
     const res = await fetchWithTimeout(`${API_BASE}/users/portfolio`, {
       method: 'POST',
       headers: getAuthHeaders(),
-      body: JSON.stringify({ imageUrl, service }),
+      body: JSON.stringify({ imageUrl, service, title, description, duration, price, clientNote }),
     });
     const data = await safeJson(res);
     if (!res.ok) throw new Error(data?.error || 'Failed to add portfolio sample');

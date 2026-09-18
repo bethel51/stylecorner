@@ -555,22 +555,31 @@ app.get('/api/users/portfolio', authenticateToken, async (req, res) => {
   }
 });
 
-// POST — add a portfolio sample (max 3 per service)
+// POST — add a portfolio / work logbook sample
 app.post('/api/users/portfolio', authenticateToken, async (req, res) => {
   try {
-    const { imageUrl, service } = req.body;
+    const { imageUrl, service, title, description, duration, price, clientNote } = req.body;
     if (!imageUrl) return res.status(400).json({ error: 'Image URL is required.' });
 
     const user = await User.findById(req.user._id);
     const serviceName = (service || 'General').trim();
 
-    // Enforce max 3 samples per service
+    // Enforce reasonable limit (max 10 samples per service)
     const existing = (user.portfolio || []).filter(p => p.service === serviceName);
-    if (existing.length >= 3) {
-      return res.status(400).json({ error: `You have reached the maximum of 3 samples for "${serviceName}". Delete an existing one to add a new sample.` });
+    if (existing.length >= 10) {
+      return res.status(400).json({ error: `You have reached the maximum of 10 samples for "${serviceName}". Delete an existing one to add a new sample.` });
     }
 
-    user.portfolio.push({ service: serviceName, imageUrl });
+    user.portfolio.push({
+      service: serviceName,
+      imageUrl,
+      title: (title || '').trim(),
+      description: (description || '').trim(),
+      duration: (duration || '').trim(),
+      price: (price || '').trim(),
+      clientNote: (clientNote || '').trim(),
+      createdAt: new Date()
+    });
     await user.save();
 
     const updatedUser = await User.findById(req.user._id).select('-password');

@@ -57,7 +57,7 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
   return (
     <>
       <header className="app-header">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', flex: 1, minWidth: 0 }}>
           {showBack || (!isHome && location.pathname !== '/customer-dashboard' && location.pathname !== '/expert-dashboard') ? (
             <button
               className="app-header-btn"
@@ -78,16 +78,16 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
 
           <div className="app-header-title">
             {title ? (
-              title
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{title}</span>
             ) : (
-              <span style={{ letterSpacing: '0.04em', fontWeight: 800, fontSize: '1.05rem' }}>
+              <span style={{ letterSpacing: '0.04em', fontWeight: 800, fontSize: '1.05rem', whiteSpace: 'nowrap' }}>
                 STYLE<span style={{ color: 'var(--color-accent)' }}>CORNER</span>
               </span>
             )}
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexShrink: 0 }}>
           {/* Theme Toggle Button */}
           <button
             className="app-header-btn"

@@ -114,25 +114,25 @@ export const CartSheet = ({ isOpen, onClose }) => {
   return (
     <BottomSheet isOpen={isOpen} onClose={onClose} title={`Your Grooming Cart (${cart.length})`}>
       {cart.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '2.5rem 1rem', color: '#6b7280' }}>
+        <div style={{ textAlign: 'center', padding: '2.5rem 1rem', color: 'var(--color-text-muted)' }}>
           <div style={{
             width: '64px', height: '64px', borderRadius: '50%',
-            backgroundColor: '#faf9f5', border: '1px dashed rgba(212,175,55,0.4)',
+            backgroundColor: 'var(--color-accent-soft)', border: '1.5px dashed var(--color-accent)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            margin: '0 auto 1rem', color: '#d4af37'
+            margin: '0 auto 1rem', color: 'var(--color-accent)'
           }}>
             <ShoppingBag size={28} />
           </div>
-          <h4 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: '#171717', margin: '0 0 0.35rem' }}>
+          <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.05rem', fontWeight: 800, color: 'var(--color-text-primary)', margin: '0 0 0.35rem' }}>
             Your Cart is Empty
           </h4>
-          <p style={{ fontSize: '0.82rem', color: '#6b7280', margin: '0 0 1.25rem', lineHeight: 1.4 }}>
+          <p style={{ fontSize: '0.82rem', color: 'var(--color-text-secondary)', margin: '0 0 1.25rem', lineHeight: 1.4 }}>
             Explore our curated grooming pomades, beard elixirs & hair wraps.
           </p>
           <button
             type="button"
             onClick={() => { onClose(); navigate('/store'); }}
-            className="app-btn app-btn-primary"
+            className="app-btn app-btn-accent"
             style={{ width: 'auto', padding: '0.6rem 1.5rem', margin: '0 auto', fontSize: '0.85rem' }}
           >
             Explore Grooming Store
@@ -150,12 +150,14 @@ export const CartSheet = ({ isOpen, onClose }) => {
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   gap: '0.65rem',
-                  padding: '0.75rem 0.85rem',
-                  background: '#151822',
+                  padding: '0.85rem',
+                  background: 'var(--color-surface)',
                   borderRadius: '16px',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  border: '1px solid var(--color-border)',
                   boxSizing: 'border-box',
-                  width: '100%'
+                  width: '100%',
+                  boxShadow: 'var(--shadow-sm)',
+                  transition: 'transform 0.15s ease, box-shadow 0.15s ease',
                 }}
               >
                 {/* Product Thumbnail & Details */}
@@ -165,21 +167,21 @@ export const CartSheet = ({ isOpen, onClose }) => {
                       src={item.image}
                       alt={item.title}
                       style={{
-                        width: '48px',
-                        height: '48px',
+                        width: '50px',
+                        height: '50px',
                         borderRadius: '12px',
                         objectFit: 'cover',
                         flexShrink: 0,
-                        border: '1px solid rgba(255, 255, 255, 0.08)'
+                        border: '1px solid var(--color-border)'
                       }}
                     />
                   )}
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <h4 style={{
-                      fontFamily: 'Outfit',
-                      fontSize: '0.86rem',
+                      fontFamily: 'var(--font-heading)',
+                      fontSize: '0.88rem',
                       fontWeight: 800,
-                      color: '#ffffff',
+                      color: 'var(--color-text-primary)',
                       margin: 0,
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
@@ -188,7 +190,7 @@ export const CartSheet = ({ isOpen, onClose }) => {
                     }}>
                       {item.title}
                     </h4>
-                    <span style={{ fontSize: '0.82rem', color: '#f5b942', fontWeight: 900, marginTop: '0.15rem', display: 'block' }}>
+                    <span style={{ fontSize: '0.84rem', color: 'var(--color-accent)', fontWeight: 800, marginTop: '0.2rem', display: 'block' }}>
                       ₦{Number(item.price).toLocaleString()}
                     </span>
                   </div>
@@ -200,9 +202,9 @@ export const CartSheet = ({ isOpen, onClose }) => {
                     style={{
                       display: 'flex',
                       alignItems: 'center',
-                      background: '#1c202d',
+                      background: 'var(--color-card-surface)',
                       borderRadius: '10px',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      border: '1px solid var(--color-border)',
                       padding: '3px 5px',
                     }}
                   >
@@ -213,12 +215,12 @@ export const CartSheet = ({ isOpen, onClose }) => {
                       style={{
                         background: 'none', border: 'none', cursor: 'pointer',
                         padding: '6px 8px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        color: '#94a3b8'
+                        color: 'var(--color-text-secondary)'
                       }}
                     >
                       <Minus size={12} />
                     </button>
-                    <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '0.85rem', padding: '0 4px', color: '#ffffff' }}>
+                    <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '0.85rem', padding: '0 4px', color: 'var(--color-text-primary)' }}>
                       {item.quantity}
                     </span>
                     <button
@@ -228,7 +230,7 @@ export const CartSheet = ({ isOpen, onClose }) => {
                       style={{
                         background: 'none', border: 'none', cursor: 'pointer',
                         padding: '6px 8px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        color: '#94a3b8'
+                        color: 'var(--color-text-secondary)'
                       }}
                     >
                       <Plus size={12} />
@@ -249,8 +251,11 @@ export const CartSheet = ({ isOpen, onClose }) => {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      flexShrink: 0
+                      flexShrink: 0,
+                      transition: 'transform 0.12s ease',
                     }}
+                    onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.08)'}
+                    onMouseLeave={e => e.currentTarget.style.transform = ''}
                   >
                     <Trash2 size={15} />
                   </button>
@@ -260,18 +265,18 @@ export const CartSheet = ({ isOpen, onClose }) => {
           </div>
 
           {/* Checkout Form */}
-          <form onSubmit={handleCheckout} style={{ borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '1rem' }}>
+          <form onSubmit={handleCheckout} style={{ borderTop: '1px solid var(--color-border)', paddingTop: '1rem' }}>
             <div style={{ marginBottom: '1.25rem' }}>
-              <h4 style={{ fontFamily: 'Outfit', fontSize: '0.88rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.65rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+              <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '0.88rem', fontWeight: 800, color: 'var(--color-text-primary)', marginBottom: '0.65rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
                 📍 Delivery Location Details
               </h4>
               <LocationSelector location={location} onChange={setLocation} />
             </div>
 
             {/* Voucher & Promo Code Section */}
-            <div style={{ background: 'rgba(245, 185, 66, 0.06)', border: '1px dashed rgba(245, 185, 66, 0.35)', borderRadius: '14px', padding: '0.75rem 0.85rem', marginBottom: '1rem' }}>
+            <div style={{ background: 'var(--color-accent-soft)', border: '1px dashed var(--color-border-accent)', borderRadius: '14px', padding: '0.75rem 0.85rem', marginBottom: '1rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
-                <span style={{ fontFamily: 'Outfit', fontSize: '0.78rem', fontWeight: 800, color: '#f5b942', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                <span style={{ fontFamily: 'var(--font-heading)', fontSize: '0.78rem', fontWeight: 800, color: 'var(--color-accent)', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
                   🎁 Loyalty Voucher & Promo
                 </span>
                 {appliedVoucher ? (
@@ -282,7 +287,7 @@ export const CartSheet = ({ isOpen, onClose }) => {
               </div>
 
               {appliedVoucher ? (
-                <div style={{ background: 'rgba(245,185,66,0.15)', border: '1px solid rgba(245,185,66,0.4)', borderRadius: '10px', padding: '0.5rem 0.75rem', color: '#f5b942', fontSize: '0.78rem', fontFamily: 'Outfit', fontWeight: 800, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border-accent)', borderRadius: '10px', padding: '0.5rem 0.75rem', color: 'var(--color-accent)', fontSize: '0.78rem', fontFamily: 'var(--font-heading)', fontWeight: 800, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span>✓ ₦25,000 Loyalty Voucher Applied!</span>
                   <span style={{ color: '#10b981', fontWeight: 900 }}>-₦25,000</span>
                 </div>
@@ -293,7 +298,8 @@ export const CartSheet = ({ isOpen, onClose }) => {
                     placeholder="Enter voucher code (e.g. LOYALTY25K)"
                     value={promoCode}
                     onChange={(e) => setPromoCode(e.target.value)}
-                    style={{ flex: 1, padding: '0.55rem 0.75rem', borderRadius: '10px', border: '1px solid rgba(255, 255, 255, 0.12)', background: '#1c202d', color: '#ffffff', fontSize: '0.85rem', fontFamily: 'Outfit' }}
+                    className="app-input"
+                    style={{ flex: 1, padding: '0.55rem 0.75rem', minHeight: '40px', fontSize: '0.84rem', textTransform: 'uppercase' }}
                   />
                   <button
                     type="button"
@@ -305,7 +311,8 @@ export const CartSheet = ({ isOpen, onClose }) => {
                         showToast('Please enter a valid promo or voucher code.', 'error');
                       }
                     }}
-                    style={{ background: '#f5b942', color: '#0c0e14', border: 'none', borderRadius: '10px', padding: '0.45rem 0.85rem', fontSize: '0.78rem', fontFamily: 'Outfit', fontWeight: 900, cursor: 'pointer' }}
+                    className="app-btn app-btn-accent"
+                    style={{ borderRadius: '10px', padding: '0 1rem', minHeight: '40px', fontSize: '0.78rem', fontWeight: 800, cursor: 'pointer' }}
                   >
                     Apply
                   </button>
@@ -320,11 +327,11 @@ export const CartSheet = ({ isOpen, onClose }) => {
                 flexDirection: 'column',
                 gap: '0.35rem',
                 padding: '0.75rem 0',
-                borderTop: '1px dashed rgba(255, 255, 255, 0.1)',
+                borderTop: '1px dashed var(--color-border)',
                 marginBottom: '0.85rem'
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', color: '#94a3b8' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', color: 'var(--color-text-secondary)' }}>
                 <span>Subtotal</span>
                 <span>₦{Number(subtotal).toLocaleString()}</span>
               </div>
@@ -335,10 +342,10 @@ export const CartSheet = ({ isOpen, onClose }) => {
                 </div>
               )}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '0.2rem' }}>
-                <span style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.9rem', color: '#ffffff', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '0.9rem', color: 'var(--color-text-primary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                   Final Total
                 </span>
-                <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '1.35rem', color: '#f5b942' }}>
+                <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: '1.35rem', color: 'var(--color-accent)' }}>
                   ₦{Number(Math.max(0, subtotal - (appliedVoucher ? 25000 : 0))).toLocaleString()}
                 </span>
               </div>
@@ -354,12 +361,15 @@ export const CartSheet = ({ isOpen, onClose }) => {
                 borderRadius: '14px',
                 fontSize: '0.92rem',
                 fontWeight: 900,
-                boxShadow: '0 8px 20px rgba(212,175,55,0.3)',
+                boxShadow: 'var(--shadow-accent)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '0.45rem'
+                gap: '0.45rem',
+                transition: 'transform 0.12s ease',
               }}
+              onMouseDown={e => e.currentTarget.style.transform = 'scale(0.98)'}
+              onMouseUp={e => e.currentTarget.style.transform = ''}
             >
               {submitting ? (
                 <span>Placing Order...</span>

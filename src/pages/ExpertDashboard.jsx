@@ -9,7 +9,7 @@ import {
   LogOut,
   RefreshCw,
   Sparkles,
-  DollarSign,
+  TrendingUp,
   Star,
   Mail,
   Phone,
@@ -33,6 +33,10 @@ import {
   Plus,
   ImageIcon,
   BookOpen,
+  Eye,
+  FileText,
+  Tag,
+  Maximize2,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
@@ -164,7 +168,7 @@ const SwipeableBookingCard = ({
           padding: '1.15rem',
           willChange: 'transform',
           touchAction: 'pan-y',
-          transition: 'border-color 0.2s ease',
+          transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
         }}
       >
         {/* Row 1: Client Name + Price */}
@@ -290,17 +294,109 @@ const SwipeableBookingCard = ({
 
         {/* Row 5: Action CTA Buttons */}
         {b.status === 'pending' && (
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.55rem' }}>
+              <button
+                onClick={onAccept}
+                disabled={isUpdating}
+                style={{
+                  background: 'linear-gradient(135deg, #10b981, #059669)',
+                  border: 'none',
+                  color: '#ffffff',
+                  borderRadius: '12px',
+                  height: '44px',
+                  fontSize: '0.82rem',
+                  fontWeight: 800,
+                  fontFamily: 'Outfit',
+                  cursor: isUpdating ? 'not-allowed' : 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.4rem',
+                  boxShadow: '0 4px 14px rgba(16, 185, 129, 0.35)',
+                  transition: 'transform 0.12s cubic-bezier(0.16, 1, 0.3, 1)',
+                  opacity: isUpdating ? 0.6 : 1,
+                }}
+                onMouseDown={e => { if (!isUpdating) e.currentTarget.style.transform = 'scale(0.96)'; }}
+                onMouseUp={e => { e.currentTarget.style.transform = ''; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = ''; }}
+              >
+                <CheckCircle size={16} />
+                <span>{isUpdating ? 'Updating…' : 'Accept'}</span>
+              </button>
+
+              <button
+                onClick={onDecline}
+                disabled={isUpdating}
+                style={{
+                  background: 'rgba(239, 68, 68, 0.12)',
+                  border: '1px solid rgba(239, 68, 68, 0.35)',
+                  color: '#f87171',
+                  borderRadius: '12px',
+                  height: '44px',
+                  fontSize: '0.82rem',
+                  fontWeight: 700,
+                  fontFamily: 'Outfit',
+                  cursor: isUpdating ? 'not-allowed' : 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.35rem',
+                  transition: 'transform 0.12s cubic-bezier(0.16, 1, 0.3, 1)',
+                  opacity: isUpdating ? 0.6 : 1,
+                }}
+                onMouseDown={e => { if (!isUpdating) e.currentTarget.style.transform = 'scale(0.96)'; }}
+                onMouseUp={e => { e.currentTarget.style.transform = ''; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = ''; }}
+              >
+                <XCircle size={16} />
+                <span>Decline</span>
+              </button>
+            </div>
+
+            {/* Instant WhatsApp Acceptance Message */}
+            {b.clientPhone && (
+              <a
+                href={`https://wa.me/${b.clientPhone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(`Hello ${b.clientName || 'there'}, your appointment for ${b.service} on ${b.date} at ${b.time} has been ACCEPTED! Looking forward to giving you an exceptional experience at Style Corner. ✂️`)}`}
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.45rem',
+                  background: 'rgba(34, 197, 94, 0.1)',
+                  border: '1px solid rgba(34, 197, 94, 0.3)',
+                  color: '#4ade80',
+                  borderRadius: '12px',
+                  height: '38px',
+                  fontSize: '0.78rem',
+                  fontWeight: 800,
+                  fontFamily: 'Outfit',
+                  textDecoration: 'none',
+                  transition: 'background 0.15s ease',
+                }}
+              >
+                <MessageSquare size={14} />
+                <span>WhatsApp Acceptance Message</span>
+              </a>
+            )}
+          </div>
+        )}
+
+        {b.status === 'accepted' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             <button
-              onClick={onAccept}
+              onClick={onComplete}
               disabled={isUpdating}
               style={{
-                background: '#10b981',
-                border: 'none',
+                width: '100%',
+                background: 'linear-gradient(135deg, #f5b942, #d4960a)',
                 color: '#0c0e14',
+                border: 'none',
                 borderRadius: '12px',
-                height: '42px',
-                fontSize: '0.82rem',
+                height: '44px',
+                fontSize: '0.84rem',
                 fontWeight: 800,
                 fontFamily: 'Outfit',
                 cursor: isUpdating ? 'not-allowed' : 'pointer',
@@ -308,63 +404,45 @@ const SwipeableBookingCard = ({
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '0.4rem',
-                boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)',
+                boxShadow: '0 4px 16px rgba(245, 185, 66, 0.35)',
+                transition: 'transform 0.12s cubic-bezier(0.16, 1, 0.3, 1)',
+                opacity: isUpdating ? 0.6 : 1,
               }}
+              onMouseDown={e => { if (!isUpdating) e.currentTarget.style.transform = 'scale(0.97)'; }}
+              onMouseUp={e => { e.currentTarget.style.transform = ''; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = ''; }}
             >
               <CheckCircle size={16} />
-              <span>{isUpdating ? 'Updating…' : 'Accept'}</span>
+              <span>{isUpdating ? 'Completing…' : 'Mark as Completed & Credit Earnings'}</span>
             </button>
 
-            <button
-              onClick={onDecline}
-              disabled={isUpdating}
-              style={{
-                background: 'rgba(239, 68, 68, 0.12)',
-                border: '1px solid rgba(239, 68, 68, 0.35)',
-                color: '#f87171',
-                borderRadius: '12px',
-                height: '42px',
-                fontSize: '0.82rem',
-                fontWeight: 700,
-                fontFamily: 'Outfit',
-                cursor: isUpdating ? 'not-allowed' : 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.35rem',
-              }}
-            >
-              <XCircle size={16} />
-              <span>Decline</span>
-            </button>
+            {/* WhatsApp Completion Message */}
+            {b.clientPhone && (
+              <a
+                href={`https://wa.me/${b.clientPhone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(`Hello ${b.clientName || 'there'}, thank you for choosing Style Corner! Your ${b.service} session has been completed. We hope you loved the results! ⭐ Please leave us a review.`)}`}
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.4rem',
+                  background: 'rgba(34, 197, 94, 0.08)',
+                  border: '1px solid rgba(34, 197, 94, 0.25)',
+                  color: '#4ade80',
+                  borderRadius: '10px',
+                  height: '36px',
+                  fontSize: '0.75rem',
+                  fontWeight: 700,
+                  fontFamily: 'Outfit',
+                  textDecoration: 'none',
+                }}
+              >
+                <MessageSquare size={13} />
+                <span>Send Completion Message</span>
+              </a>
+            )}
           </div>
-        )}
-
-        {b.status === 'accepted' && (
-          <button
-            onClick={onComplete}
-            disabled={isUpdating}
-            style={{
-              width: '100%',
-              background: '#f5b942',
-              color: '#0c0e14',
-              border: 'none',
-              borderRadius: '12px',
-              height: '42px',
-              fontSize: '0.84rem',
-              fontWeight: 800,
-              fontFamily: 'Outfit',
-              cursor: isUpdating ? 'not-allowed' : 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '0.4rem',
-              boxShadow: '0 4px 14px rgba(245, 185, 66, 0.3)',
-            }}
-          >
-            <CheckCircle size={16} />
-            <span>{isUpdating ? 'Completing…' : 'Mark as Completed & Credit Earnings'}</span>
-          </button>
         )}
 
         {b.status === 'completed' && (
@@ -394,7 +472,7 @@ const SwipeableBookingCard = ({
 // ─── Main Expert Dashboard Component ─────────────────────────────────────────
 export const ExpertDashboard = () => {
   const navigate = useNavigate();
-  const { user, logout, updateProfile, deleteAccount, showToast } = useAuth();
+  const { user, logout, updateProfile, updateUser, deleteAccount, showToast } = useAuth();
 
   const [bookings, setBookings] = useState([]);
   const [reviews, setReviews] = useState([]);
@@ -413,7 +491,6 @@ export const ExpertDashboard = () => {
   const [topupSubmitting, setTopupSubmitting] = useState(false);
   const [showWalletHistorySheet, setShowWalletHistorySheet] = useState(false);
 
-
   // Profile Photos & Modals
   const [showAvatarSheet, setShowAvatarSheet] = useState(false);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
@@ -421,12 +498,24 @@ export const ExpertDashboard = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deletingAccount, setDeletingAccount] = useState(false);
 
-  // Portfolio / Lookbook State
+  // Portfolio / Lookbook & Work Logbook State
   const [portfolio, setPortfolio] = useState([]);
-  const [portfolioServices, setPortfolioServices] = useState([]);
-  const [activePortfolioService, setActivePortfolioService] = useState(null);
+  const [portfolioServices, setPortfolioServices] = useState(['All']);
+  const [activePortfolioService, setActivePortfolioService] = useState('All');
+  const [portfolioView, setPortfolioView] = useState('lookbook'); // 'lookbook' | 'logbook'
+  const [showAddWorkModal, setShowAddWorkModal] = useState(false);
+  const [selectedLogDetail, setSelectedLogDetail] = useState(null);
   const [uploadingPortfolio, setUploadingPortfolio] = useState(false);
   const [deletingPortfolioId, setDeletingPortfolioId] = useState(null);
+  const [workForm, setWorkForm] = useState({
+    title: '',
+    service: '',
+    duration: '',
+    price: '',
+    clientNote: '',
+    imageFile: null,
+    imagePreview: '',
+  });
   const portfolioUploadRef = useRef(null);
 
   const fetchWalletData = async () => {
@@ -449,24 +538,23 @@ export const ExpertDashboard = () => {
   const fetchPortfolio = useCallback(async () => {
     try {
       const data = await api.getPortfolio();
-      setPortfolio(data.portfolio || []);
+      const loadedPortfolio = data.portfolio || [];
+      setPortfolio(loadedPortfolio);
       const svcList = (data.services || []).map(s => s.name || s).filter(Boolean);
-      // fallback to specialties if services array is empty
       const fallback = data.specialties || [];
       const merged = svcList.length > 0 ? svcList : fallback;
-      setPortfolioServices(merged.length > 0 ? merged : ['General']);
-      if (!activePortfolioService) {
-        setActivePortfolioService(merged[0] || 'General');
-      }
+      const finalServices = merged.length > 0 ? merged : ['Hair Styling', 'Bespoke Grooming'];
+      setPortfolioServices(['All', ...finalServices]);
     } catch (err) {
       console.warn('Portfolio fetch notice:', err.message);
-      // Use user services as fallback list
+      if (user?.portfolio) {
+        setPortfolio(user.portfolio);
+      }
       const userServices = (user?.services || []).map(s => s.name || s).filter(Boolean);
-      const list = userServices.length > 0 ? userServices : ['General'];
-      setPortfolioServices(list);
-      if (!activePortfolioService) setActivePortfolioService(list[0]);
+      const list = userServices.length > 0 ? userServices : ['Hair Styling', 'Bespoke Grooming'];
+      setPortfolioServices(['All', ...list]);
     }
-  }, [user, activePortfolioService]);
+  }, [user]);
 
   const fetchDashboardData = async () => {
     setLoading(true);
@@ -532,31 +620,70 @@ export const ExpertDashboard = () => {
     }
   };
 
-  // Portfolio Upload & Delete
-  const handlePortfolioUpload = async (e) => {
+  // Portfolio & Work Logbook Handlers
+  const handleOpenAddWorkModal = (preselectedService = null) => {
+    const defaultSvc = preselectedService && preselectedService !== 'All'
+      ? preselectedService
+      : (portfolioServices.find(s => s !== 'All') || 'General');
+    setWorkForm({
+      title: '',
+      service: defaultSvc,
+      duration: '',
+      price: '',
+      clientNote: '',
+      imageFile: null,
+      imagePreview: '',
+    });
+    setShowAddWorkModal(true);
+  };
+
+  const handleWorkImageSelect = (e) => {
     const file = e.target.files[0];
     if (!file) return;
     if (!file.type.startsWith('image/')) {
       showToast('Please select a valid image file.', 'error');
       return;
     }
-    const service = activePortfolioService || 'General';
-    const sameSvcSamples = portfolio.filter(p => p.service === service);
-    if (sameSvcSamples.length >= 3) {
-      showToast(`Max 3 samples reached for "${service}". Delete one to add more.`, 'error');
+    const preview = URL.createObjectURL(file);
+    setWorkForm(prev => ({ ...prev, imageFile: file, imagePreview: preview }));
+  };
+
+  const handleSaveWorkLog = async (e) => {
+    if (e) e.preventDefault();
+    if (!workForm.imageFile && !workForm.imagePreview) {
+      showToast('Please select a photo for this work entry.', 'error');
       return;
     }
+    if (!workForm.title.trim()) {
+      showToast('Please enter a title / style name for this work.', 'error');
+      return;
+    }
+
     setUploadingPortfolio(true);
     try {
-      const imageUrl = await uploadToCloudinary(file);
-      const updatedUser = await api.addPortfolioSample({ imageUrl, service });
+      let imageUrl = workForm.imagePreview;
+      if (workForm.imageFile) {
+        imageUrl = await uploadToCloudinary(workForm.imageFile);
+      }
+
+      const updatedUser = await api.addPortfolioSample({
+        imageUrl,
+        service: workForm.service || 'General',
+        title: workForm.title.trim(),
+        description: workForm.clientNote.trim(),
+        duration: workForm.duration.trim(),
+        price: workForm.price.trim(),
+        clientNote: workForm.clientNote.trim()
+      });
+
       setPortfolio(updatedUser.portfolio || []);
-      showToast('Portfolio sample added!', 'success');
+      if (updateUser) updateUser(updatedUser);
+      setShowAddWorkModal(false);
+      showToast('Work entry successfully logged to lookbook & portfolio!', 'success');
     } catch (err) {
-      showToast(err.message || 'Failed to upload sample.', 'error');
+      showToast(err.message || 'Failed to save work log.', 'error');
     } finally {
       setUploadingPortfolio(false);
-      if (e.target) e.target.value = '';
     }
   };
 
@@ -565,7 +692,11 @@ export const ExpertDashboard = () => {
     try {
       const updatedUser = await api.deletePortfolioSample(sampleId);
       setPortfolio(updatedUser.portfolio || []);
-      showToast('Sample removed.', 'accent');
+      if (updateUser) updateUser(updatedUser);
+      if (selectedLogDetail?._id === sampleId) {
+        setSelectedLogDetail(null);
+      }
+      showToast('Portfolio entry removed.', 'accent');
     } catch (err) {
       showToast(err.message || 'Failed to delete sample.', 'error');
     } finally {
@@ -1130,7 +1261,7 @@ export const ExpertDashboard = () => {
                   Revenue
                 </span>
                 <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'rgba(245, 185, 66, 0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#f5b942' }}>
-                  <DollarSign size={14} />
+                  <TrendingUp size={14} />
                 </div>
               </div>
               <div style={{ fontFamily: 'Outfit', fontSize: '1.35rem', fontWeight: 900, color: '#f5b942', lineHeight: 1.1 }}>
@@ -1323,249 +1454,572 @@ export const ExpertDashboard = () => {
         </div>
 
         {/* ── 6. Portfolio Work & Lookbook ── */}
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.85rem' }}>
+        <div id="portfolio">
+          {/* Header */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.85rem', flexWrap: 'wrap', gap: '0.5rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <BookOpen size={15} color="#f5b942" />
-              <h3 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
-                Portfolio Work & Lookbook
-              </h3>
+              <div style={{ width: '32px', height: '32px', borderRadius: '10px', background: 'rgba(245, 185, 66, 0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#f5b942' }}>
+                <BookOpen size={16} />
+              </div>
+              <div>
+                <h3 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', margin: 0, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                  Portfolio Work & Logbook
+                </h3>
+                <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
+                  Document client styles, techniques & lookbook showcase
+                </span>
+              </div>
             </div>
-            <span
+
+            <button
+              onClick={() => handleOpenAddWorkModal(activePortfolioService !== 'All' ? activePortfolioService : null)}
               style={{
-                fontSize: '0.7rem',
-                fontFamily: 'Outfit',
-                fontWeight: 700,
-                color: '#64748b',
-                background: '#151822',
-                border: '1px solid rgba(255,255,255,0.08)',
-                padding: '0.2rem 0.6rem',
+                background: 'linear-gradient(135deg, #f5b942 0%, #e0a32d 100%)',
+                color: '#0c0e14',
+                border: 'none',
                 borderRadius: '50px',
+                padding: '0.45rem 0.95rem',
+                fontSize: '0.78rem',
+                fontFamily: 'Outfit',
+                fontWeight: 800,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                boxShadow: '0 4px 14px rgba(245, 185, 66, 0.25)',
+                transition: 'all 0.15s ease',
               }}
             >
-              Max 3 per service
-            </span>
+              <Plus size={15} /> Log Work Entry
+            </button>
           </div>
 
-          {/* Service Tabs */}
-          {portfolioServices.length > 0 && (
-            <div
-              style={{
-                display: 'flex',
-                gap: '0.5rem',
-                overflowX: 'auto',
-                paddingBottom: '0.35rem',
-                marginBottom: '1rem',
-                scrollbarWidth: 'none',
-              }}
-            >
-              {portfolioServices.map((svc) => {
-                const isActive = activePortfolioService === svc;
-                const count = portfolio.filter(p => p.service === svc).length;
-                return (
-                  <button
-                    key={svc}
-                    onClick={() => setActivePortfolioService(svc)}
-                    style={{
-                      background: isActive ? '#f5b942' : '#151822',
-                      color: isActive ? '#0c0e14' : '#94a3b8',
-                      border: `1px solid ${isActive ? '#f5b942' : 'rgba(255,255,255,0.08)'}`,
-                      borderRadius: '50px',
-                      padding: '0.35rem 0.9rem',
-                      fontFamily: 'Outfit',
-                      fontSize: '0.76rem',
-                      fontWeight: isActive ? 800 : 600,
-                      cursor: 'pointer',
-                      whiteSpace: 'nowrap',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.35rem',
-                      transition: 'all 0.15s ease',
-                      flexShrink: 0,
-                    }}
-                  >
-                    <span>{svc}</span>
-                    <span
-                      style={{
-                        background: isActive ? 'rgba(12,14,20,0.25)' : 'rgba(255,255,255,0.08)',
-                        padding: '0.1rem 0.4rem',
-                        borderRadius: '50px',
-                        fontSize: '0.68rem',
-                      }}
-                    >
-                      {count}/3
-                    </span>
-                  </button>
-                );
-              })}
+          {/* Controls Bar: Dual View Toggle + Service Filter Pills */}
+          <div
+            style={{
+              background: '#151822',
+              borderRadius: '16px',
+              padding: '0.65rem 0.85rem',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              marginBottom: '1rem',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.65rem',
+            }}
+          >
+            {/* View Mode Switcher */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
+              <div style={{ display: 'flex', background: '#0e1017', padding: '3px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.06)' }}>
+                <button
+                  type="button"
+                  onClick={() => setPortfolioView('lookbook')}
+                  style={{
+                    background: portfolioView === 'lookbook' ? '#f5b942' : 'transparent',
+                    color: portfolioView === 'lookbook' ? '#0c0e14' : '#94a3b8',
+                    border: 'none',
+                    borderRadius: '8px',
+                    padding: '0.3rem 0.75rem',
+                    fontFamily: 'Outfit',
+                    fontSize: '0.74rem',
+                    fontWeight: portfolioView === 'lookbook' ? 800 : 600,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.3rem',
+                    transition: 'all 0.15s ease',
+                  }}
+                >
+                  <Camera size={13} /> Visual Lookbook
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPortfolioView('logbook')}
+                  style={{
+                    background: portfolioView === 'logbook' ? '#f5b942' : 'transparent',
+                    color: portfolioView === 'logbook' ? '#0c0e14' : '#94a3b8',
+                    border: 'none',
+                    borderRadius: '8px',
+                    padding: '0.3rem 0.75rem',
+                    fontFamily: 'Outfit',
+                    fontSize: '0.74rem',
+                    fontWeight: portfolioView === 'logbook' ? 800 : 600,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.3rem',
+                    transition: 'all 0.15s ease',
+                  }}
+                >
+                  <FileText size={13} /> Work Logbook ({portfolio.length})
+                </button>
+              </div>
+
+              <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 600 }}>
+                {portfolio.length} total logged work {portfolio.length === 1 ? 'sample' : 'samples'}
+              </span>
             </div>
-          )}
 
-          {/* Samples Grid for Active Service */}
-          {(() => {
-            const service = activePortfolioService || 'General';
-            const samples = portfolio.filter(p => p.service === service);
-            const canAdd = samples.length < 3;
-            const slots = [...samples, ...(canAdd ? [{ _placeholder: true }] : [])];
-
-            return (
+            {/* Service Category Pills */}
+            {portfolioServices.length > 1 && (
               <div
                 style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(3, 1fr)',
-                  gap: '0.65rem',
+                  display: 'flex',
+                  gap: '0.45rem',
+                  overflowX: 'auto',
+                  paddingBottom: '0.15rem',
+                  scrollbarWidth: 'none',
                 }}
               >
-                {slots.map((item, idx) =>
-                  item._placeholder ? (
-                    // Upload slot
-                    <label
-                      key="upload"
+                {portfolioServices.map((svc) => {
+                  const isActive = activePortfolioService === svc;
+                  const count = svc === 'All'
+                    ? portfolio.length
+                    : portfolio.filter((p) => (p.service || 'General') === svc).length;
+
+                  return (
+                    <button
+                      key={svc}
+                      type="button"
+                      onClick={() => setActivePortfolioService(svc)}
                       style={{
-                        aspectRatio: '1 / 1',
-                        borderRadius: '16px',
-                        border: '2px dashed rgba(245, 185, 66, 0.35)',
-                        background: 'rgba(245, 185, 66, 0.04)',
+                        background: isActive ? '#f5b942' : '#1c202d',
+                        color: isActive ? '#0c0e14' : '#94a3b8',
+                        border: `1px solid ${isActive ? '#f5b942' : 'rgba(255,255,255,0.08)'}`,
+                        borderRadius: '50px',
+                        padding: '0.28rem 0.75rem',
+                        fontFamily: 'Outfit',
+                        fontSize: '0.72rem',
+                        fontWeight: isActive ? 800 : 600,
+                        cursor: 'pointer',
+                        whiteSpace: 'nowrap',
                         display: 'flex',
-                        flexDirection: 'column',
                         alignItems: 'center',
-                        justifyContent: 'center',
-                        cursor: uploadingPortfolio ? 'not-allowed' : 'pointer',
-                        gap: '0.4rem',
-                        transition: 'all 0.2s ease',
+                        gap: '0.3rem',
+                        transition: 'all 0.15s ease',
+                        flexShrink: 0,
                       }}
                     >
-                      {uploadingPortfolio ? (
-                        <>
-                          <div
-                            style={{
-                              width: '22px', height: '22px',
-                              borderRadius: '50%',
-                              border: '2px solid rgba(245,185,66,0.3)',
-                              borderTopColor: '#f5b942',
-                              animation: 'spin 0.7s linear infinite',
-                            }}
-                          />
-                          <span style={{ fontSize: '0.68rem', color: '#f5b942', fontFamily: 'Outfit', fontWeight: 700 }}>Uploading…</span>
-                        </>
-                      ) : (
-                        <>
-                          <Plus size={20} color="#f5b942" />
-                          <span style={{ fontSize: '0.68rem', color: '#94a3b8', fontFamily: 'Outfit', fontWeight: 600, textAlign: 'center', lineHeight: 1.3 }}>Add Sample</span>
-                        </>
-                      )}
-                      <input
-                        ref={portfolioUploadRef}
-                        type="file"
-                        accept="image/*"
-                        onChange={handlePortfolioUpload}
-                        style={{ display: 'none' }}
-                        disabled={uploadingPortfolio}
-                      />
-                    </label>
-                  ) : (
-                    // Sample image card
-                    <div
-                      key={item._id || idx}
-                      style={{
-                        aspectRatio: '1 / 1',
-                        borderRadius: '16px',
-                        overflow: 'hidden',
-                        position: 'relative',
-                        border: '1px solid rgba(255,255,255,0.1)',
-                        background: '#151822',
-                      }}
-                    >
-                      <img
-                        src={item.imageUrl}
-                        alt={`${service} sample ${idx + 1}`}
+                      <span>{svc}</span>
+                      <span
                         style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover',
-                          display: 'block',
-                        }}
-                        loading="lazy"
-                      />
-                      {/* Delete overlay */}
-                      <button
-                        onClick={() => handlePortfolioDelete(item._id)}
-                        disabled={deletingPortfolioId === item._id}
-                        style={{
-                          position: 'absolute',
-                          top: '6px',
-                          right: '6px',
-                          width: '26px',
-                          height: '26px',
-                          borderRadius: '50%',
-                          background: deletingPortfolioId === item._id ? 'rgba(0,0,0,0.7)' : 'rgba(239,68,68,0.85)',
-                          border: 'none',
-                          color: '#ffffff',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          cursor: deletingPortfolioId === item._id ? 'not-allowed' : 'pointer',
-                          backdropFilter: 'blur(4px)',
-                          boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
+                          background: isActive ? 'rgba(12,14,20,0.25)' : 'rgba(255,255,255,0.08)',
+                          padding: '0.08rem 0.35rem',
+                          borderRadius: '50px',
+                          fontSize: '0.65rem',
+                          fontWeight: 800,
                         }}
                       >
-                        {deletingPortfolioId === item._id ? (
-                          <div style={{
-                            width: '12px', height: '12px',
-                            borderRadius: '50%',
-                            border: '2px solid rgba(255,255,255,0.3)',
-                            borderTopColor: '#fff',
-                            animation: 'spin 0.7s linear infinite',
-                          }} />
-                        ) : (
-                          <X size={13} />
-                        )}
-                      </button>
-                    </div>
-                  )
-                )}
+                        {count}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
 
-                {/* Fill remaining empty visual slots if < 3 with ghosted placeholders */}
-                {Array.from({ length: Math.max(0, 3 - slots.length) }).map((_, i) => (
+          {/* Content Rendering: Lookbook or Logbook */}
+          {(() => {
+            const displayedItems = activePortfolioService === 'All'
+              ? portfolio
+              : portfolio.filter((p) => (p.service || 'General') === activePortfolioService);
+
+            if (displayedItems.length === 0) {
+              return (
+                <div
+                  style={{
+                    background: '#151822',
+                    borderRadius: '20px',
+                    padding: '2.5rem 1.25rem',
+                    textAlign: 'center',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                  }}
+                >
+                  <BookOpen size={42} color="#f5b942" style={{ marginBottom: '0.75rem', opacity: 0.8 }} />
+                  <h4 style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.35rem' }}>
+                    No Work Logged {activePortfolioService !== 'All' ? `for "${activePortfolioService}"` : 'Yet'}
+                  </h4>
+                  <p style={{ fontSize: '0.8rem', color: '#64748b', maxWidth: '380px', margin: '0 auto 1.25rem', lineHeight: 1.4 }}>
+                    Document client transformations, styling notes, duration, and photos to showcase your craft on your public profile.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => handleOpenAddWorkModal(activePortfolioService !== 'All' ? activePortfolioService : null)}
+                    style={{
+                      background: '#f5b942',
+                      color: '#0c0e14',
+                      border: 'none',
+                      borderRadius: '50px',
+                      padding: '0.55rem 1.25rem',
+                      fontFamily: 'Outfit',
+                      fontSize: '0.82rem',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.4rem',
+                      boxShadow: '0 4px 14px rgba(245, 185, 66, 0.3)',
+                    }}
+                  >
+                    <Plus size={16} /> Log Your First Work Sample
+                  </button>
+                </div>
+              );
+            }
+
+            // ── VISUAL LOOKBOOK VIEW ──
+            if (portfolioView === 'lookbook') {
+              return (
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))',
+                    gap: '0.75rem',
+                  }}
+                >
+                  {/* Quick Add Slot */}
                   <div
-                    key={`ghost-${i}`}
+                    onClick={() => handleOpenAddWorkModal(activePortfolioService !== 'All' ? activePortfolioService : null)}
                     style={{
                       aspectRatio: '1 / 1',
                       borderRadius: '16px',
-                      border: '1px dashed rgba(255,255,255,0.07)',
-                      background: 'rgba(255,255,255,0.02)',
+                      border: '2px dashed rgba(245, 185, 66, 0.35)',
+                      background: 'rgba(245, 185, 66, 0.03)',
                       display: 'flex',
+                      flexDirection: 'column',
                       alignItems: 'center',
                       justifyContent: 'center',
+                      cursor: 'pointer',
+                      gap: '0.4rem',
+                      transition: 'all 0.2s ease',
                     }}
                   >
-                    <ImageIcon size={18} color="rgba(255,255,255,0.08)" />
+                    <div style={{ width: '34px', height: '34px', borderRadius: '50%', background: 'rgba(245, 185, 66, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#f5b942' }}>
+                      <Plus size={18} />
+                    </div>
+                    <span style={{ fontSize: '0.72rem', color: '#f5b942', fontFamily: 'Outfit', fontWeight: 800 }}>
+                      Log Work
+                    </span>
                   </div>
-                ))}
+
+                  {/* Portfolio Cards */}
+                  {displayedItems.map((item, idx) => {
+                    const imgUrl = item.imageUrl || item.url || '';
+                    return (
+                      <div
+                        key={item._id || idx}
+                        style={{
+                          aspectRatio: '1 / 1',
+                          borderRadius: '16px',
+                          overflow: 'hidden',
+                          position: 'relative',
+                          border: '1px solid rgba(255,255,255,0.1)',
+                          background: '#151822',
+                          cursor: 'pointer',
+                          boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
+                        }}
+                        onClick={() => setSelectedLogDetail(item)}
+                      >
+                        <img
+                          src={imgUrl}
+                          alt={item.title || 'Work sample'}
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
+                            display: 'block',
+                            transition: 'transform 0.3s ease',
+                          }}
+                          loading="lazy"
+                        />
+
+                        {/* Top Service Badge */}
+                        <div
+                          style={{
+                            position: 'absolute',
+                            top: '6px',
+                            left: '6px',
+                            background: 'rgba(12, 14, 20, 0.75)',
+                            backdropFilter: 'blur(6px)',
+                            border: '1px solid rgba(255,255,255,0.15)',
+                            color: '#f5b942',
+                            fontSize: '0.62rem',
+                            fontWeight: 800,
+                            padding: '0.15rem 0.45rem',
+                            borderRadius: '50px',
+                            fontFamily: 'Outfit',
+                            maxWidth: '75%',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                          }}
+                        >
+                          {item.service || 'General'}
+                        </div>
+
+                        {/* Delete button */}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handlePortfolioDelete(item._id);
+                          }}
+                          disabled={deletingPortfolioId === item._id}
+                          style={{
+                            position: 'absolute',
+                            top: '6px',
+                            right: '6px',
+                            width: '26px',
+                            height: '26px',
+                            borderRadius: '50%',
+                            background: deletingPortfolioId === item._id ? 'rgba(0,0,0,0.8)' : 'rgba(239,68,68,0.85)',
+                            border: 'none',
+                            color: '#ffffff',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: deletingPortfolioId === item._id ? 'not-allowed' : 'pointer',
+                            backdropFilter: 'blur(4px)',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
+                            zIndex: 2,
+                          }}
+                        >
+                          {deletingPortfolioId === item._id ? (
+                            <div style={{ width: '12px', height: '12px', borderRadius: '50%', border: '2px solid rgba(255,255,255,0.3)', borderTopColor: '#fff', animation: 'spin 0.7s linear infinite' }} />
+                          ) : (
+                            <X size={13} />
+                          )}
+                        </button>
+
+                        {/* Bottom Gradient Overlay with Title & Details */}
+                        <div
+                          style={{
+                            position: 'absolute',
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            padding: '1.25rem 0.5rem 0.45rem',
+                            background: 'linear-gradient(to top, rgba(12,14,20,0.95) 0%, rgba(12,14,20,0.6) 60%, transparent 100%)',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '0.15rem',
+                          }}
+                        >
+                          <span
+                            style={{
+                              color: '#ffffff',
+                              fontSize: '0.72rem',
+                              fontFamily: 'Outfit',
+                              fontWeight: 800,
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                            }}
+                          >
+                            {item.title || 'Client Transformation'}
+                          </span>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.2rem' }}>
+                            <span style={{ color: '#94a3b8', fontSize: '0.62rem' }}>
+                              {item.duration || (item.createdAt ? new Date(item.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : 'Logged')}
+                            </span>
+                            {item.price && (
+                              <span style={{ color: '#f5b942', fontSize: '0.64rem', fontWeight: 800 }}>
+                                {item.price.startsWith('₦') ? item.price : `₦${item.price}`}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            }
+
+            // ── DETAILED WORK LOGBOOK JOURNAL VIEW ──
+            return (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                {displayedItems.map((item, idx) => {
+                  const imgUrl = item.imageUrl || item.url || '';
+                  const formattedDate = item.createdAt
+                    ? new Date(item.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
+                    : 'Recent Entry';
+
+                  return (
+                    <div
+                      key={item._id || idx}
+                      style={{
+                        background: '#151822',
+                        borderRadius: '16px',
+                        border: '1px solid rgba(255, 255, 255, 0.08)',
+                        padding: '0.85rem',
+                        display: 'flex',
+                        gap: '0.85rem',
+                        alignItems: 'center',
+                        transition: 'all 0.15s ease',
+                      }}
+                    >
+                      {/* Photo Thumbnail */}
+                      <div
+                        onClick={() => setSelectedLogDetail(item)}
+                        style={{
+                          width: '74px',
+                          height: '74px',
+                          borderRadius: '12px',
+                          overflow: 'hidden',
+                          flexShrink: 0,
+                          position: 'relative',
+                          cursor: 'pointer',
+                          border: '1px solid rgba(255,255,255,0.1)',
+                          background: '#1c202d',
+                        }}
+                      >
+                        <img
+                          src={imgUrl}
+                          alt={item.title || 'Work'}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                          loading="lazy"
+                        />
+                        <div
+                          style={{
+                            position: 'absolute',
+                            inset: 0,
+                            background: 'rgba(0,0,0,0.3)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            opacity: 0,
+                            transition: 'opacity 0.2s ease',
+                          }}
+                          className="hover-show"
+                        >
+                          <Eye size={16} color="#ffffff" />
+                        </div>
+                      </div>
+
+                      {/* Log Details */}
+                      <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
+                          <span
+                            style={{
+                              background: 'rgba(245, 185, 66, 0.12)',
+                              color: '#f5b942',
+                              border: '1px solid rgba(245, 185, 66, 0.3)',
+                              borderRadius: '50px',
+                              padding: '0.1rem 0.45rem',
+                              fontSize: '0.65rem',
+                              fontFamily: 'Outfit',
+                              fontWeight: 800,
+                            }}
+                          >
+                            {item.service || 'General'}
+                          </span>
+                          <span style={{ fontSize: '0.7rem', color: '#64748b' }}>
+                            • {formattedDate}
+                          </span>
+                        </div>
+
+                        <h4
+                          onClick={() => setSelectedLogDetail(item)}
+                          style={{
+                            fontFamily: 'Outfit',
+                            fontSize: '0.88rem',
+                            fontWeight: 800,
+                            color: '#ffffff',
+                            margin: 0,
+                            cursor: 'pointer',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                          }}
+                        >
+                          {item.title || 'Client Transformation'}
+                        </h4>
+
+                        {/* Note / Technique preview */}
+                        {item.clientNote || item.description ? (
+                          <p
+                            style={{
+                              fontSize: '0.74rem',
+                              color: '#94a3b8',
+                              margin: 0,
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              fontStyle: 'italic',
+                            }}
+                          >
+                            "{item.clientNote || item.description}"
+                          </p>
+                        ) : null}
+
+                        {/* Duration & Price pills */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginTop: '0.1rem' }}>
+                          {item.duration && (
+                            <span style={{ fontSize: '0.68rem', color: '#94a3b8', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                              <Clock size={11} color="#f5b942" /> {item.duration}
+                            </span>
+                          )}
+                          {item.price && (
+                            <span style={{ fontSize: '0.72rem', color: '#f5b942', fontWeight: 800 }}>
+                              {item.price.startsWith('₦') ? item.price : `₦${item.price}`}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Actions */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexShrink: 0 }}>
+                        <button
+                          type="button"
+                          onClick={() => setSelectedLogDetail(item)}
+                          style={{
+                            background: '#1c202d',
+                            border: '1px solid rgba(255,255,255,0.08)',
+                            color: '#f5b942',
+                            width: '32px',
+                            height: '32px',
+                            borderRadius: '50%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                          }}
+                          title="View Full Log"
+                        >
+                          <Eye size={14} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handlePortfolioDelete(item._id)}
+                          disabled={deletingPortfolioId === item._id}
+                          style={{
+                            background: 'rgba(239, 68, 68, 0.12)',
+                            border: '1px solid rgba(239, 68, 68, 0.3)',
+                            color: '#ef4444',
+                            width: '32px',
+                            height: '32px',
+                            borderRadius: '50%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: deletingPortfolioId === item._id ? 'not-allowed' : 'pointer',
+                          }}
+                          title="Delete Entry"
+                        >
+                          {deletingPortfolioId === item._id ? (
+                            <div style={{ width: '12px', height: '12px', borderRadius: '50%', border: '2px solid rgba(239,68,68,0.3)', borderTopColor: '#ef4444', animation: 'spin 0.7s linear infinite' }} />
+                          ) : (
+                            <Trash2 size={13} />
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             );
           })()}
-
-          {/* Empty state when expert has no services set up */}
-          {portfolioServices.length === 0 && (
-            <div
-              style={{
-                background: '#151822',
-                borderRadius: '20px',
-                padding: '2rem 1.25rem',
-                textAlign: 'center',
-                border: '1px solid rgba(255,255,255,0.08)',
-              }}
-            >
-              <BookOpen size={36} color="#f5b942" style={{ marginBottom: '0.65rem', opacity: 0.7 }} />
-              <h4 style={{ fontFamily: 'Outfit', fontWeight: 800, color: '#ffffff', margin: '0 0 0.35rem', fontSize: '0.95rem' }}>
-                No Services Set Up
-              </h4>
-              <p style={{ fontSize: '0.78rem', color: '#64748b', margin: 0 }}>
-                Update your profile with the services you offer to start uploading portfolio samples.
-              </p>
-            </div>
-          )}
         </div>
 
       </div>
@@ -1829,6 +2283,422 @@ export const ExpertDashboard = () => {
           )}
         </div>
       </BottomSheet>
+
+      {/* 5. Add Work to Lookbook & Portfolio Modal */}
+      {showAddWorkModal && (
+        <PopupModal
+          isOpen={showAddWorkModal}
+          onClose={() => {
+            if (!uploadingPortfolio) setShowAddWorkModal(false);
+          }}
+          title="Log Client Work & Lookbook"
+        >
+          <form onSubmit={handleSaveWorkLog} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <p style={{ color: '#94a3b8', fontSize: '0.82rem', margin: 0, lineHeight: 1.4 }}>
+              Document client styles, styling duration, technique notes, and publish directly to your lookbook showcase.
+            </p>
+
+            {/* Photo Selection / Preview Area */}
+            <div>
+              <label style={{ fontSize: '0.78rem', color: '#94a3b8', fontWeight: 600, display: 'block', marginBottom: '0.35rem' }}>
+                Work Photo <span style={{ color: '#ef4444' }}>*</span>
+              </label>
+
+              {workForm.imagePreview ? (
+                <div style={{ position: 'relative', width: '100%', height: '180px', borderRadius: '14px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.12)' }}>
+                  <img
+                    src={workForm.imagePreview}
+                    alt="Preview"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                  <label
+                    style={{
+                      position: 'absolute',
+                      bottom: '8px',
+                      right: '8px',
+                      background: 'rgba(12, 14, 20, 0.85)',
+                      backdropFilter: 'blur(6px)',
+                      color: '#f5b942',
+                      border: '1px solid rgba(245, 185, 66, 0.35)',
+                      padding: '0.3rem 0.65rem',
+                      borderRadius: '50px',
+                      fontSize: '0.72rem',
+                      fontFamily: 'Outfit',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.3rem',
+                    }}
+                  >
+                    <Camera size={12} /> Change Photo
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleWorkImageSelect}
+                      style={{ display: 'none' }}
+                      disabled={uploadingPortfolio}
+                    />
+                  </label>
+                </div>
+              ) : (
+                <label
+                  style={{
+                    width: '100%',
+                    height: '140px',
+                    borderRadius: '14px',
+                    border: '2px dashed rgba(245, 185, 66, 0.35)',
+                    background: 'rgba(245, 185, 66, 0.04)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    gap: '0.45rem',
+                    transition: 'all 0.2s ease',
+                  }}
+                >
+                  <div style={{ width: '38px', height: '38px', borderRadius: '50%', background: 'rgba(245, 185, 66, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#f5b942' }}>
+                    <Camera size={20} />
+                  </div>
+                  <span style={{ fontFamily: 'Outfit', fontSize: '0.82rem', fontWeight: 800, color: '#f5b942' }}>
+                    Select / Take Work Photo
+                  </span>
+                  <span style={{ fontSize: '0.68rem', color: '#64748b' }}>
+                    PNG, JPG, WEBP up to 10MB
+                  </span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleWorkImageSelect}
+                    style={{ display: 'none' }}
+                    disabled={uploadingPortfolio}
+                  />
+                </label>
+              )}
+            </div>
+
+            {/* Style / Work Title */}
+            <div>
+              <label style={{ fontSize: '0.78rem', color: '#94a3b8', fontWeight: 600, display: 'block', marginBottom: '0.35rem' }}>
+                Style / Transformation Title <span style={{ color: '#ef4444' }}>*</span>
+              </label>
+              <input
+                type="text"
+                placeholder="e.g. Bohemian Knotless Braids, Razor Fade & Beard Sculpt"
+                value={workForm.title}
+                onChange={(e) => setWorkForm((p) => ({ ...p, title: e.target.value }))}
+                style={{
+                  width: '100%',
+                  background: '#10131b',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  borderRadius: '12px',
+                  padding: '0.7rem 0.85rem',
+                  color: '#ffffff',
+                  fontFamily: 'Outfit',
+                  fontSize: '0.88rem',
+                  outline: 'none',
+                }}
+                required
+              />
+
+              {/* Quick Suggestion Chips */}
+              <div style={{ display: 'flex', gap: '0.35rem', overflowX: 'auto', marginTop: '0.4rem', scrollbarWidth: 'none' }}>
+                {['Silk Press & Steam', 'Skin Fade + Beard', 'Knotless Braids', 'Russian Almond Gel', 'Soft Glam Makeup'].map((chip) => (
+                  <button
+                    key={chip}
+                    type="button"
+                    onClick={() => setWorkForm((p) => ({ ...p, title: chip }))}
+                    style={{
+                      background: 'rgba(255,255,255,0.05)',
+                      border: '1px solid rgba(255,255,255,0.08)',
+                      color: '#94a3b8',
+                      fontSize: '0.66rem',
+                      padding: '0.18rem 0.5rem',
+                      borderRadius: '50px',
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {chip}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Service Category Selection */}
+            <div>
+              <label style={{ fontSize: '0.78rem', color: '#94a3b8', fontWeight: 600, display: 'block', marginBottom: '0.35rem' }}>
+                Service Category <span style={{ color: '#ef4444' }}>*</span>
+              </label>
+              <select
+                value={workForm.service}
+                onChange={(e) => setWorkForm((p) => ({ ...p, service: e.target.value }))}
+                style={{
+                  width: '100%',
+                  background: '#10131b',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  borderRadius: '12px',
+                  padding: '0.7rem 0.85rem',
+                  color: '#ffffff',
+                  fontFamily: 'Outfit',
+                  fontSize: '0.88rem',
+                  outline: 'none',
+                }}
+              >
+                {portfolioServices.filter((s) => s !== 'All').map((svc) => (
+                  <option key={svc} value={svc} style={{ background: '#151822', color: '#ffffff' }}>
+                    {svc}
+                  </option>
+                ))}
+                <option value="General" style={{ background: '#151822', color: '#ffffff' }}>
+                  General / Bespoke Styling
+                </option>
+              </select>
+            </div>
+
+            {/* Row: Duration & Price */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+              <div>
+                <label style={{ fontSize: '0.78rem', color: '#94a3b8', fontWeight: 600, display: 'block', marginBottom: '0.35rem' }}>
+                  Duration
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. 2 hrs, 45 mins"
+                  value={workForm.duration}
+                  onChange={(e) => setWorkForm((p) => ({ ...p, duration: e.target.value }))}
+                  style={{
+                    width: '100%',
+                    background: '#10131b',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: '12px',
+                    padding: '0.7rem 0.85rem',
+                    color: '#ffffff',
+                    fontFamily: 'Outfit',
+                    fontSize: '0.88rem',
+                    outline: 'none',
+                  }}
+                />
+              </div>
+
+              <div>
+                <label style={{ fontSize: '0.78rem', color: '#94a3b8', fontWeight: 600, display: 'block', marginBottom: '0.35rem' }}>
+                  Fee / Value (₦)
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. ₦25,000"
+                  value={workForm.price}
+                  onChange={(e) => setWorkForm((p) => ({ ...p, price: e.target.value }))}
+                  style={{
+                    width: '100%',
+                    background: '#10131b',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: '12px',
+                    padding: '0.7rem 0.85rem',
+                    color: '#ffffff',
+                    fontFamily: 'Outfit',
+                    fontSize: '0.88rem',
+                    outline: 'none',
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Client & Technique Notes */}
+            <div>
+              <label style={{ fontSize: '0.78rem', color: '#94a3b8', fontWeight: 600, display: 'block', marginBottom: '0.35rem' }}>
+                Technique, Products & Client Notes (Optional)
+              </label>
+              <textarea
+                rows={3}
+                placeholder="e.g. Used botanical scalp butter, straight razor finish. Client requested mid-back length with curly blonde ends."
+                value={workForm.clientNote}
+                onChange={(e) => setWorkForm((p) => ({ ...p, clientNote: e.target.value }))}
+                style={{
+                  width: '100%',
+                  background: '#10131b',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  borderRadius: '12px',
+                  padding: '0.7rem 0.85rem',
+                  color: '#ffffff',
+                  fontFamily: 'Outfit',
+                  fontSize: '0.82rem',
+                  outline: 'none',
+                  resize: 'none',
+                  lineHeight: 1.4,
+                }}
+              />
+            </div>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={uploadingPortfolio}
+              style={{
+                background: 'linear-gradient(135deg, #f5b942 0%, #e0a32d 100%)',
+                color: '#0c0e14',
+                border: 'none',
+                borderRadius: '14px',
+                padding: '0.85rem',
+                fontFamily: 'Outfit',
+                fontSize: '0.94rem',
+                fontWeight: 800,
+                cursor: uploadingPortfolio ? 'not-allowed' : 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.45rem',
+                boxShadow: '0 4px 15px rgba(245, 185, 66, 0.3)',
+                marginTop: '0.5rem',
+              }}
+            >
+              {uploadingPortfolio ? (
+                <>
+                  <div style={{ width: '18px', height: '18px', borderRadius: '50%', border: '2px solid rgba(12,14,20,0.3)', borderTopColor: '#0c0e14', animation: 'spin 0.7s linear infinite' }} />
+                  <span>Uploading & Publishing Work…</span>
+                </>
+              ) : (
+                <>
+                  <Sparkles size={16} /> Save to Lookbook & Portfolio
+                </>
+              )}
+            </button>
+          </form>
+        </PopupModal>
+      )}
+
+      {/* 6. Work Log Detail & Lightbox Modal */}
+      {selectedLogDetail && (
+        <PopupModal
+          isOpen={!!selectedLogDetail}
+          onClose={() => setSelectedLogDetail(null)}
+          title={selectedLogDetail.title || 'Work Log Detail'}
+        >
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {/* Full Preview Image */}
+            <div
+              style={{
+                width: '100%',
+                maxHeight: '300px',
+                borderRadius: '16px',
+                overflow: 'hidden',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                background: '#10131b',
+              }}
+            >
+              <img
+                src={selectedLogDetail.imageUrl || selectedLogDetail.url}
+                alt={selectedLogDetail.title || 'Work detail'}
+                style={{ width: '100%', height: '100%', maxHeight: '300px', objectFit: 'contain', display: 'block' }}
+              />
+            </div>
+
+            {/* Title & Service Badges */}
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.4rem', flexWrap: 'wrap' }}>
+                <span
+                  style={{
+                    background: 'rgba(245, 185, 66, 0.15)',
+                    color: '#f5b942',
+                    border: '1px solid rgba(245, 185, 66, 0.35)',
+                    borderRadius: '50px',
+                    padding: '0.15rem 0.6rem',
+                    fontSize: '0.72rem',
+                    fontFamily: 'Outfit',
+                    fontWeight: 800,
+                  }}
+                >
+                  {selectedLogDetail.service || 'General'}
+                </span>
+                <span style={{ fontSize: '0.74rem', color: '#64748b' }}>
+                  Logged {selectedLogDetail.createdAt ? new Date(selectedLogDetail.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : 'Recently'}
+                </span>
+              </div>
+
+              <h3 style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+                {selectedLogDetail.title || 'Client Transformation'}
+              </h3>
+            </div>
+
+            {/* Duration & Fee Pills */}
+            {(selectedLogDetail.duration || selectedLogDetail.price) && (
+              <div style={{ display: 'flex', gap: '0.75rem', background: '#151822', padding: '0.65rem 0.85rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.06)' }}>
+                {selectedLogDetail.duration && (
+                  <div>
+                    <div style={{ fontSize: '0.66rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Duration</div>
+                    <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#ffffff', fontFamily: 'Outfit' }}>{selectedLogDetail.duration}</div>
+                  </div>
+                )}
+                {selectedLogDetail.price && (
+                  <div style={{ marginLeft: selectedLogDetail.duration ? 'auto' : 0 }}>
+                    <div style={{ fontSize: '0.66rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Fee / Price</div>
+                    <div style={{ fontSize: '0.92rem', fontWeight: 900, color: '#f5b942', fontFamily: 'Outfit' }}>
+                      {selectedLogDetail.price.startsWith('₦') ? selectedLogDetail.price : `₦${selectedLogDetail.price}`}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Client & Technique Notes */}
+            {(selectedLogDetail.clientNote || selectedLogDetail.description) && (
+              <div style={{ background: 'rgba(255, 255, 255, 0.03)', borderRadius: '12px', padding: '0.85rem', border: '1px solid rgba(255,255,255,0.06)' }}>
+                <div style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: 700, marginBottom: '0.25rem' }}>
+                  Styling Notes & Technique
+                </div>
+                <p style={{ margin: 0, fontSize: '0.82rem', color: '#cbd5e1', lineHeight: 1.4, fontStyle: 'italic' }}>
+                  "{selectedLogDetail.clientNote || selectedLogDetail.description}"
+                </p>
+              </div>
+            )}
+
+            {/* Actions: Delete or Close */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', marginTop: '0.5rem' }}>
+              <button
+                type="button"
+                onClick={() => handlePortfolioDelete(selectedLogDetail._id)}
+                disabled={deletingPortfolioId === selectedLogDetail._id}
+                style={{
+                  background: 'rgba(239, 68, 68, 0.12)',
+                  color: '#ef4444',
+                  border: '1px solid rgba(239, 68, 68, 0.3)',
+                  borderRadius: '12px',
+                  padding: '0.65rem 1rem',
+                  fontFamily: 'Outfit',
+                  fontSize: '0.82rem',
+                  fontWeight: 700,
+                  cursor: deletingPortfolioId === selectedLogDetail._id ? 'not-allowed' : 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                }}
+              >
+                <Trash2 size={14} /> Remove Entry
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setSelectedLogDetail(null)}
+                style={{
+                  background: '#1c202d',
+                  color: '#ffffff',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  borderRadius: '12px',
+                  padding: '0.65rem 1.25rem',
+                  fontFamily: 'Outfit',
+                  fontSize: '0.82rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                }}
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </PopupModal>
+      )}
 
     </PageContainer>
   );
