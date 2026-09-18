@@ -15,6 +15,17 @@ const Withdrawal = require('./models/Withdrawal');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const {
+  buildBaseEmailLayout,
+  getVerificationOtpEmail,
+  getPasswordResetOtpEmail,
+  getPasswordResetSuccessEmail,
+  getBookingCreatedEmail,
+  getSpecialistBookingAlertEmail,
+  getBookingAcceptedEmail,
+  getStoreOrderEmail,
+  generateAutoHtmlFallback,
+} = require('./utils/emailTemplates');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-prototype-key-12345';
 const PAYSTACK_SECRET_KEY = (process.env.PAYSTACK_SECRET_KEY || '').trim();
@@ -57,7 +68,7 @@ if (!brevoTransporter && !gmailTransporter) {
   console.log('Email credentials not found in .env');
 }
 
-async function sendNotification(to, subject, text) {
+async function sendNotification(to, subject, text, html) {
   if (!brevoTransporter && !gmailTransporter) {
     throw new Error('Email transporter is not configured. Please check your .env credentials.');
   }
@@ -65,10 +76,11 @@ async function sendNotification(to, subject, text) {
   // Use a valid sender address. Never use Brevo SMTP login (ad0edf001@smtp-brevo.com) as from address!
   const senderEmail = process.env.EMAIL_SENDER || process.env.EMAIL_USER || 'support@stylecorner.com';
   const mailOptions = {
-    from: `"Style Corner" <${senderEmail}>`,
+    from: `"Style Corner Atelier" <${senderEmail}>`,
     to: to,
     subject: subject,
-    text: text
+    text: text,
+    html: html || generateAutoHtmlFallback(subject, text)
   };
 
   let lastError = null;
@@ -107,9 +119,9 @@ async function sendNotification(to, subject, text) {
   throw lastError || new Error('All configured email transports failed.');
 }
 
-async function sendNotificationSafe(to, subject, text) {
+async function sendNotificationSafe(to, subject, text, html) {
   try {
-    await sendNotification(to, subject, text);
+    await sendNotification(to, subject, text, html);
   } catch (err) {
     console.error('Non-blocking notification email failed to send:', err.message);
   }
@@ -260,7 +272,8 @@ app.post('/api/auth/register', async (req, res) => {
     sendNotificationSafe(
       savedUser.email,
       "Style Corner - Verify Your Account",
-      `Hi ${savedUser.firstname},\n\nYour verification code is: ${otpCode}\n\nThis code will expire in 15 minutes.`
+      `Hi ${savedUser.firstname},\n\nYour verification code is: ${otpCode}\n\nThis code will expire in 15 minutes.`,
+      getVerificationOtpEmail({ userName: savedUser.firstname, otpCode, expiresInMinutes: 15 })
     );
     
     res.status(201).json({ message: 'Registration successful. Please verify your email.', email: savedUser.email });
@@ -327,7 +340,8 @@ app.post('/api/auth/resend-otp', async (req, res) => {
     await sendNotificationSafe(
       user.email,
       "Style Corner - Verification Code",
-      `Hi ${user.firstname},\n\nYour new verification code is: ${otpCode}\n\nThis code will expire in 15 minutes.`
+      `Hi ${user.firstname},\n\nYour new verification code is: ${otpCode}\n\nThis code will expire in 15 minutes.`,
+      getVerificationOtpEmail({ userName: user.firstname, otpCode, expiresInMinutes: 15 })
     );
 
     res.status(200).json({ message: 'A new 6-digit verification code has been sent to your email.' });
@@ -381,7 +395,8 @@ app.post('/api/auth/login', async (req, res) => {
       sendNotificationSafe(
         user.email,
         "Style Corner - Verify Your Account",
-        `Hi ${user.firstname},\n\nYour verification code is: ${otpCode}\n\nThis code will expire in 15 minutes.`
+        `Hi ${user.firstname},\n\nYour verification code is: ${otpCode}\n\nThis code will expire in 15 minutes.`,
+        getVerificationOtpEmail({ userName: user.firstname, otpCode, expiresInMinutes: 15 })
       );
 
       return res.status(403).json({ error: 'unverified', message: 'Please verify your email address before logging in. A new verification code has been sent.', email: user.email });
@@ -420,7 +435,8 @@ app.post('/api/auth/forgot-password', async (req, res) => {
     await sendNotificationSafe(
       user.email,
       "Style Corner - Password Reset Code",
-      `Hi ${user.firstname},\n\nYour password reset code is: ${otpCode}\n\nThis code will expire in 15 minutes.\nIf you did not request a password reset, please ignore this email.`
+      `Hi ${user.firstname},\n\nYour password reset code is: ${otpCode}\n\nThis code will expire in 15 minutes.\nIf you did not request a password reset, please ignore this email.`,
+      getPasswordResetOtpEmail({ userName: user.firstname, otpCode, expiresInMinutes: 15 })
     );
 
     res.status(200).json({ message: 'Password reset code sent to your email.' });
@@ -487,7 +503,8 @@ app.post('/api/auth/reset-password', async (req, res) => {
     sendNotificationSafe(
       user.email,
       "Style Corner - Password Reset Successful",
-      `Hi ${user.firstname},\n\nYour Style Corner account password has been successfully reset.\n\nYou can now log in using your new password.`
+      `Hi ${user.firstname},\n\nYour Style Corner account password has been successfully reset.\n\nYou can now log in using your new password.`,
+      getPasswordResetSuccessEmail({ userName: user.firstname })
     );
 
     res.status(200).json({ message: 'Password reset successful! You can now log in.' });
@@ -973,7 +990,8 @@ app.post('/api/bookings', authenticateToken, async (req, res) => {
     await sendNotificationSafe(
       savedBooking.clientEmail,
       "Booking Request Submitted ✂️",
-      `Hi ${savedBooking.clientName},\n\nYour appointment request for ${savedBooking.service} with ${savedBooking.stylist} on ${savedBooking.date} at ${savedBooking.time} has been submitted.\n\nYour specialist will review and accept your booking shortly.`
+      `Hi ${savedBooking.clientName},\n\nYour appointment request for ${savedBooking.service} with ${savedBooking.stylist} on ${savedBooking.date} at ${savedBooking.time} has been submitted.\n\nYour specialist will review and accept your booking shortly.`,
+      getBookingCreatedEmail(savedBooking)
     );
     
     await createInAppNotification({
@@ -1002,7 +1020,8 @@ app.post('/api/bookings', authenticateToken, async (req, res) => {
       await sendNotificationSafe(
         targetStylistEmail,
         `⚡ New Booking Request Alert: ${savedBooking.clientName}`,
-        `SPECIALIST NOTIFICATION\n\nYou have a new booking request waiting for your acceptance!\n\nDetails:\n- Client: ${savedBooking.clientName} (${savedBooking.clientEmail})\n- Phone: ${savedBooking.clientPhone || 'N/A'}\n- Service: ${savedBooking.service}\n- Scheduled: ${savedBooking.date} at ${savedBooking.time}\n- Price: ₦${Number(savedBooking.price).toLocaleString()}\n\nPlease log in to your Expert Dashboard to Accept or Decline this request.`
+        `SPECIALIST NOTIFICATION\n\nYou have a new booking request waiting for your acceptance!\n\nDetails:\n- Client: ${savedBooking.clientName} (${savedBooking.clientEmail})\n- Phone: ${savedBooking.clientPhone || 'N/A'}\n- Service: ${savedBooking.service}\n- Scheduled: ${savedBooking.date} at ${savedBooking.time}\n- Price: ₦${Number(savedBooking.price).toLocaleString()}\n\nPlease log in to your Expert Dashboard to Accept or Decline this request.`,
+        getSpecialistBookingAlertEmail(savedBooking)
       );
       await createInAppNotification({
         userEmail: targetStylistEmail,
@@ -1019,7 +1038,8 @@ app.post('/api/bookings', authenticateToken, async (req, res) => {
       await sendNotificationSafe(
         adminEmail,
         `🔔 New Salon Booking Alert: ${savedBooking.clientName}`,
-        `ADMIN NOTIFICATION\n\nNew Booking Details:\n- Client: ${savedBooking.clientName} (${savedBooking.clientEmail})\n- Phone: ${savedBooking.clientPhone || 'N/A'}\n- Service: ${savedBooking.service}\n- Specialist: ${savedBooking.stylist}\n- Date & Time: ${savedBooking.date} at ${savedBooking.time}\n- Price: ₦${Number(savedBooking.price).toLocaleString()}`
+        `ADMIN NOTIFICATION\n\nNew Booking Details:\n- Client: ${savedBooking.clientName} (${savedBooking.clientEmail})\n- Phone: ${savedBooking.clientPhone || 'N/A'}\n- Service: ${savedBooking.service}\n- Specialist: ${savedBooking.stylist}\n- Date & Time: ${savedBooking.date} at ${savedBooking.time}\n- Price: ₦${Number(savedBooking.price).toLocaleString()}`,
+        getSpecialistBookingAlertEmail({ ...savedBooking.toObject(), stylist: 'Style Corner Atelier Manager' })
       );
     }
 
@@ -1077,7 +1097,8 @@ app.put('/api/bookings/:id', authenticateToken, async (req, res) => {
         await sendNotificationSafe(
           updated.clientEmail,
           "Booking Accepted! ✂️",
-          `Hi ${updated.clientName || 'Client'},\n\nGreat news! Your booking for ${updated.service} with ${updated.stylist} on ${updated.date} at ${updated.time} has been ACCEPTED!\n\nWe look forward to giving you an exceptional experience!`
+          `Hi ${updated.clientName || 'Client'},\n\nGreat news! Your booking for ${updated.service} with ${updated.stylist} on ${updated.date} at ${updated.time} has been ACCEPTED!\n\nWe look forward to giving you an exceptional experience!`,
+          getBookingAcceptedEmail(updated)
         );
         await createInAppNotification({
           userEmail: updated.clientEmail,
@@ -1332,7 +1353,12 @@ app.post('/api/orders', authenticateToken, async (req, res) => {
     const savedOrder = await order.save();
     
     // 1. Send confirmation to Customer
-    await sendNotificationSafe(savedOrder.email, "Order Received", `Thank you for your order! Order #${savedOrder._id} for ${savedOrder.item} has been placed.`);
+    await sendNotificationSafe(
+      savedOrder.email,
+      "Order Received 📦",
+      `Thank you for your order! Order #${savedOrder._id} for ${savedOrder.item} has been placed.`,
+      getStoreOrderEmail(savedOrder, false)
+    );
     
     // In-app notifications
     await createInAppNotification({
@@ -1356,7 +1382,8 @@ app.post('/api/orders', authenticateToken, async (req, res) => {
       await sendNotificationSafe(
         adminEmail,
         `📦 New Store Order Alert: Order #${savedOrder._id}`,
-        `ADMIN NOTIFICATION\n\nA new order has been placed on the Atelier Store!\n\nOrder Details:\n- Order ID: #${savedOrder._id}\n- Items: ${savedOrder.item}\n- Customer: ${savedOrder.name || 'Customer'} (${savedOrder.email})\n- Phone: ${savedOrder.phone || 'N/A'}\n- Delivery Address: ${savedOrder.address || 'N/A'}\n- Total Price: ₦${Number(savedOrder.totalPrice || savedOrder.price || 0).toLocaleString()}`
+        `ADMIN NOTIFICATION\n\nA new order has been placed on the Atelier Store!\n\nOrder Details:\n- Order ID: #${savedOrder._id}\n- Items: ${savedOrder.item}\n- Customer: ${savedOrder.name || 'Customer'} (${savedOrder.email})\n- Phone: ${savedOrder.phone || 'N/A'}\n- Delivery Address: ${savedOrder.address || 'N/A'}\n- Total Price: ₦${Number(savedOrder.totalPrice || savedOrder.price || 0).toLocaleString()}`,
+        getStoreOrderEmail(savedOrder, true)
       );
     }
 
