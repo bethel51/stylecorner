@@ -527,9 +527,12 @@ export const ExpertProfile = () => {
     <PageContainer hideHeader={true}>
       <div style={{
         minHeight: '100vh',
-        background: '#0C0E14',
+        background: 'var(--color-bg)',
         paddingBottom: '6rem',
-        margin: '-1rem',
+        margin: 0,
+        width: '100%',
+        maxWidth: '100%',
+        overflowX: 'hidden',
       }}>
 
         {/* ── TOP NAV BAR ── */}
