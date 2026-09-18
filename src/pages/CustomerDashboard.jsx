@@ -675,14 +675,102 @@ export const CustomerDashboard = () => {
             }}
           >
             {[
-              { label: 'Barber', service: 'Barber' },
-              { label: 'Hair', service: 'Hair Stylist (Braider)' },
-              { label: 'Nails', service: 'Nail Tech' },
-              { label: 'Lashes', service: 'Lash Tech' },
-              { label: 'Makeup', service: 'Makeup Artist' },
-              { label: 'Wigs', service: 'Wig Installer' },
-              { label: 'Manicure', service: 'Manicure' },
-              { label: 'Pedicure', service: 'Pedicure' },
+              {
+                label: 'Barber',
+                service: 'Barber',
+                icon: (
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M7 3h10v3H7z" />
+                    <path d="M9 6v15M15 6v15" />
+                    <path d="M5 21h14" />
+                    <circle cx="12" cy="11" r="2" />
+                  </svg>
+                )
+              },
+              {
+                label: 'Hair',
+                service: 'Hair Stylist (Braider)',
+                icon: (
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M4 19c2.5-4 4.5-9 4.5-14a4 4 0 0 1 8 0c0 5 2 10 4.5 14" />
+                    <path d="M9 14c1.5 2 4.5 2 6 0" />
+                    <path d="M12 5v4" />
+                  </svg>
+                )
+              },
+              {
+                label: 'Nails',
+                service: 'Nail Tech',
+                icon: (
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M9 3h6a2 2 0 0 1 2 2v13a4 4 0 0 1-4 4h-2a4 4 0 0 1-4-4V5a2 2 0 0 1 2-2z" />
+                    <path d="M9 9h6" />
+                    <path d="M12 3v3" />
+                  </svg>
+                )
+              },
+              {
+                label: 'Lashes',
+                service: 'Lash Tech',
+                icon: (
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M2 10s3.5 4 10 4 10-4 10-4" />
+                    <path d="M4 11l-2 3" />
+                    <path d="M8 13.5l-1.5 3.5" />
+                    <path d="M12 14v4" />
+                    <path d="M16 13.5l1.5 3.5" />
+                    <path d="M20 11l2 3" />
+                  </svg>
+                )
+              },
+              {
+                label: 'Makeup',
+                service: 'Makeup Artist',
+                icon: (
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M9 3l4 4-2 7H7l-2-7 4-4z" />
+                    <path d="M7 14v7h4v-7" />
+                    <circle cx="17" cy="7" r="3" />
+                    <path d="M19 10l2 11h-4l1-11" />
+                  </svg>
+                )
+              },
+              {
+                label: 'Wigs',
+                service: 'Wig Installer',
+                icon: (
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 3c-4.97 0-9 4.03-9 9 0 3.5 2 6.5 5 8" />
+                    <path d="M12 3c4.97 0 9 4.03 9 9 0 3.5-2 6.5-5 8" />
+                    <path d="M8 12c1.5-1 3-1.5 4-1.5s2.5.5 4 1.5" />
+                    <path d="M9 16c1-0.5 2-0.8 3-0.8s2 0.3 3 0.8" />
+                  </svg>
+                )
+              },
+              {
+                label: 'Manicure',
+                service: 'Manicure',
+                icon: (
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="7" y="2" width="10" height="20" rx="5" />
+                    <path d="M7 8h10" />
+                    <path d="M10 2v3" />
+                    <path d="M14 2v3" />
+                  </svg>
+                )
+              },
+              {
+                label: 'Pedicure',
+                service: 'Pedicure',
+                icon: (
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M4 16c0 4 3.5 5 8 5s8-1 8-5c0-4-3-8-8-12-5 4-8 8-8 12z" />
+                    <circle cx="8" cy="15" r="1" />
+                    <circle cx="12" cy="14" r="1" />
+                    <circle cx="16" cy="15" r="1" />
+                  </svg>
+                )
+              },
             ].map((cat) => (
               <div
                 key={cat.label}
@@ -691,7 +779,7 @@ export const CustomerDashboard = () => {
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  gap: '0.4rem',
+                  gap: '0.45rem',
                   cursor: 'pointer',
                   flexShrink: 0
                 }}
@@ -707,14 +795,23 @@ export const CustomerDashboard = () => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     color: 'var(--color-accent)',
-                    transition: 'transform 0.15s ease, border-color 0.15s ease',
+                    transition: 'all 0.18s cubic-bezier(0.16, 1, 0.3, 1)',
+                    boxShadow: 'var(--shadow-sm)',
                   }}
-                  onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.05)'; e.currentTarget.style.borderColor = 'var(--color-accent)'; }}
-                  onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.borderColor = 'var(--color-border)'; }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.transform = 'translateY(-3px)';
+                    e.currentTarget.style.borderColor = 'var(--color-accent)';
+                    e.currentTarget.style.boxShadow = '0 6px 18px var(--color-accent-soft)';
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.transform = '';
+                    e.currentTarget.style.borderColor = 'var(--color-border)';
+                    e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+                  }}
                 >
-                  <Scissors size={20} />
+                  {cat.icon}
                 </div>
-                <span style={{ fontFamily: 'var(--font-heading)', fontSize: '0.74rem', fontWeight: 600, color: 'var(--color-text-secondary)' }}>
+                <span style={{ fontFamily: 'var(--font-heading)', fontSize: '0.74rem', fontWeight: 700, color: 'var(--color-text-secondary)' }}>
                   {cat.label}
                 </span>
               </div>
