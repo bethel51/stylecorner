@@ -87,29 +87,30 @@ const AiStylistFinder = safeLazy(() => import('./pages/AiStylistFinder').then(m 
 const Wallet = safeLazy(() => import('./pages/Wallet').then(m => ({ default: m.Wallet })));
 const Notifications = safeLazy(() => import('./pages/Notifications').then(m => ({ default: m.Notifications })));
 
-// Real simple, nice, fast and smooth PageLoader
+// High-Performance Smooth PageLoader (Theme Responsive & 60fps)
 export const PageLoader = () => (
   <div
     style={{
-      minHeight: '55vh',
+      minHeight: '60vh',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: '0.85rem',
+      gap: '1rem',
       padding: '2rem 1rem',
-      animation: 'fadeIn 0.15s ease-out',
+      animation: 'fadeIn 0.12s ease-out',
+      willChange: 'opacity',
     }}
   >
-    {/* High-speed indeterminate top loader bar */}
+    {/* Ultra-fast top indeterminate progress line */}
     <div className="top-nav-loader" />
 
-    {/* Elegant smooth spinning gold ring */}
+    {/* Luxury Atelier Dual Ring Spinner */}
     <div
       style={{
         position: 'relative',
-        width: '42px',
-        height: '42px',
+        width: '46px',
+        height: '46px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -120,36 +121,50 @@ export const PageLoader = () => (
           position: 'absolute',
           inset: 0,
           borderRadius: '50%',
-          border: '2.5px solid rgba(245, 185, 66, 0.15)',
+          border: '2px solid var(--color-border)',
         }}
       />
       <div
         style={{
           position: 'absolute',
-          inset: 0,
+          inset: '-2px',
           borderRadius: '50%',
           border: '2.5px solid transparent',
-          borderTopColor: '#f5b942',
-          borderRightColor: 'rgba(245, 185, 66, 0.6)',
-          animation: 'spin 0.65s linear infinite',
+          borderTopColor: 'var(--color-accent)',
+          borderRightColor: 'var(--color-accent)',
+          animation: 'spin 0.6s cubic-bezier(0.4, 0, 0.2, 1) infinite',
+          willChange: 'transform',
         }}
       />
-      <Scissors size={18} color="#f5b942" />
+      <Scissors size={18} color="var(--color-accent)" style={{ animation: 'pulse 1.8s ease-in-out infinite' }} />
     </div>
 
-    <span
-      style={{
-        fontFamily: 'Outfit',
-        fontSize: '0.78rem',
-        fontWeight: 700,
-        letterSpacing: '0.08em',
-        textTransform: 'uppercase',
-        color: '#94a3b8',
-        margin: 0,
-      }}
-    >
-      Style Corner
-    </span>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.2rem' }}>
+      <span
+        style={{
+          fontFamily: 'var(--font-heading)',
+          fontSize: '0.78rem',
+          fontWeight: 800,
+          letterSpacing: '0.12em',
+          textTransform: 'uppercase',
+          color: 'var(--color-text-primary)',
+          margin: 0,
+        }}
+      >
+        Style Corner
+      </span>
+      <span
+        style={{
+          fontFamily: 'var(--font-heading)',
+          fontSize: '0.68rem',
+          fontWeight: 600,
+          letterSpacing: '0.04em',
+          color: 'var(--color-text-muted)',
+        }}
+      >
+        Atelier Experience
+      </span>
+    </div>
   </div>
 );
 

@@ -7,8 +7,8 @@ export const SkeletonCard = ({ style = {} }) => (
       display: 'flex',
       flexDirection: 'column',
       gap: '0.75rem',
-      background: '#151822',
-      border: '1px solid rgba(255, 255, 255, 0.06)',
+      background: 'var(--color-surface)',
+      border: '1px solid var(--color-border)',
       borderRadius: '18px',
       padding: '1rem',
       marginBottom: 0,
@@ -33,11 +33,11 @@ export const SkeletonGrid = ({ count = 4, columns = 2, height = 210 }) => (
       <div
         key={i}
         style={{
-          background: '#151822',
+          background: 'var(--color-surface)',
           borderRadius: '18px',
           padding: '0.75rem',
           height: `${height}px`,
-          border: '1px solid rgba(255, 255, 255, 0.06)',
+          border: '1px solid var(--color-border)',
           display: 'flex',
           flexDirection: 'column',
           gap: '0.65rem',
@@ -74,8 +74,8 @@ export const SkeletonRow = () => (
       gap: '0.85rem',
       padding: '0.85rem',
       borderRadius: '16px',
-      background: '#151822',
-      border: '1px solid rgba(255, 255, 255, 0.06)',
+      background: 'var(--color-surface)',
+      border: '1px solid var(--color-border)',
     }}
   >
     <div className="skeleton" style={{ width: '48px', height: '48px', borderRadius: '14px', flexShrink: 0 }} />
