@@ -111,7 +111,16 @@ export const Wallet = () => {
                 border: 'none',
                 color: 'var(--color-text-secondary)',
                 cursor: 'pointer',
-                padding: '4px',
+                /* 44px tap target */
+                width: '44px',
+                height: '44px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '50%',
+                margin: '-10px -10px -10px 0',
+                touchAction: 'manipulation',
+                WebkitTapHighlightColor: 'transparent',
               }}
               aria-label="Toggle balance visibility"
             >
@@ -143,6 +152,8 @@ export const Wallet = () => {
                 borderRadius: '12px',
                 fontSize: '0.85rem',
                 fontWeight: 800,
+                touchAction: 'manipulation',
+                WebkitTapHighlightColor: 'transparent',
               }}
             >
               <Plus size={16} strokeWidth={2.5} />
@@ -159,6 +170,8 @@ export const Wallet = () => {
                 borderRadius: '12px',
                 fontSize: '0.85rem',
                 fontWeight: 700,
+                touchAction: 'manipulation',
+                WebkitTapHighlightColor: 'transparent',
               }}
             >
               <ArrowUpRight size={16} />
@@ -242,6 +255,9 @@ export const Wallet = () => {
               fontSize: '0.88rem',
               fontWeight: 700,
               cursor: 'pointer',
+              minHeight: '52px',
+              touchAction: 'manipulation',
+              WebkitTapHighlightColor: 'transparent',
             }}
           >
             <Plus size={16} />
@@ -252,7 +268,10 @@ export const Wallet = () => {
         {/* Navigation Rows matching Screen 10 */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
           <div
+            role="button"
+            tabIndex={0}
             onClick={() => setShowTransactionsModal(true)}
+            onKeyDown={e => e.key === 'Enter' && setShowTransactionsModal(true)}
             style={{
               background: 'var(--color-surface)',
               borderRadius: '16px',
@@ -262,6 +281,9 @@ export const Wallet = () => {
               alignItems: 'center',
               justifyContent: 'space-between',
               cursor: 'pointer',
+              touchAction: 'manipulation',
+              WebkitTapHighlightColor: 'transparent',
+              minHeight: '56px',
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -274,7 +296,10 @@ export const Wallet = () => {
           </div>
 
           <div
+            role="button"
+            tabIndex={0}
             onClick={() => setShowRewardsModal(true)}
+            onKeyDown={e => e.key === 'Enter' && setShowRewardsModal(true)}
             style={{
               background: 'var(--color-surface)',
               borderRadius: '16px',
@@ -284,6 +309,9 @@ export const Wallet = () => {
               alignItems: 'center',
               justifyContent: 'space-between',
               cursor: 'pointer',
+              touchAction: 'manipulation',
+              WebkitTapHighlightColor: 'transparent',
+              minHeight: '56px',
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>

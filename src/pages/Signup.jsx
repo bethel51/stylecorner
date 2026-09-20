@@ -115,31 +115,31 @@ export const Signup = () => {
             <div>
               <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#9AA2B3', marginBottom: '0.4rem', fontFamily: 'Outfit' }}>First Name *</label>
               <input type="text" name="firstname" value={form.firstname} onChange={handleChange}
-                placeholder="Alex" required style={{ width: '100%', padding: '0.8rem 0.9rem', borderRadius: '12px', background: '#0C0E14', border: '1px solid rgba(255,255,255,0.1)', color: '#FFFFFF', fontFamily: 'Outfit', fontSize: '0.88rem', outline: 'none' }} />
+                placeholder="Alex" required style={{ width: '100%', padding: '0.8rem 0.9rem', borderRadius: '12px', background: '#0C0E14', border: '1px solid rgba(255,255,255,0.1)', color: '#FFFFFF', fontFamily: 'Outfit', fontSize: '16px', outline: 'none', boxSizing: 'border-box' }} />
             </div>
             <div>
               <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#9AA2B3', marginBottom: '0.4rem', fontFamily: 'Outfit' }}>Last Name</label>
               <input type="text" name="lastname" value={form.lastname} onChange={handleChange}
-                placeholder="Morgan" style={{ width: '100%', padding: '0.8rem 0.9rem', borderRadius: '12px', background: '#0C0E14', border: '1px solid rgba(255,255,255,0.1)', color: '#FFFFFF', fontFamily: 'Outfit', fontSize: '0.88rem', outline: 'none' }} />
+                placeholder="Morgan" style={{ width: '100%', padding: '0.8rem 0.9rem', borderRadius: '12px', background: '#0C0E14', border: '1px solid rgba(255,255,255,0.1)', color: '#FFFFFF', fontFamily: 'Outfit', fontSize: '16px', outline: 'none', boxSizing: 'border-box' }} />
             </div>
           </div>
 
           <div style={{ marginBottom: '1rem' }}>
             <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#9AA2B3', marginBottom: '0.4rem', fontFamily: 'Outfit' }}>Email Address *</label>
             <input type="email" name="email" value={form.email} onChange={handleChange}
-              placeholder="alex@example.com" required style={{ width: '100%', padding: '0.8rem 0.9rem', borderRadius: '12px', background: '#0C0E14', border: '1px solid rgba(255,255,255,0.1)', color: '#FFFFFF', fontFamily: 'Outfit', fontSize: '0.88rem', outline: 'none' }} />
+              placeholder="alex@example.com" required style={{ width: '100%', padding: '0.8rem 0.9rem', borderRadius: '12px', background: '#0C0E14', border: '1px solid rgba(255,255,255,0.1)', color: '#FFFFFF', fontFamily: 'Outfit', fontSize: '16px', outline: 'none', boxSizing: 'border-box' }} />
           </div>
 
           <div style={{ marginBottom: '1rem' }}>
             <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#9AA2B3', marginBottom: '0.4rem', fontFamily: 'Outfit' }}>Phone Number</label>
             <input type="tel" name="phone" value={form.phone} onChange={handleChange}
-              placeholder="+234 800 000 0000" style={{ width: '100%', padding: '0.8rem 0.9rem', borderRadius: '12px', background: '#0C0E14', border: '1px solid rgba(255,255,255,0.1)', color: '#FFFFFF', fontFamily: 'Outfit', fontSize: '0.88rem', outline: 'none' }} />
+              placeholder="+234 800 000 0000" style={{ width: '100%', padding: '0.8rem 0.9rem', borderRadius: '12px', background: '#0C0E14', border: '1px solid rgba(255,255,255,0.1)', color: '#FFFFFF', fontFamily: 'Outfit', fontSize: '16px', outline: 'none', boxSizing: 'border-box' }} />
           </div>
 
           <div style={{ marginBottom: '1rem' }}>
             <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#9AA2B3', marginBottom: '0.4rem', fontFamily: 'Outfit' }}>Password *</label>
             <input type="password" name="password" value={form.password} onChange={handleChange}
-              placeholder="••••••••" required style={{ width: '100%', padding: '0.8rem 0.9rem', borderRadius: '12px', background: '#0C0E14', border: '1px solid rgba(255,255,255,0.1)', color: '#FFFFFF', fontFamily: 'Outfit', fontSize: '0.88rem', outline: 'none' }} />
+              placeholder="••••••••" required style={{ width: '100%', padding: '0.8rem 0.9rem', borderRadius: '12px', background: '#0C0E14', border: '1px solid rgba(255,255,255,0.1)', color: '#FFFFFF', fontFamily: 'Outfit', fontSize: '16px', outline: 'none', boxSizing: 'border-box' }} />
           </div>
 
           {/* Service Selection for Experts */}
@@ -261,7 +261,10 @@ export const Signup = () => {
               width: '100%', padding: '1rem', borderRadius: '16px', marginTop: '1.25rem',
               background: submitting ? 'rgba(245,185,66,0.6)' : '#F5B942',
               color: '#0C0E14', fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.95rem',
-              border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem'
+              border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
+              minHeight: '54px',
+              touchAction: 'manipulation',
+              WebkitTapHighlightColor: 'transparent',
             }}
           >
             {submitting ? (
@@ -279,12 +282,20 @@ export const Signup = () => {
         <div style={{ textAlign: 'center', marginTop: '1.25rem' }}>
           <p style={{ color: '#9AA2B3', fontSize: '0.88rem' }}>
             Already registered?{' '}
-            <span
+            <button
+              type="button"
               onClick={() => navigate('/login')}
-              style={{ color: '#F5B942', fontWeight: 700, cursor: 'pointer' }}
+              style={{
+                background: 'none', border: 'none',
+                color: '#F5B942', fontWeight: 700, cursor: 'pointer',
+                fontSize: '0.88rem', fontFamily: 'Outfit',
+                padding: '0.25rem 0.1rem',
+                touchAction: 'manipulation',
+                WebkitTapHighlightColor: 'transparent',
+              }}
             >
               Sign In
-            </span>
+            </button>
           </p>
         </div>
       </div>

@@ -128,6 +128,8 @@ export const Login = () => {
               justifyContent: 'center',
               gap: '0.4rem',
               transition: 'all 0.2s ease',
+              touchAction: 'manipulation',
+              WebkitTapHighlightColor: 'transparent',
             }}
           >
             <User size={16} />
@@ -153,6 +155,8 @@ export const Login = () => {
               justifyContent: 'center',
               gap: '0.4rem',
               transition: 'all 0.2s ease',
+              touchAction: 'manipulation',
+              WebkitTapHighlightColor: 'transparent',
             }}
           >
             <Scissors size={16} />
@@ -182,12 +186,27 @@ export const Login = () => {
             <div style={{ marginBottom: '1.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                 <label style={{ fontSize: '0.8rem', fontWeight: 700, color: '#9AA2B3', fontFamily: 'Outfit' }}>Password</label>
-                <span
+                <button
+                  type="button"
                   onClick={() => navigate('/forgot-password')}
-                  style={{ fontSize: '0.78rem', color: '#F5B942', fontWeight: 600, cursor: 'pointer' }}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    fontSize: '0.78rem',
+                    color: '#F5B942',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    padding: '0.25rem 0.1rem',
+                    minHeight: '44px',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    fontFamily: 'Outfit',
+                    touchAction: 'manipulation',
+                    WebkitTapHighlightColor: 'transparent',
+                  }}
                 >
                   Forgot Password?
-                </span>
+                </button>
               </div>
               <input
                 type="password"
@@ -211,7 +230,10 @@ export const Login = () => {
                 background: submitting ? 'rgba(245,185,66,0.6)' : '#F5B942',
                 color: '#0C0E14', fontFamily: 'Outfit', fontWeight: 800,
                 fontSize: '0.95rem', border: 'none', cursor: 'pointer',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem'
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
+                minHeight: '54px',
+                touchAction: 'manipulation',
+                WebkitTapHighlightColor: 'transparent',
               }}
             >
               {submitting ? (
@@ -229,12 +251,20 @@ export const Login = () => {
         <div style={{ textAlign: 'center' }}>
           <p style={{ color: '#9AA2B3', fontSize: '0.88rem' }}>
             New to Style Corner?{' '}
-            <span
+            <button
+              type="button"
               onClick={() => navigate('/role-selection')}
-              style={{ color: '#F5B942', fontWeight: 700, cursor: 'pointer' }}
+              style={{
+                background: 'none', border: 'none',
+                color: '#F5B942', fontWeight: 700, cursor: 'pointer',
+                fontSize: '0.88rem', fontFamily: 'Outfit',
+                padding: '0.25rem 0.1rem',
+                touchAction: 'manipulation',
+                WebkitTapHighlightColor: 'transparent',
+              }}
             >
               Create an Account
-            </span>
+            </button>
           </p>
         </div>
       </div>
