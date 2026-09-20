@@ -480,10 +480,17 @@ export const api = {
   },
 
   getSpecialistReviews: async (stylistName) => {
-    const res = await fetchWithTimeout(`${API_BASE}/reviews/specialist/${encodeURIComponent(stylistName)}`);
-    const data = await safeJson(res);
-    if (!res.ok) throw new Error(data?.error || 'Failed to fetch specialist reviews');
-    return Array.isArray(data) ? data : [];
+    try {
+      const res = await fetchWithTimeout(`${API_BASE}/reviews/specialist/${encodeURIComponent(stylistName)}`);
+      const data = await safeJson(res);
+      // 404 means no reviews yet — return empty array gracefully
+      if (res.status === 404) return [];
+      if (!res.ok) throw new Error(data?.error || 'Failed to fetch specialist reviews');
+      return Array.isArray(data) ? data : [];
+    } catch (err) {
+      if (err.name === 'AbortError' || err.message?.includes('timed out')) throw err;
+      return [];
+    }
   },
 
   getMyReviews: async () => {
@@ -495,6 +502,29 @@ export const api = {
     return Array.isArray(data) ? data : [];
   },
 
+  // Specialist Direct Inquiry / Message
+  sendSpecialistInquiry: async ({ specialistName, specialistId, message, service }) => {
+    const res = await fetchWithTimeout(`${API_BASE}/messages/inquiry`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ specialistName, specialistId, message, service }),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Failed to send inquiry');
+    return data;
+  },
+
+
+  submitContact: async ({ name, email, message }) => {
+    const res = await fetchWithTimeout(`${API_BASE}/contact`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, message }),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Failed to submit message');
+    return data;
+  },
 
   // Wallet API
   getWalletBalance: async () => {
@@ -506,15 +536,9 @@ export const api = {
     return data || { walletBalance: 0 };
   },
 
-  topupWallet: async (amount) => {
-    const res = await fetchWithTimeout(`${API_BASE}/wallet/topup`, {
-      method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify({ amount }),
-    });
-    const data = await safeJson(res);
-    if (!res.ok) throw new Error(data?.error || 'Failed to top up wallet');
-    return data;
+  // Direct wallet top-up requires verified Paystack gateway confirmation
+  topupWallet: async () => {
+    throw new Error('Direct demo top-up is disabled. Please fund your wallet securely via Paystack.');
   },
 
   payWithWallet: async (amount, orderId = null, bookingId = null, description = '') => {
@@ -622,17 +646,7 @@ export const api = {
     if (!res.ok) throw new Error(data?.error || 'Failed to delete order');
     return data;
   },
-  getProducts: async () => {
-    try {
-      const res = await fetchWithTimeout(`${API_BASE}/products`);
-      const data = await safeJson(res);
-      if (!res.ok) throw new Error(data?.error || 'Failed to fetch products');
-      return Array.isArray(data) ? data : [];
-    } catch (err) {
-      console.warn('Failed to fetch products:', err);
-      return [];
-    }
-  },
+
   getProductById: async (id) => {
     try {
       const res = await fetchWithTimeout(`${API_BASE}/products/${id}`);

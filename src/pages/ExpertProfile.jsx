@@ -499,16 +499,25 @@ export const ExpertProfile = () => {
     }
   };
 
-  const handleSendMessage = (e) => {
+  const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!messageText.trim()) return;
     setSendingMsg(true);
-    setTimeout(() => {
-      setSendingMsg(false);
+    try {
+      await api.sendSpecialistInquiry({
+        specialistName: expert?.name || '',
+        specialistId: expert?.id || '',
+        message: messageText.trim(),
+        service: selectedService?.name || '',
+      });
       setShowChatModal(false);
       setMessageText('');
       showToast(`Inquiry sent to ${expert?.name || 'Expert'}! They will respond shortly.`, 'success');
-    }, 600);
+    } catch (err) {
+      showToast(err.message || 'Failed to send message. Please try again.', 'error');
+    } finally {
+      setSendingMsg(false);
+    }
   };
 
   const handleBookNow = () => {
@@ -576,7 +585,8 @@ export const ExpertProfile = () => {
             Professional Profile
           </h3>
 
-          {/* Edit Control Button for Experts */}
+          {/* Edit Control Button - only shown to the expert/staff who owns this page */}
+          {isViewingMyself && (
           <button
             onClick={handleOpenEditSheet}
             style={{
@@ -596,6 +606,7 @@ export const ExpertProfile = () => {
           >
             <Edit size={13} /> Edit Page
           </button>
+          )}
         </div>
 
         {/* ── COVER IMAGE & FLOATING AVATAR ── */}
@@ -794,6 +805,7 @@ export const ExpertProfile = () => {
               Offered Services & Pricing
             </h3>
 
+            {isViewingMyself && (
             <button
               onClick={handleOpenEditSheet}
               style={{
@@ -811,6 +823,7 @@ export const ExpertProfile = () => {
             >
               <Plus size={14} /> Edit Services Menu
             </button>
+            )}
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
@@ -1533,7 +1546,9 @@ export const ExpertProfile = () => {
                 type="button"
                 onClick={() => {
                   const targetSvc = activePortfolioModal.service || selectedService?.name || '';
-                  navigate(`/booking?stylist=${encodeURIComponent(expert.name)}${targetSvc ? `&service=${encodeURIComponent(targetSvc)}` : ''}`);
+                  const stylistFirstName = expert.name.split(' ')[0];
+                  navigate(`/booking?stylist=${encodeURIComponent(stylistFirstName)}${targetSvc ? `&service=${encodeURIComponent(targetSvc)}` : ''}`);
+                  setActivePortfolioModal(null);
                 }}
                 style={{
                   flex: 1,

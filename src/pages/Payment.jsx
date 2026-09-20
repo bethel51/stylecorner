@@ -16,8 +16,9 @@ export const Payment = () => {
     description: 'Style Corner Atelier Order',
   };
 
+  const isTopup = Boolean(checkoutData.isTopup || checkoutData.title === 'Wallet Funding');
   const amount = Number(checkoutData.amount || checkoutData.totalPrice || 0);
-  const [activeMethod, setActiveMethod] = useState('wallet'); // 'wallet' | 'card' | 'transfer'
+  const [activeMethod, setActiveMethod] = useState(isTopup ? 'card' : 'wallet'); // 'wallet' | 'card' | 'transfer'
 
   // Wallet State
   const [walletBalance, setWalletBalance] = useState(0);
@@ -89,10 +90,16 @@ export const Payment = () => {
                 reference: response.reference,
                 bookingId: checkoutData.bookingId,
                 orderId: checkoutData.orderId,
+                isTopup,
                 amount
               });
-              showToast(checkoutData.bookingId ? 'Payment verified via Paystack! Specialist will review & accept.' : 'Order payment verified via Paystack! 🎉', 'success');
-              navigate('/customer-dashboard', { replace: true });
+              if (isTopup) {
+                showToast(`Wallet credited with ₦${amount.toLocaleString()} via Paystack! 🎉`, 'success');
+                navigate('/wallet', { replace: true });
+              } else {
+                showToast(checkoutData.bookingId ? 'Payment verified via Paystack! Specialist will review & accept.' : 'Order payment verified via Paystack! 🎉', 'success');
+                navigate('/customer-dashboard', { replace: true });
+              }
             } catch (err) {
               showToast(err.message || 'Payment verification failed', 'error');
               setSubmitting(false);
@@ -210,8 +217,8 @@ export const Payment = () => {
         {/* Payment Methods Selector Tabs */}
         <div style={{ display: 'flex', background: '#151822', borderRadius: '16px', padding: '4px', gap: '4px', marginBottom: '1.25rem', border: '1px solid rgba(255,255,255,0.06)' }}>
           {[
-            { id: 'wallet', label: '₦ Wallet', icon: Wallet },
-            { id: 'card', label: 'Card', icon: CreditCard },
+            ...(!isTopup ? [{ id: 'wallet', label: '₦ Wallet', icon: Wallet }] : []),
+            { id: 'card', label: 'Card / Paystack', icon: CreditCard },
             { id: 'transfer', label: 'Bank Transfer', icon: Landmark },
           ].map((m) => (
             <button

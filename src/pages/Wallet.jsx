@@ -73,6 +73,7 @@ export const Wallet = () => {
         title: 'Wallet Funding',
         amount: amt,
         description: 'Direct Deposit to Atelier Wallet',
+        isTopup: true,
       },
     });
   };

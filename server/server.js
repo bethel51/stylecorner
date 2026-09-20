@@ -1889,47 +1889,104 @@ app.get('/api/wallet', authenticateToken, async (req, res) => {
   }
 });
 
-// Top-Up Wallet Balance
+// Top-Up Wallet Balance (Security Notice: Direct demo top-up is disabled — topups must use verified Paystack payment)
 app.post('/api/wallet/topup', authenticateToken, async (req, res) => {
+  return res.status(400).json({
+    error: 'Direct demo wallet top-up has been removed for security. Please fund your wallet securely via Paystack.'
+  });
+});
+
+// Direct Specialist Inquiry / Message
+app.post('/api/messages/inquiry', authenticateToken, async (req, res) => {
   try {
-    const amount = Number(req.body.amount);
-    if (!amount || amount <= 0) {
-      return res.status(400).json({ error: 'Please enter a valid top-up amount' });
+    const { specialistName, specialistId, message, service } = req.body;
+    if (!message || !message.trim()) {
+      return res.status(400).json({ error: 'Message content cannot be empty' });
     }
 
-    const userDoc = await User.findById(req.user._id);
-    if (!userDoc) return res.status(404).json({ error: 'User not found' });
+    const sender = await User.findById(req.user._id);
+    const senderName = `${sender?.firstname || 'Client'} ${sender?.lastname || ''}`.trim();
+    const senderEmail = sender?.email || req.user.email;
 
-    const currentBal = userDoc.walletBalance ?? 0;
-    const newBal = currentBal + amount;
-    userDoc.walletBalance = newBal;
-    await userDoc.save();
+    // Find the specialist to notify
+    let specialistUser = null;
+    if (specialistId && mongoose.isValidObjectId(specialistId)) {
+      specialistUser = await User.findById(specialistId);
+    }
+    if (!specialistUser && specialistName) {
+      const nameParts = specialistName.trim().split(' ');
+      specialistUser = await User.findOne({
+        $or: [
+          { firstname: { $regex: new RegExp(`^${nameParts[0]}$`, 'i') } },
+          { email: { $regex: new RegExp(nameParts[0], 'i') } }
+        ]
+      });
+    }
 
-    const topupRef = `WLT-TOP-${Date.now()}-${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
-    const txn = new Transaction({
-      userId: userDoc._id,
-      userEmail: userDoc.email,
-      userName: `${userDoc.firstname} ${userDoc.lastname || ''}`.trim(),
-      type: 'wallet_topup',
-      amount: amount,
-      direction: 'credit',
-      reference: topupRef,
-      status: 'success',
-      description: 'Direct wallet top-up'
+    const recipientEmail = specialistUser?.email || process.env.EMAIL_SENDER || 'support@stylecorner.com';
+
+    // In-app notification for the specialist (if found)
+    if (specialistUser) {
+      await createInAppNotification({
+        userEmail: specialistUser.email,
+        title: `💬 New Client Inquiry: ${service ? service : 'Service Details'}`,
+        message: `${senderName} says: "${message.trim()}" (Reply to: ${senderEmail})`,
+        type: 'message'
+      });
+    }
+
+    // In-app confirmation for sender
+    await createInAppNotification({
+      userEmail: senderEmail,
+      title: `Message Sent to ${specialistName || 'Specialist'}`,
+      message: `Your inquiry regarding ${service || 'services'} was delivered. They will contact you shortly.`,
+      type: 'message'
     });
-    await txn.save();
+
+    // Send email notification to specialist
+    await sendNotificationSafe(
+      recipientEmail,
+      `New Client Inquiry from ${senderName} — Style Corner Atelier`,
+      `Hi ${specialistName || 'Specialist'},\n\nYou have received a new client inquiry through Style Corner Atelier.\n\nFrom: ${senderName} (${senderEmail})\nService: ${service || 'General Inquiry'}\n\nMessage:\n"${message.trim()}"\n\nPlease respond to the client at ${senderEmail}.`
+    );
+
+    res.status(200).json({
+      success: true,
+      message: `Inquiry successfully delivered to ${specialistName || 'specialist'}.`
+    });
+  } catch (error) {
+    console.error('Specialist inquiry error:', error);
+    res.status(500).json({ error: 'Failed to send specialist inquiry' });
+  }
+});
+
+// Contact Us Form Submission
+app.post('/api/contact', async (req, res) => {
+  try {
+    const { name, email, message } = req.body;
+    if (!name || !email || !message) {
+      return res.status(400).json({ error: 'Name, email, and message are required.' });
+    }
+
+    const adminEmail = process.env.EMAIL_SENDER || process.env.EMAIL_USER || 'support@stylecorner.com';
+
+    await sendNotificationSafe(
+      adminEmail,
+      `Concierge Contact Inquiry from ${name}`,
+      `New contact message received on Style Corner Atelier:\n\nFrom: ${name}\nEmail: ${email}\n\nMessage:\n${message}\n\nPlease reply directly to ${email}.`
+    );
 
     await createInAppNotification({
-      userEmail: userDoc.email,
-      title: '💳 Wallet Top-Up Successful!',
-      message: `Your Atelier Wallet has been credited with ₦${amount.toLocaleString()}. New Balance: ₦${newBal.toLocaleString()}`,
-      type: 'order',
+      userEmail: email,
+      title: 'Concierge Message Received',
+      message: 'Thank you for contacting Style Corner. Our concierge team has received your message and will be in touch shortly.',
+      type: 'system'
     });
 
-    res.status(200).json({ message: 'Wallet top-up successful', walletBalance: newBal, reference: topupRef });
+    res.status(200).json({ success: true, message: 'Message sent successfully.' });
   } catch (error) {
-    console.error('Wallet top-up error:', error);
-    res.status(500).json({ error: 'Failed to top up wallet' });
+    console.error('Contact form submission error:', error);
+    res.status(500).json({ error: 'Failed to send contact message' });
   }
 });
 

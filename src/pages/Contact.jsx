@@ -2,20 +2,25 @@ import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Send, MessageSquare } from 'lucide-react';
 import { PageContainer } from '../components/common/PageContainer';
 import { useAuth } from '../context/AuthContext';
+import { api } from '../services/api';
 
 export const Contact = () => {
   const { showToast } = useAuth();
   const [form, setForm] = useState({ name: '', email: '', message: '' });
   const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
-    setTimeout(() => {
-      showToast('Thank you! Your message has been sent to our desk.', 'success');
+    try {
+      await api.submitContact(form);
+      showToast('Thank you! Your message has been sent to our concierge desk.', 'success');
       setForm({ name: '', email: '', message: '' });
+    } catch (err) {
+      showToast(err.message || 'Failed to send message. Please try again.', 'error');
+    } finally {
       setSubmitting(false);
-    }, 600);
+    }
   };
 
   return (
