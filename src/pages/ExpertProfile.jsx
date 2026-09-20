@@ -26,7 +26,6 @@ import {
 } from 'lucide-react';
 import { PageContainer } from '../components/common/PageContainer';
 import { PopupModal } from '../components/common/PopupModal';
-import { BottomSheet } from '../components/common/BottomSheet';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import { uploadToCloudinary } from '../services/cloudinary';
@@ -351,19 +350,9 @@ export const ExpertProfile = () => {
     }
   }, [queryName, user, isViewingMyself]);
 
-  // Open Edit Sheet & Populate Form
+  // Direct navigation to dedicated Expert Dashboard
   const handleOpenEditSheet = () => {
-    if (!expert) return;
-    setEditForm({
-      name: expert.name || '',
-      role: expert.role || '',
-      location: expert.location || '',
-      bio: expert.bio || '',
-      avatar: expert.avatar || '',
-      coverImage: expert.coverImage || '',
-      services: expert.services ? [...expert.services] : [],
-    });
-    setShowEditSheet(true);
+    navigate('/expert-dashboard');
   };
 
   const handleUploadCover = async (e) => {
@@ -588,7 +577,8 @@ export const ExpertProfile = () => {
           {/* Edit Control Button - only shown to the expert/staff who owns this page */}
           {isViewingMyself && (
           <button
-            onClick={handleOpenEditSheet}
+            onClick={() => navigate('/expert-dashboard')}
+            onMouseEnter={() => preloadRoute('/expert-dashboard')}
             style={{
               background: 'rgba(245,185,66,0.15)',
               border: '1px solid rgba(245,185,66,0.4)',
@@ -601,10 +591,12 @@ export const ExpertProfile = () => {
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              gap: '0.35rem'
+              gap: '0.35rem',
+              minHeight: '44px',
+              touchAction: 'manipulation',
             }}
           >
-            <Edit size={13} /> Edit Page
+            <Edit size={13} /> Edit Page in Dashboard
           </button>
           )}
         </div>
@@ -808,7 +800,8 @@ export const ExpertProfile = () => {
 
             {isViewingMyself && (
             <button
-              onClick={handleOpenEditSheet}
+              onClick={() => navigate('/expert-dashboard')}
+              onMouseEnter={() => preloadRoute('/expert-dashboard')}
               style={{
                 background: 'none',
                 border: 'none',
@@ -819,7 +812,9 @@ export const ExpertProfile = () => {
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.2rem'
+                gap: '0.2rem',
+                minHeight: '44px',
+                touchAction: 'manipulation',
               }}
             >
               <Plus size={14} /> Edit Services Menu
@@ -1228,197 +1223,7 @@ export const ExpertProfile = () => {
 
       </div>
 
-      {/* ── EXPERT EDIT PROFILE BOTTOM SHEET ── */}
-      <BottomSheet
-        isOpen={showEditSheet}
-        onClose={() => setShowEditSheet(false)}
-        title="Manage My Professional Page"
-      >
-        <form onSubmit={handleSaveProfile} style={{ paddingBottom: '1.5rem' }}>
-          
-          {/* Cover Photo Upload */}
-          <div style={{ marginBottom: '1.25rem' }}>
-            <label className="app-label">Cover Banner Image</label>
-            <div style={{
-              width: '100%',
-              height: '110px',
-              borderRadius: '14px',
-              background: `url(${editForm.coverImage}) center/cover no-repeat #f3f4f6`,
-              border: '1.5px dashed rgba(0,0,0,0.15)',
-              position: 'relative',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              overflow: 'hidden'
-            }}>
-              <label htmlFor="edit-cover-upload" style={{
-                background: 'rgba(17,17,17,0.75)',
-                color: '#ffffff',
-                padding: '0.4rem 0.85rem',
-                borderRadius: '50px',
-                fontSize: '0.78rem',
-                fontFamily: 'Outfit',
-                fontWeight: 800,
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.35rem'
-              }}>
-                <Upload size={13} /> {uploadingCover ? 'Uploading...' : 'Change Cover Photo'}
-              </label>
-              <input id="edit-cover-upload" type="file" accept="image/*" style={{ display: 'none' }} onChange={handleUploadCover} />
-            </div>
-          </div>
-
-          {/* Avatar Photo Upload */}
-          <div style={{ marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{
-              width: '68px',
-              height: '68px',
-              borderRadius: '50%',
-              background: `url(${editForm.avatar}) center/cover no-repeat #d4af37`,
-              border: '2.5px solid #d4af37',
-              flexShrink: 0
-            }} />
-
-            <div>
-              <label htmlFor="edit-avatar-upload" style={{
-                background: 'rgba(212,175,55,0.15)',
-                border: '1px solid rgba(212,175,55,0.4)',
-                color: '#b5952f',
-                padding: '0.45rem 1rem',
-                borderRadius: '50px',
-                fontSize: '0.8rem',
-                fontFamily: 'Outfit',
-                fontWeight: 800,
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.35rem'
-              }}>
-                <Edit size={13} /> {uploadingAvatar ? 'Uploading...' : 'Change Profile Picture'}
-              </label>
-              <input id="edit-avatar-upload" type="file" accept="image/*" style={{ display: 'none' }} onChange={handleUploadAvatar} />
-              <p style={{ fontSize: '0.72rem', color: '#9ca3af', margin: '0.25rem 0 0' }}>JPG, PNG or WEBP up to 10MB</p>
-            </div>
-          </div>
-
-          <div className="app-input-group">
-            <label className="app-label">Display Name *</label>
-            <input
-              type="text"
-              value={editForm.name}
-              onChange={e => setEditForm({ ...editForm, name: e.target.value })}
-              className="app-input"
-              required
-            />
-          </div>
-
-          <div className="app-input-group">
-            <label className="app-label">Professional Role / Title *</label>
-            <input
-              type="text"
-              value={editForm.role}
-              onChange={e => setEditForm({ ...editForm, role: e.target.value })}
-              className="app-input"
-              placeholder="e.g. Master Barber & Cut Architect"
-              required
-            />
-          </div>
-
-          <div className="app-input-group">
-            <label className="app-label">Location (City, State) *</label>
-            <input
-              type="text"
-              value={editForm.location}
-              onChange={e => setEditForm({ ...editForm, location: e.target.value })}
-              className="app-input"
-              placeholder="e.g. Lagos, Nigeria"
-              required
-            />
-          </div>
-
-          <div className="app-input-group">
-            <label className="app-label">About / Biography *</label>
-            <textarea
-              rows={3}
-              value={editForm.bio}
-              onChange={e => setEditForm({ ...editForm, bio: e.target.value })}
-              className="app-textarea"
-              required
-            />
-          </div>
-
-          {/* Offered Services & Prices Editor */}
-          <div style={{ borderTop: '1px solid rgba(0,0,0,0.08)', paddingTop: '1rem', marginTop: '1rem' }}>
-            <h4 style={{ fontFamily: 'Outfit', fontSize: '0.9rem', fontWeight: 800, color: '#171717', marginBottom: '0.65rem' }}>
-              Manage Offered Services & Prices (₦)
-            </h4>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1rem' }}>
-              {editForm.services.map((s, idx) => (
-                <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: '#fafafa', padding: '0.5rem 0.75rem', borderRadius: '10px', border: '1px solid rgba(0,0,0,0.06)' }}>
-                  <span style={{ flex: 1, fontFamily: 'Outfit', fontSize: '0.85rem', fontWeight: 700, color: '#171717' }}>
-                    {s.name}
-                  </span>
-                  <span style={{ fontFamily: 'Outfit', fontSize: '0.85rem', fontWeight: 900, color: '#b5952f' }}>
-                    {s.price}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => handleDeleteService(idx)}
-                    style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', padding: '2px' }}
-                  >
-                    <Trash2 size={15} />
-                  </button>
-                </div>
-              ))}
-            </div>
-
-            {/* Add New Service Form Inline */}
-            <div style={{ background: '#f8fafc', padding: '0.85rem', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.08)' }}>
-              <span style={{ fontSize: '0.78rem', fontFamily: 'Outfit', fontWeight: 800, color: '#475569', display: 'block', marginBottom: '0.4rem' }}>
-                + Add New Service to Menu
-              </span>
-              <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                <input
-                  type="text"
-                  placeholder="Service Title (e.g. Wig Install)"
-                  value={newServiceName}
-                  onChange={e => setNewServiceName(e.target.value)}
-                  className="app-input"
-                  style={{ flex: 2 }}
-                />
-                <input
-                  type="text"
-                  placeholder="Price (e.g. 15000)"
-                  value={newServicePrice}
-                  onChange={e => setNewServicePrice(e.target.value)}
-                  className="app-input"
-                  style={{ flex: 1 }}
-                />
-              </div>
-              <button
-                type="button"
-                onClick={handleAddService}
-                className="app-btn app-btn-outline"
-                style={{ minHeight: '36px', fontSize: '0.78rem', borderRadius: '8px' }}
-              >
-                <Plus size={14} /> Add Service
-              </button>
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            disabled={savingProfile}
-            className="app-btn app-btn-primary"
-            style={{ marginTop: '1.25rem', minHeight: '46px', borderRadius: '14px' }}
-          >
-            {savingProfile ? 'Publishing Changes...' : 'Save & Publish My Profile'}
-          </button>
-        </form>
-      </BottomSheet>
+      
 
       {/* ── DIRECT CHAT INQUIRY MODAL ── */}
       <PopupModal

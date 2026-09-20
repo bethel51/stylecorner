@@ -86,20 +86,46 @@ export const Services = () => {
   }, [activeCategory, searchQuery]);
 
   return (
-    <PageContainer showBack={true}>
+    <PageContainer showBack={true} onOpenAiMatcher={() => navigate('/ai-matcher')}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.15rem' }}>
         
-        {/* Screen 2: Header */}
-        <div>
-          <h1 style={{ fontFamily: 'Outfit', fontSize: '1.65rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.25rem' }}>
-            Services
-          </h1>
-          <p style={{ color: '#94a3b8', fontSize: '0.84rem', margin: 0 }}>
-            Professional beauty services, tailored for you.
-          </p>
+        {/* Screen Header */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.75rem' }}>
+          <div>
+            <h1 style={{ fontFamily: 'Outfit', fontSize: '1.65rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.25rem' }}>
+              Services
+            </h1>
+            <p style={{ color: '#94a3b8', fontSize: '0.84rem', margin: 0 }}>
+              Professional beauty & grooming services, tailored for you.
+            </p>
+          </div>
+
+          <button
+            onClick={() => navigate('/ai-matcher')}
+            onMouseEnter={() => preloadRoute('/ai-matcher')}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              background: 'linear-gradient(135deg, rgba(245, 185, 66, 0.15) 0%, rgba(245, 185, 66, 0.05) 100%)',
+              border: '1.5px solid rgba(245, 185, 66, 0.45)',
+              borderRadius: '50px',
+              padding: '0.5rem 0.9rem',
+              color: '#f5b942',
+              fontFamily: 'Outfit',
+              fontSize: '0.78rem',
+              fontWeight: 800,
+              cursor: 'pointer',
+              minHeight: '44px',
+              touchAction: 'manipulation',
+            }}
+          >
+            <Sparkles size={15} />
+            <span>AI Matcher</span>
+          </button>
         </div>
 
-        {/* Search Bar + Filter Icon */}
+        {/* Search Bar + Filter Icon (Directs to Experts Directory) */}
         <div style={{ display: 'flex', gap: '0.65rem', alignItems: 'center' }}>
           <div className="search-pill-container" style={{ flex: 1 }}>
             <Search size={16} color="#64748b" />
@@ -112,9 +138,13 @@ export const Services = () => {
             />
           </div>
           <button
+            onClick={() => navigate('/experts')}
+            onMouseEnter={() => preloadRoute('/experts')}
             style={{
-              width: '42px',
-              height: '42px',
+              width: '44px',
+              height: '44px',
+              minWidth: '44px',
+              minHeight: '44px',
               borderRadius: '12px',
               border: '1px solid rgba(255, 255, 255, 0.08)',
               background: '#171a25',
@@ -123,12 +153,70 @@ export const Services = () => {
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
+              touchAction: 'manipulation',
             }}
-            title="Filter"
-            aria-label="Filter"
+            title="Browse Specialists Directory"
+            aria-label="Browse Specialists Directory"
           >
             <SlidersHorizontal size={18} />
           </button>
+        </div>
+
+        {/* AI Specialist Matcher Feature Banner (Directs to /ai-matcher) */}
+        <div
+          onClick={() => navigate('/ai-matcher')}
+          onMouseEnter={() => preloadRoute('/ai-matcher')}
+          style={{
+            background: 'linear-gradient(135deg, rgba(245, 185, 66, 0.12) 0%, rgba(20, 24, 34, 0.95) 100%)',
+            border: '1px solid rgba(245, 185, 66, 0.35)',
+            borderRadius: '18px',
+            padding: '1rem 1.15rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '1rem',
+            cursor: 'pointer',
+            transition: 'border-color 0.2s ease, transform 0.2s ease',
+            touchAction: 'manipulation',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+            <div
+              style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '12px',
+                background: 'rgba(245, 185, 66, 0.2)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#f5b942',
+                flexShrink: 0,
+              }}
+            >
+              <Sparkles size={20} />
+            </div>
+            <div>
+              <h4 style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.15rem' }}>
+                Unsure which service to pick?
+              </h4>
+              <p style={{ color: '#94a3b8', fontSize: '0.76rem', margin: 0 }}>
+                Let our AI Matcher pair your look with verified artists.
+              </p>
+            </div>
+          </div>
+          <span
+            style={{
+              color: '#f5b942',
+              fontSize: '0.8rem',
+              fontWeight: 800,
+              fontFamily: 'Outfit',
+              whiteSpace: 'nowrap',
+              flexShrink: 0,
+            }}
+          >
+            Match Now →
+          </span>
         </div>
 
         {/* Category Pills Scroll */}
@@ -152,7 +240,7 @@ export const Services = () => {
           ))}
         </div>
 
-        {/* Services List matching Screen 2 */}
+        {/* Services List - Direct Navigation to Booking Page */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
           {filteredServices.map((s) => (
             <div
@@ -162,16 +250,17 @@ export const Services = () => {
               style={{
                 background: '#151822',
                 borderRadius: '16px',
-                padding: '0.75rem 1rem 0.75rem 0.75rem',
+                padding: '0.85rem 1rem',
                 border: '1px solid rgba(255, 255, 255, 0.07)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 cursor: 'pointer',
                 transition: 'transform 0.15s ease, border-color 0.15s ease',
+                touchAction: 'manipulation',
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', flex: 1, minWidth: 0, marginRight: '0.5rem' }}>
                 <div
                   style={{
                     width: '56px',
@@ -189,17 +278,42 @@ export const Services = () => {
                   />
                 </div>
 
-                <div>
-                  <h3 style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.2rem' }}>
+                <div style={{ minWidth: 0 }}>
+                  <h3 style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.15rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                     {s.title}
                   </h3>
-                  <span style={{ fontSize: '0.78rem', color: '#f5b942', fontWeight: 700 }}>
-                    {s.price}
-                  </span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                    <span style={{ fontSize: '0.82rem', color: '#f5b942', fontWeight: 800, fontFamily: 'Outfit' }}>
+                      {s.price}
+                    </span>
+                    <span style={{ fontSize: '0.72rem', color: '#64748b' }}>•</span>
+                    <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
+                      {s.category}
+                    </span>
+                  </div>
                 </div>
               </div>
 
-              <ChevronRight size={18} color="#64748b" />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexShrink: 0 }}>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate(`/booking?service=${encodeURIComponent(s.title)}`);
+                  }}
+                  className="app-btn app-btn-accent"
+                  style={{
+                    minHeight: '38px',
+                    padding: '0.35rem 0.85rem',
+                    fontSize: '0.76rem',
+                    borderRadius: '12px',
+                    touchAction: 'manipulation',
+                  }}
+                >
+                  Book Now
+                </button>
+                <ChevronRight size={18} color="#64748b" />
+              </div>
             </div>
           ))}
 

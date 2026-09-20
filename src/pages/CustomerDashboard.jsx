@@ -42,7 +42,6 @@ import { SkeletonList } from '../components/common/SkeletonLoader';
 import { BottomSheet } from '../components/common/BottomSheet';
 import { PopupModal } from '../components/common/PopupModal';
 import { WithdrawFundsModal } from '../components/common/WithdrawFundsModal';
-import { AISpecialistMatcherSheet } from '../components/booking/AISpecialistMatcherSheet';
 import { ImagePreviewModal } from '../components/common/ImagePreviewModal';
 import { Avatar } from '../components/common/Avatar';
 import { OrderTrackingSheet } from '../components/store/OrderTrackingSheet';
@@ -66,7 +65,6 @@ export const CustomerDashboard = () => {
 
   const [selectedOrderForTracking, setSelectedOrderForTracking] = useState(null);
   const [showProfileSheet, setShowProfileSheet] = useState(false);
-  const [showAiSheet, setShowAiSheet] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEnlargedAvatar, setShowEnlargedAvatar] = useState(false);
   const [deletingAccount, setDeletingAccount] = useState(false);
@@ -292,7 +290,7 @@ export const CustomerDashboard = () => {
   });
 
   return (
-    <PageContainer title="Style Corner" onOpenAiMatcher={() => setShowAiSheet(true)}>
+    <PageContainer title="Style Corner" onOpenAiMatcher={() => navigate('/ai-matcher')}>
       <div style={{ maxWidth: '480px', margin: '0 auto', paddingBottom: '3rem' }}>
 
         {/* ── Greeting Header with Theme Switcher ── */}
@@ -912,7 +910,7 @@ export const CustomerDashboard = () => {
               {
                 icon: <Sparkles size={20} />, label: 'AI Matcher',
                 sub: 'Find matched artist',
-                iconColor: 'var(--color-accent)', action: () => setShowAiSheet(true),
+                iconColor: 'var(--color-accent)', action: () => navigate('/ai-matcher'),
               },
               {
                 icon: <Truck size={20} />, label: 'Track Delivery',
@@ -1433,20 +1431,6 @@ export const CustomerDashboard = () => {
         </div>
       </PopupModal>
 
-      {/* AI Matcher Sheet */}
-      <AISpecialistMatcherSheet
-        isOpen={showAiSheet}
-        onClose={() => setShowAiSheet(false)}
-        onApplyMatch={(match) => {
-          setShowAiSheet(false);
-          const params = new URLSearchParams();
-          if (match.stylist) params.append('stylist', match.stylist);
-          if (match.service) params.append('service', match.service);
-          if (match.location) params.append('location', match.location);
-          if (match.stylistId) params.append('stylistId', match.stylistId);
-          navigate(`/booking?${params.toString()}`);
-        }}
-      />
 
       {/* Avatar Full Size */}
       <ImagePreviewModal isOpen={showEnlargedAvatar} onClose={() => setShowEnlargedAvatar(false)} imageUrl={user?.avatarUrl} title={`${user?.firstname || 'User'}'s Profile Picture`} />

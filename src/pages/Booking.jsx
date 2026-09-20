@@ -20,7 +20,6 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import { PageContainer } from '../components/common/PageContainer';
-import { AISpecialistMatcherSheet } from '../components/booking/AISpecialistMatcherSheet';
 import { OptimizedImage } from '../components/common/OptimizedImage';
 import { Avatar } from '../components/common/Avatar';
 
@@ -206,7 +205,9 @@ export const Booking = () => {
   const todayISO = dynamicDates[0]?.full || new Date().toISOString().split('T')[0];
 
   // Steps: 1: Service, 2: Stylist, 3: Date & Time + Location, 4: Confirm
-  const [activeStep, setActiveStep] = useState(queryStylist && queryService ? 3 : 1);
+  const [activeStep, setActiveStep] = useState(
+    queryStylist && queryService ? 3 : queryService ? 2 : 1
+  );
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedService, setSelectedService] = useState(SERVICES[0].title);
   const [selectedDate, setSelectedDate] = useState(todayISO);
@@ -221,7 +222,6 @@ export const Booking = () => {
   const [appliedVoucher, setAppliedVoucher] = useState(false);
   const [voucherCode, setVoucherCode] = useState('');
   const [submitting, setSubmitting] = useState(false);
-  const [showAiSheet, setShowAiSheet] = useState(false);
   const [isAiMatched, setIsAiMatched] = useState(Boolean(queryStylist && queryService));
 
   // Sync service from query
@@ -426,7 +426,7 @@ export const Booking = () => {
   }, [selectedDate]);
 
   return (
-    <PageContainer showBack={true} onOpenAiMatcher={() => setShowAiSheet(true)}>
+    <PageContainer showBack={true} onOpenAiMatcher={() => navigate('/ai-matcher')}>
       <div style={{ maxWidth: '520px', margin: '0 auto', paddingBottom: '3rem' }}>
         
         {/* Top Header */}
@@ -442,7 +442,7 @@ export const Booking = () => {
 
           {/* Header Quick AI Matcher Action */}
           <button
-            onClick={() => setShowAiSheet(true)}
+            onClick={() => navigate('/ai-matcher')}
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -506,7 +506,7 @@ export const Booking = () => {
             </div>
 
             <button
-              onClick={() => setShowAiSheet(true)}
+              onClick={() => navigate('/ai-matcher')}
               style={{
                 background: 'transparent',
                 border: 'none',
@@ -628,7 +628,7 @@ export const Booking = () => {
 
             {/* AI Assistant Callout Box */}
             <div
-              onClick={() => setShowAiSheet(true)}
+              onClick={() => navigate('/ai-matcher')}
               style={{
                 background: 'linear-gradient(135deg, rgba(245, 185, 66, 0.1) 0%, rgba(26, 31, 46, 0.7) 100%)',
                 border: '1px solid rgba(245, 185, 66, 0.3)',
@@ -795,7 +795,7 @@ export const Booking = () => {
               </div>
 
               <button
-                onClick={() => setShowAiSheet(true)}
+                onClick={() => navigate('/ai-matcher')}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -1283,30 +1283,6 @@ export const Booking = () => {
         )}
 
       </div>
-
-      {/* AI Specialist Matcher Modal Sheet */}
-      <AISpecialistMatcherSheet
-        isOpen={showAiSheet}
-        onClose={() => setShowAiSheet(false)}
-        onApplyMatch={(match) => {
-          setShowAiSheet(false);
-          if (match.stylist) setStylist(match.stylist);
-          if (match.service) setSelectedService(match.service);
-          if (match.location) setLocation(match.location);
-
-          const found = specialistsList.find(
-            (s) =>
-              (match.stylistId && s.id === match.stylistId) ||
-              s.name.toLowerCase().includes(match.stylist.toLowerCase()) ||
-              match.stylist.toLowerCase().includes(s.name.toLowerCase())
-          );
-          if (found) setSelectedSpecialist(found);
-
-          setIsAiMatched(true);
-          showToast(`AI Matched with ${match.stylist}!`, 'success');
-          setActiveStep(3); // Flow straight into date and time selection
-        }}
-      />
     </PageContainer>
   );
 };

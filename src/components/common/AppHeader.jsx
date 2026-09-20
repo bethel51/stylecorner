@@ -98,26 +98,26 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
             {isDark ? <Sun size={17} color="var(--color-accent)" /> : <Moon size={17} color="var(--color-accent)" />}
           </button>
 
-          {onOpenAiMatcher && (
-            <button
-              className="app-header-btn"
-              onClick={onOpenAiMatcher}
-              title="AI Specialist Matcher"
-              style={{ color: 'var(--color-accent)', borderColor: 'var(--color-border-accent)' }}
-            >
-              <Sparkles size={17} />
-            </button>
-          )}
+          <button
+            className="app-header-btn"
+            onClick={onOpenAiMatcher || (() => navigate('/ai-matcher'))}
+            onMouseEnter={() => preloadRoute('/ai-matcher')}
+            title="AI Specialist Matcher"
+            style={{ color: 'var(--color-accent)', borderColor: 'var(--color-border-accent)' }}
+          >
+            <Sparkles size={17} />
+          </button>
 
           <button
             className="app-header-btn"
             onClick={() => {
               if (isAuthenticated) {
-                setShowNotifications(true);
+                navigate('/notifications');
               } else {
                 navigate('/login');
               }
             }}
+            onMouseEnter={() => preloadRoute(isAuthenticated ? '/notifications' : '/login')}
             title="Notifications"
             aria-label="Notifications"
             style={{ position: 'relative' }}
