@@ -5,6 +5,8 @@
  */
 
 const APP_URL = process.env.CLIENT_URL || 'https://stylecorner.onrender.com';
+const BRAND_HERO_IMAGE = process.env.BRAND_IMAGE_URL ||
+  'https://raw.githubusercontent.com/bethel51/stylecorner/main/public/images/stylecorner-email-banner.jpg';
 
 /**
  * Base Email Layout Wrapper
@@ -87,9 +89,29 @@ function buildBaseEmailLayout({
     <!-- Main Container Table -->
     <table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="max-width: 580px; margin: 0 auto;" class="email-container">
       
-      <!-- HEADER LOGO BANNER -->
+      <!-- BRAND HERO IMAGE BANNER -->
       <tr>
-        <td style="padding: 24px 20px 18px; text-align: center;">
+        <td align="center" style="padding: 0 0 16px 0;">
+          <table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+            <tr>
+              <td align="center" style="border-radius: 18px; overflow: hidden; border: 1px solid rgba(245, 185, 66, 0.28); background-color: #12141c; box-shadow: 0 12px 36px rgba(0,0,0,0.6);">
+                <a href="${APP_URL}" target="_blank" style="text-decoration: none; display: block;">
+                  <img 
+                    src="${BRAND_HERO_IMAGE}" 
+                    alt="Style Corner Atelier" 
+                    width="580" 
+                    style="width: 100%; max-width: 580px; height: auto; max-height: 280px; object-fit: cover; display: block; border: 0;"
+                  />
+                </a>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+      <!-- HEADER LOGO LABEL -->
+      <tr>
+        <td style="padding: 6px 20px 18px; text-align: center;">
           <table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0">
             <tr>
               <td style="text-align: center;">

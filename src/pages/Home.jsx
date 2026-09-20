@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Scissors, ArrowRight, Sun, Moon } from 'lucide-react';
+import { ArrowRight, Sun, Moon } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { PageContainer } from '../components/common/PageContainer';
@@ -51,14 +51,13 @@ export const Home = () => {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          background: isDark ? '#0B0D13' : '#F3F4F6',
+          background: '#07080B',
           padding: '0',
           position: 'relative',
           overflowX: 'hidden',
-          transition: 'background 0.3s ease',
         }}
       >
-        {/* Main Phone / Card Frame */}
+        {/* Main Phone / Card Container */}
         <div
           style={{
             width: '100%',
@@ -67,228 +66,148 @@ export const Home = () => {
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
-            background: isDark ? '#131620' : '#FFFFFF',
-            boxShadow: isDark
-              ? '0 25px 60px -15px rgba(0, 0, 0, 0.7)'
-              : '0 25px 60px -15px rgba(0, 0, 0, 0.1)',
+            background: '#0D0E12',
+            boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.8)',
             position: 'relative',
-            transition: 'background 0.3s ease',
           }}
         >
-          {/* ── TOP HERO SECTION (Reference-Inspired 3D Atelier Graphic) ── */}
+          {/* ── TOP HERO PHOTO SECTION ── */}
           <div
             style={{
               position: 'relative',
               width: '100%',
-              height: '58vh',
+              height: '59vh',
               minHeight: '390px',
               maxHeight: '520px',
-              background: 'linear-gradient(180deg, #F9BA32 0%, #F5A623 50%, #E89518 100%)',
-              borderBottomLeftRadius: '42px',
-              borderBottomRightRadius: '42px',
               overflow: 'hidden',
-              boxShadow: '0 20px 35px -10px rgba(232, 149, 24, 0.35)',
               display: 'flex',
               flexDirection: 'column',
             }}
           >
-            {/* 3D Atelier Visual Asset */}
+            {/* Real Atelier Salon Hero Visual */}
             <img
-              src="/images/landing-hero-3d.jpg"
-              alt="Style Corner Atelier"
+              src="/images/stylecorner-salon-top.jpg"
+              alt="Style Corner Luxury Atelier"
               style={{
                 position: 'absolute',
                 inset: 0,
                 width: '100%',
                 height: '100%',
                 objectFit: 'cover',
-                objectPosition: 'center 40%',
-                pointerEvents: 'none',
+                objectPosition: 'center top',
               }}
             />
 
-            {/* Subtle Gradient Highlights */}
+            {/* Seamless Bottom Gradient Fade into Dark Canvas */}
             <div
               style={{
                 position: 'absolute',
-                top: 0,
+                bottom: 0,
                 left: 0,
                 right: 0,
-                height: '130px',
-                background: 'linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0) 100%)',
+                height: '80px',
+                background: 'linear-gradient(180deg, rgba(13,14,18,0) 0%, rgba(13,14,18,0.85) 65%, #0D0E12 100%)',
                 pointerEvents: 'none',
               }}
             />
 
-            {/* ── APP LOGO HEADER & THEME TOGGLE ── */}
-            <div
+            {/* Interactive Theme Switcher Overlay on top-right sun icon */}
+            <button
+              type="button"
+              onClick={toggleTheme}
               style={{
-                position: 'relative',
-                zIndex: 10,
-                paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1.5rem)',
-                paddingLeft: '1.25rem',
-                paddingRight: '1.25rem',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+                position: 'absolute',
+                right: '1.25rem',
+                top: 'calc(env(safe-area-inset-top, 0px) + 1.25rem)',
+                width: '42px',
+                height: '42px',
+                borderRadius: '50%',
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                zIndex: 20,
               }}
-            >
-              {/* Brand Logo Pill (Matching reference style with scissors & Atelier branding) */}
-              <div
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.65rem',
-                  background: 'rgba(255, 255, 255, 0.22)',
-                  backdropFilter: 'blur(14px)',
-                  WebkitBackdropFilter: 'blur(14px)',
-                  padding: '0.45rem 1.15rem 0.45rem 0.65rem',
-                  borderRadius: '50px',
-                  border: '1px solid rgba(255, 255, 255, 0.45)',
-                  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.12)',
-                }}
-              >
-                {/* Logo Icon Badge */}
-                <div
-                  style={{
-                    width: '32px',
-                    height: '32px',
-                    borderRadius: '50%',
-                    background: '#FFFFFF',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#E89518',
-                    boxShadow: '0 4px 10px rgba(0, 0, 0, 0.12)',
-                  }}
-                >
-                  <Scissors size={18} strokeWidth={2.5} />
-                </div>
-
-                {/* Typography */}
-                <span
-                  style={{
-                    fontFamily: 'Outfit, sans-serif',
-                    fontSize: '1.2rem',
-                    fontWeight: 800,
-                    letterSpacing: '-0.01em',
-                    color: '#FFFFFF',
-                    textShadow: '0 2px 8px rgba(0, 0, 0, 0.18)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '2px',
-                  }}
-                >
-                  Style<span style={{ fontWeight: 900, color: '#FFF9ED' }}>Corner</span>
-                </span>
-              </div>
-
-              {/* Discreet Theme Switcher */}
-              <button
-                type="button"
-                onClick={toggleTheme}
-                style={{
-                  position: 'absolute',
-                  right: '1.25rem',
-                  top: 'calc(env(safe-area-inset-top, 0px) + 1.6rem)',
-                  width: '34px',
-                  height: '34px',
-                  borderRadius: '50%',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  backdropFilter: 'blur(10px)',
-                  border: '1px solid rgba(255, 255, 255, 0.35)',
-                  color: '#FFFFFF',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  padding: 0,
-                  transition: 'all 0.2s ease',
-                }}
-                title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-              >
-                {isDark ? <Sun size={16} /> : <Moon size={16} />}
-              </button>
-            </div>
+              aria-label="Toggle Theme"
+              title={isDark ? 'Switch Theme' : 'Switch Theme'}
+            />
           </div>
 
-          {/* ── BOTTOM CONTENT & CTA SECTION ── */}
+          {/* ── BOTTOM CONTENT & CTA SECTION (Exact Reference Typography & Colors) ── */}
           <div
             style={{
               flex: 1,
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
-              padding: '2.25rem 1.75rem calc(env(safe-area-inset-bottom, 0px) + 2rem)',
+              padding: '1.75rem 1.75rem calc(env(safe-area-inset-bottom, 0px) + 2rem)',
               textAlign: 'center',
-              background: isDark ? '#131620' : '#FFFFFF',
-              transition: 'background 0.3s ease',
+              background: '#0D0E12',
             }}
           >
-            {/* Title & Description */}
-            <div style={{ maxWidth: '360px', margin: '0 auto' }}>
+            {/* Title & Subtitle */}
+            <div style={{ maxWidth: '370px', margin: '0 auto' }}>
               <h1
                 style={{
-                  fontFamily: 'Outfit, sans-serif',
-                  fontSize: '2.15rem',
-                  fontWeight: 900,
-                  color: isDark ? '#F9FAFB' : '#111827',
+                  fontFamily: 'Outfit, -apple-system, BlinkMacSystemFont, sans-serif',
+                  fontSize: '2.35rem',
+                  fontWeight: 800,
+                  color: '#FFFFFF',
                   margin: '0 0 0.85rem',
                   letterSpacing: '-0.025em',
                   lineHeight: 1.15,
                 }}
               >
-                Start your journey
+                Start your <span style={{ color: '#F5B942' }}>journey</span>
               </h1>
 
               <p
                 style={{
                   fontFamily: 'Outfit, sans-serif',
                   fontSize: '0.98rem',
-                  color: isDark ? '#9CA3AF' : '#4B5563',
+                  color: '#9CA3AF',
                   margin: 0,
                   lineHeight: 1.55,
-                  fontWeight: 500,
+                  fontWeight: 400,
                 }}
               >
                 {isAuthenticated
-                  ? `Welcome back, ${user?.firstname || 'Stylist'}! Access your appointments, wallet, and grooming orders.`
+                  ? `Welcome back, ${user?.firstname || 'Stylist'}! Access your bookings, digital wallet, and appointments.`
                   : 'Discover premier barbers, hair stylists & grooming specialists. Book luxury appointments in seconds.'}
               </p>
             </div>
 
-            {/* Actions & CTAs */}
+            {/* Action Buttons & Links */}
             <div style={{ marginTop: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {/* Primary "Get Started" Button */}
+              {/* Primary "Get Started" Button (Golden Pill with Black Text) */}
               <button
                 onClick={handleGetStarted}
                 onMouseEnter={() => preloadRoute('/signup')}
                 className="app-btn"
                 style={{
                   width: '100%',
-                  minHeight: '56px',
-                  height: '56px',
-                  background: 'linear-gradient(135deg, #FF6A00 0%, #EE5100 100%)',
-                  color: '#FFFFFF',
-                  borderRadius: '18px',
+                  minHeight: '54px',
+                  height: '54px',
+                  background: '#F5B942',
+                  color: '#0D0E12',
+                  borderRadius: '50px',
                   border: 'none',
                   fontFamily: 'Outfit, sans-serif',
-                  fontSize: '1.08rem',
+                  fontSize: '1.05rem',
                   fontWeight: 800,
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '0.5rem',
-                  boxShadow: '0 12px 28px -6px rgba(238, 81, 0, 0.42)',
+                  boxShadow: '0 10px 25px -5px rgba(245, 185, 66, 0.4)',
                   transition: 'all 0.2s ease',
                 }}
               >
                 <span>{isAuthenticated ? 'Go to Dashboard' : 'Get Started'}</span>
-                <ArrowRight size={19} strokeWidth={2.5} />
+                <ArrowRight size={20} strokeWidth={2.8} />
               </button>
 
-              {/* Secondary Navigation Row (Login & Guest Explore) */}
+              {/* Secondary Row: Log In */}
               <div
                 style={{
                   display: 'flex',
@@ -297,13 +216,13 @@ export const Home = () => {
                   gap: '0.35rem',
                   fontSize: '0.92rem',
                   fontFamily: 'Outfit, sans-serif',
-                  color: isDark ? '#9CA3AF' : '#6B7280',
+                  color: '#8E8E93',
                   fontWeight: 500,
                 }}
               >
                 {isAuthenticated ? (
                   <span>
-                    Logged in as <strong style={{ color: isDark ? '#F9FAFB' : '#111827' }}>{user?.email}</strong>
+                    Logged in as <strong style={{ color: '#F5B942' }}>{user?.email}</strong>
                   </span>
                 ) : (
                   <>
@@ -315,7 +234,7 @@ export const Home = () => {
                       style={{
                         background: 'none',
                         border: 'none',
-                        color: '#EE5100',
+                        color: '#F5B942',
                         fontWeight: 800,
                         cursor: 'pointer',
                         padding: '4px',
@@ -330,7 +249,7 @@ export const Home = () => {
                 )}
               </div>
 
-              {/* Guest Explore Quick Link */}
+              {/* Quick Guest Catalogue Link */}
               <button
                 type="button"
                 onClick={() => navigate('/services')}
@@ -338,17 +257,17 @@ export const Home = () => {
                 style={{
                   background: 'none',
                   border: 'none',
-                  color: isDark ? '#6B7280' : '#9CA3AF',
+                  color: '#64748B',
                   fontSize: '0.82rem',
                   fontFamily: 'Outfit, sans-serif',
                   fontWeight: 600,
                   cursor: 'pointer',
                   padding: '4px',
-                  marginTop: '0.25rem',
+                  marginTop: '0.15rem',
                   letterSpacing: '0.02em',
                 }}
               >
-                Or browse services as guest →
+                Or explore services as guest →
               </button>
             </div>
           </div>
