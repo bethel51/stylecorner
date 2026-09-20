@@ -613,7 +613,8 @@ export const ExpertProfile = () => {
         <div style={{ position: 'relative', marginBottom: '3rem' }}>
           <div style={{
             width: '100%',
-            height: 'clamp(160px, 28vw, 220px)',
+            /* clamp: 140px floor on 320px → 220px ceiling on large phones */
+            height: 'clamp(140px, 40vw, 220px)',
             background: `url(${expert.coverImage}) center/cover no-repeat`,
             borderRadius: '0 0 20px 20px',
             position: 'relative',
@@ -1010,7 +1011,7 @@ export const ExpertProfile = () => {
                   )}
 
                   {/* Lookbook Grid */}
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(115px, 1fr))', gap: '0.65rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: '0.65rem' }}>
                     {displayedSamples.map((item, i) => {
                       const imgUrl = typeof item === 'object' ? (item.imageUrl || item.url) : item;
                       if (!imgUrl) return null;
@@ -1157,11 +1158,14 @@ export const ExpertProfile = () => {
         <div style={{
           position: 'fixed',
           bottom: 0,
-          left: 0,
-          right: 0,
+          /* Centre within the 460px card on desktop; fill 100% on mobile */
+          left: '50%',
+          transform: 'translateX(-50%)',
           width: '100%',
+          maxWidth: '460px',
           background: 'rgba(12, 14, 20, 0.95)',
           backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
           borderTop: '1px solid rgba(255, 255, 255, 0.08)',
           padding: '0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom))',
           display: 'flex',
@@ -1186,6 +1190,8 @@ export const ExpertProfile = () => {
               justifyContent: 'center',
               cursor: 'pointer',
               flexShrink: 0,
+              touchAction: 'manipulation',
+              WebkitTapHighlightColor: 'transparent',
             }}
           >
             <MessageSquare size={20} color="#f5b942" />
@@ -1211,6 +1217,8 @@ export const ExpertProfile = () => {
               gap: '0.4rem',
               boxShadow: '0 6px 20px rgba(245,185,66,0.35)',
               overflow: 'hidden',
+              touchAction: 'manipulation',
+              WebkitTapHighlightColor: 'transparent',
             }}
           >
             <Calendar size={16} style={{ flexShrink: 0 }} />

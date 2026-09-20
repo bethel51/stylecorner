@@ -174,7 +174,7 @@ export const Payment = () => {
   };
 
   return (
-    <PageContainer title="Secure Checkout Payment">
+    <PageContainer title="Secure Checkout Payment" showBack={true}>
       <div style={{ maxWidth: '460px', margin: '0 auto', paddingBottom: '2rem' }}>
         
         {/* Order Summary Box */}
@@ -424,14 +424,17 @@ export const Payment = () => {
               <div style={{ marginBottom: '1.25rem' }}>
                 <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#9AA2B3', marginBottom: '0.4rem', fontFamily: 'Outfit' }}>Top Up Amount (₦)</label>
                 <input
-                  type="number" placeholder="e.g. 20000"
+                  type="number"
+                  inputMode="numeric"
+                  placeholder="e.g. 20000"
                   value={topupAmount}
                   onChange={(e) => setTopupAmount(e.target.value)}
                   required
                   style={{
                     width: '100%', padding: '0.75rem 1rem', borderRadius: '12px',
                     background: '#0C0E14', border: '1px solid rgba(255,255,255,0.1)',
-                    color: '#FFFFFF', fontFamily: 'Outfit', fontSize: '0.95rem', outline: 'none'
+                    color: '#FFFFFF', fontFamily: 'Outfit', fontSize: '1rem', outline: 'none',
+                    boxSizing: 'border-box',
                   }}
                 />
               </div>

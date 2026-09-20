@@ -122,7 +122,9 @@ export const PwaInstallPrompt = () => {
             display: 'flex',
             alignItems: 'center',
             gap: '0.35rem',
-            boxShadow: '0 4px 14px rgba(212,175,55,0.3)'
+            boxShadow: '0 4px 14px rgba(212,175,55,0.3)',
+            touchAction: 'manipulation',
+            WebkitTapHighlightColor: 'transparent',
           }}
         >
           <Download size={14} />
@@ -136,12 +138,15 @@ export const PwaInstallPrompt = () => {
             color: '#9ca3af',
             border: 'none',
             borderRadius: '50%',
-            width: '28px',
-            height: '28px',
+            width: '36px',
+            height: '36px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            touchAction: 'manipulation',
+            WebkitTapHighlightColor: 'transparent',
+            flexShrink: 0,
           }}
           title="Dismiss"
         >
