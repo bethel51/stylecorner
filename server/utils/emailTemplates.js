@@ -89,95 +89,76 @@ function buildBaseEmailLayout({
     <!-- Main Container Table -->
     <table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="max-width: 580px; margin: 0 auto;" class="email-container">
       
-      <!-- BRAND HERO IMAGE BANNER -->
+      <!-- MAIN CARD WITH NEATLY POSITIONED BRAND BANNER -->
       <tr>
-        <td align="center" style="padding: 0 0 16px 0;">
+        <td style="background-color: #141721; border: 1px solid rgba(245, 185, 66, 0.22); border-radius: 20px; overflow: hidden; box-shadow: 0 16px 48px rgba(0, 0, 0, 0.65);">
+          
+          <!-- BRAND HERO IMAGE BANNER (Neatly Positioned Header) -->
           <table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
             <tr>
-              <td align="center" style="border-radius: 18px; overflow: hidden; border: 1px solid rgba(245, 185, 66, 0.28); background-color: #12141c; box-shadow: 0 12px 36px rgba(0,0,0,0.6);">
+              <td align="center" style="padding: 0; background-color: #0c0e14; border-bottom: 1px solid rgba(245, 185, 66, 0.2);">
                 <a href="${APP_URL}" target="_blank" style="text-decoration: none; display: block;">
                   <img 
                     src="${BRAND_HERO_IMAGE}" 
-                    alt="Style Corner Atelier" 
+                    alt="Style Corner" 
                     width="580" 
-                    style="width: 100%; max-width: 580px; height: auto; max-height: 280px; object-fit: cover; display: block; border: 0;"
+                    style="width: 100%; max-width: 580px; height: auto; max-height: 240px; object-fit: cover; display: block; border: 0;"
                   />
                 </a>
               </td>
             </tr>
           </table>
-        </td>
-      </tr>
 
-      <!-- HEADER LOGO LABEL -->
-      <tr>
-        <td style="padding: 6px 20px 18px; text-align: center;">
-          <table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0">
-            <tr>
-              <td style="text-align: center;">
-                <div style="display: inline-block; padding: 6px 14px; background: rgba(212, 175, 55, 0.08); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 50px; margin-bottom: 8px;">
-                  <span style="font-size: 11px; font-weight: 800; color: #f5b942; letter-spacing: 2px; text-transform: uppercase;">
-                    STYLE CORNER
+          <!-- MAIN CONTENT BODY -->
+          <div style="padding: 34px 28px;">
+            
+            <!-- Badge -->
+            ${badge ? `
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 16px;">
+              <tr>
+                <td style="background: rgba(245, 185, 66, 0.12); border: 1px solid rgba(245, 185, 66, 0.35); border-radius: 50px; padding: 4px 14px;">
+                  <span style="font-size: 11px; font-weight: 800; color: #f5b942; letter-spacing: 1px; text-transform: uppercase; display: inline-block;">
+                    ${badge}
                   </span>
-                </div>
-                <div style="font-size: 10px; color: #94a3b8; letter-spacing: 3px; text-transform: uppercase; font-weight: 600;">
-                  HAIR & GROOMING ATELIER
-                </div>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
+                </td>
+              </tr>
+            </table>` : ''}
 
-      <!-- MAIN CONTENT CARD -->
-      <tr>
-        <td style="background-color: #151822; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 36px 32px; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.65);">
-          
-          <!-- Badge -->
-          ${badge ? `
-          <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 16px;">
-            <tr>
-              <td style="background: rgba(245, 185, 66, 0.12); border: 1px solid rgba(245, 185, 66, 0.35); border-radius: 50px; padding: 4px 14px;">
-                <span style="font-size: 11px; font-weight: 800; color: #f5b942; letter-spacing: 1px; text-transform: uppercase; display: inline-block;">
-                  ${badge}
-                </span>
-              </td>
-            </tr>
-          </table>` : ''}
+            <!-- Headline -->
+            <h1 style="margin: 0 0 8px 0; font-size: 24px; line-height: 1.3; font-weight: 800; color: #ffffff; letter-spacing: -0.02em;">
+              ${title}
+            </h1>
 
-          <!-- Headline -->
-          <h1 style="margin: 0 0 8px 0; font-size: 24px; line-height: 1.3; font-weight: 800; color: #ffffff; letter-spacing: -0.02em;">
-            ${title}
-          </h1>
+            <!-- Subtitle / Meta -->
+            ${subtitle ? `
+            <p style="margin: 0 0 24px 0; font-size: 14px; line-height: 1.5; color: #94a3b8;">
+              ${subtitle}
+            </p>` : '<div style="height: 16px;"></div>'}
 
-          <!-- Subtitle / Meta -->
-          ${subtitle ? `
-          <p style="margin: 0 0 24px 0; font-size: 14px; line-height: 1.5; color: #94a3b8;">
-            ${subtitle}
-          </p>` : '<div style="height: 16px;"></div>'}
+            <!-- Dynamic Content Body -->
+            <div style="font-size: 15px; line-height: 1.6; color: #cbd5e1;">
+              ${contentHtml}
+            </div>
 
-          <!-- Dynamic Content Body -->
-          <div style="font-size: 15px; line-height: 1.6; color: #cbd5e1;">
-            ${contentHtml}
+            <!-- Call to Action Button -->
+            ${ctaText && ctaUrl ? `
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 32px; width: 100%;">
+              <tr>
+                <td align="center">
+                  <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                    <tr>
+                      <td style="border-radius: 12px; background: linear-gradient(135deg, #f5b942 0%, #c99326 100%); text-align: center;">
+                        <a href="${ctaUrl}" target="_blank" style="background: linear-gradient(135deg, #f5b942 0%, #c99326 100%); border: 1px solid #f5b942; font-size: 14px; font-weight: 800; font-family: sans-serif; text-decoration: none; padding: 14px 32px; color: #0c0e14; border-radius: 12px; display: inline-block; letter-spacing: 0.02em;">
+                          ${ctaText} &rarr;
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>` : ''}
+
           </div>
-
-          <!-- Call to Action Button -->
-          ${ctaText && ctaUrl ? `
-          <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 32px; width: 100%;">
-            <tr>
-              <td align="center">
-                <table role="presentation" cellspacing="0" cellpadding="0" border="0">
-                  <tr>
-                    <td style="border-radius: 12px; background: linear-gradient(135deg, #f5b942 0%, #c99326 100%); text-align: center;">
-                      <a href="${ctaUrl}" target="_blank" style="background: linear-gradient(135deg, #f5b942 0%, #c99326 100%); border: 1px solid #f5b942; font-size: 14px; font-weight: 800; font-family: sans-serif; text-decoration: none; padding: 14px 32px; color: #0c0e14; border-radius: 12px; display: inline-block; letter-spacing: 0.02em;">
-                        ${ctaText} &rarr;
-                      </a>
-                    </td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-          </table>` : ''}
 
         </td>
       </tr>

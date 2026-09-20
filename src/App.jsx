@@ -31,6 +31,7 @@ const routeLoaders = {
   '/payment': () => import('./pages/Payment'),
   '/policies': () => import('./pages/Policies'),
   '/profile': () => import('./pages/Profile'),
+  '/ai-matcher': () => import('./pages/AiStylistFinder'),
   '/ai-stylist-finder': () => import('./pages/AiStylistFinder'),
   '/wallet': () => import('./pages/Wallet'),
   '/notifications': () => import('./pages/Notifications'),
@@ -218,6 +219,7 @@ export const App = () => {
               <Route path="/cart" element={<Cart />} />
               <Route path="/product/:id" element={<ProductDetail />} />
               <Route path="/booking" element={<Booking />} />
+              <Route path="/ai-matcher" element={<AiStylistFinder />} />
               <Route path="/ai-stylist-finder" element={<AiStylistFinder />} />
               <Route path="/notifications" element={<Notifications />} />
               <Route path="/about" element={<About />} />
