@@ -2055,6 +2055,7 @@ export const ExpertDashboard = () => {
               </label>
               <input
                 type="number"
+                inputMode="numeric"
                 min="500"
                 placeholder="e.g. 5000"
                 value={topupAmount}
@@ -2064,9 +2065,11 @@ export const ExpertDashboard = () => {
                   border: '1px solid rgba(255, 255, 255, 0.1)',
                   borderRadius: '12px',
                   padding: '0.75rem',
+                  minHeight: '48px',
+                  boxSizing: 'border-box',
                   color: '#ffffff',
                   fontFamily: 'Outfit',
-                  fontSize: '1rem',
+                  fontSize: '16px',
                   fontWeight: 700,
                   outline: 'none',
                 }}
@@ -2086,10 +2089,13 @@ export const ExpertDashboard = () => {
                     color: '#f5b942',
                     borderRadius: '8px',
                     padding: '0.4rem 0',
-                    fontSize: '0.76rem',
+                    minHeight: '44px',
+                    fontSize: '0.78rem',
                     fontFamily: 'Outfit',
                     fontWeight: 700,
                     cursor: 'pointer',
+                    touchAction: 'manipulation',
+                    WebkitTapHighlightColor: 'transparent',
                   }}
                 >
                   ₦{quick.toLocaleString()}
@@ -2106,11 +2112,14 @@ export const ExpertDashboard = () => {
                   border: '1px solid rgba(255, 255, 255, 0.1)',
                   color: '#94a3b8',
                   borderRadius: '50px',
-                  height: '42px',
-                  fontSize: '0.82rem',
+                  height: '46px',
+                  minHeight: '46px',
+                  fontSize: '0.84rem',
                   fontWeight: 700,
                   fontFamily: 'Outfit',
                   cursor: 'pointer',
+                  touchAction: 'manipulation',
+                  WebkitTapHighlightColor: 'transparent',
                 }}
               >
                 Cancel
@@ -2125,11 +2134,14 @@ export const ExpertDashboard = () => {
                   border: 'none',
                   color: '#0c0e14',
                   borderRadius: '50px',
-                  height: '42px',
-                  fontSize: '0.82rem',
+                  height: '46px',
+                  minHeight: '46px',
+                  fontSize: '0.84rem',
                   fontWeight: 800,
                   fontFamily: 'Outfit',
                   cursor: topupSubmitting ? 'not-allowed' : 'pointer',
+                  touchAction: 'manipulation',
+                  WebkitTapHighlightColor: 'transparent',
                 }}
               >
                 {topupSubmitting ? 'Processing…' : 'Proceed to Paystack'}
@@ -2393,17 +2405,19 @@ export const ExpertDashboard = () => {
                   background: '#10131b',
                   border: '1px solid rgba(255, 255, 255, 0.1)',
                   borderRadius: '12px',
-                  padding: '0.7rem 0.85rem',
+                  padding: '0.75rem 0.85rem',
+                  minHeight: '46px',
+                  boxSizing: 'border-box',
                   color: '#ffffff',
                   fontFamily: 'Outfit',
-                  fontSize: '0.88rem',
+                  fontSize: '16px',
                   outline: 'none',
                 }}
                 required
               />
 
               {/* Quick Suggestion Chips */}
-              <div style={{ display: 'flex', gap: '0.35rem', overflowX: 'auto', marginTop: '0.4rem', scrollbarWidth: 'none' }}>
+              <div style={{ display: 'flex', gap: '0.45rem', overflowX: 'auto', marginTop: '0.5rem', scrollbarWidth: 'none' }}>
                 {['Silk Press & Steam', 'Skin Fade + Beard', 'Knotless Braids', 'Russian Almond Gel', 'Soft Glam Makeup'].map((chip) => (
                   <button
                     key={chip}
@@ -2413,11 +2427,14 @@ export const ExpertDashboard = () => {
                       background: 'rgba(255,255,255,0.05)',
                       border: '1px solid rgba(255,255,255,0.08)',
                       color: '#94a3b8',
-                      fontSize: '0.66rem',
-                      padding: '0.18rem 0.5rem',
+                      fontSize: '0.72rem',
+                      padding: '0.35rem 0.75rem',
+                      minHeight: '34px',
                       borderRadius: '50px',
                       cursor: 'pointer',
                       whiteSpace: 'nowrap',
+                      touchAction: 'manipulation',
+                      WebkitTapHighlightColor: 'transparent',
                     }}
                   >
                     {chip}
@@ -2439,10 +2456,12 @@ export const ExpertDashboard = () => {
                   background: '#10131b',
                   border: '1px solid rgba(255, 255, 255, 0.1)',
                   borderRadius: '12px',
-                  padding: '0.7rem 0.85rem',
+                  padding: '0.75rem 0.85rem',
+                  minHeight: '46px',
+                  boxSizing: 'border-box',
                   color: '#ffffff',
                   fontFamily: 'Outfit',
-                  fontSize: '0.88rem',
+                  fontSize: '16px',
                   outline: 'none',
                 }}
               >
@@ -2473,10 +2492,12 @@ export const ExpertDashboard = () => {
                     background: '#10131b',
                     border: '1px solid rgba(255, 255, 255, 0.1)',
                     borderRadius: '12px',
-                    padding: '0.7rem 0.85rem',
+                    padding: '0.75rem 0.85rem',
+                    minHeight: '46px',
+                    boxSizing: 'border-box',
                     color: '#ffffff',
                     fontFamily: 'Outfit',
-                    fontSize: '0.88rem',
+                    fontSize: '16px',
                     outline: 'none',
                   }}
                 />
@@ -2496,10 +2517,12 @@ export const ExpertDashboard = () => {
                     background: '#10131b',
                     border: '1px solid rgba(255, 255, 255, 0.1)',
                     borderRadius: '12px',
-                    padding: '0.7rem 0.85rem',
+                    padding: '0.75rem 0.85rem',
+                    minHeight: '46px',
+                    boxSizing: 'border-box',
                     color: '#ffffff',
                     fontFamily: 'Outfit',
-                    fontSize: '0.88rem',
+                    fontSize: '16px',
                     outline: 'none',
                   }}
                 />
@@ -2521,10 +2544,11 @@ export const ExpertDashboard = () => {
                   background: '#10131b',
                   border: '1px solid rgba(255, 255, 255, 0.1)',
                   borderRadius: '12px',
-                  padding: '0.7rem 0.85rem',
+                  padding: '0.75rem 0.85rem',
                   color: '#ffffff',
                   fontFamily: 'Outfit',
-                  fontSize: '0.82rem',
+                  fontSize: '16px',
+                  boxSizing: 'border-box',
                   outline: 'none',
                   resize: 'none',
                   lineHeight: 1.4,
@@ -2542,6 +2566,7 @@ export const ExpertDashboard = () => {
                 border: 'none',
                 borderRadius: '14px',
                 padding: '0.85rem',
+                minHeight: '48px',
                 fontFamily: 'Outfit',
                 fontSize: '0.94rem',
                 fontWeight: 800,
@@ -2552,6 +2577,8 @@ export const ExpertDashboard = () => {
                 gap: '0.45rem',
                 boxShadow: '0 4px 15px rgba(245, 185, 66, 0.3)',
                 marginTop: '0.5rem',
+                touchAction: 'manipulation',
+                WebkitTapHighlightColor: 'transparent',
               }}
             >
               {uploadingPortfolio ? (

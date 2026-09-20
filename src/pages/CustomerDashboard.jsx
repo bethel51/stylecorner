@@ -317,20 +317,23 @@ export const CustomerDashboard = () => {
               background: 'var(--color-surface)',
               border: '1px solid var(--color-border)',
               borderRadius: '20px',
-              padding: '0.35rem 0.65rem',
-              display: 'flex',
+              padding: '0.45rem 0.85rem',
+              minHeight: '44px',
+              display: 'inline-flex',
               alignItems: 'center',
-              gap: '0.35rem',
+              gap: '0.4rem',
               color: 'var(--color-text-secondary)',
-              fontSize: '0.72rem',
+              fontSize: '0.75rem',
               fontFamily: 'var(--font-heading)',
               fontWeight: 600,
               cursor: 'pointer',
               flexShrink: 0,
               boxShadow: 'var(--shadow-sm)',
+              touchAction: 'manipulation',
+              WebkitTapHighlightColor: 'transparent',
             }}
           >
-            {isDark ? <Sun size={13} color="var(--color-accent)" /> : <Moon size={13} color="var(--color-accent)" />}
+            {isDark ? <Sun size={14} color="var(--color-accent)" /> : <Moon size={14} color="var(--color-accent)" />}
             <span>{isDark ? 'Light' : 'Dark'}</span>
           </button>
         </div>
@@ -428,11 +431,17 @@ export const CustomerDashboard = () => {
                           border: '1px solid var(--color-border)',
                           color: 'var(--color-text-primary)',
                           borderRadius: '12px',
-                          padding: '0.4rem 0.85rem',
+                          padding: '0.5rem 0.95rem',
+                          minHeight: '44px',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
                           fontFamily: 'var(--font-heading)',
-                          fontSize: '0.76rem',
+                          fontSize: '0.78rem',
                           fontWeight: 700,
                           cursor: 'pointer',
+                          touchAction: 'manipulation',
+                          WebkitTapHighlightColor: 'transparent',
                         }}
                       >
                         Session Details
@@ -448,17 +457,21 @@ export const CustomerDashboard = () => {
                             border: '1px solid rgba(34, 197, 94, 0.4)',
                             color: '#4ade80',
                             borderRadius: '12px',
-                            padding: '0.4rem 0.85rem',
+                            padding: '0.5rem 0.95rem',
+                            minHeight: '44px',
                             fontFamily: 'var(--font-heading)',
-                            fontSize: '0.76rem',
+                            fontSize: '0.78rem',
                             fontWeight: 800,
                             textDecoration: 'none',
-                            display: 'flex',
+                            display: 'inline-flex',
                             alignItems: 'center',
+                            justifyContent: 'center',
                             gap: '0.35rem',
+                            touchAction: 'manipulation',
+                            WebkitTapHighlightColor: 'transparent',
                           }}
                         >
-                          <MessageSquare size={13} /> Chat Specialist
+                          <MessageSquare size={14} /> Chat Specialist
                         </a>
                       )}
                     </div>
@@ -518,11 +531,17 @@ export const CustomerDashboard = () => {
                     color: '#0c0e14',
                     border: 'none',
                     borderRadius: '50px',
-                    padding: '0.45rem 1rem',
+                    padding: '0.5rem 1.15rem',
+                    minHeight: '44px',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                     fontFamily: 'var(--font-heading)',
-                    fontSize: '0.76rem',
+                    fontSize: '0.8rem',
                     fontWeight: 700,
                     cursor: 'pointer',
+                    touchAction: 'manipulation',
+                    WebkitTapHighlightColor: 'transparent',
                   }}
                 >
                   Book a Service
@@ -551,7 +570,15 @@ export const CustomerDashboard = () => {
 
         {/* ── Beauty Store Promo Banner ── */}
         <div
+          role="button"
+          tabIndex={0}
           onClick={() => navigate('/store')}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              navigate('/store');
+            }
+          }}
           style={{
             background: 'var(--color-surface)',
             borderRadius: '20px',
@@ -566,6 +593,8 @@ export const CustomerDashboard = () => {
             position: 'relative',
             overflow: 'hidden',
             boxShadow: 'var(--shadow-sm)',
+            touchAction: 'manipulation',
+            WebkitTapHighlightColor: 'transparent',
           }}
         >
           <div style={{ position: 'absolute', top: '-20px', right: '-20px', width: '100px', height: '100px', borderRadius: '50%', background: 'var(--color-accent-soft)', pointerEvents: 'none' }} />
@@ -604,7 +633,15 @@ export const CustomerDashboard = () => {
               return (
                 <div
                   key={stat.label}
+                  role="button"
+                  tabIndex={0}
                   onClick={stat.action}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      stat.action();
+                    }
+                  }}
                   style={{
                     background: 'var(--color-surface)',
                     border: '1px solid var(--color-border)',
@@ -612,8 +649,11 @@ export const CustomerDashboard = () => {
                     padding: '0.9rem 0.5rem',
                     textAlign: 'center',
                     cursor: 'pointer',
+                    minHeight: '88px',
                     boxShadow: 'var(--shadow-sm)',
                     transition: 'transform 0.15s ease',
+                    touchAction: 'manipulation',
+                    WebkitTapHighlightColor: 'transparent',
                   }}
                 >
                   <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '50%', background: 'var(--color-card-surface)', color: stat.color, marginBottom: '0.35rem' }}>
@@ -657,8 +697,14 @@ export const CustomerDashboard = () => {
                 color: 'var(--color-accent)',
                 fontFamily: 'var(--font-heading)',
                 fontWeight: 700,
-                fontSize: '0.82rem',
-                cursor: 'pointer'
+                fontSize: '0.84rem',
+                cursor: 'pointer',
+                minHeight: '44px',
+                padding: '0.4rem 0.6rem',
+                display: 'inline-flex',
+                alignItems: 'center',
+                touchAction: 'manipulation',
+                WebkitTapHighlightColor: 'transparent',
               }}
             >
               View all &gt;
@@ -775,14 +821,24 @@ export const CustomerDashboard = () => {
             ].map((cat) => (
               <div
                 key={cat.label}
+                role="button"
+                tabIndex={0}
                 onClick={() => navigate(`/booking?service=${encodeURIComponent(cat.service)}`)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    navigate(`/booking?service=${encodeURIComponent(cat.service)}`);
+                  }
+                }}
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
                   gap: '0.45rem',
                   cursor: 'pointer',
-                  flexShrink: 0
+                  flexShrink: 0,
+                  touchAction: 'manipulation',
+                  WebkitTapHighlightColor: 'transparent',
                 }}
               >
                 <div
@@ -888,6 +944,8 @@ export const CustomerDashboard = () => {
                   gap: '0.45rem',
                   transition: 'transform 0.15s ease, box-shadow 0.15s ease',
                   minHeight: '94px',
+                  touchAction: 'manipulation',
+                  WebkitTapHighlightColor: 'transparent',
                 }}
                 onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = 'var(--shadow-sm)'; }}
                 onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = ''; }}
@@ -930,7 +988,7 @@ export const CustomerDashboard = () => {
             <button
               onClick={logout}
               className="app-btn app-btn-outline"
-              style={{ justifyContent: 'center', gap: '0.4rem', minHeight: '46px', borderRadius: '14px', fontSize: '0.85rem' }}
+              style={{ justifyContent: 'center', gap: '0.4rem', minHeight: '46px', borderRadius: '14px', fontSize: '0.85rem', touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' }}
             >
               <LogOut size={15} /> Sign Out of Account
             </button>
@@ -941,6 +999,7 @@ export const CustomerDashboard = () => {
                 background: 'rgba(239,68,68,0.07)', color: '#ef4444',
                 border: '1px solid rgba(239,68,68,0.22)',
                 justifyContent: 'center', gap: '0.4rem', minHeight: '46px', borderRadius: '14px', fontSize: '0.85rem',
+                touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent',
               }}
             >
               <Trash2 size={15} /> Delete My Account
@@ -967,9 +1026,11 @@ export const CustomerDashboard = () => {
               style={{
                 flex: '1 1 auto', minWidth: '120px', background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.35)',
                 color: '#b5952f', padding: '0.6rem 0.5rem', borderRadius: '12px',
-                fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.75rem',
-                cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem',
-                minHeight: '42px',
+                fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.78rem',
+                cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
+                minHeight: '44px',
+                touchAction: 'manipulation',
+                WebkitTapHighlightColor: 'transparent',
               }}
             >
               <Download size={14} /> Export CSV
@@ -979,9 +1040,11 @@ export const CustomerDashboard = () => {
               style={{
                 flex: '1 1 auto', minWidth: '120px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)',
                 color: '#ef4444', padding: '0.6rem 0.5rem', borderRadius: '12px',
-                fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.75rem',
-                cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem',
-                minHeight: '42px',
+                fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.78rem',
+                cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
+                minHeight: '44px',
+                touchAction: 'manipulation',
+                WebkitTapHighlightColor: 'transparent',
               }}
             >
               <Trash2 size={14} /> Clear History
@@ -1003,12 +1066,15 @@ export const CustomerDashboard = () => {
                 onClick={() => setActiveTab(tab.id)}
                 style={{
                   flex: 1, padding: '0.6rem', borderRadius: '11px', border: 'none',
-                  fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.82rem',
+                  fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.84rem',
                   cursor: 'pointer', transition: 'all 0.2s ease',
                   background: activeTab === tab.id ? '#151822' : 'transparent',
                   color: activeTab === tab.id ? '#ffffff' : '#64748b',
                   boxShadow: activeTab === tab.id ? '0 2px 10px rgba(0,0,0,0.3)' : 'none',
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
+                  minHeight: '44px',
+                  touchAction: 'manipulation',
+                  WebkitTapHighlightColor: 'transparent',
                 }}
               >
                 {tab.icon}
@@ -1039,7 +1105,7 @@ export const CustomerDashboard = () => {
                     Book your first visit — hair cuts, braids, or nails.
                   </p>
                   <button onClick={() => { setShowHistorySheet(false); navigate('/booking'); }} className="app-btn app-btn-primary"
-                    style={{ maxWidth: '160px', margin: '0 auto', minHeight: '40px', fontSize: '0.82rem' }}>
+                    style={{ maxWidth: '160px', margin: '0 auto', minHeight: '44px', fontSize: '0.84rem', touchAction: 'manipulation' }}>
                     Book Now
                   </button>
                 </div>
@@ -1090,7 +1156,7 @@ export const CustomerDashboard = () => {
                       )}
 
                       {b.status !== 'rejected' && (
-                        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.4rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', flexWrap: 'wrap' }}>
                           {b.status === 'completed' && (
                             <button
                               onClick={() => {
@@ -1102,19 +1168,20 @@ export const CustomerDashboard = () => {
                                 background: 'rgba(212,175,55,0.15)',
                                 border: '1px solid rgba(212,175,55,0.4)',
                                 color: '#b5952f',
-                                minHeight: '34px', width: 'auto', fontSize: '0.75rem', padding: '0.35rem 0.8rem', borderRadius: '10px',
-                                fontFamily: 'Outfit', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem'
+                                minHeight: '44px', width: 'auto', fontSize: '0.78rem', padding: '0.45rem 0.95rem', borderRadius: '12px',
+                                fontFamily: 'Outfit', fontWeight: 800, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
+                                touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent',
                               }}
                             >
-                              <Star size={11} fill="#b5952f" /> Rate Specialist
+                              <Star size={13} fill="#b5952f" /> Rate Specialist
                             </button>
                           )}
                           <button
                             onClick={() => { setShowHistorySheet(false); navigate(`/booking?stylist=${encodeURIComponent(b.stylist)}&service=${encodeURIComponent(b.service)}`); }}
                             className="app-btn app-btn-outline"
-                            style={{ minHeight: '34px', width: 'auto', fontSize: '0.75rem', padding: '0.35rem 0.8rem', borderRadius: '10px' }}
+                            style={{ minHeight: '44px', width: 'auto', fontSize: '0.78rem', padding: '0.45rem 0.95rem', borderRadius: '12px', touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' }}
                           >
-                            <RefreshCw size={11} /> Rebook
+                            <RefreshCw size={13} /> Rebook
                           </button>
                         </div>
                       )}
@@ -1140,7 +1207,7 @@ export const CustomerDashboard = () => {
                     Shop hair products, beard kits, and more.
                   </p>
                   <button onClick={() => { setShowHistorySheet(false); navigate('/store'); }} className="app-btn app-btn-accent"
-                    style={{ maxWidth: '160px', margin: '0 auto', minHeight: '40px', fontSize: '0.82rem' }}>
+                    style={{ maxWidth: '160px', margin: '0 auto', minHeight: '44px', fontSize: '0.84rem', touchAction: 'manipulation' }}>
                     Browse Store
                   </button>
                 </div>
@@ -1172,11 +1239,11 @@ export const CustomerDashboard = () => {
                           </div>
                         </div>
                       </div>
-                      <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '0.55rem', display: 'flex', gap: '0.5rem' }}>
+                      <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '0.55rem', display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                         <button
                           onClick={() => { setShowHistorySheet(false); setSelectedOrderForTracking(o); }}
                           className="app-btn app-btn-accent"
-                          style={{ flex: 1, minHeight: '38px', fontSize: '0.78rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem' }}
+                          style={{ flex: 1, minHeight: '44px', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' }}
                         >
                           <Truck size={14} /> Track Delivery
                         </button>
@@ -1187,15 +1254,18 @@ export const CustomerDashboard = () => {
                             border: '1px solid rgba(239,68,68,0.25)',
                             color: '#ef4444',
                             borderRadius: '10px',
-                            minHeight: '38px',
+                            minHeight: '44px',
+                            minWidth: '44px',
                             padding: '0 0.75rem',
                             cursor: 'pointer',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
                             transition: 'all 0.2s ease',
+                            touchAction: 'manipulation',
+                            WebkitTapHighlightColor: 'transparent',
                           }}
                           title="Delete order"
                         >
-                          <Trash2 size={15} />
+                          <Trash2 size={16} />
                         </button>
                       </div>
                     </div>
@@ -1317,15 +1387,15 @@ export const CustomerDashboard = () => {
 
           <div className="app-input-group">
             <label className="app-label">First Name *</label>
-            <input type="text" value={profileForm.firstname} onChange={(e) => setProfileForm({ ...profileForm, firstname: e.target.value })} className="app-input" required />
+            <input type="text" value={profileForm.firstname} onChange={(e) => setProfileForm({ ...profileForm, firstname: e.target.value })} className="app-input" style={{ fontSize: '16px' }} required />
           </div>
           <div className="app-input-group">
             <label className="app-label">Last Name</label>
-            <input type="text" value={profileForm.lastname} onChange={(e) => setProfileForm({ ...profileForm, lastname: e.target.value })} className="app-input" />
+            <input type="text" value={profileForm.lastname} onChange={(e) => setProfileForm({ ...profileForm, lastname: e.target.value })} className="app-input" style={{ fontSize: '16px' }} />
           </div>
           <div className="app-input-group">
             <label className="app-label">Phone Number</label>
-            <input type="tel" value={profileForm.phone} onChange={(e) => setProfileForm({ ...profileForm, phone: e.target.value })} className="app-input" />
+            <input type="tel" value={profileForm.phone} onChange={(e) => setProfileForm({ ...profileForm, phone: e.target.value })} className="app-input" style={{ fontSize: '16px' }} />
           </div>
 
           {/* Delivery Location Section */}
@@ -1336,7 +1406,7 @@ export const CustomerDashboard = () => {
             <LocationSelector location={location} onChange={setLocation} />
           </div>
 
-          <button type="submit" disabled={savingProfile} className="app-btn app-btn-primary" style={{ marginTop: '0.5rem' }}>
+          <button type="submit" disabled={savingProfile} className="app-btn app-btn-primary" style={{ marginTop: '0.5rem', minHeight: '48px', touchAction: 'manipulation' }}>
             {savingProfile ? 'Saving Profile & Location...' : 'Save Profile & Location'}
           </button>
         </form>
@@ -1355,8 +1425,8 @@ export const CustomerDashboard = () => {
             This will permanently erase your account and all data. This cannot be undone.
           </p>
           <div style={{ display: 'flex', gap: '0.65rem' }}>
-            <button onClick={() => setShowDeleteModal(false)} className="app-btn app-btn-outline" style={{ flex: 1 }}>Cancel</button>
-            <button onClick={handleDeleteAccount} disabled={deletingAccount} className="app-btn" style={{ flex: 1, background: '#ef4444', color: '#fff', border: 'none' }}>
+            <button onClick={() => setShowDeleteModal(false)} className="app-btn app-btn-outline" style={{ flex: 1, minHeight: '46px', touchAction: 'manipulation' }}>Cancel</button>
+            <button onClick={handleDeleteAccount} disabled={deletingAccount} className="app-btn" style={{ flex: 1, background: '#ef4444', color: '#fff', border: 'none', minHeight: '46px', touchAction: 'manipulation' }}>
               {deletingAccount ? 'Deleting...' : 'Delete Permanently'}
             </button>
           </div>
@@ -1421,7 +1491,10 @@ export const CustomerDashboard = () => {
                   onClick={() => setReviewRating(star)}
                   style={{
                     background: 'none', border: 'none', cursor: 'pointer', padding: '0.2rem',
-                    transition: 'transform 0.15s ease'
+                    minWidth: '44px', minHeight: '44px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                    transition: 'transform 0.15s ease',
+                    touchAction: 'manipulation',
+                    WebkitTapHighlightColor: 'transparent',
                   }}
                   onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.2)'}
                   onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
@@ -1443,7 +1516,7 @@ export const CustomerDashboard = () => {
                 value={reviewComment}
                 onChange={(e) => setReviewComment(e.target.value)}
                 className="app-textarea"
-                style={{ width: '100%', padding: '0.65rem', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.12)', fontFamily: 'Outfit', fontSize: '0.85rem' }}
+                style={{ width: '100%', padding: '0.75rem', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.12)', fontFamily: 'Outfit', fontSize: '16px', boxSizing: 'border-box' }}
               />
             </div>
 
@@ -1451,7 +1524,7 @@ export const CustomerDashboard = () => {
               type="submit"
               disabled={submittingReview}
               className="app-btn app-btn-accent"
-              style={{ width: '100%', minHeight: '44px', borderRadius: '14px', fontSize: '0.88rem', fontWeight: 800 }}
+              style={{ width: '100%', minHeight: '48px', borderRadius: '14px', fontSize: '0.9rem', fontWeight: 800, touchAction: 'manipulation' }}
             >
               {submittingReview ? 'Submitting Review...' : `Submit ${reviewRating}-Star Review`}
             </button>
