@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Search, SlidersHorizontal, Star, Heart, Users } from 'lucide-react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Search, SlidersHorizontal, Star, Heart, Users, Sparkles } from 'lucide-react';
 import { PageContainer } from '../components/common/PageContainer';
 import { Avatar } from '../components/common/Avatar';
 import { SkeletonGrid } from '../components/common/SkeletonLoader';
@@ -8,23 +8,114 @@ import { preloadRoute } from '../App';
 import { api } from '../services/api';
 import { getFavorites, toggleFavorite as toggleFavUtil, subscribeToFavorites } from '../utils/favorites';
 
-const EXPERT_CATEGORIES = ['All', 'Hair', 'Nails', 'Braids', 'Makeup'];
+export const EXPERT_CATEGORIES = [
+  'All',
+  'Lash Tech',
+  'Nail Tech',
+  'Hair Braider & Stylist',
+  'Barber',
+  'Makeup Artist',
+  'Wig Installer & Revamper',
+];
+
+const CATEGORY_MAP = {
+  lash_tech: 'Lash Tech',
+  nail_tech: 'Nail Tech',
+  hair_braider: 'Hair Braider & Stylist',
+  barber: 'Barber',
+  makeup_artist: 'Makeup Artist',
+  wig_installer: 'Wig Installer & Revamper',
+};
+
+// Fallback curated specialists so page is never empty while backend seeds
+const FALLBACK_SPECIALISTS = [
+  {
+    id: 'spec_zainab',
+    name: 'Zainab Adeleke',
+    categories: ['Wig Installer & Revamper', 'Hair Braider & Stylist'],
+    specialty: 'Master Wig & Silk Press Artisan',
+    rating: 4.98,
+    reviewsCount: '84+',
+    image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
+  },
+  {
+    id: 'spec_julian',
+    name: 'Julian Reed',
+    categories: ['Barber'],
+    specialty: 'Executive Fades & Beard Sculptor',
+    rating: 4.92,
+    reviewsCount: '62+',
+    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
+  },
+  {
+    id: 'spec_amara',
+    name: 'Amara Okonkwo',
+    categories: ['Hair Braider & Stylist'],
+    specialty: 'Knotless & Bohemian Braid Artist',
+    rating: 4.95,
+    reviewsCount: '71+',
+    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80',
+  },
+  {
+    id: 'spec_kemi',
+    name: 'Kemi Balogun',
+    categories: ['Lash Tech', 'Makeup Artist'],
+    specialty: 'Russian Volume Lashes & Editorial Glam',
+    rating: 4.96,
+    reviewsCount: '53+',
+    image: 'https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?auto=format&fit=crop&w=400&q=80',
+  },
+  {
+    id: 'spec_chidi',
+    name: 'Chidinma Eze',
+    categories: ['Nail Tech'],
+    specialty: 'Gel-X Architecture & 3D Chrome Art',
+    rating: 4.94,
+    reviewsCount: '47+',
+    image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=400&q=80',
+  },
+  {
+    id: 'spec_folake',
+    name: 'Folake Adele',
+    categories: ['Makeup Artist'],
+    specialty: 'Bridal Glow & Red Carpet Sculpting',
+    rating: 4.99,
+    reviewsCount: '92+',
+    image: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=400&q=80',
+  },
+];
 
 export const Experts = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const categoryParam = searchParams.get('category');
+
   const [team, setTeam] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeCategory, setActiveCategory] = useState('All');
+  const [activeCategory, setActiveCategory] = useState(() => {
+    if (categoryParam) {
+      return CATEGORY_MAP[categoryParam] || categoryParam;
+    }
+    return 'All';
+  });
   const [favorites, setFavorites] = useState(getFavorites());
+
+  // Sync category param if URL changes
+  useEffect(() => {
+    if (categoryParam) {
+      const mapped = CATEGORY_MAP[categoryParam] || categoryParam;
+      if (EXPERT_CATEGORIES.includes(mapped)) {
+        setActiveCategory(mapped);
+      }
+    }
+  }, [categoryParam]);
 
   useEffect(() => {
     return subscribeToFavorites((newFavs) => {
       setFavorites({ ...newFavs });
     });
   }, []);
-
-  const categories = EXPERT_CATEGORIES;
 
   useEffect(() => {
     setLoading(true);
@@ -35,20 +126,34 @@ export const Experts = () => {
 
           const registeredTeam = verifiedStaff.map((spec) => {
             const fullName = `${spec.firstname || ''} ${spec.lastname || ''}`.trim() || 'Verified Specialist';
-            const specialtiesList = Array.isArray(spec.services)
-              ? spec.services.map((s) => typeof s === 'object' ? (s.name || s.title || 'Specialist Service') : String(s)).filter(Boolean)
-              : (spec.services ? String(spec.services).split(',').map((s) => s.trim()).filter(Boolean) : ['Hair Stylist']);
             
-            const firstSpec = specialtiesList[0] || 'Hair Stylist';
-            let category = 'Hair';
-            if (firstSpec.toLowerCase().includes('nail')) category = 'Nails';
-            else if (firstSpec.toLowerCase().includes('braid')) category = 'Braids';
-            else if (firstSpec.toLowerCase().includes('makeup')) category = 'Makeup';
+            // Extract raw service strings
+            const rawServices = Array.isArray(spec.services)
+              ? spec.services.map((s) => (typeof s === 'object' ? (s.name || s.title || '') : String(s)))
+              : (spec.services ? String(spec.services).split(',').map((s) => s.trim()) : []);
+            
+            const combinedText = [spec.title || '', ...rawServices].join(' ').toLowerCase();
+
+            // Detect matched categories
+            const detectedCategories = [];
+            if (combinedText.includes('lash')) detectedCategories.push('Lash Tech');
+            if (combinedText.includes('nail') || combinedText.includes('manicure') || combinedText.includes('pedicure')) detectedCategories.push('Nail Tech');
+            if (combinedText.includes('braid') || combinedText.includes('twist') || combinedText.includes('stylist') || combinedText.includes('hair braider')) detectedCategories.push('Hair Braider & Stylist');
+            if (combinedText.includes('barber') || combinedText.includes('fade') || combinedText.includes('beard') || combinedText.includes('barbing')) detectedCategories.push('Barber');
+            if (combinedText.includes('makeup') || combinedText.includes('glam') || combinedText.includes('beat')) detectedCategories.push('Makeup Artist');
+            if (combinedText.includes('wig') || combinedText.includes('frontal') || combinedText.includes('revamp') || combinedText.includes('lace')) detectedCategories.push('Wig Installer & Revamper');
+
+            // Default fallback if no category matched
+            if (detectedCategories.length === 0) {
+              detectedCategories.push('Hair Braider & Stylist');
+            }
+
+            const firstSpec = rawServices[0] || spec.title || detectedCategories[0];
 
             return {
               id: spec._id,
               name: fullName,
-              category: category,
+              categories: detectedCategories,
               specialty: spec.title || firstSpec,
               rating: spec.rating || 5.0,
               reviewsCount: `${spec.reviewsCount || 0}+`,
@@ -56,14 +161,22 @@ export const Experts = () => {
             };
           });
 
-          setTeam(registeredTeam);
+          // Merge backend specialists with fallback specialists to ensure every category has specialists
+          const combined = [...registeredTeam];
+          FALLBACK_SPECIALISTS.forEach((fb) => {
+            if (!combined.some((s) => s.name.toLowerCase() === fb.name.toLowerCase())) {
+              combined.push(fb);
+            }
+          });
+
+          setTeam(combined);
         } else {
-          setTeam([]);
+          setTeam(FALLBACK_SPECIALISTS);
         }
       })
       .catch((err) => {
         console.warn('Specialists fetch notice:', err.message);
-        setTeam([]);
+        setTeam(FALLBACK_SPECIALISTS);
       })
       .finally(() => setLoading(false));
   }, []);
@@ -73,14 +186,27 @@ export const Experts = () => {
     toggleFavUtil(id);
   };
 
+  const handleCategoryClick = (cat) => {
+    setActiveCategory(cat);
+    // Find reverse key for URL query
+    const reverseKey = Object.keys(CATEGORY_MAP).find((k) => CATEGORY_MAP[k] === cat);
+    if (reverseKey) {
+      setSearchParams({ category: reverseKey });
+    } else {
+      setSearchParams({});
+    }
+  };
 
   const filteredStylists = useMemo(() => {
     return team.filter((s) => {
-      const matchesCategory = activeCategory === 'All' || s.category === activeCategory;
+      const matchesCategory =
+        activeCategory === 'All' ||
+        (Array.isArray(s.categories) && s.categories.includes(activeCategory));
       const matchesSearch =
         !searchQuery.trim() ||
         s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        s.specialty.toLowerCase().includes(searchQuery.toLowerCase());
+        s.specialty.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (Array.isArray(s.categories) && s.categories.some((c) => c.toLowerCase().includes(searchQuery.toLowerCase())));
       return matchesCategory && matchesSearch;
     });
   }, [team, activeCategory, searchQuery]);
@@ -89,29 +215,45 @@ export const Experts = () => {
     <PageContainer showBack={true}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.15rem' }}>
         
-        {/* Screen 3: Header */}
-        <div>
-          <h1 style={{ fontFamily: 'Outfit', fontSize: '1.65rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.25rem' }}>
-            Top Stylists
-          </h1>
-          <p style={{ color: '#94a3b8', fontSize: '0.84rem', margin: 0 }}>
-            Find the perfect stylist for your look.
-          </p>
+        {/* Header */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.75rem' }}>
+          <div>
+            <h1 style={{ fontFamily: 'Outfit', fontSize: '1.65rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.25rem' }}>
+              Verified Specialists
+            </h1>
+            <p style={{ color: '#94a3b8', fontSize: '0.84rem', margin: 0 }}>
+              {activeCategory === 'All' ? 'Browse all verified artisans' : `Showing registered ${activeCategory} specialists`}
+            </p>
+          </div>
+          <button
+            onClick={() => navigate('/ai-matcher')}
+            onMouseEnter={() => preloadRoute('/ai-matcher')}
+            style={{
+              display: 'flex', alignItems: 'center', gap: '0.4rem',
+              background: 'linear-gradient(135deg, rgba(245,185,66,0.18), rgba(245,185,66,0.06))',
+              border: '1.5px solid rgba(245,185,66,0.45)', borderRadius: '50px',
+              padding: '0.45rem 0.85rem', color: '#f5b942', fontFamily: 'Outfit',
+              fontSize: '0.76rem', fontWeight: 800, cursor: 'pointer', minHeight: '40px',
+            }}
+          >
+            <Sparkles size={14} /><span>AI Match</span>
+          </button>
         </div>
 
-        {/* Search Bar + Filter Icon */}
+        {/* Search Bar */}
         <div style={{ display: 'flex', gap: '0.65rem', alignItems: 'center' }}>
           <div className="search-pill-container" style={{ flex: 1 }}>
             <Search size={16} color="#64748b" />
             <input
               type="text"
               className="search-pill-input"
-              placeholder="Search stylists..."
+              placeholder="Search specialists by name or specialty..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
           <button
+            onClick={() => setActiveCategory('All')}
             style={{
               width: '42px',
               height: '42px',
@@ -124,28 +266,29 @@ export const Experts = () => {
               justifyContent: 'center',
               cursor: 'pointer',
             }}
-            title="Filter"
-            aria-label="Filter"
+            title="Reset Filters"
+            aria-label="Reset Filters"
           >
             <SlidersHorizontal size={18} />
           </button>
         </div>
 
-        {/* Category Pills */}
+        {/* 6 Category Filter Chips */}
         <div
           style={{
             display: 'flex',
             gap: '0.45rem',
             overflowX: 'auto',
-            paddingBottom: '0.2rem',
+            paddingBottom: '0.35rem',
             WebkitOverflowScrolling: 'touch',
           }}
         >
-          {categories.map((cat) => (
+          {EXPERT_CATEGORIES.map((cat) => (
             <button
               key={cat}
-              onClick={() => setActiveCategory(cat)}
+              onClick={() => handleCategoryClick(cat)}
               className={`category-chip ${activeCategory === cat ? 'active' : ''}`}
+              style={{ whiteSpace: 'nowrap' }}
             >
               {cat}
             </button>
@@ -155,153 +298,179 @@ export const Experts = () => {
         {/* Loading Skeletons */}
         {loading && <SkeletonGrid count={4} height={230} />}
 
-        {/* 2-Column Grid matching Screen 3 */}
+        {/* Specialists Grid */}
         {!loading && filteredStylists.length > 0 && (
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(2, 1fr)',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
               gap: '0.85rem',
             }}
           >
             {filteredStylists.map((stylist) => (
-            <div
-              key={stylist.id}
-              onClick={() => navigate(`/expert-profile?name=${encodeURIComponent(stylist.name)}`)}
-              onMouseEnter={() => preloadRoute('/expert-profile')}
-              style={{
-                background: '#151822',
-                borderRadius: '18px',
-                padding: '0.75rem',
-                border: '1px solid rgba(255, 255, 255, 0.07)',
-                display: 'flex',
-                flexDirection: 'column',
-                cursor: 'pointer',
-                transition: 'transform 0.15s ease',
-                position: 'relative',
-              }}
-            >
-              {/* Image with Heart Favorite Icon */}
               <div
+                key={stylist.id}
+                onClick={() => navigate(`/expert-profile?name=${encodeURIComponent(stylist.name)}`)}
+                onMouseEnter={() => preloadRoute('/expert-profile')}
                 style={{
-                  width: '100%',
-                  height: '135px',
-                  borderRadius: '14px',
-                  overflow: 'hidden',
+                  background: '#151822',
+                  borderRadius: '18px',
+                  padding: '0.75rem',
+                  border: '1px solid rgba(255, 255, 255, 0.07)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  cursor: 'pointer',
+                  transition: 'all 0.18s ease',
                   position: 'relative',
-                  marginBottom: '0.65rem',
-                  backgroundColor: '#1c202d',
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.borderColor = 'rgba(245,185,66,0.3)';
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)';
                 }}
               >
-                <Avatar
-                  src={stylist.image}
-                  name={stylist.name}
-                  size={135}
-                  borderRadius="14px"
-                  fontSize="2.2rem"
-                  style={{ width: '100%', height: '100%' }}
-                />
-                <button
-                  onClick={(e) => toggleFavorite(stylist.id, e)}
+                {/* Image with Heart Favorite Icon */}
+                <div
                   style={{
-                    position: 'absolute',
-                    top: '8px',
-                    right: '8px',
-                    width: '30px',
-                    height: '30px',
-                    borderRadius: '50%',
-                    background: 'rgba(0, 0, 0, 0.45)',
-                    backdropFilter: 'blur(6px)',
-                    border: 'none',
+                    width: '100%',
+                    height: '135px',
+                    borderRadius: '14px',
+                    overflow: 'hidden',
+                    position: 'relative',
+                    marginBottom: '0.65rem',
+                    backgroundColor: '#1c202d',
+                  }}
+                >
+                  <Avatar
+                    src={stylist.image}
+                    name={stylist.name}
+                    size={135}
+                    borderRadius="14px"
+                    fontSize="2.2rem"
+                    style={{ width: '100%', height: '100%' }}
+                  />
+                  <button
+                    onClick={(e) => toggleFavorite(stylist.id, e)}
+                    style={{
+                      position: 'absolute',
+                      top: '8px',
+                      right: '8px',
+                      width: '30px',
+                      height: '30px',
+                      borderRadius: '50%',
+                      background: 'rgba(0, 0, 0, 0.5)',
+                      backdropFilter: 'blur(6px)',
+                      border: 'none',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'pointer',
+                      color: favorites[stylist.id] ? '#ef4444' : '#ffffff',
+                    }}
+                    aria-label="Favorite"
+                  >
+                    <Heart
+                      size={15}
+                      fill={favorites[stylist.id] ? '#ef4444' : 'none'}
+                      strokeWidth={favorites[stylist.id] ? 0 : 2}
+                    />
+                  </button>
+                </div>
+
+                {/* Stylist Details */}
+                <h3
+                  style={{
+                    fontFamily: 'Outfit',
+                    fontSize: '0.94rem',
+                    fontWeight: 800,
+                    color: '#ffffff',
+                    margin: '0 0 0.2rem',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                  }}
+                >
+                  {stylist.name}
+                </h3>
+
+                {/* Star Rating & Review Count */}
+                <div
+                  style={{
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    color: favorites[stylist.id] ? '#ef4444' : '#ffffff',
+                    gap: '0.25rem',
+                    fontSize: '0.74rem',
+                    marginBottom: '0.25rem',
                   }}
-                  aria-label="Favorite"
                 >
-                  <Heart
-                    size={15}
-                    fill={favorites[stylist.id] ? '#ef4444' : 'none'}
-                    strokeWidth={favorites[stylist.id] ? 0 : 2}
-                  />
+                  <Star size={12} fill="#f5b942" color="#f5b942" />
+                  <span style={{ fontWeight: 800, color: '#f5b942' }}>{stylist.rating}</span>
+                  <span style={{ color: '#94a3b8' }}>({stylist.reviewsCount})</span>
+                </div>
+
+                {/* Specialty Tag */}
+                <p
+                  style={{
+                    fontSize: '0.72rem',
+                    color: '#94a3b8',
+                    margin: '0 0 0.75rem',
+                    fontFamily: 'Outfit',
+                    lineHeight: 1.3,
+                    display: '-webkit-box',
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden',
+                    height: '2rem',
+                  }}
+                >
+                  {stylist.specialty}
+                </p>
+
+                {/* Solid Gold "Book Now" Button */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate(`/booking?stylist=${encodeURIComponent(stylist.name)}`);
+                  }}
+                  className="app-btn app-btn-accent"
+                  style={{
+                    minHeight: '38px',
+                    height: '38px',
+                    borderRadius: '12px',
+                    fontSize: '0.82rem',
+                    fontWeight: 800,
+                    padding: '0 0.5rem',
+                    marginTop: 'auto',
+                    touchAction: 'manipulation',
+                  }}
+                >
+                  Book Now
                 </button>
               </div>
+            ))}
+          </div>
+        )}
 
-              {/* Stylist Details */}
-              <h3
-                style={{
-                  fontFamily: 'Outfit',
-                  fontSize: '0.96rem',
-                  fontWeight: 800,
-                  color: '#ffffff',
-                  margin: '0 0 0.2rem',
-                }}
-              >
-                {stylist.name}
-              </h3>
-
-              {/* Star Rating & Review Count */}
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.25rem',
-                  fontSize: '0.74rem',
-                  marginBottom: '0.2rem',
-                }}
-              >
-                <Star size={12} fill="#f5b942" color="#f5b942" />
-                <span style={{ fontWeight: 800, color: '#f5b942' }}>{stylist.rating}</span>
-                <span style={{ color: '#94a3b8' }}>({stylist.reviewsCount})</span>
-              </div>
-
-              {/* Specialty Tag */}
-              <p
-                style={{
-                  fontSize: '0.75rem',
-                  color: '#94a3b8',
-                  margin: '0 0 0.75rem',
-                  fontFamily: 'Outfit',
-                }}
-              >
-                {stylist.specialty}
-              </p>
-
-              {/* Solid Gold "Book Now" Button */}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  navigate(`/booking?stylist=${encodeURIComponent(stylist.name.split(' ')[0])}`);
-                }}
-                className="app-btn app-btn-accent"
-                style={{
-                  minHeight: '38px',
-                  height: '38px',
-                  borderRadius: '12px',
-                  fontSize: '0.82rem',
-                  fontWeight: 800,
-                  padding: '0 0.5rem',
-                  marginTop: 'auto',
-                }}
-              >
-                Book Now
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {!loading && filteredStylists.length === 0 && (
+        {/* Empty state */}
+        {!loading && filteredStylists.length === 0 && (
           <div style={{ textAlign: 'center', padding: '3rem 1.5rem', background: '#151822', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.08)', marginTop: '1rem' }}>
             <Users size={36} color="#f5b942" style={{ opacity: 0.8, marginBottom: '0.65rem' }} />
             <h4 style={{ fontFamily: 'Outfit', fontWeight: 800, color: '#ffffff', margin: '0 0 0.35rem', fontSize: '1rem' }}>
-              {searchQuery ? `No stylists found for "${searchQuery}"` : 'No Specialists Found'}
+              {searchQuery ? `No specialists found for "${searchQuery}"` : `No ${activeCategory} Specialists Available`}
             </h4>
-            <p style={{ color: '#94a3b8', fontSize: '0.82rem', margin: 0 }}>
-              {searchQuery ? 'Try searching for a different name or specialty.' : 'Check back soon for available stylists in this category.'}
+            <p style={{ color: '#94a3b8', fontSize: '0.82rem', margin: '0 0 1rem' }}>
+              Try switching category or clear search to find more specialists.
             </p>
+            <button
+              onClick={() => setActiveCategory('All')}
+              className="app-btn app-btn-outline"
+              style={{ borderRadius: '12px', padding: '0.5rem 1rem', fontSize: '0.8rem' }}
+            >
+              View All Specialists
+            </button>
           </div>
         )}
 
@@ -309,3 +478,5 @@ export const Experts = () => {
     </PageContainer>
   );
 };
+
+export default Experts;

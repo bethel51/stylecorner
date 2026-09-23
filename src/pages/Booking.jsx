@@ -25,58 +25,58 @@ import { Avatar } from '../components/common/Avatar';
 
 const SERVICES = [
   {
-    id: 'hair_styling',
-    title: 'Hair Styling',
-    category: 'Hair',
-    price: 5000,
+    id: 'lash_tech',
+    title: 'Lash Tech',
+    category: 'Lash Tech',
+    price: 6000,
+    duration: '75 mins',
+    desc: 'Classic, hybrid & volume silk lash extensions — tailored to your eye shape.',
+    image: 'https://images.unsplash.com/photo-1607748862156-7c548e7e98f4?auto=format&fit=crop&w=300&q=80',
+  },
+  {
+    id: 'nail_tech',
+    title: 'Nail Tech',
+    category: 'Nail Tech',
+    price: 4500,
     duration: '60 mins',
-    desc: 'Wash, blow dry, straightening, hot oil treatments & silk press.',
-    image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=300&q=80',
+    desc: 'Gel extensions, nail architecture & 3D nail art — precision finish every time.',
+    image: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&w=300&q=80',
   },
   {
-    id: 'barbering',
-    title: 'Precision Barbing',
-    category: 'Hair',
-    price: 5000,
-    duration: '45 mins',
-    desc: 'Sharp fades, line-ups, beard trimming & hot towel royal grooming.',
-    image: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=300&q=80',
-  },
-  {
-    id: 'braiding',
-    title: 'Braids',
-    category: 'Braids',
-    price: 4000,
-    duration: '90 mins',
-    desc: 'Cornrows, box braids, knotless braids & protective twists.',
+    id: 'hair_braider',
+    title: 'Hair Braider & Stylist',
+    category: 'Hair Braider & Stylist',
+    price: 6500,
+    duration: '120 mins',
+    desc: 'Knotless box braids, goddess braids, twists & protective stylist services.',
     image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=300&q=80',
   },
   {
-    id: 'nail_care',
-    title: 'Nail Care',
-    category: 'Nails',
-    price: 3000,
+    id: 'barber',
+    title: 'Barber',
+    category: 'Barber',
+    price: 4000,
     duration: '45 mins',
-    desc: 'Manicure, pedicure, acrylic extensions and 3D gel nail art.',
-    image: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&w=300&q=80',
+    desc: 'Precision fades, line-ups & beard sculpting — sharp, clean & fresh.',
+    image: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=300&q=80',
   },
   {
-    id: 'skincare',
-    title: 'Skincare',
-    category: 'Skincare',
-    price: 6000,
-    duration: '60 mins',
-    desc: 'Deep pore facial, hydra exfoliation & skin brightening treatment.',
-    image: 'https://images.unsplash.com/photo-1512290900672-1f5be50c76ba?auto=format&fit=crop&w=300&q=80',
-  },
-  {
-    id: 'makeup',
-    title: 'Makeup',
-    category: 'Makeup',
-    price: 8000,
-    duration: '60 mins',
-    desc: 'Flawless glam beat, bridal makeover & brow sculpting.',
+    id: 'makeup_artist',
+    title: 'Makeup Artist',
+    category: 'Makeup Artist',
+    price: 9000,
+    duration: '90 mins',
+    desc: 'Bridal glam, soft natural beat, photoshoot makeup & brow sculpting.',
     image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=300&q=80',
+  },
+  {
+    id: 'wig_installer',
+    title: 'Wig Installer & Revamper',
+    category: 'Wig Installer & Revamper',
+    price: 7500,
+    duration: '90 mins',
+    desc: 'Lace melting, custom frontal install, deep washing & hot-comb revamp.',
+    image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=300&q=80',
   },
 ];
 
@@ -223,6 +223,16 @@ export const Booking = () => {
   const [voucherCode, setVoucherCode] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [isAiMatched, setIsAiMatched] = useState(Boolean(queryStylist && queryService));
+  const [walletBalance, setWalletBalance] = useState(0);
+
+  // Fetch wallet balance so we can gate booking before it's created
+  useEffect(() => {
+    if (isAuthenticated) {
+      api.getWalletBalance()
+        .then((data) => { if (data && typeof data.walletBalance === 'number') setWalletBalance(data.walletBalance); })
+        .catch(() => {});
+    }
+  }, [isAuthenticated]);
 
   // Sync service from query
   useEffect(() => {
@@ -372,6 +382,26 @@ export const Booking = () => {
     if (role === 'staff') {
       showToast('Experts cannot book services.', 'error');
       navigate('/expert-dashboard');
+      return;
+    }
+
+    // ── Wallet pre-check: block booking creation if balance is insufficient ──
+    // Refresh balance first to get the latest value
+    let currentBalance = walletBalance;
+    try {
+      const fresh = await api.getWalletBalance();
+      if (fresh && typeof fresh.walletBalance === 'number') {
+        currentBalance = fresh.walletBalance;
+        setWalletBalance(currentBalance);
+      }
+    } catch (_) { /* use cached balance */ }
+
+    if (currentBalance < totalPrice) {
+      showToast(
+        `Insufficient wallet balance (₦${currentBalance.toLocaleString()}). Please top up ₦${(totalPrice - currentBalance).toLocaleString()} more to proceed.`,
+        'error'
+      );
+      navigate('/wallet');
       return;
     }
 

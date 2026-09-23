@@ -536,23 +536,31 @@ export const ExpertDashboard = () => {
   };
 
   const fetchPortfolio = useCallback(async () => {
+    const OFFICIAL_SERVICES = [
+      'Lash Tech',
+      'Nail Tech',
+      'Hair Braider & Stylist',
+      'Barber',
+      'Makeup Artist',
+      'Wig Installer & Revamper',
+    ];
     try {
       const data = await api.getPortfolio();
       const loadedPortfolio = data.portfolio || [];
       setPortfolio(loadedPortfolio);
       const svcList = (data.services || []).map(s => s.name || s).filter(Boolean);
       const fallback = data.specialties || [];
-      const merged = svcList.length > 0 ? svcList : fallback;
-      const finalServices = merged.length > 0 ? merged : ['Hair Styling', 'Bespoke Grooming'];
-      setPortfolioServices(['All', ...finalServices]);
+      const userList = [...svcList, ...fallback];
+      const merged = Array.from(new Set([...OFFICIAL_SERVICES, ...userList]));
+      setPortfolioServices(['All', ...merged]);
     } catch (err) {
       console.warn('Portfolio fetch notice:', err.message);
       if (user?.portfolio) {
         setPortfolio(user.portfolio);
       }
       const userServices = (user?.services || []).map(s => s.name || s).filter(Boolean);
-      const list = userServices.length > 0 ? userServices : ['Hair Styling', 'Bespoke Grooming'];
-      setPortfolioServices(['All', ...list]);
+      const merged = Array.from(new Set([...OFFICIAL_SERVICES, ...userServices]));
+      setPortfolioServices(['All', ...merged]);
     }
   }, [user]);
 
