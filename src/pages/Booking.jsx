@@ -80,37 +80,6 @@ const SERVICES = [
   },
 ];
 
-const DEFAULT_SPECIALISTS = [
-  {
-    id: 'spec_zainab',
-    name: 'Zainab Adeleke',
-    role: 'Master Wig & Silk Press Artisan',
-    rating: 4.95,
-    image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
-  },
-  {
-    id: 'spec_julian',
-    name: 'Julian Reed',
-    role: 'Executive Barber & Groomer',
-    rating: 4.9,
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
-  },
-  {
-    id: 'spec_amara',
-    name: 'Amara Okon',
-    role: 'Luxe Nail & Lash Architect',
-    rating: 5.0,
-    image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80',
-  },
-  {
-    id: 'spec_tunde',
-    name: 'Tunde Bakare',
-    role: 'Editorial Makeup & Glow Specialist',
-    rating: 4.85,
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80',
-  },
-];
-
 // Helper to generate dynamic upcoming dates starting from today
 const generateUpcomingDates = (count = 14) => {
   const dates = [];
@@ -212,9 +181,9 @@ export const Booking = () => {
   const [selectedService, setSelectedService] = useState(SERVICES[0].title);
   const [selectedDate, setSelectedDate] = useState(todayISO);
   const [selectedTime, setSelectedTime] = useState('11:00 AM');
-  const [stylist, setStylist] = useState(queryStylist || 'Zainab Adeleke');
+  const [stylist, setStylist] = useState(queryStylist || '');
   const [selectedSpecialist, setSelectedSpecialist] = useState(null);
-  const [specialistsList, setSpecialistsList] = useState(DEFAULT_SPECIALISTS);
+  const [specialistsList, setSpecialistsList] = useState([]);
   const [loadingSpecialists, setLoadingSpecialists] = useState(true);
   const [busySlots, setBusySlots] = useState([]);
   const [loadingBusySlots, setLoadingBusySlots] = useState(false);
@@ -261,52 +230,48 @@ export const Booking = () => {
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
           const verifiedStaff = data.filter((s) => s.role === 'staff' || s.role === 'expert' || s.isVerified === true);
-          const mapped = verifiedStaff.map((s) => ({
+          const pool = verifiedStaff.length > 0 ? verifiedStaff : data;
+          const mapped = pool.map((s) => ({
             id: s._id,
             name: `${s.firstname || ''} ${s.lastname || ''}`.trim() || 'Verified Specialist',
             role: s.title || s.roleTitle || 'Certified Stylist',
-            rating: s.rating || 4.95,
+            rating: s.rating || 5.0,
             image: s.avatarUrl || s.profileImage || '',
           }));
 
-          const combined = mapped.length > 0 ? mapped : DEFAULT_SPECIALISTS;
-          setSpecialistsList(combined);
+          setSpecialistsList(mapped);
 
           const found = queryStylist
-            ? combined.find((m) =>
+            ? mapped.find((m) =>
                 m.name.toLowerCase().includes(queryStylist.toLowerCase()) ||
                 queryStylist.toLowerCase().includes(m.name.toLowerCase()) ||
-                (queryStylistId && m.id === queryStylistId)
+                (queryStylistId && String(m.id) === String(queryStylistId))
               )
             : null;
 
-          const target = found || combined[0];
-          setStylist(target.name);
-          setSelectedSpecialist(target);
+          const target = found || mapped[0] || null;
+          if (target) {
+            setStylist(target.name);
+            setSelectedSpecialist(target);
+          }
         } else {
-          setSpecialistsList(DEFAULT_SPECIALISTS);
-          const found = queryStylist
-            ? DEFAULT_SPECIALISTS.find((m) => m.name.toLowerCase().includes(queryStylist.toLowerCase()))
-            : null;
-          const target = found || DEFAULT_SPECIALISTS[0];
-          setStylist(target.name);
-          setSelectedSpecialist(target);
+          setSpecialistsList([]);
         }
       })
       .catch(() => {
-        setSpecialistsList(DEFAULT_SPECIALISTS);
-        const target = DEFAULT_SPECIALISTS[0];
-        setStylist(target.name);
-        setSelectedSpecialist(target);
+        setSpecialistsList([]);
       })
       .finally(() => setLoadingSpecialists(false));
   }, [queryStylist, queryStylistId]);
 
   // Fetch busy slots whenever selected date or specialist changes
   useEffect(() => {
-    if (!selectedDate) return;
+    if (!selectedDate || !stylist) {
+      setBusySlots([]);
+      return;
+    }
     setLoadingBusySlots(true);
-    const specId = selectedSpecialist?.id || (selectedSpecialist?.id !== 'spec_zainab' ? selectedSpecialist?.id : undefined);
+    const specId = selectedSpecialist?.id;
     api.getBusySlots(stylist, specId, selectedDate)
       .then((slots) => {
         setBusySlots(Array.isArray(slots) ? slots : []);
@@ -407,14 +372,14 @@ export const Booking = () => {
 
     const currentSpecialist =
       selectedSpecialist ||
-      specialistsList.find((s) => s.name === stylist) || { name: stylist || 'Zainab Adeleke' };
+      specialistsList.find((s) => s.name === stylist) || { name: stylist || 'Specialist' };
 
     const bookingPayload = {
       clientName: `${user.firstname || ''} ${user.lastname || ''}`.trim() || 'Client',
       clientEmail: user.email,
       clientPhone: user.phone || 'N/A',
       stylist: currentSpecialist.name,
-      stylistId: currentSpecialist.id && !currentSpecialist.id.startsWith('spec_') ? currentSpecialist.id : undefined,
+      stylistId: currentSpecialist.id || undefined,
       service: appliedVoucher ? `${selectedService} [Voucher Applied]` : selectedService,
       location: location,
       price: totalPrice,
@@ -847,7 +812,14 @@ export const Booking = () => {
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.5rem' }}>
-              {specialistsList.map((sp) => {
+              {specialistsList.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '2.5rem 1rem', background: '#151822', borderRadius: '16px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                  <p style={{ color: '#94a3b8', fontSize: '0.85rem', margin: 0 }}>
+                    {loadingSpecialists ? 'Loading verified specialists...' : 'No verified specialists available at this time.'}
+                  </p>
+                </div>
+              ) : (
+                specialistsList.map((sp) => {
                 const isSelected = stylist.toLowerCase().includes(sp.name.toLowerCase()) || sp.name.toLowerCase().includes(stylist.toLowerCase());
                 return (
                   <div
@@ -909,7 +881,7 @@ export const Booking = () => {
                     </div>
                   </div>
                 );
-              })}
+              }))}
             </div>
 
             <div style={{ display: 'flex', gap: '0.65rem' }}>

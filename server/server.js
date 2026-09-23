@@ -732,70 +732,11 @@ app.post('/api/ai/match-specialist', async (req, res) => {
     }
 
     if (!staffMembers || staffMembers.length === 0) {
-      staffMembers = [
-        {
-          _id: 'spec_zainab',
-          firstname: 'Zainab',
-          lastname: 'Adeleke',
-          title: 'Master Wig & Silk Press Artisan',
-          rating: 4.9,
-          location: 'Lagos State',
-          state: 'Lagos State',
-          avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
-          specialties: ['Hair Styling', 'Wig Installation & Styling', 'Braiding', 'Silk Press', 'Hair Treatment'],
-          services: [
-            { name: 'Hair Styling', price: '5000' },
-            { name: 'Wig Installation & Styling', price: '7000' },
-            { name: 'Braiding', price: '4000' }
-          ]
-        },
-        {
-          _id: 'spec_julian',
-          firstname: 'Julian',
-          lastname: 'Reed',
-          title: 'Executive Barber & Groomer',
-          rating: 4.9,
-          location: 'Lagos State',
-          state: 'Lagos State',
-          avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
-          specialties: ['Precision Barbing', 'Hair Cut', 'Beard Sculpting', 'Hot Towel Treatment', 'Hair Styling'],
-          services: [
-            { name: 'Precision Barbing', price: '5000' },
-            { name: 'Hair Styling', price: '5000' }
-          ]
-        },
-        {
-          _id: 'spec_amara',
-          firstname: 'Amara',
-          lastname: 'Okon',
-          title: 'Luxe Nail & Lash Architect',
-          rating: 5.0,
-          location: 'Lagos State',
-          state: 'Lagos State',
-          avatarUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80',
-          specialties: ['Nail Care', 'Nail Tech', 'Acrylic Extensions', 'Manicure', 'Pedicure', 'Gel Art'],
-          services: [
-            { name: 'Nail Care', price: '3000' },
-            { name: 'Manicure', price: '3000' },
-            { name: 'Pedicure', price: '4000' }
-          ]
-        },
-        {
-          _id: 'spec_tunde',
-          firstname: 'Tunde',
-          lastname: 'Bakare',
-          title: 'Editorial Makeup & Glow Specialist',
-          rating: 4.85,
-          location: 'FCT – Abuja',
-          state: 'FCT – Abuja',
-          avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80',
-          specialties: ['Makeup', 'Skincare', 'Bridal Glam', 'Hydra Facial', 'Skin Brightening'],
-          services: [
-            { name: 'Makeup', price: '8000' },
-            { name: 'Skincare', price: '6000' }
-          ]
-        }
-      ];
+      return res.json({
+        success: true,
+        match: null,
+        message: 'No active specialists currently available.'
+      });
     }
 
     const query = (requestText + ' ' + primaryService + ' ' + secondaryService).toLowerCase();

@@ -30,156 +30,6 @@ import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import { uploadToCloudinary } from '../services/cloudinary';
 
-const DEFAULT_EXPERT_PROFILES = [
-  {
-    id: 'spec_zainab',
-    name: 'Zainab Adeleke',
-    role: 'Master Wig & Silk Press Artisan',
-    rating: 4.95,
-    reviewsCount: 38,
-    location: 'Victoria Island, Lagos',
-    experience: '8+ Years Atelier Experience',
-    bio: 'Renowned master wig technician and silk press artisan known for precision lace melt, flawless styling, and non-damaging thermal treatments.',
-    avatar: '',
-    coverImage: '/images/hero-bg.png',
-    services: [
-      { name: 'HD Frontal Wig Installation & Customization', price: '₦28,000' },
-      { name: 'Silk Press & Botanical Scalp Treatment', price: '₦22,000' },
-      { name: 'Boho Knotless Braids with Curls', price: '₦35,000' }
-    ],
-    portfolio: [
-      {
-        _id: 'p_z1',
-        service: 'HD Frontal Wig Installation & Customization',
-        title: 'HD Invisible Lace Melt & Body Waves',
-        imageUrl: 'https://images.unsplash.com/photo-1580618672591-eb180b1a973f?auto=format&fit=crop&w=600&q=80',
-        description: 'Bleached knots, customized hairline, and bouncy 24-inch body wave barrel curls.',
-        duration: '2.5 hrs',
-        price: '₦28,000'
-      },
-      {
-        _id: 'p_z2',
-        service: 'Silk Press & Botanical Scalp Treatment',
-        title: 'Glass-Finish Silk Press & Steam Therapy',
-        imageUrl: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=600&q=80',
-        description: 'Deep hydration steam bath followed by titanium silk press with high shine serum.',
-        duration: '1.5 hrs',
-        price: '₦22,000'
-      },
-      {
-        _id: 'p_z3',
-        service: 'Boho Knotless Braids with Curls',
-        title: 'Waist-Length Boho Knotless Braids',
-        imageUrl: 'https://images.unsplash.com/photo-1582095133179-bfd08e2fc6b3?auto=format&fit=crop&w=600&q=80',
-        description: 'French curl human hair extensions blended with seamless knotless parting.',
-        duration: '4.5 hrs',
-        price: '₦35,000'
-      }
-    ]
-  },
-  {
-    id: 'spec_julian',
-    name: 'Julian Reed',
-    role: 'Executive Barber & Groomer',
-    rating: 4.9,
-    reviewsCount: 52,
-    location: 'Ikoyi, Lagos',
-    experience: '6+ Years Master Barber',
-    bio: 'Crafting surgical skin fades, hot towel beard sculpting, and executive gentlemen grooming tailored to your face structure.',
-    avatar: '',
-    coverImage: '/images/hero-bg.png',
-    services: [
-      { name: 'Executive Razor Skin Fade & Haircut', price: '₦15,000' },
-      { name: 'Beard Sculpting & Hot Towel Treatment', price: '₦12,000' },
-      { name: 'Atelier Royal Head Spa & Grooming', price: '₦25,000' }
-    ],
-    portfolio: [
-      {
-        _id: 'p_j1',
-        service: 'Executive Razor Skin Fade & Haircut',
-        title: 'Drop Fade with Surgical Lineup',
-        imageUrl: 'https://images.unsplash.com/photo-1622286342621-4bd786c2447c?auto=format&fit=crop&w=600&q=80',
-        description: 'Crisp mid-drop fade finished with straight razor hairline and matte pomade.',
-        duration: '45 mins',
-        price: '₦15,000'
-      },
-      {
-        _id: 'p_j2',
-        service: 'Beard Sculpting & Hot Towel Treatment',
-        title: 'Full Beard Contouring & Steam Infusion',
-        imageUrl: 'https://images.unsplash.com/photo-1621605815971-fbc98d665033?auto=format&fit=crop&w=600&q=80',
-        description: 'Eucalyptus hot towel wrap, organic beard butter treatment, and razor lineup.',
-        duration: '40 mins',
-        price: '₦12,000'
-      }
-    ]
-  },
-  {
-    id: 'spec_amara',
-    name: 'Amara Okon',
-    role: 'Luxe Nail & Lash Architect',
-    rating: 5.0,
-    reviewsCount: 44,
-    location: 'Lekki Phase 1, Lagos',
-    experience: '7+ Years Nail Artistry',
-    bio: 'Specializing in Russian manicures, sculptural acrylic extensions, 3D chrome nail art, and lightweight Russian volume lash sets.',
-    avatar: '',
-    coverImage: '/images/hero-bg.png',
-    services: [
-      { name: 'Russian Almond Acrylic Extensions & Chrome Art', price: '₦25,000' },
-      { name: 'Russian Volume Lightweight Lash Full Set', price: '₦30,000' },
-      { name: 'Luxe Gel Overlay & Spa Pedicure', price: '₦18,000' }
-    ],
-    portfolio: [
-      {
-        _id: 'p_a1',
-        service: 'Russian Almond Acrylic Extensions & Chrome Art',
-        title: 'Glazed Donut Almond Acrylic Sculpt',
-        imageUrl: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&w=600&q=80',
-        description: 'Flawless cuticle cleanup, sculptured almond shape, and chrome glaze powder.',
-        duration: '2 hrs',
-        price: '₦25,000'
-      },
-      {
-        _id: 'p_a2',
-        service: 'Russian Volume Lightweight Lash Full Set',
-        title: 'Wispy Hybrid Lash Architecture',
-        imageUrl: 'https://images.unsplash.com/photo-1583001931096-959e9a1a6223?auto=format&fit=crop&w=600&q=80',
-        description: 'Handmade 4D-6D volume fans created for a fluffy, textured feline cat-eye effect.',
-        duration: '2.5 hrs',
-        price: '₦30,000'
-      }
-    ]
-  },
-  {
-    id: 'spec_tunde',
-    name: 'Tunde Bakare',
-    role: 'Editorial Makeup & Glow Specialist',
-    rating: 4.85,
-    reviewsCount: 29,
-    location: 'Ikeja GRA, Lagos',
-    experience: '5+ Years Editorial Makeup',
-    bio: 'Mastering luminous skin finishes, soft editorial glamour, red carpet contouring, and bridal artistry.',
-    avatar: '',
-    coverImage: '/images/hero-bg.png',
-    services: [
-      { name: 'Soft Glam Editorial Makeup & Lashes', price: '₦25,000' },
-      { name: 'Bridal Glow Airbrush Transformation', price: '₦50,000' }
-    ],
-    portfolio: [
-      {
-        _id: 'p_t1',
-        service: 'Soft Glam Editorial Makeup & Lashes',
-        title: 'Golden Hour Soft Glam Finish',
-        imageUrl: 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=600&q=80',
-        description: 'Skin-first dewy coverage, diffused bronze eyeshadow, and nude ombré lip lacquer.',
-        duration: '1.5 hrs',
-        price: '₦25,000'
-      }
-    ]
-  }
-];
-
 const normalizeServices = (rawServices) => {
   if (!Array.isArray(rawServices) || rawServices.length === 0) {
     return [{ name: 'Bespoke Styling', price: '₦20,000' }];
@@ -245,31 +95,13 @@ export const ExpertProfile = () => {
     (user.firstname && searchLower === user.firstname.toLowerCase())
   );
 
+  const [loadingProfile, setLoadingProfile] = useState(true);
+
   useEffect(() => {
     if (queryName) {
       api.getSpecialistReviews(queryName)
         .then((revs) => setReviewsList(revs))
         .catch(() => setReviewsList([]));
-    }
-
-    let found = DEFAULT_EXPERT_PROFILES.find(p => p.name.toLowerCase().includes(searchLower) || p.id.includes(searchLower));
-
-    // Check if custom profile saved in localStorage
-    const targetId1 = found ? found.id : searchLower.replace(/\s+/g, '-');
-    const customSaved = localStorage.getItem(`expert_profile_custom_${targetId1}`) || localStorage.getItem(`expert_profile_custom_${searchLower.replace(/\s+/g, '-')}`);
-
-    if (customSaved) {
-      try {
-        const parsed = JSON.parse(customSaved);
-        const norm = {
-          ...parsed,
-          services: normalizeServices(parsed.services),
-          portfolio: parsed.portfolio || (found ? found.portfolio : [])
-        };
-        setExpert(norm);
-        setSelectedService(norm.services[0]);
-        return;
-      } catch (err) {}
     }
 
     if (isViewingMyself) {
@@ -290,65 +122,77 @@ export const ExpertProfile = () => {
       };
       setExpert(userProfile);
       setSelectedService(userProfile.services[0]);
+      setLoadingProfile(false);
       return;
     }
 
-    if (found) {
-      const norm = {
-        ...found,
-        services: normalizeServices(found.services),
-        portfolio: found.portfolio || []
-      };
-      setExpert(norm);
-      setSelectedService(norm.services[0]);
-    } else {
-      // Fallback API lookup
-      api.getSpecialists()
-        .then((data) => {
-          if (Array.isArray(data) && data.length > 0) {
-            const matched = data.find(s => `${s.firstname} ${s.lastname}`.toLowerCase().includes(searchLower));
-            if (matched) {
-              const fullName = `${matched.firstname || ''} ${matched.lastname || ''}`.trim() || 'Style Specialist';
-              const specs = normalizeServices(matched.services);
-              
-              const dynamicProfile = {
-                id: matched._id || fullName.toLowerCase().replace(/\s+/g, '-'),
-                name: fullName,
-                role: matched.title || 'Certified Master Specialist',
-                rating: 5.0,
-                reviewsCount: 42,
-                location: matched.location || 'Lagos, Nigeria',
-                experience: 'Verified Atelier Expert',
-                bio: matched.bio || `Specialized in premium hair and beauty services.`,
-                avatar: matched.avatarUrl || '',
-                coverImage: matched.coverImage || '/images/hero-bg.png',
-                services: specs,
-                portfolio: matched.portfolio || []
-              };
-              setExpert(dynamicProfile);
-              setSelectedService(dynamicProfile.services[0]);
-              return;
+    setLoadingProfile(true);
+    api.getSpecialists()
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          const verifiedStaff = data.filter((s) => s.role === 'staff' || s.role === 'expert' || s.isVerified === true);
+          const pool = verifiedStaff.length > 0 ? verifiedStaff : data;
+
+          const matched = hasExplicitQuery
+            ? pool.find((s) => {
+                const fullName = `${s.firstname || ''} ${s.lastname || ''}`.trim().toLowerCase();
+                return (
+                  fullName.includes(searchLower) ||
+                  searchLower.includes(fullName) ||
+                  (s.firstname && searchLower.includes(s.firstname.toLowerCase())) ||
+                  (s._id && String(s._id).toLowerCase() === searchLower)
+                );
+              })
+            : pool[0];
+
+          if (matched) {
+            const fullName = `${matched.firstname || ''} ${matched.lastname || ''}`.trim() || 'Verified Specialist';
+            const specs = normalizeServices(matched.services);
+            
+            const dynamicProfile = {
+              id: matched._id || fullName.toLowerCase().replace(/\s+/g, '-'),
+              name: fullName,
+              role: matched.title || 'Certified Master Specialist',
+              rating: matched.rating || 5.0,
+              reviewsCount: matched.reviewsCount || 0,
+              location: matched.location || 'Lagos, Nigeria',
+              experience: 'Verified Atelier Expert',
+              bio: matched.bio || 'Specialized in premium styling and client care.',
+              avatar: matched.avatarUrl || '',
+              coverImage: matched.coverImage || '/images/hero-bg.png',
+              services: specs,
+              portfolio: matched.portfolio || []
+            };
+
+            // Check if custom profile overrides in localStorage
+            const customSaved = localStorage.getItem(`expert_profile_custom_${dynamicProfile.id}`);
+            if (customSaved) {
+              try {
+                const parsed = JSON.parse(customSaved);
+                const merged = {
+                  ...dynamicProfile,
+                  ...parsed,
+                  services: normalizeServices(parsed.services || dynamicProfile.services),
+                  portfolio: parsed.portfolio || dynamicProfile.portfolio
+                };
+                setExpert(merged);
+                setSelectedService(merged.services[0]);
+                return;
+              } catch (e) {}
             }
+
+            setExpert(dynamicProfile);
+            setSelectedService(dynamicProfile.services[0]);
+            return;
           }
-          const defaultNorm = {
-            ...DEFAULT_EXPERT_PROFILES[0],
-            services: normalizeServices(DEFAULT_EXPERT_PROFILES[0]?.services),
-            portfolio: DEFAULT_EXPERT_PROFILES[0]?.portfolio || []
-          };
-          setExpert(defaultNorm);
-          setSelectedService(defaultNorm.services[0]);
-        })
-        .catch(() => {
-          const defaultNorm = {
-            ...DEFAULT_EXPERT_PROFILES[0],
-            services: normalizeServices(DEFAULT_EXPERT_PROFILES[0]?.services),
-            portfolio: DEFAULT_EXPERT_PROFILES[0]?.portfolio || []
-          };
-          setExpert(defaultNorm);
-          setSelectedService(defaultNorm.services[0]);
-        });
-    }
-  }, [queryName, user, isViewingMyself]);
+        }
+        setExpert(null);
+      })
+      .catch(() => {
+        setExpert(null);
+      })
+      .finally(() => setLoadingProfile(false));
+  }, [queryName, user, isViewingMyself, hasExplicitQuery, searchLower]);
 
   // Direct navigation to dedicated Expert Dashboard
   const handleOpenEditSheet = () => {
@@ -516,7 +360,35 @@ export const ExpertProfile = () => {
     navigate(`/booking?stylist=${encodeURIComponent(stylistFirstName)}&service=${encodeURIComponent(serviceName)}`);
   };
 
-  if (!expert) return null;
+  if (loadingProfile) {
+    return (
+      <PageContainer hideHeader={true} noPadding={true}>
+        <div style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <p style={{ color: '#94a3b8', fontFamily: 'Outfit' }}>Loading specialist profile...</p>
+        </div>
+      </PageContainer>
+    );
+  }
+
+  if (!expert) {
+    return (
+      <PageContainer title="Specialist Not Found">
+        <div style={{ textAlign: 'center', padding: '3rem 1.5rem', background: '#151822', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.08)', margin: '1.5rem 0' }}>
+          <h3 style={{ fontFamily: 'Outfit', fontWeight: 800, color: '#ffffff', marginBottom: '0.5rem' }}>Specialist Not Found</h3>
+          <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginBottom: '1.5rem' }}>
+            The requested specialist is not available or does not exist.
+          </p>
+          <button
+            onClick={() => navigate('/experts')}
+            className="app-btn app-btn-accent"
+            style={{ borderRadius: '12px', padding: '0.65rem 1.25rem', fontSize: '0.85rem' }}
+          >
+            Browse Verified Specialists
+          </button>
+        </div>
+      </PageContainer>
+    );
+  }
 
   // Determine if current user is expert / staff or owns page
   const isExpertUser = user?.role === 'staff' || (user?.firstname && expert.name.toLowerCase().includes(user.firstname.toLowerCase()));

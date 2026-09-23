@@ -8,12 +8,12 @@ export const Gallery = () => {
   const [likes, setLikes] = useState({});
 
   const items = [
-    { id: 1, title: 'Precision Burst Fade', category: 'Haircut', artisan: 'Julian Reed', likes: 142 },
-    { id: 2, title: 'Knotless Boho Braids', category: 'Braids', artisan: 'Elena Thorne', likes: 218 },
-    { id: 3, title: 'Matte Black Gel Nails', category: 'Nails', artisan: 'Marcus Grey', likes: 98 },
-    { id: 4, title: 'Full Beard Sculpting', category: 'Grooming', artisan: 'Julian Reed', likes: 175 },
-    { id: 5, title: 'Cornrow Crown Art', category: 'Braids', artisan: 'Elena Thorne', likes: 260 },
-    { id: 6, title: 'French Tip Gel Pedicure', category: 'Nails', artisan: 'Marcus Grey', likes: 112 },
+    { id: 1, title: 'Precision Burst Fade', category: 'Haircut', artisan: 'Atelier Artisan', likes: 142 },
+    { id: 2, title: 'Knotless Boho Braids', category: 'Braids', artisan: 'Atelier Artisan', likes: 218 },
+    { id: 3, title: 'Matte Black Gel Nails', category: 'Nails', artisan: 'Atelier Artisan', likes: 98 },
+    { id: 4, title: 'Full Beard Sculpting', category: 'Grooming', artisan: 'Atelier Artisan', likes: 175 },
+    { id: 5, title: 'Cornrow Crown Art', category: 'Braids', artisan: 'Atelier Artisan', likes: 260 },
+    { id: 6, title: 'French Tip Gel Pedicure', category: 'Nails', artisan: 'Atelier Artisan', likes: 112 },
   ];
 
   const toggleLike = (id) => {

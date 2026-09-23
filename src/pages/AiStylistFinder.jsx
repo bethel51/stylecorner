@@ -175,53 +175,9 @@ export const AiStylistFinder = () => {
 
       clearInterval(stepInterval);
 
-      // Curated backup database
-      const fallbackList = [
-        {
-          _id: 'spec_zainab',
-          firstname: 'Zainab',
-          lastname: 'Adeleke',
-          title: 'Master Wig & Silk Press Artisan',
-          rating: 4.98,
-          reviewsCount: 84,
-          location: selectedLocation,
-          avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
-        },
-        {
-          _id: 'spec_julian',
-          firstname: 'Julian',
-          lastname: 'Reed',
-          title: 'Executive Barber & Groomer',
-          rating: 4.92,
-          reviewsCount: 62,
-          location: selectedLocation,
-          avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
-        },
-        {
-          _id: 'spec_amara',
-          firstname: 'Amara',
-          lastname: 'Okonkwo',
-          title: 'Celebrity Braids & Stylist',
-          rating: 4.95,
-          reviewsCount: 71,
-          location: selectedLocation,
-          avatarUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80',
-        },
-        {
-          _id: 'spec_kemi',
-          firstname: 'Kemi',
-          lastname: 'Balogun',
-          title: 'Russian Volume Lash & Glam Artist',
-          rating: 4.96,
-          reviewsCount: 53,
-          location: selectedLocation,
-          avatarUrl: 'https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?auto=format&fit=crop&w=400&q=80',
-        },
-      ];
-
-      const verifiedList = Array.isArray(allSpecialists) && allSpecialists.length > 0
-        ? allSpecialists
-        : fallbackList;
+      const verifiedList = Array.isArray(allSpecialists)
+        ? allSpecialists.filter((s) => s.role === 'staff' || s.role === 'expert' || s.isVerified === true)
+        : [];
 
       // Filter by specialist matching this service if possible
       const matchedSpecialists = verifiedList.filter((spec) => {
@@ -240,19 +196,25 @@ export const AiStylistFinder = () => {
       });
 
       const pool = matchedSpecialists.length > 0 ? matchedSpecialists : verifiedList;
-      const primary = pool[0];
-      const primaryName = aiData?.match?.name || `${primary.firstname || ''} ${primary.lastname || ''}`.trim() || 'Zainab Adeleke';
-      const primaryAvatar = aiData?.match?.avatarUrl || primary.avatarUrl || primary.profileImage || '';
-
       const matchedServiceObj = SERVICES.find((s) => s.service === selectedService) || SERVICES[0];
+
+      if (pool.length === 0 && !aiData?.match) {
+        setMatchedResults(null);
+        showToast?.('No verified specialists currently available for this category.', 'info');
+        return;
+      }
+
+      const primary = pool[0];
+      const primaryName = aiData?.match?.name || (primary ? `${primary.firstname || ''} ${primary.lastname || ''}`.trim() : 'Verified Specialist');
+      const primaryAvatar = aiData?.match?.avatarUrl || primary?.avatarUrl || primary?.profileImage || '';
 
       setMatchedResults({
         topMatch: {
-          id: primary._id || 'spec_primary',
+          id: primary?._id || aiData?.match?._id || 'match_primary',
           name: primaryName,
-          title: primary.title || `${selectedService} Senior Specialist`,
-          rating: primary.rating || 4.98,
-          reviewsCount: primary.reviewsCount || 84,
+          title: primary?.title || `${selectedService} Senior Specialist`,
+          rating: primary?.rating || 5.0,
+          reviewsCount: primary?.reviewsCount || 0,
           location: selectedLocation,
           avatarUrl: primaryAvatar,
           service: selectedService,
@@ -264,11 +226,11 @@ export const AiStylistFinder = () => {
             `Optimal match for ${selectedService}. Verified portfolio in ${selectedLocation} matching the ${selectedVibe} aesthetic.`,
         },
         alternates: pool.slice(1, 3).map((spec, idx) => ({
-          id: spec._id || `spec_alt_${idx}`,
+          id: spec._id || `match_alt_${idx}`,
           name: `${spec.firstname || ''} ${spec.lastname || ''}`.trim() || 'Verified Specialist',
           title: spec.title || `${selectedService} Specialist`,
           rating: spec.rating || (4.9 - idx * 0.05),
-          reviewsCount: spec.reviewsCount || (50 - idx * 10),
+          reviewsCount: spec.reviewsCount || 0,
           location: selectedLocation,
           avatarUrl: spec.avatarUrl || spec.profileImage || '',
           service: selectedService,

@@ -27,64 +27,6 @@ const CATEGORY_MAP = {
   wig_installer: 'Wig Installer & Revamper',
 };
 
-// Fallback curated specialists so page is never empty while backend seeds
-const FALLBACK_SPECIALISTS = [
-  {
-    id: 'spec_zainab',
-    name: 'Zainab Adeleke',
-    categories: ['Wig Installer & Revamper', 'Hair Braider & Stylist'],
-    specialty: 'Master Wig & Silk Press Artisan',
-    rating: 4.98,
-    reviewsCount: '84+',
-    image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
-  },
-  {
-    id: 'spec_julian',
-    name: 'Julian Reed',
-    categories: ['Barber'],
-    specialty: 'Executive Fades & Beard Sculptor',
-    rating: 4.92,
-    reviewsCount: '62+',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
-  },
-  {
-    id: 'spec_amara',
-    name: 'Amara Okonkwo',
-    categories: ['Hair Braider & Stylist'],
-    specialty: 'Knotless & Bohemian Braid Artist',
-    rating: 4.95,
-    reviewsCount: '71+',
-    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80',
-  },
-  {
-    id: 'spec_kemi',
-    name: 'Kemi Balogun',
-    categories: ['Lash Tech', 'Makeup Artist'],
-    specialty: 'Russian Volume Lashes & Editorial Glam',
-    rating: 4.96,
-    reviewsCount: '53+',
-    image: 'https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?auto=format&fit=crop&w=400&q=80',
-  },
-  {
-    id: 'spec_chidi',
-    name: 'Chidinma Eze',
-    categories: ['Nail Tech'],
-    specialty: 'Gel-X Architecture & 3D Chrome Art',
-    rating: 4.94,
-    reviewsCount: '47+',
-    image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=400&q=80',
-  },
-  {
-    id: 'spec_folake',
-    name: 'Folake Adele',
-    categories: ['Makeup Artist'],
-    specialty: 'Bridal Glow & Red Carpet Sculpting',
-    rating: 4.99,
-    reviewsCount: '92+',
-    image: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=400&q=80',
-  },
-];
-
 export const Experts = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -161,22 +103,14 @@ export const Experts = () => {
             };
           });
 
-          // Merge backend specialists with fallback specialists to ensure every category has specialists
-          const combined = [...registeredTeam];
-          FALLBACK_SPECIALISTS.forEach((fb) => {
-            if (!combined.some((s) => s.name.toLowerCase() === fb.name.toLowerCase())) {
-              combined.push(fb);
-            }
-          });
-
-          setTeam(combined);
+          setTeam(registeredTeam);
         } else {
-          setTeam(FALLBACK_SPECIALISTS);
+          setTeam([]);
         }
       })
       .catch((err) => {
         console.warn('Specialists fetch notice:', err.message);
-        setTeam(FALLBACK_SPECIALISTS);
+        setTeam([]);
       })
       .finally(() => setLoading(false));
   }, []);

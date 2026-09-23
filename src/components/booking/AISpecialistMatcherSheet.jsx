@@ -70,37 +70,27 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
           matchScore: data.match.matchScore || 98,
           rationale: data.match.rationale || `Matched top verified specialist for ${selectedService} with ${vibe} styling in ${preferredState}.`,
         });
-      } else {
-        const specName = matchedSpec ? `${matchedSpec.firstname || ''} ${matchedSpec.lastname || ''}`.trim() : 'Zainab Adeleke';
+      } else if (matchedSpec) {
+        const specName = `${matchedSpec.firstname || ''} ${matchedSpec.lastname || ''}`.trim() || 'Verified Specialist';
 
         setMatchResult({
-          _id: matchedSpec?._id || 'spec_zainab',
-          id: matchedSpec?._id || 'spec_zainab',
+          _id: matchedSpec._id,
+          id: matchedSpec._id,
           name: specName,
-          firstname: matchedSpec?.firstname || 'Zainab',
-          role: matchedSpec?.title || matchedSpec?.roleTitle || 'Certified Atelier Specialist',
-          rating: matchedSpec?.rating || 4.95,
+          firstname: matchedSpec.firstname || 'Specialist',
+          role: matchedSpec.title || matchedSpec.roleTitle || 'Certified Atelier Specialist',
+          rating: matchedSpec.rating || 5.0,
           matchScore: 98,
           location: preferredState,
           rationale: `Matched based on your preference for ${selectedService} (${vibe}) in ${preferredState}. Verified track record for top quality styling.`,
           avatar: fallbackAvatar,
           service: selectedService,
         });
+      } else {
+        setMatchResult(null);
       }
     } catch (err) {
-      setMatchResult({
-        _id: 'spec_zainab',
-        id: 'spec_zainab',
-        name: 'Zainab Adeleke',
-        firstname: 'Zainab',
-        role: 'Certified Atelier Specialist',
-        rating: 4.95,
-        matchScore: 96,
-        location: preferredState,
-        rationale: `Matched based on your preference for ${selectedService} (${vibe}) in ${preferredState}. Dedicated to high-precision styling and long-lasting results.`,
-        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
-        service: selectedService,
-      });
+      setMatchResult(null);
     } finally {
       setLoading(false);
     }
