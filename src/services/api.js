@@ -297,6 +297,27 @@ export const api = {
     return data;
   },
 
+  // Booking Chat (Customer <-> Specialist, paid bookings only)
+  getBookingMessages: async (bookingId) => {
+    const res = await fetchWithTimeout(`${API_BASE}/bookings/${bookingId}/messages`, {
+      headers: getAuthHeaders(),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Failed to fetch booking messages');
+    return data || { messages: [] };
+  },
+
+  sendBookingMessage: async (bookingId, text) => {
+    const res = await fetchWithTimeout(`${API_BASE}/bookings/${bookingId}/messages`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ text }),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Failed to send message');
+    return data;
+  },
+
   // Orders
   getOrders: async () => {
     const res = await fetchWithTimeout(`${API_BASE}/orders`, {

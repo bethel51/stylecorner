@@ -1513,7 +1513,115 @@ app.post('/api/orders/:id/messages', authenticateToken, async (req, res) => {
   }
 });
 
+// ── BOOKING CHAT ROUTES (Customer <-> Specialist, paid bookings only) ──────────
+
+// GET booking messages
+app.get('/api/bookings/:id/messages', authenticateToken, async (req, res) => {
+  try {
+    const booking = await Booking.findById(req.params.id).lean();
+    if (!booking) return res.status(404).json({ error: 'Booking not found' });
+
+    const userEmail = (req.user.email || '').trim().toLowerCase();
+    const clientEmail = (booking.clientEmail || '').trim().toLowerCase();
+    const stylistEmail = (booking.stylistEmail || '').trim().toLowerCase();
+    const isAdmin = req.user.role === 'admin' || req.user.role === 'staff';
+
+    if (!isAdmin && userEmail !== clientEmail && userEmail !== stylistEmail) {
+      return res.status(403).json({ error: 'Access denied. You are not part of this booking.' });
+    }
+
+    if (booking.paymentStatus !== 'paid') {
+      return res.status(403).json({ error: 'Chat is only available for paid bookings.' });
+    }
+
+    const messages = booking.messages || [];
+    res.status(200).json({ messages, bookingId: booking._id, paymentStatus: booking.paymentStatus });
+  } catch (error) {
+    console.error('Failed to get booking messages:', error);
+    res.status(500).json({ error: 'Failed to fetch messages' });
+  }
+});
+
+// POST a booking message (customer or specialist)
+app.post('/api/bookings/:id/messages', authenticateToken, async (req, res) => {
+  try {
+    const { text } = req.body;
+    if (!text || !text.trim()) {
+      return res.status(400).json({ error: 'Message content is required.' });
+    }
+
+    const booking = await Booking.findById(req.params.id);
+    if (!booking) return res.status(404).json({ error: 'Booking not found' });
+
+    const userEmail = (req.user.email || '').trim().toLowerCase();
+    const clientEmail = (booking.clientEmail || '').trim().toLowerCase();
+    const stylistEmail = (booking.stylistEmail || '').trim().toLowerCase();
+    const isAdmin = req.user.role === 'admin' || req.user.role === 'staff';
+
+    if (!isAdmin && userEmail !== clientEmail && userEmail !== stylistEmail) {
+      return res.status(403).json({ error: 'Access denied. You are not part of this booking.' });
+    }
+
+    if (booking.paymentStatus !== 'paid') {
+      return res.status(403).json({ error: 'Chat is only available for paid bookings.' });
+    }
+
+    const isSpecialist = userEmail === stylistEmail || req.user.role === 'staff';
+    const senderRole = isSpecialist ? 'specialist' : 'customer';
+    const senderName = `${req.user.firstname || ''} ${req.user.lastname || ''}`.trim() || req.user.email;
+
+    const newMessage = {
+      sender: senderName,
+      senderRole,
+      text: text.trim(),
+      createdAt: new Date()
+    };
+
+    booking.messages.push(newMessage);
+    await booking.save();
+
+    // Notify the OTHER party
+    if (isSpecialist) {
+      // Specialist sent → notify customer
+      await createInAppNotification({
+        userEmail: booking.clientEmail,
+        title: `💬 ${booking.stylist} replied on your ${booking.service} booking`,
+        message: `"${text.trim()}"`,
+        type: 'booking',
+        bookingId: booking._id
+      });
+      await sendNotificationSafe(
+        booking.clientEmail,
+        `New Message from ${booking.stylist} — ${booking.service} Booking`,
+        `${booking.stylist} sent you a message:\n\n"${text.trim()}"\n\nLog in to your Style Corner dashboard to reply.`
+      );
+    } else {
+      // Customer sent → notify specialist
+      if (booking.stylistEmail) {
+        await createInAppNotification({
+          userEmail: booking.stylistEmail,
+          title: `💬 New message from ${booking.clientName} on booking`,
+          message: `${booking.service} — ${booking.date} at ${booking.time}: "${text.trim()}"`,
+          type: 'booking',
+          bookingId: booking._id
+        });
+        await sendNotificationSafe(
+          booking.stylistEmail,
+          `New Client Message — ${booking.clientName} (${booking.service})`,
+          `${booking.clientName} sent you a message about their ${booking.service} booking on ${booking.date} at ${booking.time}:\n\n"${text.trim()}"\n\nLog in to your Expert Dashboard to reply.`
+        );
+      }
+    }
+
+    res.status(200).json({ messages: booking.messages, bookingId: booking._id });
+  } catch (error) {
+    console.error('Failed to post booking message:', error);
+    res.status(500).json({ error: 'Failed to send message' });
+  }
+});
+
 // --- NOTIFICATION ROUTES ---
+
 app.get('/api/notifications', authenticateToken, async (req, res) => {
   try {
     const userEmail = (req.user.email || '').trim().toLowerCase();

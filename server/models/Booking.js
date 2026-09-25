@@ -21,7 +21,15 @@ const bookingSchema = new mongoose.Schema({
     default: 'pending' 
   },
   reminderSent: { type: Boolean, default: false },
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
+  messages: [
+    {
+      sender: { type: String, required: true },
+      senderRole: { type: String, enum: ['customer', 'specialist', 'system'], default: 'customer' },
+      text: { type: String, required: true },
+      createdAt: { type: Date, default: Date.now }
+    }
+  ]
 });
 
 module.exports = mongoose.model('Booking', bookingSchema);

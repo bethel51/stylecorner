@@ -49,6 +49,7 @@ import { PopupModal } from '../components/common/PopupModal';
 import { BottomSheet } from '../components/common/BottomSheet';
 import { WithdrawFundsModal } from '../components/common/WithdrawFundsModal';
 import { downloadBookingHistoryCSV, printBookingHistoryReport } from '../utils/bookingHistoryExport';
+import { BookingChatSheet } from '../components/booking/BookingChatSheet';
 
 // ─── Swipeable Booking Request Card ──────────────────────────────────────────
 const SwipeableBookingCard = ({
@@ -58,6 +59,7 @@ const SwipeableBookingCard = ({
   onDecline,
   onComplete,
   openClientWhatsApp,
+  onChatClient,
 }) => {
   const cardRef = useRef(null);
   const startX = useRef(0);
@@ -442,26 +444,65 @@ const SwipeableBookingCard = ({
                 <span>Send Completion Message</span>
               </a>
             )}
+
+            {/* In-app Chat Client button (paid bookings) */}
+            {b.paymentStatus === 'paid' && onChatClient && (
+              <button
+                onClick={() => onChatClient(b)}
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem',
+                  background: 'linear-gradient(135deg, rgba(167,139,250,0.15), rgba(124,58,237,0.15))',
+                  border: '1px solid rgba(167,139,250,0.35)', color: '#c4b5fd',
+                  borderRadius: '10px', height: '40px',
+                  fontSize: '0.78rem', fontWeight: 800, fontFamily: 'Outfit', cursor: 'pointer',
+                }}
+              >
+                <MessageSquare size={14} /> Chat Client
+              </button>
+            )}
           </div>
         )}
+
 
         {b.status === 'completed' && (
           <div
             style={{
               display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '0.4rem',
-              color: '#10b981',
-              fontSize: '0.78rem',
-              fontWeight: 700,
-              fontFamily: 'Outfit',
-              background: 'rgba(16, 185, 129, 0.1)',
-              padding: '0.5rem',
-              borderRadius: '10px',
+              flexDirection: 'column',
+              gap: '0.5rem',
             }}
           >
-            <Check size={14} /> Service Completed & Credited to Wallet
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.4rem',
+                color: '#10b981',
+                fontSize: '0.78rem',
+                fontWeight: 700,
+                fontFamily: 'Outfit',
+                background: 'rgba(16, 185, 129, 0.1)',
+                padding: '0.5rem',
+                borderRadius: '10px',
+              }}
+            >
+              <Check size={14} /> Service Completed & Credited to Wallet
+            </div>
+            {b.paymentStatus === 'paid' && onChatClient && (
+              <button
+                onClick={() => onChatClient(b)}
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem',
+                  background: 'linear-gradient(135deg, rgba(167,139,250,0.15), rgba(124,58,237,0.15))',
+                  border: '1px solid rgba(167,139,250,0.35)', color: '#c4b5fd',
+                  borderRadius: '10px', height: '38px',
+                  fontSize: '0.78rem', fontWeight: 800, fontFamily: 'Outfit', cursor: 'pointer',
+                }}
+              >
+                <MessageSquare size={14} /> Chat Client
+              </button>
+            )}
           </div>
         )}
       </div>
@@ -481,6 +522,7 @@ export const ExpertDashboard = () => {
   const [updatingId, setUpdatingId] = useState(null);
   const [isAvailable, setIsAvailable] = useState(true);
   const [filterTab, setFilterTab] = useState('all'); // 'all' | 'pending' | 'accepted' | 'completed' | 'today'
+  const [chatBooking, setChatBooking] = useState(null); // booking opened in chat sheet
 
   // Wallet & Payout States
   const [walletBalance, setWalletBalance] = useState(0);
@@ -1403,6 +1445,7 @@ export const ExpertDashboard = () => {
                   onDecline={() => handleUpdateStatus(b._id, 'rejected')}
                   onComplete={() => handleUpdateStatus(b._id, 'completed')}
                   openClientWhatsApp={openClientWhatsApp}
+                  onChatClient={(booking) => setChatBooking(booking)}
                 />
               ))}
             </div>
@@ -2734,6 +2777,15 @@ export const ExpertDashboard = () => {
           </div>
         </PopupModal>
       )}
+
+      {/* ── Booking Chat Sheet (Expert <-> Customer, paid bookings only) ── */}
+      <BookingChatSheet
+        booking={chatBooking}
+        currentUserEmail={user?.email}
+        viewerRole="specialist"
+        isOpen={!!chatBooking}
+        onClose={() => setChatBooking(null)}
+      />
 
     </PageContainer>
   );

@@ -48,6 +48,7 @@ import { OrderTrackingSheet } from '../components/store/OrderTrackingSheet';
 import { LocationSelector } from '../components/store/LocationSelector';
 import { downloadBookingHistoryCSV, printBookingHistoryReport } from '../utils/bookingHistoryExport';
 import { OptimizedImage } from '../components/common/OptimizedImage';
+import { BookingChatSheet } from '../components/booking/BookingChatSheet';
 
 export const CustomerDashboard = () => {
   const navigate = useNavigate();
@@ -58,6 +59,7 @@ export const CustomerDashboard = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('bookings'); // 'bookings' | 'orders'
+  const [chatBooking, setChatBooking] = useState(null); // booking opened in chat sheet
 
   // Dedicated Sheet/Page Navigation States
   const [showHistorySheet, setShowHistorySheet] = useState(false);
@@ -445,32 +447,30 @@ export const CustomerDashboard = () => {
                         Session Details
                       </button>
 
-                      {isAccepted && upcoming.stylist && (
-                        <a
-                          href={`https://wa.me/?text=${encodeURIComponent(`Hello ${upcoming.stylist}, I have a booking with you for ${upcoming.service} on ${upcoming.date} at ${upcoming.time} via Style Corner.`)}`}
-                          target="_blank"
-                          rel="noreferrer"
+                      {isAccepted && upcoming.paymentStatus === 'paid' && upcoming.stylist && (
+                        <button
+                          onClick={() => setChatBooking(upcoming)}
                           style={{
-                            background: 'rgba(34, 197, 94, 0.15)',
-                            border: '1px solid rgba(34, 197, 94, 0.4)',
-                            color: '#4ade80',
+                            background: 'linear-gradient(135deg, rgba(167,139,250,0.18), rgba(124,58,237,0.18))',
+                            border: '1px solid rgba(167,139,250,0.4)',
+                            color: '#c4b5fd',
                             borderRadius: '12px',
                             padding: '0.5rem 0.95rem',
                             minHeight: '44px',
                             fontFamily: 'var(--font-heading)',
                             fontSize: '0.78rem',
                             fontWeight: 800,
-                            textDecoration: 'none',
                             display: 'inline-flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             gap: '0.35rem',
+                            cursor: 'pointer',
                             touchAction: 'manipulation',
                             WebkitTapHighlightColor: 'transparent',
                           }}
                         >
-                          <MessageSquare size={14} /> Chat Specialist
-                        </a>
+                          <MessageSquare size={14} /> Chat Expert
+                        </button>
                       )}
                     </div>
                   </div>
@@ -1174,6 +1174,21 @@ export const CustomerDashboard = () => {
                               <Star size={13} fill="#b5952f" /> Rate Specialist
                             </button>
                           )}
+                          {(b.status === 'accepted' || b.status === 'completed') && b.paymentStatus === 'paid' && (
+                            <button
+                              onClick={() => { setShowHistorySheet(false); setChatBooking(b); }}
+                              style={{
+                                background: 'linear-gradient(135deg, rgba(167,139,250,0.15), rgba(124,58,237,0.15))',
+                                border: '1px solid rgba(167,139,250,0.35)',
+                                color: '#c4b5fd',
+                                minHeight: '44px', width: 'auto', fontSize: '0.78rem', padding: '0.45rem 0.95rem', borderRadius: '12px',
+                                fontFamily: 'Outfit', fontWeight: 800, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
+                                touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent',
+                              }}
+                            >
+                              <MessageSquare size={13} /> Chat Expert
+                            </button>
+                          )}
                           <button
                             onClick={() => { setShowHistorySheet(false); navigate(`/booking?stylist=${encodeURIComponent(b.stylist)}&service=${encodeURIComponent(b.service)}`); }}
                             className="app-btn app-btn-outline"
@@ -1183,6 +1198,7 @@ export const CustomerDashboard = () => {
                           </button>
                         </div>
                       )}
+
                     </div>
                   ))}
                 </div>
@@ -1522,6 +1538,15 @@ export const CustomerDashboard = () => {
         onSuccess={(newBal) => {
           if (updateProfile) updateProfile({ walletBalance: newBal });
         }}
+      />
+
+      {/* ── Booking Chat Sheet (Customer <-> Specialist, paid bookings only) ── */}
+      <BookingChatSheet
+        booking={chatBooking}
+        currentUserEmail={user?.email}
+        viewerRole="customer"
+        isOpen={!!chatBooking}
+        onClose={() => setChatBooking(null)}
       />
     </PageContainer>
   );
