@@ -244,7 +244,7 @@ export const Experts = () => {
             {filteredStylists.map((stylist) => (
               <div
                 key={stylist.id}
-                onClick={() => navigate(`/expert-profile?name=${encodeURIComponent(stylist.name)}`)}
+                onClick={() => navigate(`/expert-profile?id=${encodeURIComponent(stylist.id)}&name=${encodeURIComponent(stylist.name)}`)}
                 onMouseEnter={() => preloadRoute('/expert-profile')}
                 style={{
                   background: '#151822',
@@ -367,7 +367,8 @@ export const Experts = () => {
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    navigate(`/booking?stylist=${encodeURIComponent(stylist.name)}`);
+                    const primaryCategory = Array.isArray(stylist.categories) && stylist.categories.length > 0 ? stylist.categories[0] : '';
+                    navigate(`/booking?stylist=${encodeURIComponent(stylist.name)}&stylistId=${encodeURIComponent(stylist.id)}${primaryCategory ? `&service=${encodeURIComponent(primaryCategory)}` : ''}`);
                   }}
                   className="app-btn app-btn-accent"
                   style={{

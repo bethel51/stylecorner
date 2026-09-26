@@ -53,7 +53,8 @@ export const ExpertProfile = () => {
   const [searchParams] = useSearchParams();
   const { showToast, user, updateProfile } = useAuth();
 
-  const queryName = searchParams.get('name') || searchParams.get('stylist') || (user?.firstname ? `${user.firstname} ${user.lastname || ''}` : 'Style Specialist');
+  const queryName = searchParams.get('name') || searchParams.get('stylist') || '';
+  const queryId = searchParams.get('id') || '';
   
   const [expert, setExpert] = useState(null);
   const [selectedService, setSelectedService] = useState(null);
@@ -86,13 +87,16 @@ export const ExpertProfile = () => {
   const [newServicePrice, setNewServicePrice] = useState('');
 
   const myFullName = user ? `${user.firstname || ''} ${user.lastname || ''}`.trim().toLowerCase() : '';
-  const searchLower = queryName.toLowerCase();
-  const hasExplicitQuery = searchParams.get('name') || searchParams.get('stylist') || searchParams.get('id');
+  const searchLower = queryName.trim().toLowerCase();
+  const hasExplicitQuery = Boolean(queryId || queryName);
   const isViewingMyself = user && user.role === 'staff' && (
     !hasExplicitQuery ||
-    searchLower === myFullName ||
-    (user._id && searchLower === String(user._id).toLowerCase()) ||
-    (user.firstname && searchLower === user.firstname.toLowerCase())
+    (queryId && user._id && String(user._id) === queryId) ||
+    (searchLower && (
+      searchLower === myFullName ||
+      (user._id && searchLower === String(user._id).toLowerCase()) ||
+      (user.firstname && searchLower === user.firstname.toLowerCase())
+    ))
   );
 
   const [loadingProfile, setLoadingProfile] = useState(true);
@@ -133,17 +137,31 @@ export const ExpertProfile = () => {
           const verifiedStaff = data.filter((s) => s.role === 'staff' || s.role === 'expert' || s.isVerified === true);
           const pool = verifiedStaff.length > 0 ? verifiedStaff : data;
 
-          const matched = hasExplicitQuery
-            ? pool.find((s) => {
+          let matched = null;
+          if (queryId) {
+            matched = pool.find((s) => s._id && String(s._id) === queryId);
+          }
+          if (!matched && searchLower) {
+            // 1. Exact full name match
+            matched = pool.find((s) => {
+              const fullName = `${s.firstname || ''} ${s.lastname || ''}`.trim().toLowerCase();
+              return fullName === searchLower || (s._id && String(s._id).toLowerCase() === searchLower);
+            });
+            // 2. Exact first name match
+            if (!matched) {
+              matched = pool.find((s) => s.firstname && s.firstname.trim().toLowerCase() === searchLower);
+            }
+            // 3. Fallback prefix match on full name
+            if (!matched) {
+              matched = pool.find((s) => {
                 const fullName = `${s.firstname || ''} ${s.lastname || ''}`.trim().toLowerCase();
-                return (
-                  fullName.includes(searchLower) ||
-                  searchLower.includes(fullName) ||
-                  (s.firstname && searchLower.includes(s.firstname.toLowerCase())) ||
-                  (s._id && String(s._id).toLowerCase() === searchLower)
-                );
-              })
-            : pool[0];
+                return fullName.startsWith(searchLower);
+              });
+            }
+          }
+          if (!matched && !hasExplicitQuery) {
+            matched = pool[0];
+          }
 
           if (matched) {
             const fullName = `${matched.firstname || ''} ${matched.lastname || ''}`.trim() || 'Verified Specialist';
@@ -355,9 +373,8 @@ export const ExpertProfile = () => {
 
   const handleBookNow = () => {
     if (!expert) return;
-    const stylistFirstName = expert.name.split(' ')[0];
     const serviceName = selectedService ? selectedService.name : (expert.services[0]?.name || '');
-    navigate(`/booking?stylist=${encodeURIComponent(stylistFirstName)}&service=${encodeURIComponent(serviceName)}`);
+    navigate(`/booking?stylist=${encodeURIComponent(expert.name)}&stylistId=${encodeURIComponent(expert.id || '')}&service=${encodeURIComponent(serviceName)}`);
   };
 
   if (loadingProfile) {
@@ -1231,8 +1248,7 @@ export const ExpertProfile = () => {
                 type="button"
                 onClick={() => {
                   const targetSvc = activePortfolioModal.service || selectedService?.name || '';
-                  const stylistFirstName = expert.name.split(' ')[0];
-                  navigate(`/booking?stylist=${encodeURIComponent(stylistFirstName)}${targetSvc ? `&service=${encodeURIComponent(targetSvc)}` : ''}`);
+                  navigate(`/booking?stylist=${encodeURIComponent(expert.name)}&stylistId=${encodeURIComponent(expert.id || '')}${targetSvc ? `&service=${encodeURIComponent(targetSvc)}` : ''}`);
                   setActivePortfolioModal(null);
                 }}
                 style={{

@@ -241,15 +241,30 @@ export const Booking = () => {
 
           setSpecialistsList(mapped);
 
-          const found = queryStylist
-            ? mapped.find((m) =>
-                m.name.toLowerCase().includes(queryStylist.toLowerCase()) ||
-                queryStylist.toLowerCase().includes(m.name.toLowerCase()) ||
-                (queryStylistId && String(m.id) === String(queryStylistId))
-              )
-            : null;
+          let target = null;
+          if (queryStylistId) {
+            target = mapped.find((m) => String(m.id) === String(queryStylistId));
+          }
+          if (!target && queryStylist) {
+            const qLower = queryStylist.trim().toLowerCase();
+            // 1. Exact full name match
+            target = mapped.find((m) => m.name.toLowerCase() === qLower);
+            // 2. Exact first name match if unambiguous
+            if (!target) {
+              target = mapped.find((m) => m.name.toLowerCase().split(' ')[0] === qLower);
+            }
+            // 3. Fallback word match
+            if (!target) {
+              target = mapped.find((m) => {
+                const words = m.name.toLowerCase().split(/\s+/);
+                return words.includes(qLower);
+              });
+            }
+          }
+          if (!target && mapped.length > 0) {
+            target = mapped[0];
+          }
 
-          const target = found || mapped[0] || null;
           if (target) {
             setStylist(target.name);
             setSelectedSpecialist(target);
@@ -422,7 +437,7 @@ export const Booking = () => {
 
   return (
     <PageContainer showBack={true} onOpenAiMatcher={() => navigate('/ai-matcher')}>
-      <div style={{ maxWidth: '520px', margin: '0 auto', paddingBottom: '3rem' }}>
+      <div style={{ maxWidth: '520px', margin: '0 auto', paddingBottom: 'calc(var(--bottom-nav-height, 70px) + env(safe-area-inset-bottom, 24px) + 3.5rem)' }}>
         
         {/* Top Header */}
         <div style={{ marginBottom: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -759,20 +774,24 @@ export const Booking = () => {
             </div>
 
             {/* Next Button */}
-            <button
-              onClick={() => setActiveStep(2)}
-              className="app-btn app-btn-accent"
-              style={{
-                width: '100%',
-                borderRadius: '16px',
-                padding: '0.95rem',
-                fontSize: '0.92rem',
-                boxShadow: '0 8px 24px rgba(245, 185, 66, 0.35)',
-              }}
-            >
-              <span>Next: Select Specialist</span>
-              <ArrowRight size={18} />
-            </button>
+            <div style={{ marginTop: '1.5rem', paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1rem)' }}>
+              <button
+                onClick={() => setActiveStep(2)}
+                className="app-btn app-btn-accent"
+                style={{
+                  width: '100%',
+                  minHeight: '48px',
+                  borderRadius: '16px',
+                  padding: '0.95rem',
+                  fontSize: '0.92rem',
+                  boxShadow: '0 8px 24px rgba(245, 185, 66, 0.35)',
+                  touchAction: 'manipulation',
+                }}
+              >
+                <span>Next: Select Specialist</span>
+                <ArrowRight size={18} />
+              </button>
+            </div>
           </div>
         )}
 
@@ -820,82 +839,92 @@ export const Booking = () => {
                 </div>
               ) : (
                 specialistsList.map((sp) => {
-                const isSelected = stylist.toLowerCase().includes(sp.name.toLowerCase()) || sp.name.toLowerCase().includes(stylist.toLowerCase());
-                return (
-                  <div
-                    key={sp.id}
-                    onClick={() => {
-                      setStylist(sp.name);
-                      setSelectedSpecialist(sp);
-                    }}
-                    style={{
-                      background: '#151822',
-                      borderRadius: '16px',
-                      padding: '0.95rem 1rem',
-                      border: `1.5px solid ${isSelected ? '#f5b942' : 'rgba(255, 255, 255, 0.08)'}`,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      cursor: 'pointer',
-                      transition: 'border-color 0.15s ease',
-                    }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-                      <Avatar
-                        src={sp.image}
-                        name={sp.name}
-                        size={48}
-                        borderRadius="50%"
-                      />
-                      <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                          <h4 style={{ fontFamily: 'Outfit', fontSize: '0.96rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
-                            {sp.name}
-                          </h4>
-                          <ShieldCheck size={14} color="#f5b942" />
-                        </div>
-                        <span style={{ fontSize: '0.74rem', color: '#94a3b8' }}>{sp.role}</span>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', marginTop: '0.2rem' }}>
-                          <Star size={11} fill="#f5b942" color="#f5b942" />
-                          <span style={{ fontSize: '0.72rem', color: '#f5b942', fontWeight: 800 }}>
-                            {sp.rating || 4.95}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
+                  const isSelected = selectedSpecialist
+                    ? String(selectedSpecialist.id) === String(sp.id)
+                    : (Boolean(stylist) && stylist.trim().toLowerCase() === sp.name.trim().toLowerCase());
+                  return (
                     <div
+                      key={sp.id}
+                      onClick={() => {
+                        setSelectedSpecialist(sp);
+                        setStylist(sp.name);
+                      }}
                       style={{
-                        width: '22px',
-                        height: '22px',
-                        borderRadius: '50%',
-                        border: `1.5px solid ${isSelected ? '#f5b942' : '#394056'}`,
-                        background: isSelected ? '#f5b942' : 'transparent',
+                        background: '#151822',
+                        borderRadius: '16px',
+                        padding: '0.95rem 1rem',
+                        border: `1.5px solid ${isSelected ? '#f5b942' : 'rgba(255, 255, 255, 0.08)'}`,
                         display: 'flex',
                         alignItems: 'center',
-                        justifyContent: 'center',
-                        flexShrink: 0,
+                        justifyContent: 'space-between',
+                        cursor: 'pointer',
+                        transition: 'border-color 0.15s ease',
                       }}
                     >
-                      {isSelected && <Check size={13} color="#0c0e14" strokeWidth={3} />}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                        <Avatar
+                          src={sp.image}
+                          name={sp.name}
+                          size={48}
+                          borderRadius="50%"
+                        />
+                        <div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                            <h4 style={{ fontFamily: 'Outfit', fontSize: '0.96rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+                              {sp.name}
+                            </h4>
+                            <ShieldCheck size={14} color="#f5b942" />
+                          </div>
+                          <span style={{ fontSize: '0.74rem', color: '#94a3b8' }}>{sp.role}</span>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', marginTop: '0.2rem' }}>
+                            <Star size={11} fill="#f5b942" color="#f5b942" />
+                            <span style={{ fontSize: '0.72rem', color: '#f5b942', fontWeight: 800 }}>
+                              {sp.rating || 4.95}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div
+                        style={{
+                          width: '22px',
+                          height: '22px',
+                          borderRadius: '50%',
+                          border: `1.5px solid ${isSelected ? '#f5b942' : '#394056'}`,
+                          background: isSelected ? '#f5b942' : 'transparent',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          flexShrink: 0,
+                          transition: 'all 0.15s ease',
+                        }}
+                      >
+                        {isSelected && <Check size={13} color="#0c0e14" strokeWidth={3} />}
+                      </div>
                     </div>
-                  </div>
-                );
-              }))}
+                  );
+                }))}
             </div>
 
-            <div style={{ display: 'flex', gap: '0.65rem' }}>
+            <div
+              style={{
+                display: 'flex',
+                gap: '0.65rem',
+                marginTop: '1.5rem',
+                paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1rem)',
+              }}
+            >
               <button
                 onClick={handlePrevStep}
                 className="app-btn app-btn-outline"
-                style={{ flex: 1, borderRadius: '14px' }}
+                style={{ flex: 1, minHeight: '48px', borderRadius: '14px', touchAction: 'manipulation' }}
               >
                 Back
               </button>
               <button
                 onClick={handleNextStep}
                 className="app-btn app-btn-accent"
-                style={{ flex: 2, borderRadius: '14px' }}
+                style={{ flex: 2, minHeight: '48px', borderRadius: '14px', touchAction: 'manipulation' }}
               >
                 <span>Next: Date & Time</span>
                 <ArrowRight size={18} />
@@ -1159,18 +1188,25 @@ export const Booking = () => {
             </div>
 
             {/* Navigation Buttons */}
-            <div style={{ display: 'flex', gap: '0.65rem' }}>
+            <div
+              style={{
+                display: 'flex',
+                gap: '0.65rem',
+                marginTop: '1.5rem',
+                paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1rem)',
+              }}
+            >
               <button
                 onClick={handlePrevStep}
                 className="app-btn app-btn-outline"
-                style={{ flex: 1, borderRadius: '14px' }}
+                style={{ flex: 1, minHeight: '48px', borderRadius: '14px', touchAction: 'manipulation' }}
               >
                 Back
               </button>
               <button
                 onClick={handleNextStep}
                 className="app-btn app-btn-accent"
-                style={{ flex: 2, borderRadius: '14px' }}
+                style={{ flex: 2, minHeight: '48px', borderRadius: '14px', touchAction: 'manipulation' }}
               >
                 <span>Review & Confirm</span>
                 <ArrowRight size={18} />
@@ -1264,11 +1300,18 @@ export const Booking = () => {
               </button>
             </form>
 
-            <div style={{ display: 'flex', gap: '0.65rem' }}>
+            <div
+              style={{
+                display: 'flex',
+                gap: '0.65rem',
+                marginTop: '1.5rem',
+                paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1rem)',
+              }}
+            >
               <button
                 onClick={handlePrevStep}
                 className="app-btn app-btn-outline"
-                style={{ flex: 1, borderRadius: '14px' }}
+                style={{ flex: 1, minHeight: '48px', borderRadius: '14px', touchAction: 'manipulation' }}
               >
                 Back
               </button>
@@ -1276,7 +1319,7 @@ export const Booking = () => {
                 onClick={handleBookingSubmit}
                 disabled={submitting}
                 className="app-btn app-btn-accent"
-                style={{ flex: 2, borderRadius: '14px' }}
+                style={{ flex: 2, minHeight: '48px', borderRadius: '14px', touchAction: 'manipulation' }}
               >
                 {submitting ? 'Scheduling Session...' : 'Proceed to Payment'}
               </button>

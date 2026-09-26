@@ -201,7 +201,7 @@ html, body {
 
   .page-content {
     padding: 0.85rem !important;
-    padding-bottom: calc(1.75rem + env(safe-area-inset-bottom)) !important;
+    padding-bottom: calc(var(--bottom-nav-height, 70px) + env(safe-area-inset-bottom, 20px) + 2rem) !important;
   }
 }
 
@@ -216,7 +216,7 @@ html, body {
 
 .page-content {
   padding: 1rem;
-  padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+  padding-bottom: calc(var(--bottom-nav-height, 70px) + env(safe-area-inset-bottom, 20px) + 2rem);
 }
 
 /* App-Style Header */
