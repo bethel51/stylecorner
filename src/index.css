@@ -1387,3 +1387,167 @@ button:active, .dashboard-quick-actions button:active {
   color: #475569 !important;
 }
 
+/* ═══════════════════════════════════════════════════════════
+   UI CONSISTENCY & MICRO-ANIMATION UPGRADES
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Button hover lift ── */
+.app-btn-primary:hover:not(:disabled),
+.app-btn-accent:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 32px -6px rgba(212, 175, 55, 0.45);
+}
+
+.app-btn-outline:hover:not(:disabled) {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+}
+
+/* ── Card hover lift ── */
+.app-card:hover {
+  transform: translateY(-2px) translateZ(0);
+  border-color: var(--color-border-accent);
+  box-shadow: var(--shadow-md);
+}
+
+/* ── Glass card consistent dark overlay ── */
+.glass-card {
+  background: rgba(21, 24, 34, 0.72) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+}
+[data-theme="light"] .glass-card {
+  background: rgba(255, 255, 255, 0.82) !important;
+}
+
+/* ── Input focus ring polish ── */
+.app-input:focus,
+.app-select:focus,
+.app-textarea:focus {
+  border-color: var(--color-accent) !important;
+  box-shadow: 0 0 0 3px var(--color-accent-soft), 0 2px 8px rgba(0,0,0,0.15) !important;
+  outline: none !important;
+}
+
+/* ── Skeleton shimmer speed-up ── */
+.skeleton {
+  animation-duration: 1.4s !important;
+}
+
+/* ── Smooth page transitions ── */
+.page-content {
+  animation: pageFadeIn 0.3s ease-out both;
+}
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Tap scale feedback for interactive cards ── */
+.tap-scale:active {
+  transform: scale(0.975) !important;
+  transition: transform 0.1s ease !important;
+}
+
+/* ── Status badge glow ── */
+.status-accepted, .status-verified, .status-completed {
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.18);
+}
+.status-pending {
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.15);
+}
+
+/* ── Bottom sheet handle wider tap ── */
+.bottom-sheet-handle {
+  width: 48px !important;
+  cursor: grab;
+  opacity: 0.45;
+  transition: opacity 0.2s ease, width 0.2s ease;
+}
+.bottom-sheet-handle:hover {
+  width: 64px !important;
+  opacity: 0.65;
+}
+
+/* ── Smooth scroll everywhere ── */
+* {
+  scroll-behavior: smooth;
+}
+
+/* ── Nav item tap feedback ── */
+.bottom-nav-item:active svg {
+  transform: scale(0.88) !important;
+}
+
+/* ── Focus visible rings for accessibility ── */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* ── Loading pulse for avatar placeholders ── */
+@keyframes avatarPulse {
+  0%, 100% { opacity: 0.6; }
+  50%       { opacity: 1;   }
+}
+.avatar-loading {
+  animation: avatarPulse 1.5s ease-in-out infinite;
+}
+
+/* ── Notification dot ping ── */
+@keyframes ping {
+  0%   { transform: scale(1);  opacity: 1; }
+  75%, 100% { transform: scale(2); opacity: 0; }
+}
+.badge-dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--color-accent);
+  animation: ping 1.6s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+[data-theme="light"] [style*="background: #151822"],
+[data-theme="light"] [style*="background:#151822"],
+[data-theme="light"] [style*="background: #10131b"],
+[data-theme="light"] [style*="background:#10131b"],
+[data-theme="light"] [style*="background: #1c202d"],
+[data-theme="light"] [style*="background:#1c202d"] {
+  background: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] [style*="background: #0C0E14"],
+[data-theme="light"] [style*="background:#0C0E14"],
+[data-theme="light"] [style*="background: #0c0e14"],
+[data-theme="light"] [style*="background:#0c0e14"] {
+  background: #f8f9fc !important;
+}
+
+[data-theme="light"] [style*="background: rgba(12, 14, 20"],
+[data-theme="light"] [style*="background:rgba(12, 14, 20"] {
+  background: rgba(255, 255, 255, 0.94) !important;
+}
+
+/* Light mode text readability */
+[data-theme="light"] h1[style*="color: #ffffff"],
+[data-theme="light"] h2[style*="color: #ffffff"],
+[data-theme="light"] h3[style*="color: #ffffff"],
+[data-theme="light"] h4[style*="color: #ffffff"],
+[data-theme="light"] span[style*="color: #ffffff"]:not([style*="background: #f5b942"]):not([style*="background:#f5b942"]):not(.badge-dot) {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] p[style*="color: #cbd5e1"],
+[data-theme="light"] span[style*="color: #94a3b8"],
+[data-theme="light"] span[style*="color: #64748b"] {
+  color: #475569 !important;
+}
+
