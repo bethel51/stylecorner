@@ -89,6 +89,7 @@ const Wallet = safeLazy(() => import('./pages/Wallet').then(m => ({ default: m.W
 const Notifications = safeLazy(() => import('./pages/Notifications').then(m => ({ default: m.Notifications })));
 const AdminLogin = safeLazy(() => import('./pages/AdminLogin').then(m => ({ default: m.AdminLogin })));
 const AdminDashboard = safeLazy(() => import('./pages/AdminDashboard').then(m => ({ default: m.AdminDashboard })));
+const BillboardFlyersPage = safeLazy(() => import('./pages/BillboardFlyersPage').then(m => ({ default: m.BillboardFlyersPage || m.default })));
 
 // High-Performance Smooth PageLoader (Theme Responsive & 60fps)
 export const PageLoader = () => (
@@ -311,6 +312,11 @@ export const App = () => {
                 }
               />
               <Route path="/policies" element={<Policies />} />
+
+              {/* Marketing & Billboard Flyers Routes */}
+              <Route path="/billboard-flyers" element={<BillboardFlyersPage />} />
+              <Route path="/billboard-flyers.html" element={<BillboardFlyersPage />} />
+              <Route path="/admin/marketing-flyers" element={<BillboardFlyersPage />} />
 
               {/* Fallback Catch-all */}
               <Route path="*" element={<Navigate to="/" replace />} />

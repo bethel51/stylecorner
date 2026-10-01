@@ -48,6 +48,7 @@ import { StatusBadge } from '../components/common/StatusBadge';
 import { OrderTrackingSheet } from '../components/store/OrderTrackingSheet';
 import { NotificationSheet } from '../components/common/NotificationSheet';
 import { exportOrdersToCSV, exportBookingsToCSV } from '../utils/exportUtils';
+import { QrWorldSvg, QrRecruitSvg } from '../components/common/QrCodeSvgs';
 
 export const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -82,15 +83,10 @@ export const AdminDashboard = () => {
   const [activeBannerModal, setActiveBannerModal] = useState(null); // 'billboard' | 'portrait' | 'recruit' | null
 
   const handleDownloadBannerPdf = (type) => {
-    const hash = type === 'portrait' ? 'street' : type;
-    const printUrl = `/billboard-flyers.html#${hash}`;
+    const hash = type === 'portrait' ? 'street' : (type || 'all');
+    const printUrl = `/billboard-flyers?design=${hash}&print=true`;
     const win = window.open(printUrl, '_blank');
-    if (win) {
-      win.focus();
-      setTimeout(() => {
-        try { win.print(); } catch (e) {}
-      }, 700);
-    } else {
+    if (!win) {
       window.location.href = printUrl;
     }
   };
@@ -1957,7 +1953,7 @@ export const AdminDashboard = () => {
                   <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                     <button
                       type="button"
-                      onClick={() => window.open('/billboard-flyers.html', '_blank')}
+                      onClick={() => window.open('/billboard-flyers', '_blank')}
                       style={{
                         display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
                         padding: '0.55rem 1rem', borderRadius: '10px', fontSize: '0.8rem', fontWeight: 800,
@@ -1969,7 +1965,7 @@ export const AdminDashboard = () => {
                     </button>
                     <button
                       type="button"
-                      onClick={() => { const w = window.open('/billboard-flyers.html', '_blank'); w && setTimeout(() => w.print(), 800); }}
+                      onClick={() => handleDownloadBannerPdf('all')}
                       style={{
                         display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
                         padding: '0.55rem 1rem', borderRadius: '10px', fontSize: '0.8rem', fontWeight: 800,
@@ -2058,12 +2054,7 @@ export const AdminDashboard = () => {
                         </div>
                       </div>
                       <div style={{ position: 'relative', zIndex: 1, flexShrink: 0, textAlign: 'center' }}>
-                        <div style={{ backgroundColor: '#ffffff', padding: '6px', borderRadius: '8px', display: 'inline-block', boxShadow: '0 4px 16px rgba(0,0,0,0.4)', position: 'relative' }}>
-                          <img src="/images/qr-world.svg" alt="QR Code — stylecorner.world" style={{ width: '54px', height: '54px', display: 'block' }} />
-                          <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '14px', height: '14px', borderRadius: '3px', backgroundColor: '#08090C', border: '1px solid #F5B942', overflow: 'hidden' }}>
-                            <img src="/pwa-icon-192.png" alt="SC" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                          </div>
-                        </div>
+                        <QrWorldSvg size={64} logoSize={16} />
                         <div style={{ fontSize: '0.42rem', color: '#94a3b8', marginTop: '0.3rem', fontFamily: 'Outfit' }}>Scan to book</div>
                       </div>
                     </div>
@@ -2165,12 +2156,7 @@ export const AdminDashboard = () => {
                         </div>
                       </div>
                       <div style={{ position: 'relative', zIndex: 1, flexShrink: 0, textAlign: 'center' }}>
-                        <div style={{ backgroundColor: '#ffffff', padding: '6px', borderRadius: '8px', display: 'inline-block', boxShadow: '0 4px 16px rgba(0,0,0,0.4)', position: 'relative' }}>
-                          <img src="/images/qr-world.svg" alt="QR Code — stylecorner.world" style={{ width: '54px', height: '54px', display: 'block' }} />
-                          <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '14px', height: '14px', borderRadius: '3px', backgroundColor: '#08090C', border: '1px solid #F5B942', overflow: 'hidden' }}>
-                            <img src="/pwa-icon-192.png" alt="SC" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                          </div>
-                        </div>
+                        <QrWorldSvg size={64} logoSize={16} />
                         <div style={{ fontSize: '0.42rem', color: '#94a3b8', marginTop: '0.3rem', fontFamily: 'Outfit' }}>Scan to book</div>
                       </div>
                     </div>
@@ -2277,12 +2263,7 @@ export const AdminDashboard = () => {
                         </div>
                       </div>
                       <div style={{ position: 'relative', zIndex: 1, flexShrink: 0, textAlign: 'center' }}>
-                        <div style={{ backgroundColor: '#ffffff', padding: '6px', borderRadius: '8px', display: 'inline-block', boxShadow: '0 4px 16px rgba(0,0,0,0.4)', position: 'relative' }}>
-                          <img src="/images/qr-recruit.svg" alt="QR Code — role-selection" style={{ width: '54px', height: '54px', display: 'block' }} />
-                          <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '14px', height: '14px', borderRadius: '3px', backgroundColor: '#08090C', border: '1px solid #4ade80', overflow: 'hidden' }}>
-                            <img src="/pwa-icon-192.png" alt="SC" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                          </div>
-                        </div>
+                        <QrRecruitSvg size={64} logoSize={16} />
                         <div style={{ fontSize: '0.42rem', color: '#94a3b8', marginTop: '0.3rem', fontFamily: 'Outfit' }}>Scan to join</div>
                       </div>
                     </div>
@@ -2360,7 +2341,7 @@ export const AdminDashboard = () => {
               }}>
                 <Shield size={15} color="#f5b942" style={{ flexShrink: 0, marginTop: '0.1rem' }} />
                 <p style={{ fontSize: '0.75rem', color: '#94a3b8', margin: 0, lineHeight: 1.6 }}>
-                  <strong style={{ color: '#f5b942' }}>Admin Only</strong> — These marketing assets are private and only visible inside the admin portal. The standalone flyer page (<code style={{ color: '#f5b942', fontSize: '0.72rem' }}>/billboard-flyers.html</code>) is excluded from public routing and ignored by git. QR codes encode live URLs and are always scannable.
+                  <strong style={{ color: '#f5b942' }}>Admin Only</strong> — These marketing assets are private and only visible inside the admin portal. The standalone flyer page (<code style={{ color: '#f5b942', fontSize: '0.72rem' }}>/billboard-flyers</code>) is accessible directly or via print mode. QR codes encode live URLs and are always scannable.
                 </p>
               </div>
             </div>
@@ -3051,11 +3032,8 @@ export const AdminDashboard = () => {
                       ⚡ Instant Mobile Booking
                     </div>
 
-                    <div style={{ width: '190px', height: '190px', backgroundColor: '#ffffff', borderRadius: '16px', padding: '10px', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 30px rgba(0,0,0,0.5)', marginBottom: '0.75rem' }}>
-                      <img src="/images/qr-world.svg" alt="QR Code" style={{ width: '100%', height: '100%', display: 'block' }} />
-                      <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '38px', height: '38px', borderRadius: '9px', backgroundColor: '#08090C', border: '2.5px solid #F5B942', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.4)' }}>
-                        <img src="/pwa-icon-192.png" alt="SC" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                      </div>
+                    <div style={{ marginBottom: '0.75rem' }}>
+                      <QrWorldSvg size={200} logoSize={42} />
                     </div>
 
                     <div style={{ fontSize: '0.92rem', fontWeight: 900, color: '#ffffff', fontFamily: 'Outfit', marginBottom: '0.2rem' }}>SCAN WITH CAMERA</div>
@@ -3099,11 +3077,8 @@ export const AdminDashboard = () => {
 
                   {/* QR Box */}
                   <div style={{ backgroundColor: 'rgba(245, 185, 66, 0.08)', border: '2px solid rgba(245, 185, 66, 0.5)', borderRadius: '22px', padding: '1.25rem 1.8rem', display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '1rem', width: '100%', maxWidth: '280px', boxSizing: 'border-box' }}>
-                    <div style={{ width: '180px', height: '180px', backgroundColor: '#ffffff', borderRadius: '16px', padding: '10px', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.75rem', boxShadow: '0 8px 30px rgba(0,0,0,0.5)' }}>
-                      <img src="/images/qr-world.svg" alt="QR Code" style={{ width: '100%', height: '100%', display: 'block' }} />
-                      <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '38px', height: '38px', borderRadius: '9px', backgroundColor: '#08090C', border: '2.5px solid #F5B942', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.4)' }}>
-                        <img src="/pwa-icon-192.png" alt="SC" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                      </div>
+                    <div style={{ marginBottom: '0.75rem' }}>
+                      <QrWorldSvg size={200} logoSize={42} />
                     </div>
                     <div style={{ fontSize: '0.85rem', fontWeight: 900, color: '#F5B942', letterSpacing: '0.04em', fontFamily: 'Outfit' }}>POINT CAMERA TO SCAN</div>
                     <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#ffffff', marginTop: '2px', fontFamily: 'Outfit' }}>www.stylecorner.world</div>
@@ -3164,11 +3139,8 @@ export const AdminDashboard = () => {
 
                   {/* QR Box */}
                   <div style={{ backgroundColor: 'rgba(167, 139, 250, 0.12)', border: '2px solid #a78bfa', borderRadius: '22px', padding: '1.25rem 1.8rem', display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '1rem', width: '100%', maxWidth: '280px', boxSizing: 'border-box' }}>
-                    <div style={{ width: '180px', height: '180px', backgroundColor: '#ffffff', borderRadius: '16px', padding: '10px', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.75rem', boxShadow: '0 8px 30px rgba(0,0,0,0.5)' }}>
-                      <img src="/images/qr-recruit.svg" alt="Recruitment QR Code" style={{ width: '100%', height: '100%', display: 'block' }} />
-                      <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '38px', height: '38px', borderRadius: '9px', backgroundColor: '#08090C', border: '2.5px solid #a78bfa', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.4)' }}>
-                        <img src="/pwa-icon-192.png" alt="SC" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                      </div>
+                    <div style={{ marginBottom: '0.75rem' }}>
+                      <QrRecruitSvg size={200} logoSize={42} />
                     </div>
                     <div style={{ fontSize: '0.85rem', fontWeight: 900, color: '#c4b5fd', textTransform: 'uppercase', fontFamily: 'Outfit' }}>SCAN TO JOIN AS EXPERT</div>
                     <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#ffffff', marginTop: '2px', fontFamily: 'Outfit' }}>stylecorner.world/role-selection</div>
@@ -3204,7 +3176,7 @@ export const AdminDashboard = () => {
 
               <button
                 type="button"
-                onClick={() => window.open(`/billboard-flyers.html#${activeBannerModal === 'portrait' ? 'street' : activeBannerModal}`, '_blank')}
+                onClick={() => window.open(`/billboard-flyers?design=${activeBannerModal === 'portrait' ? 'street' : activeBannerModal}`, '_blank')}
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
                   padding: '0.55rem 0.95rem', borderRadius: '10px', fontSize: '0.78rem', fontWeight: 700,
