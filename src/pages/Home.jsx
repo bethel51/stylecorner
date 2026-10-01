@@ -4,7 +4,6 @@ import {
   ArrowRight,
   Sparkles,
   Star,
-  Scissors,
   Zap,
   Shield,
   MapPin,
@@ -377,20 +376,19 @@ export const Home = () => {
                 userSelect: "none",
               }}
             >
-              <div
+              <img
+                src="/pwa-icon-192.png"
+                alt="StyleCorner Logo"
                 style={{
                   width: "36px",
                   height: "36px",
                   borderRadius: "11px",
-                  background: "linear-gradient(135deg, #F5B942 0%, #d4891a 100%)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
                   boxShadow: "0 4px 16px rgba(245,185,66,0.45)",
+                  objectFit: "cover",
+                  display: "block",
+                  flexShrink: 0,
                 }}
-              >
-                <Scissors size={18} color="#08090C" strokeWidth={2.6} />
-              </div>
+              />
               <div>
                 <span
                   style={{
