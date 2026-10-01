@@ -84,7 +84,7 @@ export const AdminDashboard = () => {
 
   const handleDownloadBannerPdf = (type) => {
     const hash = type === 'portrait' ? 'street' : (type || 'all');
-    const printUrl = `/billboard-flyers?design=${hash}&print=true`;
+    const printUrl = `/admin/marketing-flyers?design=${hash}&print=true`;
     const win = window.open(printUrl, '_blank');
     if (!win) {
       window.location.href = printUrl;
@@ -1953,7 +1953,7 @@ export const AdminDashboard = () => {
                   <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                     <button
                       type="button"
-                      onClick={() => window.open('/billboard-flyers', '_blank')}
+                      onClick={() => window.open('/admin/marketing-flyers', '_blank')}
                       style={{
                         display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
                         padding: '0.55rem 1rem', borderRadius: '10px', fontSize: '0.8rem', fontWeight: 800,
@@ -3203,7 +3203,7 @@ export const AdminDashboard = () => {
 
               <button
                 type="button"
-                onClick={() => window.open(`/billboard-flyers?design=${activeBannerModal === 'portrait' ? 'street' : activeBannerModal}`, '_blank')}
+                onClick={() => window.open(`/admin/marketing-flyers?design=${activeBannerModal === 'portrait' ? 'street' : activeBannerModal}`, '_blank')}
                 style={{
                   flex: isMobile ? '1 1 calc(50% - 0.25rem)' : 'none',
                   minHeight: '40px',
