@@ -140,19 +140,19 @@ export const BillboardFlyersPage = () => {
           </button>
 
           {[
-            { id: 'all', label: 'All 3 Designs' },
-            { id: 'billboard', label: '1. Highway Billboard' },
-            { id: 'street', label: '2. Street Flyer' },
-            { id: 'recruit', label: '3. Recruitment Poster' },
+            { id: 'all', label: 'All 3 Designs', activeBg: '#F5B942', activeColor: '#08090C' },
+            { id: 'billboard', label: '1. Highway Billboard', activeBg: '#F5B942', activeColor: '#08090C' },
+            { id: 'street', label: '2. Street Flyer', activeBg: '#a855f7', activeColor: '#ffffff' },
+            { id: 'recruit', label: '3. Recruitment Poster', activeBg: '#10b981', activeColor: '#ffffff' },
           ].map((tab) => (
             <button
               key={tab.id}
               type="button"
               onClick={() => setActiveDesign(tab.id)}
               style={{
-                backgroundColor: activeDesign === tab.id ? '#F5B942' : 'transparent',
-                color: activeDesign === tab.id ? '#08090C' : '#cbd5e1',
-                border: activeDesign === tab.id ? '1px solid #F5B942' : '1px solid transparent',
+                backgroundColor: activeDesign === tab.id ? tab.activeBg : 'transparent',
+                color: activeDesign === tab.id ? tab.activeColor : '#cbd5e1',
+                border: activeDesign === tab.id ? `1px solid ${tab.activeBg}` : '1px solid transparent',
                 borderRadius: '50px',
                 padding: '0.35rem 0.85rem',
                 fontSize: '0.76rem',
@@ -435,11 +435,11 @@ export const BillboardFlyersPage = () => {
             style={{
               width: '100%',
               maxWidth: '620px',
-              background: 'radial-gradient(circle at 50% 10%, rgba(245, 185, 66, 0.22) 0%, transparent 50%), linear-gradient(180deg, #10121a 0%, #090a0f 65%, #050608 100%)',
-              border: '2.5px solid rgba(245, 185, 66, 0.45)',
+              background: 'radial-gradient(circle at 50% 10%, rgba(168, 85, 247, 0.28) 0%, transparent 55%), linear-gradient(180deg, #150d24 0%, #0d0817 65%, #06040a 100%)',
+              border: '2.5px solid rgba(168, 85, 247, 0.5)',
               borderRadius: '36px',
               padding: 'clamp(1.75rem, 5vw, 3rem) clamp(1.25rem, 4vw, 2.5rem)',
-              boxShadow: '0 40px 90px -15px rgba(0, 0, 0, 0.95), 0 0 50px rgba(245, 185, 66, 0.18)',
+              boxShadow: '0 40px 90px -15px rgba(0, 0, 0, 0.95), 0 0 50px rgba(168, 85, 247, 0.22)',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
@@ -463,14 +463,14 @@ export const BillboardFlyersPage = () => {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.4rem',
-                backgroundColor: 'rgba(245,185,66,0.14)',
-                border: '1px solid rgba(245,185,66,0.35)',
+                backgroundColor: 'rgba(168, 85, 247, 0.16)',
+                border: '1px solid rgba(168, 85, 247, 0.45)',
                 borderRadius: '50px',
                 padding: '0.35rem 0.9rem',
                 marginBottom: '1.2rem',
                 fontSize: '0.74rem',
                 fontWeight: 800,
-                color: '#F5B942',
+                color: '#c084fc',
                 textTransform: 'uppercase',
               }}
             >
@@ -489,7 +489,7 @@ export const BillboardFlyersPage = () => {
               Your Next Look. <br />
               <span
                 style={{
-                  background: 'linear-gradient(135deg, #F5B942 0%, #ffc857 50%, #ea580c 100%)',
+                  background: 'linear-gradient(135deg, #c084fc 0%, #a855f7 50%, #f472b6 100%)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                 }}
@@ -508,13 +508,13 @@ export const BillboardFlyersPage = () => {
                 <span
                   key={s}
                   style={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    backgroundColor: 'rgba(168, 85, 247, 0.1)',
+                    border: '1px solid rgba(168, 85, 247, 0.35)',
                     borderRadius: '50px',
                     padding: '0.35rem 0.85rem',
                     fontSize: '0.78rem',
                     fontWeight: 700,
-                    color: '#e2e8f0',
+                    color: '#e9d5ff',
                   }}
                 >
                   {s}
@@ -525,8 +525,8 @@ export const BillboardFlyersPage = () => {
             {/* Prominent QR Box with 100% Vector SVG */}
             <div
               style={{
-                backgroundColor: 'rgba(245, 185, 66, 0.08)',
-                border: '2px solid rgba(245, 185, 66, 0.5)',
+                backgroundColor: 'rgba(168, 85, 247, 0.12)',
+                border: '2px solid rgba(168, 85, 247, 0.55)',
                 borderRadius: '28px',
                 padding: '1.75rem 2rem',
                 display: 'flex',
@@ -536,12 +536,13 @@ export const BillboardFlyersPage = () => {
                 width: '100%',
                 maxWidth: '320px',
                 boxSizing: 'border-box',
+                boxShadow: '0 18px 45px rgba(0, 0, 0, 0.7), 0 0 35px rgba(168, 85, 247, 0.25)',
               }}
             >
               <div style={{ marginBottom: '0.85rem' }}>
                 <QrWorldSvg size={200} logoSize={40} />
               </div>
-              <div style={{ fontSize: '0.95rem', fontWeight: 900, color: '#F5B942', letterSpacing: '0.04em' }}>
+              <div style={{ fontSize: '0.95rem', fontWeight: 900, color: '#c084fc', letterSpacing: '0.04em' }}>
                 POINT CAMERA TO SCAN
               </div>
               <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#FFFFFF', marginTop: '3px' }}>
@@ -553,8 +554,8 @@ export const BillboardFlyersPage = () => {
                   type="button"
                   onClick={() => handlePrint('street')}
                   style={{
-                    backgroundColor: '#F5B942',
-                    color: '#08090C',
+                    backgroundColor: '#a855f7',
+                    color: '#ffffff',
                     border: 'none',
                     borderRadius: '50px',
                     padding: '0.55rem 1.25rem',
@@ -564,6 +565,7 @@ export const BillboardFlyersPage = () => {
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '0.35rem',
+                    boxShadow: '0 4px 14px rgba(168,85,247,0.4)',
                   }}
                 >
                   <Download size={13} /> Save Flyer (PDF)
@@ -604,11 +606,11 @@ export const BillboardFlyersPage = () => {
             style={{
               width: '100%',
               maxWidth: '640px',
-              background: 'radial-gradient(circle at 50% 10%, rgba(167, 139, 250, 0.22) 0%, transparent 50%), linear-gradient(180deg, #130e1f 0%, #0d0a15 65%, #07050a 100%)',
-              border: '2.5px solid rgba(167, 139, 250, 0.45)',
+              background: 'radial-gradient(circle at 50% 10%, rgba(16, 185, 129, 0.28) 0%, transparent 55%), linear-gradient(180deg, #0a1f14 0%, #07150d 65%, #040a06 100%)',
+              border: '2.5px solid rgba(16, 185, 129, 0.5)',
               borderRadius: '36px',
               padding: 'clamp(1.75rem, 5vw, 3rem) clamp(1.25rem, 4vw, 2.5rem)',
-              boxShadow: '0 40px 90px -15px rgba(0, 0, 0, 0.95), 0 0 50px rgba(167, 139, 250, 0.18)',
+              boxShadow: '0 40px 90px -15px rgba(0, 0, 0, 0.95), 0 0 50px rgba(16, 185, 129, 0.22)',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
@@ -632,14 +634,14 @@ export const BillboardFlyersPage = () => {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.4rem',
-                backgroundColor: 'rgba(167, 139, 250, 0.16)',
-                border: '1px solid rgba(167, 139, 250, 0.4)',
+                backgroundColor: 'rgba(16, 185, 129, 0.16)',
+                border: '1px solid rgba(16, 185, 129, 0.45)',
                 borderRadius: '50px',
                 padding: '0.35rem 0.9rem',
                 marginBottom: '1.2rem',
                 fontSize: '0.74rem',
                 fontWeight: 800,
-                color: '#c4b5fd',
+                color: '#4ade80',
                 textTransform: 'uppercase',
               }}
             >
@@ -658,7 +660,7 @@ export const BillboardFlyersPage = () => {
               Are You a Barber, Braider, Lash Tech or Stylist? <br />
               <span
                 style={{
-                  background: 'linear-gradient(135deg, #c084fc 0%, #a855f7 50%, #4ade80 100%)',
+                  background: 'linear-gradient(135deg, #4ade80 0%, #22c55e 50%, #10b981 100%)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                 }}
@@ -690,14 +692,14 @@ export const BillboardFlyersPage = () => {
                 <div
                   key={feat.title}
                   style={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    backgroundColor: 'rgba(16, 185, 129, 0.08)',
+                    border: '1px solid rgba(16, 185, 129, 0.2)',
                     borderRadius: '16px',
                     padding: '0.9rem',
                     textAlign: 'left',
                   }}
                 >
-                  <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#FFFFFF', marginBottom: '0.2rem' }}>
+                  <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#4ade80', marginBottom: '0.2rem' }}>
                     {feat.title}
                   </div>
                   <div style={{ fontSize: '0.72rem', color: '#94a3b8', lineHeight: 1.4 }}>
@@ -710,8 +712,8 @@ export const BillboardFlyersPage = () => {
             {/* Recruitment QR Code with 100% Vector SVG */}
             <div
               style={{
-                backgroundColor: 'rgba(167, 139, 250, 0.12)',
-                border: '2px solid #a78bfa',
+                backgroundColor: 'rgba(16, 185, 129, 0.12)',
+                border: '2px solid rgba(16, 185, 129, 0.55)',
                 borderRadius: '28px',
                 padding: '1.75rem 2rem',
                 display: 'flex',
@@ -721,12 +723,13 @@ export const BillboardFlyersPage = () => {
                 width: '100%',
                 maxWidth: '320px',
                 boxSizing: 'border-box',
+                boxShadow: '0 18px 45px rgba(0, 0, 0, 0.7), 0 0 35px rgba(16, 185, 129, 0.25)',
               }}
             >
               <div style={{ marginBottom: '0.85rem' }}>
                 <QrRecruitSvg size={200} logoSize={40} />
               </div>
-              <div style={{ fontSize: '0.95rem', fontWeight: 900, color: '#c4b5fd', textTransform: 'uppercase' }}>
+              <div style={{ fontSize: '0.95rem', fontWeight: 900, color: '#4ade80', textTransform: 'uppercase' }}>
                 SCAN TO JOIN AS AN EXPERT
               </div>
               <div style={{ fontSize: '0.85rem', color: '#FFFFFF', fontWeight: 700, marginTop: '3px' }}>
@@ -738,8 +741,8 @@ export const BillboardFlyersPage = () => {
                   type="button"
                   onClick={() => handlePrint('recruit')}
                   style={{
-                    backgroundColor: '#a78bfa',
-                    color: '#08090C',
+                    backgroundColor: '#10b981',
+                    color: '#ffffff',
                     border: 'none',
                     borderRadius: '50px',
                     padding: '0.55rem 1.25rem',
@@ -749,6 +752,7 @@ export const BillboardFlyersPage = () => {
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '0.35rem',
+                    boxShadow: '0 4px 14px rgba(16,185,129,0.4)',
                   }}
                 >
                   <Download size={13} /> Save Poster (PDF)
