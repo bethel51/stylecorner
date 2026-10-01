@@ -171,19 +171,23 @@ export const Signup = () => {
         <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
           <div
             style={{
-              width: '56px',
-              height: '56px',
+              width: '64px',
+              height: '64px',
               borderRadius: '16px',
-              background: '#151822',
-              color: '#F5B942',
+              overflow: 'hidden',
+              margin: '0 auto 1rem',
+              border: '2px solid rgba(245, 185, 66, 0.45)',
+              boxShadow: '0 10px 25px rgba(245,185,66,0.25)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              margin: '0 auto 1rem',
-              border: '1.5px solid rgba(245,185,66,0.3)',
             }}
           >
-            {role === 'staff' ? <Scissors size={26} /> : <Sparkles size={26} />}
+            <img
+              src="/pwa-icon-192.png"
+              alt="StyleCorner Official Logo"
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
           </div>
           <h2 style={{ fontFamily: 'Outfit', fontSize: '1.6rem', fontWeight: 800, color: '#FFFFFF' }}>
             Create Your Account

@@ -66,20 +66,23 @@ export const Login = () => {
         <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
           <div
             style={{
-              width: '64px',
-              height: '64px',
-              borderRadius: '20px',
-              background: 'linear-gradient(135deg, #151822, #0C0E14)',
-              color: '#F5B942',
+              width: '68px',
+              height: '68px',
+              borderRadius: '18px',
+              overflow: 'hidden',
+              margin: '0 auto 1.1rem',
+              border: '2px solid rgba(245, 185, 66, 0.45)',
+              boxShadow: '0 10px 30px rgba(245,185,66,0.25)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              margin: '0 auto 1.1rem',
-              border: '1.5px solid rgba(245, 185, 66, 0.35)',
-              boxShadow: '0 10px 30px rgba(245,185,66,0.15)',
             }}
           >
-            <Sparkles size={28} />
+            <img
+              src="/pwa-icon-192.png"
+              alt="StyleCorner Official Logo"
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
           </div>
 
           <h2

@@ -60,20 +60,23 @@ export const AdminLogin = () => {
         <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
           <div
             style={{
-              width: '68px',
-              height: '68px',
+              width: '72px',
+              height: '72px',
               borderRadius: '20px',
-              background: 'linear-gradient(135deg, #d4af37 0%, #92700a 100%)',
-              color: '#ffffff',
+              overflow: 'hidden',
+              margin: '0 auto 1.25rem',
+              border: '2px solid rgba(245, 185, 66, 0.5)',
+              boxShadow: '0 12px 30px rgba(245, 185, 66, 0.35)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              margin: '0 auto 1.25rem',
-              border: '2px solid rgba(212, 175, 55, 0.5)',
-              boxShadow: '0 12px 30px rgba(212, 175, 55, 0.25)',
             }}
           >
-            <Shield size={34} />
+            <img
+              src="/pwa-icon-192.png"
+              alt="StyleCorner Official Logo"
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
           </div>
 
           <span

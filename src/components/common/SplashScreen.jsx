@@ -20,21 +20,24 @@ export const SplashScreen = () => {
     >
       <div
         style={{
-          width: '72px',
-          height: '72px',
-          borderRadius: '20px',
-          background: 'linear-gradient(135deg, #1f1f1f, #121212)',
-          border: '2px solid rgba(212, 175, 55, 0.6)',
+          width: '84px',
+          height: '84px',
+          borderRadius: '22px',
+          overflow: 'hidden',
+          boxShadow: '0 12px 35px rgba(245, 185, 66, 0.4)',
+          marginBottom: '1.5rem',
+          border: '2px solid rgba(245, 185, 66, 0.6)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          color: '#d4af37',
-          boxShadow: '0 12px 30px rgba(212, 175, 55, 0.25)',
-          marginBottom: '1.5rem',
           animation: 'pulse 2s infinite ease-in-out',
         }}
       >
-        <Sparkles size={36} />
+        <img
+          src="/pwa-icon-192.png"
+          alt="StyleCorner Logo"
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
       </div>
 
       <h1

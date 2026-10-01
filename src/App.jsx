@@ -5,7 +5,7 @@ import { CartProvider } from './context/CartContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
 import { ScrollToTop } from './components/common/ScrollToTop';
-import { Scissors } from 'lucide-react';
+
 
 // Eager load Home page for instant initial render
 import { Home } from './pages/Home';
@@ -139,7 +139,18 @@ export const PageLoader = () => (
           willChange: 'transform',
         }}
       />
-      <Scissors size={18} color="var(--color-accent)" style={{ animation: 'pulse 1.8s ease-in-out infinite' }} />
+      <img
+        src="/pwa-icon-192.png"
+        alt="StyleCorner Logo"
+        style={{
+          width: '24px',
+          height: '24px',
+          borderRadius: '6px',
+          objectFit: 'cover',
+          animation: 'pulse 1.8s ease-in-out infinite',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+        }}
+      />
     </div>
 
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.2rem' }}>

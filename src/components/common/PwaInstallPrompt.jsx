@@ -82,15 +82,19 @@ export const PwaInstallPrompt = () => {
           width: '42px',
           height: '42px',
           borderRadius: '12px',
-          background: 'rgba(212,175,55,0.2)',
-          border: '1px solid rgba(212,175,55,0.4)',
-          color: '#d4af37',
+          overflow: 'hidden',
+          border: '1.5px solid rgba(245,185,66,0.4)',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           flexShrink: 0
         }}>
-          <Smartphone size={22} />
+          <img
+            src="/pwa-icon-192.png"
+            alt="StyleCorner Logo"
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          />
         </div>
 
         <div style={{ minWidth: 0 }}>

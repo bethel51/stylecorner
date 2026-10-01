@@ -15,19 +15,23 @@ export const RoleSelection = () => {
       <div style={{ maxWidth: '420px', margin: '1rem auto 2rem', textAlign: 'center' }}>
         <div
           style={{
-            width: '60px',
-            height: '60px',
-            borderRadius: '50%',
-            background: 'rgba(212, 175, 55, 0.12)',
-            color: '#d4af37',
+            width: '68px',
+            height: '68px',
+            borderRadius: '18px',
+            overflow: 'hidden',
+            margin: '0 auto 1.25rem',
+            border: '2px solid rgba(245, 185, 66, 0.45)',
+            boxShadow: '0 10px 30px rgba(245, 185, 66, 0.25)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            margin: '0 auto 1.25rem',
-            border: '1px solid rgba(212, 175, 55, 0.3)',
           }}
         >
-          <ShieldCheck size={28} />
+          <img
+            src="/pwa-icon-192.png"
+            alt="StyleCorner Official Logo"
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          />
         </div>
 
         <h2

@@ -70,9 +70,21 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
             <div
               onClick={() => navigate('/')}
               onMouseEnter={() => preloadRoute('/')}
-              style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.45rem' }}
+              style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.45rem', flexShrink: 0 }}
             >
-              <Sparkles size={18} fill="var(--color-accent)" color="var(--color-accent)" />
+              <img
+                src="/pwa-icon-192.png"
+                alt="StyleCorner Logo"
+                style={{
+                  width: '28px',
+                  height: '28px',
+                  borderRadius: '8px',
+                  objectFit: 'cover',
+                  display: 'block',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                  border: '1px solid rgba(245, 185, 66, 0.35)',
+                }}
+              />
             </div>
           )}
 
