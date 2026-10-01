@@ -93,19 +93,19 @@ const SERVICES = [
 ];
 
 const VIBES = [
-  { id: 'executive', label: 'Bespoke Executive Luxury', desc: 'Impeccable, understated elegance for elite professionals' },
-  { id: 'redcarpet', label: 'Red Carpet & Event Glam', desc: 'High-impact, head-turning editorial drama' },
-  { id: 'daily', label: 'Clean Minimalist Chic', desc: 'Effortless, fresh everyday grooming & maintenance' },
-  { id: 'bold', label: 'Avant-Garde & Fashion Bold', desc: 'Creative, contemporary cuts, colors & art' },
+  { id: 'executive', label: 'Smart & Professional', desc: 'Clean, sharp, and neat style for work and daily life' },
+  { id: 'redcarpet', label: 'Party & Event Glam', desc: 'Eye-catching, beautiful look for weddings and special outings' },
+  { id: 'daily', label: 'Everyday Simple', desc: 'Fresh, natural, and easy daily look' },
+  { id: 'bold', label: 'Trendy & Bold', desc: 'Standout styles, vibrant colors, and modern cuts' },
 ];
 
 const PROMPT_CHIPS = [
-  'Russian volume silk lash extensions in Victoria Island',
-  'Gel-X chrome glazed nails with 3D sculpted architecture',
-  'Boho knotless braids with French curl ends',
-  'Low skin taper fade, crisp line-up & hot towel beard sculpt',
-  'Bridal glam soft beat with sculpted brows for evening gala',
-  'HD invisible lace frontal melt and custom body wave styling',
+  'Volume lash extensions in Victoria Island',
+  'Clean gel nails with stylish nail art',
+  'Knotless braids with soft curl tips',
+  'Clean skin fade, sharp line-up & beard trim',
+  'Soft glam makeup and neat brows for a party',
+  'Lace frontal wig install with wavy curls',
 ];
 
 const LOCATIONS = [
@@ -132,8 +132,8 @@ export const AiStylistFinder = () => {
   // Consultation State
   const [customPrompt, setCustomPrompt] = useState(searchParams.get('q') || '');
   const [selectedService, setSelectedService] = useState('Hair Braider & Stylist');
-  const [selectedVibe, setSelectedVibe] = useState('Bespoke Executive Luxury');
-  const [serviceMode, setServiceMode] = useState('atelier'); // 'atelier' | 'home'
+  const [selectedVibe, setSelectedVibe] = useState('Smart & Professional');
+  const [serviceMode, setServiceMode] = useState('salon'); // 'salon' | 'home'
   const [selectedLocation, setSelectedLocation] = useState('Victoria Island, Lagos');
   const [selectedDate, setSelectedDate] = useState(() => {
     const d = new Date();
@@ -148,10 +148,10 @@ export const AiStylistFinder = () => {
   const [matchedResults, setMatchedResults] = useState(null);
 
   const matchingSteps = [
-    'Parsing aesthetic vibe & technique parameters…',
-    'Analyzing verified specialist masteries & live ratings…',
-    'Verifying schedule availability & regional proximity…',
-    'Generating neural match profile…',
+    'Checking your style and choices...',
+    'Reviewing verified stylist ratings and reviews...',
+    'Checking available dates and locations...',
+    'Picking your best stylist match...',
   ];
 
   const handleRunMatcher = async (e) => {
@@ -166,7 +166,7 @@ export const AiStylistFinder = () => {
     try {
       const queryPayload = customPrompt
         ? `${customPrompt} (${selectedService} - ${selectedVibe} in ${selectedLocation})`
-        : `${selectedService} styled with ${selectedVibe} in ${selectedLocation} on ${selectedDate} (${serviceMode === 'home' ? 'Home VIP Service' : 'Atelier Suite'})`;
+        : `${selectedService} styled with ${selectedVibe} in ${selectedLocation} on ${selectedDate} (${serviceMode === 'home' ? 'Home Service' : 'In-Salon'})`;
 
       const [aiData, allSpecialists] = await Promise.all([
         api.matchAiSpecialist(queryPayload, selectedService, '').catch(() => ({})),
@@ -212,7 +212,7 @@ export const AiStylistFinder = () => {
         topMatch: {
           id: primary?._id || aiData?.match?._id || 'match_primary',
           name: primaryName,
-          title: primary?.title || `${selectedService} Senior Specialist`,
+          title: primary?.title || `${selectedService} Specialist`,
           rating: primary?.rating || 5.0,
           reviewsCount: primary?.reviewsCount || 0,
           location: selectedLocation,
@@ -221,9 +221,9 @@ export const AiStylistFinder = () => {
           price: matchedServiceObj.price,
           duration: matchedServiceObj.duration,
           matchScore: 99,
-          badge: 'Top Neural Match',
+          badge: 'Best Match',
           rationale: aiData?.match?.rationale ||
-            `Optimal match for ${selectedService}. Verified portfolio in ${selectedLocation} matching the ${selectedVibe} aesthetic.`,
+            `Great match for ${selectedService} in ${selectedLocation} matching your ${selectedVibe} style.`,
         },
         alternates: pool.slice(1, 3).map((spec, idx) => ({
           id: spec._id || `match_alt_${idx}`,
@@ -246,7 +246,7 @@ export const AiStylistFinder = () => {
       }, 100);
     } catch (err) {
       clearInterval(stepInterval);
-      showToast?.('AI Matcher completed with verified atelier recommendations.', 'info');
+      showToast?.('Found top stylists matching your request.', 'info');
     } finally {
       setMatching(false);
     }
@@ -259,14 +259,14 @@ export const AiStylistFinder = () => {
       service: selectedService,
       date: selectedDate,
       time: selectedTimeSlot.split(' ')[0] || '12:00 PM',
-      location: `${selectedLocation} (${serviceMode === 'home' ? 'VIP Home Service' : 'Atelier Suite'})`,
+      location: `${selectedLocation} (${serviceMode === 'home' ? 'Home Service' : 'In-Salon'})`,
     });
     navigate(`/booking?${params.toString()}`);
   };
 
   return (
     <PageContainer title="AI Style Matcher" showBack={true}>
-      <div style={{ maxWidth: '640px', margin: '0 auto', paddingBottom: '3rem' }}>
+      <div style={{ maxWidth: '640px', margin: '0 auto', paddingBottom: 'calc(var(--bottom-nav-height, 70px) + env(safe-area-inset-bottom, 24px) + 3.5rem)' }}>
 
         {/* ── Luxury Header ── */}
         <div style={{ marginBottom: '1.25rem' }}>
@@ -289,7 +289,7 @@ export const AiStylistFinder = () => {
             }}
           >
             <Sparkles size={13} />
-            <span>Neural Look Matcher</span>
+            <span>Smart Stylist Matcher</span>
           </div>
 
           <h1
@@ -313,7 +313,7 @@ export const AiStylistFinder = () => {
               margin: 0,
             }}
           >
-            Select your service, vibe, and location. Our AI engine scans registered, verified artisans and pairs you with your ideal match.
+            Choose what you need, your preferred style, and location. We will quickly find you the best verified stylist.
           </p>
         </div>
 
