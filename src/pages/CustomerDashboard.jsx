@@ -174,6 +174,14 @@ export const CustomerDashboard = () => {
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewComment, setReviewComment] = useState('');
   const [submittingReview, setSubmittingReview] = useState(false);
+  // Track which completed bookings we've already prompted this session
+  const promptedReviewsKey = 'sc_prompted_reviews';
+  const getPromptedSet = () => new Set(JSON.parse(sessionStorage.getItem(promptedReviewsKey) || '[]'));
+  const markPrompted = (id) => {
+    const s = getPromptedSet();
+    s.add(id);
+    sessionStorage.setItem(promptedReviewsKey, JSON.stringify([...s]));
+  };
 
   const handleSubmitReview = async (e) => {
     e.preventDefault();
@@ -187,6 +195,7 @@ export const CustomerDashboard = () => {
         rating: reviewRating,
         comment: reviewComment.trim(),
       });
+      markPrompted(reviewModalBooking._id);
       showToast(`Thank you! Your ${reviewRating}-star review for ${reviewModalBooking.stylist} has been posted. ⭐`, 'success');
       setReviewModalBooking(null);
       setReviewComment('');
@@ -206,7 +215,22 @@ export const CustomerDashboard = () => {
         api.getWalletBalance(),
       ]);
       if (bookingsResult.status === 'fulfilled') {
-        setBookings(Array.isArray(bookingsResult.value) ? bookingsResult.value : []);
+        const loaded = Array.isArray(bookingsResult.value) ? bookingsResult.value : [];
+        setBookings(loaded);
+
+        // Auto-prompt review for the most recent completed booking not yet prompted
+        const prompted = getPromptedSet();
+        const toReview = loaded.find(
+          (b) => b.status === 'completed' && !prompted.has(b._id)
+        );
+        if (toReview) {
+          // Small delay so the page renders first
+          setTimeout(() => {
+            setReviewModalBooking(toReview);
+            setReviewRating(5);
+            setReviewComment('');
+          }, 1200);
+        }
       }
       if (ordersResult.status === 'fulfilled') {
         setOrders(Array.isArray(ordersResult.value) ? ordersResult.value : []);
@@ -1126,6 +1150,26 @@ export const CustomerDashboard = () => {
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.25rem', flexShrink: 0 }}>
                           <StatusBadge status={b.status} />
+                          {/* Payment status pill */}
+                          {b.paymentStatus && b.paymentStatus !== 'unpaid' && b.paymentStatus !== 'pending_payment' ? (
+                            <span style={{
+                              display: 'inline-flex', alignItems: 'center', gap: '0.25rem',
+                              background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)',
+                              color: '#10b981', borderRadius: '6px', padding: '0.12rem 0.45rem',
+                              fontSize: '0.64rem', fontFamily: 'Outfit', fontWeight: 800,
+                            }}>
+                              💳 PAID
+                            </span>
+                          ) : b.paymentStatus === 'pending_payment' || (!b.paymentStatus && b.status !== 'rejected' && b.status !== 'cancelled') ? (
+                            <span style={{
+                              display: 'inline-flex', alignItems: 'center', gap: '0.25rem',
+                              background: 'rgba(245,185,66,0.1)', border: '1px solid rgba(245,185,66,0.25)',
+                              color: '#f5b942', borderRadius: '6px', padding: '0.12rem 0.45rem',
+                              fontSize: '0.64rem', fontFamily: 'Outfit', fontWeight: 800,
+                            }}>
+                              ⏳ AWAITING PAY
+                            </span>
+                          ) : null}
                           <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '0.92rem', color: '#b5952f', whiteSpace: 'nowrap' }}>
                             ₦{Number(b.price).toLocaleString()}
                           </span>
@@ -1465,7 +1509,10 @@ export const CustomerDashboard = () => {
       {/* Rate & Review Specialist Sheet */}
       <BottomSheet
         isOpen={!!reviewModalBooking}
-        onClose={() => setReviewModalBooking(null)}
+        onClose={() => {
+          if (reviewModalBooking) markPrompted(reviewModalBooking._id);
+          setReviewModalBooking(null);
+        }}
         title="Rate & Review Specialist"
       >
         {reviewModalBooking && (
@@ -1509,10 +1556,10 @@ export const CustomerDashboard = () => {
             </div>
 
             <div className="app-input-group" style={{ marginBottom: '1.25rem' }}>
-              <label className="app-label">Your Experience & Feedback</label>
+              <label className="app-label">Your Experience & Feedback <span style={{ color: '#9ca3af', fontWeight: 600 }}>(optional)</span></label>
               <textarea
                 rows={3}
-                placeholder="Share your thoughts about the hairstyle, nail art, or barbering service..."
+                placeholder="Share your thoughts about the service..."
                 value={reviewComment}
                 onChange={(e) => setReviewComment(e.target.value)}
                 className="app-textarea"
@@ -1520,14 +1567,35 @@ export const CustomerDashboard = () => {
               />
             </div>
 
-            <button
-              type="submit"
-              disabled={submittingReview}
-              className="app-btn app-btn-accent"
-              style={{ width: '100%', minHeight: '48px', borderRadius: '14px', fontSize: '0.9rem', fontWeight: 800, touchAction: 'manipulation' }}
-            >
-              {submittingReview ? 'Submitting Review...' : `Submit ${reviewRating}-Star Review`}
-            </button>
+            <div style={{ display: 'flex', gap: '0.65rem' }}>
+              <button
+                type="button"
+                onClick={() => { markPrompted(reviewModalBooking._id); setReviewModalBooking(null); }}
+                style={{
+                  flex: 1,
+                  background: 'transparent',
+                  border: '1px solid rgba(0,0,0,0.12)',
+                  color: '#9ca3af',
+                  borderRadius: '14px',
+                  minHeight: '48px',
+                  fontFamily: 'Outfit',
+                  fontSize: '0.85rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  touchAction: 'manipulation',
+                }}
+              >
+                Skip
+              </button>
+              <button
+                type="submit"
+                disabled={submittingReview}
+                className="app-btn app-btn-accent"
+                style={{ flex: 2, minHeight: '48px', borderRadius: '14px', fontSize: '0.9rem', fontWeight: 800, touchAction: 'manipulation' }}
+              >
+                {submittingReview ? 'Submitting...' : `Submit ${reviewRating}★ Review`}
+              </button>
+            </div>
           </form>
         )}
       </BottomSheet>

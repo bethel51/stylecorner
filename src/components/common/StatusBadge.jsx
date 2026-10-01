@@ -1,5 +1,5 @@
 import React from 'react';
-import { Clock, CheckCircle2, AlertCircle, Truck, XCircle } from 'lucide-react';
+import { Clock, CheckCircle2, AlertCircle, Truck, XCircle, Wallet } from 'lucide-react';
 
 export const StatusBadge = ({ status }) => {
   const s = (status || 'pending').toLowerCase();
@@ -8,11 +8,24 @@ export const StatusBadge = ({ status }) => {
     switch (s) {
       case 'accepted':
       case 'verified':
-      case 'completed':
         return {
           label: s.toUpperCase(),
           className: 'status-accepted',
           icon: CheckCircle2,
+        };
+      case 'completed':
+        return {
+          label: 'COMPLETED',
+          className: 'status-accepted',
+          icon: CheckCircle2,
+        };
+      case 'paid':
+      case 'paid_wallet':
+      case 'paid_paystack':
+        return {
+          label: 'PAID',
+          className: 'status-accepted',
+          icon: Wallet,
         };
       case 'shipped':
         return {
