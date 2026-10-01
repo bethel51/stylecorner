@@ -4,3 +4,8 @@ server/node_modules/
 server/.env
 .DS_Store
 dist/
+
+# Local marketing flyers (not tracked in repo)
+billboard-flyers.html
+public/billboard-flyers.html
+public/images/qr-*.svg
