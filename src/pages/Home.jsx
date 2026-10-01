@@ -14,8 +14,11 @@ import {
   Home as HomeIcon,
   ShieldCheck,
   Award,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 import { PageContainer } from "../components/common/PageContainer";
 import { preloadRoute } from "../App";
 
@@ -199,6 +202,7 @@ const TRUST_POINTS = [
 export const Home = () => {
   const navigate = useNavigate();
   const { isAuthenticated, role, user } = useAuth();
+  const { toggleTheme, isDark } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -289,6 +293,159 @@ export const Home = () => {
         .btn-glass-subtle:active {
           transform: scale(0.97);
         }
+
+        /* ── Responsive Desktop Layout Utilities ── */
+        .home-main-container {
+          width: 100%;
+          max-width: 760px;
+          min-height: 100dvh;
+          display: flex;
+          flex-direction: column;
+          position: relative;
+          z-index: 1;
+          box-sizing: border-box;
+          padding: 0 clamp(1rem, 4vw, 2rem);
+        }
+
+        .home-desktop-nav-menu {
+          display: none;
+        }
+
+        .hero-section {
+          padding-top: 1.2rem;
+          padding-bottom: 2rem;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          width: 100%;
+        }
+
+        .hero-text-col {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          width: 100%;
+        }
+
+        .hero-buttons-row {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          justify-content: center;
+          gap: 0.75rem;
+          width: 100%;
+          max-width: 460px;
+          margin-bottom: 2rem;
+        }
+
+        .hero-visual-col {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          width: 100%;
+        }
+
+        .hero-desktop-trust {
+          display: none;
+        }
+
+        .home-services-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          gap: 1rem;
+          width: 100%;
+          box-sizing: border-box;
+        }
+
+        .home-steps-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+          gap: 1rem;
+          width: 100%;
+          box-sizing: border-box;
+        }
+
+        .home-trust-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+          gap: 1rem;
+        }
+
+        @media (min-width: 1024px) {
+          .home-main-container {
+            max-width: 1320px !important;
+            padding: 0 2.5rem !important;
+          }
+
+          .home-desktop-nav-menu {
+            display: flex !important;
+            align-items: center;
+            gap: 0.25rem;
+          }
+
+          .hero-section {
+            display: grid !important;
+            grid-template-columns: 1.15fr 0.9fr !important;
+            gap: 3.5rem !important;
+            align-items: center !important;
+            text-align: left !important;
+            padding-top: 2.5rem !important;
+            padding-bottom: 4rem !important;
+          }
+
+          .hero-text-col {
+            align-items: flex-start !important;
+            text-align: left !important;
+          }
+
+          .hero-text-col h1 {
+            text-align: left !important;
+            margin: 0 0 1.25rem !important;
+            max-width: 640px !important;
+          }
+
+          .hero-text-col p {
+            text-align: left !important;
+            margin: 0 0 2rem !important;
+            max-width: 540px !important;
+          }
+
+          .hero-buttons-row {
+            justify-content: flex-start !important;
+            margin-bottom: 2.2rem !important;
+          }
+
+          .hero-desktop-trust {
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 1rem !important;
+            width: 100% !important;
+            max-width: 520px !important;
+            padding-top: 1.5rem !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+          }
+
+          .home-services-grid {
+            grid-template-columns: repeat(3, 1fr) !important;
+            gap: 1.5rem !important;
+          }
+
+          .home-steps-grid {
+            grid-template-columns: repeat(3, 1fr) !important;
+            gap: 1.5rem !important;
+          }
+
+          .home-trust-grid {
+            grid-template-columns: repeat(4, 1fr) !important;
+            gap: 1.5rem !important;
+          }
+
+          .home-mobile-footer {
+            display: none !important;
+          }
+        }
       `}</style>
 
       {/* ── Page Root Background ── */}
@@ -339,19 +496,7 @@ export const Home = () => {
         />
 
         {/* ── Main Responsive Content Column ── */}
-        <div
-          style={{
-            width: "100%",
-            maxWidth: "760px",
-            minHeight: "100dvh",
-            display: "flex",
-            flexDirection: "column",
-            position: "relative",
-            zIndex: 1,
-            boxSizing: "border-box",
-            padding: "0 clamp(1rem, 4vw, 2rem)",
-          }}
-        >
+        <div className="home-main-container">
 
           {/* ── Top Navigation Bar ── */}
           <header
@@ -416,8 +561,82 @@ export const Home = () => {
               </div>
             </div>
 
-            {/* Quick Auth Actions */}
+            {/* Desktop Navigation Links (>=1024px) */}
+            <nav className="home-desktop-nav-menu">
+              {[
+                { label: 'Home', path: '/' },
+                { label: 'Services', path: '/services' },
+                { label: 'Specialists', path: '/experts' },
+                { label: 'Gallery', path: '/gallery' },
+                { label: 'Store', path: '/store' },
+                { label: 'About', path: '/about' },
+                { label: 'Contact', path: '/contact' },
+              ].map((item) => (
+                <button
+                  key={item.path}
+                  type="button"
+                  onClick={() => {
+                    preloadRoute(item.path);
+                    navigate(item.path);
+                  }}
+                  onMouseEnter={() => preloadRoute(item.path)}
+                  className={`desktop-nav-link ${item.path === '/' ? 'active' : ''}`}
+                >
+                  {item.label}
+                  {item.path === '/' && <span className="desktop-nav-active-pip" />}
+                </button>
+              ))}
+            </nav>
+
+            {/* Quick Actions & Auth */}
             <div style={{ display: "flex", alignItems: "center", gap: "0.55rem" }}>
+              {/* Theme Toggle Button */}
+              <button
+                type="button"
+                onClick={toggleTheme}
+                className="btn-glass-subtle"
+                style={{
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  borderRadius: "50%",
+                  width: "36px",
+                  height: "36px",
+                  padding: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                }}
+                title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
+              >
+                {isDark ? <Sun size={16} color="#F5B942" /> : <Moon size={16} color="#F5B942" />}
+              </button>
+
+              {/* AI Matcher Pill */}
+              <button
+                type="button"
+                onClick={() => navigate("/ai-matcher")}
+                onMouseEnter={() => preloadRoute("/ai-matcher")}
+                className="btn-glass-subtle"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "0.35rem",
+                  background: "rgba(245,185,66,0.1)",
+                  border: "1px solid rgba(245,185,66,0.35)",
+                  borderRadius: "50px",
+                  padding: "0.45rem 0.85rem",
+                  fontSize: "0.78rem",
+                  fontWeight: 800,
+                  color: "#F5B942",
+                  cursor: "pointer",
+                  fontFamily: "Outfit, sans-serif",
+                }}
+              >
+                <Sparkles size={14} />
+                <span>AI Matcher</span>
+              </button>
+
               {!isAuthenticated ? (
                 <>
                   <button
@@ -482,361 +701,392 @@ export const Home = () => {
             </div>
           </header>
 
-          {/* ── HERO SECTION (Ultra Neat & High Impact) ── */}
+          {/* ── HERO SECTION (Ultra Neat & High Impact Desktop 2-Column Split) ── */}
           <section
+            className="hero-section"
             style={{
-              paddingTop: "1.2rem",
-              paddingBottom: "2rem",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              textAlign: "center",
               opacity: mounted ? 1 : 0,
               transform: mounted ? "translateY(0)" : "translateY(16px)",
               transition: "opacity 0.6s ease, transform 0.6s ease",
             }}
           >
-            {/* Pulsing Pill Badge */}
-            <div
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.45rem",
-                background: "rgba(245,185,66,0.12)",
-                border: "1px solid rgba(245,185,66,0.32)",
-                borderRadius: "50px",
-                padding: "0.38rem 0.95rem",
-                marginBottom: "1rem",
-                boxShadow: "0 0 20px rgba(245,185,66,0.15)",
-              }}
-            >
-              <Sparkles size={13} color="#F5B942" />
-              <span
-                style={{
-                  fontSize: "0.74rem",
-                  fontWeight: 800,
-                  color: "#F5B942",
-                  letterSpacing: "0.03em",
-                  textTransform: "uppercase",
-                }}
-              >
-                AI-Powered Beauty & Grooming Platform
-              </span>
-            </div>
-
-            {/* Main Headline */}
-            <h1
-              style={{
-                fontSize: "clamp(2rem, 7.5vw, 3rem)",
-                fontWeight: 900,
-                letterSpacing: "-0.035em",
-                lineHeight: 1.12,
-                margin: "0 0 1rem",
-                maxWidth: "620px",
-              }}
-            >
-              Your look. Verified talent.{" "}
-              <span
-                style={{
-                  background: "linear-gradient(135deg, #F5B942 0%, #fbbf24 45%, #ea580c 100%)",
-                  backgroundSize: "200% auto",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                  animation: "shimmerText 4s linear infinite",
-                  display: "inline",
-                }}
-              >
-                Booked in seconds.
-              </span>
-            </h1>
-
-            {/* Subtitle */}
-            <p
-              style={{
-                fontSize: "clamp(0.9rem, 3.2vw, 1.05rem)",
-                color: "#94a3b8",
-                lineHeight: 1.6,
-                margin: "0 0 1.6rem",
-                maxWidth: "520px",
-              }}
-            >
-              Connect with vetted barbers, braiders, lash techs, nail artists, and makeup specialists across Lagos & Ibadan. Salon appointments or VIP home visits.
-            </p>
-
-            {/* Primary Action Buttons */}
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "0.75rem",
-                width: "100%",
-                maxWidth: "460px",
-                marginBottom: "2rem",
-              }}
-            >
-              <button
-                type="button"
-                onClick={handleGetStarted}
-                className="btn-cta-gold"
-                style={{
-                  flex: "1 1 200px",
-                  minHeight: "52px",
-                  background: "linear-gradient(135deg, #F5B942 0%, #e8912d 100%)",
-                  color: "#08090C",
-                  borderRadius: "50px",
-                  border: "none",
-                  fontSize: "0.98rem",
-                  fontWeight: 900,
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "0.5rem",
-                  boxShadow: "0 8px 24px -2px rgba(245,185,66,0.45)",
-                  fontFamily: "Outfit, sans-serif",
-                }}
-              >
-                <span>{isAuthenticated ? "Go to Dashboard" : "Book a Stylist"}</span>
-                <ArrowRight size={18} strokeWidth={2.8} />
-              </button>
-
-              <button
-                type="button"
-                onClick={() => navigate("/ai-matcher")}
-                className="btn-glass-subtle"
-                style={{
-                  flex: "1 1 180px",
-                  minHeight: "52px",
-                  background: "rgba(255,255,255,0.05)",
-                  border: "1.5px solid rgba(255,255,255,0.12)",
-                  color: "#ffffff",
-                  borderRadius: "50px",
-                  fontSize: "0.92rem",
-                  fontWeight: 700,
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "0.45rem",
-                  backdropFilter: "blur(12px)",
-                  WebkitBackdropFilter: "blur(12px)",
-                  fontFamily: "Outfit, sans-serif",
-                }}
-              >
-                <Sparkles size={16} color="#F5B942" />
-                <span>Try AI Matcher</span>
-              </button>
-            </div>
-
-            {/* ── NEAT & UNCLUSTERED HERO VISUAL (Soft 3D Showcase) ── */}
-            {/* Clean presentation with no clutter tags plastered across the image */}
-            <div
-              style={{
-                position: "relative",
-                width: "100%",
-                maxWidth: "640px",
-                borderRadius: "28px",
-                padding: "0.5rem",
-                background: "linear-gradient(145deg, rgba(245,185,66,0.22) 0%, rgba(255,255,255,0.06) 40%, rgba(13,14,18,0.8) 100%)",
-                boxShadow: "0 30px 70px -15px rgba(0,0,0,0.9), 0 0 35px rgba(245,185,66,0.12)",
-                animation: "heroCardFloat 6s ease-in-out infinite",
-                boxSizing: "border-box",
-                overflow: "hidden",
-              }}
-            >
+            {/* Left Column: Editorial Value Proposition & Actions */}
+            <div className="hero-text-col">
+              {/* Pulsing Pill Badge */}
               <div
                 style={{
-                  position: "relative",
-                  width: "100%",
-                  height: "clamp(240px, 42vw, 360px)",
-                  borderRadius: "22px",
-                  overflow: "hidden",
-                  background: "#12141c",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "0.45rem",
+                  background: "rgba(245,185,66,0.12)",
+                  border: "1px solid rgba(245,185,66,0.32)",
+                  borderRadius: "50px",
+                  padding: "0.38rem 0.95rem",
+                  marginBottom: "1rem",
+                  boxShadow: "0 0 20px rgba(245,185,66,0.15)",
                 }}
               >
-                <img
-                  src="/images/stylecorner-salon-top.jpg"
-                  alt="StyleCorner Luxury Atelier"
+                <Sparkles size={13} color="#F5B942" />
+                <span
                   style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                    objectPosition: "center 28%",
-                    display: "block",
-                    filter: "contrast(1.05) brightness(0.98)",
-                    transition: "transform 0.8s ease",
-                  }}
-                />
-
-                {/* Subtle Luxury Gradient Vignette for depth (keeps image visible & crisp) */}
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    background: "linear-gradient(180deg, rgba(8,9,12,0.1) 0%, rgba(8,9,12,0.4) 65%, rgba(8,9,12,0.85) 100%)",
-                    pointerEvents: "none",
-                  }}
-                />
-
-                {/* Floating Soft 3D Pill: Top Left Status */}
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "14px",
-                    left: "14px",
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "0.4rem",
-                    background: "rgba(12,14,20,0.8)",
-                    backdropFilter: "blur(16px)",
-                    WebkitBackdropFilter: "blur(16px)",
-                    border: "1px solid rgba(255,255,255,0.12)",
-                    borderRadius: "50px",
-                    padding: "0.35rem 0.85rem",
-                    boxShadow: "0 8px 20px rgba(0,0,0,0.4)",
+                    fontSize: "0.74rem",
+                    fontWeight: 800,
+                    color: "#F5B942",
+                    letterSpacing: "0.03em",
+                    textTransform: "uppercase",
                   }}
                 >
-                  <div style={{ width: "7px", height: "7px", borderRadius: "50%", background: "#10b981", boxShadow: "0 0 8px #10b981" }} />
-                  <span style={{ fontSize: "0.74rem", fontWeight: 800, color: "#FFFFFF" }}>Verified Artists Active</span>
-                </div>
+                  AI-Powered Beauty & Grooming Platform
+                </span>
+              </div>
 
-                {/* Floating Soft 3D Pill: Top Right Location */}
-                <div
+              {/* Main Headline */}
+              <h1
+                style={{
+                  fontSize: "clamp(2rem, 5.5vw, 3.25rem)",
+                  fontWeight: 900,
+                  letterSpacing: "-0.035em",
+                  lineHeight: 1.12,
+                  margin: "0 0 1rem",
+                  maxWidth: "620px",
+                }}
+              >
+                Your look. Verified talent.{" "}
+                <span
                   style={{
-                    position: "absolute",
-                    top: "14px",
-                    right: "14px",
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "0.35rem",
-                    background: "rgba(12,14,20,0.8)",
-                    backdropFilter: "blur(16px)",
-                    WebkitBackdropFilter: "blur(16px)",
-                    border: "1px solid rgba(245,185,66,0.3)",
-                    borderRadius: "50px",
-                    padding: "0.35rem 0.85rem",
-                    boxShadow: "0 8px 20px rgba(0,0,0,0.4)",
+                    background: "linear-gradient(135deg, #F5B942 0%, #fbbf24 45%, #ea580c 100%)",
+                    backgroundSize: "200% auto",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                    animation: "shimmerText 4s linear infinite",
+                    display: "inline",
                   }}
                 >
-                  <MapPin size={12} color="#F5B942" />
-                  <span style={{ fontSize: "0.74rem", fontWeight: 800, color: "#F5B942" }}>Lagos & Ibadan</span>
-                </div>
+                  Booked in seconds.
+                </span>
+              </h1>
 
-                {/* Floating Soft 3D Feature Card: Bottom Overlay */}
-                <div
+              {/* Subtitle */}
+              <p
+                style={{
+                  fontSize: "clamp(0.92rem, 2.5vw, 1.05rem)",
+                  color: "#94a3b8",
+                  lineHeight: 1.6,
+                  margin: "0 0 1.75rem",
+                  maxWidth: "520px",
+                }}
+              >
+                Connect with vetted barbers, braiders, lash techs, nail artists, and makeup specialists across Lagos & Ibadan. Salon appointments or VIP home visits.
+              </p>
+
+              {/* Primary Action Buttons */}
+              <div className="hero-buttons-row">
+                <button
+                  type="button"
+                  onClick={handleGetStarted}
+                  className="btn-cta-gold"
                   style={{
-                    position: "absolute",
-                    bottom: "12px",
-                    left: "12px",
-                    right: "12px",
-                    background: "rgba(13,15,22,0.82)",
-                    backdropFilter: "blur(16px)",
-                    WebkitBackdropFilter: "blur(16px)",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                    borderRadius: "16px",
-                    padding: "0.75rem 1rem",
+                    flex: "1 1 200px",
+                    minHeight: "52px",
+                    background: "linear-gradient(135deg, #F5B942 0%, #e8912d 100%)",
+                    color: "#08090C",
+                    borderRadius: "50px",
+                    border: "none",
+                    fontSize: "0.98rem",
+                    fontWeight: 900,
+                    cursor: "pointer",
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "space-between",
-                    boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
+                    justifyContent: "center",
+                    gap: "0.5rem",
+                    boxShadow: "0 8px 24px -2px rgba(245,185,66,0.45)",
+                    fontFamily: "Outfit, sans-serif",
                   }}
                 >
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
-                    <div
-                      style={{
-                        width: "34px",
-                        height: "34px",
-                        borderRadius: "10px",
-                        background: "rgba(245,185,66,0.18)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        color: "#F5B942",
-                        flexShrink: 0,
-                      }}
-                    >
-                      <Star size={17} fill="#F5B942" />
-                    </div>
-                    <div style={{ textAlign: "left" }}>
-                      <div style={{ fontSize: "0.84rem", fontWeight: 800, color: "#FFFFFF" }}>4.92 ★ Average Rating</div>
-                      <div style={{ fontSize: "0.72rem", color: "#94a3b8" }}>Over 1,200+ satisfied appointments</div>
-                    </div>
-                  </div>
+                  <span>{isAuthenticated ? "Go to Dashboard" : "Book a Stylist"}</span>
+                  <ArrowRight size={18} strokeWidth={2.8} />
+                </button>
 
-                  <div
-                    onClick={() => navigate("/services")}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.25rem",
-                      fontSize: "0.76rem",
-                      fontWeight: 800,
-                      color: "#F5B942",
-                      cursor: "pointer",
-                      padding: "0.35rem 0.65rem",
-                      borderRadius: "8px",
-                      background: "rgba(245,185,66,0.12)",
-                    }}
-                  >
-                    <span>Explore</span>
-                    <ChevronRight size={14} />
+                <button
+                  type="button"
+                  onClick={() => navigate("/ai-matcher")}
+                  className="btn-glass-subtle"
+                  style={{
+                    flex: "1 1 180px",
+                    minHeight: "52px",
+                    background: "rgba(255,255,255,0.05)",
+                    border: "1.5px solid rgba(255,255,255,0.12)",
+                    color: "#ffffff",
+                    borderRadius: "50px",
+                    fontSize: "0.92rem",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "0.45rem",
+                    backdropFilter: "blur(12px)",
+                    WebkitBackdropFilter: "blur(12px)",
+                    fontFamily: "Outfit, sans-serif",
+                  }}
+                >
+                  <Sparkles size={16} color="#F5B942" />
+                  <span>Try AI Matcher</span>
+                </button>
+              </div>
+
+              {/* Desktop Trust Strip */}
+              <div className="hero-desktop-trust">
+                <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+                  <div style={{ width: "32px", height: "32px", borderRadius: "8px", background: "rgba(245,185,66,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <Star size={16} fill="#F5B942" color="#F5B942" />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: "0.82rem", fontWeight: 800, color: "#FFFFFF" }}>4.92 ★ Verified Rating</div>
+                    <div style={{ fontSize: "0.7rem", color: "#94a3b8" }}>1,200+ Booked Sessions</div>
+                  </div>
+                </div>
+
+                <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+                  <div style={{ width: "32px", height: "32px", borderRadius: "8px", background: "rgba(16,185,129,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <ShieldCheck size={16} color="#10b981" />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: "0.82rem", fontWeight: 800, color: "#FFFFFF" }}>100% Vetted Artists</div>
+                    <div style={{ fontSize: "0.7rem", color: "#94a3b8" }}>Identity & Portfolio Checked</div>
+                  </div>
+                </div>
+
+                <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+                  <div style={{ width: "32px", height: "32px", borderRadius: "8px", background: "rgba(245,185,66,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <MapPin size={16} color="#F5B942" />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: "0.82rem", fontWeight: 800, color: "#FFFFFF" }}>Lagos & Ibadan</div>
+                    <div style={{ fontSize: "0.7rem", color: "#94a3b8" }}>Salons & VIP Home Visits</div>
+                  </div>
+                </div>
+
+                <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+                  <div style={{ width: "32px", height: "32px", borderRadius: "8px", background: "rgba(167,139,250,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <Zap size={16} color="#a78bfa" />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: "0.82rem", fontWeight: 800, color: "#FFFFFF" }}>Escrow Protected</div>
+                    <div style={{ fontSize: "0.7rem", color: "#94a3b8" }}>Funds Held Till Satisfied</div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Quick Service Category Pills underneath showcase */}
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                justifyContent: "center",
-                gap: "0.5rem",
-                marginTop: "1.4rem",
-                maxWidth: "600px",
-              }}
-            >
-              {[
-                { name: "Hair Braider", query: "Hair Braider & Stylist" },
-                { name: "Barber", query: "Barber" },
-                { name: "Lash Tech", query: "Lash Tech" },
-                { name: "Nail Tech", query: "Nail Tech" },
-                { name: "Makeup Artist", query: "Makeup Artist" },
-                { name: "Wig Installer", query: "Wig Installer & Revamper" },
-              ].map((item) => (
-                <button
-                  key={item.name}
-                  type="button"
-                  onClick={() => handleBookService(item.query)}
+            {/* Right Column: Soft 3D Showcase Card & Service Pills */}
+            <div className="hero-visual-col">
+              <div
+                style={{
+                  position: "relative",
+                  width: "100%",
+                  maxWidth: "600px",
+                  borderRadius: "28px",
+                  padding: "0.5rem",
+                  background: "linear-gradient(145deg, rgba(245,185,66,0.22) 0%, rgba(255,255,255,0.06) 40%, rgba(13,14,18,0.8) 100%)",
+                  boxShadow: "0 30px 70px -15px rgba(0,0,0,0.9), 0 0 35px rgba(245,185,66,0.12)",
+                  animation: "heroCardFloat 6s ease-in-out infinite",
+                  boxSizing: "border-box",
+                  overflow: "hidden",
+                }}
+              >
+                <div
                   style={{
-                    background: "rgba(255,255,255,0.04)",
-                    border: "1px solid rgba(255,255,255,0.08)",
-                    borderRadius: "50px",
-                    padding: "0.35rem 0.8rem",
-                    fontSize: "0.74rem",
-                    fontWeight: 700,
-                    color: "#cbd5e1",
-                    cursor: "pointer",
-                    transition: "all 0.18s ease",
-                    fontFamily: "Outfit, sans-serif",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = "#F5B942";
-                    e.currentTarget.style.color = "#F5B942";
-                    e.currentTarget.style.background = "rgba(245,185,66,0.08)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
-                    e.currentTarget.style.color = "#cbd5e1";
-                    e.currentTarget.style.background = "rgba(255,255,255,0.04)";
+                    position: "relative",
+                    width: "100%",
+                    height: "clamp(260px, 32vw, 380px)",
+                    borderRadius: "22px",
+                    overflow: "hidden",
+                    background: "#12141c",
                   }}
                 >
-                  ✦ {item.name}
-                </button>
-              ))}
+                  <img
+                    src="/images/stylecorner-salon-top.jpg"
+                    alt="StyleCorner Luxury Atelier"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      objectPosition: "center 28%",
+                      display: "block",
+                      filter: "contrast(1.05) brightness(0.98)",
+                      transition: "transform 0.8s ease",
+                    }}
+                  />
+
+                  {/* Subtle Luxury Gradient Vignette */}
+                  <div
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      background: "linear-gradient(180deg, rgba(8,9,12,0.1) 0%, rgba(8,9,12,0.4) 65%, rgba(8,9,12,0.85) 100%)",
+                      pointerEvents: "none",
+                    }}
+                  />
+
+                  {/* Floating Soft 3D Pill: Top Left Status */}
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: "14px",
+                      left: "14px",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "0.4rem",
+                      background: "rgba(12,14,20,0.8)",
+                      backdropFilter: "blur(16px)",
+                      WebkitBackdropFilter: "blur(16px)",
+                      border: "1px solid rgba(255,255,255,0.12)",
+                      borderRadius: "50px",
+                      padding: "0.35rem 0.85rem",
+                      boxShadow: "0 8px 20px rgba(0,0,0,0.4)",
+                    }}
+                  >
+                    <div style={{ width: "7px", height: "7px", borderRadius: "50%", background: "#10b981", boxShadow: "0 0 8px #10b981" }} />
+                    <span style={{ fontSize: "0.74rem", fontWeight: 800, color: "#FFFFFF" }}>Verified Artists Active</span>
+                  </div>
+
+                  {/* Floating Soft 3D Pill: Top Right Location */}
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: "14px",
+                      right: "14px",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "0.35rem",
+                      background: "rgba(12,14,20,0.8)",
+                      backdropFilter: "blur(16px)",
+                      WebkitBackdropFilter: "blur(16px)",
+                      border: "1px solid rgba(245,185,66,0.3)",
+                      borderRadius: "50px",
+                      padding: "0.35rem 0.85rem",
+                      boxShadow: "0 8px 20px rgba(0,0,0,0.4)",
+                    }}
+                  >
+                    <MapPin size={12} color="#F5B942" />
+                    <span style={{ fontSize: "0.74rem", fontWeight: 800, color: "#F5B942" }}>Lagos & Ibadan</span>
+                  </div>
+
+                  {/* Floating Feature Card: Bottom Overlay */}
+                  <div
+                    style={{
+                      position: "absolute",
+                      bottom: "12px",
+                      left: "12px",
+                      right: "12px",
+                      background: "rgba(13,15,22,0.82)",
+                      backdropFilter: "blur(16px)",
+                      WebkitBackdropFilter: "blur(16px)",
+                      border: "1px solid rgba(255,255,255,0.1)",
+                      borderRadius: "16px",
+                      padding: "0.75rem 1rem",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+                      <div
+                        style={{
+                          width: "34px",
+                          height: "34px",
+                          borderRadius: "10px",
+                          background: "rgba(245,185,66,0.18)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          color: "#F5B942",
+                          flexShrink: 0,
+                        }}
+                      >
+                        <Star size={17} fill="#F5B942" />
+                      </div>
+                      <div style={{ textAlign: "left" }}>
+                        <div style={{ fontSize: "0.84rem", fontWeight: 800, color: "#FFFFFF" }}>4.92 ★ Average Rating</div>
+                        <div style={{ fontSize: "0.72rem", color: "#94a3b8" }}>Over 1,200+ satisfied appointments</div>
+                      </div>
+                    </div>
+
+                    <div
+                      onClick={() => navigate("/services")}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.25rem",
+                        fontSize: "0.76rem",
+                        fontWeight: 800,
+                        color: "#F5B942",
+                        cursor: "pointer",
+                        padding: "0.35rem 0.65rem",
+                        borderRadius: "8px",
+                        background: "rgba(245,185,66,0.12)",
+                      }}
+                    >
+                      <span>Explore</span>
+                      <ChevronRight size={14} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick Service Category Pills underneath showcase */}
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  justifyContent: "center",
+                  gap: "0.5rem",
+                  marginTop: "1.25rem",
+                  maxWidth: "580px",
+                }}
+              >
+                {[
+                  { name: "Hair Braider", query: "Hair Braider & Stylist" },
+                  { name: "Barber", query: "Barber" },
+                  { name: "Lash Tech", query: "Lash Tech" },
+                  { name: "Nail Tech", query: "Nail Tech" },
+                  { name: "Makeup Artist", query: "Makeup Artist" },
+                  { name: "Wig Installer", query: "Wig Installer & Revamper" },
+                ].map((item) => (
+                  <button
+                    key={item.name}
+                    type="button"
+                    onClick={() => handleBookService(item.query)}
+                    style={{
+                      background: "rgba(255,255,255,0.04)",
+                      border: "1px solid rgba(255,255,255,0.08)",
+                      borderRadius: "50px",
+                      padding: "0.35rem 0.8rem",
+                      fontSize: "0.74rem",
+                      fontWeight: 700,
+                      color: "#cbd5e1",
+                      cursor: "pointer",
+                      transition: "all 0.18s ease",
+                      fontFamily: "Outfit, sans-serif",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = "#F5B942";
+                      e.currentTarget.style.color = "#F5B942";
+                      e.currentTarget.style.background = "rgba(245,185,66,0.08)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
+                      e.currentTarget.style.color = "#cbd5e1";
+                      e.currentTarget.style.background = "rgba(255,255,255,0.04)";
+                    }}
+                  >
+                    ✦ {item.name}
+                  </button>
+                ))}
+              </div>
             </div>
           </section>
 
@@ -878,16 +1128,8 @@ export const Home = () => {
               </p>
             </div>
 
-            {/* 6 Service Cards Grid (Responsive 2-col minmax) */}
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-                gap: "1rem",
-                width: "100%",
-                boxSizing: "border-box",
-              }}
-            >
+            {/* 6 Service Cards Grid (Responsive 3-col on desktop) */}
+            <div className="home-services-grid">
               {SERVICES.map((s) => {
                 const IconComp = s.icon;
                 return (
@@ -1044,15 +1286,7 @@ export const Home = () => {
               </p>
             </div>
 
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-                gap: "1rem",
-                width: "100%",
-                boxSizing: "border-box",
-              }}
-            >
+            <div className="home-steps-grid">
               {STEPS.map((st) => {
                 const IconComp = st.icon;
                 return (
@@ -1177,13 +1411,7 @@ export const Home = () => {
               </div>
 
               {/* 4 Trust Points Bento */}
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))",
-                  gap: "1rem",
-                }}
-              >
+              <div className="home-trust-grid">
                 {TRUST_POINTS.map((tp) => {
                   const IconComp = tp.icon;
                   return (
@@ -1423,8 +1651,9 @@ export const Home = () => {
             </div>
           </section>
 
-          {/* ── Footer ── */}
+          {/* ── Mobile Footer (Hidden on Desktop) ── */}
           <footer
+            className="home-mobile-footer"
             style={{
               paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 2rem)",
               textAlign: "center",

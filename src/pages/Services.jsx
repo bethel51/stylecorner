@@ -226,8 +226,8 @@ export const Services = () => {
           </span>
         </div>
 
-        {/* Services Grid — 2 columns on mobile/tablet */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
+        {/* Services Grid — 3 columns on desktop, responsive auto-fit on mobile */}
+        <div className="services-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
           {SERVICES_LIST.map((service) => {
             const IconComponent = service.icon;
             return (

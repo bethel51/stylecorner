@@ -235,6 +235,7 @@ export const Experts = () => {
         {/* Specialists Grid */}
         {!loading && filteredStylists.length > 0 && (
           <div
+            className="experts-grid"
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',

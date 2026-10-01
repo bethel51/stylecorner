@@ -4,5 +4,6 @@ server/node_modules/
 server/.env
 .DS_Store
 dist/
+public/b64-*.txt
 
 

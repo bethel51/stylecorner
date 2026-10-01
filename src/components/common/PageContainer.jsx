@@ -1,6 +1,7 @@
 import React from 'react';
 import { AppHeader } from './AppHeader';
 import { BottomNavigation } from './BottomNavigation';
+import { DesktopFooter } from './DesktopFooter';
 import { PwaInstallPrompt } from './PwaInstallPrompt';
 
 export const PageContainer = ({
@@ -12,6 +13,7 @@ export const PageContainer = ({
   desktopExpanded = true,
   hideHeader = false,
   hideNav = false,
+  hideFooter = false,
   noPadding = false,
 }) => {
   return (
@@ -35,8 +37,10 @@ export const PageContainer = ({
           {children}
         </div>
       </main>
+      {!hideFooter && <DesktopFooter />}
       {!hideNav && <BottomNavigation />}
       <PwaInstallPrompt />
     </div>
   );
 };
+

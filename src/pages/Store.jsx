@@ -459,9 +459,10 @@ export const Store = () => {
         {/* Loading Skeleton Grid */}
         {loading && <SkeletonGrid count={4} height={220} />}
 
-        {/* 2-Column Product Grid */}
+        {/* Product Grid — 4 Columns on Desktop, 2 on Mobile */}
         {!loading && filteredProducts.length > 0 && (
           <div
+            className="store-grid"
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(2, 1fr)',

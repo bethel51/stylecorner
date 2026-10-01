@@ -57,8 +57,8 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
   return (
     <>
       <header className="app-header">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', flex: 1, minWidth: 0 }}>
-          {showBack || (!isHome && location.pathname !== '/customer-dashboard' && location.pathname !== '/expert-dashboard') ? (
+        <div className="app-header-left">
+          {showBack ? (
             <button
               className="app-header-btn"
               onClick={() => navigate(-1)}
@@ -66,40 +66,69 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
             >
               <ArrowLeft size={18} />
             </button>
-          ) : (
-            <div
-              onClick={() => navigate('/')}
-              onMouseEnter={() => preloadRoute('/')}
-              style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.45rem', flexShrink: 0 }}
-            >
-              <img
-                src="/pwa-icon-192.png"
-                alt="StyleCorner Logo"
-                style={{
-                  width: '28px',
-                  height: '28px',
-                  borderRadius: '8px',
-                  objectFit: 'cover',
-                  display: 'block',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
-                  border: '1px solid rgba(245, 185, 66, 0.35)',
-                }}
-              />
-            </div>
-          )}
+          ) : null}
 
-          <div className="app-header-title">
-            {title ? (
-              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{title}</span>
-            ) : (
-              <span style={{ letterSpacing: '0.04em', fontWeight: 800, fontSize: '1.05rem', whiteSpace: 'nowrap' }}>
+          <div
+            onClick={() => navigate('/')}
+            onMouseEnter={() => preloadRoute('/')}
+            className="app-header-brand-wrap"
+          >
+            <img
+              src="/pwa-icon-192.png"
+              alt="StyleCorner Logo"
+              className="app-header-logo"
+            />
+            <div className="app-header-brand-text">
+              <span className="brand-primary-text">
                 STYLE<span style={{ color: 'var(--color-accent)' }}>CORNER</span>
               </span>
-            )}
+              <span className="brand-sub-badge">Atelier Grooming</span>
+            </div>
           </div>
+
+          {title && !isHome && (
+            <div className="app-header-subpage-badge mobile-hide">
+              <span className="subpage-sep">/</span>
+              <span className="subpage-title">{title}</span>
+            </div>
+          )}
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexShrink: 0 }}>
+        {/* Desktop Navigation Links (>=1024px) */}
+        <nav className="desktop-nav-menu" aria-label="Main Navigation">
+          {[
+            { label: 'Home', path: '/' },
+            { label: 'Services', path: '/services' },
+            { label: 'Specialists', path: '/experts' },
+            { label: 'Gallery', path: '/gallery' },
+            { label: 'Store', path: '/store' },
+            { label: 'About', path: '/about' },
+            { label: 'Contact', path: '/contact' },
+          ].map((item) => {
+            const isActive = item.path === '/' 
+              ? location.pathname === '/' 
+              : location.pathname.startsWith(item.path);
+
+            return (
+              <button
+                key={item.path}
+                type="button"
+                onClick={() => {
+                  preloadRoute(item.path);
+                  navigate(item.path);
+                }}
+                onMouseEnter={() => preloadRoute(item.path)}
+                className={`desktop-nav-link ${isActive ? 'active' : ''}`}
+              >
+                {item.label}
+                {isActive && <span className="desktop-nav-active-pip" />}
+              </button>
+            );
+          })}
+        </nav>
+
+        {/* Right Action Cluster */}
+        <div className="app-header-right">
           {/* Theme Toggle Button */}
           <button
             className="app-header-btn"
@@ -110,16 +139,18 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
             {isDark ? <Sun size={17} color="var(--color-accent)" /> : <Moon size={17} color="var(--color-accent)" />}
           </button>
 
+          {/* AI Matcher Pill */}
           <button
-            className="app-header-btn"
+            className="app-header-btn desktop-ai-btn"
             onClick={onOpenAiMatcher || (() => navigate('/ai-matcher'))}
             onMouseEnter={() => preloadRoute('/ai-matcher')}
             title="AI Specialist Matcher"
-            style={{ color: 'var(--color-accent)', borderColor: 'var(--color-border-accent)' }}
           >
-            <Sparkles size={17} />
+            <Sparkles size={16} />
+            <span className="desktop-only-text">AI Matcher</span>
           </button>
 
+          {/* Notifications */}
           <button
             className="app-header-btn"
             onClick={() => {
@@ -138,34 +169,40 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
             {unreadCount > 0 && <span className="badge-dot" />}
           </button>
 
-          {!isHome && (
-            <button
-              className="app-header-btn"
-              onClick={onOpenCart || (() => navigate('/cart'))}
-              onMouseEnter={() => preloadRoute('/cart')}
-              aria-label="Store Cart"
-            >
-              <ShoppingBag size={18} color="var(--color-text-primary)" />
-              {itemCount > 0 && <span className="badge-dot" />}
-            </button>
-          )}
-
+          {/* Cart Icon */}
           <button
             className="app-header-btn"
+            onClick={onOpenCart || (() => navigate('/cart'))}
+            onMouseEnter={() => preloadRoute('/cart')}
+            aria-label="Store Cart"
+            title="Shopping Cart"
+            style={{ position: 'relative' }}
+          >
+            <ShoppingBag size={18} color="var(--color-text-primary)" />
+            {itemCount > 0 && <span className="badge-dot" />}
+          </button>
+
+          {/* Desktop Book Appointment CTA Button */}
+          <button
+            type="button"
+            onClick={() => {
+              preloadRoute('/booking');
+              navigate('/booking');
+            }}
+            onMouseEnter={() => preloadRoute('/booking')}
+            className="desktop-book-btn"
+            title="Book an Appointment"
+          >
+            <span>Book Now</span>
+          </button>
+
+          {/* User Profile / Login Avatar */}
+          <button
+            className="app-header-btn profile-avatar-btn"
             onClick={handleProfileClick}
             onMouseEnter={() => preloadRoute(isAuthenticated ? '/profile' : '/login')}
             aria-label="User Profile"
-            style={{
-              borderColor: 'var(--color-accent)',
-              overflow: 'hidden',
-              padding: 0,
-              width: '36px',
-              height: '36px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              background: 'var(--color-card-surface)',
-            }}
+            title={isAuthenticated ? "View Profile" : "Sign In"}
           >
             {user?.avatarUrl ? (
               <OptimizedImage
