@@ -258,7 +258,7 @@ export const BillboardFlyersPage = () => {
               padding: 'clamp(1.5rem, 4vw, 3.5rem)',
               boxShadow: '0 35px 80px -15px rgba(0, 0, 0, 0.95), 0 0 50px rgba(245, 185, 66, 0.15)',
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))',
               gap: '2.5rem',
               alignItems: 'center',
               boxSizing: 'border-box',
