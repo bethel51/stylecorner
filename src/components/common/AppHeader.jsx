@@ -139,7 +139,7 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
             {isDark ? <Sun size={17} color="var(--color-accent)" /> : <Moon size={17} color="var(--color-accent)" />}
           </button>
 
-          {/* AI Matcher Pill */}
+          {/* AI Matcher Pill — hidden on mobile, shown on desktop */}
           <button
             className="app-header-btn desktop-ai-btn"
             onClick={onOpenAiMatcher || (() => navigate('/ai-matcher'))}

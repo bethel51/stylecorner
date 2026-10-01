@@ -111,6 +111,12 @@ html, body {
   overflow-x: hidden;
 }
 
+/* Prevent any child from busting the viewport width */
+.app-viewport > * {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
 /* Tablet (768px – 1024px) */
 @media (min-width: 768px) and (max-width: 1024px) {
   .app-viewport {
@@ -207,6 +213,13 @@ html, body {
     width: 100% !important;
     max-width: 100% !important;
     transform: none !important;
+    /* Ensure header content never overflows on narrow phones */
+    overflow: hidden;
+  }
+
+  /* On small phones, tighten the header button gap */
+  .app-header-right {
+    gap: 0.3rem !important;
   }
 
   .bottom-nav {
@@ -222,6 +235,12 @@ html, body {
   .page-content {
     padding: 0.85rem !important;
     padding-bottom: calc(var(--bottom-nav-height, 70px) + env(safe-area-inset-bottom, 20px) + 2rem) !important;
+  }
+
+  /* Prevent any inline-wide divs from causing horizontal scroll */
+  .page-content > * {
+    max-width: 100%;
+    box-sizing: border-box;
   }
 }
 
@@ -328,10 +347,21 @@ html, body {
 }
 
 /* Even more compact on very narrow phones */
-@media (max-width: 360px) {
+@media (max-width: 390px) {
   .app-header-btn {
     width: 33px;
     height: 33px;
+  }
+
+  /* On very narrow phones, hide the AI label in header to save space */
+  .app-header-btn .desktop-only-text {
+    display: none !important;
+  }
+
+  /* Tighten header horizontal padding */
+  .app-header {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
   }
 }
 
@@ -383,10 +413,11 @@ html, body {
   gap: 3px;
   color: var(--color-text-muted);
   text-decoration: none;
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-family: var(--font-heading);
   font-weight: 600;
   flex: 1;
+  min-width: 0;
   height: var(--bottom-nav-height);
   position: relative;
   -webkit-tap-highlight-color: transparent;
@@ -395,6 +426,16 @@ html, body {
   background: none;
   border: none;
   transition: color 0.2s ease;
+  padding: 0 2px;
+}
+
+/* Nav label truncation for ultra-small phones */
+.bottom-nav-item span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  font-size: inherit;
 }
 
 .bottom-nav-item i, .bottom-nav-item svg {
@@ -976,6 +1017,19 @@ button:active, .dashboard-quick-actions button:active {
   .dashboard-quick-actions button {
     padding: 0.9rem 0.7rem !important;
     min-height: 96px !important;
+  }
+
+  /* Services / Experts grids: go single column on small phones */
+  .services-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .experts-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.75rem !important;
+  }
+  .store-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.65rem !important;
   }
 }
 
@@ -1669,6 +1723,16 @@ textarea:focus-visible {
 }
 
 .desktop-atelier-footer {
+  display: none;
+}
+
+/* AI Matcher button in header — hidden on mobile, only shown on desktop */
+.desktop-ai-btn {
+  display: none !important;
+}
+
+/* Subpage badge in header — hidden on mobile */
+.mobile-hide {
   display: none;
 }
 

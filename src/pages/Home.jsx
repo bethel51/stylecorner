@@ -304,7 +304,7 @@ export const Home = () => {
           position: relative;
           z-index: 1;
           box-sizing: border-box;
-          padding: 0 clamp(1rem, 4vw, 2rem);
+          padding: 0 clamp(0.85rem, 4vw, 2rem);
         }
 
         .home-desktop-nav-menu {
@@ -340,6 +340,20 @@ export const Home = () => {
           margin-bottom: 2rem;
         }
 
+        /* Stack buttons on very narrow phones */
+        @media (max-width: 380px) {
+          .hero-buttons-row {
+            flex-direction: column;
+            max-width: 100%;
+          }
+          .hero-buttons-row button,
+          .hero-buttons-row a {
+            flex: unset !important;
+            width: 100% !important;
+            min-width: 0 !important;
+          }
+        }
+
         .hero-visual-col {
           display: flex;
           flex-direction: column;
@@ -353,24 +367,39 @@ export const Home = () => {
 
         .home-services-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-          gap: 1rem;
+          grid-template-columns: 1fr;
+          gap: 0.9rem;
           width: 100%;
           box-sizing: border-box;
+        }
+
+        /* 2-column on mid-sized phones */
+        @media (min-width: 480px) and (max-width: 1023px) {
+          .home-services-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+          }
         }
 
         .home-steps-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-          gap: 1rem;
+          grid-template-columns: 1fr;
+          gap: 0.9rem;
           width: 100%;
           box-sizing: border-box;
         }
 
+        @media (min-width: 540px) and (max-width: 1023px) {
+          .home-steps-grid {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+          }
+        }
+
         .home-trust-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-          gap: 1rem;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 0.85rem;
         }
 
         @media (min-width: 1024px) {
@@ -1037,7 +1066,7 @@ export const Home = () => {
                 </div>
               </div>
 
-              {/* Quick Service Category Pills underneath showcase */}
+              {/* Quick Service Category Pills underneath showcase — horizontally scrollable on mobile */}
               <div
                 style={{
                   display: "flex",
@@ -1046,6 +1075,8 @@ export const Home = () => {
                   gap: "0.5rem",
                   marginTop: "1.25rem",
                   maxWidth: "580px",
+                  width: "100%",
+                  boxSizing: "border-box",
                 }}
               >
                 {[
@@ -1663,13 +1694,13 @@ export const Home = () => {
               paddingTop: "1.5rem",
             }}
           >
-            <div style={{ display: "flex", justifyContent: "center", gap: "1.25rem", marginBottom: "0.75rem" }}>
+            <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "0.85rem 1.25rem", marginBottom: "0.75rem" }}>
               <span onClick={() => navigate("/about")} style={{ cursor: "pointer", color: "#64748b" }}>About</span>
               <span onClick={() => navigate("/services")} style={{ cursor: "pointer", color: "#64748b" }}>Services</span>
               <span onClick={() => navigate("/policies")} style={{ cursor: "pointer", color: "#64748b" }}>Policies</span>
               <span onClick={() => navigate("/contact")} style={{ cursor: "pointer", color: "#64748b" }}>Contact</span>
             </div>
-            <div>© {new Date().getFullYear()} StyleCorner. All rights reserved. Lagos & Ibadan, Nigeria.</div>
+            <div>© {new Date().getFullYear()} StyleCorner. All rights reserved. Lagos &amp; Ibadan, Nigeria.</div>
           </footer>
 
         </div>
