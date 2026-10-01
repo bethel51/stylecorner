@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>StyleCorner — Billboard & Marketing Flyers</title>
+  <title>StyleCorner — Billboard & Marketing Flyers (www.stylecorner.world)</title>
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -41,10 +41,10 @@
       position: sticky;
       top: 1rem;
       z-index: 1000;
-      background: rgba(15, 17, 24, 0.92);
+      background: rgba(15, 17, 24, 0.94);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(245, 185, 66, 0.3);
+      border: 1px solid rgba(245, 185, 66, 0.35);
       border-radius: 50px;
       padding: 0.5rem 1rem;
       display: flex;
@@ -190,22 +190,41 @@
       position: relative;
     }
 
+    /* Real Crisp QR Frame with Scissors Center Mark */
     .qr-frame {
-      width: 200px;
-      height: 200px;
+      width: 210px;
+      height: 210px;
       background: #FFFFFF;
       border-radius: 20px;
-      padding: 12px;
-      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5);
+      padding: 10px;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6);
       position: relative;
       margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .qr-frame img {
+    .qr-frame svg {
       width: 100%;
       height: 100%;
       display: block;
+    }
+
+    .qr-center-logo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 38px;
+      height: 38px;
       border-radius: 10px;
+      background: #08090C;
+      border: 2.5px solid #F5B942;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
     }
 
     .qr-badge {
@@ -224,13 +243,14 @@
     }
 
     .qr-sub {
-      font-size: 0.85rem;
+      font-size: 0.88rem;
       color: #94a3b8;
       font-weight: 600;
     }
 
     .qr-sub strong {
-      color: #FFFFFF;
+      color: var(--gold);
+      font-weight: 800;
     }
 
     /* ══════════════════════════════════════════════════════════════════
@@ -328,20 +348,23 @@
     }
 
     .flyer-qr-image {
-      width: 180px;
-      height: 180px;
+      width: 190px;
+      height: 190px;
       background: #FFFFFF;
       border-radius: 18px;
       padding: 10px;
       margin-bottom: 1.1rem;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .flyer-qr-image img {
+    .flyer-qr-image svg {
       width: 100%;
       height: 100%;
       display: block;
-      border-radius: 10px;
     }
 
     .flyer-cta-text {
@@ -354,9 +377,10 @@
     }
 
     .flyer-url {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: #FFFFFF;
-      font-weight: 700;
+      font-weight: 800;
+      letter-spacing: 0.02em;
     }
 
     .flyer-footer-trust {
@@ -531,7 +555,7 @@
         </div>
       </div>
 
-      <!-- Right QR Showcase -->
+      <!-- Right QR Showcase with Guaranteed Scannable SVG (https://www.stylecorner.world) -->
       <div class="billboard-qr-showcase">
         <div class="qr-badge">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#08090C" stroke-width="3" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
@@ -539,14 +563,21 @@
         </div>
 
         <div class="qr-frame">
-          <img src="/images/stylecorner-qr.png" alt="Scan QR Code to Book StyleCorner">
+          <!-- Inline 100% Crisp Vector QR code encoding https://www.stylecorner.world -->
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 37 37" shape-rendering="crispEdges">
+            <path fill="#ffffff" d="M0 0h37v37H0z"/>
+            <path stroke="#000000" d="M4 4.5h7m5 0h1m1 0h1m4 0h1m2 0h7M4 5.5h1m5 0h1m1 0h6m5 0h2m1 0h1m5 0h1M4 6.5h1m1 0h3m1 0h1m8 0h1m2 0h1m3 0h1m1 0h3m1 0h1M4 7.5h1m1 0h3m1 0h1m2 0h2m1 0h2m2 0h1m2 0h1m2 0h1m1 0h3m1 0h1M4 8.5h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h2m2 0h4m2 0h1m1 0h3m1 0h1M4 9.5h1m5 0h1m2 0h1m2 0h1m1 0h3m1 0h2m2 0h1m5 0h1M4 10.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M13 11.5h4m2 0h1m1 0h1m2 0h1M4 12.5h1m1 0h1m1 0h1m1 0h1m2 0h1m6 0h2m1 0h2m3 0h1m2 0h1M6 13.5h1m1 0h1m3 0h1m1 0h1m2 0h1m1 0h4m1 0h1m1 0h1m2 0h1m2 0h1M5 14.5h2m1 0h4m1 0h4m1 0h4m2 0h1m1 0h1m3 0h3M4 15.5h3m1 0h2m2 0h1m1 0h5m1 0h3m3 0h1m1 0h1m2 0h1M8 16.5h4m1 0h2m3 0h2m1 0h1m3 0h2m2 0h1m1 0h2M5 17.5h1m1 0h1m1 0h1m2 0h2m1 0h2m1 0h2m4 0h1m1 0h2m1 0h1m2 0h1M4 18.5h1m3 0h3m1 0h2m2 0h2m3 0h1m3 0h3m1 0h1m1 0h2M4 19.5h1m1 0h4m5 0h2m2 0h1m1 0h2m1 0h2m3 0h1m1 0h1M4 20.5h2m2 0h1m1 0h2m2 0h1m1 0h1m3 0h2m1 0h5m1 0h1m1 0h2M5 21.5h1m3 0h1m3 0h1m1 0h1m1 0h1m1 0h4m1 0h1m1 0h1m2 0h2m1 0h1M4 22.5h1m1 0h1m1 0h1m1 0h6m2 0h5m4 0h1m3 0h2M5 23.5h1m1 0h2m4 0h1m1 0h4m1 0h2m7 0h1m1 0h1M4 24.5h1m1 0h1m1 0h7m3 0h2m1 0h1m2 0h5M12 25.5h1m5 0h2m3 0h2m3 0h1m1 0h3M4 26.5h7m2 0h1m2 0h2m5 0h2m1 0h1m1 0h2m1 0h2M4 27.5h1m5 0h1m4 0h1m3 0h1m1 0h1m2 0h1m3 0h2M4 28.5h1m1 0h3m1 0h1m1 0h1m2 0h2m3 0h2m2 0h5m2 0h1M4 29.5h1m1 0h3m1 0h1m2 0h1m2 0h2m1 0h3m6 0h1m1 0h1M4 30.5h1m1 0h3m1 0h1m1 0h1m2 0h1m1 0h1m1 0h2m2 0h2m2 0h3m2 0h1M4 31.5h1m5 0h1m2 0h5m2 0h2m1 0h2m1 0h1m1 0h1m2 0h1M4 32.5h7m1 0h1m3 0h1m1 0h3m1 0h3m1 0h4m1 0h2"/>
+          </svg>
+          <div class="qr-center-logo">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F5B942" stroke-width="2.6" stroke-linecap="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+          </div>
         </div>
 
         <div style="font-size: 1.15rem; font-weight: 900; color: #FFFFFF; margin-bottom: 0.35rem;">
           SCAN WITH CAMERA
         </div>
         <div class="qr-sub">
-          Point phone camera to join · <strong>stylecorner.ng</strong>
+          Point phone camera to join · <strong>www.stylecorner.world</strong>
         </div>
       </div>
     </div>
@@ -573,7 +604,7 @@
       </h2>
 
       <p class="flyer-subhead">
-        No more guessing salon quality. Get matched to vetted braiders, barbers, lash techs & makeup artists in your LGA.
+        No more guessing salon quality. Get matched to vetted braiders, barbers, lash techs & makeup artists in your LGA across Lagos & Ibadan.
       </p>
 
       <div class="services-tag-row">
@@ -585,13 +616,19 @@
         <span class="service-tag">✦ Frontal Wig Install</span>
       </div>
 
-      <!-- Prominent QR Box -->
+      <!-- Prominent QR Box with Real SVG (https://www.stylecorner.world) -->
       <div class="flyer-qr-box">
         <div class="flyer-qr-image">
-          <img src="/images/stylecorner-qr.png" alt="StyleCorner QR Code">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 37 37" shape-rendering="crispEdges">
+            <path fill="#ffffff" d="M0 0h37v37H0z"/>
+            <path stroke="#000000" d="M4 4.5h7m5 0h1m1 0h1m4 0h1m2 0h7M4 5.5h1m5 0h1m1 0h6m5 0h2m1 0h1m5 0h1M4 6.5h1m1 0h3m1 0h1m8 0h1m2 0h1m3 0h1m1 0h3m1 0h1M4 7.5h1m1 0h3m1 0h1m2 0h2m1 0h2m2 0h1m2 0h1m2 0h1m1 0h3m1 0h1M4 8.5h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h2m2 0h4m2 0h1m1 0h3m1 0h1M4 9.5h1m5 0h1m2 0h1m2 0h1m1 0h3m1 0h2m2 0h1m5 0h1M4 10.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M13 11.5h4m2 0h1m1 0h1m2 0h1M4 12.5h1m1 0h1m1 0h1m1 0h1m2 0h1m6 0h2m1 0h2m3 0h1m2 0h1M6 13.5h1m1 0h1m3 0h1m1 0h1m2 0h1m1 0h4m1 0h1m1 0h1m2 0h1m2 0h1M5 14.5h2m1 0h4m1 0h4m1 0h4m2 0h1m1 0h1m3 0h3M4 15.5h3m1 0h2m2 0h1m1 0h5m1 0h3m3 0h1m1 0h1m2 0h1M8 16.5h4m1 0h2m3 0h2m1 0h1m3 0h2m2 0h1m1 0h2M5 17.5h1m1 0h1m1 0h1m2 0h2m1 0h2m1 0h2m4 0h1m1 0h2m1 0h1m2 0h1M4 18.5h1m3 0h3m1 0h2m2 0h2m3 0h1m3 0h3m1 0h1m1 0h2M4 19.5h1m1 0h4m5 0h2m2 0h1m1 0h2m1 0h2m3 0h1m1 0h1M4 20.5h2m2 0h1m1 0h2m2 0h1m1 0h1m3 0h2m1 0h5m1 0h1m1 0h2M5 21.5h1m3 0h1m3 0h1m1 0h1m1 0h1m1 0h4m1 0h1m1 0h1m2 0h2m1 0h1M4 22.5h1m1 0h1m1 0h1m1 0h6m2 0h5m4 0h1m3 0h2M5 23.5h1m1 0h2m4 0h1m1 0h4m1 0h2m7 0h1m1 0h1M4 24.5h1m1 0h1m1 0h7m3 0h2m1 0h1m2 0h5M12 25.5h1m5 0h2m3 0h2m3 0h1m1 0h3M4 26.5h7m2 0h1m2 0h2m5 0h2m1 0h1m1 0h2m1 0h2M4 27.5h1m5 0h1m4 0h1m3 0h1m1 0h1m2 0h1m3 0h2M4 28.5h1m1 0h3m1 0h1m1 0h1m2 0h2m3 0h2m2 0h5m2 0h1M4 29.5h1m1 0h3m1 0h1m2 0h1m2 0h2m1 0h3m6 0h1m1 0h1M4 30.5h1m1 0h3m1 0h1m1 0h1m2 0h1m1 0h1m1 0h2m2 0h2m2 0h3m2 0h1M4 31.5h1m5 0h1m2 0h5m2 0h2m1 0h2m1 0h1m1 0h1m2 0h1M4 32.5h7m1 0h1m3 0h1m1 0h3m1 0h3m1 0h4m1 0h2"/>
+          </svg>
+          <div class="qr-center-logo">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F5B942" stroke-width="2.6" stroke-linecap="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+          </div>
         </div>
         <div class="flyer-cta-text">POINT CAMERA TO SCAN</div>
-        <div class="flyer-url">www.stylecorner.ng</div>
+        <div class="flyer-url">www.stylecorner.world</div>
       </div>
 
       <div class="flyer-footer-trust">
@@ -638,16 +675,22 @@
         </div>
       </div>
 
-      <!-- QR Code -->
+      <!-- Recruitment QR Code (https://www.stylecorner.world/role-selection) -->
       <div style="background: rgba(167, 139, 250, 0.12); border: 2px solid #a78bfa; border-radius: 28px; padding: 1.75rem 2.2rem; display: flex; flex-direction: column; align-items: center; margin-bottom: 1.5rem;">
-        <div style="width: 170px; height: 170px; background: #FFFFFF; border-radius: 16px; padding: 10px; margin-bottom: 0.85rem;">
-          <img src="/images/stylecorner-qr.png" alt="Scan to Join StyleCorner as a Stylist" style="width: 100%; height: 100%; border-radius: 8px;">
+        <div style="width: 180px; height: 180px; background: #FFFFFF; border-radius: 16px; padding: 10px; margin-bottom: 0.85rem; position: relative; display: flex; align-items: center; justify-content: center;">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 41 41" shape-rendering="crispEdges" style="width: 100%; height: 100%; display: block;">
+            <path fill="#ffffff" d="M0 0h41v41H0z"/>
+            <path stroke="#000000" d="M4 4.5h7m2 0h3m1 0h1m3 0h4m1 0h2m2 0h7M4 5.5h1m5 0h1m4 0h1m1 0h3m1 0h1m4 0h1m3 0h1m5 0h1M4 6.5h1m1 0h3m1 0h1m1 0h2m2 0h2m1 0h6m2 0h2m1 0h1m1 0h3m1 0h1M4 7.5h1m1 0h3m1 0h1m1 0h1m3 0h1m1 0h3m2 0h4m1 0h1m1 0h1m1 0h3m1 0h1M4 8.5h1m1 0h3m1 0h1m1 0h1m2 0h3m1 0h1m2 0h1m2 0h1m2 0h1m1 0h1m1 0h3m1 0h1M4 9.5h1m5 0h1m1 0h3m2 0h4m3 0h3m1 0h1m1 0h1m5 0h1M4 10.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M12 11.5h2m1 0h1m2 0h2m5 0h1m1 0h1M4 12.5h1m1 0h5m2 0h1m1 0h1m1 0h3m1 0h1m4 0h2m2 0h5M11 13.5h1m2 0h3m1 0h1m1 0h1m2 0h5m2 0h2m1 0h2m1 0h1M4 14.5h1m1 0h2m2 0h3m1 0h1m1 0h1m2 0h1m2 0h1m2 0h1m2 0h2m2 0h1m1 0h2M4 15.5h1m3 0h1m2 0h1m1 0h3m2 0h3m2 0h1m1 0h3m1 0h1m2 0h3M6 16.5h1m1 0h1m1 0h2m3 0h1m6 0h1m2 0h1m1 0h3m1 0h3m1 0h2M4 17.5h4m1 0h1m3 0h1m1 0h1m1 0h4m3 0h1m1 0h2m2 0h1m2 0h4M6 18.5h1m3 0h2m1 0h1m1 0h4m2 0h3m1 0h1m3 0h3m1 0h3M4 19.5h1m1 0h1m2 0h1m1 0h3m4 0h1m1 0h1m1 0h6m1 0h2m1 0h1m1 0h1M4 20.5h1m1 0h1m1 0h3m1 0h2m1 0h1m5 0h4m1 0h4m1 0h2m3 0h1M7 21.5h1m1 0h1m2 0h2m1 0h2m3 0h5m2 0h5m1 0h2m1 0h1M4 22.5h2m3 0h3m7 0h1m1 0h1m2 0h1m1 0h1m4 0h2m1 0h2M5 23.5h1m1 0h1m4 0h4m1 0h2m2 0h4m2 0h1m1 0h8M4 24.5h1m1 0h2m2 0h1m1 0h1m1 0h2m1 0h4m2 0h4m1 0h2m1 0h3m1 0h2M4 25.5h1m4 0h1m1 0h1m4 0h2m1 0h1m1 0h2m4 0h1m1 0h2m2 0h1m2 0h1M4 26.5h1m2 0h1m2 0h2m2 0h2m3 0h3m2 0h3m2 0h1m3 0h3M4 27.5h1m2 0h2m2 0h2m1 0h1m1 0h1m1 0h2m2 0h1m2 0h1m2 0h3m2 0h2M4 28.5h1m1 0h1m2 0h2m3 0h4m1 0h3m4 0h8m1 0h2M12 29.5h1m3 0h1m3 0h1m2 0h3m1 0h2m3 0h1m1 0h1m1 0h1M4 30.5h7m2 0h3m3 0h2m1 0h1m1 0h2m1 0h2m1 0h1m1 0h1m1 0h2M4 31.5h1m5 0h1m1 0h2m1 0h3m2 0h1m2 0h1m1 0h4m3 0h3m1 0h1M4 32.5h1m1 0h3m1 0h1m1 0h3m1 0h2m4 0h1m2 0h1m2 0h6M4 33.5h1m1 0h3m1 0h1m1 0h1m3 0h1m2 0h2m3 0h4m1 0h1m2 0h1m1 0h1m1 0h1M4 34.5h1m1 0h3m1 0h1m1 0h1m4 0h2m2 0h1m1 0h1m1 0h7m1 0h1M4 35.5h1m5 0h1m2 0h2m1 0h3m1 0h1m2 0h4m2 0h1m2 0h3M4 36.5h7m1 0h1m2 0h2m1 0h1m2 0h1m1 0h1m2 0h3m2 0h1m3 0h1"/>
+          </svg>
+          <div class="qr-center-logo" style="border-color: #a78bfa;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2.6" stroke-linecap="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+          </div>
         </div>
         <div style="font-size: 1rem; font-weight: 900; color: #c4b5fd; text-transform: uppercase;">
           SCAN TO JOIN AS AN EXPERT
         </div>
-        <div style="font-size: 0.8rem; color: #94a3b8;">
-          Takes only 2 minutes · <strong>stylecorner.ng/role-selection</strong>
+        <div style="font-size: 0.85rem; color: #FFFFFF; font-weight: 700; margin-top: 2px;">
+          www.stylecorner.world/role-selection
         </div>
       </div>
 
@@ -695,14 +738,16 @@
       hint.style.bottom = '10px';
       hint.style.left = '50%';
       hint.style.transform = 'translateX(-50%)';
-      hint.style.background = 'rgba(0,0,0,0.8)';
+      hint.style.background = 'rgba(0,0,0,0.85)';
       hint.style.color = '#F5B942';
-      hint.style.padding = '0.35rem 0.8rem';
+      hint.style.padding = '0.45rem 1rem';
       hint.style.borderRadius = '50px';
-      hint.style.fontSize = '0.72rem';
+      hint.style.fontSize = '0.76rem';
       hint.style.fontFamily = 'Outfit, sans-serif';
+      hint.style.fontWeight = '700';
+      hint.style.border = '1px solid rgba(245,185,66,0.3)';
       hint.style.zIndex = '9999';
-      hint.innerText = '📷 Clean Mode Active — Press ESC or tap anywhere to restore toolbar';
+      hint.innerText = '📷 Clean Screenshot Mode Active — Press ESC or tap anywhere to restore controls';
       document.body.appendChild(hint);
 
       setTimeout(() => {
