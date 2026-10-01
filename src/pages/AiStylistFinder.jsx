@@ -100,22 +100,25 @@ const VIBES = [
 ];
 
 const PROMPT_CHIPS = [
-  'Volume lash extensions in Victoria Island',
-  'Clean gel nails with stylish nail art',
-  'Knotless braids with soft curl tips',
+  'Volume lash extensions in Ikeja, Lagos',
+  'Clean gel nails in Lekki, Lagos',
+  'Knotless braids in Bodija, Ibadan',
   'Clean skin fade, sharp line-up & beard trim',
-  'Soft glam makeup and neat brows for a party',
-  'Lace frontal wig install with wavy curls',
+  'Soft glam makeup in Ring Road, Ibadan',
+  'Lace frontal wig install in Victoria Island',
 ];
 
 const LOCATIONS = [
-  'Victoria Island, Lagos',
-  'Lekki Phase 1, Lagos',
-  'Ikoyi, Lagos',
-  'Ikeja GRA, Lagos',
-  'Maitama, Abuja',
-  'Wuse II, Abuja',
-  'Port Harcourt (GRA)',
+  'Ikeja, Lagos',
+  'Eti-Osa (Lekki / Victoria Island / Ikoyi), Lagos',
+  'Lagos Mainland (Yaba / Surulere), Lagos',
+  'Kosofe (Magodo / Maryland), Lagos',
+  'Surulere, Lagos',
+  'Amuwo-Odofin (Festac), Lagos',
+  'Ibadan North (Bodija, Agodi, UI), Oyo',
+  'Ibadan South-West (Ring Road, Oluyole), Oyo',
+  'Ibadan North-West (Dugbe, Mokola), Oyo',
+  'Akinyele (Moniya, Ojoo), Oyo',
 ];
 
 const TIME_SLOTS = [
@@ -513,6 +516,121 @@ export const AiStylistFinder = () => {
           </div>
         </div>
 
+        {/* ── Schedule: Date & Time ── */}
+        <div
+          style={{
+            background: '#151822',
+            border: '1px solid rgba(255,255,255,0.08)',
+            borderRadius: '22px',
+            padding: '1.25rem',
+            marginBottom: '1.25rem',
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+            <span style={{ fontFamily: 'Outfit', fontSize: '0.86rem', fontWeight: 800, color: '#ffffff' }}>
+              Preferred Date & Time
+            </span>
+            <span style={{ fontSize: '0.74rem', color: '#F5B942', fontWeight: 700, fontFamily: 'Outfit' }}>
+              Flexible Scheduling
+            </span>
+          </div>
+
+          {/* Quick Date Shortcuts */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem', marginBottom: '0.75rem' }}>
+            {[
+              { id: 'today', label: 'Today', offset: 0 },
+              { id: 'tomorrow', label: 'Tomorrow', offset: 1 },
+              { id: 'weekend', label: 'Weekend', offset: 3 },
+            ].map((preset) => {
+              const targetDate = new Date();
+              targetDate.setDate(targetDate.getDate() + preset.offset);
+              const dateStr = targetDate.toISOString().split('T')[0];
+              const isSelected = selectedDate === dateStr;
+              return (
+                <button
+                  key={preset.id}
+                  type="button"
+                  onClick={() => setSelectedDate(dateStr)}
+                  style={{
+                    padding: '0.65rem 0.5rem',
+                    borderRadius: '12px',
+                    background: isSelected ? 'rgba(245,185,66,0.15)' : '#0c0e14',
+                    border: isSelected ? '1.5px solid #F5B942' : '1px solid rgba(255,255,255,0.08)',
+                    color: isSelected ? '#F5B942' : '#cbd5e1',
+                    fontSize: '0.78rem',
+                    fontFamily: 'Outfit',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    textAlign: 'center',
+                    minHeight: '40px',
+                  }}
+                >
+                  {preset.label}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Date Picker Input */}
+          <div style={{ marginBottom: '0.85rem' }}>
+            <input
+              type="date"
+              value={selectedDate}
+              min={new Date().toISOString().split('T')[0]}
+              onChange={(e) => setSelectedDate(e.target.value)}
+              style={{
+                width: '100%',
+                background: '#0c0e14',
+                border: '1.5px solid rgba(255,255,255,0.1)',
+                borderRadius: '14px',
+                padding: '0.75rem 1rem',
+                color: '#ffffff',
+                fontFamily: 'Outfit',
+                fontSize: '15px',
+                fontWeight: 600,
+                outline: 'none',
+                boxSizing: 'border-box',
+              }}
+            />
+          </div>
+
+          {/* Time of Day Slots */}
+          <div>
+            <label style={{ display: 'block', fontSize: '0.72rem', color: '#94a3b8', fontWeight: 700, marginBottom: '0.45rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              Preferred Time of Day
+            </label>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem' }}>
+              {TIME_SLOTS.map((slot) => {
+                const isSelected = selectedTimeSlot === slot.label;
+                return (
+                  <button
+                    key={slot.id}
+                    type="button"
+                    onClick={() => setSelectedTimeSlot(slot.label)}
+                    style={{
+                      padding: '0.65rem 0.4rem',
+                      borderRadius: '12px',
+                      background: isSelected ? 'rgba(245,185,66,0.15)' : '#0c0e14',
+                      border: isSelected ? '1.5px solid #F5B942' : '1px solid rgba(255,255,255,0.08)',
+                      color: isSelected ? '#F5B942' : '#cbd5e1',
+                      fontSize: '0.74rem',
+                      fontFamily: 'Outfit',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      textAlign: 'center',
+                      lineHeight: 1.25,
+                      minHeight: '44px',
+                    }}
+                  >
+                    <span style={{ fontSize: '0.95rem', display: 'block', marginBottom: '0.15rem' }}>{slot.icon}</span>
+                    <span>{slot.id === 'morning' ? 'Morning' : slot.id === 'afternoon' ? 'Afternoon' : 'Evening'}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
         {/* ── Location & Service Mode ── */}
         <div
           style={{
@@ -531,7 +649,7 @@ export const AiStylistFinder = () => {
               value={selectedLocation}
               onChange={(e) => setSelectedLocation(e.target.value)}
               className="app-select"
-              style={{ width: '100%', background: '#0c0e14' }}
+              style={{ width: '100%', background: '#0c0e14', fontSize: '15px' }}
             >
               {LOCATIONS.map((loc) => (
                 <option key={loc} value={loc}>{loc}</option>
@@ -543,7 +661,7 @@ export const AiStylistFinder = () => {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem' }}>
             <button
               type="button"
-              onClick={() => setServiceMode('atelier')}
+              onClick={() => setServiceMode('salon')}
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -551,17 +669,18 @@ export const AiStylistFinder = () => {
                 gap: '0.5rem',
                 padding: '0.75rem',
                 borderRadius: '12px',
-                background: serviceMode === 'atelier' ? '#F5B942' : '#0c0e14',
-                color: serviceMode === 'atelier' ? '#0c0e14' : '#94a3b8',
-                border: serviceMode === 'atelier' ? '1.5px solid #F5B942' : '1px solid rgba(255,255,255,0.07)',
+                background: (serviceMode === 'salon' || serviceMode === 'atelier') ? '#F5B942' : '#0c0e14',
+                color: (serviceMode === 'salon' || serviceMode === 'atelier') ? '#0c0e14' : '#94a3b8',
+                border: (serviceMode === 'salon' || serviceMode === 'atelier') ? '1.5px solid #F5B942' : '1px solid rgba(255,255,255,0.07)',
                 fontFamily: 'Outfit',
                 fontSize: '0.8rem',
                 fontWeight: 800,
                 cursor: 'pointer',
+                minHeight: '44px',
               }}
             >
               <Store size={16} />
-              <span>Atelier Suite</span>
+              <span>In-Salon</span>
             </button>
             <button
               type="button"
@@ -580,6 +699,7 @@ export const AiStylistFinder = () => {
                 fontSize: '0.8rem',
                 fontWeight: 800,
                 cursor: 'pointer',
+                minHeight: '44px',
               }}
             >
               <HomeIcon size={16} />
@@ -722,25 +842,45 @@ export const AiStylistFinder = () => {
                 </div>
               </div>
 
-              {/* Instant Book Button */}
-              <button
-                onClick={() => handleBookDirectly(matchedResults.topMatch)}
-                className="app-btn app-btn-accent"
-                style={{
-                  width: '100%',
-                  minHeight: '46px',
-                  borderRadius: '14px',
-                  fontSize: '0.92rem',
-                  fontWeight: 800,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.45rem',
-                }}
-              >
-                <span>Book Appointment with {matchedResults.topMatch.name.split(' ')[0]}</span>
-                <ArrowRight size={16} />
-              </button>
+              {/* Actions: View Profile & Instant Book */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.6fr', gap: '0.65rem' }}>
+                <button
+                  type="button"
+                  onClick={() => navigate(`/expert-profile?id=${matchedResults.topMatch.id}`)}
+                  className="app-btn app-btn-outline"
+                  style={{
+                    minHeight: '48px',
+                    borderRadius: '14px',
+                    fontSize: '0.84rem',
+                    fontWeight: 700,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <span>View Profile</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleBookDirectly(matchedResults.topMatch)}
+                  className="app-btn app-btn-accent"
+                  style={{
+                    minHeight: '48px',
+                    borderRadius: '14px',
+                    fontSize: '0.88rem',
+                    fontWeight: 800,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.45rem',
+                    boxShadow: '0 4px 16px rgba(245,185,66,0.3)',
+                  }}
+                >
+                  <span>Book {matchedResults.topMatch.name.split(' ')[0]}</span>
+                  <ArrowRight size={16} />
+                </button>
+              </div>
             </div>
 
             {/* Alternates */}

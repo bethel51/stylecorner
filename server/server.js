@@ -219,7 +219,7 @@ function authenticateAdmin(req, res, next) {
 // Register User
 app.post('/api/auth/register', async (req, res) => {
   try {
-    const { firstname, lastname, email, password, phone, role, services } = req.body;
+    const { firstname, lastname, email, password, phone, role, services, state, lga, address, businessAddress, location } = req.body;
     const cleanEmail = (email || '').trim().toLowerCase();
 
     if (!cleanEmail || !password || !firstname) {
@@ -250,6 +250,10 @@ app.post('/api/auth/register', async (req, res) => {
       }
     }
 
+    const assignedState = (state || 'Lagos').trim();
+    const assignedLga = (lga || 'Ikeja').trim();
+    const resolvedAddress = (businessAddress || address || '').trim();
+
     const user = new User({
       firstname: firstname.trim(),
       lastname: (lastname || '').trim(),
@@ -257,6 +261,11 @@ app.post('/api/auth/register', async (req, res) => {
       phone: (phone || '').trim(),
       password: hashedPassword,
       role: (role === 'staff' || role === 'expert') ? 'staff' : 'customer',
+      state: assignedState,
+      lga: assignedLga,
+      address: resolvedAddress,
+      businessAddress: resolvedAddress,
+      location: (location || `${assignedLga}, ${assignedState}`).trim(),
       specialties: expertSpecialties,
       services: expertSpecialties.map(spec => ({ name: spec, price: '15000' })),
       isVerified: false,
@@ -528,7 +537,7 @@ app.get('/api/auth/me', authenticateToken, async (req, res) => {
 // Update user profile
 app.put('/api/users/profile', authenticateToken, async (req, res) => {
   try {
-    const { firstname, lastname, phone, avatarUrl, coverImage, title, bio, location, state, lga, street, houseNumber, address, services, specialties } = req.body;
+    const { firstname, lastname, phone, avatarUrl, coverImage, title, bio, location, state, lga, street, houseNumber, address, businessAddress, services, specialties } = req.body;
     
     const updatePayload = {};
     if (firstname !== undefined) updatePayload.firstname = firstname;
@@ -544,6 +553,7 @@ app.put('/api/users/profile', authenticateToken, async (req, res) => {
     if (street !== undefined) updatePayload.street = street;
     if (houseNumber !== undefined) updatePayload.houseNumber = houseNumber;
     if (address !== undefined) updatePayload.address = address;
+    if (businessAddress !== undefined) updatePayload.businessAddress = businessAddress;
     if (services !== undefined) updatePayload.services = services;
     if (specialties !== undefined) updatePayload.specialties = specialties;
 

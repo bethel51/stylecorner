@@ -24,6 +24,7 @@ import { OptimizedImage } from '../components/common/OptimizedImage';
 import { PopupModal } from '../components/common/PopupModal';
 import { api } from '../services/api';
 import { getFavoritesCount, subscribeToFavorites } from '../utils/favorites';
+import { LocationSelector } from '../components/store/LocationSelector';
 
 export const Profile = () => {
   const navigate = useNavigate();
@@ -34,6 +35,13 @@ export const Profile = () => {
     lastname: user?.lastname || '',
     phone: user?.phone || '',
     avatarUrl: user?.avatarUrl || '',
+  });
+
+  const [profileLocation, setProfileLocation] = useState({
+    state: user?.state || 'Lagos',
+    lga: user?.lga || 'Ikeja',
+    street: '',
+    houseNumber: '',
   });
 
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
@@ -101,6 +109,12 @@ export const Profile = () => {
         phone: user.phone || '',
         avatarUrl: user.avatarUrl || '',
       });
+      setProfileLocation({
+        state: user.state || 'Lagos',
+        lga: user.lga || 'Ikeja',
+        street: '',
+        houseNumber: '',
+      });
     }
   }, [user]);
 
@@ -138,6 +152,8 @@ export const Profile = () => {
         firstname: profileForm.firstname.trim(),
         lastname: profileForm.lastname.trim(),
         phone: profileForm.phone.trim(),
+        state: profileLocation.state,
+        lga: profileLocation.lga,
       });
       setShowEditModal(false);
       showToast('Profile updated successfully!', 'success');
@@ -477,11 +493,36 @@ export const Profile = () => {
             />
           </div>
 
+          {/* Location */}
+          <div
+            style={{
+              background: 'rgba(245, 185, 66, 0.06)',
+              border: '1px solid rgba(245, 185, 66, 0.2)',
+              borderRadius: '14px',
+              padding: '0.85rem',
+              marginBottom: '0.25rem',
+            }}
+          >
+            <label
+              className="app-label"
+              style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontWeight: 800, marginBottom: '0.65rem' }}
+            >
+              📍 Your Location
+            </label>
+            <p style={{ fontSize: '0.72rem', color: '#94a3b8', margin: '0 0 0.65rem', lineHeight: 1.4 }}>
+              Used to show you specialists nearby when booking.
+            </p>
+            <LocationSelector
+              location={profileLocation}
+              onChange={(loc) => setProfileLocation(prev => ({ ...prev, state: loc.state, lga: loc.lga }))}
+            />
+          </div>
+
           <button
             type="submit"
             disabled={saving}
             className="app-btn app-btn-accent"
-            style={{ marginTop: '1rem', borderRadius: '12px' }}
+            style={{ marginTop: '0.5rem', borderRadius: '12px', minHeight: '46px' }}
           >
             {saving ? 'Saving...' : 'Save Changes'}
           </button>

@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { Scissors, Sparkles, ArrowRight, Check } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { PageContainer } from '../components/common/PageContainer';
+import { SUPPORTED_STATES } from '../utils/locations';
 
 // Custom SVG Icons for the 6 services
 const LashIcon = () => (
@@ -90,10 +91,22 @@ export const Signup = () => {
   });
 
   const [selectedServices, setSelectedServices] = useState([]);
+  const [selectedState, setSelectedState] = useState('Lagos');
+  const [selectedLga, setSelectedLga] = useState('Ikeja');
+  const [businessAddress, setBusinessAddress] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleStateChange = (e) => {
+    const newState = e.target.value;
+    setSelectedState(newState);
+    const stateObj = SUPPORTED_STATES.find((s) => s.name === newState) || SUPPORTED_STATES[0];
+    if (stateObj && stateObj.lgas.length > 0) {
+      setSelectedLga(stateObj.lgas[0]);
+    }
   };
 
   const toggleService = (label) => {
@@ -117,6 +130,10 @@ export const Signup = () => {
     }
 
     if (role === 'staff') {
+      if (!businessAddress.trim()) {
+        showToast('Please enter the street address of your salon or business atelier.', 'error');
+        return;
+      }
       if (selectedServices.length === 0) {
         showToast('Please select up to 2 services you offer.', 'error');
         return;
@@ -133,6 +150,11 @@ export const Signup = () => {
         ...form,
         role: role === 'staff' ? 'staff' : 'customer',
         services: role === 'staff' ? selectedServices : [],
+        state: selectedState,
+        lga: selectedLga,
+        address: businessAddress.trim(),
+        businessAddress: businessAddress.trim(),
+        location: `${selectedLga}, ${selectedState}`,
       });
       showToast('Registration successful! Check your email for OTP code.', 'success');
       navigate(`/verify?email=${encodeURIComponent(form.email)}`);
@@ -237,6 +259,92 @@ export const Signup = () => {
                 required
                 style={{ width: '100%', padding: '0.8rem 0.9rem', borderRadius: '12px', background: '#0C0E14', border: '1px solid rgba(255,255,255,0.1)', color: '#FFFFFF', fontFamily: 'Outfit', fontSize: '16px', outline: 'none', boxSizing: 'border-box' }}
               />
+            </div>
+
+            {/* Location & Operating Base */}
+            <div
+              style={{
+                marginTop: '1.25rem',
+                padding: '1.15rem',
+                borderRadius: '18px',
+                background: 'rgba(255,255,255,0.02)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                marginBottom: '1rem',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
+                <label style={{ margin: 0, color: '#FFFFFF', fontWeight: 800, fontSize: '0.86rem', fontFamily: 'Outfit' }}>
+                  {role === 'staff' ? 'Business Location & Base *' : 'Your Location'}
+                </label>
+                <span style={{ fontSize: '0.72rem', color: '#F5B942', fontWeight: 800, fontFamily: 'Outfit' }}>
+                  Lagos & Ibadan Only
+                </span>
+              </div>
+              <p style={{ fontSize: '0.76rem', color: '#9AA2B3', margin: '0 0 0.85rem', lineHeight: 1.4 }}>
+                {role === 'staff'
+                  ? 'Set your exact salon or studio base so nearby clients can find and book your services.'
+                  : 'Select your state and area to find verified specialists nearest to you.'}
+              </p>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '0.75rem' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.76rem', fontWeight: 700, color: '#9AA2B3', marginBottom: '0.35rem', fontFamily: 'Outfit' }}>
+                    State *
+                  </label>
+                  <select
+                    value={selectedState}
+                    onChange={handleStateChange}
+                    className="app-select"
+                    style={{ width: '100%', background: '#0C0E14', padding: '0.75rem', fontSize: '15px' }}
+                  >
+                    {SUPPORTED_STATES.map((s) => (
+                      <option key={s.name} value={s.name}>{s.label}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.76rem', fontWeight: 700, color: '#9AA2B3', marginBottom: '0.35rem', fontFamily: 'Outfit' }}>
+                    LGA / Area *
+                  </label>
+                  <select
+                    value={selectedLga}
+                    onChange={(e) => setSelectedLga(e.target.value)}
+                    className="app-select"
+                    style={{ width: '100%', background: '#0C0E14', padding: '0.75rem', fontSize: '15px' }}
+                  >
+                    {(SUPPORTED_STATES.find((s) => s.name === selectedState)?.lgas || []).map((lga) => (
+                      <option key={lga} value={lga}>{lga}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Exact Business / Atelier Address */}
+              <div>
+                <label style={{ display: 'block', fontSize: '0.76rem', fontWeight: 700, color: '#9AA2B3', marginBottom: '0.35rem', fontFamily: 'Outfit' }}>
+                  {role === 'staff' ? 'Studio / Salon Street Address *' : 'Street / Home Address'}
+                </label>
+                <input
+                  type="text"
+                  value={businessAddress}
+                  onChange={(e) => setBusinessAddress(e.target.value)}
+                  placeholder={role === 'staff' ? 'e.g. Suite 4B, Admiralty Way, Lekki Phase 1' : 'e.g. Victoria Island, Lagos'}
+                  required={role === 'staff'}
+                  style={{
+                    width: '100%',
+                    padding: '0.8rem 0.9rem',
+                    borderRadius: '12px',
+                    background: '#0C0E14',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    color: '#FFFFFF',
+                    fontFamily: 'Outfit',
+                    fontSize: '15px',
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                  }}
+                />
+              </div>
             </div>
 
             {/* Service Selection for Experts */}

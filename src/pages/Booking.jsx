@@ -22,6 +22,7 @@ import { api } from '../services/api';
 import { PageContainer } from '../components/common/PageContainer';
 import { OptimizedImage } from '../components/common/OptimizedImage';
 import { Avatar } from '../components/common/Avatar';
+import { isSameLga, isSameState } from '../utils/locations';
 
 const SERVICES = [
   {
@@ -159,6 +160,8 @@ export const Booking = () => {
   const queryStylist = searchParams.get('stylist') || '';
   const queryLocation = searchParams.get('location') || '';
   const queryStylistId = searchParams.get('stylistId') || '';
+  const queryDate = searchParams.get('date') || '';
+  const queryTime = searchParams.get('time') || '';
 
   const { user, isAuthenticated, showToast, role } = useAuth();
 
@@ -179,8 +182,8 @@ export const Booking = () => {
   );
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedService, setSelectedService] = useState(SERVICES[0].title);
-  const [selectedDate, setSelectedDate] = useState(todayISO);
-  const [selectedTime, setSelectedTime] = useState('11:00 AM');
+  const [selectedDate, setSelectedDate] = useState(queryDate || todayISO);
+  const [selectedTime, setSelectedTime] = useState(queryTime || '11:00 AM');
   const [stylist, setStylist] = useState(queryStylist || '');
   const [selectedSpecialist, setSelectedSpecialist] = useState(null);
   const [specialistsList, setSpecialistsList] = useState([]);
@@ -223,6 +226,28 @@ export const Booking = () => {
     }
   }, [queryLocation]);
 
+  // Sync date from query
+  useEffect(() => {
+    if (queryDate) {
+      setSelectedDate(queryDate);
+    }
+  }, [queryDate]);
+
+  // Sync time from query
+  useEffect(() => {
+    if (queryTime) {
+      setSelectedTime(queryTime);
+    }
+  }, [queryTime]);
+
+  // Proximity rank helper — returns 0 (closest) → 2 (farthest)
+  const proximityRank = (specialist) => {
+    if (!user) return 2;
+    if (isSameLga(user.lga, specialist.lga)) return 0;
+    if (isSameState(user.state, specialist.state)) return 1;
+    return 2;
+  };
+
   // Load specialists from database/API
   useEffect(() => {
     setLoadingSpecialists(true);
@@ -237,32 +262,52 @@ export const Booking = () => {
             role: s.title || s.roleTitle || 'Certified Stylist',
             rating: s.rating || 5.0,
             image: s.avatarUrl || s.profileImage || '',
+            state: s.state || '',
+            lga: s.lga || '',
+            address: s.businessAddress || s.address || '',
           }));
 
-          setSpecialistsList(mapped);
+          // Sort by proximity: same LGA → same state → rest
+          const sorted = [...mapped].sort((a, b) => {
+            const rankA = (() => {
+              if (!user) return 2;
+              if (isSameLga(user.lga, a.lga)) return 0;
+              if (isSameState(user.state, a.state)) return 1;
+              return 2;
+            })();
+            const rankB = (() => {
+              if (!user) return 2;
+              if (isSameLga(user.lga, b.lga)) return 0;
+              if (isSameState(user.state, b.state)) return 1;
+              return 2;
+            })();
+            return rankA - rankB;
+          });
+
+          setSpecialistsList(sorted);
 
           let target = null;
           if (queryStylistId) {
-            target = mapped.find((m) => String(m.id) === String(queryStylistId));
+            target = sorted.find((m) => String(m.id) === String(queryStylistId));
           }
           if (!target && queryStylist) {
             const qLower = queryStylist.trim().toLowerCase();
             // 1. Exact full name match
-            target = mapped.find((m) => m.name.toLowerCase() === qLower);
+            target = sorted.find((m) => m.name.toLowerCase() === qLower);
             // 2. Exact first name match if unambiguous
             if (!target) {
-              target = mapped.find((m) => m.name.toLowerCase().split(' ')[0] === qLower);
+              target = sorted.find((m) => m.name.toLowerCase().split(' ')[0] === qLower);
             }
             // 3. Fallback word match
             if (!target) {
-              target = mapped.find((m) => {
+              target = sorted.find((m) => {
                 const words = m.name.toLowerCase().split(/\s+/);
                 return words.includes(qLower);
               });
             }
           }
-          if (!target && mapped.length > 0) {
-            target = mapped[0];
+          if (!target && sorted.length > 0) {
+            target = sorted[0];
           }
 
           if (target) {
@@ -804,7 +849,9 @@ export const Booking = () => {
                   Select Specialist
                 </h2>
                 <p style={{ color: '#94a3b8', fontSize: '0.78rem', margin: '0.15rem 0 0' }}>
-                  Choose your preferred artist for {selectedService}
+                  {user?.lga || user?.state
+                    ? `Showing verified ${selectedService} artists near you · ${user.lga || user.state}`
+                    : `Choose your preferred artist for ${selectedService}`}
                 </p>
               </div>
 
@@ -842,6 +889,13 @@ export const Booking = () => {
                   const isSelected = selectedSpecialist
                     ? String(selectedSpecialist.id) === String(sp.id)
                     : (Boolean(stylist) && stylist.trim().toLowerCase() === sp.name.trim().toLowerCase());
+
+                  // Compute proximity label for this specialist
+                  const isNearestLga = user && sp.lga && isSameLga(user.lga, sp.lga);
+                  const isNearestState = !isNearestLga && user && sp.state && isSameState(user.state, sp.state);
+                  const proximityLabel = isNearestLga ? 'Near You' : isNearestState ? 'Same City' : null;
+                  const locationDisplay = [sp.lga, sp.state].filter(Boolean).join(', ');
+
                   return (
                     <div
                       key={sp.id}
@@ -853,34 +907,71 @@ export const Booking = () => {
                         background: '#151822',
                         borderRadius: '16px',
                         padding: '0.95rem 1rem',
-                        border: `1.5px solid ${isSelected ? '#f5b942' : 'rgba(255, 255, 255, 0.08)'}`,
+                        border: `1.5px solid ${isSelected ? '#f5b942' : isNearestLga ? 'rgba(34,197,94,0.35)' : 'rgba(255, 255, 255, 0.08)'}`,
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
                         cursor: 'pointer',
                         transition: 'border-color 0.15s ease',
+                        position: 'relative',
                       }}
                     >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                      {/* Proximity badge */}
+                      {proximityLabel && (
+                        <div
+                          style={{
+                            position: 'absolute',
+                            top: '0.55rem',
+                            right: '0.65rem',
+                            background: isNearestLga ? 'rgba(34,197,94,0.18)' : 'rgba(59,130,246,0.18)',
+                            border: `1px solid ${isNearestLga ? 'rgba(34,197,94,0.45)' : 'rgba(59,130,246,0.45)'}`,
+                            borderRadius: '8px',
+                            padding: '0.18rem 0.5rem',
+                            fontSize: '0.64rem',
+                            fontFamily: 'Outfit',
+                            fontWeight: 800,
+                            color: isNearestLga ? '#4ade80' : '#93c5fd',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.25rem',
+                            zIndex: 1,
+                          }}
+                        >
+                          <MapPin size={9} />
+                          {proximityLabel}
+                        </div>
+                      )}
+
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', flex: 1, minWidth: 0 }}>
                         <Avatar
                           src={sp.image}
                           name={sp.name}
                           size={48}
                           borderRadius="50%"
                         />
-                        <div>
+                        <div style={{ minWidth: 0 }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                            <h4 style={{ fontFamily: 'Outfit', fontSize: '0.96rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+                            <h4 style={{ fontFamily: 'Outfit', fontSize: '0.96rem', fontWeight: 800, color: '#ffffff', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                               {sp.name}
                             </h4>
-                            <ShieldCheck size={14} color="#f5b942" />
+                            <ShieldCheck size={14} color="#f5b942" style={{ flexShrink: 0 }} />
                           </div>
-                          <span style={{ fontSize: '0.74rem', color: '#94a3b8' }}>{sp.role}</span>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', marginTop: '0.2rem' }}>
-                            <Star size={11} fill="#f5b942" color="#f5b942" />
-                            <span style={{ fontSize: '0.72rem', color: '#f5b942', fontWeight: 800 }}>
-                              {sp.rating || 4.95}
-                            </span>
+                          <span style={{ fontSize: '0.74rem', color: '#94a3b8', display: 'block' }}>{sp.role}</span>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.2rem', flexWrap: 'wrap' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                              <Star size={11} fill="#f5b942" color="#f5b942" />
+                              <span style={{ fontSize: '0.72rem', color: '#f5b942', fontWeight: 800 }}>
+                                {sp.rating || 4.95}
+                              </span>
+                            </div>
+                            {locationDisplay ? (
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+                                <MapPin size={10} color="#64748b" />
+                                <span style={{ fontSize: '0.68rem', color: '#64748b', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '120px' }}>
+                                  {locationDisplay}
+                                </span>
+                              </div>
+                            ) : null}
                           </div>
                         </div>
                       </div>
@@ -897,6 +988,7 @@ export const Booking = () => {
                           justifyContent: 'center',
                           flexShrink: 0,
                           transition: 'all 0.15s ease',
+                          marginLeft: '0.5rem',
                         }}
                       >
                         {isSelected && <Check size={13} color="#0c0e14" strokeWidth={3} />}

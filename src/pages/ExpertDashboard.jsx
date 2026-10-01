@@ -50,6 +50,7 @@ import { BottomSheet } from '../components/common/BottomSheet';
 import { WithdrawFundsModal } from '../components/common/WithdrawFundsModal';
 import { downloadBookingHistoryCSV, printBookingHistoryReport } from '../utils/bookingHistoryExport';
 import { BookingChatSheet } from '../components/booking/BookingChatSheet';
+import { LocationSelector } from '../components/store/LocationSelector';
 
 // ─── Swipeable Booking Request Card ──────────────────────────────────────────
 const SwipeableBookingCard = ({
@@ -535,10 +536,63 @@ export const ExpertDashboard = () => {
 
   // Profile Photos & Modals
   const [showAvatarSheet, setShowAvatarSheet] = useState(false);
+  const [showProfileEditSheet, setShowProfileEditSheet] = useState(false);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [uploadingCover, setUploadingCover] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deletingAccount, setDeletingAccount] = useState(false);
+  const [savingProfile, setSavingProfile] = useState(false);
+
+  // Expert profile edit form state
+  const [expertProfileForm, setExpertProfileForm] = useState({
+    firstname: user?.firstname || '',
+    lastname: user?.lastname || '',
+    phone: user?.phone || '',
+    title: user?.title || '',
+    businessAddress: user?.businessAddress || '',
+  });
+  const [expertLocation, setExpertLocation] = useState({
+    state: user?.state || 'Lagos',
+    lga: user?.lga || 'Ikeja',
+    street: user?.businessAddress || '',
+    houseNumber: '',
+  });
+
+  const handleOpenProfileEdit = () => {
+    setExpertProfileForm({
+      firstname: user?.firstname || '',
+      lastname: user?.lastname || '',
+      phone: user?.phone || '',
+      title: user?.title || '',
+      businessAddress: user?.businessAddress || '',
+    });
+    setExpertLocation({
+      state: user?.state || 'Lagos',
+      lga: user?.lga || 'Ikeja',
+      street: user?.businessAddress || '',
+      houseNumber: '',
+    });
+    setShowProfileEditSheet(true);
+  };
+
+  const handleExpertProfileSave = async (e) => {
+    e.preventDefault();
+    setSavingProfile(true);
+    try {
+      await updateProfile({
+        ...expertProfileForm,
+        state: expertLocation.state,
+        lga: expertLocation.lga,
+        businessAddress: expertProfileForm.businessAddress.trim() || expertLocation.street.trim(),
+      });
+      showToast('Profile & location updated!', 'success');
+      setShowProfileEditSheet(false);
+    } catch (err) {
+      showToast(err.message || 'Failed to update profile', 'error');
+    } finally {
+      setSavingProfile(false);
+    }
+  };
 
   // Portfolio / Lookbook & Work Logbook State
   const [portfolio, setPortfolio] = useState([]);
@@ -1050,6 +1104,28 @@ export const ExpertDashboard = () => {
               }}
             >
               <Sparkles size={13} color="#f5b942" /> View Page
+            </button>
+
+            <button
+              onClick={handleOpenProfileEdit}
+              style={{
+                flex: 1,
+                background: '#1c202d',
+                border: '1px solid rgba(245, 185, 66, 0.3)',
+                color: '#f5b942',
+                padding: '0.55rem 0.6rem',
+                borderRadius: '12px',
+                fontSize: '0.76rem',
+                fontFamily: 'Outfit',
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.35rem',
+              }}
+            >
+              <Edit size={13} /> Edit Profile
             </button>
 
             <button
@@ -2786,6 +2862,102 @@ export const ExpertDashboard = () => {
         isOpen={!!chatBooking}
         onClose={() => setChatBooking(null)}
       />
+
+      {/* ── Expert Profile Edit Sheet ── */}
+      <BottomSheet isOpen={showProfileEditSheet} onClose={() => setShowProfileEditSheet(false)} title="Edit Profile & Location">
+        <form onSubmit={handleExpertProfileSave} style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem' }}>
+            <div className="app-input-group" style={{ marginBottom: 0 }}>
+              <label className="app-label">First Name *</label>
+              <input
+                type="text"
+                value={expertProfileForm.firstname}
+                onChange={(e) => setExpertProfileForm(p => ({ ...p, firstname: e.target.value }))}
+                className="app-input"
+                style={{ fontSize: '16px' }}
+                required
+              />
+            </div>
+            <div className="app-input-group" style={{ marginBottom: 0 }}>
+              <label className="app-label">Last Name</label>
+              <input
+                type="text"
+                value={expertProfileForm.lastname}
+                onChange={(e) => setExpertProfileForm(p => ({ ...p, lastname: e.target.value }))}
+                className="app-input"
+                style={{ fontSize: '16px' }}
+              />
+            </div>
+          </div>
+
+          <div className="app-input-group" style={{ marginBottom: 0 }}>
+            <label className="app-label">Phone Number</label>
+            <input
+              type="tel"
+              value={expertProfileForm.phone}
+              onChange={(e) => setExpertProfileForm(p => ({ ...p, phone: e.target.value }))}
+              className="app-input"
+              style={{ fontSize: '16px' }}
+            />
+          </div>
+
+          <div className="app-input-group" style={{ marginBottom: 0 }}>
+            <label className="app-label">Professional Title</label>
+            <input
+              type="text"
+              value={expertProfileForm.title}
+              onChange={(e) => setExpertProfileForm(p => ({ ...p, title: e.target.value }))}
+              className="app-input"
+              placeholder="e.g. Certified Lash Tech"
+              style={{ fontSize: '16px' }}
+            />
+          </div>
+
+          {/* Business Location */}
+          <div
+            style={{
+              background: 'rgba(245, 185, 66, 0.06)',
+              border: '1px solid rgba(245, 185, 66, 0.25)',
+              borderRadius: '16px',
+              padding: '0.85rem',
+            }}
+          >
+            <label
+              className="app-label"
+              style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#f5b942', fontWeight: 800, marginBottom: '0.75rem' }}
+            >
+              <MapPin size={14} />
+              Business Location
+            </label>
+            <p style={{ color: '#94a3b8', fontSize: '0.72rem', margin: '0 0 0.75rem', lineHeight: 1.4 }}>
+              This is used to match you with nearby customers. Choose your working area accurately.
+            </p>
+            <LocationSelector location={expertLocation} onChange={setExpertLocation} />
+          </div>
+
+          <div className="app-input-group" style={{ marginBottom: 0 }}>
+            <label className="app-label">Full Business Address</label>
+            <input
+              type="text"
+              value={expertProfileForm.businessAddress}
+              onChange={(e) => setExpertProfileForm(p => ({ ...p, businessAddress: e.target.value }))}
+              className="app-input"
+              placeholder="e.g. 23 Allen Avenue, Ikeja, Lagos"
+              style={{ fontSize: '16px' }}
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={savingProfile}
+            className="app-btn app-btn-accent"
+            style={{ minHeight: '48px', touchAction: 'manipulation', marginTop: '0.25rem' }}
+          >
+            {savingProfile ? 'Saving...' : 'Save Profile & Location'}
+          </button>
+        </form>
+      </BottomSheet>
 
     </PageContainer>
   );

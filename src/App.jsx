@@ -87,6 +87,8 @@ const Cart = safeLazy(() => import('./pages/Cart').then(m => ({ default: m.Cart 
 const AiStylistFinder = safeLazy(() => import('./pages/AiStylistFinder').then(m => ({ default: m.AiStylistFinder })));
 const Wallet = safeLazy(() => import('./pages/Wallet').then(m => ({ default: m.Wallet })));
 const Notifications = safeLazy(() => import('./pages/Notifications').then(m => ({ default: m.Notifications })));
+const AdminLogin = safeLazy(() => import('./pages/AdminLogin').then(m => ({ default: m.AdminLogin })));
+const AdminDashboard = safeLazy(() => import('./pages/AdminDashboard').then(m => ({ default: m.AdminDashboard })));
 
 // High-Performance Smooth PageLoader (Theme Responsive & 60fps)
 export const PageLoader = () => (
@@ -265,6 +267,25 @@ export const App = () => {
                 element={
                   <ProtectedRoute requiredRole="staff">
                     <ExpertDashboard />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Admin Routes */}
+              <Route path="/admin/login" element={<AdminLogin />} />
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/*"
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <AdminDashboard />
                   </ProtectedRoute>
                 }
               />
