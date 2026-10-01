@@ -5,7 +5,7 @@ server/.env
 .DS_Store
 dist/
 
-# Local marketing flyers (not tracked in repo)
+# Local standalone marketing / billboard templates (not part of app code)
 billboard-flyers.html
 public/billboard-flyers.html
 public/images/qr-*.svg
