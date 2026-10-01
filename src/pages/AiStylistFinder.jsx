@@ -122,9 +122,9 @@ const LOCATIONS = [
 ];
 
 const TIME_SLOTS = [
-  { id: 'morning', label: 'Morning (9:00 AM – 12:00 PM)', icon: '🌅' },
-  { id: 'afternoon', label: 'Afternoon (12:00 PM – 4:00 PM)', icon: '☀️' },
-  { id: 'evening', label: 'Evening (4:00 PM – 8:00 PM)', icon: '🌙' },
+  { id: 'morning', label: 'Morning (9:00 AM – 12:00 PM)', shortLabel: 'Morning', icon: '🌅' },
+  { id: 'afternoon', label: 'Afternoon (12:00 PM – 4:00 PM)', shortLabel: 'Afternoon', icon: '☀️' },
+  { id: 'evening', label: 'Evening (4:00 PM – 8:00 PM)', shortLabel: 'Evening', icon: '🌙' },
 ];
 
 export const AiStylistFinder = () => {
@@ -137,7 +137,7 @@ export const AiStylistFinder = () => {
   const [selectedService, setSelectedService] = useState('Hair Braider & Stylist');
   const [selectedVibe, setSelectedVibe] = useState('Smart & Professional');
   const [serviceMode, setServiceMode] = useState('salon'); // 'salon' | 'home'
-  const [selectedLocation, setSelectedLocation] = useState('Victoria Island, Lagos');
+  const [selectedLocation, setSelectedLocation] = useState(LOCATIONS[0]);
   const [selectedDate, setSelectedDate] = useState(() => {
     const d = new Date();
     d.setDate(d.getDate() + 1);
@@ -269,10 +269,19 @@ export const AiStylistFinder = () => {
 
   return (
     <PageContainer title="AI Style Matcher" showBack={true}>
-      <div style={{ maxWidth: '640px', margin: '0 auto', paddingBottom: 'calc(var(--bottom-nav-height, 70px) + env(safe-area-inset-bottom, 24px) + 3.5rem)' }}>
+      <div
+        style={{
+          maxWidth: '640px',
+          width: '100%',
+          margin: '0 auto',
+          boxSizing: 'border-box',
+          overflowX: 'hidden',
+          paddingBottom: 'calc(var(--bottom-nav-height, 70px) + env(safe-area-inset-bottom, 24px) + 3.5rem)',
+        }}
+      >
 
         {/* ── Luxury Header ── */}
-        <div style={{ marginBottom: '1.25rem' }}>
+        <div style={{ marginBottom: '1.25rem', width: '100%', boxSizing: 'border-box' }}>
           <div
             style={{
               display: 'inline-flex',
@@ -298,12 +307,13 @@ export const AiStylistFinder = () => {
           <h1
             style={{
               fontFamily: 'Outfit',
-              fontSize: 'clamp(1.5rem, 5vw, 1.95rem)',
+              fontSize: 'clamp(1.4rem, 4.8vw, 1.85rem)',
               fontWeight: 800,
               color: '#ffffff',
               margin: '0 0 0.4rem',
               letterSpacing: '-0.02em',
-              lineHeight: 1.2,
+              lineHeight: 1.25,
+              wordBreak: 'break-word',
             }}
           >
             Match Your Look & Book Instantly
@@ -311,7 +321,7 @@ export const AiStylistFinder = () => {
           <p
             style={{
               color: '#94a3b8',
-              fontSize: '0.88rem',
+              fontSize: 'clamp(0.82rem, 2.5vw, 0.88rem)',
               lineHeight: 1.5,
               margin: 0,
             }}
@@ -325,9 +335,11 @@ export const AiStylistFinder = () => {
           style={{
             background: '#151822',
             border: '1px solid rgba(255,255,255,0.08)',
-            borderRadius: '22px',
-            padding: '1.25rem',
+            borderRadius: '20px',
+            padding: 'clamp(0.9rem, 3.5vw, 1.25rem)',
             marginBottom: '1.25rem',
+            width: '100%',
+            boxSizing: 'border-box',
           }}
         >
           <label
@@ -343,7 +355,7 @@ export const AiStylistFinder = () => {
             Describe your vision or event look:
           </label>
 
-          <div style={{ position: 'relative', marginBottom: '0.75rem' }}>
+          <div style={{ position: 'relative', marginBottom: '0.75rem', width: '100%', boxSizing: 'border-box' }}>
             <textarea
               rows={3}
               value={customPrompt}
@@ -357,7 +369,7 @@ export const AiStylistFinder = () => {
                 padding: '0.85rem 1rem',
                 color: '#ffffff',
                 fontFamily: 'Outfit',
-                fontSize: '15px',
+                fontSize: '16px', // 16px prevents iOS Safari auto-zoom
                 lineHeight: 1.5,
                 outline: 'none',
                 resize: 'none',
@@ -367,11 +379,22 @@ export const AiStylistFinder = () => {
           </div>
 
           {/* Quick inspiration chips */}
-          <div>
+          <div style={{ width: '100%', boxSizing: 'border-box' }}>
             <div style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 700, marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
               Quick Suggestions
             </div>
-            <div style={{ display: 'flex', gap: '0.4rem', overflowX: 'auto', paddingBottom: '0.35rem', scrollbarWidth: 'none' }}>
+            <div
+              style={{
+                display: 'flex',
+                gap: '0.45rem',
+                overflowX: 'auto',
+                WebkitOverflowScrolling: 'touch',
+                paddingBottom: '0.4rem',
+                scrollbarWidth: 'none',
+                width: '100%',
+                boxSizing: 'border-box',
+              }}
+            >
               {PROMPT_CHIPS.map((chip) => (
                 <button
                   key={chip}
@@ -382,13 +405,16 @@ export const AiStylistFinder = () => {
                     border: '1px solid rgba(255,255,255,0.08)',
                     color: customPrompt === chip ? '#F5B942' : '#94a3b8',
                     borderRadius: '50px',
-                    padding: '0.35rem 0.8rem',
-                    fontSize: '0.72rem',
+                    padding: '0.4rem 0.85rem',
+                    fontSize: '0.74rem',
                     fontFamily: 'Outfit',
                     fontWeight: 600,
                     cursor: 'pointer',
                     whiteSpace: 'nowrap',
-                    minHeight: '34px',
+                    flexShrink: 0,
+                    minHeight: '36px',
+                    boxSizing: 'border-box',
+                    transition: 'all 0.15s ease',
                   }}
                 >
                   {chip}
@@ -398,17 +424,19 @@ export const AiStylistFinder = () => {
           </div>
         </div>
 
-        {/* ── 6 Service Categories Selection ── */}
+        {/* ── 6 Service Categories Selection (Mobile Optimized & 100% Contained) ── */}
         <div
           style={{
             background: '#151822',
             border: '1px solid rgba(255,255,255,0.08)',
-            borderRadius: '22px',
-            padding: '1.25rem',
+            borderRadius: '20px',
+            padding: 'clamp(0.9rem, 3.5vw, 1.25rem)',
             marginBottom: '1.25rem',
+            width: '100%',
+            boxSizing: 'border-box',
           }}
         >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', width: '100%', boxSizing: 'border-box' }}>
             <span style={{ fontFamily: 'Outfit', fontSize: '0.86rem', fontWeight: 800, color: '#ffffff' }}>
               Select Service Category
             </span>
@@ -417,7 +445,16 @@ export const AiStylistFinder = () => {
             </span>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.65rem' }}>
+          {/* Fully fluid 2-column grid using minmax(0, 1fr) to guarantee zero mobile blowout */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+              gap: '0.55rem',
+              width: '100%',
+              boxSizing: 'border-box',
+            }}
+          >
             {SERVICES.map((s) => {
               const isSelected = selectedService === s.service;
               const IconComp = s.icon;
@@ -429,14 +466,19 @@ export const AiStylistFinder = () => {
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '0.65rem',
-                    padding: '0.75rem 0.85rem',
+                    gap: '0.55rem',
+                    padding: '0.75rem 0.65rem',
                     borderRadius: '14px',
-                    background: isSelected ? 'rgba(245,185,66,0.12)' : '#0c0e14',
-                    border: isSelected ? '1.5px solid #F5B942' : '1px solid rgba(255,255,255,0.07)',
+                    background: isSelected ? 'rgba(245,185,66,0.14)' : '#0c0e14',
+                    border: isSelected ? '1.5px solid #F5B942' : '1px solid rgba(255,255,255,0.08)',
+                    boxShadow: isSelected ? '0 0 14px rgba(245,185,66,0.18)' : 'none',
                     cursor: 'pointer',
                     textAlign: 'left',
+                    width: '100%',
+                    minWidth: 0,
+                    boxSizing: 'border-box',
                     transition: 'all 0.18s ease',
+                    position: 'relative',
                   }}
                 >
                   <div
@@ -444,7 +486,7 @@ export const AiStylistFinder = () => {
                       width: '32px',
                       height: '32px',
                       borderRadius: '10px',
-                      background: isSelected ? s.color + '25' : 'rgba(255,255,255,0.05)',
+                      background: isSelected ? s.color + '28' : 'rgba(255,255,255,0.05)',
                       color: isSelected ? s.color : '#94a3b8',
                       display: 'flex',
                       alignItems: 'center',
@@ -454,14 +496,46 @@ export const AiStylistFinder = () => {
                   >
                     <IconComp />
                   </div>
-                  <div style={{ minWidth: 0 }}>
-                    <div style={{ fontSize: '0.82rem', fontWeight: 800, color: isSelected ? '#ffffff' : '#cbd5e1', fontFamily: 'Outfit', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  <div style={{ minWidth: 0, flex: 1, overflow: 'hidden' }}>
+                    <div
+                      style={{
+                        fontSize: 'clamp(0.74rem, 2.3vw, 0.82rem)',
+                        fontWeight: 800,
+                        color: isSelected ? '#ffffff' : '#e2e8f0',
+                        fontFamily: 'Outfit',
+                        lineHeight: 1.25,
+                        whiteSpace: 'normal',
+                        wordBreak: 'break-word',
+                      }}
+                    >
                       {s.label}
                     </div>
-                    <div style={{ fontSize: '0.7rem', color: isSelected ? '#F5B942' : '#64748b', fontFamily: 'Outfit', fontWeight: 700 }}>
+                    <div
+                      style={{
+                        fontSize: 'clamp(0.66rem, 2vw, 0.7rem)',
+                        color: isSelected ? '#F5B942' : '#64748b',
+                        fontFamily: 'Outfit',
+                        fontWeight: 700,
+                        marginTop: '2px',
+                      }}
+                    >
                       From ₦{s.price.toLocaleString()}
                     </div>
                   </div>
+                  {isSelected && (
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: '5px',
+                        right: '5px',
+                        width: '6px',
+                        height: '6px',
+                        borderRadius: '50%',
+                        background: '#F5B942',
+                        boxShadow: '0 0 6px #F5B942',
+                      }}
+                    />
+                  )}
                 </button>
               );
             })}
@@ -473,15 +547,17 @@ export const AiStylistFinder = () => {
           style={{
             background: '#151822',
             border: '1px solid rgba(255,255,255,0.08)',
-            borderRadius: '22px',
-            padding: '1.25rem',
+            borderRadius: '20px',
+            padding: 'clamp(0.9rem, 3.5vw, 1.25rem)',
             marginBottom: '1.25rem',
+            width: '100%',
+            boxSizing: 'border-box',
           }}
         >
           <span style={{ display: 'block', fontFamily: 'Outfit', fontSize: '0.86rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.75rem' }}>
             Desired Aesthetic Vibe
           </span>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '0.55rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '0.55rem', width: '100%', boxSizing: 'border-box' }}>
             {VIBES.map((v) => {
               const isSelected = selectedVibe === v.label;
               return (
@@ -493,23 +569,28 @@ export const AiStylistFinder = () => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    padding: '0.75rem 0.9rem',
+                    padding: '0.75rem 0.85rem',
                     borderRadius: '14px',
-                    background: isSelected ? 'rgba(245,185,66,0.1)' : '#0c0e14',
+                    background: isSelected ? 'rgba(245,185,66,0.12)' : '#0c0e14',
                     border: isSelected ? '1.5px solid #F5B942' : '1px solid rgba(255,255,255,0.07)',
                     cursor: 'pointer',
                     textAlign: 'left',
+                    width: '100%',
+                    minWidth: 0,
+                    boxSizing: 'border-box',
+                    gap: '0.5rem',
+                    transition: 'all 0.18s ease',
                   }}
                 >
-                  <div>
-                    <div style={{ fontSize: '0.84rem', fontWeight: 800, color: isSelected ? '#F5B942' : '#ffffff', fontFamily: 'Outfit' }}>
+                  <div style={{ minWidth: 0, flex: 1 }}>
+                    <div style={{ fontSize: '0.84rem', fontWeight: 800, color: isSelected ? '#F5B942' : '#ffffff', fontFamily: 'Outfit', lineHeight: 1.3 }}>
                       {v.label}
                     </div>
-                    <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
+                    <div style={{ fontSize: '0.72rem', color: '#94a3b8', lineHeight: 1.35, marginTop: '2px' }}>
                       {v.desc}
                     </div>
                   </div>
-                  {isSelected && <Check size={16} color="#F5B942" strokeWidth={3} />}
+                  {isSelected && <Check size={16} color="#F5B942" strokeWidth={3} style={{ flexShrink: 0 }} />}
                 </button>
               );
             })}
@@ -521,12 +602,14 @@ export const AiStylistFinder = () => {
           style={{
             background: '#151822',
             border: '1px solid rgba(255,255,255,0.08)',
-            borderRadius: '22px',
-            padding: '1.25rem',
+            borderRadius: '20px',
+            padding: 'clamp(0.9rem, 3.5vw, 1.25rem)',
             marginBottom: '1.25rem',
+            width: '100%',
+            boxSizing: 'border-box',
           }}
         >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', width: '100%', boxSizing: 'border-box' }}>
             <span style={{ fontFamily: 'Outfit', fontSize: '0.86rem', fontWeight: 800, color: '#ffffff' }}>
               Preferred Date & Time
             </span>
@@ -535,8 +618,17 @@ export const AiStylistFinder = () => {
             </span>
           </div>
 
-          {/* Quick Date Shortcuts */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem', marginBottom: '0.75rem' }}>
+          {/* Quick Date Shortcuts - Responsive 3-col minmax */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+              gap: '0.45rem',
+              marginBottom: '0.75rem',
+              width: '100%',
+              boxSizing: 'border-box',
+            }}
+          >
             {[
               { id: 'today', label: 'Today', offset: 0 },
               { id: 'tomorrow', label: 'Tomorrow', offset: 1 },
@@ -552,17 +644,21 @@ export const AiStylistFinder = () => {
                   type="button"
                   onClick={() => setSelectedDate(dateStr)}
                   style={{
-                    padding: '0.65rem 0.5rem',
+                    padding: '0.65rem 0.25rem',
                     borderRadius: '12px',
                     background: isSelected ? 'rgba(245,185,66,0.15)' : '#0c0e14',
                     border: isSelected ? '1.5px solid #F5B942' : '1px solid rgba(255,255,255,0.08)',
                     color: isSelected ? '#F5B942' : '#cbd5e1',
-                    fontSize: '0.78rem',
+                    fontSize: 'clamp(0.72rem, 2.2vw, 0.78rem)',
                     fontFamily: 'Outfit',
                     fontWeight: 700,
                     cursor: 'pointer',
                     textAlign: 'center',
                     minHeight: '40px',
+                    width: '100%',
+                    minWidth: 0,
+                    boxSizing: 'border-box',
+                    whiteSpace: 'nowrap',
                   }}
                 >
                   {preset.label}
@@ -572,7 +668,7 @@ export const AiStylistFinder = () => {
           </div>
 
           {/* Date Picker Input */}
-          <div style={{ marginBottom: '0.85rem' }}>
+          <div style={{ marginBottom: '0.85rem', width: '100%', boxSizing: 'border-box' }}>
             <input
               type="date"
               value={selectedDate}
@@ -583,23 +679,32 @@ export const AiStylistFinder = () => {
                 background: '#0c0e14',
                 border: '1.5px solid rgba(255,255,255,0.1)',
                 borderRadius: '14px',
-                padding: '0.75rem 1rem',
+                padding: '0.75rem 0.9rem',
                 color: '#ffffff',
                 fontFamily: 'Outfit',
-                fontSize: '15px',
+                fontSize: '16px', // Prevents iOS zoom
                 fontWeight: 600,
                 outline: 'none',
                 boxSizing: 'border-box',
+                minHeight: '44px',
               }}
             />
           </div>
 
-          {/* Time of Day Slots */}
-          <div>
+          {/* Time of Day Slots - Responsive 3-col minmax */}
+          <div style={{ width: '100%', boxSizing: 'border-box' }}>
             <label style={{ display: 'block', fontSize: '0.72rem', color: '#94a3b8', fontWeight: 700, marginBottom: '0.45rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
               Preferred Time of Day
             </label>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem' }}>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+                gap: '0.45rem',
+                width: '100%',
+                boxSizing: 'border-box',
+              }}
+            >
               {TIME_SLOTS.map((slot) => {
                 const isSelected = selectedTimeSlot === slot.label;
                 return (
@@ -608,22 +713,25 @@ export const AiStylistFinder = () => {
                     type="button"
                     onClick={() => setSelectedTimeSlot(slot.label)}
                     style={{
-                      padding: '0.65rem 0.4rem',
+                      padding: '0.65rem 0.25rem',
                       borderRadius: '12px',
                       background: isSelected ? 'rgba(245,185,66,0.15)' : '#0c0e14',
                       border: isSelected ? '1.5px solid #F5B942' : '1px solid rgba(255,255,255,0.08)',
                       color: isSelected ? '#F5B942' : '#cbd5e1',
-                      fontSize: '0.74rem',
+                      fontSize: 'clamp(0.68rem, 2vw, 0.74rem)',
                       fontFamily: 'Outfit',
                       fontWeight: 700,
                       cursor: 'pointer',
                       textAlign: 'center',
                       lineHeight: 1.25,
-                      minHeight: '44px',
+                      minHeight: '48px',
+                      width: '100%',
+                      minWidth: 0,
+                      boxSizing: 'border-box',
                     }}
                   >
                     <span style={{ fontSize: '0.95rem', display: 'block', marginBottom: '0.15rem' }}>{slot.icon}</span>
-                    <span>{slot.id === 'morning' ? 'Morning' : slot.id === 'afternoon' ? 'Afternoon' : 'Evening'}</span>
+                    <span>{slot.shortLabel}</span>
                   </button>
                 );
               })}
@@ -636,12 +744,14 @@ export const AiStylistFinder = () => {
           style={{
             background: '#151822',
             border: '1px solid rgba(255,255,255,0.08)',
-            borderRadius: '22px',
-            padding: '1.25rem',
+            borderRadius: '20px',
+            padding: 'clamp(0.9rem, 3.5vw, 1.25rem)',
             marginBottom: '1.5rem',
+            width: '100%',
+            boxSizing: 'border-box',
           }}
         >
-          <div style={{ marginBottom: '1rem' }}>
+          <div style={{ marginBottom: '1rem', width: '100%', boxSizing: 'border-box' }}>
             <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#94a3b8', marginBottom: '0.4rem', fontFamily: 'Outfit' }}>
               Service Location
             </label>
@@ -649,7 +759,13 @@ export const AiStylistFinder = () => {
               value={selectedLocation}
               onChange={(e) => setSelectedLocation(e.target.value)}
               className="app-select"
-              style={{ width: '100%', background: '#0c0e14', fontSize: '15px' }}
+              style={{
+                width: '100%',
+                background: '#0c0e14',
+                fontSize: '16px', // Prevents iOS zoom
+                minHeight: '44px',
+                boxSizing: 'border-box',
+              }}
             >
               {LOCATIONS.map((loc) => (
                 <option key={loc} value={loc}>{loc}</option>
@@ -657,8 +773,16 @@ export const AiStylistFinder = () => {
             </select>
           </div>
 
-          {/* Service Mode Toggle */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem' }}>
+          {/* Service Mode Toggle - Responsive 2-col minmax */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+              gap: '0.55rem',
+              width: '100%',
+              boxSizing: 'border-box',
+            }}
+          >
             <button
               type="button"
               onClick={() => setServiceMode('salon')}
@@ -666,21 +790,24 @@ export const AiStylistFinder = () => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '0.5rem',
-                padding: '0.75rem',
+                gap: '0.45rem',
+                padding: '0.75rem 0.4rem',
                 borderRadius: '12px',
                 background: (serviceMode === 'salon' || serviceMode === 'atelier') ? '#F5B942' : '#0c0e14',
                 color: (serviceMode === 'salon' || serviceMode === 'atelier') ? '#0c0e14' : '#94a3b8',
                 border: (serviceMode === 'salon' || serviceMode === 'atelier') ? '1.5px solid #F5B942' : '1px solid rgba(255,255,255,0.07)',
                 fontFamily: 'Outfit',
-                fontSize: '0.8rem',
+                fontSize: 'clamp(0.74rem, 2.2vw, 0.8rem)',
                 fontWeight: 800,
                 cursor: 'pointer',
-                minHeight: '44px',
+                minHeight: '46px',
+                width: '100%',
+                minWidth: 0,
+                boxSizing: 'border-box',
               }}
             >
-              <Store size={16} />
-              <span>In-Salon</span>
+              <Store size={15} style={{ flexShrink: 0 }} />
+              <span style={{ whiteSpace: 'nowrap' }}>In-Salon</span>
             </button>
             <button
               type="button"
@@ -689,21 +816,24 @@ export const AiStylistFinder = () => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '0.5rem',
-                padding: '0.75rem',
+                gap: '0.45rem',
+                padding: '0.75rem 0.4rem',
                 borderRadius: '12px',
                 background: serviceMode === 'home' ? '#F5B942' : '#0c0e14',
                 color: serviceMode === 'home' ? '#0c0e14' : '#94a3b8',
                 border: serviceMode === 'home' ? '1.5px solid #F5B942' : '1px solid rgba(255,255,255,0.07)',
                 fontFamily: 'Outfit',
-                fontSize: '0.8rem',
+                fontSize: 'clamp(0.74rem, 2.2vw, 0.8rem)',
                 fontWeight: 800,
                 cursor: 'pointer',
-                minHeight: '44px',
+                minHeight: '46px',
+                width: '100%',
+                minWidth: 0,
+                boxSizing: 'border-box',
               }}
             >
-              <HomeIcon size={16} />
-              <span>VIP Home Service</span>
+              <HomeIcon size={15} style={{ flexShrink: 0 }} />
+              <span style={{ whiteSpace: 'nowrap' }}>VIP Home Service</span>
             </button>
           </div>
         </div>
@@ -717,13 +847,14 @@ export const AiStylistFinder = () => {
             width: '100%',
             minHeight: '52px',
             borderRadius: '16px',
-            fontSize: '1rem',
+            fontSize: 'clamp(0.92rem, 3vw, 1rem)',
             fontWeight: 800,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             gap: '0.5rem',
             boxShadow: '0 8px 24px rgba(245,185,66,0.25)',
+            boxSizing: 'border-box',
           }}
         >
           {matching ? (
@@ -750,6 +881,8 @@ export const AiStylistFinder = () => {
               background: '#151822',
               border: '1px solid rgba(245,185,66,0.3)',
               textAlign: 'center',
+              boxSizing: 'border-box',
+              width: '100%',
             }}
           >
             <p style={{ margin: 0, fontSize: '0.82rem', color: '#F5B942', fontFamily: 'Outfit', fontWeight: 700 }}>
@@ -760,7 +893,7 @@ export const AiStylistFinder = () => {
 
         {/* ── Match Results Container ── */}
         {matchedResults && (
-          <div id="ai-match-results-container" style={{ marginTop: '2rem' }}>
+          <div id="ai-match-results-container" style={{ marginTop: '2rem', width: '100%', boxSizing: 'border-box' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
               <Sparkles size={18} color="#F5B942" />
               <h2 style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
@@ -773,32 +906,56 @@ export const AiStylistFinder = () => {
               style={{
                 background: 'linear-gradient(135deg, rgba(245,185,66,0.12), #151822 65%)',
                 border: '1.5px solid rgba(245,185,66,0.4)',
-                borderRadius: '24px',
-                padding: '1.35rem',
+                borderRadius: '22px',
+                padding: 'clamp(1rem, 3.5vw, 1.35rem)',
                 marginBottom: '1rem',
                 boxShadow: '0 12px 36px rgba(0,0,0,0.3)',
+                boxSizing: 'border-box',
+                width: '100%',
+                overflow: 'hidden',
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
-                <div style={{ display: 'flex', gap: '0.85rem' }}>
+              {/* Header with responsive wrapping */}
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'flex-start',
+                  flexWrap: 'wrap',
+                  gap: '0.65rem',
+                  marginBottom: '1rem',
+                  width: '100%',
+                  boxSizing: 'border-box',
+                }}
+              >
+                <div style={{ display: 'flex', gap: '0.75rem', minWidth: 0, flex: '1 1 180px' }}>
                   <Avatar
                     src={matchedResults.topMatch.avatarUrl}
                     name={matchedResults.topMatch.name}
-                    size={64}
+                    size={56}
                     borderRadius="16px"
                   />
-                  <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', marginBottom: '0.15rem' }}>
-                      <h3 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+                  <div style={{ minWidth: 0, flex: 1 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', marginBottom: '0.15rem', flexWrap: 'wrap' }}>
+                      <h3
+                        style={{
+                          fontFamily: 'Outfit',
+                          fontSize: 'clamp(1rem, 3.5vw, 1.15rem)',
+                          fontWeight: 800,
+                          color: '#ffffff',
+                          margin: 0,
+                          wordBreak: 'break-word',
+                        }}
+                      >
                         {matchedResults.topMatch.name}
                       </h3>
-                      <ShieldCheck size={16} color="#F5B942" />
+                      <ShieldCheck size={16} color="#F5B942" style={{ flexShrink: 0 }} />
                     </div>
-                    <p style={{ fontSize: '0.78rem', color: '#94a3b8', margin: '0 0 0.35rem' }}>
+                    <p style={{ fontSize: '0.78rem', color: '#94a3b8', margin: '0 0 0.35rem', wordBreak: 'break-word' }}>
                       {matchedResults.topMatch.title}
                     </p>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.76rem' }}>
-                      <Star size={13} fill="#F5B942" color="#F5B942" />
+                      <Star size={13} fill="#F5B942" color="#F5B942" style={{ flexShrink: 0 }} />
                       <span style={{ fontWeight: 800, color: '#F5B942' }}>{matchedResults.topMatch.rating}</span>
                       <span style={{ color: '#64748b' }}>({matchedResults.topMatch.reviewsCount} reviews)</span>
                     </div>
@@ -815,6 +972,8 @@ export const AiStylistFinder = () => {
                     fontFamily: 'Outfit',
                     fontSize: '0.74rem',
                     fontWeight: 900,
+                    flexShrink: 0,
+                    alignSelf: 'flex-start',
                   }}
                 >
                   {matchedResults.topMatch.matchScore}% Match
@@ -822,12 +981,37 @@ export const AiStylistFinder = () => {
               </div>
 
               {/* Rationale */}
-              <p style={{ fontSize: '0.8rem', color: '#cbd5e1', lineHeight: 1.5, margin: '0 0 1rem', background: 'rgba(0,0,0,0.25)', padding: '0.75rem', borderRadius: '12px' }}>
+              <p
+                style={{
+                  fontSize: '0.8rem',
+                  color: '#cbd5e1',
+                  lineHeight: 1.5,
+                  margin: '0 0 1rem',
+                  background: 'rgba(0,0,0,0.25)',
+                  padding: '0.75rem 0.85rem',
+                  borderRadius: '12px',
+                  wordBreak: 'break-word',
+                  boxSizing: 'border-box',
+                }}
+              >
                 "{matchedResults.topMatch.rationale}"
               </p>
 
               {/* Price & Duration */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', paddingTop: '0.5rem', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: '1rem',
+                  paddingTop: '0.5rem',
+                  borderTop: '1px solid rgba(255,255,255,0.06)',
+                  flexWrap: 'wrap',
+                  gap: '0.5rem',
+                  width: '100%',
+                  boxSizing: 'border-box',
+                }}
+              >
                 <div>
                   <span style={{ fontSize: '0.72rem', color: '#94a3b8', display: 'block' }}>Estimated Fee</span>
                   <span style={{ fontSize: '1.1rem', fontWeight: 800, color: '#F5B942', fontFamily: 'Outfit' }}>
@@ -842,8 +1026,16 @@ export const AiStylistFinder = () => {
                 </div>
               </div>
 
-              {/* Actions: View Profile & Instant Book */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.6fr', gap: '0.65rem' }}>
+              {/* Actions: View Profile & Instant Book - Auto-wrapping grid */}
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
+                  gap: '0.65rem',
+                  width: '100%',
+                  boxSizing: 'border-box',
+                }}
+              >
                 <button
                   type="button"
                   onClick={() => navigate(`/expert-profile?id=${matchedResults.topMatch.id}`)}
@@ -856,6 +1048,9 @@ export const AiStylistFinder = () => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
+                    width: '100%',
+                    minWidth: 0,
+                    boxSizing: 'border-box',
                   }}
                 >
                   <span>View Profile</span>
@@ -875,21 +1070,34 @@ export const AiStylistFinder = () => {
                     justifyContent: 'center',
                     gap: '0.45rem',
                     boxShadow: '0 4px 16px rgba(245,185,66,0.3)',
+                    width: '100%',
+                    minWidth: 0,
+                    boxSizing: 'border-box',
                   }}
                 >
                   <span>Book {matchedResults.topMatch.name.split(' ')[0]}</span>
-                  <ArrowRight size={16} />
+                  <ArrowRight size={16} style={{ flexShrink: 0 }} />
                 </button>
               </div>
             </div>
 
             {/* Alternates */}
             {matchedResults.alternates.length > 0 && (
-              <div>
-                <h4 style={{ fontFamily: 'Outfit', fontSize: '0.88rem', fontWeight: 800, color: '#94a3b8', marginBottom: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              <div style={{ width: '100%', boxSizing: 'border-box' }}>
+                <h4
+                  style={{
+                    fontFamily: 'Outfit',
+                    fontSize: '0.88rem',
+                    fontWeight: 800,
+                    color: '#94a3b8',
+                    marginBottom: '0.65rem',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.04em',
+                  }}
+                >
                   Other Highly Rated Specialists
                 </h4>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', width: '100%', boxSizing: 'border-box' }}>
                   {matchedResults.alternates.map((alt) => (
                     <div
                       key={alt.id}
@@ -897,16 +1105,29 @@ export const AiStylistFinder = () => {
                         background: '#151822',
                         border: '1px solid rgba(255,255,255,0.06)',
                         borderRadius: '16px',
-                        padding: '0.85rem 1rem',
+                        padding: '0.75rem 0.85rem',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
+                        gap: '0.5rem',
+                        width: '100%',
+                        boxSizing: 'border-box',
                       }}
                     >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', minWidth: 0, flex: 1 }}>
                         <Avatar src={alt.avatarUrl} name={alt.name} size={42} borderRadius="12px" />
-                        <div>
-                          <div style={{ fontFamily: 'Outfit', fontSize: '0.88rem', fontWeight: 800, color: '#ffffff' }}>
+                        <div style={{ minWidth: 0, flex: 1 }}>
+                          <div
+                            style={{
+                              fontFamily: 'Outfit',
+                              fontSize: '0.88rem',
+                              fontWeight: 800,
+                              color: '#ffffff',
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                            }}
+                          >
                             {alt.name}
                           </div>
                           <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
@@ -917,7 +1138,14 @@ export const AiStylistFinder = () => {
                       <button
                         onClick={() => handleBookDirectly(alt)}
                         className="app-btn app-btn-outline"
-                        style={{ borderRadius: '10px', padding: '0.35rem 0.75rem', fontSize: '0.75rem' }}
+                        style={{
+                          borderRadius: '10px',
+                          padding: '0.4rem 0.85rem',
+                          fontSize: '0.76rem',
+                          flexShrink: 0,
+                          minHeight: '38px',
+                          boxSizing: 'border-box',
+                        }}
                       >
                         Select
                       </button>
