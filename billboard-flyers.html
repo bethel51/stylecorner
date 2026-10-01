@@ -8,6 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <style>
     :root {
@@ -558,8 +560,8 @@
     <button id="btn-billboard" onclick="filterDesign('billboard')">1. Landscape Billboard</button>
     <button id="btn-street" onclick="filterDesign('street')">2. Street Flyer</button>
     <button id="btn-recruit" onclick="filterDesign('recruit')">3. Recruitment Poster</button>
-    <button onclick="printActive()" style="background: rgba(245,185,66,0.18); border-color: var(--gold); color: var(--gold);">🖨️ Print / Save PDF</button>
-    <button onclick="toggleToolbar()" title="Press ESC to bring back controls">📷 Screenshot Mode</button>
+    <button id="btn-download-pdf" onclick="savePdf(activeDesign)" style="background: rgba(245,185,66,0.18); border-color: var(--gold); color: var(--gold);">📥 Download PDF</button>
+    <button onclick="toggleToolbar()" title="Press ESC to bring back controls">📷 Clean View</button>
   </div>
 
   <div class="flyers-container">
@@ -623,7 +625,7 @@
         <div class="qr-sub">
           Point phone camera to join · <strong>www.stylecorner.world</strong>
         </div>
-        <button onclick="printSingle('billboard')" style="margin-top:1.1rem;background:#F5B942;color:#08090C;border:none;border-radius:50px;padding:0.5rem 1.25rem;font-family:'Outfit',sans-serif;font-size:0.8rem;font-weight:900;cursor:pointer;letter-spacing:0.02em;">🖨️ Download This Billboard (PDF)</button>
+        <button onclick="savePdf('billboard')" style="margin-top:1.1rem;background:#F5B942;color:#08090C;border:none;border-radius:50px;padding:0.5rem 1.25rem;font-family:'Outfit',sans-serif;font-size:0.8rem;font-weight:900;cursor:pointer;letter-spacing:0.02em;">📥 Download Billboard (PDF)</button>
       </div>
     </div>
 
@@ -674,7 +676,7 @@
         </div>
         <div class="flyer-cta-text">POINT CAMERA TO SCAN</div>
         <div class="flyer-url">www.stylecorner.world</div>
-        <button onclick="printSingle('street')" style="margin-top:1rem;background:#a855f7;color:#ffffff;border:none;border-radius:50px;padding:0.5rem 1.25rem;font-family:'Outfit',sans-serif;font-size:0.8rem;font-weight:900;cursor:pointer;letter-spacing:0.02em;">🖨️ Download This Flyer (PDF)</button>
+        <button onclick="savePdf('street')" style="margin-top:1rem;background:#a855f7;color:#ffffff;border:none;border-radius:50px;padding:0.5rem 1.25rem;font-family:'Outfit',sans-serif;font-size:0.8rem;font-weight:900;cursor:pointer;letter-spacing:0.02em;">📥 Download Flyer (PDF)</button>
       </div>
 
       <div class="flyer-footer-trust">
@@ -738,7 +740,7 @@
         <div style="font-size: 0.85rem; color: #FFFFFF; font-weight: 700; margin-top: 2px;">
           www.stylecorner.world/role-selection
         </div>
-        <button onclick="printSingle('recruit')" style="margin-top:1rem;background:#10b981;color:#ffffff;border:none;border-radius:50px;padding:0.5rem 1.25rem;font-family:'Outfit',sans-serif;font-size:0.8rem;font-weight:900;cursor:pointer;letter-spacing:0.02em;">🖨️ Download This Poster (PDF)</button>
+        <button onclick="savePdf('recruit')" style="margin-top:1rem;background:#10b981;color:#ffffff;border:none;border-radius:50px;padding:0.5rem 1.25rem;font-family:'Outfit',sans-serif;font-size:0.8rem;font-weight:900;cursor:pointer;letter-spacing:0.02em;">📥 Download Poster (PDF)</button>
       </div>
 
       <div style="font-size: 0.76rem; color: #64748b;">
@@ -786,31 +788,83 @@
       applyFilter(type);
     }
 
-    // Per-flyer print: show only that design, print, then restore
-    function printSingle(type) {
-      var prev = activeDesign;
-      applyFilter(type);
-      // Hide toolbar for clean print
-      var tb = document.getElementById('toolbar');
-      tb.style.display = 'none';
-      setTimeout(function() {
-        window.print();
-        // Restore after print dialog closes
-        setTimeout(function() {
-          tb.style.display = 'flex';
-          applyFilter(prev);
-        }, 500);
-      }, 150);
-    }
+    async function savePdf(type) {
+      var target = type || activeDesign;
+      var btn = document.getElementById('btn-download-pdf');
+      var originalBtnText = btn ? btn.innerHTML : '';
+      if (btn) { btn.innerHTML = '⏳ Saving PDF...'; btn.disabled = true; }
 
-    // Full print (whatever is currently shown)
-    function printActive() {
-      var tb = document.getElementById('toolbar');
-      tb.style.display = 'none';
-      setTimeout(function() {
-        window.print();
-        setTimeout(function() { tb.style.display = 'flex'; }, 500);
-      }, 150);
+      try {
+        var targets = [];
+        var billboard = document.getElementById('design-billboard');
+        var portrait  = document.getElementById('design-portrait');
+        var recruit   = document.getElementById('design-recruit');
+
+        if (target === 'all') {
+          applyFilter('all');
+          await new Promise(function(r) { setTimeout(r, 100); });
+          targets.push({ el: billboard, isLandscape: true });
+          targets.push({ el: portrait, isLandscape: false });
+          targets.push({ el: recruit, isLandscape: false });
+        } else if (target === 'billboard') {
+          applyFilter('billboard');
+          await new Promise(function(r) { setTimeout(r, 100); });
+          targets.push({ el: billboard, isLandscape: true });
+        } else if (target === 'street') {
+          applyFilter('street');
+          await new Promise(function(r) { setTimeout(r, 100); });
+          targets.push({ el: portrait, isLandscape: false });
+        } else if (target === 'recruit') {
+          applyFilter('recruit');
+          await new Promise(function(r) { setTimeout(r, 100); });
+          targets.push({ el: recruit, isLandscape: false });
+        }
+
+        var names = { billboard: 'StyleCorner-Billboard', street: 'StyleCorner-StreetFlyer', recruit: 'StyleCorner-RecruitPoster', all: 'StyleCorner-AllBanners' };
+        var filename = (names[target] || 'StyleCorner-Banner') + '.pdf';
+
+        var pdf = null;
+        for (var i = 0; i < targets.length; i++) {
+          var item = targets[i];
+          var canvas = await html2canvas(item.el, {
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: '#08090C',
+            logging: false,
+            ignoreElements: function(el) {
+              return el.tagName === 'BUTTON' || (el.classList && el.classList.contains('no-print'));
+            }
+          });
+
+          var imgData = canvas.toDataURL('image/jpeg', 0.95);
+          var cardW = Math.round(canvas.width / 2);
+          var cardH = Math.round(canvas.height / 2);
+          var orientation = item.isLandscape ? 'landscape' : 'portrait';
+
+          if (i === 0) {
+            pdf = new window.jspdf.jsPDF({
+              orientation: orientation,
+              unit: 'px',
+              format: [cardW, cardH],
+              compress: true
+            });
+            pdf.addImage(imgData, 'JPEG', 0, 0, cardW, cardH);
+          } else {
+            pdf.addPage([cardW, cardH], orientation);
+            pdf.addImage(imgData, 'JPEG', 0, 0, cardW, cardH);
+          }
+        }
+
+        if (pdf) {
+          pdf.save(filename);
+        }
+      } catch (err) {
+        console.error('PDF error:', err);
+        alert('Could not generate PDF. Please try again.');
+      } finally {
+        if (btn) { btn.innerHTML = originalBtnText; btn.disabled = false; }
+      }
     }
 
     function toggleToolbar() {
@@ -856,6 +910,13 @@
         }, 150);
       } else {
         applyFilter('all');
+      }
+
+      var params = new URLSearchParams(window.location.search);
+      if (params.get('download') === 'true') {
+        setTimeout(function() {
+          savePdf(validTypes.indexOf(hash) !== -1 ? hash : 'all');
+        }, 1200);
       }
     }
 

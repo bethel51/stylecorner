@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Printer, Download, Eye, Check, Copy } from 'lucide-react';
+import { ArrowLeft, Download, Check, Copy, Loader } from 'lucide-react';
 import { QrWorldSvg, QrRecruitSvg } from '../components/common/QrCodeSvgs';
 
 export const BillboardFlyersPage = () => {
@@ -25,26 +25,114 @@ export const BillboardFlyersPage = () => {
   const [activeDesign, setActiveDesign] = useState(getInitialDesign());
   const [copiedType, setCopiedType] = useState(null);
   const [screenshotMode, setScreenshotMode] = useState(false);
+  const [savingPdf, setSavingPdf] = useState(false);
+  const containerRef = useRef(null);
 
   useEffect(() => {
     const current = getInitialDesign();
     setActiveDesign(current);
 
     const params = new URLSearchParams(location.search);
-    if (params.get('print') === 'true') {
+    if (params.get('download') === 'true') {
+      // Auto-trigger PDF download when opened with ?download=true
       setTimeout(() => {
-        window.print();
-      }, 500);
+        saveToPdf(current);
+      }, 1800);
     }
   }, [location.search, location.hash]);
 
-  const handlePrint = (type) => {
-    if (type && type !== 'all') {
-      setActiveDesign(type);
+  // Load a CDN script only once, returns a promise
+  const loadScript = (src) =>
+    new Promise((resolve, reject) => {
+      if (document.querySelector(`script[src="${src}"]`)) { resolve(); return; }
+      const s = document.createElement('script');
+      s.src = src;
+      s.onload = resolve;
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+
+  const saveToPdf = async (designType) => {
+    const target = designType || activeDesign;
+    setSavingPdf(true);
+    try {
+      // Ensure target design is visible if a specific design was requested
+      if (target !== 'all' && activeDesign !== target && activeDesign !== 'all') {
+        setActiveDesign(target);
+        await new Promise((r) => setTimeout(r, 200));
+      }
+
+      // Load html2canvas and jsPDF from CDN if not already loaded
+      await loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
+      await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+
+      const { jsPDF } = window.jspdf;
+
+      // Select specific card or all cards
+      let selector = '.print-card';
+      if (target === 'billboard') selector = '.print-card[data-design="billboard"]';
+      else if (target === 'street') selector = '.print-card[data-design="street"]';
+      else if (target === 'recruit') selector = '.print-card[data-design="recruit"]';
+
+      let cards = containerRef.current?.querySelectorAll(selector);
+      if (!cards || cards.length === 0) {
+        cards = containerRef.current?.querySelectorAll('.print-card');
+      }
+      if (!cards || cards.length === 0) throw new Error('No banner card found to download');
+
+      const designNames = {
+        billboard: 'StyleCorner-Billboard',
+        street: 'StyleCorner-StreetFlyer',
+        recruit: 'StyleCorner-RecruitPoster',
+        all: 'StyleCorner-AllBanners',
+      };
+      const filename = `${designNames[target] || 'StyleCorner-Banner'}.pdf`;
+
+      let pdf = null;
+      let pageCount = 0;
+
+      for (const card of Array.from(cards)) {
+        const isBillboard = card.getAttribute('data-design') === 'billboard';
+        const orientation = isBillboard ? 'landscape' : 'portrait';
+
+        const canvas = await window.html2canvas(card, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: '#08090C',
+          logging: false,
+          ignoreElements: (el) => el.classList && el.classList.contains('no-print'),
+        });
+
+        const imgData = canvas.toDataURL('image/jpeg', 0.95);
+        // Half of scale: 2 is the exact CSS dimensions
+        const cardW = Math.round(canvas.width / 2);
+        const cardH = Math.round(canvas.height / 2);
+
+        if (pageCount === 0) {
+          pdf = new jsPDF({
+            orientation: orientation,
+            unit: 'px',
+            format: [cardW, cardH],
+            compress: true,
+          });
+          pdf.addImage(imgData, 'JPEG', 0, 0, cardW, cardH);
+        } else {
+          pdf.addPage([cardW, cardH], orientation);
+          pdf.addImage(imgData, 'JPEG', 0, 0, cardW, cardH);
+        }
+        pageCount++;
+      }
+
+      if (pdf) {
+        pdf.save(filename);
+      }
+    } catch (err) {
+      console.error('PDF save failed:', err);
+      alert('Could not save PDF. Please try again.');
+    } finally {
+      setSavingPdf(false);
     }
-    setTimeout(() => {
-      window.print();
-    }, 200);
   };
 
   const copyUrl = (type, url) => {
@@ -55,6 +143,7 @@ export const BillboardFlyersPage = () => {
 
   return (
     <div
+      className="flyers-page-root"
       style={{
         backgroundColor: '#050608',
         color: '#FFFFFF',
@@ -68,32 +157,66 @@ export const BillboardFlyersPage = () => {
       }}
     >
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap');
         @media print {
           * {
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
+            color-adjust: exact !important;
+          }
+          @page {
+            margin: 0;
+            size: auto;
           }
           body, html {
             background-color: #050608 !important;
+            background: #050608 !important;
             color: #FFFFFF !important;
             margin: 0 !important;
             padding: 0 !important;
+            width: 100% !important;
           }
-          .no-print, .print-hide, .flyer-toolbar, button {
+          /* Hide all UI chrome */
+          .no-print,
+          .print-hide,
+          .flyer-toolbar,
+          button {
             display: none !important;
           }
+          /* The outer page wrapper — remove all screen padding */
+          .flyers-page-root {
+            padding: 0 !important;
+            margin: 0 !important;
+            min-height: unset !important;
+            background: #050608 !important;
+            display: block !important;
+          }
+          /* The cards column */
           .billboard-container {
+            display: block !important;
             max-width: 100% !important;
             width: 100% !important;
             gap: 0 !important;
             padding: 0 !important;
+            margin: 0 !important;
+            align-items: unset !important;
           }
+          /* Each individual banner card */
           .print-card {
+            page-break-before: auto;
             page-break-after: always;
             break-after: page;
-            border-radius: 0 !important;
+            border-radius: 16px !important;
             box-shadow: none !important;
             margin: 0 auto !important;
+            max-width: 100% !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+          }
+          /* Last card — no extra blank page */
+          .print-card:last-child {
+            page-break-after: avoid !important;
+            break-after: avoid !important;
           }
         }
       `}</style>
@@ -168,23 +291,29 @@ export const BillboardFlyersPage = () => {
 
           <button
             type="button"
-            onClick={() => handlePrint(activeDesign)}
+            onClick={() => saveToPdf(activeDesign)}
+            disabled={savingPdf}
             style={{
-              backgroundColor: 'rgba(245, 185, 66, 0.18)',
+              backgroundColor: savingPdf ? 'rgba(245, 185, 66, 0.08)' : 'rgba(245, 185, 66, 0.18)',
               color: '#F5B942',
               border: '1px solid #F5B942',
               borderRadius: '50px',
               padding: '0.35rem 0.9rem',
               fontSize: '0.76rem',
               fontWeight: 800,
-              cursor: 'pointer',
+              cursor: savingPdf ? 'not-allowed' : 'pointer',
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.3rem',
               whiteSpace: 'nowrap',
+              opacity: savingPdf ? 0.7 : 1,
             }}
           >
-            <Printer size={13} /> Save as PDF / Download
+            {savingPdf
+              ? <><Loader size={13} style={{ animation: 'spin 1s linear infinite' }} /> Saving…</>
+              : <><Download size={13} /> Save as PDF
+            </>
+            }
           </button>
 
           <button
@@ -233,6 +362,7 @@ export const BillboardFlyersPage = () => {
 
       {/* Main Container */}
       <div
+        ref={containerRef}
         className="billboard-container"
         style={{
           display: 'flex',
@@ -249,6 +379,7 @@ export const BillboardFlyersPage = () => {
         {(activeDesign === 'all' || activeDesign === 'billboard') && (
           <div
             className="print-card"
+            data-design="billboard"
             style={{
               width: '100%',
               maxWidth: '1080px',
@@ -388,7 +519,8 @@ export const BillboardFlyersPage = () => {
               <div className="no-print" style={{ display: 'flex', gap: '0.5rem', marginTop: '1.25rem' }}>
                 <button
                   type="button"
-                  onClick={() => handlePrint('billboard')}
+                  onClick={() => saveToPdf('billboard')}
+                  disabled={savingPdf}
                   style={{
                     backgroundColor: '#F5B942',
                     color: '#08090C',
@@ -432,6 +564,7 @@ export const BillboardFlyersPage = () => {
         {(activeDesign === 'all' || activeDesign === 'street') && (
           <div
             className="print-card"
+            data-design="street"
             style={{
               width: '100%',
               maxWidth: '620px',
@@ -552,7 +685,8 @@ export const BillboardFlyersPage = () => {
               <div className="no-print" style={{ display: 'flex', gap: '0.5rem', marginTop: '1.25rem' }}>
                 <button
                   type="button"
-                  onClick={() => handlePrint('street')}
+                  onClick={() => saveToPdf('street')}
+                  disabled={savingPdf}
                   style={{
                     backgroundColor: '#a855f7',
                     color: '#ffffff',
@@ -603,6 +737,7 @@ export const BillboardFlyersPage = () => {
         {(activeDesign === 'all' || activeDesign === 'recruit') && (
           <div
             className="print-card"
+            data-design="recruit"
             style={{
               width: '100%',
               maxWidth: '640px',
@@ -739,7 +874,8 @@ export const BillboardFlyersPage = () => {
               <div className="no-print" style={{ display: 'flex', gap: '0.5rem', marginTop: '1.25rem' }}>
                 <button
                   type="button"
-                  onClick={() => handlePrint('recruit')}
+                  onClick={() => saveToPdf('recruit')}
+                  disabled={savingPdf}
                   style={{
                     backgroundColor: '#10b981',
                     color: '#ffffff',

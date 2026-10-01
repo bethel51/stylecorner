@@ -84,10 +84,10 @@ export const AdminDashboard = () => {
 
   const handleDownloadBannerPdf = (type) => {
     const hash = type === 'portrait' ? 'street' : (type || 'all');
-    const printUrl = `/admin/marketing-flyers?design=${hash}&print=true`;
-    const win = window.open(printUrl, '_blank');
+    const downloadUrl = `/admin/marketing-flyers?design=${hash}&download=true`;
+    const win = window.open(downloadUrl, '_blank');
     if (!win) {
-      window.location.href = printUrl;
+      window.location.href = downloadUrl;
     }
   };
 

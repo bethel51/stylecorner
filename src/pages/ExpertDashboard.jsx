@@ -165,10 +165,11 @@ const SwipeableBookingCard = ({
         style={{
           position: 'relative',
           zIndex: 1,
-          background: '#151822',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
-          borderRadius: '18px',
-          padding: '1.15rem',
+          background: 'linear-gradient(145deg, #151824 0%, #10121c 100%)',
+          border: '1px solid rgba(255, 255, 255, 0.09)',
+          borderRadius: '20px',
+          padding: '1.25rem',
+          boxShadow: '0 8px 24px -8px rgba(0, 0, 0, 0.5)',
           willChange: 'transform',
           touchAction: 'pan-y',
           transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
@@ -182,7 +183,7 @@ const SwipeableBookingCard = ({
             </h4>
             <StatusBadge status={b.status} />
           </div>
-          <span style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 900, color: '#f5b942', flexShrink: 0 }}>
+          <span style={{ fontFamily: 'Outfit', fontSize: '1.08rem', fontWeight: 900, color: '#f5b942', flexShrink: 0 }}>
             ₦{Number(b.price || 0).toLocaleString()}
           </span>
         </div>
@@ -211,14 +212,15 @@ const SwipeableBookingCard = ({
         {/* Row 3: Schedule Date, Time & Location */}
         <div
           style={{
-            background: '#1c202d',
-            borderRadius: '12px',
-            padding: '0.65rem 0.85rem',
+            background: 'rgba(255, 255, 255, 0.03)',
+            border: '1px solid rgba(255, 255, 255, 0.06)',
+            borderRadius: '14px',
+            padding: '0.7rem 0.9rem',
             marginBottom: '0.85rem',
             display: 'flex',
             alignItems: 'center',
             flexWrap: 'wrap',
-            gap: '0.65rem',
+            gap: '0.75rem',
             fontSize: '0.75rem',
             color: '#94a3b8',
           }}
@@ -932,33 +934,67 @@ export const ExpertDashboard = () => {
         <div
           style={{
             background: user?.coverImage
-              ? `linear-gradient(180deg, rgba(12,14,20,0.6) 0%, rgba(12,14,20,0.92) 100%), url(${user.coverImage}) center/cover no-repeat`
-              : 'linear-gradient(135deg, #151822 0%, #10131b 100%)',
-            borderRadius: '24px',
-            padding: '1.25rem',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
+              ? `linear-gradient(180deg, rgba(8, 10, 15, 0.45) 0%, rgba(13, 16, 24, 0.96) 100%), url(${user.coverImage}) center/cover no-repeat`
+              : 'radial-gradient(circle at 85% 15%, rgba(245, 185, 66, 0.12) 0%, transparent 60%), linear-gradient(135deg, #141724 0%, #0d0f17 100%)',
+            borderRadius: '26px',
+            padding: '1.4rem',
+            border: '1.5px solid rgba(245, 185, 66, 0.25)',
+            boxShadow: '0 20px 45px -12px rgba(0, 0, 0, 0.7), 0 0 30px rgba(245, 185, 66, 0.08)',
             position: 'relative',
             overflow: 'hidden',
           }}
         >
           {/* Top banner action row */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-            <span
-              style={{
-                background: 'rgba(245, 185, 66, 0.15)',
-                color: '#f5b942',
-                border: '1px solid rgba(245, 185, 66, 0.3)',
-                borderRadius: '50px',
-                padding: '0.2rem 0.65rem',
-                fontSize: '0.68rem',
-                fontFamily: 'Outfit',
-                fontWeight: 800,
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em',
-              }}
-            >
-              Verified Specialist
-            </span>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+              <span
+                style={{
+                  background: 'rgba(245, 185, 66, 0.15)',
+                  color: '#f5b942',
+                  border: '1px solid rgba(245, 185, 66, 0.35)',
+                  borderRadius: '50px',
+                  padding: '0.25rem 0.75rem',
+                  fontSize: '0.7rem',
+                  fontFamily: 'Outfit',
+                  fontWeight: 800,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                }}
+              >
+                <ShieldCheck size={12} /> Verified Specialist
+              </span>
+
+              {/* Status Switcher Toggle Pill */}
+              <button
+                type="button"
+                onClick={() => {
+                  const next = !isAvailable;
+                  setIsAvailable(next);
+                  showToast(next ? 'Status set to: Accepting Bookings' : 'Status set to: On Break', 'accent');
+                }}
+                style={{
+                  background: isAvailable ? 'rgba(16, 185, 129, 0.16)' : 'rgba(239, 68, 68, 0.16)',
+                  border: isAvailable ? '1px solid rgba(16, 185, 129, 0.35)' : '1px solid rgba(239, 68, 68, 0.35)',
+                  color: isAvailable ? '#10b981' : '#f87171',
+                  fontSize: '0.7rem',
+                  fontFamily: 'Outfit',
+                  fontWeight: 800,
+                  padding: '0.25rem 0.75rem',
+                  borderRadius: '50px',
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: isAvailable ? '#10b981' : '#ef4444' }} />
+                <span>{isAvailable ? 'ACCEPTING BOOKINGS' : 'ON BREAK'}</span>
+              </button>
+            </div>
 
             <label
               style={{
@@ -966,7 +1002,7 @@ export const ExpertDashboard = () => {
                 color: '#f5b942',
                 border: '1px solid rgba(245, 185, 66, 0.35)',
                 borderRadius: '50px',
-                padding: '0.3rem 0.75rem',
+                padding: '0.3rem 0.8rem',
                 fontSize: '0.72rem',
                 fontFamily: 'Outfit',
                 fontWeight: 700,
@@ -974,16 +1010,17 @@ export const ExpertDashboard = () => {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.35rem',
+                backdropFilter: 'blur(8px)',
               }}
             >
               <Camera size={12} />
-              <span>{uploadingCover ? 'Saving...' : 'Cover'}</span>
+              <span>{uploadingCover ? 'Saving...' : 'Cover Image'}</span>
               <input type="file" accept="image/*" onChange={handleCoverUpload} style={{ display: 'none' }} />
             </label>
           </div>
 
           {/* Avatar + Specialist Info */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.15rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1.15rem', marginBottom: '1.25rem' }}>
             <label
               style={{ position: 'relative', flexShrink: 0, cursor: 'pointer', display: 'block' }}
               title="Tap to update profile avatar"
@@ -992,11 +1029,11 @@ export const ExpertDashboard = () => {
               <Avatar
                 src={user?.avatarUrl || ''}
                 name={`${user?.firstname || 'S'} ${user?.lastname || ''}`}
-                size={68}
+                size={74}
                 borderRadius="50%"
                 style={{
                   border: '2.5px solid #f5b942',
-                  boxShadow: '0 4px 16px rgba(245, 185, 66, 0.25)',
+                  boxShadow: '0 6px 20px rgba(245, 185, 66, 0.3)',
                 }}
               />
               <div
@@ -1004,27 +1041,30 @@ export const ExpertDashboard = () => {
                   position: 'absolute',
                   bottom: 0,
                   right: 0,
-                  width: '22px',
-                  height: '22px',
+                  width: '24px',
+                  height: '24px',
                   borderRadius: '50%',
                   background: '#f5b942',
                   color: '#0c0e14',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  border: '2px solid #151822',
+                  border: '2px solid #141724',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.5)',
                 }}
               >
-                <Edit size={10} />
+                <Edit size={11} />
               </div>
             </label>
 
             <div style={{ flex: 1, minWidth: 0 }}>
-              <h2 style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.15rem', lineHeight: 1.2 }}>
-                {user?.firstname || 'Specialist'} {user?.lastname || ''}
-              </h2>
-              <p style={{ color: '#f5b942', fontSize: '0.78rem', fontFamily: 'Outfit', fontWeight: 700, margin: '0 0 0.35rem' }}>
-                {user?.title ? user.title.toUpperCase() : 'SALON & BEAUTY SPECIALIST'}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                <h2 style={{ fontFamily: 'Outfit', fontSize: '1.35rem', fontWeight: 900, color: '#ffffff', margin: 0, lineHeight: 1.2 }}>
+                  {user?.firstname || 'Specialist'} {user?.lastname || ''}
+                </h2>
+              </div>
+              <p style={{ color: '#f5b942', fontSize: '0.78rem', fontFamily: 'Outfit', fontWeight: 800, margin: '0.2rem 0 0.45rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                {user?.title ? user.title : 'SALON & BEAUTY SPECIALIST'}
               </p>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', flexWrap: 'wrap' }}>
@@ -1036,10 +1076,10 @@ export const ExpertDashboard = () => {
                     background: 'rgba(245, 185, 66, 0.12)',
                     border: '1px solid rgba(245, 185, 66, 0.3)',
                     color: '#f5b942',
-                    fontSize: '0.7rem',
+                    fontSize: '0.72rem',
                     fontFamily: 'Outfit',
                     fontWeight: 800,
-                    padding: '0.2rem 0.6rem',
+                    padding: '0.2rem 0.65rem',
                     borderRadius: '50px',
                     cursor: 'pointer',
                     display: 'inline-flex',
@@ -1052,123 +1092,115 @@ export const ExpertDashboard = () => {
                   <span>{averageRating ? `${averageRating} (${reviews.length} ${reviews.length === 1 ? 'review' : 'reviews'})` : `${reviews.length} reviews`}</span>
                 </button>
 
-                {/* Status Switcher Toggle Pill */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    const next = !isAvailable;
-                    setIsAvailable(next);
-                    showToast(next ? 'Status set to: Accepting Bookings' : 'Status set to: On Break', 'accent');
-                  }}
-                  style={{
-                    background: isAvailable ? 'rgba(16, 185, 129, 0.16)' : 'rgba(239, 68, 68, 0.16)',
-                    border: isAvailable ? '1px solid rgba(16, 185, 129, 0.35)' : '1px solid rgba(239, 68, 68, 0.35)',
-                    color: isAvailable ? '#10b981' : '#f87171',
-                    fontSize: '0.7rem',
-                    fontFamily: 'Outfit',
-                    fontWeight: 800,
-                    padding: '0.2rem 0.65rem',
-                    borderRadius: '50px',
-                    cursor: 'pointer',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.35rem',
-                  }}
-                >
-                  <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: isAvailable ? '#10b981' : '#ef4444' }} />
-                  <span>{isAvailable ? 'ACCEPTING BOOKINGS' : 'ON BREAK'}</span>
-                </button>
+                {(user?.businessAddress || user?.lga) && (
+                  <span style={{ fontSize: '0.72rem', color: '#94a3b8', display: 'inline-flex', alignItems: 'center', gap: '0.25rem', background: 'rgba(255,255,255,0.04)', padding: '0.2rem 0.55rem', borderRadius: '50px', border: '1px solid rgba(255,255,255,0.06)' }}>
+                    <MapPin size={11} color="#f5b942" />
+                    <span>{user?.lga || user?.businessAddress}</span>
+                  </span>
+                )}
               </div>
             </div>
           </div>
 
           {/* Quick Profile Controls Bar */}
-          <div style={{ display: 'flex', gap: '0.55rem', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '0.85rem' }}>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
+              gap: '0.65rem',
+              borderTop: '1px solid rgba(255,255,255,0.08)',
+              paddingTop: '1rem',
+              marginTop: '0.25rem',
+            }}
+          >
             <button
               onClick={() => navigate(`/expert-profile?name=${encodeURIComponent(`${user?.firstname || ''} ${user?.lastname || ''}`.trim() || 'Specialist')}`)}
               style={{
-                flex: 1,
-                background: '#1c202d',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                color: '#ffffff',
-                padding: '0.55rem 0.6rem',
-                borderRadius: '12px',
-                fontSize: '0.76rem',
+                background: 'linear-gradient(135deg, rgba(245, 185, 66, 0.16) 0%, rgba(245, 185, 66, 0.08) 100%)',
+                border: '1px solid rgba(245, 185, 66, 0.35)',
+                color: '#f5b942',
+                padding: '0.65rem 0.85rem',
+                borderRadius: '14px',
+                fontSize: '0.78rem',
                 fontFamily: 'Outfit',
-                fontWeight: 700,
+                fontWeight: 800,
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '0.35rem',
+                gap: '0.4rem',
+                transition: 'all 0.2s ease',
+                boxShadow: '0 4px 12px rgba(245, 185, 66, 0.08)',
               }}
             >
-              <Sparkles size={13} color="#f5b942" /> View Page
+              <Sparkles size={14} color="#f5b942" /> View Public Page
             </button>
 
             <button
               onClick={handleOpenProfileEdit}
               style={{
-                flex: 1,
-                background: '#1c202d',
-                border: '1px solid rgba(245, 185, 66, 0.3)',
-                color: '#f5b942',
-                padding: '0.55rem 0.6rem',
-                borderRadius: '12px',
-                fontSize: '0.76rem',
+                background: 'rgba(255, 255, 255, 0.04)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                color: '#e2e8f0',
+                padding: '0.65rem 0.85rem',
+                borderRadius: '14px',
+                fontSize: '0.78rem',
                 fontFamily: 'Outfit',
                 fontWeight: 700,
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '0.35rem',
+                gap: '0.4rem',
+                transition: 'all 0.2s ease',
               }}
             >
-              <Edit size={13} /> Edit Profile
+              <Edit size={14} color="#94a3b8" /> Edit Profile
             </button>
 
             <button
               onClick={() => setShowReviewsSheet(true)}
               style={{
-                flex: 1,
-                background: '#1c202d',
-                border: '1px solid rgba(245, 185, 66, 0.25)',
-                color: '#f5b942',
-                padding: '0.55rem 0.6rem',
-                borderRadius: '12px',
-                fontSize: '0.76rem',
+                background: 'rgba(255, 255, 255, 0.04)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                color: '#e2e8f0',
+                padding: '0.65rem 0.85rem',
+                borderRadius: '14px',
+                fontSize: '0.78rem',
                 fontFamily: 'Outfit',
                 fontWeight: 700,
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '0.35rem',
+                gap: '0.4rem',
+                transition: 'all 0.2s ease',
               }}
             >
-              <MessageSquare size={13} /> Reviews ({reviews.length})
+              <MessageSquare size={14} color="#f5b942" /> Reviews ({reviews.length})
             </button>
 
             <button
               onClick={logout}
               style={{
-                background: 'rgba(239, 68, 68, 0.12)',
-                border: '1px solid rgba(239, 68, 68, 0.25)',
+                background: 'rgba(239, 68, 68, 0.08)',
+                border: '1px solid rgba(239, 68, 68, 0.2)',
                 color: '#f87171',
-                padding: '0.55rem 0.85rem',
-                borderRadius: '12px',
-                fontSize: '0.76rem',
+                padding: '0.65rem 0.85rem',
+                borderRadius: '14px',
+                fontSize: '0.78rem',
                 fontFamily: 'Outfit',
                 fontWeight: 700,
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.35rem',
+                justifyContent: 'center',
+                gap: '0.4rem',
+                transition: 'all 0.2s ease',
               }}
               title="Sign Out"
             >
-              <LogOut size={13} /> Sign Out
+              <LogOut size={14} /> Sign Out
             </button>
           </div>
         </div>
@@ -1177,110 +1209,127 @@ export const ExpertDashboard = () => {
         {/* ── 2. Atelier Wallet & Payout Card ── */}
         <div
           style={{
-            background: 'linear-gradient(135deg, #151822 0%, #10131b 100%)',
-            borderRadius: '20px',
-            padding: '1.25rem',
-            border: '1px solid rgba(245, 185, 66, 0.25)',
-            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.3)',
+            background: 'radial-gradient(circle at 90% 15%, rgba(245, 185, 66, 0.16) 0%, transparent 60%), linear-gradient(135deg, #141724 0%, #0d1017 100%)',
+            borderRadius: '24px',
+            padding: '1.4rem',
+            border: '1.5px solid rgba(245, 185, 66, 0.28)',
+            boxShadow: '0 16px 36px -10px rgba(0, 0, 0, 0.7), 0 0 24px rgba(245, 185, 66, 0.08)',
+            position: 'relative',
+            overflow: 'hidden',
           }}
         >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.45rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: '#94a3b8', fontSize: '0.78rem', fontFamily: 'Outfit', fontWeight: 700 }}>
-              <Wallet size={15} color="#f5b942" />
-              <span>Available Earnings</span>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <div style={{ width: '32px', height: '32px', borderRadius: '10px', background: 'rgba(245, 185, 66, 0.14)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#f5b942' }}>
+                <Wallet size={16} />
+              </div>
+              <div>
+                <span style={{ color: '#94a3b8', fontSize: '0.74rem', fontFamily: 'Outfit', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Available Balance
+                </span>
+                <div style={{ fontSize: '0.68rem', color: '#10b981', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                  <ShieldCheck size={11} /> Bank Payout Ready
+                </div>
+              </div>
             </div>
+
             <button
               onClick={() => setShowWalletHistorySheet(true)}
               style={{
-                background: 'none',
-                border: 'none',
+                background: 'rgba(245, 185, 66, 0.1)',
+                border: '1px solid rgba(245, 185, 66, 0.25)',
                 color: '#f5b942',
                 fontFamily: 'Outfit',
-                fontSize: '0.78rem',
-                fontWeight: 700,
+                fontSize: '0.74rem',
+                fontWeight: 800,
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.2rem',
-                padding: 0,
+                gap: '0.3rem',
+                padding: '0.35rem 0.75rem',
+                borderRadius: '50px',
+                transition: 'all 0.15s ease',
               }}
             >
-              History <ChevronRight size={13} />
+              <History size={12} /> Statements <ChevronRight size={12} />
             </button>
           </div>
 
-          <div style={{ fontFamily: 'Outfit', fontSize: '1.95rem', fontWeight: 900, color: '#f5b942', marginBottom: '1rem', letterSpacing: '-0.02em' }}>
-            ₦{Number(walletBalance || 0).toLocaleString()}
+          <div style={{ fontFamily: 'Outfit', fontSize: '2.2rem', fontWeight: 900, color: '#f5b942', margin: '0.4rem 0 1.15rem', letterSpacing: '-0.02em', display: 'flex', alignItems: 'baseline', gap: '0.35rem' }}>
+            <span>₦{Number(walletBalance || 0).toLocaleString()}</span>
+            <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>NGN</span>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '0.75rem' }}>
             <button
               onClick={() => setShowWithdrawModal(true)}
               style={{
-                background: '#f5b942',
+                background: 'linear-gradient(135deg, #f5b942 0%, #e0a32d 100%)',
                 color: '#0c0e14',
                 border: 'none',
-                borderRadius: '50px',
-                height: '42px',
+                borderRadius: '14px',
+                height: '46px',
                 fontFamily: 'Outfit',
-                fontWeight: 800,
-                fontSize: '0.82rem',
+                fontWeight: 900,
+                fontSize: '0.84rem',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '0.4rem',
-                boxShadow: '0 4px 12px rgba(245, 185, 66, 0.3)',
+                gap: '0.45rem',
+                boxShadow: '0 6px 18px rgba(245, 185, 66, 0.28)',
+                transition: 'transform 0.12s ease',
               }}
             >
-              <Building2 size={15} /> Request Payout
+              <Building2 size={16} /> Request Payout
             </button>
 
             <button
               onClick={() => setShowTopupModal(true)}
               style={{
-                background: '#1c202d',
+                background: 'rgba(255, 255, 255, 0.05)',
                 color: '#ffffff',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                borderRadius: '50px',
-                height: '42px',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                borderRadius: '14px',
+                height: '46px',
                 fontFamily: 'Outfit',
                 fontWeight: 700,
-                fontSize: '0.82rem',
+                fontSize: '0.84rem',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '0.4rem',
+                gap: '0.45rem',
+                transition: 'all 0.15s ease',
               }}
             >
-              <ArrowUpRight size={15} color="#f5b942" /> Top Up
+              <ArrowUpRight size={16} color="#f5b942" /> Top Up Wallet
             </button>
           </div>
         </div>
 
         {/* ── 3. Performance Metrics Grid (100% Real Data) ── */}
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', marginBottom: '0.75rem' }}>
-            <Activity size={14} color="#f5b942" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', marginBottom: '0.85rem' }}>
+            <Activity size={15} color="#f5b942" />
             <span style={{ fontFamily: 'Outfit', fontSize: '0.82rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
               Performance Overview
             </span>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.85rem' }}>
             {/* Pending */}
             <div
               onClick={() => setFilterTab('pending')}
               style={{
                 background: filterTab === 'pending'
-                  ? 'linear-gradient(145deg, rgba(245, 185, 66, 0.12) 0%, #151822 100%)'
-                  : 'linear-gradient(145deg, #151822 0%, #10131b 100%)',
-                borderRadius: '18px',
-                padding: '1rem',
+                  ? 'radial-gradient(circle at 85% 15%, rgba(245, 185, 66, 0.18) 0%, transparent 60%), linear-gradient(145deg, #1a1e2d 0%, #121520 100%)'
+                  : 'linear-gradient(145deg, #151824 0%, #0f121a 100%)',
+                borderRadius: '20px',
+                padding: '1.15rem',
                 cursor: 'pointer',
                 border: filterTab === 'pending' ? '1.5px solid #f5b942' : '1px solid rgba(255, 255, 255, 0.08)',
-                boxShadow: filterTab === 'pending' ? '0 6px 20px rgba(245, 185, 66, 0.15)' : 'none',
+                boxShadow: filterTab === 'pending' ? '0 8px 24px rgba(245, 185, 66, 0.2)' : '0 4px 16px rgba(0,0,0,0.3)',
                 transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
                 position: 'relative',
                 overflow: 'hidden',
@@ -1290,14 +1339,14 @@ export const ExpertDashboard = () => {
                 <span style={{ fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                   Pending
                 </span>
-                <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'rgba(245, 185, 66, 0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#f5b942' }}>
-                  <Clock size={14} />
+                <div style={{ width: '30px', height: '30px', borderRadius: '10px', background: 'rgba(245, 185, 66, 0.14)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#f5b942' }}>
+                  <Clock size={15} />
                 </div>
               </div>
-              <div style={{ fontFamily: 'Outfit', fontSize: '1.85rem', fontWeight: 900, color: '#f5b942', lineHeight: 1 }}>
+              <div style={{ fontFamily: 'Outfit', fontSize: '1.95rem', fontWeight: 900, color: '#f5b942', lineHeight: 1 }}>
                 {pendingBookings.length}
               </div>
-              <div style={{ fontSize: '0.68rem', color: '#64748b', marginTop: '0.35rem' }}>
+              <div style={{ fontSize: '0.7rem', color: '#64748b', marginTop: '0.4rem', fontWeight: 600 }}>
                 {pendingBookings.length === 1 ? '1 client waiting' : `${pendingBookings.length} clients waiting`}
               </div>
             </div>
@@ -1307,13 +1356,13 @@ export const ExpertDashboard = () => {
               onClick={() => setFilterTab('accepted')}
               style={{
                 background: filterTab === 'accepted'
-                  ? 'linear-gradient(145deg, rgba(16, 185, 129, 0.12) 0%, #151822 100%)'
-                  : 'linear-gradient(145deg, #151822 0%, #10131b 100%)',
-                borderRadius: '18px',
-                padding: '1rem',
+                  ? 'radial-gradient(circle at 85% 15%, rgba(16, 185, 129, 0.18) 0%, transparent 60%), linear-gradient(145deg, #13241b 0%, #0d1a13 100%)'
+                  : 'linear-gradient(145deg, #151824 0%, #0f121a 100%)',
+                borderRadius: '20px',
+                padding: '1.15rem',
                 cursor: 'pointer',
                 border: filterTab === 'accepted' ? '1.5px solid #10b981' : '1px solid rgba(255, 255, 255, 0.08)',
-                boxShadow: filterTab === 'accepted' ? '0 6px 20px rgba(16, 185, 129, 0.15)' : 'none',
+                boxShadow: filterTab === 'accepted' ? '0 8px 24px rgba(16, 185, 129, 0.2)' : '0 4px 16px rgba(0,0,0,0.3)',
                 transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
                 position: 'relative',
                 overflow: 'hidden',
@@ -1323,15 +1372,15 @@ export const ExpertDashboard = () => {
                 <span style={{ fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                   Confirmed
                 </span>
-                <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'rgba(16, 185, 129, 0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#10b981' }}>
-                  <CheckCircle size={14} />
+                <div style={{ width: '30px', height: '30px', borderRadius: '10px', background: 'rgba(16, 185, 129, 0.14)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#10b981' }}>
+                  <CheckCircle size={15} />
                 </div>
               </div>
-              <div style={{ fontFamily: 'Outfit', fontSize: '1.85rem', fontWeight: 900, color: '#10b981', lineHeight: 1 }}>
+              <div style={{ fontFamily: 'Outfit', fontSize: '1.95rem', fontWeight: 900, color: '#10b981', lineHeight: 1 }}>
                 {acceptedBookings.length}
               </div>
-              <div style={{ fontSize: '0.68rem', color: '#64748b', marginTop: '0.35rem' }}>
-                Active bookings scheduled
+              <div style={{ fontSize: '0.7rem', color: '#64748b', marginTop: '0.4rem', fontWeight: 600 }}>
+                Active scheduled sessions
               </div>
             </div>
 
@@ -1340,13 +1389,13 @@ export const ExpertDashboard = () => {
               onClick={() => setFilterTab('completed')}
               style={{
                 background: filterTab === 'completed'
-                  ? 'linear-gradient(145deg, rgba(96, 165, 250, 0.12) 0%, #151822 100%)'
-                  : 'linear-gradient(145deg, #151822 0%, #10131b 100%)',
-                borderRadius: '18px',
-                padding: '1rem',
+                  ? 'radial-gradient(circle at 85% 15%, rgba(96, 165, 250, 0.18) 0%, transparent 60%), linear-gradient(145deg, #131d2b 0%, #0d141f 100%)'
+                  : 'linear-gradient(145deg, #151824 0%, #0f121a 100%)',
+                borderRadius: '20px',
+                padding: '1.15rem',
                 cursor: 'pointer',
                 border: filterTab === 'completed' ? '1.5px solid #60a5fa' : '1px solid rgba(255, 255, 255, 0.08)',
-                boxShadow: filterTab === 'completed' ? '0 6px 20px rgba(96, 165, 250, 0.15)' : 'none',
+                boxShadow: filterTab === 'completed' ? '0 8px 24px rgba(96, 165, 250, 0.2)' : '0 4px 16px rgba(0,0,0,0.3)',
                 transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
                 position: 'relative',
                 overflow: 'hidden',
@@ -1356,14 +1405,14 @@ export const ExpertDashboard = () => {
                 <span style={{ fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                   Completed
                 </span>
-                <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'rgba(96, 165, 250, 0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#60a5fa' }}>
-                  <Sparkles size={14} />
+                <div style={{ width: '30px', height: '30px', borderRadius: '10px', background: 'rgba(96, 165, 250, 0.14)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#60a5fa' }}>
+                  <Sparkles size={15} />
                 </div>
               </div>
-              <div style={{ fontFamily: 'Outfit', fontSize: '1.85rem', fontWeight: 900, color: '#60a5fa', lineHeight: 1 }}>
+              <div style={{ fontFamily: 'Outfit', fontSize: '1.95rem', fontWeight: 900, color: '#60a5fa', lineHeight: 1 }}>
                 {completedBookings.length}
               </div>
-              <div style={{ fontSize: '0.68rem', color: '#64748b', marginTop: '0.35rem' }}>
+              <div style={{ fontSize: '0.7rem', color: '#64748b', marginTop: '0.4rem', fontWeight: 600 }}>
                 Successful sessions
               </div>
             </div>
@@ -1372,11 +1421,12 @@ export const ExpertDashboard = () => {
             <div
               onClick={() => setShowWalletHistorySheet(true)}
               style={{
-                background: 'linear-gradient(145deg, #151822 0%, #10131b 100%)',
-                borderRadius: '18px',
-                padding: '1rem',
+                background: 'linear-gradient(145deg, #151824 0%, #0f121a 100%)',
+                borderRadius: '20px',
+                padding: '1.15rem',
                 cursor: 'pointer',
-                border: '1px solid rgba(245, 185, 66, 0.18)',
+                border: '1px solid rgba(245, 185, 66, 0.22)',
+                boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
                 transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
                 position: 'relative',
                 overflow: 'hidden',
@@ -1384,17 +1434,17 @@ export const ExpertDashboard = () => {
             >
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
                 <span style={{ fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                  Revenue
+                  Total Revenue
                 </span>
-                <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'rgba(245, 185, 66, 0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#f5b942' }}>
-                  <TrendingUp size={14} />
+                <div style={{ width: '30px', height: '30px', borderRadius: '10px', background: 'rgba(245, 185, 66, 0.14)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#f5b942' }}>
+                  <TrendingUp size={15} />
                 </div>
               </div>
-              <div style={{ fontFamily: 'Outfit', fontSize: '1.35rem', fontWeight: 900, color: '#f5b942', lineHeight: 1.1 }}>
+              <div style={{ fontFamily: 'Outfit', fontSize: '1.45rem', fontWeight: 900, color: '#f5b942', lineHeight: 1.1 }}>
                 ₦{Number(totalRevenue).toLocaleString()}
               </div>
-              <div style={{ fontSize: '0.68rem', color: '#64748b', marginTop: '0.35rem' }}>
-                Completed revenue
+              <div style={{ fontSize: '0.7rem', color: '#64748b', marginTop: '0.4rem', fontWeight: 600 }}>
+                Lifetime completed earnings
               </div>
             </div>
           </div>
@@ -1433,10 +1483,10 @@ export const ExpertDashboard = () => {
           <div
             style={{
               display: 'flex',
-              gap: '0.5rem',
+              gap: '0.55rem',
               overflowX: 'auto',
-              paddingBottom: '0.35rem',
-              marginBottom: '0.85rem',
+              paddingBottom: '0.45rem',
+              marginBottom: '1rem',
               scrollbarWidth: 'none',
             }}
           >
@@ -1453,29 +1503,32 @@ export const ExpertDashboard = () => {
                   key={tab.id}
                   onClick={() => setFilterTab(tab.id)}
                   style={{
-                    background: isActive ? '#f5b942' : '#151822',
+                    background: isActive ? 'linear-gradient(135deg, #f5b942 0%, #e0a32d 100%)' : 'rgba(255, 255, 255, 0.04)',
                     color: isActive ? '#0c0e14' : '#94a3b8',
                     border: `1px solid ${isActive ? '#f5b942' : 'rgba(255, 255, 255, 0.08)'}`,
                     borderRadius: '50px',
-                    padding: '0.35rem 0.85rem',
+                    padding: '0.4rem 0.95rem',
                     fontFamily: 'Outfit',
-                    fontSize: '0.76rem',
+                    fontSize: '0.78rem',
                     fontWeight: isActive ? 800 : 600,
                     cursor: 'pointer',
                     whiteSpace: 'nowrap',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '0.35rem',
+                    gap: '0.4rem',
                     transition: 'all 0.15s ease',
+                    boxShadow: isActive ? '0 4px 14px rgba(245, 185, 66, 0.25)' : 'none',
                   }}
                 >
                   <span>{tab.label}</span>
                   <span
                     style={{
                       background: isActive ? 'rgba(12, 14, 20, 0.25)' : 'rgba(255, 255, 255, 0.08)',
-                      padding: '0.1rem 0.4rem',
+                      color: isActive ? '#0c0e14' : '#f5b942',
+                      padding: '0.1rem 0.45rem',
                       borderRadius: '50px',
                       fontSize: '0.68rem',
+                      fontWeight: 800,
                     }}
                   >
                     {tab.count}
@@ -1491,20 +1544,22 @@ export const ExpertDashboard = () => {
           {!loading && filteredBookings.length === 0 && (
             <div
               style={{
-                background: '#151822',
-                borderRadius: '20px',
-                padding: '2.5rem 1.25rem',
+                background: 'radial-gradient(circle at 50% 20%, rgba(245, 185, 66, 0.08) 0%, transparent 65%), #141722',
+                borderRadius: '24px',
+                padding: '3rem 1.5rem',
                 textAlign: 'center',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
+                border: '1.5px dashed rgba(245, 185, 66, 0.25)',
               }}
             >
-              <Scissors size={38} color="#f5b942" style={{ marginBottom: '0.75rem', opacity: 0.8 }} />
-              <h4 style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.35rem' }}>
+              <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'rgba(245, 185, 66, 0.12)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: '#f5b942', marginBottom: '1rem' }}>
+                <Scissors size={28} />
+              </div>
+              <h4 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.4rem' }}>
                 No {filterTab === 'all' ? '' : filterTab} appointments
               </h4>
-              <p style={{ fontSize: '0.8rem', color: '#64748b', margin: 0 }}>
+              <p style={{ fontSize: '0.84rem', color: '#64748b', margin: 0, maxWidth: '380px', marginInline: 'auto', lineHeight: 1.4 }}>
                 {filterTab === 'pending'
-                  ? 'You are all caught up! New client booking requests will appear here.'
+                  ? 'You are all caught up! New client booking requests will appear here in real-time.'
                   : 'Appointments will be listed here when scheduled by clients.'}
               </p>
             </div>
@@ -1531,23 +1586,30 @@ export const ExpertDashboard = () => {
         {/* ── 5. Appointment History Statement & Export Hub ── */}
         <div
           style={{
-            background: '#151822',
+            background: 'linear-gradient(135deg, #141724 0%, #0f121b 100%)',
             borderRadius: '20px',
-            padding: '1.15rem',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
+            padding: '1.25rem 1.4rem',
+            border: '1px solid rgba(245, 185, 66, 0.25)',
+            boxShadow: '0 8px 24px -8px rgba(0, 0, 0, 0.5)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             gap: '1rem',
+            flexWrap: 'wrap',
           }}
         >
-          <div>
-            <h4 style={{ fontFamily: 'Outfit', fontSize: '0.94rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.25rem' }}>
-              Export Booking Records
-            </h4>
-            <p style={{ fontSize: '0.78rem', color: '#94a3b8', margin: 0 }}>
-              Download official CSV log & printable statement
-            </p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div style={{ width: '38px', height: '38px', borderRadius: '12px', background: 'rgba(245, 185, 66, 0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#f5b942', flexShrink: 0 }}>
+              <Download size={18} />
+            </div>
+            <div>
+              <h4 style={{ fontFamily: 'Outfit', fontSize: '0.96rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.2rem' }}>
+                Export Booking Records
+              </h4>
+              <p style={{ fontSize: '0.78rem', color: '#94a3b8', margin: 0 }}>
+                Download official CSV log & printable statement
+              </p>
+            </div>
           </div>
 
           <button
@@ -1561,22 +1623,23 @@ export const ExpertDashboard = () => {
               showToast('Export file downloaded & statement opened!', 'success');
             }}
             style={{
-              background: '#1c202d',
+              background: 'rgba(245, 185, 66, 0.12)',
               border: '1px solid rgba(245, 185, 66, 0.35)',
               color: '#f5b942',
-              padding: '0.55rem 0.95rem',
+              padding: '0.6rem 1.15rem',
               borderRadius: '50px',
               fontFamily: 'Outfit',
-              fontSize: '0.78rem',
-              fontWeight: 700,
+              fontSize: '0.8rem',
+              fontWeight: 800,
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              gap: '0.35rem',
+              gap: '0.4rem',
               flexShrink: 0,
+              transition: 'all 0.15s ease',
             }}
           >
-            <Download size={14} /> Export Records
+            <Download size={14} /> Export Statement
           </button>
         </div>
 
@@ -1624,35 +1687,36 @@ export const ExpertDashboard = () => {
           {/* Controls Bar: Dual View Toggle + Service Filter Pills */}
           <div
             style={{
-              background: '#151822',
-              borderRadius: '16px',
-              padding: '0.65rem 0.85rem',
+              background: 'linear-gradient(135deg, #141724 0%, #0f121b 100%)',
+              borderRadius: '20px',
+              padding: '0.85rem 1rem',
               border: '1px solid rgba(255, 255, 255, 0.08)',
-              marginBottom: '1rem',
+              boxShadow: '0 8px 24px -8px rgba(0, 0, 0, 0.4)',
+              marginBottom: '1.15rem',
               display: 'flex',
               flexDirection: 'column',
-              gap: '0.65rem',
+              gap: '0.75rem',
             }}
           >
             {/* View Mode Switcher */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
-              <div style={{ display: 'flex', background: '#0e1017', padding: '3px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.06)' }}>
+              <div style={{ display: 'flex', background: 'rgba(0, 0, 0, 0.4)', padding: '4px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.06)' }}>
                 <button
                   type="button"
                   onClick={() => setPortfolioView('lookbook')}
                   style={{
-                    background: portfolioView === 'lookbook' ? '#f5b942' : 'transparent',
+                    background: portfolioView === 'lookbook' ? 'linear-gradient(135deg, #f5b942 0%, #e0a32d 100%)' : 'transparent',
                     color: portfolioView === 'lookbook' ? '#0c0e14' : '#94a3b8',
                     border: 'none',
-                    borderRadius: '8px',
-                    padding: '0.3rem 0.75rem',
+                    borderRadius: '9px',
+                    padding: '0.35rem 0.85rem',
                     fontFamily: 'Outfit',
-                    fontSize: '0.74rem',
+                    fontSize: '0.76rem',
                     fontWeight: portfolioView === 'lookbook' ? 800 : 600,
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '0.3rem',
+                    gap: '0.35rem',
                     transition: 'all 0.15s ease',
                   }}
                 >
@@ -1662,18 +1726,18 @@ export const ExpertDashboard = () => {
                   type="button"
                   onClick={() => setPortfolioView('logbook')}
                   style={{
-                    background: portfolioView === 'logbook' ? '#f5b942' : 'transparent',
+                    background: portfolioView === 'logbook' ? 'linear-gradient(135deg, #f5b942 0%, #e0a32d 100%)' : 'transparent',
                     color: portfolioView === 'logbook' ? '#0c0e14' : '#94a3b8',
                     border: 'none',
-                    borderRadius: '8px',
-                    padding: '0.3rem 0.75rem',
+                    borderRadius: '9px',
+                    padding: '0.35rem 0.85rem',
                     fontFamily: 'Outfit',
-                    fontSize: '0.74rem',
+                    fontSize: '0.76rem',
                     fontWeight: portfolioView === 'logbook' ? 800 : 600,
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '0.3rem',
+                    gap: '0.35rem',
                     transition: 'all 0.15s ease',
                   }}
                 >
@@ -1681,7 +1745,7 @@ export const ExpertDashboard = () => {
                 </button>
               </div>
 
-              <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 600 }}>
+              <span style={{ fontSize: '0.74rem', color: '#64748b', fontWeight: 600 }}>
                 {portfolio.length} total logged work {portfolio.length === 1 ? 'sample' : 'samples'}
               </span>
             </div>
@@ -1691,9 +1755,9 @@ export const ExpertDashboard = () => {
               <div
                 style={{
                   display: 'flex',
-                  gap: '0.45rem',
+                  gap: '0.5rem',
                   overflowX: 'auto',
-                  paddingBottom: '0.15rem',
+                  paddingBottom: '0.2rem',
                   scrollbarWidth: 'none',
                 }}
               >
@@ -1709,19 +1773,19 @@ export const ExpertDashboard = () => {
                       type="button"
                       onClick={() => setActivePortfolioService(svc)}
                       style={{
-                        background: isActive ? '#f5b942' : '#1c202d',
+                        background: isActive ? 'linear-gradient(135deg, #f5b942 0%, #e0a32d 100%)' : 'rgba(255, 255, 255, 0.04)',
                         color: isActive ? '#0c0e14' : '#94a3b8',
                         border: `1px solid ${isActive ? '#f5b942' : 'rgba(255,255,255,0.08)'}`,
                         borderRadius: '50px',
-                        padding: '0.28rem 0.75rem',
+                        padding: '0.3rem 0.85rem',
                         fontFamily: 'Outfit',
-                        fontSize: '0.72rem',
+                        fontSize: '0.74rem',
                         fontWeight: isActive ? 800 : 600,
                         cursor: 'pointer',
                         whiteSpace: 'nowrap',
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '0.3rem',
+                        gap: '0.35rem',
                         transition: 'all 0.15s ease',
                         flexShrink: 0,
                       }}
@@ -1730,7 +1794,8 @@ export const ExpertDashboard = () => {
                       <span
                         style={{
                           background: isActive ? 'rgba(12,14,20,0.25)' : 'rgba(255,255,255,0.08)',
-                          padding: '0.08rem 0.35rem',
+                          color: isActive ? '#0c0e14' : '#f5b942',
+                          padding: '0.08rem 0.4rem',
                           borderRadius: '50px',
                           fontSize: '0.65rem',
                           fontWeight: 800,
@@ -1755,36 +1820,38 @@ export const ExpertDashboard = () => {
               return (
                 <div
                   style={{
-                    background: '#151822',
-                    borderRadius: '20px',
-                    padding: '2.5rem 1.25rem',
+                    background: 'radial-gradient(circle at 50% 20%, rgba(245, 185, 66, 0.08) 0%, transparent 65%), #141722',
+                    borderRadius: '24px',
+                    padding: '3rem 1.5rem',
                     textAlign: 'center',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    border: '1.5px dashed rgba(245, 185, 66, 0.25)',
                   }}
                 >
-                  <BookOpen size={42} color="#f5b942" style={{ marginBottom: '0.75rem', opacity: 0.8 }} />
-                  <h4 style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.35rem' }}>
+                  <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'rgba(245, 185, 66, 0.12)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: '#f5b942', marginBottom: '1rem' }}>
+                    <BookOpen size={28} />
+                  </div>
+                  <h4 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.4rem' }}>
                     No Work Logged {activePortfolioService !== 'All' ? `for "${activePortfolioService}"` : 'Yet'}
                   </h4>
-                  <p style={{ fontSize: '0.8rem', color: '#64748b', maxWidth: '380px', margin: '0 auto 1.25rem', lineHeight: 1.4 }}>
+                  <p style={{ fontSize: '0.84rem', color: '#64748b', maxWidth: '380px', margin: '0 auto 1.5rem', lineHeight: 1.4 }}>
                     Document client transformations, styling notes, duration, and photos to showcase your craft on your public profile.
                   </p>
                   <button
                     type="button"
                     onClick={() => handleOpenAddWorkModal(activePortfolioService !== 'All' ? activePortfolioService : null)}
                     style={{
-                      background: '#f5b942',
+                      background: 'linear-gradient(135deg, #f5b942 0%, #e0a32d 100%)',
                       color: '#0c0e14',
                       border: 'none',
                       borderRadius: '50px',
-                      padding: '0.55rem 1.25rem',
+                      padding: '0.65rem 1.4rem',
                       fontFamily: 'Outfit',
-                      fontSize: '0.82rem',
+                      fontSize: '0.84rem',
                       fontWeight: 800,
                       cursor: 'pointer',
                       display: 'inline-flex',
                       alignItems: 'center',
-                      gap: '0.4rem',
+                      gap: '0.45rem',
                       boxShadow: '0 4px 14px rgba(245, 185, 66, 0.3)',
                     }}
                   >
@@ -1976,13 +2043,14 @@ export const ExpertDashboard = () => {
                     <div
                       key={item._id || idx}
                       style={{
-                        background: '#151822',
-                        borderRadius: '16px',
+                        background: 'linear-gradient(145deg, #151824 0%, #10121c 100%)',
+                        borderRadius: '18px',
                         border: '1px solid rgba(255, 255, 255, 0.08)',
-                        padding: '0.85rem',
+                        padding: '1rem',
                         display: 'flex',
-                        gap: '0.85rem',
+                        gap: '0.95rem',
                         alignItems: 'center',
+                        boxShadow: '0 4px 16px rgba(0, 0, 0, 0.3)',
                         transition: 'all 0.15s ease',
                       }}
                     >
