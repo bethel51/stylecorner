@@ -38,6 +38,8 @@ import {
   CreditCard,
   Copy,
   Check,
+  Printer,
+  ExternalLink,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
@@ -75,6 +77,8 @@ export const AdminDashboard = () => {
   const [rejectionModalWithdrawal, setRejectionModalWithdrawal] = useState(null);
   const [rejectionReasonInput, setRejectionReasonInput] = useState('');
   const [copiedWithdrawalId, setCopiedWithdrawalId] = useState(null);
+  const [marketingFilter, setMarketingFilter] = useState('all'); // 'all' | 'billboard' | 'portrait' | 'recruit'
+  const [copiedMarketingUrl, setCopiedMarketingUrl] = useState(null);
 
   // Product Modals State
   const [showProductModal, setShowProductModal] = useState(false);
@@ -572,6 +576,7 @@ export const AdminDashboard = () => {
     { id: 'users', label: 'User Accounts', icon: Users, count: usersList.length },
     { id: 'products', label: 'Manage Products', icon: Tag, count: productsList.length },
     { id: 'payouts', label: 'Expert Payouts', icon: DollarSign, count: pendingPayoutsCount },
+    { id: 'marketing', label: 'Billboards & Flyers', icon: Sparkles, count: 3 },
   ];
 
   return (
@@ -773,10 +778,10 @@ export const AdminDashboard = () => {
             )}
             <div style={{ minWidth: 0, overflow: 'hidden' }}>
               <h1 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: isMobile ? '1rem' : '1.3rem', color: '#ffffff', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                {activeTab === 'orders' ? 'Store Orders' : activeTab === 'messages' ? 'Order Inquiries' : activeTab === 'bookings' ? 'Salon Bookings' : activeTab === 'users' ? 'User Accounts' : activeTab === 'products' ? 'Store Products' : 'Expert Payouts'}
+                {activeTab === 'orders' ? 'Store Orders' : activeTab === 'messages' ? 'Order Inquiries' : activeTab === 'bookings' ? 'Salon Bookings' : activeTab === 'users' ? 'User Accounts' : activeTab === 'products' ? 'Store Products' : activeTab === 'payouts' ? 'Expert Payouts' : 'Billboards & Marketing Flyers'}
               </h1>
               <p style={{ color: '#94a3b8', fontSize: '0.75rem', margin: '0.1rem 0 0 0', display: isMobile ? 'none' : 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                {activeTab === 'orders' ? 'Manage customer orders in real-time' : activeTab === 'messages' ? 'Reply to customer inquiries and send instant real-time notifications' : activeTab === 'bookings' ? 'Manage appointment bookings' : activeTab === 'users' ? 'Manage registered client and expert accounts' : activeTab === 'products' ? 'Upload and manage products displayed on the public store page' : 'Review and settle expert earnings withdrawals'}
+                {activeTab === 'orders' ? 'Manage customer orders in real-time' : activeTab === 'messages' ? 'Reply to customer inquiries and send instant real-time notifications' : activeTab === 'bookings' ? 'Manage appointment bookings' : activeTab === 'users' ? 'Manage registered client and expert accounts' : activeTab === 'products' ? 'Upload and manage products displayed on the public store page' : activeTab === 'payouts' ? 'Review and settle expert earnings withdrawals' : 'View, preview, and print official billboard and promotional flyer assets with live QR codes'}
               </p>
             </div>
           </div>
@@ -837,7 +842,7 @@ export const AdminDashboard = () => {
         </div>
 
         {/* Dashboard Content */}
-        <div style={{ padding: isMobile ? '0.85rem 0.85rem calc(5.5rem + env(safe-area-inset-bottom, 0px))' : '2rem', boxSizing: 'border-box' }}>
+        <div style={{ padding: isMobile ? '0.85rem 0.85rem calc(1.5rem + env(safe-area-inset-bottom, 0px))' : '2rem', boxSizing: 'border-box' }}>
 
           {/* KPI Metrics Cards Grid */}
           <div style={{
@@ -907,7 +912,8 @@ export const AdminDashboard = () => {
           )}
 
           {/* Search Bar + Filter Chips Row */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.25rem' }}>
+          {activeTab !== 'marketing' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.25rem' }}>
             <div style={{ position: 'relative', width: '100%' }}>
               <Search size={16} style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
               <input
@@ -1069,6 +1075,7 @@ export const AdminDashboard = () => {
               </div>
             )}
           </div>
+          )}
 
           {/* Dynamic Content List */}
           {loading ? (
@@ -1673,7 +1680,7 @@ export const AdminDashboard = () => {
                 </div>
               )}
             </div>
-          ) : (
+          ) : activeTab === 'payouts' ? (
             /* --- TAB 6: EXPERT PAYOUTS & WITHDRAWALS --- */
             <div>
               {/* Header & Metrics Banner */}
@@ -1903,7 +1910,379 @@ export const AdminDashboard = () => {
                 </div>
               )}
             </div>
-          )}
+          ) : activeTab === 'marketing' ? (
+            /* --- TAB 7: BILLBOARDS & MARKETING FLYERS --- */
+            <div>
+              {/* Hero Banner */}
+              <div style={{
+                background: 'linear-gradient(135deg, rgba(212,175,55,0.15) 0%, rgba(168,85,247,0.12) 50%, rgba(212,175,55,0.08) 100%)',
+                border: '1px solid rgba(212,175,55,0.25)',
+                borderRadius: '20px',
+                padding: isMobile ? '1.25rem' : '1.75rem 2rem',
+                marginBottom: '1.5rem',
+                position: 'relative',
+                overflow: 'hidden',
+              }}>
+                <div style={{ position: 'absolute', top: '-30px', right: '-30px', width: '120px', height: '120px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(212,175,55,0.15) 0%, transparent 70%)', pointerEvents: 'none' }} />
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.4rem' }}>
+                      <div style={{ width: '32px', height: '32px', borderRadius: '10px', background: 'linear-gradient(135deg, #d4af37, #f5b942)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Sparkles size={16} color="#0c0e14" />
+                      </div>
+                      <h3 style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: isMobile ? '1rem' : '1.2rem', color: '#ffffff', margin: 0 }}>
+                        Billboard & Marketing Assets
+                      </h3>
+                    </div>
+                    <p style={{ color: '#94a3b8', fontSize: '0.8rem', margin: 0, maxWidth: '520px' }}>
+                      Official promotional templates with live QR codes pointing to <strong style={{ color: '#f5b942' }}>www.stylecorner.world</strong>. Screenshot, print, or export to PDF for outdoor advertising and social media.
+                    </p>
+                  </div>
+                  <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                    <button
+                      type="button"
+                      onClick={() => window.open('/billboard-flyers.html', '_blank')}
+                      style={{
+                        display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
+                        padding: '0.55rem 1rem', borderRadius: '10px', fontSize: '0.8rem', fontWeight: 800,
+                        backgroundColor: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)',
+                        color: '#ffffff', cursor: 'pointer', fontFamily: 'Outfit',
+                      }}
+                    >
+                      <ExternalLink size={13} /> Open Fullscreen
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => { const w = window.open('/billboard-flyers.html', '_blank'); w && setTimeout(() => w.print(), 800); }}
+                      style={{
+                        display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
+                        padding: '0.55rem 1rem', borderRadius: '10px', fontSize: '0.8rem', fontWeight: 800,
+                        background: 'linear-gradient(135deg, #d4af37, #f5b942)', border: 'none',
+                        color: '#0c0e14', cursor: 'pointer', fontFamily: 'Outfit',
+                        boxShadow: '0 4px 14px rgba(212,175,55,0.35)',
+                      }}
+                    >
+                      <Printer size={13} /> Print / Save PDF
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Filter Pills */}
+              <div style={{ display: 'flex', gap: '0.4rem', overflowX: 'auto', paddingBottom: '0.4rem', marginBottom: '1.25rem', WebkitOverflowScrolling: 'touch' }}>
+                {[
+                  { id: 'all', label: 'All Templates', count: 3 },
+                  { id: 'billboard', label: 'Highway Billboard', count: 1 },
+                  { id: 'portrait', label: 'Street Flyer', count: 1 },
+                  { id: 'recruit', label: 'Stylist Recruitment', count: 1 },
+                ].map(f => (
+                  <button
+                    key={f.id}
+                    type="button"
+                    onClick={() => setMarketingFilter(f.id)}
+                    style={{
+                      padding: '0.4rem 0.9rem', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 700,
+                      backgroundColor: marketingFilter === f.id ? '#f5b942' : '#151822',
+                      color: marketingFilter === f.id ? '#0c0e14' : '#94a3b8',
+                      border: marketingFilter === f.id ? '1px solid #f5b942' : '1px solid rgba(255,255,255,0.08)',
+                      cursor: 'pointer', flexShrink: 0, fontFamily: 'Outfit', transition: 'all 0.15s ease',
+                      display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
+                    }}
+                  >
+                    {f.label}
+                    <span style={{
+                      fontSize: '0.64rem', fontWeight: 800, padding: '0.05rem 0.38rem', borderRadius: '50px',
+                      backgroundColor: marketingFilter === f.id ? '#0c0e14' : 'rgba(255,255,255,0.08)',
+                      color: marketingFilter === f.id ? '#f5b942' : '#94a3b8',
+                    }}>{f.count}</span>
+                  </button>
+                ))}
+              </div>
+
+              {/* Template Cards Grid */}
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(320px, 1fr))',
+                gap: '1.25rem',
+              }}>
+
+                {/* CARD 1 — Highway Billboard */}
+                {(marketingFilter === 'all' || marketingFilter === 'billboard') && (
+                  <div style={{
+                    backgroundColor: '#151822', borderRadius: '20px',
+                    border: '1px solid rgba(212,175,55,0.2)',
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.35), 0 0 0 1px rgba(212,175,55,0.05)',
+                    overflow: 'hidden',
+                  }}>
+                    {/* Preview */}
+                    <div style={{
+                      background: 'linear-gradient(135deg, #1a1225 0%, #0d1117 40%, #1a1225 100%)',
+                      padding: '1.5rem',
+                      aspectRatio: '16/7',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: '1rem',
+                      position: 'relative',
+                      overflow: 'hidden',
+                    }}>
+                      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 20% 50%, rgba(212,175,55,0.12) 0%, transparent 60%), radial-gradient(ellipse at 80% 50%, rgba(168,85,247,0.08) 0%, transparent 60%)' }} />
+                      <div style={{ position: 'relative', zIndex: 1, flex: 1 }}>
+                        <div style={{ fontSize: '0.55rem', fontWeight: 900, color: '#f5b942', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '0.3rem', fontFamily: 'Outfit' }}>✦ StyleCorner</div>
+                        <div style={{ fontSize: isMobile ? '1.1rem' : '1.4rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.1, fontFamily: 'Outfit', marginBottom: '0.3rem' }}>Your Style,<br/><span style={{ color: '#f5b942' }}>Delivered.</span></div>
+                        <div style={{ fontSize: '0.55rem', color: '#94a3b8', fontFamily: 'Outfit' }}>Book top stylists in Lagos & Ibadan</div>
+                        <div style={{ marginTop: '0.5rem', display: 'inline-flex', alignItems: 'center', gap: '0.3rem', backgroundColor: '#f5b942', padding: '0.2rem 0.55rem', borderRadius: '50px' }}>
+                          <span style={{ fontSize: '0.5rem', fontWeight: 900, color: '#0c0e14', fontFamily: 'Outfit' }}>www.stylecorner.world</span>
+                        </div>
+                      </div>
+                      <div style={{ position: 'relative', zIndex: 1, flexShrink: 0, textAlign: 'center' }}>
+                        <div style={{ backgroundColor: '#ffffff', padding: '6px', borderRadius: '8px', display: 'inline-block', boxShadow: '0 4px 16px rgba(0,0,0,0.4)' }}>
+                          <img src="/images/qr-world.svg" alt="QR Code — stylecorner.world" style={{ width: '52px', height: '52px', display: 'block' }} />
+                        </div>
+                        <div style={{ fontSize: '0.42rem', color: '#94a3b8', marginTop: '0.3rem', fontFamily: 'Outfit' }}>Scan to book</div>
+                      </div>
+                    </div>
+                    {/* Card Footer */}
+                    <div style={{ padding: '1rem 1.25rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.6rem' }}>
+                        <div>
+                          <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#ffffff', fontFamily: 'Outfit' }}>Highway Billboard</div>
+                          <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>16:9 Landscape — LED screens, roadside hoardings</div>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', backgroundColor: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.25)', padding: '0.2rem 0.55rem', borderRadius: '50px' }}>
+                          <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#f5b942' }} />
+                          <span style={{ fontSize: '0.65rem', color: '#f5b942', fontWeight: 800 }}>Live QR</span>
+                        </div>
+                      </div>
+                      <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            navigator.clipboard.writeText('https://www.stylecorner.world');
+                            setCopiedMarketingUrl('billboard');
+                            setTimeout(() => setCopiedMarketingUrl(null), 2000);
+                          }}
+                          style={{
+                            flex: 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem',
+                            padding: '0.5rem', borderRadius: '8px', fontSize: '0.73rem', fontWeight: 700,
+                            backgroundColor: copiedMarketingUrl === 'billboard' ? 'rgba(34,197,94,0.15)' : 'rgba(255,255,255,0.05)',
+                            border: copiedMarketingUrl === 'billboard' ? '1px solid rgba(34,197,94,0.4)' : '1px solid rgba(255,255,255,0.1)',
+                            color: copiedMarketingUrl === 'billboard' ? '#4ade80' : '#94a3b8',
+                            cursor: 'pointer', fontFamily: 'Outfit', transition: 'all 0.15s ease',
+                          }}
+                        >
+                          {copiedMarketingUrl === 'billboard' ? <Check size={12} /> : <Copy size={12} />}
+                          {copiedMarketingUrl === 'billboard' ? 'Copied!' : 'Copy URL'}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => window.open('/billboard-flyers.html#billboard', '_blank')}
+                          style={{
+                            flex: 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem',
+                            padding: '0.5rem', borderRadius: '8px', fontSize: '0.73rem', fontWeight: 700,
+                            backgroundColor: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)',
+                            color: '#f5b942', cursor: 'pointer', fontFamily: 'Outfit',
+                          }}
+                        >
+                          <ExternalLink size={12} /> View Full
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* CARD 2 — Street Flyer / Portrait */}
+                {(marketingFilter === 'all' || marketingFilter === 'portrait') && (
+                  <div style={{
+                    backgroundColor: '#151822', borderRadius: '20px',
+                    border: '1px solid rgba(168,85,247,0.2)',
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.35), 0 0 0 1px rgba(168,85,247,0.05)',
+                    overflow: 'hidden',
+                  }}>
+                    {/* Preview */}
+                    <div style={{
+                      background: 'linear-gradient(160deg, #120a1a 0%, #0d0d14 50%, #1a0d12 100%)',
+                      padding: '1.5rem 1rem',
+                      aspectRatio: '16/7',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: '1rem',
+                      position: 'relative',
+                      overflow: 'hidden',
+                    }}>
+                      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 30% 50%, rgba(168,85,247,0.12) 0%, transparent 60%)' }} />
+                      <div style={{ position: 'relative', zIndex: 1, flex: 1 }}>
+                        <div style={{ fontSize: '0.48rem', fontWeight: 900, color: '#c084fc', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '0.3rem', fontFamily: 'Outfit' }}>✦ StyleCorner</div>
+                        <div style={{ fontSize: isMobile ? '1rem' : '1.2rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.15, fontFamily: 'Outfit', marginBottom: '0.3rem' }}>Style that<br/><span style={{ background: 'linear-gradient(90deg, #a855f7, #f5b942)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>moves with you.</span></div>
+                        <div style={{ fontSize: '0.52rem', color: '#94a3b8' }}>Browse. Book. Slay — same day.</div>
+                        <div style={{ marginTop: '0.5rem', display: 'inline-block', backgroundColor: 'rgba(168,85,247,0.2)', border: '1px solid rgba(168,85,247,0.4)', padding: '0.2rem 0.55rem', borderRadius: '50px' }}>
+                          <span style={{ fontSize: '0.48rem', fontWeight: 900, color: '#c084fc', fontFamily: 'Outfit' }}>www.stylecorner.world</span>
+                        </div>
+                      </div>
+                      <div style={{ position: 'relative', zIndex: 1, flexShrink: 0, textAlign: 'center' }}>
+                        <div style={{ backgroundColor: '#ffffff', padding: '6px', borderRadius: '8px', display: 'inline-block', boxShadow: '0 4px 16px rgba(0,0,0,0.4)' }}>
+                          <img src="/images/qr-world.svg" alt="QR Code — stylecorner.world" style={{ width: '52px', height: '52px', display: 'block' }} />
+                        </div>
+                        <div style={{ fontSize: '0.42rem', color: '#94a3b8', marginTop: '0.3rem', fontFamily: 'Outfit' }}>Scan to book</div>
+                      </div>
+                    </div>
+                    {/* Card Footer */}
+                    <div style={{ padding: '1rem 1.25rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.6rem' }}>
+                        <div>
+                          <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#ffffff', fontFamily: 'Outfit' }}>Street Flyer / Social Story</div>
+                          <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>4:5 / 9:16 Portrait — salons, malls, social media</div>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', backgroundColor: 'rgba(168,85,247,0.12)', border: '1px solid rgba(168,85,247,0.25)', padding: '0.2rem 0.55rem', borderRadius: '50px' }}>
+                          <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#a855f7' }} />
+                          <span style={{ fontSize: '0.65rem', color: '#c084fc', fontWeight: 800 }}>Live QR</span>
+                        </div>
+                      </div>
+                      <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            navigator.clipboard.writeText('https://www.stylecorner.world');
+                            setCopiedMarketingUrl('portrait');
+                            setTimeout(() => setCopiedMarketingUrl(null), 2000);
+                          }}
+                          style={{
+                            flex: 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem',
+                            padding: '0.5rem', borderRadius: '8px', fontSize: '0.73rem', fontWeight: 700,
+                            backgroundColor: copiedMarketingUrl === 'portrait' ? 'rgba(34,197,94,0.15)' : 'rgba(255,255,255,0.05)',
+                            border: copiedMarketingUrl === 'portrait' ? '1px solid rgba(34,197,94,0.4)' : '1px solid rgba(255,255,255,0.1)',
+                            color: copiedMarketingUrl === 'portrait' ? '#4ade80' : '#94a3b8',
+                            cursor: 'pointer', fontFamily: 'Outfit', transition: 'all 0.15s ease',
+                          }}
+                        >
+                          {copiedMarketingUrl === 'portrait' ? <Check size={12} /> : <Copy size={12} />}
+                          {copiedMarketingUrl === 'portrait' ? 'Copied!' : 'Copy URL'}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => window.open('/billboard-flyers.html#street', '_blank')}
+                          style={{
+                            flex: 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem',
+                            padding: '0.5rem', borderRadius: '8px', fontSize: '0.73rem', fontWeight: 700,
+                            backgroundColor: 'rgba(168,85,247,0.12)', border: '1px solid rgba(168,85,247,0.3)',
+                            color: '#c084fc', cursor: 'pointer', fontFamily: 'Outfit',
+                          }}
+                        >
+                          <ExternalLink size={12} /> View Full
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* CARD 3 — Stylist Recruitment */}
+                {(marketingFilter === 'all' || marketingFilter === 'recruit') && (
+                  <div style={{
+                    backgroundColor: '#151822', borderRadius: '20px',
+                    border: '1px solid rgba(16,185,129,0.2)',
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.35), 0 0 0 1px rgba(16,185,129,0.05)',
+                    overflow: 'hidden',
+                  }}>
+                    {/* Preview */}
+                    <div style={{
+                      background: 'linear-gradient(135deg, #0a1a12 0%, #0d1117 50%, #0a1a12 100%)',
+                      padding: '1.5rem 1rem',
+                      aspectRatio: '16/7',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: '1rem',
+                      position: 'relative',
+                      overflow: 'hidden',
+                    }}>
+                      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 30% 50%, rgba(16,185,129,0.12) 0%, transparent 60%)' }} />
+                      <div style={{ position: 'relative', zIndex: 1, flex: 1 }}>
+                        <div style={{ fontSize: '0.48rem', fontWeight: 900, color: '#4ade80', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '0.3rem', fontFamily: 'Outfit' }}>We're Hiring ✦</div>
+                        <div style={{ fontSize: isMobile ? '0.95rem' : '1.15rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.15, fontFamily: 'Outfit', marginBottom: '0.3rem' }}>Are you a <br/><span style={{ color: '#4ade80' }}>Top Stylist?</span></div>
+                        <div style={{ fontSize: '0.5rem', color: '#94a3b8' }}>Join StyleCorner. Earn more. Work free.</div>
+                        <div style={{ marginTop: '0.5rem', display: 'flex', gap: '0.3rem', flexWrap: 'wrap' }}>
+                          {['Barbers', 'Braiders', 'Lash Techs', 'Nail Artists'].map(r => (
+                            <span key={r} style={{ fontSize: '0.42rem', fontWeight: 700, color: '#4ade80', backgroundColor: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.3)', padding: '0.1rem 0.35rem', borderRadius: '4px', fontFamily: 'Outfit' }}>{r}</span>
+                          ))}
+                        </div>
+                        <div style={{ marginTop: '0.4rem', display: 'inline-block', backgroundColor: 'rgba(16,185,129,0.2)', border: '1px solid rgba(16,185,129,0.4)', padding: '0.2rem 0.55rem', borderRadius: '50px' }}>
+                          <span style={{ fontSize: '0.48rem', fontWeight: 900, color: '#4ade80', fontFamily: 'Outfit' }}>stylecorner.world/role-selection</span>
+                        </div>
+                      </div>
+                      <div style={{ position: 'relative', zIndex: 1, flexShrink: 0, textAlign: 'center' }}>
+                        <div style={{ backgroundColor: '#ffffff', padding: '6px', borderRadius: '8px', display: 'inline-block', boxShadow: '0 4px 16px rgba(0,0,0,0.4)' }}>
+                          <img src="/images/qr-recruit.svg" alt="QR Code — role-selection" style={{ width: '52px', height: '52px', display: 'block' }} />
+                        </div>
+                        <div style={{ fontSize: '0.42rem', color: '#94a3b8', marginTop: '0.3rem', fontFamily: 'Outfit' }}>Scan to join</div>
+                      </div>
+                    </div>
+                    {/* Card Footer */}
+                    <div style={{ padding: '1rem 1.25rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.6rem' }}>
+                        <div>
+                          <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#ffffff', fontFamily: 'Outfit' }}>Stylist Recruitment Poster</div>
+                          <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>For salons, barber hubs, beauty schools, social ads</div>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', backgroundColor: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.25)', padding: '0.2rem 0.55rem', borderRadius: '50px' }}>
+                          <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#22c55e' }} />
+                          <span style={{ fontSize: '0.65rem', color: '#4ade80', fontWeight: 800 }}>Live QR</span>
+                        </div>
+                      </div>
+                      <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            navigator.clipboard.writeText('https://www.stylecorner.world/role-selection');
+                            setCopiedMarketingUrl('recruit');
+                            setTimeout(() => setCopiedMarketingUrl(null), 2000);
+                          }}
+                          style={{
+                            flex: 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem',
+                            padding: '0.5rem', borderRadius: '8px', fontSize: '0.73rem', fontWeight: 700,
+                            backgroundColor: copiedMarketingUrl === 'recruit' ? 'rgba(34,197,94,0.15)' : 'rgba(255,255,255,0.05)',
+                            border: copiedMarketingUrl === 'recruit' ? '1px solid rgba(34,197,94,0.4)' : '1px solid rgba(255,255,255,0.1)',
+                            color: copiedMarketingUrl === 'recruit' ? '#4ade80' : '#94a3b8',
+                            cursor: 'pointer', fontFamily: 'Outfit', transition: 'all 0.15s ease',
+                          }}
+                        >
+                          {copiedMarketingUrl === 'recruit' ? <Check size={12} /> : <Copy size={12} />}
+                          {copiedMarketingUrl === 'recruit' ? 'Copied!' : 'Copy Recruit URL'}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => window.open('/billboard-flyers.html#recruit', '_blank')}
+                          style={{
+                            flex: 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem',
+                            padding: '0.5rem', borderRadius: '8px', fontSize: '0.73rem', fontWeight: 700,
+                            backgroundColor: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)',
+                            color: '#4ade80', cursor: 'pointer', fontFamily: 'Outfit',
+                          }}
+                        >
+                          <ExternalLink size={12} /> View Full
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+              </div>
+
+              {/* Info Footer Note */}
+              <div style={{
+                marginTop: '1.5rem', padding: '1rem 1.25rem',
+                backgroundColor: 'rgba(255,255,255,0.03)',
+                border: '1px solid rgba(255,255,255,0.07)',
+                borderRadius: '14px',
+                display: 'flex', alignItems: 'flex-start', gap: '0.75rem',
+              }}>
+                <Shield size={15} color="#f5b942" style={{ flexShrink: 0, marginTop: '0.1rem' }} />
+                <p style={{ fontSize: '0.75rem', color: '#94a3b8', margin: 0, lineHeight: 1.6 }}>
+                  <strong style={{ color: '#f5b942' }}>Admin Only</strong> — These marketing assets are private and only visible inside the admin portal. The standalone flyer page (<code style={{ color: '#f5b942', fontSize: '0.72rem' }}>/billboard-flyers.html</code>) is excluded from public routing and ignored by git. QR codes encode live URLs and are always scannable.
+                </p>
+              </div>
+            </div>
+          ) : null}
         </div>
         {/* iOS safe area bottom spacer */}
         <div style={{ height: 'env(safe-area-inset-bottom, 0px)', minHeight: isMobile ? '1rem' : 0 }} />
@@ -2479,105 +2858,6 @@ export const AdminDashboard = () => {
             </div>
           </div>
         </div>
-      )}
-
-      {/* ── Mobile Fixed Bottom Nav Bar ── */}
-      {isMobile && (
-        <nav
-          style={{
-            position: 'fixed',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            zIndex: 45,
-            backgroundColor: 'rgba(12, 14, 20, 0.95)',
-            backdropFilter: 'blur(16px)',
-            borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-            padding: '0.4rem 0.5rem calc(0.4rem + env(safe-area-inset-bottom, 0px))',
-            display: 'flex',
-            justifyContent: 'space-around',
-            alignItems: 'center',
-            boxShadow: '0 -4px 20px rgba(0, 0, 0, 0.4)',
-          }}
-        >
-          {navItems.map(item => {
-            const isActive = activeTab === item.id;
-            return (
-              <button
-                key={item.id}
-                onClick={() => setActiveTab(item.id)}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: '0.2rem',
-                  padding: '0.35rem 0.25rem',
-                  borderRadius: '10px',
-                  cursor: 'pointer',
-                  position: 'relative',
-                  flex: 1,
-                  color: isActive ? '#f5b942' : '#94a3b8',
-                  transition: 'all 0.15s ease',
-                }}
-              >
-                <div style={{ position: 'relative' }}>
-                  <item.icon size={18} color={isActive ? '#f5b942' : '#94a3b8'} />
-                  {item.count > 0 && (
-                    <span
-                      style={{
-                        position: 'absolute',
-                        top: '-4px',
-                        right: '-8px',
-                        backgroundColor: isActive ? '#f5b942' : 'rgba(255,255,255,0.15)',
-                        color: isActive ? '#0c0e14' : '#ffffff',
-                        fontSize: '0.58rem',
-                        fontWeight: 800,
-                        padding: '0.05rem 0.3rem',
-                        borderRadius: '50px',
-                        lineHeight: 1,
-                      }}
-                    >
-                      {item.count}
-                    </span>
-                  )}
-                </div>
-                <span
-                  style={{
-                    fontSize: '0.62rem',
-                    fontWeight: isActive ? 800 : 500,
-                    fontFamily: 'Outfit',
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  {item.id === 'orders' ? 'Orders' : item.id === 'messages' ? 'Inquiries' : item.id === 'bookings' ? 'Bookings' : item.id === 'users' ? 'Users' : item.id === 'products' ? 'Products' : 'Payouts'}
-                </span>
-              </button>
-            );
-          })}
-          <button
-            onClick={() => setIsMobileOpen(true)}
-            style={{
-              background: 'none',
-              border: 'none',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '0.2rem',
-              padding: '0.35rem 0.25rem',
-              borderRadius: '10px',
-              cursor: 'pointer',
-              color: '#94a3b8',
-              flex: 1,
-            }}
-          >
-            <Menu size={18} color="#94a3b8" />
-            <span style={{ fontSize: '0.62rem', fontWeight: 500, fontFamily: 'Outfit', whiteSpace: 'nowrap' }}>
-              Menu
-            </span>
-          </button>
-        </nav>
       )}
     </div>
   );
