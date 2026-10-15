@@ -27,8 +27,9 @@ import { isSameLga, isSameState } from '../utils/locations';
 const SERVICES = [
   {
     id: 'lash_tech',
-    title: 'Lash Tech',
+    title: 'Lash Tech & Eye Aesthetics',
     category: 'Lash Tech',
+    tags: ['Lashes', 'Skincare', 'Beauty', 'Eyes'],
     price: 6000,
     duration: '75 mins',
     desc: 'Classic, hybrid & volume silk lash extensions — tailored to your eye shape.',
@@ -38,6 +39,7 @@ const SERVICES = [
     id: 'nail_tech',
     title: 'Nail Tech',
     category: 'Nail Tech',
+    tags: ['Nails', 'Manicure', 'Pedicure', 'Art'],
     price: 4500,
     duration: '60 mins',
     desc: 'Gel extensions, nail architecture & 3D nail art — precision finish every time.',
@@ -47,6 +49,7 @@ const SERVICES = [
     id: 'hair_braider',
     title: 'Hair Braider & Stylist',
     category: 'Hair Braider & Stylist',
+    tags: ['Hair', 'Braids', 'Styling', 'Twists'],
     price: 6500,
     duration: '120 mins',
     desc: 'Knotless box braids, goddess braids, twists & protective stylist services.',
@@ -54,8 +57,9 @@ const SERVICES = [
   },
   {
     id: 'barber',
-    title: 'Barber',
+    title: 'Barber & Men Grooming',
     category: 'Barber',
+    tags: ['Hair', 'Barber', 'Grooming', 'Fades'],
     price: 4000,
     duration: '45 mins',
     desc: 'Precision fades, line-ups & beard sculpting — sharp, clean & fresh.',
@@ -65,6 +69,7 @@ const SERVICES = [
     id: 'makeup_artist',
     title: 'Makeup Artist',
     category: 'Makeup Artist',
+    tags: ['Makeup', 'Beauty', 'Glam', 'Bridal'],
     price: 9000,
     duration: '90 mins',
     desc: 'Bridal glam, soft natural beat, photoshoot makeup & brow sculpting.',
@@ -74,12 +79,56 @@ const SERVICES = [
     id: 'wig_installer',
     title: 'Wig Installer & Revamper',
     category: 'Wig Installer & Revamper',
+    tags: ['Hair', 'Wigs', 'Lace', 'Revamp'],
     price: 7500,
     duration: '90 mins',
     desc: 'Lace melting, custom frontal install, deep washing & hot-comb revamp.',
     image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=300&q=80',
   },
 ];
+
+const serviceMatchesCategory = (s, cat) => {
+  if (!cat || cat === 'All') return true;
+  const c = cat.toLowerCase().trim();
+  const title = (s.title || '').toLowerCase();
+  const category = (s.category || '').toLowerCase();
+  const desc = (s.desc || '').toLowerCase();
+  const tags = (s.tags || []).map((t) => t.toLowerCase());
+
+  if (tags.some((t) => t === c || t.includes(c) || c.includes(t))) return true;
+
+  if (c === 'hair') {
+    return (
+      category.includes('hair') ||
+      category.includes('barber') ||
+      category.includes('wig') ||
+      title.includes('hair') ||
+      title.includes('barber') ||
+      title.includes('wig') ||
+      title.includes('braid')
+    );
+  }
+  if (c === 'braids') {
+    return category.includes('braid') || title.includes('braid') || desc.includes('braid');
+  }
+  if (c === 'nails') {
+    return category.includes('nail') || title.includes('nail');
+  }
+  if (c === 'skincare') {
+    return (
+      category.includes('skin') ||
+      category.includes('lash') ||
+      title.includes('skin') ||
+      title.includes('lash') ||
+      desc.includes('skin') ||
+      desc.includes('lash')
+    );
+  }
+  if (c === 'makeup') {
+    return category.includes('makeup') || title.includes('makeup');
+  }
+  return category.includes(c) || title.includes(c);
+};
 
 // Helper to generate dynamic upcoming dates starting from today
 const generateUpcomingDates = (count = 14) => {
@@ -720,34 +769,58 @@ export const Booking = () => {
                 paddingBottom: '0.75rem',
                 marginBottom: '0.75rem',
                 WebkitOverflowScrolling: 'touch',
+                scrollbarWidth: 'none',
               }}
             >
-              {['All', 'Hair', 'Braids', 'Nails', 'Skincare', 'Makeup'].map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  style={{
-                    padding: '0.4rem 0.85rem',
-                    borderRadius: '20px',
-                    fontFamily: 'Outfit',
-                    fontSize: '0.74rem',
-                    fontWeight: 700,
-                    cursor: 'pointer',
-                    background: selectedCategory === cat ? '#f5b942' : '#151822',
-                    color: selectedCategory === cat ? '#0c0e14' : '#94a3b8',
-                    border: `1px solid ${selectedCategory === cat ? '#f5b942' : 'rgba(255, 255, 255, 0.08)'}`,
-                    whiteSpace: 'nowrap',
-                    transition: 'all 0.15s ease',
-                  }}
-                >
-                  {cat}
-                </button>
-              ))}
+              {['All', 'Hair', 'Braids', 'Nails', 'Skincare', 'Makeup'].map((cat) => {
+                const count = SERVICES.filter((s) => serviceMatchesCategory(s, cat)).length;
+                const isCatActive = selectedCategory === cat;
+                return (
+                  <button
+                    key={cat}
+                    type="button"
+                    onClick={() => setSelectedCategory(cat)}
+                    style={{
+                      padding: '0.42rem 0.9rem',
+                      borderRadius: '20px',
+                      fontFamily: 'Outfit, sans-serif',
+                      fontSize: '0.75rem',
+                      fontWeight: isCatActive ? 800 : 600,
+                      cursor: 'pointer',
+                      background: isCatActive ? '#f5b942' : '#151822',
+                      color: isCatActive ? '#0c0e14' : '#94a3b8',
+                      border: `1.5px solid ${isCatActive ? '#f5b942' : 'rgba(255, 255, 255, 0.08)'}`,
+                      whiteSpace: 'nowrap',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.35rem',
+                      transition: 'all 0.18s ease',
+                      flexShrink: 0,
+                    }}
+                  >
+                    <span>{cat}</span>
+                    {cat !== 'All' && count > 0 && (
+                      <span
+                        style={{
+                          fontSize: '0.66rem',
+                          padding: '0.1rem 0.35rem',
+                          borderRadius: '10px',
+                          background: isCatActive ? 'rgba(12,14,20,0.2)' : 'rgba(255,255,255,0.08)',
+                          color: isCatActive ? '#0c0e14' : '#64748b',
+                          fontWeight: 800,
+                        }}
+                      >
+                        {count}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
             </div>
 
             {/* Service Selection Cards */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.5rem' }}>
-              {SERVICES.filter((s) => selectedCategory === 'All' || s.category === selectedCategory).map((s) => {
+              {SERVICES.filter((s) => serviceMatchesCategory(s, selectedCategory)).map((s) => {
                 const isSelected =
                   selectedService.toLowerCase().includes(s.title.toLowerCase()) ||
                   s.title.toLowerCase().includes(selectedService.toLowerCase());

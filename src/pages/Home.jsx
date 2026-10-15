@@ -475,6 +475,40 @@ export const Home = () => {
             display: none !important;
           }
         }
+
+        /* ── Home Header Mobile Responsiveness ── */
+        .home-ai-pill-text {
+          display: inline;
+        }
+
+        @media (max-width: 520px) {
+          .home-header-actions {
+            gap: 0.3rem !important;
+          }
+          .home-ai-pill-text {
+            display: none !important;
+          }
+          .home-ai-pill {
+            padding: 0.38rem !important;
+            border-radius: 50% !important;
+            width: 34px !important;
+            height: 34px !important;
+            justify-content: center !important;
+          }
+          .home-login-btn {
+            padding: 0.32rem 0.6rem !important;
+            font-size: 0.7rem !important;
+          }
+        }
+
+        @media (max-width: 380px) {
+          .home-header-actions {
+            gap: 0.2rem !important;
+          }
+          .home-login-btn {
+            display: none !important;
+          }
+        }
       `}</style>
 
       {/* ── Page Root Background ── */}
@@ -618,7 +652,7 @@ export const Home = () => {
             </nav>
 
             {/* Quick Actions & Auth */}
-            <div style={{ display: "flex", alignItems: "center", gap: "0.55rem" }}>
+            <div className="home-header-actions" style={{ display: "flex", alignItems: "center", gap: "0.45rem", flexShrink: 0 }}>
               {/* Theme Toggle Button */}
               <button
                 type="button"
@@ -628,42 +662,44 @@ export const Home = () => {
                   background: "rgba(255,255,255,0.04)",
                   border: "1px solid rgba(255,255,255,0.1)",
                   borderRadius: "50%",
-                  width: "36px",
-                  height: "36px",
+                  width: "34px",
+                  height: "34px",
                   padding: 0,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   cursor: "pointer",
+                  flexShrink: 0,
                 }}
                 title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
               >
-                {isDark ? <Sun size={16} color="#F5B942" /> : <Moon size={16} color="#F5B942" />}
+                {isDark ? <Sun size={15} color="#F5B942" /> : <Moon size={15} color="#F5B942" />}
               </button>
 
-              {/* AI Matcher Pill */}
+              {/* AI Matcher — icon only on mobile, pill on desktop */}
               <button
                 type="button"
                 onClick={() => navigate("/ai-matcher")}
                 onMouseEnter={() => preloadRoute("/ai-matcher")}
-                className="btn-glass-subtle"
+                className="btn-glass-subtle home-ai-pill"
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
-                  gap: "0.35rem",
+                  gap: "0.3rem",
                   background: "rgba(245,185,66,0.1)",
                   border: "1px solid rgba(245,185,66,0.35)",
                   borderRadius: "50px",
-                  padding: "0.45rem 0.85rem",
-                  fontSize: "0.78rem",
+                  padding: "0.38rem 0.65rem",
+                  fontSize: "0.76rem",
                   fontWeight: 800,
                   color: "#F5B942",
                   cursor: "pointer",
                   fontFamily: "Outfit, sans-serif",
+                  flexShrink: 0,
                 }}
               >
                 <Sparkles size={14} />
-                <span>AI Matcher</span>
+                <span className="home-ai-pill-text">AI Matcher</span>
               </button>
 
               {!isAuthenticated ? (
@@ -671,17 +707,19 @@ export const Home = () => {
                   <button
                     type="button"
                     onClick={() => navigate("/login")}
-                    className="btn-glass-subtle"
+                    className="btn-glass-subtle home-login-btn"
                     style={{
                       background: "rgba(255,255,255,0.04)",
                       border: "1px solid rgba(255,255,255,0.1)",
                       borderRadius: "50px",
-                      padding: "0.45rem 0.95rem",
-                      fontSize: "0.78rem",
+                      padding: "0.38rem 0.85rem",
+                      fontSize: "0.76rem",
                       fontWeight: 700,
                       color: "#cbd5e1",
                       cursor: "pointer",
                       fontFamily: "Outfit, sans-serif",
+                      whiteSpace: "nowrap",
+                      flexShrink: 0,
                     }}
                   >
                     Log In
@@ -694,13 +732,15 @@ export const Home = () => {
                       background: "linear-gradient(135deg, #F5B942 0%, #e8912d 100%)",
                       border: "none",
                       borderRadius: "50px",
-                      padding: "0.45rem 1rem",
-                      fontSize: "0.78rem",
+                      padding: "0.38rem 0.85rem",
+                      fontSize: "0.76rem",
                       fontWeight: 800,
                       color: "#08090C",
                       cursor: "pointer",
                       fontFamily: "Outfit, sans-serif",
                       boxShadow: "0 4px 14px rgba(245,185,66,0.35)",
+                      whiteSpace: "nowrap",
+                      flexShrink: 0,
                     }}
                   >
                     Join Free
@@ -715,13 +755,15 @@ export const Home = () => {
                     background: "linear-gradient(135deg, #F5B942 0%, #e8912d 100%)",
                     border: "none",
                     borderRadius: "50px",
-                    padding: "0.45rem 1rem",
-                    fontSize: "0.78rem",
+                    padding: "0.38rem 0.85rem",
+                    fontSize: "0.76rem",
                     fontWeight: 800,
                     color: "#08090C",
                     cursor: "pointer",
                     fontFamily: "Outfit, sans-serif",
                     boxShadow: "0 4px 14px rgba(245,185,66,0.35)",
+                    whiteSpace: "nowrap",
+                    flexShrink: 0,
                   }}
                 >
                   Dashboard →

@@ -217,20 +217,6 @@ export const CustomerDashboard = () => {
       if (bookingsResult.status === 'fulfilled') {
         const loaded = Array.isArray(bookingsResult.value) ? bookingsResult.value : [];
         setBookings(loaded);
-
-        // Auto-prompt review for the most recent completed booking not yet prompted
-        const prompted = getPromptedSet();
-        const toReview = loaded.find(
-          (b) => b.status === 'completed' && !prompted.has(b._id)
-        );
-        if (toReview) {
-          // Small delay so the page renders first
-          setTimeout(() => {
-            setReviewModalBooking(toReview);
-            setReviewRating(5);
-            setReviewComment('');
-          }, 1200);
-        }
       }
       if (ordersResult.status === 'fulfilled') {
         setOrders(Array.isArray(ordersResult.value) ? ordersResult.value : []);

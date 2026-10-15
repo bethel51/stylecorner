@@ -74,7 +74,7 @@ const EXPERT_SERVICES = [
   { id: 'wig_installer', label: 'Wig Installer & Revamper', icon: WigIcon, color: '#a78bfa', desc: 'Lace melting, custom frontal install & revamp' },
 ];
 
-const MAX_SERVICES = 2;
+const MAX_SERVICES = 1;
 
 export const Signup = () => {
   const navigate = useNavigate();
@@ -110,16 +110,8 @@ export const Signup = () => {
   };
 
   const toggleService = (label) => {
-    setSelectedServices((prev) => {
-      if (prev.includes(label)) {
-        return prev.filter((s) => s !== label);
-      }
-      if (prev.length >= MAX_SERVICES) {
-        showToast(`Strictly maximum 2 services allowed. Deselect one to choose another.`, 'error');
-        return prev;
-      }
-      return [...prev, label];
-    });
+    // Single service selection: an expert chooses a single primary specialty
+    setSelectedServices([label]);
   };
 
   const handleSubmit = async (e) => {
@@ -135,11 +127,7 @@ export const Signup = () => {
         return;
       }
       if (selectedServices.length === 0) {
-        showToast('Please select up to 2 services you offer.', 'error');
-        return;
-      }
-      if (selectedServices.length > MAX_SERVICES) {
-        showToast(`Strictly select not more than ${MAX_SERVICES} services.`, 'error');
+        showToast('Please select your specialty craft.', 'error');
         return;
       }
     }
@@ -150,6 +138,8 @@ export const Signup = () => {
         ...form,
         role: role === 'staff' ? 'staff' : 'customer',
         services: role === 'staff' ? selectedServices : [],
+        service: role === 'staff' ? selectedServices[0] : '',
+        title: role === 'staff' ? selectedServices[0] : '',
         state: selectedState,
         lga: selectedLga,
         address: businessAddress.trim(),
@@ -351,7 +341,7 @@ export const Signup = () => {
               </div>
             </div>
 
-            {/* Service Selection for Experts */}
+            {/* Service Selection for Experts (Single Specialty Craft) */}
             {role === 'staff' && (
               <div
                 style={{
@@ -364,32 +354,31 @@ export const Signup = () => {
               >
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.35rem' }}>
                   <label style={{ margin: 0, color: '#FFFFFF', fontWeight: 800, fontSize: '0.86rem', fontFamily: 'Outfit' }}>
-                    Select Your Services *
+                    Select Your Specialty Craft *
                   </label>
                   <span
                     style={{
                       fontSize: '0.72rem',
                       fontWeight: 900,
-                      color: selectedServices.length === MAX_SERVICES ? '#10b981' : '#F5B942',
+                      color: selectedServices.length === 1 ? '#10b981' : '#F5B942',
                       fontFamily: 'Outfit',
-                      background: selectedServices.length === MAX_SERVICES ? 'rgba(16,185,129,0.15)' : 'rgba(245,185,66,0.15)',
+                      background: selectedServices.length === 1 ? 'rgba(16,185,129,0.15)' : 'rgba(245,185,66,0.15)',
                       padding: '0.2rem 0.65rem',
                       borderRadius: '50px',
-                      border: selectedServices.length === MAX_SERVICES ? '1px solid rgba(16,185,129,0.35)' : '1px solid rgba(245,185,66,0.35)',
+                      border: selectedServices.length === 1 ? '1px solid rgba(16,185,129,0.35)' : '1px solid rgba(245,185,66,0.35)',
                     }}
                   >
-                    {selectedServices.length}/{MAX_SERVICES} Selected {selectedServices.length === MAX_SERVICES && '✓'}
+                    {selectedServices.length === 1 ? 'Specialty Selected ✓' : 'Choose 1 Service'}
                   </span>
                 </div>
 
                 <p style={{ fontSize: '0.76rem', color: '#9AA2B3', margin: '0 0 0.85rem', lineHeight: 1.4 }}>
-                  Choose up to <strong style={{ color: '#F5B942' }}>2 specialties</strong> from our official list:
+                  Choose the single primary service you provide as a StyleCorner expert:
                 </p>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '0.55rem' }}>
                   {EXPERT_SERVICES.map((service) => {
                     const isSelected = selectedServices.includes(service.label);
-                    const isDisabled = !isSelected && selectedServices.length >= MAX_SERVICES;
                     const IconComp = service.icon;
 
                     return (
@@ -397,7 +386,6 @@ export const Signup = () => {
                         key={service.id}
                         type="button"
                         onClick={() => toggleService(service.label)}
-                        disabled={isDisabled}
                         style={{
                           display: 'flex',
                           alignItems: 'center',
@@ -405,12 +393,12 @@ export const Signup = () => {
                           gap: '0.75rem',
                           padding: '0.75rem 0.9rem',
                           borderRadius: '14px',
-                          border: isSelected ? `1.5px solid ${service.color}` : '1px solid rgba(255,255,255,0.08)',
-                          backgroundColor: isSelected ? 'rgba(245,185,66,0.1)' : isDisabled ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.04)',
-                          cursor: isDisabled ? 'not-allowed' : 'pointer',
+                          border: isSelected ? `2px solid ${service.color}` : '1px solid rgba(255,255,255,0.08)',
+                          backgroundColor: isSelected ? 'rgba(245,185,66,0.12)' : 'rgba(255,255,255,0.03)',
+                          cursor: 'pointer',
                           textAlign: 'left',
                           transition: 'all 0.18s ease',
-                          opacity: isDisabled ? 0.4 : 1,
+                          boxShadow: isSelected ? `0 0 16px ${service.color}25` : 'none',
                         }}
                       >
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', minWidth: 0 }}>

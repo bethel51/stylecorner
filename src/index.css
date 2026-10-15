@@ -213,13 +213,29 @@ html, body {
     width: 100% !important;
     max-width: 100% !important;
     transform: none !important;
-    /* Ensure header content never overflows on narrow phones */
-    overflow: hidden;
+    overflow: visible !important;
+    padding-left: 0.65rem !important;
+    padding-right: 0.65rem !important;
+    gap: 0.35rem !important;
   }
 
-  /* On small phones, tighten the header button gap */
+  .app-header-left {
+    min-width: 0 !important;
+    flex-shrink: 1 !important;
+    gap: 0.4rem !important;
+  }
+
+  .app-header-brand-wrap {
+    min-width: 0 !important;
+    gap: 0.4rem !important;
+  }
+
   .app-header-right {
-    gap: 0.3rem !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.35rem !important;
+    flex-shrink: 0 !important;
+    margin-left: auto !important;
   }
 
   .bottom-nav {
@@ -346,22 +362,58 @@ html, body {
   background: var(--color-surface-hover);
 }
 
-/* Even more compact on very narrow phones */
-@media (max-width: 390px) {
+/* Media queries for narrow & compact phones */
+@media (max-width: 480px) {
+  .app-header {
+    padding-left: 0.55rem !important;
+    padding-right: 0.55rem !important;
+    gap: 0.25rem !important;
+  }
+
   .app-header-btn {
     width: 33px;
     height: 33px;
   }
 
-  /* On very narrow phones, hide the AI label in header to save space */
   .app-header-btn .desktop-only-text {
     display: none !important;
   }
 
-  /* Tighten header horizontal padding */
+  .app-header-right {
+    gap: 0.25rem !important;
+  }
+
+  .app-header-logo {
+    width: 30px !important;
+    height: 30px !important;
+  }
+
+  .brand-primary-text {
+    font-size: 0.98rem !important;
+  }
+
+  .brand-sub-badge {
+    display: none !important;
+  }
+}
+
+@media (max-width: 360px) {
   .app-header {
-    padding-left: 0.75rem !important;
-    padding-right: 0.75rem !important;
+    padding-left: 0.35rem !important;
+    padding-right: 0.35rem !important;
+  }
+
+  .app-header-btn {
+    width: 30px;
+    height: 30px;
+  }
+
+  .app-header-right {
+    gap: 0.18rem !important;
+  }
+
+  .brand-primary-text {
+    font-size: 0.88rem !important;
   }
 }
 
