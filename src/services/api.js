@@ -277,6 +277,29 @@ export const api = {
     return data;
   },
 
+  verifyCheckIn: async ({ code, bookingId }) => {
+    const res = await fetchWithTimeout(`${API_BASE}/bookings/verify-checkin`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ code, bookingId }),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Failed to verify check-in');
+    return data;
+  },
+
+  checkInBooking: async (id) => {
+    const res = await fetchWithTimeout(`${API_BASE}/bookings/${id}/check-in`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Failed to check in appointment');
+    return data;
+  },
+
+  getCalendarIcsUrl: (id) => `${API_BASE}/bookings/${id}/calendar.ics`,
+
   deleteBooking: async (id) => {
     const res = await fetchWithTimeout(`${API_BASE}/bookings/${id}`, {
       method: 'DELETE',
@@ -680,3 +703,5 @@ export const api = {
     }
   },
 };
+
+export default api;

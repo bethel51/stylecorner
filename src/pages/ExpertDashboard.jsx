@@ -37,6 +37,7 @@ import {
   FileText,
   Tag,
   Maximize2,
+  QrCode,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
@@ -51,6 +52,7 @@ import { WithdrawFundsModal } from '../components/common/WithdrawFundsModal';
 import { downloadBookingHistoryCSV, printBookingHistoryReport } from '../utils/bookingHistoryExport';
 import { BookingChatSheet } from '../components/booking/BookingChatSheet';
 import { LocationSelector } from '../components/store/LocationSelector';
+import { CheckInScannerModal } from '../components/booking/CheckInScannerModal';
 
 // ─── Swipeable Booking Request Card ──────────────────────────────────────────
 const SwipeableBookingCard = ({
@@ -188,8 +190,8 @@ const SwipeableBookingCard = ({
           </span>
         </div>
 
-        {/* Row 2: Payment badge & Service */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
+        {/* Row 2: Payment badge, Check-In badge & Service */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
           <span
             style={{
               fontSize: '0.68rem',
@@ -203,6 +205,58 @@ const SwipeableBookingCard = ({
           >
             {isPaid ? '✓ Paid via Paystack' : '⏳ Payment Pending'}
           </span>
+
+          {b.checkInStatus === 'checked_in' || b.checkedInAt ? (
+            <span
+              style={{
+                fontSize: '0.68rem',
+                fontWeight: 800,
+                fontFamily: 'Outfit',
+                background: 'rgba(16, 185, 129, 0.18)',
+                color: '#10b981',
+                border: '1px solid rgba(16, 185, 129, 0.35)',
+                padding: '0.15rem 0.55rem',
+                borderRadius: '50px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.2rem',
+              }}
+            >
+              ✓ Client Checked In
+            </span>
+          ) : (
+            <span
+              style={{
+                fontSize: '0.68rem',
+                fontWeight: 700,
+                fontFamily: 'Outfit',
+                background: 'rgba(148, 163, 184, 0.1)',
+                color: '#94a3b8',
+                padding: '0.15rem 0.55rem',
+                borderRadius: '50px',
+              }}
+            >
+              ⏳ Awaiting Arrival
+            </span>
+          )}
+
+          {b.checkInCode && (
+            <span
+              style={{
+                fontSize: '0.68rem',
+                color: '#f5b942',
+                background: 'rgba(245, 185, 66, 0.1)',
+                border: '1px solid rgba(245, 185, 66, 0.25)',
+                borderRadius: '6px',
+                padding: '0.1rem 0.4rem',
+                fontFamily: 'monospace',
+                fontWeight: 800,
+              }}
+            >
+              Pass: {b.checkInCode}
+            </span>
+          )}
+
           <span style={{ fontSize: '0.74rem', color: '#94a3b8' }}>•</span>
           <span style={{ fontSize: '0.78rem', color: '#e2e8f0', fontWeight: 700, fontFamily: 'Outfit' }}>
             ✂️ {b.service || 'Service'}
@@ -526,6 +580,7 @@ export const ExpertDashboard = () => {
   const [isAvailable, setIsAvailable] = useState(true);
   const [filterTab, setFilterTab] = useState('all'); // 'all' | 'pending' | 'accepted' | 'completed' | 'today'
   const [chatBooking, setChatBooking] = useState(null); // booking opened in chat sheet
+  const [showCheckInDesk, setShowCheckInDesk] = useState(false);
 
   // Wallet & Payout States
   const [walletBalance, setWalletBalance] = useState(0);
@@ -1461,22 +1516,44 @@ export const ExpertDashboard = () => {
               </h3>
             </div>
 
-            <button
-              onClick={fetchDashboardData}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: '#94a3b8',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.3rem',
-                fontSize: '0.76rem',
-                fontFamily: 'Outfit',
-              }}
-            >
-              <RefreshCw size={13} className={loading ? 'spin' : ''} /> Refresh
-            </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+              <button
+                onClick={() => setShowCheckInDesk(true)}
+                style={{
+                  background: 'linear-gradient(135deg, rgba(245, 185, 66, 0.18), rgba(212, 175, 55, 0.18))',
+                  border: '1px solid rgba(245, 185, 66, 0.4)',
+                  color: '#f5b942',
+                  borderRadius: '12px',
+                  padding: '0.35rem 0.75rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  fontSize: '0.76rem',
+                  fontFamily: 'Outfit',
+                  fontWeight: 800,
+                }}
+              >
+                <QrCode size={13} /> Check-In Desk
+              </button>
+
+              <button
+                onClick={fetchDashboardData}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#94a3b8',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.3rem',
+                  fontSize: '0.76rem',
+                  fontFamily: 'Outfit',
+                }}
+              >
+                <RefreshCw size={13} className={loading ? 'spin' : ''} /> Refresh
+              </button>
+            </div>
           </div>
 
           {/* Filter Pills Bar */}
@@ -3026,6 +3103,18 @@ export const ExpertDashboard = () => {
           </button>
         </form>
       </BottomSheet>
+
+      {/* ── Atelier Check-In Desk Scanner Modal ── */}
+      <CheckInScannerModal
+        isOpen={showCheckInDesk}
+        onClose={() => setShowCheckInDesk(false)}
+        onCheckInComplete={(updatedBooking) => {
+          setBookings((prev) =>
+            prev.map((b) => (b._id === updatedBooking._id ? { ...b, ...updatedBooking } : b))
+          );
+          showToast('Client arrival confirmed & verified!', 'success');
+        }}
+      />
 
     </PageContainer>
   );

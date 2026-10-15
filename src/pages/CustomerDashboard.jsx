@@ -31,6 +31,7 @@ import {
   Sun,
   Moon,
   MapPin,
+  QrCode,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
@@ -49,6 +50,7 @@ import { LocationSelector } from '../components/store/LocationSelector';
 import { downloadBookingHistoryCSV, printBookingHistoryReport } from '../utils/bookingHistoryExport';
 import { OptimizedImage } from '../components/common/OptimizedImage';
 import { BookingChatSheet } from '../components/booking/BookingChatSheet';
+import { AppointmentPassModal } from '../components/booking/AppointmentPassModal';
 
 export const CustomerDashboard = () => {
   const navigate = useNavigate();
@@ -60,6 +62,7 @@ export const CustomerDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('bookings'); // 'bookings' | 'orders'
   const [chatBooking, setChatBooking] = useState(null); // booking opened in chat sheet
+  const [passBooking, setPassBooking] = useState(null); // booking opened in pass & calendar modal
 
   // Dedicated Sheet/Page Navigation States
   const [showHistorySheet, setShowHistorySheet] = useState(false);
@@ -455,6 +458,30 @@ export const CustomerDashboard = () => {
                         }}
                       >
                         Session Details
+                      </button>
+
+                      <button
+                        onClick={() => setPassBooking(upcoming)}
+                        style={{
+                          background: 'linear-gradient(135deg, rgba(245,185,66,0.18), rgba(212,175,55,0.18))',
+                          border: '1px solid rgba(245,185,66,0.4)',
+                          color: '#f5b942',
+                          borderRadius: '12px',
+                          padding: '0.5rem 0.95rem',
+                          minHeight: '44px',
+                          fontFamily: 'var(--font-heading)',
+                          fontSize: '0.78rem',
+                          fontWeight: 800,
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '0.35rem',
+                          cursor: 'pointer',
+                          touchAction: 'manipulation',
+                          WebkitTapHighlightColor: 'transparent',
+                        }}
+                      >
+                        <QrCode size={14} /> Pass & Calendar
                       </button>
 
                       {isAccepted && upcoming.paymentStatus === 'paid' && upcoming.stylist && (
@@ -1220,6 +1247,19 @@ export const CustomerDashboard = () => {
                             </button>
                           )}
                           <button
+                            onClick={() => { setShowHistorySheet(false); setPassBooking(b); }}
+                            style={{
+                              background: 'rgba(245,185,66,0.12)',
+                              border: '1px solid rgba(245,185,66,0.35)',
+                              color: '#f5b942',
+                              minHeight: '44px', width: 'auto', fontSize: '0.78rem', padding: '0.45rem 0.95rem', borderRadius: '12px',
+                              fontFamily: 'Outfit', fontWeight: 800, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
+                              touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent',
+                            }}
+                          >
+                            <QrCode size={13} /> Pass & Calendar
+                          </button>
+                          <button
                             onClick={() => { setShowHistorySheet(false); navigate(`/booking?stylist=${encodeURIComponent(b.stylist)}&service=${encodeURIComponent(b.service)}`); }}
                             className="app-btn app-btn-outline"
                             style={{ minHeight: '44px', width: 'auto', fontSize: '0.78rem', padding: '0.45rem 0.95rem', borderRadius: '12px', touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' }}
@@ -1601,6 +1641,19 @@ export const CustomerDashboard = () => {
         viewerRole="customer"
         isOpen={!!chatBooking}
         onClose={() => setChatBooking(null)}
+      />
+
+      {/* ── Luxury Appointment Pass & Calendar Integration Modal ── */}
+      <AppointmentPassModal
+        booking={passBooking}
+        isOpen={!!passBooking}
+        onClose={() => setPassBooking(null)}
+        onCheckInSuccess={(bkgId) => {
+          setBookings((prev) =>
+            prev.map((b) => (b._id === bkgId ? { ...b, checkInStatus: 'checked_in' } : b))
+          );
+          showToast('Arrival verified! Enjoy your session.', 'success');
+        }}
       />
     </PageContainer>
   );

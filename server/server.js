@@ -898,8 +898,26 @@ app.get('/api/bookings', authenticateToken, async (req, res) => {
     } else if (req.user.role === 'admin') {
       query = {}; // Admin can see all bookings
     }
+function generateCheckInCode() {
+  const chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
+  let code = 'SC-';
+  for (let i = 0; i < 4; i++) {
+    code += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return code;
+}
+
     const bookings = await Booking.find(query).sort({ createdAt: -1 });
-    res.status(200).json(bookings);
+    // Backfill any missing checkInCode so every client has a pass code
+    const enriched = await Promise.all(bookings.map(async (b) => {
+      if (!b.checkInCode) {
+        b.checkInCode = generateCheckInCode();
+        if (!b.checkInStatus) b.checkInStatus = 'pending';
+        try { await b.save(); } catch (_) {}
+      }
+      return b;
+    }));
+    res.status(200).json(enriched);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch bookings' });
   }
@@ -930,6 +948,8 @@ app.post('/api/bookings', authenticateToken, async (req, res) => {
 
     const bookingPayload = {
       ...req.body,
+      checkInCode: req.body.checkInCode || generateCheckInCode(),
+      checkInStatus: 'pending',
       status: 'pending',
       paymentStatus: req.body.paymentStatus || 'pending_payment'
     };
@@ -1146,6 +1166,182 @@ app.put('/api/bookings/:id', authenticateToken, async (req, res) => {
   } catch (error) {
     console.error('Failed to update booking status:', error);
     res.status(500).json({ error: 'Failed to update booking' });
+  }
+});
+
+// Verify client check-in via 6-character code or booking ID
+app.post('/api/bookings/verify-checkin', authenticateToken, async (req, res) => {
+  try {
+    const { code, bookingId } = req.body;
+    let query = {};
+    if (code && typeof code === 'string') {
+      const cleanCode = code.trim().toUpperCase();
+      query = { checkInCode: cleanCode };
+    } else if (bookingId) {
+      query = { _id: bookingId };
+    } else {
+      return res.status(400).json({ error: 'Please provide a valid Check-In Code or Booking ID.' });
+    }
+
+    const booking = await Booking.findOne(query);
+    if (!booking) {
+      return res.status(404).json({ error: 'No booking found matching this Check-In Code.' });
+    }
+
+    const userEmail = (req.user.email || '').trim().toLowerCase();
+    const isAdmin = req.user.role === 'admin';
+    const isStaff = req.user.role === 'staff';
+    const isClient = (booking.clientEmail || '').trim().toLowerCase() === userEmail;
+
+    if (!isAdmin && !isStaff && !isClient) {
+      return res.status(403).json({ error: 'You are not authorized to check in for this appointment.' });
+    }
+
+    booking.checkInStatus = 'checked_in';
+    booking.checkedInAt = new Date();
+    if (booking.status === 'pending') {
+      booking.status = 'accepted';
+    }
+    const updated = await booking.save();
+
+    await createInAppNotification({
+      userEmail: updated.clientEmail,
+      title: 'Checked In at Style Corner! ✂️',
+      message: `Your check-in for ${updated.service} with ${updated.stylist} is verified. Your specialist has been notified.`,
+      type: 'booking',
+      bookingId: updated._id
+    });
+
+    if (updated.stylistEmail) {
+      await createInAppNotification({
+        userEmail: updated.stylistEmail,
+        title: 'Client Checked In! 💈',
+        message: `${updated.clientName} has checked in for ${updated.service} (${updated.time}).`,
+        type: 'booking',
+        bookingId: updated._id
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `Check-in confirmed for ${updated.clientName}!`,
+      booking: updated
+    });
+  } catch (error) {
+    console.error('Verify check-in error:', error);
+    res.status(500).json({ error: 'Failed to verify check-in.' });
+  }
+});
+
+// Single booking direct check-in
+app.post('/api/bookings/:id/check-in', authenticateToken, async (req, res) => {
+  try {
+    const booking = await Booking.findById(req.params.id);
+    if (!booking) {
+      return res.status(404).json({ error: 'Booking not found.' });
+    }
+
+    booking.checkInStatus = 'checked_in';
+    booking.checkedInAt = new Date();
+    if (booking.status === 'pending') {
+      booking.status = 'accepted';
+    }
+    const updated = await booking.save();
+
+    await createInAppNotification({
+      userEmail: updated.clientEmail,
+      title: 'Checked In at Style Corner! ✂️',
+      message: `Your check-in for ${updated.service} with ${updated.stylist} is confirmed. Enjoy your bespoke styling session!`,
+      type: 'booking',
+      bookingId: updated._id
+    });
+
+    res.status(200).json({ success: true, booking: updated });
+  } catch (error) {
+    console.error('Direct check-in error:', error);
+    res.status(500).json({ error: 'Failed to complete check-in.' });
+  }
+});
+
+// Download RFC-5545 iCalendar (.ics) file for an appointment
+app.get('/api/bookings/:id/calendar.ics', async (req, res) => {
+  try {
+    const booking = await Booking.findById(req.params.id);
+    if (!booking) {
+      return res.status(404).send('Booking not found');
+    }
+
+    const dateStr = booking.date || '';
+    const timeStr = booking.time || '10:00 AM';
+    
+    let startIso = new Date();
+    try {
+      const parts = dateStr.split('-');
+      if (parts.length === 3) {
+        const year = parseInt(parts[0], 10);
+        const month = parseInt(parts[1], 10) - 1;
+        const day = parseInt(parts[2], 10);
+        
+        let hours = 10;
+        let mins = 0;
+        const timeMatch = timeStr.match(/(\d+):(\d+)\s*(AM|PM)?/i);
+        if (timeMatch) {
+          hours = parseInt(timeMatch[1], 10);
+          mins = parseInt(timeMatch[2], 10);
+          const meridian = timeMatch[3];
+          if (meridian) {
+            if (meridian.toUpperCase() === 'PM' && hours < 12) hours += 12;
+            if (meridian.toUpperCase() === 'AM' && hours === 12) hours = 0;
+          }
+        }
+        startIso = new Date(Date.UTC(year, month, day, hours, mins, 0));
+      }
+    } catch (_) {}
+
+    const endIso = new Date(startIso.getTime() + 60 * 60 * 1000);
+    
+    const formatIcsDate = (d) => {
+      return d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    };
+
+    const dtStart = formatIcsDate(startIso);
+    const dtEnd = formatIcsDate(endIso);
+    const dtStamp = formatIcsDate(new Date());
+    const uid = `booking-${booking._id}@stylecorner.world`;
+    const summary = `Style Corner: ${booking.service} with ${booking.stylist}`;
+    const description = `Bespoke Grooming & Atelier Session at Style Corner.\\n\\nSpecialist: ${booking.stylist}\\nService: ${booking.service}\\nPass Code: ${booking.checkInCode || 'SC-PASS'}\\nClient: ${booking.clientName}\\nLocation: ${booking.location || 'Style Corner Atelier'}\\n\\nManage appointment: https://www.stylecorner.world/customer-dashboard`;
+    const location = (booking.location || 'Style Corner Atelier, Lagos').replace(/,/g, '\\,');
+
+    const icsContent = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//Style Corner Atelier//EN',
+      'CALSCALE:GREGORIAN',
+      'METHOD:PUBLISH',
+      'BEGIN:VEVENT',
+      `UID:${uid}`,
+      `DTSTAMP:${dtStamp}`,
+      `DTSTART:${dtStart}`,
+      `DTEND:${dtEnd}`,
+      `SUMMARY:${summary}`,
+      `DESCRIPTION:${description}`,
+      `LOCATION:${location}`,
+      'STATUS:CONFIRMED',
+      'BEGIN:VALARM',
+      'TRIGGER:-PT2H',
+      'ACTION:DISPLAY',
+      'DESCRIPTION:Reminder: Style Corner appointment in 2 hours',
+      'END:VALARM',
+      'END:VEVENT',
+      'END:VCALENDAR'
+    ].join('\r\n');
+
+    res.setHeader('Content-Type', 'text/calendar; charset=utf-8');
+    res.setHeader('Content-Disposition', `attachment; filename="stylecorner-appointment-${booking.checkInCode || booking._id}.ics"`);
+    res.send(icsContent);
+  } catch (error) {
+    console.error('ICS generator error:', error);
+    res.status(500).send('Failed to generate calendar file');
   }
 });
 

@@ -20,6 +20,9 @@ const bookingSchema = new mongoose.Schema({
     enum: ['pending', 'accepted', 'completed', 'cancelled', 'rejected'], 
     default: 'pending' 
   },
+  checkInCode: { type: String, uppercase: true, trim: true },
+  checkInStatus: { type: String, enum: ['pending', 'checked_in', 'completed'], default: 'pending' },
+  checkedInAt: { type: Date },
   reminderSent: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now },
   messages: [

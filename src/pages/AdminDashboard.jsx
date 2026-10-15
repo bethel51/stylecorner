@@ -40,6 +40,7 @@ import {
   Check,
   Printer,
   ExternalLink,
+  QrCode,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
@@ -49,6 +50,7 @@ import { OrderTrackingSheet } from '../components/store/OrderTrackingSheet';
 import { NotificationSheet } from '../components/common/NotificationSheet';
 import { exportOrdersToCSV, exportBookingsToCSV } from '../utils/exportUtils';
 import { QrWorldSvg, QrRecruitSvg } from '../components/common/QrCodeSvgs';
+import { CheckInScannerModal } from '../components/booking/CheckInScannerModal';
 
 export const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -62,6 +64,7 @@ export const AdminDashboard = () => {
   const [withdrawalsList, setWithdrawalsList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState(null);
+  const [showAdminCheckInDesk, setShowAdminCheckInDesk] = useState(false);
 
   // Filters & Modals
   const [orderStatusFilter, setOrderStatusFilter] = useState('all');
@@ -981,6 +984,29 @@ export const AdminDashboard = () => {
                   </button>
                 ))}
               </div>
+
+              {activeTab === 'bookings' && (
+                <button
+                  onClick={() => setShowAdminCheckInDesk(true)}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.35rem',
+                    padding: '0.38rem 0.75rem',
+                    borderRadius: '8px',
+                    backgroundColor: 'rgba(245,185,66,0.18)',
+                    border: '1px solid rgba(245,185,66,0.4)',
+                    color: '#f5b942',
+                    fontSize: '0.75rem',
+                    fontWeight: 800,
+                    fontFamily: 'Outfit',
+                    cursor: 'pointer',
+                    flexShrink: 0,
+                  }}
+                >
+                  <QrCode size={13} /> Check-In Desk
+                </button>
+              )}
 
               {(activeTab === 'orders' || activeTab === 'bookings') && (
                 <button
@@ -3245,6 +3271,16 @@ export const AdminDashboard = () => {
           </div>
         </div>
       )}
+
+      {/* ── Admin Atelier Check-In Desk Modal ── */}
+      <CheckInScannerModal
+        isOpen={showAdminCheckInDesk}
+        onClose={() => setShowAdminCheckInDesk(false)}
+        onCheckInComplete={(b) => {
+          setBookings(prev => prev.map(item => item._id === b._id ? { ...item, ...b } : item));
+          showToast('Client arrival confirmed & verified!', 'success');
+        }}
+      />
     </div>
   );
 };
