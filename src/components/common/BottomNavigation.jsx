@@ -41,7 +41,7 @@ export const BottomNavigation = () => {
     },
     {
       label: 'Profile',
-      path: isAuthenticated ? (role === 'staff' ? '/expert-dashboard' : role === 'admin' ? '/admin' : '/profile') : '/login',
+      path: isAuthenticated ? (role === 'admin' ? '/admin' : '/profile') : '/login',
       icon: User,
     },
   ];

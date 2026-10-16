@@ -19,6 +19,9 @@ const routeLoaders = {
   '/store': () => import('./pages/Store'),
   '/cart': () => import('./pages/Cart'),
   '/booking': () => import('./pages/Booking'),
+  '/my-bookings': () => import('./pages/MyBookings'),
+  '/booking-history': () => import('./pages/MyBookings'),
+  '/history': () => import('./pages/MyBookings'),
   '/about': () => import('./pages/About'),
   '/contact': () => import('./pages/Contact'),
   '/role-selection': () => import('./pages/RoleSelection'),
@@ -69,6 +72,7 @@ const Experts = safeLazy(() => import('./pages/Experts').then(m => ({ default: m
 const Gallery = safeLazy(() => import('./pages/Gallery').then(m => ({ default: m.Gallery })));
 const Store = safeLazy(() => import('./pages/Store').then(m => ({ default: m.Store })));
 const Booking = safeLazy(() => import('./pages/Booking').then(m => ({ default: m.Booking })));
+const MyBookings = safeLazy(() => import('./pages/MyBookings').then(m => ({ default: m.MyBookings || m.default })));
 const About = safeLazy(() => import('./pages/About').then(m => ({ default: m.About })));
 const Contact = safeLazy(() => import('./pages/Contact').then(m => ({ default: m.Contact })));
 const RoleSelection = safeLazy(() => import('./pages/RoleSelection').then(m => ({ default: m.RoleSelection })));
@@ -246,12 +250,36 @@ export const App = () => {
               <Route path="/login" element={<Login />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
 
-              {/* User Profile Route */}
+              {/* User Profile & Bookings Routes */}
               <Route
                 path="/profile"
                 element={
                   <ProtectedRoute>
                     <Profile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/my-bookings"
+                element={
+                  <ProtectedRoute>
+                    <MyBookings />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/booking-history"
+                element={
+                  <ProtectedRoute>
+                    <MyBookings />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/history"
+                element={
+                  <ProtectedRoute>
+                    <MyBookings />
                   </ProtectedRoute>
                 }
               />
