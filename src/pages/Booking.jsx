@@ -459,25 +459,6 @@ export const Booking = () => {
       return;
     }
 
-    // ── Wallet pre-check: block booking creation if balance is insufficient ──
-    // Refresh balance first to get the latest value
-    let currentBalance = walletBalance;
-    try {
-      const fresh = await api.getWalletBalance();
-      if (fresh && typeof fresh.walletBalance === 'number') {
-        currentBalance = fresh.walletBalance;
-        setWalletBalance(currentBalance);
-      }
-    } catch (_) { /* use cached balance */ }
-
-    if (currentBalance < totalPrice) {
-      showToast(
-        `Insufficient wallet balance (₦${currentBalance.toLocaleString()}). Please top up ₦${(totalPrice - currentBalance).toLocaleString()} more to proceed.`,
-        'error'
-      );
-      navigate('/wallet');
-      return;
-    }
 
     const currentSpecialist =
       selectedSpecialist ||

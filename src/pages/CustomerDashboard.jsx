@@ -484,7 +484,7 @@ export const CustomerDashboard = () => {
                         <QrCode size={14} /> Pass & Calendar
                       </button>
 
-                      {isAccepted && upcoming.paymentStatus === 'paid' && upcoming.stylist && (
+                      {isAccepted && String(upcoming.paymentStatus || '').startsWith('paid') && upcoming.stylist && (
                         <button
                           onClick={() => setChatBooking(upcoming)}
                           style={{
@@ -1231,7 +1231,7 @@ export const CustomerDashboard = () => {
                               <Star size={13} fill="#b5952f" /> Rate Specialist
                             </button>
                           )}
-                          {(b.status === 'accepted' || b.status === 'completed') && b.paymentStatus === 'paid' && (
+                          {(b.status === 'accepted' || b.status === 'completed') && String(b.paymentStatus || '').startsWith('paid') && (
                             <button
                               onClick={() => { setShowHistorySheet(false); setChatBooking(b); }}
                               style={{

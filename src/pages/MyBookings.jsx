@@ -128,7 +128,7 @@ export const MyBookings = () => {
     const completed = bookings.filter((b) => isPast(b.status)).length;
     const cancelled = bookings.filter((b) => isCancelled(b.status)).length;
     const totalSpent = bookings
-      .filter((b) => isPast(b.status) || b.paymentStatus === 'paid')
+      .filter((b) => isPast(b.status) || String(b.paymentStatus || '').startsWith('paid'))
       .reduce((sum, b) => sum + (Number(b.price) || 0), 0);
     return { upcoming, completed, cancelled, total: bookings.length, totalSpent };
   }, [bookings]);
@@ -1059,7 +1059,7 @@ export const MyBookings = () => {
                           Price & Payment
                         </div>
                         <div style={{ fontSize: '0.84rem', fontWeight: 800, color: '#f5b942' }}>
-                          ₦{Number(b.price || 0).toLocaleString()} • {b.paymentStatus === 'paid' ? 'Paid' : 'Pay at Studio'}
+                          ₦{Number(b.price || 0).toLocaleString()} • {String(b.paymentStatus || '').startsWith('paid') ? 'Paid' : 'Awaiting Payment'}
                         </div>
                       </div>
                     </div>
