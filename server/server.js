@@ -921,17 +921,21 @@ app.get('/api/bookings/busy-slots', async (req, res) => {
       conditions.push({ stylistId: stylistId });
     }
     if (stylist) {
-      conditions.push({ stylist: new RegExp('^' + stylist.trim() + '$', 'i') });
-      conditions.push({ stylist: new RegExp(stylist.trim().split(' ')[0], 'i') });
+      conditions.push({ stylist: new RegExp('^' + escapeRegex(stylist.trim()) + '$', 'i') });
+      conditions.push({ stylist: new RegExp(escapeRegex(stylist.trim().split(' ')[0]), 'i') });
     }
 
     const query = {
       date: date,
-      status: { $in: ['pending', 'accepted', 'confirmed'] }
+      status: { $in: ['pending', 'accepted', 'confirmed'] },
+      $or: [
+        { paymentStatus: { $in: ['paid_wallet', 'paid_paystack', 'paid'] } },
+        { createdAt: { $gte: new Date(Date.now() - 30 * 60 * 1000) } } // Only hold slot for 30 mins if unpaid
+      ]
     };
 
     if (conditions.length > 0) {
-      query.$or = conditions;
+      query.$and = [{ $or: conditions }];
     }
 
     const bookings = await Booking.find(query).select('time');
@@ -1013,10 +1017,16 @@ app.post('/api/bookings', authenticateToken, async (req, res) => {
     }
 
     const existingStylistBooking = await Booking.findOne({
-      $or: stylistOrQueries,
-      date: date,
-      time: time,
-      status: { $in: ['pending', 'accepted'] }
+      $and: [
+        { $or: stylistOrQueries },
+        { date: date, time: time, status: { $in: ['pending', 'accepted'] } },
+        {
+          $or: [
+            { paymentStatus: { $in: ['paid_wallet', 'paid_paystack', 'paid'] } },
+            { createdAt: { $gte: new Date(Date.now() - 30 * 60 * 1000) } }
+          ]
+        }
+      ]
     });
     if (existingStylistBooking) {
       return res.status(400).json({ error: 'This specialist is already booked for that specific date and time.' });
@@ -1202,16 +1212,57 @@ app.put('/api/bookings/:id', authenticateToken, async (req, res) => {
         });
       }
     } else if (newStatus === 'cancelled' || newStatus === 'rejected') {
+      // Auto-refund client wallet if the booking was already paid for
+      const wasPaid = isBookingPaid(booking.paymentStatus);
+      if (wasPaid) {
+        try {
+          const clientUser = await User.findOne({ email: new RegExp('^' + escapeRegex(booking.clientEmail) + '$', 'i') });
+          if (clientUser) {
+            const refundAmount = Number(booking.price) || 0;
+            clientUser.walletBalance = (clientUser.walletBalance ?? 0) + refundAmount;
+            await clientUser.save();
+
+            updateObj.paymentStatus = 'refunded';
+            await Booking.findByIdAndUpdate(req.params.id, { $set: { paymentStatus: 'refunded' } });
+
+            const refundTxn = new Transaction({
+              userId: clientUser._id,
+              userEmail: clientUser.email,
+              userName: `${clientUser.firstname} ${clientUser.lastname || ''}`.trim(),
+              type: 'wallet_refund',
+              amount: refundAmount,
+              direction: 'credit',
+              reference: `RFD-${Date.now()}-${String(booking._id).slice(-4)}`,
+              status: 'success',
+              description: `Refund for ${newStatus} booking: ${booking.service} with ${booking.stylist}`,
+              metadata: { bookingId: booking._id }
+            });
+            await refundTxn.save();
+
+            await createInAppNotification({
+              userEmail: clientUser.email,
+              title: '💰 Booking Refund Credited to Wallet!',
+              message: `₦${refundAmount.toLocaleString()} has been refunded to your Atelier Wallet for your ${newStatus} booking (${booking.service}).`,
+              type: 'booking',
+              bookingId: booking._id
+            });
+          }
+        } catch (refundErr) {
+          console.error('Failed to refund client wallet on cancellation/rejection:', refundErr);
+        }
+      }
+
       if (updated.clientEmail) {
+        const refundNote = wasPaid ? `\n\n💰 An automatic refund of ₦${Number(booking.price || 0).toLocaleString()} has been credited to your Atelier Wallet for immediate use.` : '';
         await sendNotificationSafe(
           updated.clientEmail,
-          "Booking Request Update",
-          `Hi ${updated.clientName || 'Client'},\n\nYour booking request for ${updated.service} on ${updated.date} at ${updated.time} could not be accepted by ${updated.stylist}.\n\nPlease visit Style Corner to select another time or specialist.`
+          newStatus === 'cancelled' ? "Booking Cancelled" : "Booking Request Update",
+          `Hi ${updated.clientName || 'Client'},\n\nYour appointment for ${updated.service} with ${updated.stylist} on ${updated.date} at ${updated.time} has been ${newStatus}.${refundNote}\n\nPlease visit Style Corner to select another time or specialist.`
         );
         await createInAppNotification({
           userEmail: updated.clientEmail,
-          title: 'Booking Request Declined',
-          message: `Your booking request for ${updated.service} with ${updated.stylist} was declined. You can reschedule anytime.`,
+          title: newStatus === 'cancelled' ? 'Booking Cancelled' : 'Booking Request Declined',
+          message: `Your booking for ${updated.service} with ${updated.stylist} was ${newStatus}.${wasPaid ? ' ₦' + Number(booking.price || 0).toLocaleString() + ' refunded to wallet.' : ''}`,
           type: 'booking',
           bookingId: updated._id
         });
@@ -1245,11 +1296,15 @@ app.post('/api/bookings/verify-checkin', authenticateToken, async (req, res) => 
 
     const userEmail = (req.user.email || '').trim().toLowerCase();
     const isAdmin = req.user.role === 'admin';
-    const isStaff = req.user.role === 'staff';
+    const isStaff = req.user.role === 'staff' || req.user.role === 'expert';
     const isClient = (booking.clientEmail || '').trim().toLowerCase() === userEmail;
 
     if (!isAdmin && !isStaff && !isClient) {
       return res.status(403).json({ error: 'You are not authorized to check in for this appointment.' });
+    }
+
+    if (!isBookingPaid(booking.paymentStatus)) {
+      return res.status(400).json({ error: 'This appointment has not been paid for yet. Please complete payment before checking in.' });
     }
 
     booking.checkInStatus = 'checked_in';
@@ -2087,6 +2142,11 @@ app.post('/api/reviews', authenticateToken, async (req, res) => {
     const { bookingId, stylistName, serviceName, rating, comment } = req.body;
     if (!bookingId || !stylistName || !rating) {
       return res.status(400).json({ error: 'Missing required review fields (bookingId, stylistName, rating)' });
+    }
+
+    const existingReview = await Review.findOne({ bookingId });
+    if (existingReview) {
+      return res.status(400).json({ error: 'You have already submitted a review for this appointment.' });
     }
 
     const customerName = `${req.user.firstname || ''} ${req.user.lastname || ''}`.trim() || 'Valued Customer';
