@@ -161,6 +161,10 @@ function isBookingPaid(paymentStatus) {
   return ps === 'paid' || ps.startsWith('paid_');
 }
 
+function escapeRegex(str = '') {
+  return String(str).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 async function notifySpecialistOfPaidBooking(booking) {
   try {
     let targetStylistEmail = booking.stylistEmail;
@@ -986,7 +990,8 @@ app.get('/api/bookings', authenticateToken, async (req, res) => {
     }));
     res.status(200).json(enriched);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch bookings' });
+    console.error('Fetch bookings error:', error);
+    res.status(500).json({ error: error?.message || 'Failed to fetch bookings' });
   }
 });
 
