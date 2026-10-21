@@ -383,7 +383,7 @@ export const Profile = () => {
               style={{ cursor: 'pointer', textAlign: 'center' }}
               title="View all bookings & schedule history"
             >
-              <div style={{ fontFamily: 'Outfit', fontSize: '1.4rem', fontWeight: 900, color: '#ffffff', lineHeight: 1 }}>
+              <div style={{ fontFamily: 'Outfit', fontSize: '1.4rem', fontWeight: 900, color: 'var(--color-text-primary, #ffffff)', lineHeight: 1 }}>
                 {loadingStats ? '…' : stats.bookings}
               </div>
               <div style={{ fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 700, color: '#94a3b8', marginTop: '0.35rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
@@ -416,7 +416,7 @@ export const Profile = () => {
               style={{ cursor: 'pointer', textAlign: 'center' }}
               title="View saved favorites in Boutique"
             >
-              <div style={{ fontFamily: 'Outfit', fontSize: '1.4rem', fontWeight: 900, color: '#ffffff', lineHeight: 1 }}>
+              <div style={{ fontFamily: 'Outfit', fontSize: '1.4rem', fontWeight: 900, color: 'var(--color-text-primary, #ffffff)', lineHeight: 1 }}>
                 {stats.favorites}
               </div>
               <div style={{ fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 700, color: '#94a3b8', marginTop: '0.35rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
@@ -793,7 +793,7 @@ export const Profile = () => {
           {reviewsList.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '2rem 1rem' }}>
               <Star size={36} color="#f5b942" style={{ margin: '0 auto 0.75rem', opacity: 0.8 }} />
-              <h4 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.35rem' }}>
+              <h4 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: '0 0 0.35rem' }}>
                 No reviews yet
               </h4>
               <p style={{ fontSize: '0.8rem', color: '#94a3b8', lineHeight: 1.5, margin: 0 }}>
@@ -827,7 +827,7 @@ export const Profile = () => {
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
-                    <div style={{ fontWeight: 800, fontSize: '0.88rem', color: '#ffffff' }}>
+                    <div style={{ fontWeight: 800, fontSize: '0.88rem', color: 'var(--color-text-primary, #ffffff)' }}>
                       {rev.serviceName || rev.service || 'Atelier Service'}
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
@@ -895,7 +895,7 @@ export const Profile = () => {
                 <span style={{ fontSize: '0.72rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 800 }}>
                   Concierge Email
                 </span>
-                <div style={{ color: '#ffffff', fontWeight: 700, fontSize: '0.88rem' }}>
+                <div style={{ color: 'var(--color-text-primary, #ffffff)', fontWeight: 700, fontSize: '0.88rem' }}>
                   concierge@stylecorner.world
                 </div>
               </div>
@@ -920,7 +920,7 @@ export const Profile = () => {
                 <span style={{ fontSize: '0.72rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 800 }}>
                   WhatsApp Concierge
                 </span>
-                <div style={{ color: '#ffffff', fontWeight: 700, fontSize: '0.88rem' }}>
+                <div style={{ color: 'var(--color-text-primary, #ffffff)', fontWeight: 700, fontSize: '0.88rem' }}>
                   +234 812 345 6789
                 </div>
               </div>

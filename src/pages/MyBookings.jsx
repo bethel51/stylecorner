@@ -375,7 +375,7 @@ export const MyBookings = () => {
                 style={{
                   background: 'none',
                   border: 'none',
-                  color: '#ffffff',
+                  color: 'var(--color-text-primary, #ffffff)',
                   fontSize: '0.76rem',
                   fontWeight: 800,
                   cursor: 'pointer',
@@ -472,7 +472,7 @@ export const MyBookings = () => {
               transition: 'all 0.15s ease',
             }}
           >
-            <div style={{ fontFamily: 'Outfit', fontSize: '1.35rem', fontWeight: 900, color: '#ffffff', lineHeight: 1 }}>
+            <div style={{ fontFamily: 'Outfit', fontSize: '1.35rem', fontWeight: 900, color: 'var(--color-text-primary, #ffffff)', lineHeight: 1 }}>
               {counts.total}
             </div>
             <div style={{ fontSize: '0.7rem', fontWeight: 700, color: '#94a3b8', marginTop: '0.3rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
@@ -1181,7 +1181,7 @@ export const MyBookings = () => {
                           }}
                           style={{
                             background: 'var(--color-surface, #151822)',
-                            color: '#ffffff',
+                            color: 'var(--color-text-primary, #ffffff)',
                             border: '1px solid var(--color-border, rgba(255, 255, 255, 0.12))',
                             borderRadius: '10px',
                             padding: '0.42rem 0.75rem',
@@ -1276,7 +1276,7 @@ export const MyBookings = () => {
               <div style={{ fontSize: '0.82rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 700 }}>
                 {reviewBooking.service}
               </div>
-              <h3 style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', margin: '0.2rem 0' }}>
+              <h3 style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: '0.2rem 0' }}>
                 With {reviewBooking.stylist}
               </h3>
               <p style={{ fontSize: '0.78rem', color: '#94a3b8' }}>

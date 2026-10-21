@@ -1488,17 +1488,21 @@ button:active, .dashboard-quick-actions button:active {
 [data-theme="light"] [style*="background: #10131b"],
 [data-theme="light"] [style*="background:#10131b"],
 [data-theme="light"] [style*="background: #1c202d"],
-[data-theme="light"] [style*="background:#1c202d"] {
-  background: #ffffff !important;
-  border-color: rgba(0, 0, 0, 0.08) !important;
-  color: #0f172a !important;
+[data-theme="light"] [style*="background:#1c202d"],
+[data-theme="light"] [style*="background: #1a1e2b"],
+[data-theme="light"] [style*="background:#1a1e2b"] {
+  background: var(--color-card-bg, #ffffff) !important;
+  border-color: var(--color-border, rgba(15, 23, 42, 0.08)) !important;
+  color: var(--color-text-primary, #0a0f1d) !important;
+  box-shadow: var(--shadow-sm, 0 2px 10px rgba(15, 23, 42, 0.04)) !important;
 }
 
 [data-theme="light"] [style*="background: #0C0E14"],
 [data-theme="light"] [style*="background:#0C0E14"],
 [data-theme="light"] [style*="background: #0c0e14"],
 [data-theme="light"] [style*="background:#0c0e14"] {
-  background: #f8f9fc !important;
+  background: #f5f6fa !important;
+  color: var(--color-text-primary, #0a0f1d) !important;
 }
 
 [data-theme="light"] [style*="background: rgba(12, 14, 20"],
@@ -1506,19 +1510,33 @@ button:active, .dashboard-quick-actions button:active {
   background: rgba(255, 255, 255, 0.94) !important;
 }
 
-/* Light mode text readability */
-[data-theme="light"] h1[style*="color: #ffffff"],
-[data-theme="light"] h2[style*="color: #ffffff"],
-[data-theme="light"] h3[style*="color: #ffffff"],
-[data-theme="light"] h4[style*="color: #ffffff"],
-[data-theme="light"] span[style*="color: #ffffff"]:not([style*="background: #f5b942"]):not([style*="background:#f5b942"]):not(.badge-dot) {
-  color: #0f172a !important;
+/* Light mode heading and text readability */
+[data-theme="light"] h1:not(.app-btn *):not(.keep-white),
+[data-theme="light"] h2:not(.app-btn *):not(.keep-white),
+[data-theme="light"] h3:not(.app-btn *):not(.keep-white),
+[data-theme="light"] h4:not(.app-btn *):not(.keep-white),
+[data-theme="light"] h5:not(.app-btn *):not(.keep-white),
+[data-theme="light"] h6:not(.app-btn *):not(.keep-white) {
+  color: var(--color-text-primary) !important;
+}
+
+/* Any text elements with inline white colors that are NOT on dark buttons/accent badges */
+[data-theme="light"] [style*="color: #fff" i]:not(button.app-btn-accent):not(button.app-btn-primary):not(.app-btn-accent *):not(.app-btn-primary *):not([style*="background: #ef4444"]):not([style*="background:#ef4444"]):not([style*="background: #10b981"]):not([style*="background:#10b981"]):not([style*="background: #f5b942"]):not([style*="background:#f5b942"]):not([style*="background: #d4af37"]):not([style*="background:#d4af37"]):not([style*="background: rgb(239, 68, 68)"]):not(.badge-dot):not(.keep-white),
+[data-theme="light"] [style*="color:#fff" i]:not(button.app-btn-accent):not(button.app-btn-primary):not(.app-btn-accent *):not(.app-btn-primary *):not([style*="background: #ef4444"]):not([style*="background:#ef4444"]):not([style*="background: #10b981"]):not([style*="background:#10b981"]):not([style*="background: #f5b942"]):not([style*="background:#f5b942"]):not([style*="background: #d4af37"]):not([style*="background:#d4af37"]):not([style*="background: rgb(239, 68, 68)"]):not(.badge-dot):not(.keep-white),
+[data-theme="light"] [style*="color: white" i]:not(button.app-btn-accent):not(button.app-btn-primary):not(.app-btn-accent *):not(.app-btn-primary *):not([style*="background: #ef4444"]):not([style*="background:#ef4444"]):not([style*="background: #10b981"]):not([style*="background:#10b981"]):not([style*="background: #f5b942"]):not([style*="background:#f5b942"]):not([style*="background: #d4af37"]):not([style*="background:#d4af37"]):not([style*="background: rgb(239, 68, 68)"]):not(.badge-dot):not(.keep-white),
+[data-theme="light"] [style*="color:white" i]:not(button.app-btn-accent):not(button.app-btn-primary):not(.app-btn-accent *):not(.app-btn-primary *):not([style*="background: #ef4444"]):not([style*="background:#ef4444"]):not([style*="background: #10b981"]):not([style*="background:#10b981"]):not([style*="background: #f5b942"]):not([style*="background:#f5b942"]):not([style*="background: #d4af37"]):not([style*="background:#d4af37"]):not([style*="background: rgb(239, 68, 68)"]):not(.badge-dot):not(.keep-white),
+[data-theme="light"] [style*="color: rgb(255, 255, 255)" i]:not(button.app-btn-accent):not(button.app-btn-primary):not(.app-btn-accent *):not(.app-btn-primary *):not([style*="background: #ef4444"]):not([style*="background:#ef4444"]):not([style*="background: #10b981"]):not([style*="background:#10b981"]):not([style*="background: #f5b942"]):not([style*="background:#f5b942"]):not([style*="background: #d4af37"]):not([style*="background:#d4af37"]):not([style*="background: rgb(239, 68, 68)"]):not(.badge-dot):not(.keep-white),
+[data-theme="light"] [style*="color:rgb(255, 255, 255)" i]:not(button.app-btn-accent):not(button.app-btn-primary):not(.app-btn-accent *):not(.app-btn-primary *):not([style*="background: #ef4444"]):not([style*="background:#ef4444"]):not([style*="background: #10b981"]):not([style*="background:#10b981"]):not([style*="background: #f5b942"]):not([style*="background:#f5b942"]):not([style*="background: #d4af37"]):not([style*="background:#d4af37"]):not([style*="background: rgb(239, 68, 68)"]):not(.badge-dot):not(.keep-white),
+[data-theme="light"] [style*="color: rgb(255,255,255)" i]:not(button.app-btn-accent):not(button.app-btn-primary):not(.app-btn-accent *):not(.app-btn-primary *):not([style*="background: #ef4444"]):not([style*="background:#ef4444"]):not([style*="background: #10b981"]):not([style*="background:#10b981"]):not([style*="background: #f5b942"]):not([style*="background:#f5b942"]):not([style*="background: #d4af37"]):not([style*="background:#d4af37"]):not([style*="background: rgb(239, 68, 68)"]):not(.badge-dot):not(.keep-white) {
+  color: var(--color-text-primary) !important;
 }
 
 [data-theme="light"] p[style*="color: #cbd5e1"],
 [data-theme="light"] span[style*="color: #94a3b8"],
-[data-theme="light"] span[style*="color: #64748b"] {
-  color: #475569 !important;
+[data-theme="light"] span[style*="color: #64748b"],
+[data-theme="light"] div[style*="color: #94a3b8"],
+[data-theme="light"] div[style*="color: #64748b"] {
+  color: var(--color-text-secondary) !important;
 }
 
 /* ═══════════════════════════════════════════════════════════

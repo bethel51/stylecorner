@@ -199,7 +199,7 @@ export const Store = () => {
         {/* Screen 4: Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
-            <h1 style={{ fontFamily: 'Outfit', fontSize: '1.65rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.2rem' }}>
+            <h1 style={{ fontFamily: 'Outfit', fontSize: '1.65rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: '0 0 0.2rem' }}>
               Style Store
             </h1>
             <p style={{ color: '#94a3b8', fontSize: '0.82rem', margin: 0 }}>
@@ -214,12 +214,12 @@ export const Store = () => {
               width: '44px',
               height: '44px',
               borderRadius: '50%',
-              background: '#151822',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
+              background: 'var(--color-surface, #151822)',
+              border: '1px solid var(--color-border, rgba(255, 255, 255, 0.08))',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#ffffff',
+              color: 'var(--color-text-primary, #ffffff)',
               cursor: 'pointer',
               flexShrink: 0,
             }}
@@ -236,8 +236,8 @@ export const Store = () => {
             position: 'relative',
             display: 'flex',
             alignItems: 'center',
-            background: '#151822',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
+            background: 'var(--color-surface, #151822)',
+            border: '1px solid var(--color-border, rgba(255, 255, 255, 0.08))',
             borderRadius: '50px',
             padding: '0.65rem 1rem',
             gap: '0.65rem',
@@ -251,7 +251,7 @@ export const Store = () => {
               background: 'transparent',
               border: 'none',
               outline: 'none',
-              color: '#ffffff',
+              color: 'var(--color-text-primary, #ffffff)',
               fontSize: '0.88rem',
               fontFamily: 'inherit',
             }}
@@ -427,7 +427,7 @@ export const Store = () => {
         {/* Section Header with dynamic count */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.25rem' }}>
           <div>
-            <h2 style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+            <h2 style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: 0 }}>
               {activeCategory === 'All' ? 'Featured Products' : `${activeCategory} Collection`}
             </h2>
             <span style={{ fontSize: '0.76rem', color: '#64748b' }}>
@@ -574,7 +574,7 @@ export const Store = () => {
                     fontFamily: 'Outfit',
                     fontSize: '0.88rem',
                     fontWeight: 700,
-                    color: '#ffffff',
+                    color: 'var(--color-text-primary, #ffffff)',
                     margin: '0 0 0.45rem',
                     lineHeight: 1.25,
                     display: '-webkit-box',

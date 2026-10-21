@@ -517,7 +517,7 @@ export const Booking = () => {
         {/* Top Header */}
         <div style={{ marginBottom: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
-            <h1 style={{ fontFamily: 'Outfit', fontSize: '1.65rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.2rem' }}>
+            <h1 style={{ fontFamily: 'Outfit', fontSize: '1.65rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: '0 0 0.2rem' }}>
               Book Appointment
             </h1>
             <p style={{ color: '#94a3b8', fontSize: '0.8rem', margin: 0 }}>
@@ -692,7 +692,7 @@ export const Booking = () => {
           <div>
             {/* Header with AI trigger CTA */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
-              <h2 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+              <h2 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: 0 }}>
                 Select Service
               </h2>
               <button
@@ -899,7 +899,7 @@ export const Booking = () => {
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
               <div>
-                <h2 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+                <h2 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: 0 }}>
                   Select Specialist
                 </h2>
                 <p style={{ color: '#94a3b8', fontSize: '0.78rem', margin: '0.15rem 0 0' }}>
@@ -1083,7 +1083,7 @@ export const Booking = () => {
         {activeStep === 3 && (
           <div>
             <div style={{ marginBottom: '1.25rem' }}>
-              <h2 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+              <h2 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: 0 }}>
                 Select Date & Time
               </h2>
               <p style={{ color: '#94a3b8', fontSize: '0.78rem', margin: '0.15rem 0 0' }}>
@@ -1364,51 +1364,51 @@ export const Booking = () => {
         {/* ── STEP 4: REVIEW & CONFIRM BOOKING ── */}
         {activeStep === 4 && (
           <div>
-            <h2 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.85rem' }}>
+            <h2 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', marginBottom: '0.85rem' }}>
               Appointment Summary
             </h2>
 
             <div
               style={{
-                background: '#151822',
+                background: 'var(--color-surface, #151822)',
                 borderRadius: '18px',
                 padding: '1.25rem',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
+                border: '1px solid var(--color-border, rgba(255, 255, 255, 0.08))',
                 marginBottom: '1.25rem',
               }}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-                <span style={{ color: '#94a3b8', fontSize: '0.82rem' }}>Service:</span>
-                <span style={{ color: '#ffffff', fontWeight: 800, fontSize: '0.88rem' }}>{selectedService}</span>
+                <span style={{ color: 'var(--color-text-secondary, #94a3b8)', fontSize: '0.82rem' }}>Service:</span>
+                <span style={{ color: 'var(--color-text-primary, #ffffff)', fontWeight: 800, fontSize: '0.88rem' }}>{selectedService}</span>
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-                <span style={{ color: '#94a3b8', fontSize: '0.82rem' }}>Specialist:</span>
-                <span style={{ color: '#ffffff', fontWeight: 800, fontSize: '0.88rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                <span style={{ color: 'var(--color-text-secondary, #94a3b8)', fontSize: '0.82rem' }}>Specialist:</span>
+                <span style={{ color: 'var(--color-text-primary, #ffffff)', fontWeight: 800, fontSize: '0.88rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
                   {stylist}
                   <ShieldCheck size={14} color="#f5b942" />
                 </span>
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-                <span style={{ color: '#94a3b8', fontSize: '0.82rem' }}>Date:</span>
-                <span style={{ color: '#ffffff', fontWeight: 800, fontSize: '0.88rem' }}>{readableDate}</span>
+                <span style={{ color: 'var(--color-text-secondary, #94a3b8)', fontSize: '0.82rem' }}>Date:</span>
+                <span style={{ color: 'var(--color-text-primary, #ffffff)', fontWeight: 800, fontSize: '0.88rem' }}>{readableDate}</span>
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-                <span style={{ color: '#94a3b8', fontSize: '0.82rem' }}>Time Slot:</span>
+                <span style={{ color: 'var(--color-text-secondary, #94a3b8)', fontSize: '0.82rem' }}>Time Slot:</span>
                 <span style={{ color: '#f5b942', fontWeight: 800, fontSize: '0.88rem' }}>{selectedTime}</span>
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-                <span style={{ color: '#94a3b8', fontSize: '0.82rem' }}>Location:</span>
-                <span style={{ color: '#ffffff', fontWeight: 800, fontSize: '0.88rem' }}>{location}</span>
+                <span style={{ color: 'var(--color-text-secondary, #94a3b8)', fontSize: '0.82rem' }}>Location:</span>
+                <span style={{ color: 'var(--color-text-primary, #ffffff)', fontWeight: 800, fontSize: '0.88rem' }}>{location}</span>
               </div>
 
-              <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '0.75rem', marginTop: '0.5rem' }}>
+              <div style={{ borderTop: '1px solid var(--color-border, rgba(255, 255, 255, 0.08))', paddingTop: '0.75rem', marginTop: '0.5rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
-                  <span style={{ color: '#94a3b8', fontSize: '0.82rem' }}>Subtotal:</span>
-                  <span style={{ color: '#ffffff', fontWeight: 700, fontSize: '0.88rem' }}>₦{rawTotalPrice.toLocaleString()}</span>
+                  <span style={{ color: 'var(--color-text-secondary, #94a3b8)', fontSize: '0.82rem' }}>Subtotal:</span>
+                  <span style={{ color: 'var(--color-text-primary, #ffffff)', fontWeight: 700, fontSize: '0.88rem' }}>₦{rawTotalPrice.toLocaleString()}</span>
                 </div>
 
                 {appliedVoucher && (
@@ -1419,7 +1419,7 @@ export const Booking = () => {
                 )}
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.65rem' }}>
-                  <span style={{ color: '#ffffff', fontWeight: 800, fontSize: '1rem' }}>Total Fee:</span>
+                  <span style={{ color: 'var(--color-text-primary, #ffffff)', fontWeight: 800, fontSize: '1rem' }}>Total Fee:</span>
                   <span style={{ color: '#f5b942', fontWeight: 900, fontSize: '1.25rem' }}>
                     ₦{totalPrice.toLocaleString()}
                   </span>
