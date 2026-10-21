@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
   houseNumber: { type: String, default: '' },
   address: { type: String, default: '' },
   businessAddress: { type: String, default: '' },
-  role: { type: String, enum: ['customer', 'staff', 'admin'], default: 'customer' },
+  role: { type: String, enum: ['customer', 'staff', 'admin', 'expert'], default: 'customer' },
   specialties: [{ type: String }],
   services: [{ name: String, price: String }],
   portfolio: [

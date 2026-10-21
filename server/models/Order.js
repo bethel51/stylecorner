@@ -16,6 +16,8 @@ const orderSchema = new mongoose.Schema({
   trackingStatus: { type: String, default: 'Order Placed' },
   trackingNumber: { type: String, default: '' },
   estimatedDelivery: { type: String, default: '' },
+  paymentStatus: { type: String, default: 'pending' },
+  paymentMethod: { type: String, default: 'wallet' },
   paymentRef: { type: String }, // For Paystack reference
   messages: [
     {

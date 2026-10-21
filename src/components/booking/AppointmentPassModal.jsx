@@ -72,6 +72,7 @@ export const AppointmentPassModal = ({ booking, isOpen, onClose, onCheckInSucces
       onClick={onClose}
     >
       <div
+        className="keep-white"
         style={{
           width: '100%',
           maxWidth: '430px',

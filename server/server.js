@@ -1032,9 +1032,33 @@ app.post('/api/bookings', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'This specialist is already booked for that specific date and time.' });
     }
 
+    let resolvedStylistEmail = stylistEmail;
+    let resolvedStylistId = isValidStylistId ? stylistId : undefined;
+
+    if (!resolvedStylistEmail || !resolvedStylistId) {
+      const stylistSearchQueries = [];
+      if (isValidStylistId) stylistSearchQueries.push({ _id: stylistId });
+      if (stylist) {
+        const firstName = stylist.trim().split(' ')[0];
+        stylistSearchQueries.push({ firstname: new RegExp('^' + escapeRegex(firstName) + '$', 'i') });
+        stylistSearchQueries.push({ firstname: new RegExp(escapeRegex(stylist.trim()), 'i') });
+      }
+      if (stylistSearchQueries.length > 0) {
+        const matchedSpecialist = await User.findOne({
+          $or: stylistSearchQueries,
+          role: { $in: ['staff', 'expert'] }
+        });
+        if (matchedSpecialist) {
+          if (!resolvedStylistEmail) resolvedStylistEmail = matchedSpecialist.email;
+          if (!resolvedStylistId) resolvedStylistId = matchedSpecialist._id;
+        }
+      }
+    }
+
     const bookingPayload = {
       ...req.body,
-      stylistId: isValidStylistId ? stylistId : undefined,
+      stylistId: resolvedStylistId,
+      stylistEmail: resolvedStylistEmail,
       checkInCode: req.body.checkInCode || generateCheckInCode(),
       checkInStatus: 'pending',
       status: 'pending',
@@ -1114,12 +1138,37 @@ app.put('/api/bookings/:id', authenticateToken, async (req, res) => {
       return res.status(403).json({ error: 'Clients are only permitted to cancel bookings' });
     }
 
+    // Guard: If status is already the requested status, return early (idempotency)
+    if (rawStatus && booking.status === rawStatus) {
+      return res.status(200).json(booking);
+    }
+
+    // Guard: Completed appointments cannot be cancelled or altered
+    if (booking.status === 'completed') {
+      if (rawStatus === 'cancelled' || rawStatus === 'rejected') {
+        return res.status(400).json({ error: 'Completed appointments cannot be cancelled. Please contact Style Corner support.' });
+      }
+      return res.status(400).json({ error: 'This appointment has already been completed.' });
+    }
+
+    // Guard: Terminal statuses cannot transition again
+    if (booking.status === 'cancelled' || booking.status === 'rejected') {
+      return res.status(400).json({ error: `This appointment has already been ${booking.status}.` });
+    }
+
     const updateObj = {};
     if (rawStatus) updateObj.status = rawStatus;
 
     // If expert accepts, record their name as staff who accepted
     if (isStaff && (updateObj.status === 'accepted' || updateObj.status === 'confirmed')) {
       updateObj.staff = `${req.user.firstname || ''} ${req.user.lastname || ''}`.trim() || req.user.email;
+    }
+
+    // If cancelling or rejecting a paid booking, update payment status to refunded
+    const wasPaid = isBookingPaid(booking.paymentStatus);
+    const isTerminating = rawStatus === 'cancelled' || rawStatus === 'rejected';
+    if (isTerminating && wasPaid && booking.paymentStatus !== 'refunded') {
+      updateObj.paymentStatus = 'refunded';
     }
 
     const updated = await Booking.findByIdAndUpdate(req.params.id, { $set: updateObj }, { new: true });
@@ -1144,8 +1193,8 @@ app.put('/api/bookings/:id', authenticateToken, async (req, res) => {
           bookingId: updated._id
         });
       }
-    } else if (newStatus === 'completed') {
-      // 1. Credit Expert's Atelier Wallet with earnings for rendered service
+    } else if (newStatus === 'completed' && booking.status !== 'completed') {
+      // 1. Credit Expert's Atelier Wallet with earnings for rendered service (only once)
       try {
         let expertUser = null;
         if (updated.stylistId) {
@@ -1154,7 +1203,8 @@ app.put('/api/bookings/:id', authenticateToken, async (req, res) => {
         if (!expertUser && updated.stylist) {
           expertUser = await User.findOne({
             $or: [
-              { firstname: new RegExp(updated.stylist, 'i'), role: 'staff' },
+              { firstname: new RegExp('^' + escapeRegex(updated.stylist.trim().split(' ')[0]) + '$', 'i'), role: { $in: ['staff', 'expert'] } },
+              { firstname: new RegExp(escapeRegex(updated.stylist), 'i'), role: { $in: ['staff', 'expert'] } },
               { email: updated.stylistEmail }
             ]
           });
@@ -1162,8 +1212,7 @@ app.put('/api/bookings/:id', authenticateToken, async (req, res) => {
 
         if (expertUser) {
           const earningAmount = Number(updated.price) || 0;
-          expertUser.walletBalance = (expertUser.walletBalance ?? 0) + earningAmount;
-          await expertUser.save();
+          await User.findByIdAndUpdate(expertUser._id, { $inc: { walletBalance: earningAmount } });
 
           const txn = new Transaction({
             userId: expertUser._id,
@@ -1211,19 +1260,14 @@ app.put('/api/bookings/:id', authenticateToken, async (req, res) => {
           bookingId: updated._id
         });
       }
-    } else if (newStatus === 'cancelled' || newStatus === 'rejected') {
-      // Auto-refund client wallet if the booking was already paid for
-      const wasPaid = isBookingPaid(booking.paymentStatus);
-      if (wasPaid) {
+    } else if (isTerminating && booking.status !== 'cancelled' && booking.status !== 'rejected') {
+      // Auto-refund client wallet if the booking was already paid for (and not already refunded)
+      if (wasPaid && booking.paymentStatus !== 'refunded') {
         try {
           const clientUser = await User.findOne({ email: new RegExp('^' + escapeRegex(booking.clientEmail) + '$', 'i') });
           if (clientUser) {
             const refundAmount = Number(booking.price) || 0;
-            clientUser.walletBalance = (clientUser.walletBalance ?? 0) + refundAmount;
-            await clientUser.save();
-
-            updateObj.paymentStatus = 'refunded';
-            await Booking.findByIdAndUpdate(req.params.id, { $set: { paymentStatus: 'refunded' } });
+            await User.findByIdAndUpdate(clientUser._id, { $inc: { walletBalance: refundAmount } });
 
             const refundTxn = new Transaction({
               userId: clientUser._id,
@@ -1351,6 +1395,23 @@ app.post('/api/bookings/:id/check-in', authenticateToken, async (req, res) => {
       return res.status(404).json({ error: 'Booking not found.' });
     }
 
+    const userEmail = (req.user.email || '').trim().toLowerCase();
+    const isAdmin = req.user.role === 'admin';
+    const isStaff = req.user.role === 'staff' || req.user.role === 'expert';
+    const isClient = (booking.clientEmail || '').trim().toLowerCase() === userEmail;
+
+    if (!isAdmin && !isStaff && !isClient) {
+      return res.status(403).json({ error: 'You are not authorized to check in for this appointment.' });
+    }
+
+    if (!isBookingPaid(booking.paymentStatus)) {
+      return res.status(400).json({ error: 'This appointment has not been paid for yet. Please complete payment before checking in.' });
+    }
+
+    if (booking.checkInStatus === 'checked_in') {
+      return res.status(200).json({ success: true, message: 'Already checked in', booking });
+    }
+
     booking.checkInStatus = 'checked_in';
     booking.checkedInAt = new Date();
     if (booking.status === 'pending') {
@@ -1365,6 +1426,16 @@ app.post('/api/bookings/:id/check-in', authenticateToken, async (req, res) => {
       type: 'booking',
       bookingId: updated._id
     });
+
+    if (updated.stylistEmail) {
+      await createInAppNotification({
+        userEmail: updated.stylistEmail,
+        title: 'Client Checked In! 💈',
+        message: `${updated.clientName} has checked in for ${updated.service} (${updated.time}).`,
+        type: 'booking',
+        bookingId: updated._id
+      });
+    }
 
     res.status(200).json({ success: true, booking: updated });
   } catch (error) {
@@ -1840,9 +1911,10 @@ app.get('/api/bookings/:id/messages', authenticateToken, async (req, res) => {
     const userEmail = (req.user.email || '').trim().toLowerCase();
     const clientEmail = (booking.clientEmail || '').trim().toLowerCase();
     const stylistEmail = (booking.stylistEmail || '').trim().toLowerCase();
-    const isAdmin = req.user.role === 'admin' || req.user.role === 'staff';
+    const isSpecialistId = booking.stylistId && String(booking.stylistId) === String(req.user._id);
+    const isAdmin = req.user.role === 'admin' || req.user.role === 'staff' || req.user.role === 'expert';
 
-    if (!isAdmin && userEmail !== clientEmail && userEmail !== stylistEmail) {
+    if (!isAdmin && !isSpecialistId && userEmail !== clientEmail && userEmail !== stylistEmail) {
       return res.status(403).json({ error: 'Access denied. You are not part of this booking.' });
     }
 
@@ -1872,9 +1944,10 @@ app.post('/api/bookings/:id/messages', authenticateToken, async (req, res) => {
     const userEmail = (req.user.email || '').trim().toLowerCase();
     const clientEmail = (booking.clientEmail || '').trim().toLowerCase();
     const stylistEmail = (booking.stylistEmail || '').trim().toLowerCase();
-    const isAdmin = req.user.role === 'admin' || req.user.role === 'staff';
+    const isSpecialistId = booking.stylistId && String(booking.stylistId) === String(req.user._id);
+    const isAdmin = req.user.role === 'admin' || req.user.role === 'staff' || req.user.role === 'expert';
 
-    if (!isAdmin && userEmail !== clientEmail && userEmail !== stylistEmail) {
+    if (!isAdmin && !isSpecialistId && userEmail !== clientEmail && userEmail !== stylistEmail) {
       return res.status(403).json({ error: 'Access denied. You are not part of this booking.' });
     }
 
@@ -1882,7 +1955,7 @@ app.post('/api/bookings/:id/messages', authenticateToken, async (req, res) => {
       return res.status(403).json({ error: 'Chat is only available for paid bookings.' });
     }
 
-    const isSpecialist = userEmail === stylistEmail || req.user.role === 'staff';
+    const isSpecialist = userEmail === stylistEmail || isSpecialistId || req.user.role === 'staff' || req.user.role === 'expert';
     const senderRole = isSpecialist ? 'specialist' : 'customer';
     const senderName = `${req.user.firstname || ''} ${req.user.lastname || ''}`.trim() || req.user.email;
 
@@ -2144,6 +2217,18 @@ app.post('/api/reviews', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'Missing required review fields (bookingId, stylistName, rating)' });
     }
 
+    // Validate the booking exists and belongs to this customer
+    const booking = await Booking.findById(bookingId).lean();
+    if (!booking) {
+      return res.status(404).json({ error: 'Booking not found. Please ensure you are reviewing a valid appointment.' });
+    }
+    if ((booking.clientEmail || '').trim().toLowerCase() !== (req.user.email || '').trim().toLowerCase()) {
+      return res.status(403).json({ error: 'You can only review your own appointments.' });
+    }
+    if (booking.status !== 'completed') {
+      return res.status(400).json({ error: 'Reviews can only be submitted for completed appointments.' });
+    }
+
     const existingReview = await Review.findOne({ bookingId });
     if (existingReview) {
       return res.status(400).json({ error: 'You have already submitted a review for this appointment.' });
@@ -2369,17 +2454,35 @@ app.post('/api/wallet/pay', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'Invalid payment amount' });
     }
 
-    const userDoc = await User.findById(req.user._id);
-    if (!userDoc) return res.status(404).json({ error: 'User not found' });
-
-    const currentBal = userDoc.walletBalance ?? 0;
-    if (currentBal < amount) {
-      return res.status(400).json({ error: `Insufficient wallet balance (₦${currentBal.toLocaleString()}). Please top up first.` });
+    // Idempotency guard: reject if already paid
+    if (bookingId) {
+      const existingBooking = await Booking.findById(bookingId).lean();
+      if (!existingBooking) return res.status(404).json({ error: 'Booking not found' });
+      if (isBookingPaid(existingBooking.paymentStatus)) {
+        return res.status(400).json({ error: 'This booking has already been paid for.' });
+      }
+    }
+    if (orderId) {
+      const existingOrder = await Order.findById(orderId).lean();
+      if (!existingOrder) return res.status(404).json({ error: 'Order not found' });
+      if (isBookingPaid(existingOrder.paymentStatus)) {
+        return res.status(400).json({ error: 'This order has already been paid for.' });
+      }
     }
 
-    const newBal = currentBal - amount;
-    userDoc.walletBalance = newBal;
-    await userDoc.save();
+    // Atomic balance deduction — prevents race-condition overdrafts
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: req.user._id, walletBalance: { $gte: amount } },
+      { $inc: { walletBalance: -amount } },
+      { new: true }
+    );
+    if (!updatedUser) {
+      const userDoc = await User.findById(req.user._id).lean();
+      const bal = userDoc?.walletBalance ?? 0;
+      return res.status(400).json({ error: `Insufficient wallet balance (₦${bal.toLocaleString()}). Please top up first.` });
+    }
+
+    const newBal = updatedUser.walletBalance;
 
     if (orderId) {
       await Order.findByIdAndUpdate(orderId, { $set: { paymentStatus: 'paid_wallet', status: 'processing' } });
@@ -2400,9 +2503,9 @@ app.post('/api/wallet/pay', authenticateToken, async (req, res) => {
     const payRef = `WLT-PAY-${Date.now()}-${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
     const txnType = bookingId ? 'service_payment' : 'store_purchase';
     const payTxn = new Transaction({
-      userId: userDoc._id,
-      userEmail: userDoc.email,
-      userName: `${userDoc.firstname} ${userDoc.lastname || ''}`.trim(),
+      userId: updatedUser._id,
+      userEmail: updatedUser.email,
+      userName: `${updatedUser.firstname} ${updatedUser.lastname || ''}`.trim(),
       type: txnType,
       amount: amount,
       direction: 'debit',
@@ -2417,7 +2520,7 @@ app.post('/api/wallet/pay', authenticateToken, async (req, res) => {
     await payTxn.save();
 
     await createInAppNotification({
-      userEmail: userDoc.email,
+      userEmail: updatedUser.email,
       title: '💳 Payment Successful via Wallet!',
       message: `Debited ₦${amount.toLocaleString()} for ${description || 'your checkout'}. Remaining Balance: ₦${newBal.toLocaleString()}`,
       type: 'order',
@@ -2448,6 +2551,27 @@ app.post('/api/paystack/verify', authenticateToken, async (req, res) => {
     if (!reference) {
       return res.status(400).json({ error: 'Payment reference is required' });
     }
+
+    // ── Replay-Attack Guard ──────────────────────────────────────────────────
+    // Reject if this Paystack reference has already been recorded in Transactions
+    const existingTxn = await Transaction.findOne({ reference }).lean();
+    if (existingTxn) {
+      return res.status(400).json({ error: 'This payment reference has already been processed. Please do not re-submit.' });
+    }
+    // Also reject if the target resource is already marked as paid
+    if (bookingId && !isTopup) {
+      const existingBooking = await Booking.findById(bookingId).lean();
+      if (existingBooking && isBookingPaid(existingBooking.paymentStatus)) {
+        return res.status(400).json({ error: 'This booking has already been paid for.' });
+      }
+    }
+    if (orderId && !isTopup) {
+      const existingOrder = await Order.findById(orderId).lean();
+      if (existingOrder && isBookingPaid(existingOrder.paymentStatus)) {
+        return res.status(400).json({ error: 'This order has already been paid for.' });
+      }
+    }
+    // ─────────────────────────────────────────────────────────────────────────
 
     let verifiedAmount = Number(amount) || 0;
     let paystackData = null;
@@ -2773,26 +2897,26 @@ app.post('/api/wallet/withdraw', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'Complete bank account details are required' });
     }
 
-    const user = await User.findById(req.user._id);
-    if (!user) return res.status(404).json({ error: 'User account not found' });
-
-    const currentBalance = user.walletBalance ?? 0;
-    if (currentBalance < withdrawAmount) {
+    // Atomic balance deduction — prevents race-condition overdrafts
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: req.user._id, walletBalance: { $gte: withdrawAmount } },
+      { $inc: { walletBalance: -withdrawAmount } },
+      { new: true }
+    );
+    if (!updatedUser) {
+      const userCheck = await User.findById(req.user._id).lean();
+      const bal = userCheck?.walletBalance ?? 0;
       return res.status(400).json({
-        error: `Insufficient withdrawable balance (₦${currentBalance.toLocaleString()}). Requested: ₦${withdrawAmount.toLocaleString()}`
+        error: `Insufficient withdrawable balance (₦${bal.toLocaleString()}). Requested: ₦${withdrawAmount.toLocaleString()}`
       });
     }
 
-    // Debit the wallet balance
-    user.walletBalance = currentBalance - withdrawAmount;
-    await user.save();
-
     const ref = `WD-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`;
 
-    const userDisplayName = `${user.firstname} ${user.lastname || ''}`.trim() || user.email;
+    const userDisplayName = `${updatedUser.firstname} ${updatedUser.lastname || ''}`.trim() || updatedUser.email;
     const withdrawal = new Withdrawal({
-      userId: user._id,
-      userEmail: user.email,
+      userId: updatedUser._id,
+      userEmail: updatedUser.email,
       expertName: userDisplayName,
       amount: withdrawAmount,
       bankName: bankName.trim(),
@@ -2805,9 +2929,9 @@ app.post('/api/wallet/withdraw', authenticateToken, async (req, res) => {
     await withdrawal.save();
 
     const txn = new Transaction({
-      userId: user._id,
-      userEmail: user.email,
-      userName: `${user.firstname} ${user.lastname || ''}`.trim(),
+      userId: updatedUser._id,
+      userEmail: updatedUser.email,
+      userName: `${updatedUser.firstname} ${updatedUser.lastname || ''}`.trim(),
       type: 'withdrawal',
       amount: withdrawAmount,
       direction: 'debit',
@@ -2823,31 +2947,31 @@ app.post('/api/wallet/withdraw', authenticateToken, async (req, res) => {
 
     // 1. Notify Expert
     await createInAppNotification({
-      userEmail: user.email,
+      userEmail: updatedUser.email,
       title: 'Payout Request Submitted! 🏦',
       message: `Your withdrawal of ₦${withdrawAmount.toLocaleString()} to ${bankName} (${accountNumber}) is being processed.`,
       type: 'order'
     });
 
     await sendNotificationSafe(
-      user.email,
+      updatedUser.email,
       `Payout Request Confirmed: ₦${withdrawAmount.toLocaleString()} 🏦`,
-      `Hi ${user.firstname},\n\nYour withdrawal request of ₦${withdrawAmount.toLocaleString()} has been received and is being processed.\n\nPayout Details:\n- Amount: ₦${withdrawAmount.toLocaleString()}\n- Bank: ${bankName}\n- Account Number: ${accountNumber}\n- Account Name: ${accountName}\n- Reference: ${ref}\n\nFunds will reflect in your bank account shortly.`
+      `Hi ${updatedUser.firstname},\n\nYour withdrawal request of ₦${withdrawAmount.toLocaleString()} has been received and is being processed.\n\nPayout Details:\n- Amount: ₦${withdrawAmount.toLocaleString()}\n- Bank: ${bankName}\n- Account Number: ${accountNumber}\n- Account Name: ${accountName}\n- Reference: ${ref}\n\nFunds will reflect in your bank account shortly.`
     );
 
     // 2. Alert Admin
     const adminEmail = process.env.ADMIN_EMAIL || process.env.EMAIL_USER || process.env.BREVO_SMTP_LOGIN;
-    if (adminEmail && adminEmail !== user.email) {
+    if (adminEmail && adminEmail !== updatedUser.email) {
       await sendNotificationSafe(
         adminEmail,
-        `🔔 Expert Payout Request: ${user.firstname} (₦${withdrawAmount.toLocaleString()})`,
-        `ADMIN PAYOUT ALERT\n\nExpert ${user.firstname} ${user.lastname || ''} (${user.email}) requested a payout:\n- Amount: ₦${withdrawAmount.toLocaleString()}\n- Bank: ${bankName}\n- Account: ${accountNumber} (${accountName})\n- Reference: ${ref}`
+        `🔔 Expert Payout Request: ${updatedUser.firstname} (₦${withdrawAmount.toLocaleString()})`,
+        `ADMIN PAYOUT ALERT\n\nExpert ${updatedUser.firstname} ${updatedUser.lastname || ''} (${updatedUser.email}) requested a payout:\n- Amount: ₦${withdrawAmount.toLocaleString()}\n- Bank: ${bankName}\n- Account: ${accountNumber} (${accountName})\n- Reference: ${ref}`
       );
     }
 
     res.status(200).json({
       message: `Withdrawal of ₦${withdrawAmount.toLocaleString()} submitted successfully!`,
-      walletBalance: user.walletBalance,
+      walletBalance: updatedUser.walletBalance,
       withdrawal
     });
   } catch (error) {
