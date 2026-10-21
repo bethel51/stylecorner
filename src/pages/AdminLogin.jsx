@@ -103,7 +103,7 @@ export const AdminLogin = () => {
               fontFamily: 'Outfit',
               fontSize: '1.85rem',
               fontWeight: 800,
-              color: '#171717',
+              color: 'var(--color-text-primary, #ffffff)',
               marginTop: '0.2rem',
             }}
           >

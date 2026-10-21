@@ -90,7 +90,7 @@ export const Login = () => {
               fontFamily: 'Outfit',
               fontSize: '1.75rem',
               fontWeight: 800,
-              color: '#FFFFFF',
+              color: 'var(--color-text-primary, #FFFFFF)',
             }}
           >
             Welcome Back
@@ -168,10 +168,10 @@ export const Login = () => {
         </div>
 
         {/* Form Card */}
-        <div style={{ background: '#151822', borderRadius: '24px', padding: '1.5rem', border: '1px solid rgba(255,255,255,0.06)', marginBottom: '1.5rem' }}>
+        <div style={{ background: 'var(--color-surface, #151822)', borderRadius: '24px', padding: '1.5rem', border: '1px solid var(--color-border, rgba(255,255,255,0.06))', marginBottom: '1.5rem' }}>
           <form onSubmit={handleSubmit}>
             <div style={{ marginBottom: '1rem' }}>
-              <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#9AA2B3', marginBottom: '0.5rem', fontFamily: 'Outfit' }}>Email Address</label>
+              <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: 'var(--color-text-secondary, #9AA2B3)', marginBottom: '0.5rem', fontFamily: 'Outfit' }}>Email Address</label>
               <input
                 type="email"
                 value={email}
@@ -180,8 +180,8 @@ export const Login = () => {
                 required
                 style={{
                   width: '100%', padding: '0.85rem 1rem', borderRadius: '14px',
-                  background: '#0C0E14', border: '1px solid rgba(255,255,255,0.1)',
-                  color: '#FFFFFF', fontFamily: 'Outfit', fontSize: '0.92rem', outline: 'none'
+                  background: 'var(--color-bg, #0C0E14)', border: '1px solid var(--color-border, rgba(255,255,255,0.1))',
+                  color: 'var(--color-text-primary, #FFFFFF)', fontFamily: 'Outfit', fontSize: '0.92rem', outline: 'none'
                 }}
               />
             </div>
@@ -219,8 +219,8 @@ export const Login = () => {
                 required
                 style={{
                   width: '100%', padding: '0.85rem 1rem', borderRadius: '14px',
-                  background: '#0C0E14', border: '1px solid rgba(255,255,255,0.1)',
-                  color: '#FFFFFF', fontFamily: 'Outfit', fontSize: '0.92rem', outline: 'none'
+                  background: 'var(--color-bg, #0C0E14)', border: '1px solid var(--color-border, rgba(255,255,255,0.1))',
+                  color: 'var(--color-text-primary, #FFFFFF)', fontFamily: 'Outfit', fontSize: '0.92rem', outline: 'none'
                 }}
               />
             </div>

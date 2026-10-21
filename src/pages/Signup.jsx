@@ -179,7 +179,7 @@ export const Signup = () => {
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
           </div>
-          <h2 style={{ fontFamily: 'Outfit', fontSize: '1.6rem', fontWeight: 800, color: '#FFFFFF' }}>
+          <h2 style={{ fontFamily: 'Outfit', fontSize: '1.6rem', fontWeight: 800, color: 'var(--color-text-primary, #FFFFFF)' }}>
             Create Your Account
           </h2>
           <p style={{ color: '#9AA2B3', fontSize: '0.88rem', marginTop: '0.2rem' }}>
@@ -189,11 +189,11 @@ export const Signup = () => {
           </p>
         </div>
 
-        <div style={{ background: '#151822', borderRadius: '24px', padding: '1.5rem', border: '1px solid rgba(255,255,255,0.06)', marginBottom: '1.25rem' }}>
+        <div style={{ background: 'var(--color-surface, #151822)', borderRadius: '24px', padding: '1.5rem', border: '1px solid var(--color-border, rgba(255,255,255,0.06))', marginBottom: '1.25rem' }}>
           <form onSubmit={handleSubmit}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1rem' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#9AA2B3', marginBottom: '0.4rem', fontFamily: 'Outfit' }}>First Name *</label>
+                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: 'var(--color-text-secondary, #9AA2B3)', marginBottom: '0.4rem', fontFamily: 'Outfit' }}>First Name *</label>
                 <input
                   type="text"
                   name="firstname"
@@ -201,24 +201,24 @@ export const Signup = () => {
                   onChange={handleChange}
                   placeholder="Alex"
                   required
-                  style={{ width: '100%', padding: '0.8rem 0.9rem', borderRadius: '12px', background: '#0C0E14', border: '1px solid rgba(255,255,255,0.1)', color: '#FFFFFF', fontFamily: 'Outfit', fontSize: '16px', outline: 'none', boxSizing: 'border-box' }}
+                  style={{ width: '100%', padding: '0.8rem 0.9rem', borderRadius: '12px', background: 'var(--color-bg, #0C0E14)', border: '1px solid var(--color-border, rgba(255,255,255,0.1))', color: 'var(--color-text-primary, #FFFFFF)', fontFamily: 'Outfit', fontSize: '16px', outline: 'none', boxSizing: 'border-box' }}
                 />
               </div>
               <div>
-                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#9AA2B3', marginBottom: '0.4rem', fontFamily: 'Outfit' }}>Last Name</label>
+                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: 'var(--color-text-secondary, #9AA2B3)', marginBottom: '0.4rem', fontFamily: 'Outfit' }}>Last Name</label>
                 <input
                   type="text"
                   name="lastname"
                   value={form.lastname}
                   onChange={handleChange}
                   placeholder="Morgan"
-                  style={{ width: '100%', padding: '0.8rem 0.9rem', borderRadius: '12px', background: '#0C0E14', border: '1px solid rgba(255,255,255,0.1)', color: '#FFFFFF', fontFamily: 'Outfit', fontSize: '16px', outline: 'none', boxSizing: 'border-box' }}
+                  style={{ width: '100%', padding: '0.8rem 0.9rem', borderRadius: '12px', background: 'var(--color-bg, #0C0E14)', border: '1px solid var(--color-border, rgba(255,255,255,0.1))', color: 'var(--color-text-primary, #FFFFFF)', fontFamily: 'Outfit', fontSize: '16px', outline: 'none', boxSizing: 'border-box' }}
                 />
               </div>
             </div>
 
             <div style={{ marginBottom: '1rem' }}>
-              <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#9AA2B3', marginBottom: '0.4rem', fontFamily: 'Outfit' }}>Email Address *</label>
+              <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: 'var(--color-text-secondary, #9AA2B3)', marginBottom: '0.4rem', fontFamily: 'Outfit' }}>Email Address *</label>
               <input
                 type="email"
                 name="email"
@@ -226,24 +226,24 @@ export const Signup = () => {
                 onChange={handleChange}
                 placeholder="alex@example.com"
                 required
-                style={{ width: '100%', padding: '0.8rem 0.9rem', borderRadius: '12px', background: '#0C0E14', border: '1px solid rgba(255,255,255,0.1)', color: '#FFFFFF', fontFamily: 'Outfit', fontSize: '16px', outline: 'none', boxSizing: 'border-box' }}
+                style={{ width: '100%', padding: '0.8rem 0.9rem', borderRadius: '12px', background: 'var(--color-bg, #0C0E14)', border: '1px solid var(--color-border, rgba(255,255,255,0.1))', color: 'var(--color-text-primary, #FFFFFF)', fontFamily: 'Outfit', fontSize: '16px', outline: 'none', boxSizing: 'border-box' }}
               />
             </div>
 
             <div style={{ marginBottom: '1rem' }}>
-              <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#9AA2B3', marginBottom: '0.4rem', fontFamily: 'Outfit' }}>Phone Number</label>
+              <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: 'var(--color-text-secondary, #9AA2B3)', marginBottom: '0.4rem', fontFamily: 'Outfit' }}>Phone Number</label>
               <input
                 type="tel"
                 name="phone"
                 value={form.phone}
                 onChange={handleChange}
                 placeholder="+234 800 000 0000"
-                style={{ width: '100%', padding: '0.8rem 0.9rem', borderRadius: '12px', background: '#0C0E14', border: '1px solid rgba(255,255,255,0.1)', color: '#FFFFFF', fontFamily: 'Outfit', fontSize: '16px', outline: 'none', boxSizing: 'border-box' }}
+                style={{ width: '100%', padding: '0.8rem 0.9rem', borderRadius: '12px', background: 'var(--color-bg, #0C0E14)', border: '1px solid var(--color-border, rgba(255,255,255,0.1))', color: 'var(--color-text-primary, #FFFFFF)', fontFamily: 'Outfit', fontSize: '16px', outline: 'none', boxSizing: 'border-box' }}
               />
             </div>
 
             <div style={{ marginBottom: '1rem' }}>
-              <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#9AA2B3', marginBottom: '0.4rem', fontFamily: 'Outfit' }}>Password *</label>
+              <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: 'var(--color-text-secondary, #9AA2B3)', marginBottom: '0.4rem', fontFamily: 'Outfit' }}>Password *</label>
               <input
                 type="password"
                 name="password"
@@ -251,7 +251,7 @@ export const Signup = () => {
                 onChange={handleChange}
                 placeholder="••••••••"
                 required
-                style={{ width: '100%', padding: '0.8rem 0.9rem', borderRadius: '12px', background: '#0C0E14', border: '1px solid rgba(255,255,255,0.1)', color: '#FFFFFF', fontFamily: 'Outfit', fontSize: '16px', outline: 'none', boxSizing: 'border-box' }}
+                style={{ width: '100%', padding: '0.8rem 0.9rem', borderRadius: '12px', background: 'var(--color-bg, #0C0E14)', border: '1px solid var(--color-border, rgba(255,255,255,0.1))', color: 'var(--color-text-primary, #FFFFFF)', fontFamily: 'Outfit', fontSize: '16px', outline: 'none', boxSizing: 'border-box' }}
               />
             </div>
 
@@ -267,7 +267,7 @@ export const Signup = () => {
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
-                <label style={{ margin: 0, color: '#FFFFFF', fontWeight: 800, fontSize: '0.86rem', fontFamily: 'Outfit' }}>
+                <label style={{ margin: 0, color: 'var(--color-text-primary, #FFFFFF)', fontWeight: 800, fontSize: '0.86rem', fontFamily: 'Outfit' }}>
                   {role === 'staff' ? 'Business Location & Base *' : 'Your Location'}
                 </label>
                 <span style={{ fontSize: '0.72rem', color: '#F5B942', fontWeight: 800, fontFamily: 'Outfit' }}>
@@ -329,9 +329,9 @@ export const Signup = () => {
                     width: '100%',
                     padding: '0.8rem 0.9rem',
                     borderRadius: '12px',
-                    background: '#0C0E14',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    color: '#FFFFFF',
+                    background: 'var(--color-bg, #0C0E14)',
+                    border: '1px solid var(--color-border, rgba(255,255,255,0.1))',
+                    color: 'var(--color-text-primary, #FFFFFF)',
                     fontFamily: 'Outfit',
                     fontSize: '15px',
                     outline: 'none',
@@ -353,7 +353,7 @@ export const Signup = () => {
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.35rem' }}>
-                  <label style={{ margin: 0, color: '#FFFFFF', fontWeight: 800, fontSize: '0.86rem', fontFamily: 'Outfit' }}>
+                  <label style={{ margin: 0, color: 'var(--color-text-primary, #FFFFFF)', fontWeight: 800, fontSize: '0.86rem', fontFamily: 'Outfit' }}>
                     Select Your Specialty Craft *
                   </label>
                   <span

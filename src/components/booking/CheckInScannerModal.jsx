@@ -70,6 +70,7 @@ export const CheckInScannerModal = ({ isOpen, onClose, onCheckInComplete }) => {
       onClick={onClose}
     >
       <div
+        className="keep-white"
         style={{
           width: '100%',
           maxWidth: '440px',

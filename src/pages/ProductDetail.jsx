@@ -426,7 +426,7 @@ export const ProductDetail = () => {
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.5rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#F5B942' }}>
               <Star size={15} fill="#F5B942" />
-              <span style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.9rem', color: '#FFFFFF' }}>
+              <span style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.9rem', color: 'var(--color-text-primary, #FFFFFF)' }}>
                 {product.rating || 4.9}
               </span>
             </div>
@@ -436,7 +436,7 @@ export const ProductDetail = () => {
           </div>
 
           {/* Title & Price */}
-          <h1 style={{ fontFamily: 'Outfit', fontSize: '1.45rem', fontWeight: 800, color: '#FFFFFF', margin: '0 0 0.5rem', lineHeight: 1.2 }}>
+          <h1 style={{ fontFamily: 'Outfit', fontSize: '1.45rem', fontWeight: 800, color: 'var(--color-text-primary, #FFFFFF)', margin: '0 0 0.5rem', lineHeight: 1.2 }}>
             {product.title}
           </h1>
 
@@ -592,7 +592,7 @@ export const ProductDetail = () => {
         {/* ── Related Recommendations Grid ── */}
         <div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
-            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: '#FFFFFF', margin: 0 }}>
+            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: 'var(--color-text-primary, #FFFFFF)', margin: 0 }}>
               Recommended Products
             </h3>
             <span style={{ fontSize: '0.75rem', color: '#F5B942', fontFamily: 'Outfit', fontWeight: 700 }}>
@@ -606,10 +606,10 @@ export const ProductDetail = () => {
                 key={rel.id}
                 onClick={() => { navigate(`/product/${rel.id}`); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                 style={{
-                  background: '#151822',
+                  background: 'var(--color-surface, #151822)',
                   borderRadius: '16px',
                   padding: '0.75rem',
-                  border: '1px solid rgba(255,255,255,0.06)',
+                  border: '1px solid var(--color-border, rgba(255,255,255,0.06))',
                   cursor: 'pointer',
                   textAlign: 'left',
                   display: 'flex',
@@ -629,7 +629,7 @@ export const ProductDetail = () => {
                     </div>
                   </div>
 
-                  <h4 style={{ fontFamily: 'Outfit', fontSize: '0.82rem', fontWeight: 700, color: '#FFFFFF', margin: '0 0 0.3rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <h4 style={{ fontFamily: 'Outfit', fontSize: '0.82rem', fontWeight: 700, color: 'var(--color-text-primary, #FFFFFF)', margin: '0 0 0.3rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {rel.title}
                   </h4>
                 </div>

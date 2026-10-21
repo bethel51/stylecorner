@@ -1517,26 +1517,54 @@ button:active, .dashboard-quick-actions button:active {
 [data-theme="light"] h4:not(.app-btn *):not(.keep-white),
 [data-theme="light"] h5:not(.app-btn *):not(.keep-white),
 [data-theme="light"] h6:not(.app-btn *):not(.keep-white) {
-  color: var(--color-text-primary) !important;
+  color: var(--color-text-primary, #0a0f1d) !important;
 }
 
-/* Any text elements with inline white colors that are NOT on dark buttons/accent badges */
-[data-theme="light"] [style*="color: #fff" i]:not(button.app-btn-accent):not(button.app-btn-primary):not(.app-btn-accent *):not(.app-btn-primary *):not([style*="background: #ef4444"]):not([style*="background:#ef4444"]):not([style*="background: #10b981"]):not([style*="background:#10b981"]):not([style*="background: #f5b942"]):not([style*="background:#f5b942"]):not([style*="background: #d4af37"]):not([style*="background:#d4af37"]):not([style*="background: rgb(239, 68, 68)"]):not(.badge-dot):not(.keep-white),
-[data-theme="light"] [style*="color:#fff" i]:not(button.app-btn-accent):not(button.app-btn-primary):not(.app-btn-accent *):not(.app-btn-primary *):not([style*="background: #ef4444"]):not([style*="background:#ef4444"]):not([style*="background: #10b981"]):not([style*="background:#10b981"]):not([style*="background: #f5b942"]):not([style*="background:#f5b942"]):not([style*="background: #d4af37"]):not([style*="background:#d4af37"]):not([style*="background: rgb(239, 68, 68)"]):not(.badge-dot):not(.keep-white),
-[data-theme="light"] [style*="color: white" i]:not(button.app-btn-accent):not(button.app-btn-primary):not(.app-btn-accent *):not(.app-btn-primary *):not([style*="background: #ef4444"]):not([style*="background:#ef4444"]):not([style*="background: #10b981"]):not([style*="background:#10b981"]):not([style*="background: #f5b942"]):not([style*="background:#f5b942"]):not([style*="background: #d4af37"]):not([style*="background:#d4af37"]):not([style*="background: rgb(239, 68, 68)"]):not(.badge-dot):not(.keep-white),
-[data-theme="light"] [style*="color:white" i]:not(button.app-btn-accent):not(button.app-btn-primary):not(.app-btn-accent *):not(.app-btn-primary *):not([style*="background: #ef4444"]):not([style*="background:#ef4444"]):not([style*="background: #10b981"]):not([style*="background:#10b981"]):not([style*="background: #f5b942"]):not([style*="background:#f5b942"]):not([style*="background: #d4af37"]):not([style*="background:#d4af37"]):not([style*="background: rgb(239, 68, 68)"]):not(.badge-dot):not(.keep-white),
-[data-theme="light"] [style*="color: rgb(255, 255, 255)" i]:not(button.app-btn-accent):not(button.app-btn-primary):not(.app-btn-accent *):not(.app-btn-primary *):not([style*="background: #ef4444"]):not([style*="background:#ef4444"]):not([style*="background: #10b981"]):not([style*="background:#10b981"]):not([style*="background: #f5b942"]):not([style*="background:#f5b942"]):not([style*="background: #d4af37"]):not([style*="background:#d4af37"]):not([style*="background: rgb(239, 68, 68)"]):not(.badge-dot):not(.keep-white),
-[data-theme="light"] [style*="color:rgb(255, 255, 255)" i]:not(button.app-btn-accent):not(button.app-btn-primary):not(.app-btn-accent *):not(.app-btn-primary *):not([style*="background: #ef4444"]):not([style*="background:#ef4444"]):not([style*="background: #10b981"]):not([style*="background:#10b981"]):not([style*="background: #f5b942"]):not([style*="background:#f5b942"]):not([style*="background: #d4af37"]):not([style*="background:#d4af37"]):not([style*="background: rgb(239, 68, 68)"]):not(.badge-dot):not(.keep-white),
-[data-theme="light"] [style*="color: rgb(255,255,255)" i]:not(button.app-btn-accent):not(button.app-btn-primary):not(.app-btn-accent *):not(.app-btn-primary *):not([style*="background: #ef4444"]):not([style*="background:#ef4444"]):not([style*="background: #10b981"]):not([style*="background:#10b981"]):not([style*="background: #f5b942"]):not([style*="background:#f5b942"]):not([style*="background: #d4af37"]):not([style*="background:#d4af37"]):not([style*="background: rgb(239, 68, 68)"]):not(.badge-dot):not(.keep-white) {
-  color: var(--color-text-primary) !important;
+/* Light mode form inputs, labels & select elements */
+[data-theme="light"] label:not(.keep-white):not(.app-btn *):not([style*="background: #ef4444"]):not([style*="background:#ef4444"]) {
+  color: var(--color-text-primary, #0a0f1d) !important;
+}
+
+[data-theme="light"] input:not([type="submit"]):not([type="button"]):not([type="checkbox"]):not([type="radio"]),
+[data-theme="light"] textarea,
+[data-theme="light"] select {
+  color: var(--color-text-primary, #0a0f1d) !important;
+  background-color: var(--color-surface, #ffffff) !important;
+  border-color: rgba(15, 23, 42, 0.12) !important;
+}
+
+[data-theme="light"] input::placeholder,
+[data-theme="light"] textarea::placeholder {
+  color: var(--color-text-muted, #64748b) !important;
+  opacity: 1 !important;
+}
+
+/* Ensure cards and glass surfaces inherit dark text by default in light mode */
+[data-theme="light"] .app-card,
+[data-theme="light"] .glass-card,
+[data-theme="light"] .popup-modal-content {
+  color: var(--color-text-primary, #0a0f1d) !important;
+}
+
+/* Any text elements with inline white colors that are NOT on dark buttons/accent badges/toasts */
+[data-theme="light"] [style*="color: #fff" i]:not(button.app-btn-accent):not(button.app-btn-primary):not(.app-btn-accent *):not(.app-btn-primary *):not([style*="background: #ef4444"]):not([style*="background:#ef4444"]):not([style*="background: #10b981"]):not([style*="background:#10b981"]):not([style*="background: #f5b942"]):not([style*="background:#f5b942"]):not([style*="background: #d4af37"]):not([style*="background:#d4af37"]):not([style*="background: rgb(239, 68, 68)"]):not(.badge-dot):not(.keep-white):not(.app-toast *):not([role="alert"] *),
+[data-theme="light"] [style*="color:#fff" i]:not(button.app-btn-accent):not(button.app-btn-primary):not(.app-btn-accent *):not(.app-btn-primary *):not([style*="background: #ef4444"]):not([style*="background:#ef4444"]):not([style*="background: #10b981"]):not([style*="background:#10b981"]):not([style*="background: #f5b942"]):not([style*="background:#f5b942"]):not([style*="background: #d4af37"]):not([style*="background:#d4af37"]):not([style*="background: rgb(239, 68, 68)"]):not(.badge-dot):not(.keep-white):not(.app-toast *):not([role="alert"] *),
+[data-theme="light"] [style*="color: white" i]:not(button.app-btn-accent):not(button.app-btn-primary):not(.app-btn-accent *):not(.app-btn-primary *):not([style*="background: #ef4444"]):not([style*="background:#ef4444"]):not([style*="background: #10b981"]):not([style*="background:#10b981"]):not([style*="background: #f5b942"]):not([style*="background:#f5b942"]):not([style*="background: #d4af37"]):not([style*="background:#d4af37"]):not([style*="background: rgb(239, 68, 68)"]):not(.badge-dot):not(.keep-white):not(.app-toast *):not([role="alert"] *),
+[data-theme="light"] [style*="color:white" i]:not(button.app-btn-accent):not(button.app-btn-primary):not(.app-btn-accent *):not(.app-btn-primary *):not([style*="background: #ef4444"]):not([style*="background:#ef4444"]):not([style*="background: #10b981"]):not([style*="background:#10b981"]):not([style*="background: #f5b942"]):not([style*="background:#f5b942"]):not([style*="background: #d4af37"]):not([style*="background:#d4af37"]):not([style*="background: rgb(239, 68, 68)"]):not(.badge-dot):not(.keep-white):not(.app-toast *):not([role="alert"] *),
+[data-theme="light"] [style*="color: rgb(255, 255, 255)" i]:not(button.app-btn-accent):not(button.app-btn-primary):not(.app-btn-accent *):not(.app-btn-primary *):not([style*="background: #ef4444"]):not([style*="background:#ef4444"]):not([style*="background: #10b981"]):not([style*="background:#10b981"]):not([style*="background: #f5b942"]):not([style*="background:#f5b942"]):not([style*="background: #d4af37"]):not([style*="background:#d4af37"]):not([style*="background: rgb(239, 68, 68)"]):not(.badge-dot):not(.keep-white):not(.app-toast *):not([role="alert"] *),
+[data-theme="light"] [style*="color:rgb(255, 255, 255)" i]:not(button.app-btn-accent):not(button.app-btn-primary):not(.app-btn-accent *):not(.app-btn-primary *):not([style*="background: #ef4444"]):not([style*="background:#ef4444"]):not([style*="background: #10b981"]):not([style*="background:#10b981"]):not([style*="background: #f5b942"]):not([style*="background:#f5b942"]):not([style*="background: #d4af37"]):not([style*="background:#d4af37"]):not([style*="background: rgb(239, 68, 68)"]):not(.badge-dot):not(.keep-white):not(.app-toast *):not([role="alert"] *),
+[data-theme="light"] [style*="color: rgb(255,255,255)" i]:not(button.app-btn-accent):not(button.app-btn-primary):not(.app-btn-accent *):not(.app-btn-primary *):not([style*="background: #ef4444"]):not([style*="background:#ef4444"]):not([style*="background: #10b981"]):not([style*="background:#10b981"]):not([style*="background: #f5b942"]):not([style*="background:#f5b942"]):not([style*="background: #d4af37"]):not([style*="background:#d4af37"]):not([style*="background: rgb(239, 68, 68)"]):not(.badge-dot):not(.keep-white):not(.app-toast *):not([role="alert"] *) {
+  color: var(--color-text-primary, #0a0f1d) !important;
 }
 
 [data-theme="light"] p[style*="color: #cbd5e1"],
 [data-theme="light"] span[style*="color: #94a3b8"],
 [data-theme="light"] span[style*="color: #64748b"],
+[data-theme="light"] span[style*="color: #9AA2B3" i],
+[data-theme="light"] p[style*="color: #9AA2B3" i],
 [data-theme="light"] div[style*="color: #94a3b8"],
 [data-theme="light"] div[style*="color: #64748b"] {
-  color: var(--color-text-secondary) !important;
+  color: var(--color-text-secondary, #475569) !important;
 }
 
 /* ═══════════════════════════════════════════════════════════

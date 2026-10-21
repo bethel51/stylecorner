@@ -167,7 +167,7 @@ export const ForgotPassword = () => {
               >
                 <Mail size={26} />
               </div>
-              <h2 style={{ fontFamily: 'Outfit', fontWeight: 800, color: '#ffffff', margin: 0, fontSize: '1.4rem' }}>
+              <h2 style={{ fontFamily: 'Outfit', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: 0, fontSize: '1.4rem' }}>
                 Forgot Password?
               </h2>
               <p style={{ color: '#9ca3af', fontSize: '0.85rem', marginTop: '0.35rem', lineHeight: '1.4' }}>
@@ -267,7 +267,7 @@ export const ForgotPassword = () => {
               >
                 <KeyRound size={26} />
               </div>
-              <h2 style={{ fontFamily: 'Outfit', fontWeight: 800, color: '#ffffff', margin: 0, fontSize: '1.4rem' }}>
+              <h2 style={{ fontFamily: 'Outfit', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: 0, fontSize: '1.4rem' }}>
                 Enter Reset Code
               </h2>
               <p style={{ color: '#9ca3af', fontSize: '0.85rem', marginTop: '0.35rem', lineHeight: '1.4' }}>
@@ -379,7 +379,7 @@ export const ForgotPassword = () => {
               >
                 <Lock size={26} />
               </div>
-              <h2 style={{ fontFamily: 'Outfit', fontWeight: 800, color: '#ffffff', margin: 0, fontSize: '1.4rem' }}>
+              <h2 style={{ fontFamily: 'Outfit', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: 0, fontSize: '1.4rem' }}>
                 Set New Password
               </h2>
               <p style={{ color: '#9ca3af', fontSize: '0.85rem', marginTop: '0.35rem', lineHeight: '1.4' }}>

@@ -461,7 +461,7 @@ export const Wallet = () => {
           >
             <Gift size={26} />
           </div>
-          <h3 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.35rem' }}>
+          <h3 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', marginBottom: '0.35rem' }}>
             Earn ₦2,000 on Every Referral
           </h3>
           <p style={{ fontSize: '0.82rem', color: '#94a3b8', lineHeight: 1.45, marginBottom: '1.25rem' }}>

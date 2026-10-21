@@ -193,7 +193,7 @@ export const Payment = () => {
               <span style={{ fontSize: '0.65rem', fontFamily: 'Outfit', fontWeight: 800, color: '#F5B942', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                 SUMMARY RECEIPT
               </span>
-              <h3 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, margin: '0.25rem 0 0', color: '#FFFFFF' }}>
+              <h3 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, margin: '0.25rem 0 0', color: 'var(--color-text-primary, #FFFFFF)' }}>
                 {checkoutData.title || 'Style Corner Checkout'}
               </h3>
               <p style={{ color: '#9AA2B3', fontSize: '0.78rem', margin: '0.2rem 0 0' }}>
@@ -215,7 +215,7 @@ export const Payment = () => {
         </div>
 
         {/* Payment Methods Selector Tabs */}
-        <div style={{ display: 'flex', background: '#151822', borderRadius: '16px', padding: '4px', gap: '4px', marginBottom: '1.25rem', border: '1px solid rgba(255,255,255,0.06)' }}>
+        <div style={{ display: 'flex', background: 'var(--color-surface, #151822)', borderRadius: '16px', padding: '4px', gap: '4px', marginBottom: '1.25rem', border: '1px solid var(--color-border, rgba(255,255,255,0.06))' }}>
           {[
             ...(!isTopup ? [{ id: 'wallet', label: '₦ Wallet', icon: Wallet }] : []),
             { id: 'card', label: 'Card / Paystack', icon: CreditCard },
@@ -299,7 +299,7 @@ export const Payment = () => {
               <CreditCard size={28} />
             </div>
 
-            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.2rem', fontWeight: 800, color: '#FFFFFF', margin: '0 0 0.4rem' }}>
+            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.2rem', fontWeight: 800, color: 'var(--color-text-primary, #FFFFFF)', margin: '0 0 0.4rem' }}>
               Pay via Paystack
             </h3>
             <p style={{ color: '#9AA2B3', fontSize: '0.82rem', maxWidth: '300px', margin: '0 auto 1.25rem', lineHeight: 1.5 }}>
@@ -312,7 +312,7 @@ export const Payment = () => {
               display: 'flex', justifyContent: 'space-between', alignItems: 'center'
             }}>
               <span style={{ fontSize: '0.82rem', color: '#9AA2B3', fontWeight: 600 }}>Amount Due</span>
-              <span style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 900, color: '#FFFFFF' }}>
+              <span style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 900, color: 'var(--color-text-primary, #FFFFFF)' }}>
                 ₦{amount.toLocaleString()}
               </span>
             </div>
@@ -339,7 +339,7 @@ export const Payment = () => {
 
         {/* ── METHOD 3: BANK TRANSFER / USSD ── */}
         {activeMethod === 'transfer' && (
-          <div style={{ background: '#151822', borderRadius: '24px', padding: '1.5rem', border: '1px solid rgba(255,255,255,0.06)', textAlign: 'center' }}>
+          <div style={{ background: 'var(--color-surface, #151822)', borderRadius: '24px', padding: '1.5rem', border: '1px solid var(--color-border, rgba(255,255,255,0.06))', textAlign: 'center' }}>
             <div style={{
               width: '56px', height: '56px', borderRadius: '50%',
               background: 'rgba(245,185,66,0.1)',
@@ -349,16 +349,16 @@ export const Payment = () => {
               <Landmark size={28} color="#F5B942" />
             </div>
 
-            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.2rem', fontWeight: 800, color: '#FFFFFF', margin: '0 0 0.5rem' }}>
+            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.2rem', fontWeight: 800, color: 'var(--color-text-primary, #FFFFFF)', margin: '0 0 0.5rem' }}>
               Bank Transfer & USSD
             </h3>
             <p style={{ color: '#9AA2B3', fontSize: '0.82rem', maxWidth: '300px', margin: '0 auto 1.25rem', lineHeight: 1.5 }}>
               Pay via bank transfer, USSD, or mobile banking — powered by Paystack.
             </p>
 
-            <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '14px', padding: '0.85rem 1rem', marginBottom: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ background: 'var(--color-surface-hover, rgba(255,255,255,0.04))', border: '1px solid var(--color-border, rgba(255,255,255,0.06))', borderRadius: '14px', padding: '0.85rem 1rem', marginBottom: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span style={{ fontSize: '0.82rem', color: '#9AA2B3', fontWeight: 600 }}>Amount Due</span>
-              <span style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 900, color: '#FFFFFF' }}>
+              <span style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 900, color: 'var(--color-text-primary, #FFFFFF)' }}>
                 ₦{amount.toLocaleString()}
               </span>
             </div>
@@ -392,9 +392,9 @@ export const Payment = () => {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            style={{ background: '#151822', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '24px', padding: '1.5rem', width: '100%', maxWidth: '400px' }}
+            style={{ background: 'var(--color-surface, #151822)', border: '1px solid var(--color-border, rgba(255,255,255,0.08))', borderRadius: '24px', padding: '1.5rem', width: '100%', maxWidth: '400px' }}
           >
-            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 800, color: '#FFFFFF', margin: '0 0 0.3rem' }}>
+            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 800, color: 'var(--color-text-primary, #FFFFFF)', margin: '0 0 0.3rem' }}>
               💳 Top Up Atelier Wallet
             </h3>
             <p style={{ color: '#9AA2B3', fontSize: '0.8rem', margin: '0 0 1.1rem' }}>
@@ -432,8 +432,8 @@ export const Payment = () => {
                   required
                   style={{
                     width: '100%', padding: '0.75rem 1rem', borderRadius: '12px',
-                    background: '#0C0E14', border: '1px solid rgba(255,255,255,0.1)',
-                    color: '#FFFFFF', fontFamily: 'Outfit', fontSize: '1rem', outline: 'none',
+                    background: 'var(--color-bg, #0C0E14)', border: '1px solid var(--color-border, rgba(255,255,255,0.1))',
+                    color: 'var(--color-text-primary, #FFFFFF)', fontFamily: 'Outfit', fontSize: '1rem', outline: 'none',
                     boxSizing: 'border-box',
                   }}
                 />
@@ -442,7 +442,7 @@ export const Payment = () => {
               <div style={{ display: 'flex', gap: '0.65rem' }}>
                 <button
                   type="button" onClick={() => setShowTopupModal(false)}
-                  style={{ flex: 1, padding: '0.85rem', borderRadius: '14px', background: 'transparent', border: '1px solid rgba(255,255,255,0.12)', color: '#FFFFFF', fontFamily: 'Outfit', fontWeight: 700, cursor: 'pointer', fontSize: '0.9rem' }}
+                  style={{ flex: 1, padding: '0.85rem', borderRadius: '14px', background: 'transparent', border: '1px solid var(--color-border, rgba(255,255,255,0.12))', color: 'var(--color-text-primary, #FFFFFF)', fontFamily: 'Outfit', fontWeight: 700, cursor: 'pointer', fontSize: '0.9rem' }}
                 >
                   Cancel
                 </button>

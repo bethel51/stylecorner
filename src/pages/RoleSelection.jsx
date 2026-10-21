@@ -39,7 +39,7 @@ export const RoleSelection = () => {
             fontFamily: 'Outfit',
             fontSize: '1.75rem',
             fontWeight: 800,
-            color: '#FFFFFF',
+            color: 'var(--color-text-primary, #FFFFFF)',
             marginBottom: '0.5rem',
           }}
         >
@@ -86,7 +86,7 @@ export const RoleSelection = () => {
               <div>
                 <h3
                   style={{
-                    fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 700, color: '#FFFFFF',
+                    fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 700, color: 'var(--color-text-primary, #FFFFFF)',
                   }}
                 >
                   Client / Customer
@@ -127,7 +127,7 @@ export const RoleSelection = () => {
               <div>
                 <h3
                   style={{
-                    fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 700, color: '#FFFFFF',
+                    fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 700, color: 'var(--color-text-primary, #FFFFFF)',
                   }}
                 >
                   Expert / Technician

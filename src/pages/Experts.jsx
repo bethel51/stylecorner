@@ -152,7 +152,7 @@ export const Experts = () => {
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.75rem' }}>
           <div>
-            <h1 style={{ fontFamily: 'Outfit', fontSize: '1.65rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.25rem' }}>
+            <h1 style={{ fontFamily: 'Outfit', fontSize: '1.65rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: '0 0 0.25rem' }}>
               Verified Specialists
             </h1>
             <p style={{ color: '#94a3b8', fontSize: '0.84rem', margin: 0 }}>
@@ -321,7 +321,7 @@ export const Experts = () => {
                     fontFamily: 'Outfit',
                     fontSize: '0.94rem',
                     fontWeight: 800,
-                    color: '#ffffff',
+                    color: 'var(--color-text-primary, #ffffff)',
                     margin: '0 0 0.2rem',
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
@@ -392,9 +392,9 @@ export const Experts = () => {
 
         {/* Empty state */}
         {!loading && filteredStylists.length === 0 && (
-          <div style={{ textAlign: 'center', padding: '3rem 1.5rem', background: '#151822', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.08)', marginTop: '1rem' }}>
+          <div style={{ textAlign: 'center', padding: '3rem 1.5rem', background: 'var(--color-surface, #151822)', borderRadius: '20px', border: '1px solid var(--color-border, rgba(255,255,255,0.08))', marginTop: '1rem' }}>
             <Users size={36} color="#f5b942" style={{ opacity: 0.8, marginBottom: '0.65rem' }} />
-            <h4 style={{ fontFamily: 'Outfit', fontWeight: 800, color: '#ffffff', margin: '0 0 0.35rem', fontSize: '1rem' }}>
+            <h4 style={{ fontFamily: 'Outfit', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: '0 0 0.35rem', fontSize: '1rem' }}>
               {searchQuery ? `No specialists found for "${searchQuery}"` : `No ${activeCategory} Specialists Available`}
             </h4>
             <p style={{ color: '#94a3b8', fontSize: '0.82rem', margin: '0 0 1rem' }}>

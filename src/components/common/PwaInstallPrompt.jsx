@@ -57,6 +57,7 @@ export const PwaInstallPrompt = () => {
 
   return (
     <div
+      className="keep-white"
       style={{
         position: 'fixed',
         bottom: 'calc(65px + env(safe-area-inset-bottom))',

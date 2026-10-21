@@ -164,7 +164,7 @@ export const Services = () => {
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.75rem' }}>
           <div>
-            <h1 style={{ fontFamily: 'Outfit', fontSize: '1.65rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.25rem' }}>
+            <h1 style={{ fontFamily: 'Outfit', fontSize: '1.65rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: '0 0 0.25rem' }}>
               Atelier Services
             </h1>
             <p style={{ color: '#94a3b8', fontSize: '0.84rem', margin: 0 }}>
@@ -236,10 +236,10 @@ export const Services = () => {
                 onClick={() => handleSelectService(service.categoryKey)}
                 onMouseEnter={() => preloadRoute('/experts')}
                 style={{
-                  background: '#151822',
+                  background: 'var(--color-surface, #151822)',
                   borderRadius: '20px',
                   padding: '1.25rem',
-                  border: '1px solid rgba(255,255,255,0.08)',
+                  border: '1px solid var(--color-border, rgba(255,255,255,0.08))',
                   display: 'flex',
                   flexDirection: 'column',
                   gap: '0.75rem',
@@ -269,7 +269,7 @@ export const Services = () => {
                     <IconComponent />
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <h3 style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.2rem' }}>
+                    <h3 style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: '0 0 0.2rem' }}>
                       {service.title}
                     </h3>
                     <p style={{ fontSize: '0.78rem', color: service.color, fontWeight: 800, fontFamily: 'Outfit', margin: 0 }}>
