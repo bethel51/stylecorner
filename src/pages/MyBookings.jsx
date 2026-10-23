@@ -20,14 +20,9 @@ import {
   MessageSquare,
   QrCode,
   AlertCircle,
-  Phone,
-  ArrowUpRight,
-  Share2,
   Check,
-  ExternalLink,
   CalendarDays,
   Ban,
-  FileText,
   Printer,
   ChevronDown,
 } from 'lucide-react';
@@ -401,14 +396,12 @@ export const MyBookings = () => {
           }}
         >
           <div
-            onClick={() => handleTabChange('upcoming')}
             style={{
               background: activeTab === 'upcoming' ? 'rgba(16, 185, 129, 0.12)' : 'var(--color-surface, #151822)',
               border: activeTab === 'upcoming' ? '1.5px solid #10b981' : '1px solid var(--color-border, rgba(255, 255, 255, 0.06))',
               borderRadius: '14px',
               padding: '0.75rem 0.5rem',
               textAlign: 'center',
-              cursor: 'pointer',
               transition: 'all 0.15s ease',
             }}
           >
@@ -421,14 +414,12 @@ export const MyBookings = () => {
           </div>
 
           <div
-            onClick={() => handleTabChange('history')}
             style={{
               background: activeTab === 'history' ? 'rgba(245, 185, 66, 0.12)' : 'var(--color-surface, #151822)',
               border: activeTab === 'history' ? '1.5px solid #f5b942' : '1px solid var(--color-border, rgba(255, 255, 255, 0.06))',
               borderRadius: '14px',
               padding: '0.75rem 0.5rem',
               textAlign: 'center',
-              cursor: 'pointer',
               transition: 'all 0.15s ease',
             }}
           >
@@ -441,14 +432,12 @@ export const MyBookings = () => {
           </div>
 
           <div
-            onClick={() => handleTabChange('cancelled')}
             style={{
               background: activeTab === 'cancelled' ? 'rgba(239, 68, 68, 0.12)' : 'var(--color-surface, #151822)',
               border: activeTab === 'cancelled' ? '1.5px solid #ef4444' : '1px solid var(--color-border, rgba(255, 255, 255, 0.06))',
               borderRadius: '14px',
               padding: '0.75rem 0.5rem',
               textAlign: 'center',
-              cursor: 'pointer',
               transition: 'all 0.15s ease',
             }}
           >
@@ -461,14 +450,12 @@ export const MyBookings = () => {
           </div>
 
           <div
-            onClick={() => handleTabChange('all')}
             style={{
               background: activeTab === 'all' ? 'rgba(99, 102, 241, 0.14)' : 'var(--color-surface, #151822)',
               border: activeTab === 'all' ? '1.5px solid #6366f1' : '1px solid var(--color-border, rgba(255, 255, 255, 0.06))',
               borderRadius: '14px',
               padding: '0.75rem 0.5rem',
               textAlign: 'center',
-              cursor: 'pointer',
               transition: 'all 0.15s ease',
             }}
           >
@@ -1115,31 +1102,54 @@ export const MyBookings = () => {
                         }}
                       >
                         <MessageSquare size={14} color="#818cf8" />
-                        Chat {b.messages?.length > 0 && `(${b.messages.length})`}
+                        Chat
                       </button>
 
-                      {/* Google Calendar export for upcoming */}
+                      {/* Calendar export for upcoming */}
                       {isUpcoming(b.status) && (
-                        <a
-                          href={getGoogleCalendarUrl(b)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{
-                            background: 'var(--color-surface, #151822)',
-                            color: '#94a3b8',
-                            border: '1px solid var(--color-border, rgba(255, 255, 255, 0.08))',
-                            borderRadius: '10px',
-                            padding: '0.42rem 0.65rem',
-                            fontSize: '0.76rem',
-                            fontWeight: 700,
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '0.3rem',
-                            textDecoration: 'none',
-                          }}
-                        >
-                          <Calendar size={13} color="#10b981" /> +Calendar
-                        </a>
+                        <>
+                          <a
+                            href={getGoogleCalendarUrl(b)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title="Add to Google Calendar"
+                            style={{
+                              background: 'var(--color-surface, #151822)',
+                              color: '#94a3b8',
+                              border: '1px solid var(--color-border, rgba(255, 255, 255, 0.08))',
+                              borderRadius: '10px',
+                              padding: '0.42rem 0.65rem',
+                              fontSize: '0.76rem',
+                              fontWeight: 700,
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '0.3rem',
+                              textDecoration: 'none',
+                            }}
+                          >
+                            <Calendar size={13} color="#10b981" /> +Google
+                          </a>
+                          <button
+                            type="button"
+                            onClick={() => downloadIcsFile(b)}
+                            title="Download .ics for Apple / Outlook Calendar"
+                            style={{
+                              background: 'var(--color-surface, #151822)',
+                              color: '#94a3b8',
+                              border: '1px solid var(--color-border, rgba(255, 255, 255, 0.08))',
+                              borderRadius: '10px',
+                              padding: '0.42rem 0.65rem',
+                              fontSize: '0.76rem',
+                              fontWeight: 700,
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '0.3rem',
+                              cursor: 'pointer',
+                            }}
+                          >
+                            <CalendarDays size={13} color="#38bdf8" /> .ics
+                          </button>
+                        </>
                       )}
                     </div>
 
@@ -1336,7 +1346,7 @@ export const MyBookings = () => {
                 className="app-btn app-btn-accent"
                 style={{ flex: 1.5, borderRadius: '12px', fontWeight: 800 }}
               >
-                {submittingReview ? 'Posting Review...' : 'Submit 5★ Review'}
+                {submittingReview ? 'Posting Review...' : `Submit ${reviewRating}★ Review`}
               </button>
             </div>
           </form>

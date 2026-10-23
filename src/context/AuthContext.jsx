@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { CheckCircle2, AlertTriangle, Info } from 'lucide-react';
 import { api } from '../services/api';
 
 const AuthContext = createContext();
@@ -138,24 +139,13 @@ export const AuthProvider = ({ children }) => {
       {children}
       {toast && (
         <div className="app-toast">
-          <i
-            className={`fas ${
-              toast.type === 'success'
-                ? 'fa-check-circle'
-                : toast.type === 'error'
-                ? 'fa-exclamation-triangle'
-                : 'fa-info-circle'
-            }`}
-            style={{
-              color:
-                toast.type === 'success'
-                  ? '#10b981'
-                  : toast.type === 'error'
-                  ? '#ef4444'
-                  : '#d4af37',
-              fontSize: '1.1rem',
-            }}
-          />
+          {toast.type === 'success' ? (
+            <CheckCircle2 size={18} color="#10b981" style={{ flexShrink: 0 }} />
+          ) : toast.type === 'error' ? (
+            <AlertTriangle size={18} color="#ef4444" style={{ flexShrink: 0 }} />
+          ) : (
+            <Info size={18} color="#d4af37" style={{ flexShrink: 0 }} />
+          )}
           <span>{toast.message}</span>
         </div>
       )}

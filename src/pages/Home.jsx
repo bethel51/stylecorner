@@ -6,12 +6,10 @@ import {
   ArrowRight,
   Sparkles,
   CheckCircle2,
-  ShieldCheck,
   Sun,
   Moon,
   Compass,
   ChevronRight,
-  Zap,
   Check,
 } from "lucide-react";
 import { SEOHead } from "../components/common/SEOHead";

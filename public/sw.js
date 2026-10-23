@@ -114,16 +114,14 @@ self.addEventListener('sync', (event) => {
   }
 });
 
-// 5. Periodic Background Sync API — fetch fresh updates periodically
+// 5. Periodic Background Sync API — inform active clients to refresh data
 self.addEventListener('periodicsync', (event) => {
   if (event.tag === 'refresh-specialists' || event.tag === 'daily-sync') {
     event.waitUntil(
-      caches.open(CACHE_NAME).then((cache) => {
-        return fetch('/api/specialists')
-          .then((res) => {
-            if (res && res.status === 200) cache.put('/api/specialists', res);
-          })
-          .catch(() => {});
+      self.clients.matchAll().then((clients) => {
+        clients.forEach((client) => {
+          client.postMessage({ type: 'PERIODIC_SYNC_TRIGGERED', tag: event.tag });
+        });
       })
     );
   }

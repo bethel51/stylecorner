@@ -160,7 +160,7 @@ export const VerifyOTP = () => {
               gap: '0.5rem',
             }}
           >
-            <RotateCw size={16} className={resending ? 'fa-spin' : ''} />
+            <RotateCw size={16} style={{ animation: resending ? 'spin 1s linear infinite' : 'none' }} />
             <span>{resending ? 'Sending Code...' : 'Resend 6-Digit Code'}</span>
           </button>
         </div>

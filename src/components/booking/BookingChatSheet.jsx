@@ -102,7 +102,10 @@ export const BookingChatSheet = ({ booking, currentUserEmail, viewerRole, isOpen
       setTimeout(() => scrollToBottom(false), 120);
     });
 
-    pollingRef.current = setInterval(() => fetchMessages(true), 5000);
+    pollingRef.current = setInterval(() => {
+      if (typeof document !== 'undefined' && document.visibilityState === 'hidden') return;
+      fetchMessages(true);
+    }, 5000);
     return () => clearInterval(pollingRef.current);
   }, [isOpen, booking?._id, fetchMessages, scrollToBottom]);
 
@@ -131,11 +134,25 @@ export const BookingChatSheet = ({ booking, currentUserEmail, viewerRole, isOpen
     if (!text || sending) return;
     setSending(true);
     setInputText('');
+
+    // Optimistic insert for instant UI feedback
+    const tempId = `temp-${Date.now()}`;
+    const optimisticMsg = {
+      _id: tempId,
+      text,
+      sender: viewerRole === 'customer' ? (booking.clientName || 'Me') : (booking.stylist || 'Me'),
+      senderRole: viewerRole === 'specialist' ? 'specialist' : 'customer',
+      createdAt: new Date().toISOString(),
+    };
+    setMessages((prev) => [...prev, optimisticMsg]);
+    setTimeout(() => scrollToBottom(), 40);
+
     try {
       const data = await api.sendBookingMessage(booking._id, text);
       setMessages(data.messages || []);
       setTimeout(() => scrollToBottom(), 80);
     } catch (err) {
+      setMessages((prev) => prev.filter((m) => m._id !== tempId));
       setInputText(text);
       setError('Failed to send message. Please try again.');
     } finally {
@@ -258,9 +275,15 @@ export const BookingChatSheet = ({ booking, currentUserEmail, viewerRole, isOpen
                 <MapPin size={12} color="#a78bfa" /> {booking.location}
               </span>
             )}
-            <span style={{ marginLeft: 'auto', background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.28)', borderRadius: 20, padding: '0.12rem 0.5rem', fontSize: '0.67rem', fontWeight: 800, color: '#34d399', fontFamily: 'Outfit, sans-serif' }}>
-              ✓ PAID
-            </span>
+            {String(booking.paymentStatus || '').startsWith('paid') ? (
+              <span style={{ marginLeft: 'auto', background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.28)', borderRadius: 20, padding: '0.12rem 0.5rem', fontSize: '0.67rem', fontWeight: 800, color: '#34d399', fontFamily: 'Outfit, sans-serif' }}>
+                ✓ PAID
+              </span>
+            ) : (
+              <span style={{ marginLeft: 'auto', background: 'rgba(245,185,66,0.12)', border: '1px solid rgba(245,185,66,0.28)', borderRadius: 20, padding: '0.12rem 0.5rem', fontSize: '0.67rem', fontWeight: 800, color: '#f5b942', fontFamily: 'Outfit, sans-serif' }}>
+                ⏳ PENDING
+              </span>
+            )}
           </div>
         </div>
 

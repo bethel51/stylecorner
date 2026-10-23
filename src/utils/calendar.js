@@ -33,7 +33,7 @@ export function parseBookingDateTime(dateStr, timeStr, durationMinutes = 60) {
         }
       }
 
-      start = new Date(year, month, day, hours, minutes, 0);
+      start = new Date(Date.UTC(year, month, day, hours, minutes, 0));
     }
   }
 

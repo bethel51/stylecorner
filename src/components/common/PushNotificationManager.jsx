@@ -50,6 +50,17 @@ export const PushNotificationManager = ({ showLabel = false, className = '' }) =
         userVisibleOnly: true,
       });
       console.log('[PWA Push] Subscribed:', JSON.stringify(sub));
+
+      // Register push subscription with backend if available
+      try {
+        await fetch('/api/push/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ subscription: sub }),
+        });
+      } catch (_) {
+        // Optional backend push route gracefully handled
+      }
       return sub;
     } catch (err) {
       // Non-fatal — push subscribe can fail if VAPID key isn't set up yet
