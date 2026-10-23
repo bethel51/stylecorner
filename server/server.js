@@ -3163,6 +3163,21 @@ app.get('/robots.txt', (req, res) => {
   return res.status(404).type('text/plain').send('robots.txt not found');
 });
 
+// Explicit route for sitemap.xsl with text/xsl Content-Type
+app.get('/sitemap.xsl', (req, res) => {
+  const fs = require('fs');
+  const distFile = path.join(distPath, 'sitemap.xsl');
+  const publicFile = path.join(publicPath, 'sitemap.xsl');
+  const target = fs.existsSync(distFile) ? distFile : (fs.existsSync(publicFile) ? publicFile : null);
+
+  if (target) {
+    res.setHeader('Content-Type', 'text/xsl; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=86400');
+    return res.sendFile(target);
+  }
+  return res.status(404).type('text/plain').send('sitemap.xsl not found');
+});
+
 // Serve dist directory if built
 app.use(express.static(distPath));
 // Serve public directory as static fallback
@@ -3175,7 +3190,7 @@ app.use((req, res, next) => {
     return res.status(404).send('Asset not found');
   }
   // Missing static files return 404 instead of falling through to HTML index
-  if (/\.(xml|txt|json|ico|png|jpg|jpeg|svg|webp|gif|webmanifest)$/i.test(req.path)) {
+  if (/\.(xml|xsl|txt|json|ico|png|jpg|jpeg|svg|webp|gif|webmanifest)$/i.test(req.path)) {
     return res.status(404).type('text/plain').send('Static resource not found');
   }
   if (req.method !== 'GET') return next();

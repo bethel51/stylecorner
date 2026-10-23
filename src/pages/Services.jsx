@@ -161,9 +161,10 @@ export const Services = () => {
   return (
     <PageContainer showBack={true} onOpenAiMatcher={() => navigate('/ai-matcher')}>
       <SEOHead
-        title="Services"
-        description="Explore Style Corner's atelier services — lash extensions, nail art, hair braiding, barbering, makeup artistry, and wig installation by verified experts."
+        title="Salon & Grooming Services"
+        description="Explore professional salon and grooming services at Style Corner. Choose from precision barbering, wig installation, knotless braids, luxury nail art, lash extensions, and makeup."
         canonicalPath="/services"
+        keywords="salon services, haircut, wig installation, knotless braids, luxury nail art, lash extensions, barbering"
       />
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
 

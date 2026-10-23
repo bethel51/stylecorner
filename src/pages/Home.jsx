@@ -120,9 +120,10 @@ export const Home = () => {
   return (
     <PageContainer hideHeader={true} hideNav={true} noPadding={true}>
       <SEOHead
-        title="Premium Salon Booking & Grooming"
-        description="Style Corner — Book elite barbers, lash technicians, nail artists, hair braiders, makeup artists and wig specialists. Premium grooming appointments in seconds."
+        title="Book Barbers, Hairstylists, Nail Techs & Lash Artists"
+        description="Book top-rated beauty professionals on Style Corner. Connect with verified barbers, hairstylists, wig installers, nail technicians, and lash artists for bespoke salon and grooming appointments."
         canonicalPath="/"
+        keywords="beauty professionals, nail technicians, lash artists, hairstylists, barbers, wig installers, salon booking, haircut appointment, braiders"
       />
       {/* ─── Global Styles ─── */}
       <style>{`

@@ -149,9 +149,10 @@ export const Experts = () => {
   return (
     <PageContainer showBack={true}>
       <SEOHead
-        title="Our Experts"
-        description="Meet Style Corner's verified grooming experts — elite barbers, lash techs, nail artists, hair braiders, makeup artists and wig specialists ready to serve you."
+        title="Verified Barbers, Stylists & Beauty Specialists"
+        description="Discover certified and vetted beauty artisans at Style Corner. View specialist portfolios, customer reviews, pricing, and book your next session with top barbers and stylists."
         canonicalPath="/experts"
+        keywords="verified barbers, hairstylists, braiders, lash technicians, nail artists, wig stylists, grooming specialists"
       />
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.15rem' }}>
         

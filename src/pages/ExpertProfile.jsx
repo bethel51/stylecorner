@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import { SEOHead } from '../components/common/SEOHead';
 import {
   ArrowLeft,
   Star,
@@ -412,6 +413,13 @@ export const ExpertProfile = () => {
 
   return (
     <PageContainer hideHeader={true} noPadding={true}>
+      <SEOHead
+        title={expert ? `${expert.name} — ${expert.specialty || 'Verified Specialist'}` : 'Specialist Profile'}
+        description={expert?.bio || `Book an appointment with ${expert?.name}, verified ${expert?.specialty || 'beauty'} specialist at Style Corner.`}
+        canonicalPath={expert?.id ? `/expert-profile?id=${expert.id}` : '/experts'}
+        ogImage={expert?.avatar}
+        type="profile"
+      />
       <div style={{
         minHeight: '100vh',
         background: 'var(--color-bg)',

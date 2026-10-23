@@ -27,9 +27,10 @@ export const Contact = () => {
   return (
     <PageContainer title="Contact Concierge">
       <SEOHead
-        title="Contact Us"
-        description="Get in touch with Style Corner's concierge desk — reach our support team for booking assistance, expert inquiries, and partnership opportunities."
+        title="Contact Style Corner | Concierge & Atelier Support"
+        description="Get in touch with Style Corner concierge for appointments, specialist inquiries, partnerships, or customer assistance. We are here to support your styling journey."
         canonicalPath="/contact"
+        keywords="contact style corner, salon customer support, concierge styling support, appointment help"
       />
       <div style={{ maxWidth: '1080px', margin: '0 auto', width: '100%' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>

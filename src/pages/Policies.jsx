@@ -7,9 +7,10 @@ export const Policies = () => {
   return (
     <PageContainer title="Policies & Terms">
       <SEOHead
-        title="Policies & Terms"
-        description="Style Corner's cancellation policy, privacy policy, terms of service, and account security guidelines."
+        title="Terms of Service & Privacy Policy | Style Corner"
+        description="Review Style Corner terms of service, customer booking policies, cancellation guidelines, and privacy protections."
         canonicalPath="/policies"
+        keywords="style corner terms, cancellation policy, privacy policy, salon booking rules"
       />
       <div style={{ maxWidth: '440px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         <div className="app-card" style={{ marginBottom: 0 }}>

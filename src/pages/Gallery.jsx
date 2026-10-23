@@ -24,9 +24,10 @@ export const Gallery = () => {
   return (
     <PageContainer title="Style Portfolio Gallery">
       <SEOHead
-        title="Gallery"
-        description="Browse Style Corner's portfolio gallery — stunning haircuts, precision fades, knotless braids, gel nails, makeup artistry and more by our verified experts."
+        title="Atelier Lookbook & Style Gallery"
+        description="Browse our curated lookbook featuring signature haircuts, braided styles, flawless wig installs, lash artistry, and nail designs crafted by verified specialists."
         canonicalPath="/gallery"
+        keywords="salon gallery, haircuts lookbook, braid styles, wig installs, nail art designs, lash extensions"
       />
       <div className="gallery-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
         {items.map((item) => {

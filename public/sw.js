@@ -55,7 +55,7 @@ self.addEventListener('fetch', (event) => {
 
   // Never intercept SEO files — let them be served directly
   const pathname = new URL(event.request.url).pathname;
-  if (pathname === '/sitemap.xml' || pathname === '/robots.txt') return;
+  if (pathname === '/sitemap.xml' || pathname === '/robots.txt' || pathname === '/sitemap.xsl') return;
 
   const url = new URL(event.request.url);
 

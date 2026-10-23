@@ -196,9 +196,10 @@ export const Store = () => {
   return (
     <PageContainer showBack={true} onOpenCart={() => navigate('/cart')}>
       <SEOHead
-        title="Grooming Store"
-        description="Shop premium grooming products at Style Corner — professional-grade hair care, skin care, styling tools, and beauty essentials from top brands."
+        title="Luxury Hair & Grooming Products Store"
+        description="Shop curated salon-grade hair care, styling pomades, beard elixirs, and beauty essentials from Style Corner's luxury grooming collection."
         canonicalPath="/store"
+        keywords="grooming store, pomade, beard elixir, salon hair care, styling products, scalp revitalizing"
       />
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.15rem', paddingBottom: '2rem' }}>
         

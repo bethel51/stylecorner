@@ -570,9 +570,10 @@ export const Booking = () => {
   return (
     <PageContainer showBack={true} onOpenAiMatcher={() => navigate('/ai-matcher')}>
       <SEOHead
-        title="Book an Appointment"
-        description="Book a premium grooming appointment at Style Corner — choose your service, pick a verified expert, select your date and time, and confirm in seconds."
+        title="Book Salon & Grooming Appointments Online"
+        description="Schedule your grooming and beauty appointments in minutes. Select your preferred specialist, service category, date, and time with seamless digital confirmation."
         canonicalPath="/booking"
+        keywords="book haircut, salon appointment, book braider, nail appointment, lash appointment, book stylist online"
       />
       <div style={{ maxWidth: '520px', margin: '0 auto', paddingBottom: 'calc(var(--bottom-nav-height, 70px) + env(safe-area-inset-bottom, 24px) + 3.5rem)' }}>
         

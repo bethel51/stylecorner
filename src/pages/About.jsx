@@ -11,9 +11,10 @@ export const About = () => {
   return (
     <PageContainer title="About Style Corner">
       <SEOHead
-        title="About Us"
-        description="Learn about Style Corner — our mission to connect you with verified grooming experts, our premium booking platform, and our commitment to luxury service."
+        title="About Style Corner | Modern Grooming & Atelier Experience"
+        description="Learn about Style Corner's mission to redefine salon appointments and groomer access with a curated collective of elite beauty artisans, secure digital payments, and luxury care."
         canonicalPath="/about"
+        keywords="about style corner, modern grooming platform, beauty artisans, salon mission"
       />
       <div style={{ maxWidth: '1080px', margin: '0 auto', width: '100%' }}>
         {/* Atelier Hero Banner */}

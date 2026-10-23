@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { SEOHead } from '../components/common/SEOHead';
 import {
   ArrowLeft,
   ShoppingBag,
@@ -217,6 +218,13 @@ export const ProductDetail = () => {
 
   return (
     <PageContainer title={product.title} onOpenCart={() => navigate('/cart')}>
+      <SEOHead
+        title={product ? `${product.title} — Luxury Grooming` : 'Product Details'}
+        description={product?.description || 'Shop luxury grooming and salon-grade styling products on Style Corner.'}
+        canonicalPath={`/product/${product.id}`}
+        ogImage={product?.imageUrl || product?.image}
+        type="product"
+      />
       <div style={{ paddingBottom: '3rem', maxWidth: '640px', margin: '0 auto' }}>
 
         {/* Top Header Navigation Bar */}

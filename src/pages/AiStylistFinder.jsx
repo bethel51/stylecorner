@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { SEOHead } from '../components/common/SEOHead';
 import {
   Sparkles,
   ArrowRight,
@@ -269,6 +270,12 @@ export const AiStylistFinder = () => {
 
   return (
     <PageContainer title="AI Style Matcher" showBack={true}>
+      <SEOHead
+        title="AI Stylist Finder — Match with Beauty Experts"
+        description="Use our AI-powered stylist matcher to discover the perfect barber, braider, nail technician, or lash artist tailored to your personal aesthetic and location."
+        canonicalPath="/ai-matcher"
+        keywords="ai stylist finder, match beauty expert, barber matching, braider finder, lash artist finder"
+      />
       <div
         style={{
           maxWidth: '640px',
