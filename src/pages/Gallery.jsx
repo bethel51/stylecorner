@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { SEOHead } from '../components/common/SEOHead';
 import { useNavigate } from 'react-router-dom';
 import { Sparkles, Calendar, Heart } from 'lucide-react';
 import { PageContainer } from '../components/common/PageContainer';
@@ -22,6 +23,11 @@ export const Gallery = () => {
 
   return (
     <PageContainer title="Style Portfolio Gallery">
+      <SEOHead
+        title="Gallery"
+        description="Browse Style Corner's portfolio gallery — stunning haircuts, precision fades, knotless braids, gel nails, makeup artistry and more by our verified experts."
+        canonicalPath="/gallery"
+      />
       <div className="gallery-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
         {items.map((item) => {
           const isLiked = likes[item.id];

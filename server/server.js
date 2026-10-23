@@ -3129,15 +3129,54 @@ app.put('/api/admin/withdrawals/:id/status', authenticateAdmin, async (req, res)
   }
 });
 
-// Serve dist directory if built
+// Static Paths
 const distPath = path.join(__dirname, '../dist');
+const publicPath = path.join(__dirname, '../public');
+
+// Explicit route for sitemap.xml with XML Content-Type
+app.get('/sitemap.xml', (req, res) => {
+  const fs = require('fs');
+  const distFile = path.join(distPath, 'sitemap.xml');
+  const publicFile = path.join(publicPath, 'sitemap.xml');
+  const target = fs.existsSync(distFile) ? distFile : (fs.existsSync(publicFile) ? publicFile : null);
+
+  if (target) {
+    res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=86400');
+    return res.sendFile(target);
+  }
+  return res.status(404).type('text/plain').send('sitemap.xml not found');
+});
+
+// Explicit route for robots.txt with text/plain Content-Type
+app.get('/robots.txt', (req, res) => {
+  const fs = require('fs');
+  const distFile = path.join(distPath, 'robots.txt');
+  const publicFile = path.join(publicPath, 'robots.txt');
+  const target = fs.existsSync(distFile) ? distFile : (fs.existsSync(publicFile) ? publicFile : null);
+
+  if (target) {
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=86400');
+    return res.sendFile(target);
+  }
+  return res.status(404).type('text/plain').send('robots.txt not found');
+});
+
+// Serve dist directory if built
 app.use(express.static(distPath));
+// Serve public directory as static fallback
+app.use(express.static(publicPath));
 
 // SPA Catch-all Route for client-side routing
 app.use((req, res, next) => {
   if (req.path.startsWith('/api')) return next();
   if (req.path.startsWith('/assets') || req.path.endsWith('.js') || req.path.endsWith('.css')) {
     return res.status(404).send('Asset not found');
+  }
+  // Missing static files return 404 instead of falling through to HTML index
+  if (/\.(xml|txt|json|ico|png|jpg|jpeg|svg|webp|gif|webmanifest)$/i.test(req.path)) {
+    return res.status(404).type('text/plain').send('Static resource not found');
   }
   if (req.method !== 'GET') return next();
 

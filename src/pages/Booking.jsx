@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { SEOHead } from '../components/common/SEOHead';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Calendar as CalendarIcon,
@@ -568,6 +569,11 @@ export const Booking = () => {
 
   return (
     <PageContainer showBack={true} onOpenAiMatcher={() => navigate('/ai-matcher')}>
+      <SEOHead
+        title="Book an Appointment"
+        description="Book a premium grooming appointment at Style Corner — choose your service, pick a verified expert, select your date and time, and confirm in seconds."
+        canonicalPath="/booking"
+      />
       <div style={{ maxWidth: '520px', margin: '0 auto', paddingBottom: 'calc(var(--bottom-nav-height, 70px) + env(safe-area-inset-bottom, 24px) + 3.5rem)' }}>
         
         {/* Top Header */}

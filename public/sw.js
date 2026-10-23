@@ -1,4 +1,4 @@
-const CACHE_NAME = 'style-corner-v12';
+const CACHE_NAME = 'style-corner-v13';
 const PRECACHE_ASSETS = [
   '/',
   '/index.html',
@@ -52,6 +52,10 @@ self.addEventListener('fetch', (event) => {
   // Never intercept non-GET or backend API requests
   if (event.request.method !== 'GET') return;
   if (event.request.url.includes('/api/')) return;
+
+  // Never intercept SEO files — let them be served directly
+  const pathname = new URL(event.request.url).pathname;
+  if (pathname === '/sitemap.xml' || pathname === '/robots.txt') return;
 
   const url = new URL(event.request.url);
 

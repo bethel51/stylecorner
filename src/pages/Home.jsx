@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { SEOHead } from "../components/common/SEOHead";
 import { useNavigate } from "react-router-dom";
 import {
   ArrowRight,
@@ -118,6 +119,11 @@ export const Home = () => {
 
   return (
     <PageContainer hideHeader={true} hideNav={true} noPadding={true}>
+      <SEOHead
+        title="Premium Salon Booking & Grooming"
+        description="Style Corner — Book elite barbers, lash technicians, nail artists, hair braiders, makeup artists and wig specialists. Premium grooming appointments in seconds."
+        canonicalPath="/"
+      />
       {/* ─── Global Styles ─── */}
       <style>{`
         @keyframes pulseGlow {

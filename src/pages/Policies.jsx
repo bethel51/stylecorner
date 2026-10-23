@@ -1,10 +1,16 @@
 import React from 'react';
+import { SEOHead } from '../components/common/SEOHead';
 import { ShieldCheck, FileText } from 'lucide-react';
 import { PageContainer } from '../components/common/PageContainer';
 
 export const Policies = () => {
   return (
     <PageContainer title="Policies & Terms">
+      <SEOHead
+        title="Policies & Terms"
+        description="Style Corner's cancellation policy, privacy policy, terms of service, and account security guidelines."
+        canonicalPath="/policies"
+      />
       <div style={{ maxWidth: '440px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         <div className="app-card" style={{ marginBottom: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.5rem' }}>

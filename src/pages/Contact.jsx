@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { SEOHead } from '../components/common/SEOHead';
 import { Mail, Phone, MapPin, Send, MessageSquare, Clock, ShieldCheck, CheckCircle2 } from 'lucide-react';
 import { PageContainer } from '../components/common/PageContainer';
 import { useAuth } from '../context/AuthContext';
@@ -25,6 +26,11 @@ export const Contact = () => {
 
   return (
     <PageContainer title="Contact Concierge">
+      <SEOHead
+        title="Contact Us"
+        description="Get in touch with Style Corner's concierge desk — reach our support team for booking assistance, expert inquiries, and partnership opportunities."
+        canonicalPath="/contact"
+      />
       <div style={{ maxWidth: '1080px', margin: '0 auto', width: '100%' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>
           

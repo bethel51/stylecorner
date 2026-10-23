@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { SEOHead } from '../components/common/SEOHead';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   ShoppingBag,
@@ -194,6 +195,11 @@ export const Store = () => {
 
   return (
     <PageContainer showBack={true} onOpenCart={() => navigate('/cart')}>
+      <SEOHead
+        title="Grooming Store"
+        description="Shop premium grooming products at Style Corner — professional-grade hair care, skin care, styling tools, and beauty essentials from top brands."
+        canonicalPath="/store"
+      />
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.15rem', paddingBottom: '2rem' }}>
         
         {/* Screen 4: Header */}

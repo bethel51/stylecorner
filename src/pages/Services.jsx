@@ -1,4 +1,5 @@
 import React from 'react';
+import { SEOHead } from '../components/common/SEOHead';
 import { useNavigate } from 'react-router-dom';
 import { Sparkles, ChevronRight, ArrowRight } from 'lucide-react';
 import { PageContainer } from '../components/common/PageContainer';
@@ -159,6 +160,11 @@ export const Services = () => {
 
   return (
     <PageContainer showBack={true} onOpenAiMatcher={() => navigate('/ai-matcher')}>
+      <SEOHead
+        title="Services"
+        description="Explore Style Corner's atelier services — lash extensions, nail art, hair braiding, barbering, makeup artistry, and wig installation by verified experts."
+        canonicalPath="/services"
+      />
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
 
         {/* Header */}

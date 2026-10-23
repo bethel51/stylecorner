@@ -1,4 +1,5 @@
 import React from 'react';
+import { SEOHead } from '../components/common/SEOHead';
 import { useNavigate } from 'react-router-dom';
 import { Sparkles, MapPin, Phone, Mail, Clock, Award, ShieldCheck, CheckCircle2, ArrowRight } from 'lucide-react';
 import { PageContainer } from '../components/common/PageContainer';
@@ -9,6 +10,11 @@ export const About = () => {
 
   return (
     <PageContainer title="About Style Corner">
+      <SEOHead
+        title="About Us"
+        description="Learn about Style Corner — our mission to connect you with verified grooming experts, our premium booking platform, and our commitment to luxury service."
+        canonicalPath="/about"
+      />
       <div style={{ maxWidth: '1080px', margin: '0 auto', width: '100%' }}>
         {/* Atelier Hero Banner */}
         <div

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { SEOHead } from '../components/common/SEOHead';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Search, SlidersHorizontal, Star, Heart, Users, Sparkles } from 'lucide-react';
 import { PageContainer } from '../components/common/PageContainer';
@@ -147,6 +148,11 @@ export const Experts = () => {
 
   return (
     <PageContainer showBack={true}>
+      <SEOHead
+        title="Our Experts"
+        description="Meet Style Corner's verified grooming experts — elite barbers, lash techs, nail artists, hair braiders, makeup artists and wig specialists ready to serve you."
+        canonicalPath="/experts"
+      />
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.15rem' }}>
         
         {/* Header */}

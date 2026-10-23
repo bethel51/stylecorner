@@ -1,0 +1,22 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /customer-dashboard
+Disallow: /expert-dashboard
+Disallow: /profile
+Disallow: /my-bookings
+Disallow: /booking-history
+Disallow: /history
+Disallow: /wallet
+Disallow: /payment
+Disallow: /notifications
+Disallow: /login
+Disallow: /signup
+Disallow: /verify
+Disallow: /forgot-password
+Disallow: /role-selection
+Disallow: /cart
+Disallow: /api/
+
+Sitemap: https://stylecorner.world/sitemap.xml
