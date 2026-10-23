@@ -18,6 +18,7 @@ import { SEOHead } from "../components/common/SEOHead";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import { PageContainer } from "../components/common/PageContainer";
+import { PushNotificationManager } from "../components/common/PushNotificationManager";
 import { preloadRoute } from "../App";
 
 export const Home = () => {
@@ -227,7 +228,7 @@ export const Home = () => {
           }}
         />
 
-        {/* Floating Top Nav (Theme Switcher) */}
+        {/* Floating Top Nav (Theme Switcher + Push Notifications) */}
         <div
           style={{
             position: "absolute",
@@ -239,6 +240,7 @@ export const Home = () => {
             gap: "0.5rem",
           }}
         >
+          <PushNotificationManager />
           <button
             type="button"
             onClick={toggleTheme}

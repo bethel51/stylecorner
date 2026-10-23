@@ -1,7 +1,8 @@
-const CACHE_NAME = 'style-corner-v14';
+const CACHE_NAME = 'style-corner-v15';
 const PRECACHE_ASSETS = [
   '/',
   '/index.html',
+  '/offline.html',
   '/manifest.json',
   '/pwa-icon-192.png',
   '/pwa-icon-512.png'
@@ -71,8 +72,10 @@ self.addEventListener('fetch', (event) => {
           return networkRes;
         })
         .catch(() => {
-          // Fallback to cached index.html only if completely offline
-          return caches.match('/index.html');
+          // Try cached SPA shell first, then branded offline page
+          return caches.match('/index.html').then((cached) => {
+            return cached || caches.match('/offline.html');
+          });
         })
     );
     return;
