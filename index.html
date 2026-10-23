@@ -61,6 +61,17 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js', { scope: '/' })
+          .then(function(reg) {
+            console.log('[PWA] SW registered immediately with scope:', reg.scope);
+          })
+          .catch(function(err) {
+            console.warn('[PWA] Early SW registration failed:', err);
+          });
+      }
+    </script>
     <script src="https://js.paystack.co/v1/inline.js"></script>
     <script type="module" src="/src/main.jsx"></script>
   </body>

@@ -45,18 +45,32 @@
   ],
   "screenshots": [
     {
-      "src": "/images/landing-hero-3d.jpg",
-      "sizes": "1280x720",
+      "src": "/images/bg-about.jpg",
+      "sizes": "1920x1280",
       "type": "image/jpeg",
       "form_factor": "wide",
       "label": "Style Corner Luxury Atelier Experience"
     },
     {
-      "src": "/images/stylecorner-salon-top.jpg",
-      "sizes": "720x1280",
+      "src": "/images/landing-hero-3d.jpg",
+      "sizes": "768x1376",
       "type": "image/jpeg",
       "form_factor": "narrow",
       "label": "Book Verified Beauty Specialists in Seconds"
+    }
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+stylecorner",
+      "url": "/booking?ref=%s"
+    }
+  ],
+  "scope_extensions": [
+    {
+      "origin": "https://stylecorner.world"
+    },
+    {
+      "origin": "https://www.stylecorner.world"
     }
   ],
   "shortcuts": [

@@ -44,37 +44,45 @@ if ('serviceWorker' in navigator) {
     }
   });
 
-  window.addEventListener('load', () => {
-    navigator.serviceWorker
-      .register('/sw.js')
-      .then((registration) => {
-        console.log('[PWA] Service Worker active with scope:', registration.scope);
+  const setupRegistration = (registration) => {
+    console.log('[PWA] Service Worker active with scope:', registration.scope);
 
-        // Check for updates on load
-        registration.update().catch(() => {});
+    // Check for updates on load
+    registration.update().catch(() => {});
 
-        // Listen for new updates found
-        registration.addEventListener('updatefound', () => {
-          const newWorker = registration.installing;
-          if (newWorker) {
-            newWorker.addEventListener('statechange', () => {
-              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                console.log('[PWA] New feature update available! Triggering activation...');
-                newWorker.postMessage({ type: 'SKIP_WAITING' });
-              }
-            });
+    // Listen for new updates found
+    registration.addEventListener('updatefound', () => {
+      const newWorker = registration.installing;
+      if (newWorker) {
+        newWorker.addEventListener('statechange', () => {
+          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            console.log('[PWA] New feature update available! Triggering activation...');
+            newWorker.postMessage({ type: 'SKIP_WAITING' });
           }
         });
+      }
+    });
 
-        // Periodically check for new updates every 60 seconds
-        setInterval(() => {
-          registration.update().catch(() => {});
-        }, 60000);
-      })
+    // Periodically check for new updates every 60 seconds
+    setInterval(() => {
+      registration.update().catch(() => {});
+    }, 60000);
+  };
+
+  const registerSw = () => {
+    navigator.serviceWorker
+      .register('/sw.js', { scope: '/' })
+      .then(setupRegistration)
       .catch((err) => {
         console.warn('[PWA] ServiceWorker registration failed:', err);
       });
-  });
+  };
+
+  if (document.readyState === 'complete') {
+    registerSw();
+  } else {
+    window.addEventListener('load', registerSw);
+  }
 
   // Check for updates when window gains focus
   window.addEventListener('focus', () => {
