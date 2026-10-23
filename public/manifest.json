@@ -1,12 +1,34 @@
 {
+  "id": "https://stylecorner.world/?source=pwa",
   "name": "Style Corner - Executive Grooming & Hair Atelier",
   "short_name": "Style Corner",
   "description": "Style Corner - Premium Salon, Specialist Matching, Booking and Grooming Store.",
-  "start_url": "/",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "lang": "en",
+  "dir": "ltr",
   "display": "standalone",
-  "background_color": "#171717",
+  "display_override": [
+    "window-controls-overlay",
+    "standalone",
+    "minimal-ui"
+  ],
+  "orientation": "any",
+  "background_color": "#08090C",
   "theme_color": "#171717",
-  "orientation": "portrait-primary",
+  "categories": [
+    "beauty",
+    "lifestyle",
+    "shopping"
+  ],
+  "prefer_related_applications": false,
+  "related_applications": [],
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  },
+  "edge_side_panel": {
+    "preferred_width": 480
+  },
   "icons": [
     {
       "src": "/pwa-icon-192.png",
@@ -21,20 +43,91 @@
       "purpose": "any maskable"
     }
   ],
+  "screenshots": [
+    {
+      "src": "/images/landing-hero-3d.jpg",
+      "sizes": "1280x720",
+      "type": "image/jpeg",
+      "form_factor": "wide",
+      "label": "Style Corner Luxury Atelier Experience"
+    },
+    {
+      "src": "/images/stylecorner-salon-top.jpg",
+      "sizes": "720x1280",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Book Verified Beauty Specialists in Seconds"
+    }
+  ],
   "shortcuts": [
     {
       "name": "Book a Session",
       "short_name": "Book",
-      "description": "Book a grooming or hair session",
+      "description": "Book a verified barber or hair styling session",
       "url": "/booking",
-      "icons": [{ "src": "/pwa-icon-192.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "/pwa-icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Atelier Services",
+      "short_name": "Services",
+      "description": "Browse hair, barber, nail, and lash services",
+      "url": "/services",
+      "icons": [
+        {
+          "src": "/pwa-icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Verified Specialists",
+      "short_name": "Experts",
+      "description": "Discover verified beauty specialists near you",
+      "url": "/experts",
+      "icons": [
+        {
+          "src": "/pwa-icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     },
     {
       "name": "Grooming Store",
       "short_name": "Store",
-      "description": "Browse hair products and grooming items",
+      "description": "Browse premium salon hair care and styling essentials",
       "url": "/store",
-      "icons": [{ "src": "/pwa-icon-192.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "/pwa-icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "AI Stylist Finder",
+      "short_name": "AI Matcher",
+      "description": "Match your look with an expert in seconds",
+      "url": "/ai-matcher",
+      "icons": [
+        {
+          "src": "/pwa-icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
-  ]
+  ],
+  "share_target": {
+    "action": "/booking",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  }
 }

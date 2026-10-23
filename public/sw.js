@@ -1,4 +1,4 @@
-const CACHE_NAME = 'style-corner-v13';
+const CACHE_NAME = 'style-corner-v14';
 const PRECACHE_ASSETS = [
   '/',
   '/index.html',
@@ -94,6 +94,89 @@ self.addEventListener('fetch', (event) => {
       });
 
       return cachedResponse || fetchPromise;
+    })
+  );
+});
+
+// 4. Background Sync API — replay deferred requests when connectivity is restored
+self.addEventListener('sync', (event) => {
+  if (event.tag === 'sync-bookings') {
+    event.waitUntil(
+      self.clients.matchAll().then((clients) => {
+        clients.forEach((client) => {
+          client.postMessage({ type: 'BACKGROUND_SYNC_TRIGGERED', tag: event.tag });
+        });
+      })
+    );
+  }
+});
+
+// 5. Periodic Background Sync API — fetch fresh updates periodically
+self.addEventListener('periodicsync', (event) => {
+  if (event.tag === 'refresh-specialists' || event.tag === 'daily-sync') {
+    event.waitUntil(
+      caches.open(CACHE_NAME).then((cache) => {
+        return fetch('/api/specialists')
+          .then((res) => {
+            if (res && res.status === 200) cache.put('/api/specialists', res);
+          })
+          .catch(() => {});
+      })
+    );
+  }
+});
+
+// 6. Web Push Notifications API — display incoming notifications
+self.addEventListener('push', (event) => {
+  let data = {
+    title: 'Style Corner Atelier',
+    body: 'You have a new update regarding your grooming session.',
+    icon: '/pwa-icon-192.png',
+    badge: '/pwa-icon-192.png',
+    data: { url: '/customer-dashboard' },
+  };
+
+  if (event.data) {
+    try {
+      data = Object.assign(data, event.data.json());
+    } catch (e) {
+      data.body = event.data.text();
+    }
+  }
+
+  const options = {
+    body: data.body,
+    icon: data.icon || '/pwa-icon-192.png',
+    badge: data.badge || '/pwa-icon-192.png',
+    vibrate: [100, 50, 100],
+    data: data.data || { url: '/' },
+    actions: [
+      { action: 'open', title: 'Open Atelier' },
+      { action: 'close', title: 'Dismiss' },
+    ],
+  };
+
+  event.waitUntil(self.registration.showNotification(data.title, options));
+});
+
+// 7. Notification Click — focus existing window or open new instance
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const targetUrl = event.notification.data?.url || '/';
+
+  if (event.action === 'close') return;
+
+  event.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      for (const client of clientList) {
+        if (client.url.includes(self.location.origin) && 'focus' in client) {
+          client.navigate(targetUrl);
+          return client.focus();
+        }
+      }
+      if (self.clients.openWindow) {
+        return self.clients.openWindow(targetUrl);
+      }
     })
   );
 });
