@@ -11,6 +11,11 @@ import {
   Compass,
   ChevronRight,
   Check,
+  ShieldCheck,
+  QrCode,
+  Wallet,
+  Star,
+  Layers,
 } from "lucide-react";
 import { SEOHead } from "../components/common/SEOHead";
 import { useAuth } from "../context/AuthContext";
@@ -127,27 +132,29 @@ export const Home = () => {
         }
 
         .role-card-btn:hover {
-          transform: translate3d(0, -4px, 0);
+          transform: translate3d(0, -3px, 0);
         }
 
         .role-card-btn:active {
-          transform: translate3d(0, -1px, 0) scale(0.99);
+          transform: translate3d(0, 0, 0) scale(0.99);
         }
 
         /* Gold Gradient CTA Button */
         .cta-gold-btn {
           position: relative;
           background: linear-gradient(135deg, #F5B942 0%, #E8912D 100%);
-          box-shadow: 0 8px 24px -4px rgba(245, 185, 66, 0.42);
+          box-shadow: 0 8px 26px -4px rgba(245, 185, 66, 0.45);
           transform: translate3d(0, 0, 0);
           transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1),
-                      box-shadow 0.18s ease;
+                      box-shadow 0.18s ease,
+                      filter 0.18s ease;
           -webkit-tap-highlight-color: transparent;
         }
 
         .cta-gold-btn:hover {
           transform: translate3d(0, -2px, 0);
-          box-shadow: 0 14px 32px -4px rgba(245, 185, 66, 0.6);
+          box-shadow: 0 14px 34px -4px rgba(245, 185, 66, 0.65);
+          filter: brightness(1.03);
         }
 
         .cta-gold-btn:active {
@@ -160,7 +167,8 @@ export const Home = () => {
           transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
                       background 0.2s ease,
                       border-color 0.2s ease,
-                      color 0.2s ease;
+                      color 0.2s ease,
+                      box-shadow 0.2s ease;
           -webkit-tap-highlight-color: transparent;
         }
 
@@ -168,10 +176,25 @@ export const Home = () => {
           transform: translate3d(0, -2px, 0);
           border-color: rgba(245, 185, 66, 0.5) !important;
           background: rgba(245, 185, 66, 0.08) !important;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
         }
 
         .guest-cta-btn:active {
           transform: scale(0.985);
+        }
+
+        /* Micro Feature Pill Chips */
+        .micro-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.35rem;
+          padding: 0.22rem 0.6rem;
+          border-radius: 8px;
+          font-size: 0.72rem;
+          font-weight: 700;
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          letter-spacing: 0.01em;
+          transition: background 0.15s ease, border-color 0.15s ease;
         }
       `}</style>
 
@@ -181,30 +204,32 @@ export const Home = () => {
           minHeight: "100vh",
           width: "100%",
           background: isDark
-            ? "radial-gradient(circle at 50% 12%, #141824 0%, #08090C 85%)"
-            : "radial-gradient(circle at 50% 12%, #fdfcf9 0%, #f4ede2 85%)",
+            ? "radial-gradient(circle at 50% 10%, #151926 0%, #07080B 85%)"
+            : "radial-gradient(circle at 50% 10%, #FFFFFF 0%, #F8F5EE 100%)",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          justifyContent: "center",
-          padding: "clamp(1rem, 4vw, 2.5rem) 1.25rem",
+          justifyContent: "flex-start",
+          padding: "0 1.25rem calc(env(safe-area-inset-bottom, 0px) + 2.5rem)",
           boxSizing: "border-box",
           position: "relative",
-          overflow: "hidden",
+          overflowX: "hidden",
+          overflowY: "auto",
+          WebkitOverflowScrolling: "touch",
         }}
       >
-        {/* Ambient Top Glow */}
+        {/* Ambient Top Gold Glow */}
         <div
           style={{
             position: "absolute",
-            top: "-15%",
+            top: "-12%",
             left: "50%",
             transform: "translateX(-50%)",
-            width: "clamp(280px, 65vw, 700px)",
-            height: "clamp(280px, 65vw, 700px)",
+            width: "clamp(300px, 70vw, 750px)",
+            height: "clamp(300px, 70vw, 750px)",
             borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(245, 185, 66, 0.18) 0%, transparent 68%)",
-            filter: "blur(70px)",
+            background: "radial-gradient(circle, rgba(245, 185, 66, 0.16) 0%, transparent 68%)",
+            filter: "blur(80px)",
             pointerEvents: "none",
             zIndex: 0,
           }}
@@ -214,54 +239,119 @@ export const Home = () => {
         <div
           style={{
             position: "absolute",
-            bottom: "-12%",
-            right: "-8%",
+            bottom: "-10%",
+            right: "-6%",
             width: "clamp(240px, 45vw, 550px)",
             height: "clamp(240px, 45vw, 550px)",
             borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(147, 51, 234, 0.12) 0%, transparent 70%)",
-            filter: "blur(80px)",
+            background: "radial-gradient(circle, rgba(147, 51, 234, 0.10) 0%, transparent 70%)",
+            filter: "blur(85px)",
             pointerEvents: "none",
             zIndex: 0,
           }}
         />
 
-        {/* Floating Top Nav (Theme Switcher + Push Notifications) */}
-        <div
+        {/* ── Dedicated Top Bar (Never Overlaps with Content) ── */}
+        <header
           style={{
-            position: "absolute",
-            top: "calc(env(safe-area-inset-top, 0px) + 1.1rem)",
-            right: "1.25rem",
-            zIndex: 20,
+            width: "100%",
+            maxWidth: "480px",
+            zIndex: 30,
             display: "flex",
             alignItems: "center",
-            gap: "0.5rem",
+            justifyContent: "space-between",
+            paddingTop: "calc(env(safe-area-inset-top, 0px) + 0.85rem)",
+            paddingBottom: "0.85rem",
+            marginBottom: "0.5rem",
+            boxSizing: "border-box",
           }}
         >
-          <PushNotificationManager />
-          <button
-            type="button"
-            onClick={toggleTheme}
-            aria-label="Toggle theme"
+          {/* Brand Mark & Label */}
+          <div
+            onClick={() => navigate("/")}
             style={{
-              background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.05)",
-              border: `1px solid ${isDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.08)"}`,
-              borderRadius: "50%",
-              width: "38px",
-              height: "38px",
               display: "flex",
               alignItems: "center",
-              justifyContent: "center",
+              gap: "0.6rem",
               cursor: "pointer",
-              color: "#F5B942",
-              backdropFilter: "blur(12px)",
-              WebkitBackdropFilter: "blur(12px)",
-              transition: "transform 0.15s ease",
+              userSelect: "none",
             }}
           >
-            {isDark ? <Sun size={17} /> : <Moon size={17} />}
-          </button>
-        </div>
+            <div
+              style={{
+                width: "36px",
+                height: "36px",
+                borderRadius: "11px",
+                overflow: "hidden",
+                border: "1.5px solid rgba(245, 185, 66, 0.45)",
+                boxShadow: "0 4px 14px rgba(245, 185, 66, 0.22)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                background: "#08090C",
+                flexShrink: 0,
+              }}
+            >
+              <img
+                src="/pwa-icon-192.png"
+                alt="Style Corner"
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
+            </div>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <span
+                style={{
+                  fontFamily: "Outfit, sans-serif",
+                  fontSize: "0.96rem",
+                  fontWeight: 900,
+                  letterSpacing: "-0.015em",
+                  color: isDark ? "#FFFFFF" : "#0F172A",
+                  lineHeight: 1.1,
+                }}
+              >
+                Style Corner
+              </span>
+              <span
+                style={{
+                  fontSize: "0.64rem",
+                  fontWeight: 800,
+                  color: "#F5B942",
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                }}
+              >
+                Atelier
+              </span>
+            </div>
+          </div>
+
+          {/* Right Action Chips: Push Notification & Theme Switcher */}
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+            <PushNotificationManager />
+            <button
+              type="button"
+              onClick={toggleTheme}
+              aria-label="Toggle theme"
+              style={{
+                background: isDark ? "rgba(255, 255, 255, 0.06)" : "rgba(0, 0, 0, 0.05)",
+                border: `1.5px solid ${isDark ? "rgba(255, 255, 255, 0.12)" : "rgba(0, 0, 0, 0.08)"}`,
+                borderRadius: "12px",
+                width: "38px",
+                height: "38px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+                color: "#F5B942",
+                backdropFilter: "blur(12px)",
+                WebkitBackdropFilter: "blur(12px)",
+                transition: "all 0.18s ease",
+              }}
+            >
+              {isDark ? <Sun size={17} /> : <Moon size={17} />}
+            </button>
+          </div>
+        </header>
 
         {/* ══════════════════════════════════════════════════════════════════
             LAYER 1: ICON LOADING SCREEN (Pulsing square icon & progress)
@@ -280,11 +370,12 @@ export const Home = () => {
             textAlign: "center",
             maxWidth: "420px",
             width: "100%",
-            margin: "0 auto",
+            margin: phase === "loading" ? "auto 0" : "0 auto",
             opacity: phase === "loading" ? 1 : 0,
             transform: phase === "loading" ? "scale(1)" : "scale(0.92)",
             pointerEvents: phase === "loading" ? "auto" : "none",
             transition: "opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+            padding: "2rem 0",
           }}
         >
           {/* Animated Square Icon Container */}
@@ -406,6 +497,7 @@ export const Home = () => {
             transform: phase === "onboarding" ? "translate3d(0, 0, 0) scale(1)" : "translate3d(0, 24px, 0) scale(0.97)",
             pointerEvents: phase === "onboarding" ? "auto" : "none",
             transition: "opacity 0.42s cubic-bezier(0.16, 1, 0.3, 1), transform 0.42s cubic-bezier(0.16, 1, 0.3, 1)",
+            margin: "0 auto",
           }}
         >
           {/* Header Mark */}
@@ -414,19 +506,24 @@ export const Home = () => {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              marginBottom: "1.6rem",
+              marginBottom: "1.35rem",
               textAlign: "center",
             }}
           >
+            {/* Center Logo Icon */}
             <div
               style={{
-                width: "54px",
-                height: "54px",
-                borderRadius: "16px",
+                width: "56px",
+                height: "56px",
+                borderRadius: "18px",
                 overflow: "hidden",
-                boxShadow: "0 8px 24px rgba(245, 185, 66, 0.35)",
-                marginBottom: "0.9rem",
-                border: "1.5px solid rgba(245, 185, 66, 0.55)",
+                boxShadow: "0 10px 28px rgba(245, 185, 66, 0.32)",
+                marginBottom: "0.85rem",
+                border: "2px solid rgba(245, 185, 66, 0.55)",
+                background: "#08090C",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
               <img
@@ -436,32 +533,34 @@ export const Home = () => {
               />
             </div>
 
+            {/* Welcome Pill Badge */}
             <div
               style={{
                 display: "inline-flex",
                 alignItems: "center",
-                gap: "0.35rem",
-                background: "rgba(245, 185, 66, 0.12)",
-                border: "1px solid rgba(245, 185, 66, 0.32)",
+                gap: "0.4rem",
+                background: isDark ? "rgba(245, 185, 66, 0.12)" : "rgba(245, 185, 66, 0.16)",
+                border: "1px solid rgba(245, 185, 66, 0.35)",
                 borderRadius: "50px",
-                padding: "0.28rem 0.85rem",
-                fontSize: "0.72rem",
+                padding: "0.32rem 0.95rem",
+                fontSize: "0.74rem",
                 fontWeight: 800,
-                color: "#F5B942",
+                color: isDark ? "#F5B942" : "#B47806",
                 letterSpacing: "0.06em",
                 textTransform: "uppercase",
-                marginBottom: "0.55rem",
+                marginBottom: "0.6rem",
                 fontFamily: "Outfit, sans-serif",
+                boxShadow: "0 2px 10px rgba(245, 185, 66, 0.12)",
               }}
             >
-              <Sparkles size={12} />
+              <Sparkles size={13} color="#F5B942" />
               Welcome to Style Corner
             </div>
 
             <h2
               style={{
                 fontFamily: "Outfit, sans-serif",
-                fontSize: "clamp(1.55rem, 5vw, 1.95rem)",
+                fontSize: "clamp(1.75rem, 5.5vw, 2.15rem)",
                 fontWeight: 900,
                 color: isDark ? "#FFFFFF" : "#0F172A",
                 margin: "0 0 0.35rem",
@@ -474,14 +573,14 @@ export const Home = () => {
             <p
               style={{
                 fontFamily: "Plus Jakarta Sans, sans-serif",
-                fontSize: "0.88rem",
-                color: "#94a3b8",
+                fontSize: "0.9rem",
+                color: isDark ? "#94a3b8" : "#64748b",
                 margin: 0,
                 lineHeight: 1.5,
                 maxWidth: "380px",
               }}
             >
-              Choose how you will experience Style Corner to set up your account.
+              Choose how you will experience Style Corner to set up your personalized atelier account.
             </p>
           </div>
 
@@ -491,43 +590,83 @@ export const Home = () => {
               onClick={() =>
                 navigate(role === "staff" ? "/expert-dashboard" : "/customer-dashboard")
               }
+              className="role-card-btn"
               style={{
                 width: "100%",
-                background: "rgba(245, 185, 66, 0.12)",
-                border: "1px solid rgba(245, 185, 66, 0.4)",
-                borderRadius: "16px",
-                padding: "0.85rem 1.1rem",
-                marginBottom: "1.25rem",
+                background: isDark
+                  ? "linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(245, 185, 66, 0.08) 100%)"
+                  : "linear-gradient(135deg, rgba(16, 185, 129, 0.10) 0%, rgba(245, 185, 66, 0.12) 100%)",
+                border: isDark
+                  ? "1.5px solid rgba(16, 185, 129, 0.35)"
+                  : "1.5px solid rgba(16, 185, 129, 0.45)",
+                borderRadius: "18px",
+                padding: "0.95rem 1.15rem",
+                marginBottom: "1.35rem",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
                 cursor: "pointer",
                 boxSizing: "border-box",
+                boxShadow: "0 8px 24px -6px rgba(16, 185, 129, 0.18)",
               }}
             >
-              <div style={{ display: "flex", alignItems: "center", gap: "0.65rem" }}>
-                <CheckCircle2 size={18} color="#10b981" />
+              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                <div
+                  style={{
+                    width: "36px",
+                    height: "36px",
+                    borderRadius: "10px",
+                    background: "rgba(16, 185, 129, 0.18)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexShrink: 0,
+                  }}
+                >
+                  <CheckCircle2 size={20} color="#10b981" />
+                </div>
                 <div style={{ textAlign: "left" }}>
-                  <div style={{ fontSize: "0.82rem", fontWeight: 800, color: isDark ? "#FFF" : "#0F172A" }}>
-                    Signed in as {user?.firstname || "Member"}
+                  <div
+                    style={{
+                      fontSize: "0.86rem",
+                      fontWeight: 800,
+                      color: isDark ? "#FFF" : "#0F172A",
+                      fontFamily: "Outfit, sans-serif",
+                    }}
+                  >
+                    Signed in as <span style={{ color: "#F5B942" }}>{user?.firstname || user?.fullName || "Member"}</span>
                   </div>
-                  <div style={{ fontSize: "0.72rem", color: "#94a3b8" }}>
+                  <div style={{ fontSize: "0.74rem", color: isDark ? "#94a3b8" : "#64748b", marginTop: "2px" }}>
                     Tap to open your {role === "staff" ? "Expert" : "Customer"} Dashboard
                   </div>
                 </div>
               </div>
-              <ArrowRight size={16} color="#F5B942" />
+              <div
+                style={{
+                  width: "30px",
+                  height: "30px",
+                  borderRadius: "50%",
+                  background: isDark ? "rgba(245, 185, 66, 0.18)" : "rgba(245, 185, 66, 0.25)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: isDark ? "#F5B942" : "#B47806",
+                  flexShrink: 0,
+                }}
+              >
+                <ArrowRight size={15} strokeWidth={2.5} />
+              </div>
             </div>
           )}
 
-          {/* ── Role Cards (Clean, Spaced, Tactile) ── */}
+          {/* ── Role Cards (Clean, Tactile, Luxury) ── */}
           <div
             style={{
               display: "flex",
               flexDirection: "column",
-              gap: "0.95rem",
+              gap: "1rem",
               width: "100%",
-              marginBottom: "1.4rem",
+              marginBottom: "1.35rem",
             }}
           >
             {/* Card 1: Client / Customer */}
@@ -541,11 +680,11 @@ export const Home = () => {
                 padding: "1.25rem 1.35rem",
                 background: isCustomer
                   ? isDark
-                    ? "linear-gradient(145deg, rgba(245, 185, 66, 0.14) 0%, rgba(21, 24, 34, 0.95) 100%)"
-                    : "linear-gradient(145deg, rgba(245, 185, 66, 0.18) 0%, #ffffff 100%)"
+                    ? "linear-gradient(145deg, rgba(245, 185, 66, 0.14) 0%, rgba(20, 24, 34, 0.98) 100%)"
+                    : "linear-gradient(145deg, rgba(245, 185, 66, 0.18) 0%, #FFFFFF 100%)"
                   : isDark
-                  ? "#141722"
-                  : "#ffffff",
+                  ? "#11141E"
+                  : "#FFFFFF",
                 border: `2px solid ${
                   isCustomer
                     ? "#F5B942"
@@ -554,8 +693,10 @@ export const Home = () => {
                     : "rgba(0, 0, 0, 0.08)"
                 }`,
                 boxShadow: isCustomer
-                  ? "0 12px 30px -4px rgba(245, 185, 66, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.1)"
-                  : "0 4px 16px rgba(0,0,0,0.04)",
+                  ? "0 14px 34px -4px rgba(245, 185, 66, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.15)"
+                  : isDark
+                  ? "0 4px 18px rgba(0, 0, 0, 0.25)"
+                  : "0 4px 18px rgba(0, 0, 0, 0.04)",
               }}
             >
               <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1rem" }}>
@@ -563,33 +704,36 @@ export const Home = () => {
                   {/* Icon Circle */}
                   <div
                     style={{
-                      width: "48px",
-                      height: "48px",
-                      borderRadius: "14px",
+                      width: "50px",
+                      height: "50px",
+                      borderRadius: "16px",
                       background: isCustomer
-                        ? "rgba(245, 185, 66, 0.24)"
+                        ? "linear-gradient(135deg, rgba(245, 185, 66, 0.3) 0%, rgba(232, 145, 45, 0.18) 100%)"
                         : isDark
-                        ? "rgba(255, 255, 255, 0.06)"
+                        ? "rgba(255, 255, 255, 0.05)"
                         : "rgba(0, 0, 0, 0.04)",
-                      color: isCustomer ? "#F5B942" : "#94a3b8",
+                      border: isCustomer
+                        ? "1.5px solid rgba(245, 185, 66, 0.6)"
+                        : "1px solid transparent",
+                      color: isCustomer ? "#F5B942" : isDark ? "#94a3b8" : "#64748b",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
                       flexShrink: 0,
                       marginTop: "2px",
-                      transition: "background 0.2s, color 0.2s",
+                      transition: "all 0.2s ease",
                     }}
                   >
-                    <User size={24} />
+                    <User size={25} />
                   </div>
 
                   {/* Text Details */}
                   <div style={{ textAlign: "left", flex: 1 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.25rem", flexWrap: "wrap" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.3rem", flexWrap: "wrap" }}>
                       <span
                         style={{
                           fontFamily: "Outfit, sans-serif",
-                          fontSize: "1.08rem",
+                          fontSize: "1.12rem",
                           fontWeight: 800,
                           color: isDark ? "#FFFFFF" : "#0F172A",
                         }}
@@ -599,11 +743,12 @@ export const Home = () => {
                       <span
                         style={{
                           fontSize: "0.68rem",
-                          fontWeight: 700,
-                          padding: "0.15rem 0.55rem",
+                          fontWeight: 800,
+                          padding: "0.18rem 0.6rem",
                           borderRadius: "50px",
                           background: "rgba(16, 185, 129, 0.15)",
                           color: "#10b981",
+                          border: "1px solid rgba(16, 185, 129, 0.3)",
                         }}
                       >
                         Book Sessions
@@ -612,19 +757,39 @@ export const Home = () => {
 
                     <p
                       style={{
-                        margin: "0 0 0.55rem",
-                        fontSize: "0.82rem",
-                        color: "#94a3b8",
+                        margin: "0 0 0.65rem",
+                        fontSize: "0.84rem",
+                        color: isDark ? "#94a3b8" : "#64748b",
                         lineHeight: 1.45,
                       }}
                     >
                       Book verified barbers, lash techs, nail artists, braiders &amp; wig stylists.
                     </p>
 
-                    {/* Feature micro-bullets */}
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem 0.8rem", fontSize: "0.72rem", color: "#64748b" }}>
-                      <span>✓ Escrow Protected</span>
-                      <span>✓ Digital Pass Check-In</span>
+                    {/* Feature micro-pills */}
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: "0.45rem", marginTop: "0.2rem" }}>
+                      <span
+                        className="micro-pill"
+                        style={{
+                          background: isDark ? "rgba(255, 255, 255, 0.05)" : "rgba(0, 0, 0, 0.04)",
+                          border: `1px solid ${isDark ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.06)"}`,
+                          color: isDark ? "#cbd5e1" : "#475569",
+                        }}
+                      >
+                        <ShieldCheck size={13} color="#10b981" />
+                        Escrow Protected
+                      </span>
+                      <span
+                        className="micro-pill"
+                        style={{
+                          background: isDark ? "rgba(255, 255, 255, 0.05)" : "rgba(0, 0, 0, 0.04)",
+                          border: `1px solid ${isDark ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.06)"}`,
+                          color: isDark ? "#cbd5e1" : "#475569",
+                        }}
+                      >
+                        <QrCode size={13} color="#F5B942" />
+                        Digital Pass Check-In
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -632,11 +797,12 @@ export const Home = () => {
                 {/* Radio selection check circle */}
                 <div
                   style={{
-                    width: "24px",
-                    height: "24px",
+                    width: "26px",
+                    height: "26px",
                     borderRadius: "50%",
-                    border: `2px solid ${isCustomer ? "#F5B942" : "#4b5563"}`,
+                    border: `2px solid ${isCustomer ? "#F5B942" : isDark ? "rgba(255, 255, 255, 0.25)" : "rgba(0, 0, 0, 0.2)"}`,
                     background: isCustomer ? "#F5B942" : "transparent",
+                    boxShadow: isCustomer ? "0 0 0 3px rgba(245, 185, 66, 0.25)" : "none",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -645,12 +811,12 @@ export const Home = () => {
                     transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
                   }}
                 >
-                  {isCustomer && <Check size={14} color="#08090C" strokeWidth={3.2} />}
+                  {isCustomer && <Check size={15} color="#08090C" strokeWidth={3.2} />}
                 </div>
               </div>
             </div>
 
-            {/* Card 2: Specialist / Beauty Expert */}
+            {/* Card 2: Specialist / Expert */}
             <div
               role="button"
               tabIndex={0}
@@ -661,11 +827,11 @@ export const Home = () => {
                 padding: "1.25rem 1.35rem",
                 background: isSpecialist
                   ? isDark
-                    ? "linear-gradient(145deg, rgba(245, 185, 66, 0.14) 0%, rgba(21, 24, 34, 0.95) 100%)"
-                    : "linear-gradient(145deg, rgba(245, 185, 66, 0.18) 0%, #ffffff 100%)"
+                    ? "linear-gradient(145deg, rgba(245, 185, 66, 0.14) 0%, rgba(20, 24, 34, 0.98) 100%)"
+                    : "linear-gradient(145deg, rgba(245, 185, 66, 0.18) 0%, #FFFFFF 100%)"
                   : isDark
-                  ? "#141722"
-                  : "#ffffff",
+                  ? "#11141E"
+                  : "#FFFFFF",
                 border: `2px solid ${
                   isSpecialist
                     ? "#F5B942"
@@ -674,8 +840,10 @@ export const Home = () => {
                     : "rgba(0, 0, 0, 0.08)"
                 }`,
                 boxShadow: isSpecialist
-                  ? "0 12px 30px -4px rgba(245, 185, 66, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.1)"
-                  : "0 4px 16px rgba(0,0,0,0.04)",
+                  ? "0 14px 34px -4px rgba(245, 185, 66, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.15)"
+                  : isDark
+                  ? "0 4px 18px rgba(0, 0, 0, 0.25)"
+                  : "0 4px 18px rgba(0, 0, 0, 0.04)",
               }}
             >
               <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1rem" }}>
@@ -683,33 +851,36 @@ export const Home = () => {
                   {/* Icon Circle */}
                   <div
                     style={{
-                      width: "48px",
-                      height: "48px",
-                      borderRadius: "14px",
+                      width: "50px",
+                      height: "50px",
+                      borderRadius: "16px",
                       background: isSpecialist
-                        ? "rgba(245, 185, 66, 0.24)"
+                        ? "linear-gradient(135deg, rgba(245, 185, 66, 0.3) 0%, rgba(232, 145, 45, 0.18) 100%)"
                         : isDark
-                        ? "rgba(255, 255, 255, 0.06)"
+                        ? "rgba(255, 255, 255, 0.05)"
                         : "rgba(0, 0, 0, 0.04)",
-                      color: isSpecialist ? "#F5B942" : "#94a3b8",
+                      border: isSpecialist
+                        ? "1.5px solid rgba(245, 185, 66, 0.6)"
+                        : "1px solid transparent",
+                      color: isSpecialist ? "#F5B942" : isDark ? "#94a3b8" : "#64748b",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
                       flexShrink: 0,
                       marginTop: "2px",
-                      transition: "background 0.2s, color 0.2s",
+                      transition: "all 0.2s ease",
                     }}
                   >
-                    <Scissors size={24} />
+                    <Scissors size={25} />
                   </div>
 
                   {/* Text Details */}
                   <div style={{ textAlign: "left", flex: 1 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.25rem", flexWrap: "wrap" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.3rem", flexWrap: "wrap" }}>
                       <span
                         style={{
                           fontFamily: "Outfit, sans-serif",
-                          fontSize: "1.08rem",
+                          fontSize: "1.12rem",
                           fontWeight: 800,
                           color: isDark ? "#FFFFFF" : "#0F172A",
                         }}
@@ -719,11 +890,12 @@ export const Home = () => {
                       <span
                         style={{
                           fontSize: "0.68rem",
-                          fontWeight: 700,
-                          padding: "0.15rem 0.55rem",
+                          fontWeight: 800,
+                          padding: "0.18rem 0.6rem",
                           borderRadius: "50px",
                           background: "rgba(245, 185, 66, 0.15)",
                           color: "#F5B942",
+                          border: "1px solid rgba(245, 185, 66, 0.35)",
                         }}
                       >
                         Earn &amp; Grow
@@ -732,19 +904,39 @@ export const Home = () => {
 
                     <p
                       style={{
-                        margin: "0 0 0.55rem",
-                        fontSize: "0.82rem",
-                        color: "#94a3b8",
+                        margin: "0 0 0.65rem",
+                        fontSize: "0.84rem",
+                        color: isDark ? "#94a3b8" : "#64748b",
                         lineHeight: 1.45,
                       }}
                     >
-                      Showcase your portfolio, receive client bookings &amp; get paid to your wallet.
+                      Showcase your portfolio, receive client bookings &amp; get paid directly to your wallet.
                     </p>
 
-                    {/* Feature micro-bullets */}
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem 0.8rem", fontSize: "0.72rem", color: "#64748b" }}>
-                      <span>✓ Lookbook Showcase</span>
-                      <span>✓ Direct Wallet Payout</span>
+                    {/* Feature micro-pills */}
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: "0.45rem", marginTop: "0.2rem" }}>
+                      <span
+                        className="micro-pill"
+                        style={{
+                          background: isDark ? "rgba(255, 255, 255, 0.05)" : "rgba(0, 0, 0, 0.04)",
+                          border: `1px solid ${isDark ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.06)"}`,
+                          color: isDark ? "#cbd5e1" : "#475569",
+                        }}
+                      >
+                        <Layers size={13} color="#a855f7" />
+                        Lookbook Showcase
+                      </span>
+                      <span
+                        className="micro-pill"
+                        style={{
+                          background: isDark ? "rgba(255, 255, 255, 0.05)" : "rgba(0, 0, 0, 0.04)",
+                          border: `1px solid ${isDark ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.06)"}`,
+                          color: isDark ? "#cbd5e1" : "#475569",
+                        }}
+                      >
+                        <Wallet size={13} color="#10b981" />
+                        Direct Wallet Payout
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -752,11 +944,12 @@ export const Home = () => {
                 {/* Radio selection check circle */}
                 <div
                   style={{
-                    width: "24px",
-                    height: "24px",
+                    width: "26px",
+                    height: "26px",
                     borderRadius: "50%",
-                    border: `2px solid ${isSpecialist ? "#F5B942" : "#4b5563"}`,
+                    border: `2px solid ${isSpecialist ? "#F5B942" : isDark ? "rgba(255, 255, 255, 0.25)" : "rgba(0, 0, 0, 0.2)"}`,
                     background: isSpecialist ? "#F5B942" : "transparent",
+                    boxShadow: isSpecialist ? "0 0 0 3px rgba(245, 185, 66, 0.25)" : "none",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -765,7 +958,7 @@ export const Home = () => {
                     transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
                   }}
                 >
-                  {isSpecialist && <Check size={14} color="#08090C" strokeWidth={3.2} />}
+                  {isSpecialist && <Check size={15} color="#08090C" strokeWidth={3.2} />}
                 </div>
               </div>
             </div>
@@ -778,23 +971,23 @@ export const Home = () => {
             className="cta-gold-btn"
             style={{
               width: "100%",
-              minHeight: "52px",
+              minHeight: "54px",
               border: "none",
               borderRadius: "16px",
               color: "#08090C",
               fontFamily: "Outfit, sans-serif",
-              fontSize: "0.98rem",
+              fontSize: "1rem",
               fontWeight: 900,
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               gap: "0.55rem",
-              marginBottom: "0.85rem",
+              marginBottom: "0.95rem",
             }}
           >
-            <span>Continue to Registration</span>
-            <ArrowRight size={18} strokeWidth={2.8} />
+            <span>{isCustomer ? "Continue as Client" : "Continue as Specialist"}</span>
+            <ArrowRight size={19} strokeWidth={2.8} />
           </button>
 
           {/* Sign In Secondary Link */}
@@ -804,8 +997,8 @@ export const Home = () => {
               alignItems: "center",
               justifyContent: "center",
               gap: "0.35rem",
-              fontSize: "0.85rem",
-              color: "#94a3b8",
+              fontSize: "0.88rem",
+              color: isDark ? "#94a3b8" : "#64748b",
               marginBottom: "1.75rem",
             }}
           >
@@ -820,7 +1013,8 @@ export const Home = () => {
                 fontWeight: 800,
                 cursor: "pointer",
                 fontFamily: "Outfit, sans-serif",
-                padding: "0.2rem 0.3rem",
+                padding: "0.2rem 0.35rem",
+                fontSize: "0.88rem",
               }}
             >
               Sign In
@@ -834,7 +1028,7 @@ export const Home = () => {
               display: "flex",
               alignItems: "center",
               gap: "1rem",
-              marginBottom: "1.4rem",
+              marginBottom: "1.35rem",
             }}
           >
             <div style={{ flex: 1, height: "1px", background: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)" }} />
@@ -842,7 +1036,7 @@ export const Home = () => {
               style={{
                 fontSize: "0.72rem",
                 fontWeight: 800,
-                color: "#64748b",
+                color: isDark ? "#64748b" : "#94a3b8",
                 textTransform: "uppercase",
                 letterSpacing: "0.08em",
               }}
@@ -861,7 +1055,7 @@ export const Home = () => {
               width: "100%",
               minHeight: "52px",
               background: isDark ? "rgba(255, 255, 255, 0.04)" : "rgba(0, 0, 0, 0.03)",
-              border: `1.5px solid ${isDark ? "rgba(255, 255, 255, 0.12)" : "rgba(0, 0, 0, 0.1)"}`,
+              border: `1.5px solid ${isDark ? "rgba(255, 255, 255, 0.10)" : "rgba(0, 0, 0, 0.08)"}`,
               borderRadius: "16px",
               color: isDark ? "#FFFFFF" : "#0F172A",
               fontFamily: "Outfit, sans-serif",
@@ -876,11 +1070,11 @@ export const Home = () => {
               marginBottom: "1.5rem",
             }}
           >
-            <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
-              <Compass size={18} color="#F5B942" />
-              <span>Explore Services as a Guest</span>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.65rem" }}>
+              <Compass size={19} color="#F5B942" />
+              <span>Explore Atelier Services as Guest</span>
             </div>
-            <ChevronRight size={17} color="#94a3b8" />
+            <ChevronRight size={17} color={isDark ? "#94a3b8" : "#64748b"} />
           </button>
 
           {/* Quick Footer Links Strip */}
@@ -910,7 +1104,7 @@ export const Home = () => {
                 style={{
                   background: "none",
                   border: "none",
-                  color: "#94a3b8",
+                  color: isDark ? "#94a3b8" : "#64748b",
                   fontSize: "0.78rem",
                   fontWeight: 600,
                   cursor: "pointer",
@@ -919,7 +1113,7 @@ export const Home = () => {
                   padding: "0.2rem",
                 }}
                 onMouseEnter={(e) => (e.currentTarget.style.color = "#F5B942")}
-                onMouseLeave={(e) => (e.currentTarget.style.color = "#94a3b8")}
+                onMouseLeave={(e) => (e.currentTarget.style.color = isDark ? "#94a3b8" : "#64748b")}
               >
                 {item.label}
               </button>
