@@ -1066,7 +1066,7 @@ export const CustomerDashboard = () => {
               </div>
             </div>
             <button
-              onClick={() => navigate('/booking')}
+              onClick={() => navigate('/experts')}
               style={{ background: 'none', border: 'none', display: 'flex', alignItems: 'center', gap: '0.2rem', color: 'var(--color-accent)', fontFamily: 'Outfit', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer', padding: '0.25rem', touchAction: 'manipulation' }}
             >
               See All <ArrowRight size={13} />
@@ -1093,7 +1093,7 @@ export const CustomerDashboard = () => {
               {localExperts.map(expert => (
                 <button
                   key={expert.id}
-                  onClick={() => navigate('/booking')}
+                  onClick={() => navigate(`/expert-profile?id=${encodeURIComponent(expert.id)}&name=${encodeURIComponent(expert.name)}`)}
                   style={{
                     flexShrink: 0, width: '130px',
                     background: 'var(--color-card-surface)',

@@ -593,7 +593,8 @@ export const ExpertDashboard = () => {
 
   // Account Activation States
   const [activating, setActivating] = useState(false);
-  const isActivated = user?.isActivated === true;
+  const [localActivated, setLocalActivated] = useState(false);
+  const isActivated = (user?.isActivated === true) || localActivated;
 
   // Profile Photos & Modals
   const [showAvatarSheet, setShowAvatarSheet] = useState(false);
@@ -915,25 +916,27 @@ export const ExpertDashboard = () => {
         amount: Math.round(amt * 100),
         currency: 'NGN',
         ref: 'TOPUP-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
-        callback: async (response) => {
-          try {
-            const res = await api.verifyPaystackPayment({
-              reference: response.reference,
-              isTopup: true,
-              amount: amt,
-            });
-            setWalletBalance(res.walletBalance);
-            showToast(`Wallet credited with ₦${amt.toLocaleString()}!`, 'success');
-            setShowTopupModal(false);
-            setTopupAmount('');
-            fetchWalletData();
-          } catch (err) {
-            showToast(err.message || 'Payment verification failed', 'error');
-          } finally {
-            setTopupSubmitting(false);
-          }
+        callback: function(response) {
+          (async () => {
+            try {
+              const res = await api.verifyPaystackPayment({
+                reference: response.reference,
+                isTopup: true,
+                amount: amt,
+              });
+              setWalletBalance(res.walletBalance);
+              showToast(`Wallet credited with ₦${amt.toLocaleString()}!`, 'success');
+              setShowTopupModal(false);
+              setTopupAmount('');
+              fetchWalletData();
+            } catch (err) {
+              showToast(err.message || 'Payment verification failed', 'error');
+            } finally {
+              setTopupSubmitting(false);
+            }
+          })();
         },
-        onClose: () => {
+        onClose: function() {
           showToast('Transaction cancelled', 'accent');
           setTopupSubmitting(false);
         },
@@ -1003,21 +1006,24 @@ export const ExpertDashboard = () => {
         amount: ACTIVATION_FEE * 100,
         currency: 'NGN',
         ref: 'ACTIVATE-' + Date.now() + '-' + Math.floor(Math.random() * 9999),
-        callback: async (response) => {
-          try {
-            const res = await api.activateExpertAccount({
-              reference: response.reference,
-              amount: ACTIVATION_FEE,
-            });
-            if (updateUser) updateUser(res.user);
-            showToast('🎉 Account activated! You are now live and visible to customers!', 'success');
-          } catch (err) {
-            showToast(err.message || 'Activation verification failed. Please contact support.', 'error');
-          } finally {
-            setActivating(false);
-          }
+        callback: function(response) {
+          (async () => {
+            try {
+              const res = await api.activateExpertAccount({
+                reference: response.reference,
+                amount: ACTIVATION_FEE,
+              });
+              setLocalActivated(true);
+              if (updateUser) updateUser(res.user);
+              showToast('🎉 Account activated! You are now live and visible to customers!', 'success');
+            } catch (err) {
+              showToast(err.message || 'Activation verification failed. Please contact support.', 'error');
+            } finally {
+              setActivating(false);
+            }
+          })();
         },
-        onClose: () => {
+        onClose: function() {
           showToast('Activation payment cancelled.', 'accent');
           setActivating(false);
         },
