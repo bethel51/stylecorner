@@ -596,8 +596,21 @@ export const api = {
     return data;
   },
 
+  // Expert Account Activation — ₦3,000 one-time payment
+  activateExpertAccount: async ({ reference, amount }) => {
+    const res = await fetchWithTimeout(`${API_BASE}/experts/activate`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ reference, amount }),
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.error || 'Activation failed');
+    return data;
+  },
+
   // Paystack & Withdrawal API
   getPaystackConfig: async () => {
+
     const res = await fetchWithTimeout(`${API_BASE}/config/paystack`);
     const data = await safeJson(res);
     return data || { publicKey: '' };

@@ -59,6 +59,8 @@ export const CustomerDashboard = () => {
 
   const [bookings, setBookings] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [localExperts, setLocalExperts] = useState([]);
+  const [loadingExperts, setLoadingExperts] = useState(false);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('bookings'); // 'bookings' | 'orders'
   const [chatBooking, setChatBooking] = useState(null); // booking opened in chat sheet
@@ -234,7 +236,49 @@ export const CustomerDashboard = () => {
     }
   };
 
-  useEffect(() => { fetchData(); }, []);
+  // Fetch activated & verified experts for the customer's location
+  const fetchLocalExperts = async () => {
+    setLoadingExperts(true);
+    try {
+      const data = await api.getSpecialists();
+      if (Array.isArray(data) && data.length > 0) {
+        const userState = (user?.state || '').toLowerCase();
+        const userLga = (user?.lga || '').toLowerCase();
+        const nearby = data
+          .filter(s => {
+            if (!userState) return true;
+            const sState = (s.state || '').toLowerCase();
+            const sLga = (s.lga || '').toLowerCase();
+            const sLoc = (s.location || '').toLowerCase();
+            return sState === userState || sLga === userLga ||
+              sLoc.includes(userState) || sLoc.includes(userLga);
+          })
+          .slice(0, 8)
+          .map(s => ({
+            id: s._id,
+            name: `${s.firstname || ''} ${s.lastname || ''}`.trim() || 'Verified Specialist',
+            title: s.title || (s.services?.[0]?.name) || (s.specialties?.[0]) || 'Specialist',
+            avatar: s.avatarUrl || '',
+            location: s.lga ? `${s.lga}, ${s.state}` : (s.location || s.state || 'Lagos'),
+            rating: s.rating || 5.0,
+          }));
+        setLocalExperts(nearby.length > 0 ? nearby : data.slice(0, 6).map(s => ({
+          id: s._id,
+          name: `${s.firstname || ''} ${s.lastname || ''}`.trim() || 'Verified Specialist',
+          title: s.title || (s.services?.[0]?.name) || 'Specialist',
+          avatar: s.avatarUrl || '',
+          location: s.lga ? `${s.lga}, ${s.state}` : (s.location || 'Lagos'),
+          rating: s.rating || 5.0,
+        })));
+      }
+    } catch (err) {
+      console.warn('Local experts fetch notice:', err.message);
+    } finally {
+      setLoadingExperts(false);
+    }
+  };
+
+  useEffect(() => { fetchData(); fetchLocalExperts(); }, []);
 
   useEffect(() => {
     if (user) {
@@ -1008,8 +1052,105 @@ export const CustomerDashboard = () => {
         </div>
 
         {/* ══════════════════════════════════════════════
-            SECTION 5 — ACCOUNT SETTINGS
+            SECTION 5 — VERIFIED EXPERTS NEAR YOU
         ══════════════════════════════════════════════ */}
+        <div style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: '22px', padding: '1.1rem', boxShadow: 'var(--shadow-sm)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+            <div style={sectionLabel}>
+              <div style={sectionIcon('rgba(245,185,66,0.12)', '#f5b942')}><ShieldCheck size={13} /></div>
+              <div>
+                <span style={sectionTitle}>Verified Experts Near You</span>
+                <span style={{ fontFamily: 'var(--font-heading)', fontSize: '0.7rem', color: 'var(--color-text-muted)', marginLeft: '0.5rem' }}>
+                  {user?.lga ? `${user.lga}, ${user.state}` : user?.state || 'Your Area'}
+                </span>
+              </div>
+            </div>
+            <button
+              onClick={() => navigate('/booking')}
+              style={{ background: 'none', border: 'none', display: 'flex', alignItems: 'center', gap: '0.2rem', color: 'var(--color-accent)', fontFamily: 'Outfit', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer', padding: '0.25rem', touchAction: 'manipulation' }}
+            >
+              See All <ArrowRight size={13} />
+            </button>
+          </div>
+
+          {loadingExperts ? (
+            <div style={{ display: 'flex', gap: '0.75rem', overflowX: 'auto', paddingBottom: '0.5rem' }}>
+              {[1, 2, 3].map(i => (
+                <div key={i} style={{ flexShrink: 0, width: '130px', background: 'var(--color-card-surface)', borderRadius: '16px', padding: '0.85rem 0.7rem', border: '1px solid var(--color-border)', animation: 'shimmer 1.5s infinite' }}>
+                  <div style={{ width: '50px', height: '50px', borderRadius: '50%', background: 'var(--color-border)', margin: '0 auto 0.6rem' }} />
+                  <div style={{ height: '10px', background: 'var(--color-border)', borderRadius: '6px', marginBottom: '0.4rem' }} />
+                  <div style={{ height: '8px', background: 'var(--color-border)', borderRadius: '6px', width: '70%', margin: '0 auto' }} />
+                </div>
+              ))}
+            </div>
+          ) : localExperts.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '1.5rem 1rem', color: 'var(--color-text-muted)', fontFamily: 'Outfit', fontSize: '0.84rem' }}>
+              <ShieldCheck size={32} style={{ opacity: 0.3, marginBottom: '0.5rem' }} />
+              <p style={{ margin: 0 }}>No verified experts in your area yet.<br />Check back soon!</p>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', gap: '0.75rem', overflowX: 'auto', paddingBottom: '0.5rem', scrollbarWidth: 'none' }}>
+              {localExperts.map(expert => (
+                <button
+                  key={expert.id}
+                  onClick={() => navigate('/booking')}
+                  style={{
+                    flexShrink: 0, width: '130px',
+                    background: 'var(--color-card-surface)',
+                    border: '1px solid var(--color-border)',
+                    borderRadius: '18px', padding: '0.9rem 0.7rem',
+                    cursor: 'pointer', textAlign: 'center',
+                    transition: 'transform 0.15s ease, box-shadow 0.15s ease',
+                    touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent',
+                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem',
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = 'var(--shadow-md)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = ''; }}
+                >
+                  {/* Avatar */}
+                  <div style={{ position: 'relative', marginBottom: '0.15rem' }}>
+                    <Avatar src={expert.avatar} name={expert.name} size={52} borderRadius="50%" />
+                    <div style={{ position: 'absolute', bottom: 0, right: 0, width: '14px', height: '14px', background: '#10b981', border: '2px solid var(--color-card-surface)', borderRadius: '50%' }} />
+                  </div>
+                  {/* Verified badge */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', background: 'rgba(245,185,66,0.12)', border: '1px solid rgba(245,185,66,0.25)', borderRadius: '50px', padding: '0.1rem 0.4rem' }}>
+                    <ShieldCheck size={9} color="#f5b942" />
+                    <span style={{ fontFamily: 'Outfit', fontSize: '0.6rem', fontWeight: 700, color: '#f5b942' }}>Verified</span>
+                  </div>
+                  {/* Name */}
+                  <span style={{ fontFamily: 'Outfit', fontSize: '0.8rem', fontWeight: 700, color: 'var(--color-text-primary)', lineHeight: 1.2, wordBreak: 'break-word' }}>
+                    {expert.name.split(' ')[0]}
+                  </span>
+                  {/* Title */}
+                  <span style={{ fontFamily: 'Outfit', fontSize: '0.68rem', color: 'var(--color-text-muted)', lineHeight: 1.3, wordBreak: 'break-word' }}>
+                    {expert.title}
+                  </span>
+                  {/* Rating */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+                    <Star size={9} color="#f5b942" fill="#f5b942" />
+                    <span style={{ fontFamily: 'Outfit', fontSize: '0.68rem', fontWeight: 700, color: 'var(--color-text-secondary)' }}>{Number(expert.rating).toFixed(1)}</span>
+                  </div>
+                  {/* Location */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+                    <MapPin size={9} color="var(--color-text-muted)" />
+                    <span style={{ fontFamily: 'Outfit', fontSize: '0.63rem', color: 'var(--color-text-muted)', maxWidth: '90px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {expert.location}
+                    </span>
+                  </div>
+                  {/* Book CTA */}
+                  <div style={{ marginTop: '0.2rem', background: 'var(--color-accent)', color: '#0c0e14', borderRadius: '8px', padding: '0.3rem 0.6rem', fontFamily: 'Outfit', fontSize: '0.67rem', fontWeight: 800 }}>
+                    Book Now
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* ══════════════════════════════════════════════
+            SECTION 6 — ACCOUNT SETTINGS
+        ══════════════════════════════════════════════ */}
+
         <div style={{
           background: '#151822', border: '1px solid rgba(239,68,68,0.2)',
           borderRadius: '22px', padding: '1.1rem',

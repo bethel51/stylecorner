@@ -775,12 +775,13 @@ app.post('/api/admin/delete-user-by-email', authenticateAdmin, async (req, res) 
   }
 });
 
-// Get all specialists (staff who have successfully registered)
+// Get all specialists — only activated experts are publicly visible
 app.get('/api/specialists', async (req, res) => {
   try {
     const specialists = await User.find({
       role: { $in: ['staff', 'expert'] },
-      $or: [{ isVerified: true }, { isVerified: { $exists: false } }]
+      isVerified: true,
+      isActivated: true
     }).select('-password');
     res.status(200).json(specialists);
   } catch (error) {
@@ -788,14 +789,138 @@ app.get('/api/specialists', async (req, res) => {
   }
 });
 
-// Get a single specialist by ID (public profile page)
+// Get a single specialist by ID (public profile page) — only activated
 app.get('/api/specialists/:id', async (req, res) => {
   try {
-    const specialist = await User.findOne({ _id: req.params.id, role: 'staff' }).select('-password');
-    if (!specialist) return res.status(404).json({ error: 'Specialist not found' });
+    const specialist = await User.findOne({
+      _id: req.params.id,
+      role: { $in: ['staff', 'expert'] },
+      isVerified: true,
+      isActivated: true
+    }).select('-password');
+    if (!specialist) return res.status(404).json({ error: 'Specialist not found or not yet activated' });
     res.status(200).json(specialist);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch specialist' });
+  }
+});
+
+// Expert Account Activation — ₦3,000 one-time payment via Paystack
+app.post('/api/experts/activate', authenticateToken, async (req, res) => {
+  try {
+    const { reference, amount } = req.body;
+    if (!reference) return res.status(400).json({ error: 'Payment reference is required' });
+
+    // Only staff/expert accounts can activate
+    if (req.user.role !== 'staff' && req.user.role !== 'expert') {
+      return res.status(403).json({ error: 'Only expert accounts can activate' });
+    }
+
+    // Already activated — idempotency check
+    if (req.user.isActivated) {
+      return res.status(400).json({ error: 'Your account is already activated.' });
+    }
+
+    // Replay-attack guard: reference already used?
+    const existingTxn = await Transaction.findOne({ reference }).lean();
+    if (existingTxn) {
+      return res.status(400).json({ error: 'This payment reference has already been used.' });
+    }
+
+    let verifiedAmount = Number(amount) || 0;
+
+    // Verify with Paystack if key is configured
+    if (PAYSTACK_SECRET_KEY) {
+      try {
+        const response = await fetch(`https://api.paystack.co/transaction/verify/${encodeURIComponent(reference)}`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${PAYSTACK_SECRET_KEY}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        const result = await response.json();
+        if (!response.ok || !result.status || result.data?.status !== 'success') {
+          return res.status(400).json({ error: result.message || 'Payment verification failed on Paystack' });
+        }
+        verifiedAmount = (result.data.amount || 0) / 100;
+      } catch (paystackErr) {
+        console.error('Paystack activation verification error:', paystackErr.message);
+        return res.status(502).json({ error: 'Unable to reach Paystack. Please try again.' });
+      }
+    }
+
+    const ACTIVATION_FEE = 3000;
+    if (verifiedAmount < ACTIVATION_FEE) {
+      return res.status(400).json({ error: `Activation requires a payment of at least ₦${ACTIVATION_FEE.toLocaleString()}.` });
+    }
+
+    // Activate the expert account
+    const expert = await User.findByIdAndUpdate(
+      req.user._id,
+      {
+        $set: {
+          isActivated: true,
+          activationPaidAt: new Date(),
+          activationAmount: verifiedAmount,
+          activationReference: reference
+        }
+      },
+      { new: true }
+    );
+
+    // Record activation transaction
+    const txn = new Transaction({
+      userId: req.user._id,
+      userEmail: req.user.email,
+      userName: `${req.user.firstname} ${req.user.lastname || ''}`.trim(),
+      type: 'expert_activation',
+      amount: verifiedAmount,
+      direction: 'debit',
+      reference: reference,
+      status: 'success',
+      description: `Expert account activation fee — ₦${verifiedAmount.toLocaleString()}`,
+    });
+    await txn.save();
+
+    // Notify admin
+    const adminEmail = process.env.ADMIN_EMAIL || process.env.EMAIL_USER || process.env.BREVO_SMTP_LOGIN;
+    if (adminEmail) {
+      sendNotificationSafe(
+        adminEmail,
+        `🎉 New Expert Account Activated: ${expert.firstname} ${expert.lastname || ''}`,
+        `Expert ${expert.firstname} ${expert.lastname || ''} (${expert.email}) has paid the ₦${verifiedAmount.toLocaleString()} activation fee and their account is now active and visible to customers.`
+      );
+    }
+
+    // In-app notification to the expert
+    await createInAppNotification({
+      userEmail: expert.email,
+      title: '🎉 Account Activated! You\'re Now Live!',
+      message: `Congratulations! Your expert account is now fully activated. Customers can now find you, book you, and the AI matcher will recommend you. Start earning today!`,
+      type: 'booking'
+    });
+
+    // Send activation email
+    sendNotificationSafe(
+      expert.email,
+      '✅ Your StyleCorner Expert Account is Now Activated!',
+      `Hi ${expert.firstname},\n\nCongratulations! Your StyleCorner expert account has been successfully activated.\n\nYou are now visible to customers in your area and can start receiving bookings immediately!\n\nWelcome to the StyleCorner expert community!`
+    );
+
+    const safeExpert = expert.toObject();
+    delete safeExpert.password;
+    delete safeExpert.otpCode;
+    delete safeExpert.otpExpiresAt;
+
+    res.status(200).json({
+      success: true,
+      message: '🎉 Account activated! You are now live and visible to customers.',
+      user: safeExpert
+    });
+  } catch (error) {
+    console.error('Expert activation error:', error);
+    res.status(500).json({ error: 'Activation failed. Please try again.' });
   }
 });
 
@@ -808,7 +933,8 @@ app.post('/api/ai/match-specialist', async (req, res) => {
     try {
       staffMembers = await User.find({
         role: { $in: ['staff', 'expert'] },
-        $or: [{ isVerified: true }, { isVerified: { $exists: false } }]
+        isVerified: true,
+        isActivated: true
       }).select('-password');
     } catch (e) {
       console.log('MongoDB staff query fallback:', e.message);
@@ -1267,29 +1393,40 @@ app.put('/api/bookings/:id', authenticateToken, async (req, res) => {
           const clientUser = await User.findOne({ email: new RegExp('^' + escapeRegex(booking.clientEmail) + '$', 'i') });
           if (clientUser) {
             const refundAmount = Number(booking.price) || 0;
-            await User.findByIdAndUpdate(clientUser._id, { $inc: { walletBalance: refundAmount } });
+            if (refundAmount > 0) {
+              // Atomic wallet credit — use $inc to avoid overwrite race condition
+              const updatedClient = await User.findByIdAndUpdate(
+                clientUser._id,
+                { $inc: { walletBalance: refundAmount } },
+                { new: true }
+              );
+              const newClientBalance = updatedClient?.walletBalance ?? 0;
+              console.log(`[REFUND] ₦${refundAmount} refunded to ${clientUser.email}. New balance: ₦${newClientBalance}`);
 
-            const refundTxn = new Transaction({
-              userId: clientUser._id,
-              userEmail: clientUser.email,
-              userName: `${clientUser.firstname} ${clientUser.lastname || ''}`.trim(),
-              type: 'wallet_refund',
-              amount: refundAmount,
-              direction: 'credit',
-              reference: `RFD-${Date.now()}-${String(booking._id).slice(-4)}`,
-              status: 'success',
-              description: `Refund for ${newStatus} booking: ${booking.service} with ${booking.stylist}`,
-              metadata: { bookingId: booking._id }
-            });
-            await refundTxn.save();
+              const refundTxn = new Transaction({
+                userId: clientUser._id,
+                userEmail: clientUser.email,
+                userName: `${clientUser.firstname} ${clientUser.lastname || ''}`.trim(),
+                type: 'wallet_refund',
+                amount: refundAmount,
+                direction: 'credit',
+                reference: `RFD-${Date.now()}-${String(booking._id).slice(-4)}`,
+                status: 'success',
+                description: `Refund for ${newStatus} booking: ${booking.service} with ${booking.stylist}`,
+                metadata: { bookingId: booking._id }
+              });
+              await refundTxn.save();
 
-            await createInAppNotification({
-              userEmail: clientUser.email,
-              title: '💰 Booking Refund Credited to Wallet!',
-              message: `₦${refundAmount.toLocaleString()} has been refunded to your Atelier Wallet for your ${newStatus} booking (${booking.service}).`,
-              type: 'booking',
-              bookingId: booking._id
-            });
+              await createInAppNotification({
+                userEmail: clientUser.email,
+                title: '💰 Booking Refund Credited!',
+                message: `₦${refundAmount.toLocaleString()} has been refunded to your Atelier Wallet. Your ${newStatus} booking (${booking.service}) refund is complete. New balance: ₦${newClientBalance.toLocaleString()}.`,
+                type: 'booking',
+                bookingId: booking._id
+              });
+            }
+          } else {
+            console.warn(`[REFUND WARNING] Could not find client user for email: ${booking.clientEmail} — refund not credited.`);
           }
         } catch (refundErr) {
           console.error('Failed to refund client wallet on cancellation/rejection:', refundErr);
@@ -2983,7 +3120,9 @@ app.post('/api/wallet/withdraw', authenticateToken, async (req, res) => {
 // Get User's Wallet Transaction History
 app.get('/api/wallet/transactions', authenticateToken, async (req, res) => {
   try {
-    const transactions = await Transaction.find({ userId: req.user._id })
+    const transactions = await Transaction.find({
+      $or: [{ userId: req.user._id }, { userEmail: req.user.email }]
+    })
       .sort({ createdAt: -1 })
       .limit(50)
       .lean();
@@ -2996,7 +3135,9 @@ app.get('/api/wallet/transactions', authenticateToken, async (req, res) => {
 // Get User's Payout / Withdrawal History
 app.get('/api/wallet/withdrawals', authenticateToken, async (req, res) => {
   try {
-    const withdrawals = await Withdrawal.find({ userId: req.user._id })
+    const withdrawals = await Withdrawal.find({
+      $or: [{ userId: req.user._id }, { userEmail: req.user.email }]
+    })
       .sort({ createdAt: -1 })
       .lean();
     res.status(200).json(withdrawals);
@@ -3073,11 +3214,28 @@ app.put('/api/admin/withdrawals/:id/status', authenticateAdmin, async (req, res)
     } else if (status === 'rejected') {
       withdrawal.rejectionReason = rejectionReason || 'Payout request rejected by admin';
 
-      // Refund the debited funds back to expert's wallet
-      const expert = await User.findById(withdrawal.userId);
+      // Refund the debited funds back to expert's wallet (lookup by userId or email fallback)
+      let expert = null;
+      if (withdrawal.userId) {
+        try {
+          expert = await User.findById(withdrawal.userId);
+        } catch (e) {}
+      }
+      if (!expert && withdrawal.userEmail) {
+        expert = await User.findOne({
+          email: new RegExp('^' + escapeRegex(withdrawal.userEmail.trim()) + '$', 'i')
+        });
+      }
+
       if (expert) {
-        expert.walletBalance = (expert.walletBalance ?? 0) + withdrawal.amount;
-        await expert.save();
+        const refundAmt = Number(withdrawal.amount) || 0;
+        const updatedExpert = await User.findByIdAndUpdate(
+          expert._id,
+          { $inc: { walletBalance: refundAmt } },
+          { new: true }
+        );
+        const newBal = updatedExpert?.walletBalance ?? 0;
+        console.log(`[PAYOUT REFUND] ₦${refundAmt} refunded to expert ${expert.email}. New balance: ₦${newBal}`);
 
         // Update original transaction to failed
         await Transaction.findOneAndUpdate(
@@ -3086,13 +3244,13 @@ app.put('/api/admin/withdrawals/:id/status', authenticateAdmin, async (req, res)
         );
 
         // Record a refund transaction
-        const refundRef = `REF-${withdrawal.reference}`;
+        const refundRef = `REF-${withdrawal.reference || Date.now()}`;
         const refundTxn = new Transaction({
           userId: expert._id,
           userEmail: expert.email,
           userName: `${expert.firstname} ${expert.lastname || ''}`.trim(),
-          type: 'wallet_topup',
-          amount: withdrawal.amount,
+          type: 'wallet_refund',
+          amount: refundAmt,
           direction: 'credit',
           reference: refundRef,
           status: 'success',
@@ -3100,6 +3258,8 @@ app.put('/api/admin/withdrawals/:id/status', authenticateAdmin, async (req, res)
           metadata: { withdrawalId: withdrawal._id }
         });
         await refundTxn.save();
+      } else {
+        console.warn(`[PAYOUT REFUND WARNING] Could not find expert for withdrawal ${withdrawal._id} (email: ${withdrawal.userEmail})`);
       }
 
       // Notify Expert

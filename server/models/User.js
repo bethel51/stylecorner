@@ -34,6 +34,10 @@ const userSchema = new mongoose.Schema({
   ],
   walletBalance: { type: Number, default: 0 },
   isVerified: { type: Boolean, default: false },
+  isActivated: { type: Boolean, default: false },
+  activationPaidAt: { type: Date },
+  activationAmount: { type: Number, default: 0 },
+  activationReference: { type: String, default: '' },
   otpCode: { type: String },
   otpExpiresAt: { type: Date },
   createdAt: { type: Date, default: Date.now }

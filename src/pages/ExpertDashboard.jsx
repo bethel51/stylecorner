@@ -591,6 +591,10 @@ export const ExpertDashboard = () => {
   const [topupSubmitting, setTopupSubmitting] = useState(false);
   const [showWalletHistorySheet, setShowWalletHistorySheet] = useState(false);
 
+  // Account Activation States
+  const [activating, setActivating] = useState(false);
+  const isActivated = user?.isActivated === true;
+
   // Profile Photos & Modals
   const [showAvatarSheet, setShowAvatarSheet] = useState(false);
   const [showProfileEditSheet, setShowProfileEditSheet] = useState(false);
@@ -981,11 +985,116 @@ export const ExpertDashboard = () => {
     window.open(`https://wa.me/${intl}?text=${msg}`, '_blank');
   };
 
+  // ── Account Activation Handler (₦3,000 one-time via Paystack) ──────────────
+  const handleActivateAccount = async () => {
+    setActivating(true);
+    try {
+      const config = await api.getPaystackConfig();
+      const pKey = config.publicKey;
+      if (!window.PaystackPop || !pKey) {
+        showToast('Payment gateway unavailable. Please refresh and try again.', 'error');
+        setActivating(false);
+        return;
+      }
+      const ACTIVATION_FEE = 3000;
+      const handler = window.PaystackPop.setup({
+        key: pKey,
+        email: user?.email || 'expert@stylecorner.com',
+        amount: ACTIVATION_FEE * 100,
+        currency: 'NGN',
+        ref: 'ACTIVATE-' + Date.now() + '-' + Math.floor(Math.random() * 9999),
+        callback: async (response) => {
+          try {
+            const res = await api.activateExpertAccount({
+              reference: response.reference,
+              amount: ACTIVATION_FEE,
+            });
+            if (updateUser) updateUser(res.user);
+            showToast('🎉 Account activated! You are now live and visible to customers!', 'success');
+          } catch (err) {
+            showToast(err.message || 'Activation verification failed. Please contact support.', 'error');
+          } finally {
+            setActivating(false);
+          }
+        },
+        onClose: () => {
+          showToast('Activation payment cancelled.', 'accent');
+          setActivating(false);
+        },
+      });
+      handler.openIframe();
+    } catch (err) {
+      showToast(err.message || 'Could not start activation.', 'error');
+      setActivating(false);
+    }
+  };
+
+  // ── Activation Lock Screen (shown to unactivated experts) ──────────────────
+  if (!isActivated) {
+    return (
+      <PageContainer title="Activate Your Expert Account">
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '70vh', padding: '1.5rem 1rem', textAlign: 'center' }}>
+          <div style={{ width: '88px', height: '88px', borderRadius: '26px', background: 'linear-gradient(135deg, rgba(245,185,66,0.18) 0%, rgba(245,185,66,0.06) 100%)', border: '2px solid rgba(245,185,66,0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', boxShadow: '0 0 40px rgba(245,185,66,0.15)' }}>
+            <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#f5b942" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+          </div>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(245,185,66,0.12)', border: '1px solid rgba(245,185,66,0.3)', borderRadius: '50px', padding: '0.3rem 1rem', marginBottom: '1rem' }}>
+            <ShieldCheck size={13} color="#f5b942" />
+            <span style={{ fontFamily: 'Outfit', fontSize: '0.75rem', fontWeight: 700, color: '#f5b942' }}>One-Time Activation Required</span>
+          </div>
+          <h2 style={{ fontFamily: 'Outfit', fontSize: '1.55rem', fontWeight: 900, color: '#ffffff', marginBottom: '0.7rem', lineHeight: 1.25 }}>Unlock Your Expert Dashboard</h2>
+          <p style={{ fontSize: '0.88rem', color: '#9ca3af', maxWidth: '340px', lineHeight: 1.65, marginBottom: '2rem' }}>
+            Activate with a one-time fee of <span style={{ color: '#f5b942', fontWeight: 800 }}>₦3,000</span> to go live, receive bookings, and start earning from customers near you.
+          </p>
+          <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '20px', padding: '1.1rem 1.25rem', width: '100%', maxWidth: '360px', marginBottom: '1.75rem', textAlign: 'left' }}>
+            {[
+              { icon: '✅', text: 'Appear in customer search & explore' },
+              { icon: '🤖', text: 'Get matched by the AI Specialist Matcher' },
+              { icon: '📅', text: 'Start receiving booking requests' },
+              { icon: '💰', text: 'Earn directly to your Atelier Wallet' },
+              { icon: '⭐', text: 'Build reviews & grow your reputation' },
+            ].map((item, i, arr) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.5rem 0', borderBottom: i < arr.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
+                <span style={{ fontSize: '1rem' }}>{item.icon}</span>
+                <span style={{ fontFamily: 'Outfit', fontSize: '0.84rem', color: '#d1d5db', fontWeight: 600 }}>{item.text}</span>
+              </div>
+            ))}
+          </div>
+          <div style={{ background: 'linear-gradient(135deg, rgba(245,185,66,0.14) 0%, rgba(245,185,66,0.05) 100%)', border: '1.5px solid rgba(245,185,66,0.4)', borderRadius: '18px', padding: '1.1rem 1.25rem', width: '100%', maxWidth: '360px', marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ textAlign: 'left' }}>
+              <div style={{ fontFamily: 'Outfit', fontSize: '0.78rem', color: '#9ca3af', fontWeight: 600, marginBottom: '0.2rem' }}>Account Activation Fee</div>
+              <div style={{ fontFamily: 'Outfit', fontSize: '2rem', fontWeight: 900, color: '#f5b942', lineHeight: 1 }}>₦3,000</div>
+              <div style={{ fontFamily: 'Outfit', fontSize: '0.72rem', color: '#6b7280', marginTop: '0.3rem' }}>Secured by Paystack · Pay once, earn forever</div>
+            </div>
+            <div style={{ background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)', borderRadius: '10px', padding: '0.4rem 0.75rem' }}>
+              <span style={{ fontFamily: 'Outfit', fontSize: '0.72rem', fontWeight: 800, color: '#10b981' }}>One-Time</span>
+            </div>
+          </div>
+          <button id="expert-activate-btn" onClick={handleActivateAccount} disabled={activating} style={{ width: '100%', maxWidth: '360px', background: activating ? 'rgba(245,185,66,0.35)' : 'linear-gradient(135deg, #f5b942 0%, #e8a520 100%)', color: '#0c0e14', border: 'none', borderRadius: '16px', padding: '1rem 1.5rem', fontFamily: 'Outfit', fontWeight: 900, fontSize: '1rem', cursor: activating ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem', minHeight: '54px', boxShadow: activating ? 'none' : '0 8px 28px rgba(245,185,66,0.4)', touchAction: 'manipulation' }}>
+            {activating
+              ? <><RefreshCw size={18} style={{ animation: 'spin 1s linear infinite' }} /> Connecting to Paystack...</>
+              : <><ShieldCheck size={18} /> Activate My Account — ₦3,000</>
+            }
+          </button>
+          <p style={{ fontFamily: 'Outfit', fontSize: '0.74rem', color: '#4b5563', marginTop: '1.2rem' }}>
+            Signed in as <strong style={{ color: '#6b7280' }}>{user?.firstname} {user?.lastname}</strong>
+          </p>
+          <button onClick={logout} style={{ background: 'none', border: 'none', color: '#6b7280', cursor: 'pointer', fontFamily: 'Outfit', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.35rem', minHeight: '44px', touchAction: 'manipulation' }}>
+            <LogOut size={14} /> Sign out
+          </button>
+        </div>
+      </PageContainer>
+    );
+  }
+
   return (
     <PageContainer title="Expert Dashboard">
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', paddingBottom: '2.5rem' }}>
 
         {/* ── 1. Hero Atelier Specialist Profile Banner ── */}
+
         <div
           style={{
             background: user?.coverImage
