@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Download, Check, Copy, Loader } from 'lucide-react';
+import { ArrowLeft, Download, Check, Copy, Loader, Maximize, Minimize, Printer } from 'lucide-react';
 import { QrWorldSvg, QrRecruitSvg } from '../components/common/QrCodeSvgs';
 
 export const BillboardFlyersPage = () => {
@@ -26,7 +26,39 @@ export const BillboardFlyersPage = () => {
   const [copiedType, setCopiedType] = useState(null);
   const [screenshotMode, setScreenshotMode] = useState(false);
   const [savingPdf, setSavingPdf] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const containerRef = useRef(null);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      const root = document.documentElement;
+      if (root.requestFullscreen) {
+        root.requestFullscreen().then(() => setIsFullscreen(true)).catch(() => {});
+      } else if (root.webkitRequestFullscreen) {
+        root.webkitRequestFullscreen();
+        setIsFullscreen(true);
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen().then(() => setIsFullscreen(false)).catch(() => {});
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+        setIsFullscreen(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    const onFsChange = () => {
+      setIsFullscreen(Boolean(document.fullscreenElement));
+    };
+    document.addEventListener('fullscreenchange', onFsChange);
+    document.addEventListener('webkitfullscreenchange', onFsChange);
+    return () => {
+      document.removeEventListener('fullscreenchange', onFsChange);
+      document.removeEventListener('webkitfullscreenchange', onFsChange);
+    };
+  }, []);
 
   useEffect(() => {
     const current = getInitialDesign();
@@ -37,7 +69,7 @@ export const BillboardFlyersPage = () => {
       // Auto-trigger PDF download when opened with ?download=true
       setTimeout(() => {
         saveToPdf(current);
-      }, 1800);
+      }, 1500);
     }
   }, [location.search, location.hash]);
 
@@ -59,26 +91,36 @@ export const BillboardFlyersPage = () => {
       // Ensure target design is visible if a specific design was requested
       if (target !== 'all' && activeDesign !== target && activeDesign !== 'all') {
         setActiveDesign(target);
-        await new Promise((r) => setTimeout(r, 200));
+        await new Promise((r) => setTimeout(r, 250));
       }
 
       // Load html2canvas and jsPDF from CDN if not already loaded
-      await loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
-      await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+      await Promise.all([
+        loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js'),
+        loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js')
+      ]);
 
-      const { jsPDF } = window.jspdf;
+      const jsPDFClass = window.jspdf?.jsPDF || window.jsPDF;
+      if (!jsPDFClass || !window.html2canvas) {
+        throw new Error('PDF export libraries unavailable. Launching native print...');
+      }
 
-      // Select specific card or all cards
+      // Select specific card or all cards from container or document root
       let selector = '.print-card';
       if (target === 'billboard') selector = '.print-card[data-design="billboard"]';
       else if (target === 'street') selector = '.print-card[data-design="street"]';
       else if (target === 'recruit') selector = '.print-card[data-design="recruit"]';
 
-      let cards = containerRef.current?.querySelectorAll(selector);
+      const root = containerRef.current || document.querySelector('.flyers-page-root') || document.body;
+      let cards = root.querySelectorAll(selector);
       if (!cards || cards.length === 0) {
-        cards = containerRef.current?.querySelectorAll('.print-card');
+        cards = root.querySelectorAll('.print-card');
       }
-      if (!cards || cards.length === 0) throw new Error('No banner card found to download');
+      if (!cards || cards.length === 0) {
+        window.print();
+        setSavingPdf(false);
+        return;
+      }
 
       const designNames = {
         billboard: 'StyleCorner-Billboard',
@@ -98,7 +140,7 @@ export const BillboardFlyersPage = () => {
         const canvas = await window.html2canvas(card, {
           scale: 2,
           useCORS: true,
-          allowTaint: true,
+          allowTaint: false,
           backgroundColor: '#08090C',
           logging: false,
           ignoreElements: (el) => el.classList && el.classList.contains('no-print'),
@@ -110,7 +152,7 @@ export const BillboardFlyersPage = () => {
         const cardH = Math.round(canvas.height / 2);
 
         if (pageCount === 0) {
-          pdf = new jsPDF({
+          pdf = new jsPDFClass({
             orientation: orientation,
             unit: 'px',
             format: [cardW, cardH],
@@ -125,11 +167,24 @@ export const BillboardFlyersPage = () => {
       }
 
       if (pdf) {
-        pdf.save(filename);
+        try {
+          pdf.save(filename);
+        } catch (saveErr) {
+          const blob = pdf.output('blob');
+          const blobUrl = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = blobUrl;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(() => URL.revokeObjectURL(blobUrl), 3000);
+        }
       }
     } catch (err) {
-      console.error('PDF save failed:', err);
-      alert('Could not save PDF. Please try again.');
+      console.warn('Direct PDF canvas generation notice, opening native Print to PDF:', err);
+      // Fallback: native browser print which lets user choose "Save as PDF"
+      window.print();
     } finally {
       setSavingPdf(false);
     }
@@ -143,6 +198,7 @@ export const BillboardFlyersPage = () => {
 
   return (
     <div
+      ref={containerRef}
       className="flyers-page-root"
       style={{
         backgroundColor: '#050608',
@@ -314,6 +370,27 @@ export const BillboardFlyersPage = () => {
               : <><Download size={13} /> Save as PDF
             </>
             }
+          </button>
+
+          <button
+            type="button"
+            onClick={toggleFullscreen}
+            style={{
+              backgroundColor: isFullscreen ? 'rgba(245, 185, 66, 0.2)' : 'rgba(255, 255, 255, 0.08)',
+              color: isFullscreen ? '#F5B942' : '#ffffff',
+              border: isFullscreen ? '1px solid #F5B942' : '1px solid rgba(255, 255, 255, 0.15)',
+              borderRadius: '50px',
+              padding: '0.35rem 0.85rem',
+              fontSize: '0.74rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+              whiteSpace: 'nowrap',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.3rem',
+            }}
+          >
+            {isFullscreen ? <><Minimize size={13} /> Exit Fullscreen</> : <><Maximize size={13} /> View Full Screen</>}
           </button>
 
           <button

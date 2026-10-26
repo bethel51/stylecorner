@@ -88,9 +88,13 @@ export const AdminDashboard = () => {
   const handleDownloadBannerPdf = (type) => {
     const hash = type === 'portrait' ? 'street' : (type || 'all');
     const downloadUrl = `/admin/marketing-flyers?design=${hash}&download=true`;
-    const win = window.open(downloadUrl, '_blank');
-    if (!win) {
-      window.location.href = downloadUrl;
+    try {
+      const win = window.open(downloadUrl, '_blank');
+      if (!win || win.closed || typeof win.closed === 'undefined') {
+        navigate(downloadUrl);
+      }
+    } catch (e) {
+      navigate(downloadUrl);
     }
   };
 
@@ -1979,7 +1983,17 @@ export const AdminDashboard = () => {
                   <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                     <button
                       type="button"
-                      onClick={() => window.open('/admin/marketing-flyers', '_blank')}
+                      onClick={() => {
+                        const url = '/admin/marketing-flyers';
+                        try {
+                          const win = window.open(url, '_blank');
+                          if (!win || win.closed || typeof win.closed === 'undefined') {
+                            navigate(url);
+                          }
+                        } catch (e) {
+                          navigate(url);
+                        }
+                      }}
                       style={{
                         display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
                         padding: '0.55rem 1rem', borderRadius: '10px', fontSize: '0.8rem', fontWeight: 800,
@@ -1987,7 +2001,7 @@ export const AdminDashboard = () => {
                         color: '#ffffff', cursor: 'pointer', fontFamily: 'Outfit',
                       }}
                     >
-                      <ExternalLink size={13} /> Open Fullscreen
+                      <ExternalLink size={13} /> View Full Screen
                     </button>
                     <button
                       type="button"
@@ -2000,7 +2014,7 @@ export const AdminDashboard = () => {
                         boxShadow: '0 4px 14px rgba(212,175,55,0.35)',
                       }}
                     >
-                      <Printer size={13} /> Print / Save PDF
+                      <Download size={13} /> Save to PDF
                     </button>
                   </div>
                 </div>
@@ -2141,7 +2155,7 @@ export const AdminDashboard = () => {
                             color: '#ffffff', cursor: 'pointer', fontFamily: 'Outfit',
                           }}
                         >
-                          <Printer size={12} /> PDF
+                          <Download size={12} /> Save to PDF
                         </button>
                       </div>
                     </div>
@@ -2245,7 +2259,7 @@ export const AdminDashboard = () => {
                             color: '#ffffff', cursor: 'pointer', fontFamily: 'Outfit',
                           }}
                         >
-                          <Printer size={12} /> PDF
+                          <Download size={12} /> Save to PDF
                         </button>
                       </div>
                     </div>
@@ -2354,7 +2368,7 @@ export const AdminDashboard = () => {
                             color: '#ffffff', cursor: 'pointer', fontFamily: 'Outfit',
                           }}
                         >
-                          <Printer size={12} /> PDF
+                          <Download size={12} /> Save to PDF
                         </button>
                       </div>
                     </div>
@@ -3229,7 +3243,18 @@ export const AdminDashboard = () => {
 
               <button
                 type="button"
-                onClick={() => window.open(`/admin/marketing-flyers?design=${activeBannerModal === 'portrait' ? 'street' : activeBannerModal}`, '_blank')}
+                onClick={() => {
+                  const targetDesign = activeBannerModal === 'portrait' ? 'street' : activeBannerModal;
+                  const url = `/admin/marketing-flyers?design=${targetDesign}`;
+                  try {
+                    const win = window.open(url, '_blank');
+                    if (!win || win.closed || typeof win.closed === 'undefined') {
+                      navigate(url);
+                    }
+                  } catch (e) {
+                    navigate(url);
+                  }
+                }}
                 style={{
                   flex: isMobile ? '1 1 calc(50% - 0.25rem)' : 'none',
                   minHeight: '40px',
@@ -3239,7 +3264,7 @@ export const AdminDashboard = () => {
                   color: '#ffffff', cursor: 'pointer', fontFamily: 'Outfit',
                 }}
               >
-                <ExternalLink size={13} /> Standalone
+                <ExternalLink size={13} /> View Full Screen
               </button>
 
               <button
@@ -3265,7 +3290,7 @@ export const AdminDashboard = () => {
                     : '0 4px 14px rgba(245,185,66,0.35)',
                 }}
               >
-                <Download size={14} /> Save as PDF / Download
+                <Download size={14} /> Save to PDF
               </button>
             </div>
           </div>
