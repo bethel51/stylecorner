@@ -1983,17 +1983,7 @@ export const AdminDashboard = () => {
                   <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                     <button
                       type="button"
-                      onClick={() => {
-                        const url = '/admin/marketing-flyers';
-                        try {
-                          const win = window.open(url, '_blank');
-                          if (!win || win.closed || typeof win.closed === 'undefined') {
-                            navigate(url);
-                          }
-                        } catch (e) {
-                          navigate(url);
-                        }
-                      }}
+                      onClick={() => navigate('/admin/marketing-flyers')}
                       style={{
                         display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
                         padding: '0.55rem 1rem', borderRadius: '10px', fontSize: '0.8rem', fontWeight: 800,
@@ -3245,15 +3235,7 @@ export const AdminDashboard = () => {
                 type="button"
                 onClick={() => {
                   const targetDesign = activeBannerModal === 'portrait' ? 'street' : activeBannerModal;
-                  const url = `/admin/marketing-flyers?design=${targetDesign}`;
-                  try {
-                    const win = window.open(url, '_blank');
-                    if (!win || win.closed || typeof win.closed === 'undefined') {
-                      navigate(url);
-                    }
-                  } catch (e) {
-                    navigate(url);
-                  }
+                  navigate(`/admin/marketing-flyers?design=${targetDesign}`);
                 }}
                 style={{
                   flex: isMobile ? '1 1 calc(50% - 0.25rem)' : 'none',

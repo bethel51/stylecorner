@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Download, Check, Copy, Loader, Maximize, Minimize, Printer } from 'lucide-react';
+import { ArrowLeft, Download, Check, Copy, Loader, Maximize, Minimize, X } from 'lucide-react';
 import { QrWorldSvg, QrRecruitSvg } from '../components/common/QrCodeSvgs';
 
 export const BillboardFlyersPage = () => {
@@ -26,31 +26,42 @@ export const BillboardFlyersPage = () => {
   const [copiedType, setCopiedType] = useState(null);
   const [screenshotMode, setScreenshotMode] = useState(false);
   const [savingPdf, setSavingPdf] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const containerRef = useRef(null);
+  const [isCssFullscreen, setIsCssFullscreen] = useState(false);
+  const billboardRef = useRef(null);
+  const streetRef = useRef(null);
+  const recruitRef = useRef(null);
 
+  /* ── CSS Fullscreen (works on all devices including iOS Safari) ── */
   const toggleFullscreen = () => {
-    if (!document.fullscreenElement) {
-      const root = document.documentElement;
-      if (root.requestFullscreen) {
-        root.requestFullscreen().then(() => setIsFullscreen(true)).catch(() => {});
-      } else if (root.webkitRequestFullscreen) {
-        root.webkitRequestFullscreen();
-        setIsFullscreen(true);
+    // First try native Fullscreen API (desktop/Android Chrome)
+    if (!isCssFullscreen && !document.fullscreenElement) {
+      const el = document.documentElement;
+      const req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen;
+      if (req) {
+        try {
+          Promise.resolve(req.call(el)).catch(() => {
+            // Native API failed (iOS) — fall back to CSS fullscreen
+            setIsCssFullscreen(true);
+          });
+          return;
+        } catch (_) { /* fall through */ }
       }
+      // No native API available (iOS) — CSS fullscreen
+      setIsCssFullscreen(true);
+    } else if (isCssFullscreen) {
+      setIsCssFullscreen(false);
     } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen().then(() => setIsFullscreen(false)).catch(() => {});
-      } else if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen();
-        setIsFullscreen(false);
-      }
+      // Native fullscreen is active — exit it
+      const exit = document.exitFullscreen || document.webkitExitFullscreen;
+      if (exit) exit.call(document).catch(() => {});
     }
   };
 
   useEffect(() => {
     const onFsChange = () => {
-      setIsFullscreen(Boolean(document.fullscreenElement));
+      if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+        setIsCssFullscreen(false);
+      }
     };
     document.addEventListener('fullscreenchange', onFsChange);
     document.addEventListener('webkitfullscreenchange', onFsChange);
@@ -66,124 +77,158 @@ export const BillboardFlyersPage = () => {
 
     const params = new URLSearchParams(location.search);
     if (params.get('download') === 'true') {
-      // Auto-trigger PDF download when opened with ?download=true
-      setTimeout(() => {
-        saveToPdf(current);
-      }, 1500);
+      setTimeout(() => saveToPdf(current), 1500);
     }
   }, [location.search, location.hash]);
 
-  // Load a CDN script only once, returns a promise
-  const loadScript = (src) =>
-    new Promise((resolve, reject) => {
-      if (document.querySelector(`script[src="${src}"]`)) { resolve(); return; }
-      const s = document.createElement('script');
-      s.src = src;
-      s.onload = resolve;
-      s.onerror = reject;
-      document.head.appendChild(s);
-    });
-
+  /* ─────────────────────────────────────────────────────────────────
+     saveToPdf — opens a new window, injects the card HTML + all
+     computed styles, then triggers window.print().
+     This approach works on ALL browsers (mobile + desktop) because:
+       • It uses the native print engine — no canvas taint issues
+       • No CDN dependencies — works offline
+       • iOS Safari triggers the "Save to PDF" sheet natively
+     ───────────────────────────────────────────────────────────────── */
   const saveToPdf = async (designType) => {
     const target = designType || activeDesign;
     setSavingPdf(true);
+
+    // Pick the correct ref(s)
+    const refMap = { billboard: billboardRef, street: streetRef, recruit: recruitRef };
+    let cardEls = [];
+    if (target === 'all') {
+      cardEls = [billboardRef, streetRef, recruitRef]
+        .map(r => r.current)
+        .filter(Boolean);
+    } else if (refMap[target]?.current) {
+      cardEls = [refMap[target].current];
+    }
+
+    // Fallback — scan DOM
+    if (cardEls.length === 0) {
+      const sel = target === 'all'
+        ? '.print-card'
+        : `.print-card[data-design="${target}"]`;
+      cardEls = Array.from(document.querySelectorAll(sel));
+    }
+
+    if (cardEls.length === 0) {
+      // Last resort — just print the page
+      window.print();
+      setSavingPdf(false);
+      return;
+    }
+
+    /* ── Build a self-contained print document ── */
+    const isBillboard = (target === 'billboard');
+    const pageSize = isBillboard
+      ? 'size: A4 landscape; margin: 0;'
+      : 'size: A4 portrait; margin: 0;';
+
+    // Collect outer HTML of each card
+    const cardsHtml = cardEls.map(el => {
+      // Clone so we can remove .no-print elements
+      const clone = el.cloneNode(true);
+      clone.querySelectorAll('.no-print').forEach(np => np.remove());
+      // Strip the data attribute so no scoping issues
+      clone.style.maxWidth = '100%';
+      clone.style.width = '100%';
+      clone.style.borderRadius = '0';
+      clone.style.margin = '0 auto';
+      clone.style.boxShadow = 'none';
+      return clone.outerHTML;
+    }).join('<div style="page-break-after:always"></div>');
+
+    // Google Fonts
+    const fontsLink = `<link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" />`;
+
+    // Absolute URL for the logo image so the print window can load it
+    const logoUrl = `${window.location.origin}/pwa-icon-192.png`;
+
+    const printDoc = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>StyleCorner Flyer</title>
+  ${fontsLink}
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0;
+      background: #050608;
+      color: #fff;
+      font-family: 'Outfit', -apple-system, sans-serif;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    @page { ${pageSize} }
+    @media print {
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      body { background: #050608 !important; }
+      .no-print { display: none !important; }
+    }
+    .print-card {
+      width: 100%;
+      page-break-after: always;
+      break-after: page;
+    }
+    .print-card:last-child {
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+    img { max-width: 100%; display: block; }
+  </style>
+</head>
+<body>
+  ${cardsHtml.replace(/\/pwa-icon-192\.png/g, logoUrl)}
+  <script>
+    // Replace any remaining relative paths
+    document.querySelectorAll('img').forEach(function(img){
+      if(img.src && img.src.indexOf('pwa-icon') !== -1 && !img.src.startsWith('http')) {
+        img.src = '${logoUrl}';
+      }
+    });
+    // Wait for fonts + images then print
+    var ready = false;
+    function doPrint() {
+      if (ready) return;
+      ready = true;
+      setTimeout(function(){ window.print(); setTimeout(function(){ window.close(); }, 1000); }, 600);
+    }
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(doPrint);
+    } else {
+      setTimeout(doPrint, 800);
+    }
+    window.onafterprint = function(){ window.close(); };
+  <\/script>
+</body>
+</html>`;
+
     try {
-      // Ensure target design is visible if a specific design was requested
-      if (target !== 'all' && activeDesign !== target && activeDesign !== 'all') {
-        setActiveDesign(target);
-        await new Promise((r) => setTimeout(r, 250));
-      }
-
-      // Load html2canvas and jsPDF from CDN if not already loaded
-      await Promise.all([
-        loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js'),
-        loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js')
-      ]);
-
-      const jsPDFClass = window.jspdf?.jsPDF || window.jsPDF;
-      if (!jsPDFClass || !window.html2canvas) {
-        throw new Error('PDF export libraries unavailable. Launching native print...');
-      }
-
-      // Select specific card or all cards from container or document root
-      let selector = '.print-card';
-      if (target === 'billboard') selector = '.print-card[data-design="billboard"]';
-      else if (target === 'street') selector = '.print-card[data-design="street"]';
-      else if (target === 'recruit') selector = '.print-card[data-design="recruit"]';
-
-      const root = containerRef.current || document.querySelector('.flyers-page-root') || document.body;
-      let cards = root.querySelectorAll(selector);
-      if (!cards || cards.length === 0) {
-        cards = root.querySelectorAll('.print-card');
-      }
-      if (!cards || cards.length === 0) {
-        window.print();
-        setSavingPdf(false);
-        return;
-      }
-
-      const designNames = {
-        billboard: 'StyleCorner-Billboard',
-        street: 'StyleCorner-StreetFlyer',
-        recruit: 'StyleCorner-RecruitPoster',
-        all: 'StyleCorner-AllBanners',
-      };
-      const filename = `${designNames[target] || 'StyleCorner-Banner'}.pdf`;
-
-      let pdf = null;
-      let pageCount = 0;
-
-      for (const card of Array.from(cards)) {
-        const isBillboard = card.getAttribute('data-design') === 'billboard';
-        const orientation = isBillboard ? 'landscape' : 'portrait';
-
-        const canvas = await window.html2canvas(card, {
-          scale: 2,
-          useCORS: true,
-          allowTaint: false,
-          backgroundColor: '#08090C',
-          logging: false,
-          ignoreElements: (el) => el.classList && el.classList.contains('no-print'),
-        });
-
-        const imgData = canvas.toDataURL('image/jpeg', 0.95);
-        // Half of scale: 2 is the exact CSS dimensions
-        const cardW = Math.round(canvas.width / 2);
-        const cardH = Math.round(canvas.height / 2);
-
-        if (pageCount === 0) {
-          pdf = new jsPDFClass({
-            orientation: orientation,
-            unit: 'px',
-            format: [cardW, cardH],
-            compress: true,
-          });
-          pdf.addImage(imgData, 'JPEG', 0, 0, cardW, cardH);
-        } else {
-          pdf.addPage([cardW, cardH], orientation);
-          pdf.addImage(imgData, 'JPEG', 0, 0, cardW, cardH);
-        }
-        pageCount++;
-      }
-
-      if (pdf) {
-        try {
-          pdf.save(filename);
-        } catch (saveErr) {
-          const blob = pdf.output('blob');
-          const blobUrl = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = blobUrl;
-          a.download = filename;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          setTimeout(() => URL.revokeObjectURL(blobUrl), 3000);
-        }
+      const pw = window.open('', '_blank', 'width=900,height=700,scrollbars=yes');
+      if (pw) {
+        pw.document.open();
+        pw.document.write(printDoc);
+        pw.document.close();
+      } else {
+        // Popup blocked — fall back to blob URL
+        const blob = new Blob([printDoc], { type: 'text/html' });
+        const blobUrl = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.target = '_blank';
+        a.rel = 'noopener';
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 5000);
       }
     } catch (err) {
-      console.warn('Direct PDF canvas generation notice, opening native Print to PDF:', err);
-      // Fallback: native browser print which lets user choose "Save as PDF"
+      console.warn('Print window failed, falling back to window.print()', err);
       window.print();
     } finally {
       setSavingPdf(false);
@@ -196,9 +241,15 @@ export const BillboardFlyersPage = () => {
     setTimeout(() => setCopiedType(null), 2000);
   };
 
+  const isNativeFullscreen = Boolean(
+    typeof document !== 'undefined' &&
+    (document.fullscreenElement || document.webkitFullscreenElement)
+  );
+  const isFullscreen = isCssFullscreen || isNativeFullscreen;
+
+  /* ────────────────────────────────────────────────────────────────── */
   return (
     <div
-      ref={containerRef}
       className="flyers-page-root"
       style={{
         backgroundColor: '#050608',
@@ -210,6 +261,15 @@ export const BillboardFlyersPage = () => {
         alignItems: 'center',
         padding: screenshotMode ? '0' : '1.25rem 1rem 3rem',
         boxSizing: 'border-box',
+        /* CSS Fullscreen styles applied inline */
+        ...(isCssFullscreen ? {
+          position: 'fixed',
+          inset: 0,
+          zIndex: 9999,
+          overflow: 'auto',
+          padding: '0.75rem 0.5rem',
+          WebkitOverflowScrolling: 'touch',
+        } : {}),
       }}
     >
       <style>{`
@@ -220,10 +280,7 @@ export const BillboardFlyersPage = () => {
             print-color-adjust: exact !important;
             color-adjust: exact !important;
           }
-          @page {
-            margin: 0;
-            size: auto;
-          }
+          @page { margin: 0; size: auto; }
           body, html {
             background-color: #050608 !important;
             background: #050608 !important;
@@ -232,14 +289,10 @@ export const BillboardFlyersPage = () => {
             padding: 0 !important;
             width: 100% !important;
           }
-          /* Hide all UI chrome */
           .no-print,
           .print-hide,
           .flyer-toolbar,
-          button {
-            display: none !important;
-          }
-          /* The outer page wrapper — remove all screen padding */
+          button { display: none !important; }
           .flyers-page-root {
             padding: 0 !important;
             margin: 0 !important;
@@ -247,7 +300,6 @@ export const BillboardFlyersPage = () => {
             background: #050608 !important;
             display: block !important;
           }
-          /* The cards column */
           .billboard-container {
             display: block !important;
             max-width: 100% !important;
@@ -255,25 +307,24 @@ export const BillboardFlyersPage = () => {
             gap: 0 !important;
             padding: 0 !important;
             margin: 0 !important;
-            align-items: unset !important;
           }
-          /* Each individual banner card */
           .print-card {
             page-break-before: auto;
             page-break-after: always;
             break-after: page;
-            border-radius: 16px !important;
+            border-radius: 0 !important;
             box-shadow: none !important;
-            margin: 0 auto !important;
+            margin: 0 !important;
             max-width: 100% !important;
             width: 100% !important;
-            box-sizing: border-box !important;
           }
-          /* Last card — no extra blank page */
           .print-card:last-child {
             page-break-after: avoid !important;
             break-after: avoid !important;
           }
+        }
+        @keyframes spin {
+          to { transform: rotate(360deg); }
         }
       `}</style>
 
@@ -285,7 +336,7 @@ export const BillboardFlyersPage = () => {
             position: 'sticky',
             top: '1rem',
             zIndex: 100,
-            backgroundColor: 'rgba(15, 17, 24, 0.95)',
+            backgroundColor: 'rgba(15, 17, 24, 0.97)',
             backdropFilter: 'blur(16px)',
             WebkitBackdropFilter: 'blur(16px)',
             border: '1px solid rgba(245, 185, 66, 0.4)',
@@ -298,6 +349,7 @@ export const BillboardFlyersPage = () => {
             boxShadow: '0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(245, 185, 66, 0.15)',
             maxWidth: '100%',
             overflowX: 'auto',
+            WebkitOverflowScrolling: 'touch',
           }}
         >
           <button
@@ -312,6 +364,7 @@ export const BillboardFlyersPage = () => {
               alignItems: 'center',
               padding: '0.35rem',
               borderRadius: '50%',
+              flexShrink: 0,
             }}
             title="Go Back"
           >
@@ -319,10 +372,10 @@ export const BillboardFlyersPage = () => {
           </button>
 
           {[
-            { id: 'all', label: 'All 3 Designs', activeBg: '#F5B942', activeColor: '#08090C' },
-            { id: 'billboard', label: '1. Highway Billboard', activeBg: '#F5B942', activeColor: '#08090C' },
+            { id: 'all', label: 'All 3', activeBg: '#F5B942', activeColor: '#08090C' },
+            { id: 'billboard', label: '1. Billboard', activeBg: '#F5B942', activeColor: '#08090C' },
             { id: 'street', label: '2. Street Flyer', activeBg: '#a855f7', activeColor: '#ffffff' },
-            { id: 'recruit', label: '3. Recruitment Poster', activeBg: '#10b981', activeColor: '#ffffff' },
+            { id: 'recruit', label: '3. Recruit', activeBg: '#10b981', activeColor: '#ffffff' },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -333,18 +386,20 @@ export const BillboardFlyersPage = () => {
                 color: activeDesign === tab.id ? tab.activeColor : '#cbd5e1',
                 border: activeDesign === tab.id ? `1px solid ${tab.activeBg}` : '1px solid transparent',
                 borderRadius: '50px',
-                padding: '0.35rem 0.85rem',
-                fontSize: '0.76rem',
+                padding: '0.35rem 0.75rem',
+                fontSize: '0.74rem',
                 fontWeight: 800,
                 cursor: 'pointer',
                 whiteSpace: 'nowrap',
                 transition: 'all 0.15s ease',
+                flexShrink: 0,
               }}
             >
               {tab.label}
             </button>
           ))}
 
+          {/* Save as PDF */}
           <button
             type="button"
             onClick={() => saveToPdf(activeDesign)}
@@ -355,7 +410,7 @@ export const BillboardFlyersPage = () => {
               border: '1px solid #F5B942',
               borderRadius: '50px',
               padding: '0.35rem 0.9rem',
-              fontSize: '0.76rem',
+              fontSize: '0.74rem',
               fontWeight: 800,
               cursor: savingPdf ? 'not-allowed' : 'pointer',
               display: 'inline-flex',
@@ -363,15 +418,16 @@ export const BillboardFlyersPage = () => {
               gap: '0.3rem',
               whiteSpace: 'nowrap',
               opacity: savingPdf ? 0.7 : 1,
+              flexShrink: 0,
             }}
           >
             {savingPdf
-              ? <><Loader size={13} style={{ animation: 'spin 1s linear infinite' }} /> Saving…</>
-              : <><Download size={13} /> Save as PDF
-            </>
+              ? <><Loader size={13} style={{ animation: 'spin 1s linear infinite' }} /> Preparing…</>
+              : <><Download size={13} /> Save to PDF</>
             }
           </button>
 
+          {/* View Full Screen */}
           <button
             type="button"
             onClick={toggleFullscreen}
@@ -388,9 +444,13 @@ export const BillboardFlyersPage = () => {
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.3rem',
+              flexShrink: 0,
             }}
           >
-            {isFullscreen ? <><Minimize size={13} /> Exit Fullscreen</> : <><Maximize size={13} /> View Full Screen</>}
+            {isFullscreen
+              ? <><Minimize size={13} /> Exit</>
+              : <><Maximize size={13} /> Fullscreen</>
+            }
           </button>
 
           <button
@@ -406,6 +466,7 @@ export const BillboardFlyersPage = () => {
               fontWeight: 700,
               cursor: 'pointer',
               whiteSpace: 'nowrap',
+              flexShrink: 0,
             }}
           >
             📷 Clean View
@@ -433,13 +494,40 @@ export const BillboardFlyersPage = () => {
             zIndex: 9999,
           }}
         >
-          📷 Tap anywhere or click here to restore controls
+          📷 Tap anywhere to restore controls
         </div>
+      )}
+
+      {/* ── CSS Fullscreen Exit Button (always visible when in CSS fullscreen) ── */}
+      {isCssFullscreen && (
+        <button
+          type="button"
+          onClick={() => setIsCssFullscreen(false)}
+          className="no-print"
+          style={{
+            position: 'fixed',
+            top: '0.75rem',
+            right: '0.75rem',
+            zIndex: 10001,
+            background: 'rgba(245, 185, 66, 0.9)',
+            color: '#08090C',
+            border: 'none',
+            borderRadius: '50%',
+            width: '40px',
+            height: '40px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            boxShadow: '0 4px 14px rgba(0,0,0,0.5)',
+          }}
+        >
+          <X size={18} strokeWidth={2.5} />
+        </button>
       )}
 
       {/* Main Container */}
       <div
-        ref={containerRef}
         className="billboard-container"
         style={{
           display: 'flex',
@@ -455,6 +543,7 @@ export const BillboardFlyersPage = () => {
              ══════════════════════════════════════════════════════════════════ */}
         {(activeDesign === 'all' || activeDesign === 'billboard') && (
           <div
+            ref={billboardRef}
             className="print-card"
             data-design="billboard"
             style={{
@@ -493,7 +582,7 @@ export const BillboardFlyersPage = () => {
                   style={{ width: '22px', height: '22px', borderRadius: '5px', objectFit: 'cover' }}
                 />
                 <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#F5B942', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-                  StyleCorner Nigeria · Lagos & Ibadan
+                  StyleCorner Nigeria · Lagos &amp; Ibadan
                 </span>
               </div>
 
@@ -506,7 +595,7 @@ export const BillboardFlyersPage = () => {
                   marginBottom: '1.2rem',
                 }}
               >
-                Book Verified Stylists, Barbers & Braiders. <br />
+                Book Verified Stylists, Barbers &amp; Braiders. <br />
                 <span
                   style={{
                     background: 'linear-gradient(135deg, #F5B942 0%, #ffc857 40%, #e8891d 100%)',
@@ -519,7 +608,7 @@ export const BillboardFlyersPage = () => {
               </h1>
 
               <p style={{ fontSize: '1rem', color: '#94a3b8', lineHeight: 1.6, marginBottom: '1.8rem', maxWidth: '580px' }}>
-                Lagos & Ibadan’s premier beauty network. AI matches you with top-rated barbers, braiders, lash techs & nail artists near you. In-salon or VIP home visits.
+                Lagos &amp; Ibadan's premier beauty network. AI matches you with top-rated barbers, braiders, lash techs &amp; nail artists near you. In-salon or VIP home visits.
               </p>
 
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.55rem', marginBottom: '1.75rem' }}>
@@ -544,11 +633,11 @@ export const BillboardFlyersPage = () => {
               <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', color: '#cbd5e1', fontSize: '0.82rem', fontWeight: 700, flexWrap: 'wrap' }}>
                 <span>🛡️ 100% Escrow Protected</span>
                 <span>⭐ 4.9 ★ Community Rated</span>
-                <span>📍 Lagos & Ibadan</span>
+                <span>📍 Lagos &amp; Ibadan</span>
               </div>
             </div>
 
-            {/* Right QR Showcase with 100% Vector SVG */}
+            {/* Right QR Showcase */}
             <div
               style={{
                 display: 'flex',
@@ -581,7 +670,6 @@ export const BillboardFlyersPage = () => {
                 ⚡ Instant Mobile Booking
               </div>
 
-              {/* 100% INLINE VECTOR SVG QR CODE */}
               <div style={{ marginBottom: '1rem' }}>
                 <QrWorldSvg size={210} logoSize={42} />
               </div>
@@ -593,7 +681,7 @@ export const BillboardFlyersPage = () => {
                 Point phone camera to join · <strong style={{ color: '#F5B942' }}>www.stylecorner.world</strong>
               </div>
 
-              <div className="no-print" style={{ display: 'flex', gap: '0.5rem', marginTop: '1.25rem' }}>
+              <div className="no-print" style={{ display: 'flex', gap: '0.5rem', marginTop: '1.25rem', flexWrap: 'wrap', justifyContent: 'center' }}>
                 <button
                   type="button"
                   onClick={() => saveToPdf('billboard')}
@@ -612,7 +700,7 @@ export const BillboardFlyersPage = () => {
                     gap: '0.35rem',
                   }}
                 >
-                  <Download size={13} /> Save Billboard (PDF)
+                  <Download size={13} /> Save to PDF
                 </button>
                 <button
                   type="button"
@@ -640,6 +728,7 @@ export const BillboardFlyersPage = () => {
              ══════════════════════════════════════════════════════════════════ */}
         {(activeDesign === 'all' || activeDesign === 'street') && (
           <div
+            ref={streetRef}
             className="print-card"
             data-design="street"
             style={{
@@ -710,7 +799,7 @@ export const BillboardFlyersPage = () => {
             </h2>
 
             <p style={{ fontSize: '0.95rem', color: '#94a3b8', lineHeight: 1.6, maxWidth: '440px', marginBottom: '1.5rem' }}>
-              No more guessing salon quality. Get matched to vetted braiders, barbers, lash techs & makeup artists in your LGA across Lagos & Ibadan.
+              No more guessing salon quality. Get matched to vetted braiders, barbers, lash techs &amp; makeup artists in your LGA across Lagos &amp; Ibadan.
             </p>
 
             <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0.5rem', marginBottom: '1.75rem' }}>
@@ -732,7 +821,7 @@ export const BillboardFlyersPage = () => {
               ))}
             </div>
 
-            {/* Prominent QR Box with 100% Vector SVG */}
+            {/* Prominent QR Box */}
             <div
               style={{
                 backgroundColor: 'rgba(168, 85, 247, 0.12)',
@@ -759,7 +848,7 @@ export const BillboardFlyersPage = () => {
                 www.stylecorner.world
               </div>
 
-              <div className="no-print" style={{ display: 'flex', gap: '0.5rem', marginTop: '1.25rem' }}>
+              <div className="no-print" style={{ display: 'flex', gap: '0.5rem', marginTop: '1.25rem', flexWrap: 'wrap', justifyContent: 'center' }}>
                 <button
                   type="button"
                   onClick={() => saveToPdf('street')}
@@ -779,7 +868,7 @@ export const BillboardFlyersPage = () => {
                     boxShadow: '0 4px 14px rgba(168,85,247,0.4)',
                   }}
                 >
-                  <Download size={13} /> Save Flyer (PDF)
+                  <Download size={13} /> Save to PDF
                 </button>
                 <button
                   type="button"
@@ -801,7 +890,7 @@ export const BillboardFlyersPage = () => {
             </div>
 
             <div style={{ display: 'flex', gap: '1.25rem', color: '#64748b', fontSize: '0.78rem', fontWeight: 700 }}>
-              <span>📍 Lagos & Ibadan</span>
+              <span>📍 Lagos &amp; Ibadan</span>
               <span>🛡️ Protected Escrow</span>
               <span>⭐ 4.9 ★ Rating</span>
             </div>
@@ -813,6 +902,7 @@ export const BillboardFlyersPage = () => {
              ══════════════════════════════════════════════════════════════════ */}
         {(activeDesign === 'all' || activeDesign === 'recruit') && (
           <div
+            ref={recruitRef}
             className="print-card"
             data-design="recruit"
             style={{
@@ -857,7 +947,7 @@ export const BillboardFlyersPage = () => {
                 textTransform: 'uppercase',
               }}
             >
-              ✂️ Calling All Beauty & Grooming Professionals
+              ✂️ Calling All Beauty &amp; Grooming Professionals
             </div>
 
             <h2
@@ -882,7 +972,7 @@ export const BillboardFlyersPage = () => {
             </h2>
 
             <p style={{ fontSize: '0.95rem', color: '#94a3b8', lineHeight: 1.5, maxWidth: '440px', marginBottom: '1.75rem' }}>
-              Join StyleCorner’s verified beauty network in Lagos & Ibadan. Fill your open calendar slots with high-value clients.
+              Join StyleCorner's verified beauty network in Lagos &amp; Ibadan. Fill your open calendar slots with high-value clients.
             </p>
 
             {/* 4 Value Points */}
@@ -921,7 +1011,7 @@ export const BillboardFlyersPage = () => {
               ))}
             </div>
 
-            {/* Recruitment QR Code with 100% Vector SVG */}
+            {/* Recruitment QR Code */}
             <div
               style={{
                 backgroundColor: 'rgba(16, 185, 129, 0.12)',
@@ -948,7 +1038,7 @@ export const BillboardFlyersPage = () => {
                 stylecorner.world/role-selection
               </div>
 
-              <div className="no-print" style={{ display: 'flex', gap: '0.5rem', marginTop: '1.25rem' }}>
+              <div className="no-print" style={{ display: 'flex', gap: '0.5rem', marginTop: '1.25rem', flexWrap: 'wrap', justifyContent: 'center' }}>
                 <button
                   type="button"
                   onClick={() => saveToPdf('recruit')}
@@ -968,7 +1058,7 @@ export const BillboardFlyersPage = () => {
                     boxShadow: '0 4px 14px rgba(16,185,129,0.4)',
                   }}
                 >
-                  <Download size={13} /> Save Poster (PDF)
+                  <Download size={13} /> Save to PDF
                 </button>
                 <button
                   type="button"
@@ -990,7 +1080,7 @@ export const BillboardFlyersPage = () => {
             </div>
 
             <div style={{ fontSize: '0.78rem', color: '#64748b' }}>
-              StyleCorner Nigeria · Lagos & Ibadan Verified Beauty & Grooming Platform
+              StyleCorner Nigeria · Lagos &amp; Ibadan Verified Beauty &amp; Grooming Platform
             </div>
           </div>
         )}
