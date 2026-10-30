@@ -1,0 +1,17 @@
+{
+  "typescript.validate.enable": true,
+  "javascript.validate.enable": true,
+  "typescript.tsserver.maxTsServerMemory": 4096,
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true
+  }
+}
