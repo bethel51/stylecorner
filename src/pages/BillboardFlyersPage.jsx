@@ -187,6 +187,13 @@ export const BillboardFlyersPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const getInitialStyle = () => {
+    const params = new URLSearchParams(location.search);
+    const qStyle = params.get('style');
+    if (qStyle === 'classic') return 'classic';
+    return 'showcase'; // default: always open phone showcase flyers
+  };
+
   const getInitialDesign = () => {
     const params = new URLSearchParams(location.search);
     const qDesign = params.get('design');
@@ -201,7 +208,7 @@ export const BillboardFlyersPage = () => {
     return 'all';
   };
 
-  const [flyerStyle, setFlyerStyle] = useState('showcase'); // 'showcase' (new reference) or 'classic'
+  const [flyerStyle, setFlyerStyle] = useState(getInitialStyle); // 'showcase' (phone flyers) or 'classic'
   const [activeDesign, setActiveDesign] = useState('all');
   const [copiedType, setCopiedType] = useState(null);
   const [screenshotMode, setScreenshotMode] = useState(false);
@@ -253,6 +260,8 @@ export const BillboardFlyersPage = () => {
   useEffect(() => {
     const current = getInitialDesign();
     setActiveDesign(current);
+    const newStyle = getInitialStyle();
+    setFlyerStyle(newStyle);
     const params = new URLSearchParams(location.search);
     if (params.get('download') === 'true') {
       setTimeout(() => saveToPdf(current), 1500);

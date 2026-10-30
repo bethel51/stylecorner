@@ -2018,6 +2018,20 @@ export const AdminDashboard = () => {
                   <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                     <button
                       type="button"
+                      onClick={() => navigate('/billboard-flyers?style=showcase')}
+                      style={{
+                        display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
+                        padding: '0.55rem 1rem', borderRadius: '10px', fontSize: '0.8rem', fontWeight: 800,
+                        background: 'linear-gradient(135deg, #F5B942, #C8930A)',
+                        border: 'none',
+                        color: '#08090C', cursor: 'pointer', fontFamily: 'Outfit',
+                        boxShadow: '0 4px 18px rgba(245,185,66,0.35)',
+                      }}
+                    >
+                      📱 Phone Flyers
+                    </button>
+                    <button
+                      type="button"
                       onClick={() => navigate('/billboard-flyers')}
                       style={{
                         display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
@@ -2026,7 +2040,7 @@ export const AdminDashboard = () => {
                         color: '#ffffff', cursor: 'pointer', fontFamily: 'Outfit',
                       }}
                     >
-                      <ExternalLink size={13} /> View Full Screen
+                      <ExternalLink size={13} /> Classic Billboards
                     </button>
                     <button
                       type="button"
