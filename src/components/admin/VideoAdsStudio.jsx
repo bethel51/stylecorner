@@ -33,13 +33,13 @@ function createBackgroundMusicEngine(style = 'luxury') {
   const chords = {
     luxury: [261.6, 329.6, 392.0, 523.3], // C major luxury chord
     lofi:   [220.0, 261.6, 329.6, 440.0], // A minor lofi chill
-    upbeat: [349.2, 440.0, 523.3, 659.3], // F major modern vibe
+    upbeat: [349.2, 440.0, 523.3, 659.3], // F major modern kinetic
   };
   const notes = chords[style] || chords.luxury;
 
   let isRunning = true;
   let nextBeatTime = ctx.currentTime + 0.1;
-  const bpm = style === 'upbeat' ? 100 : style === 'lofi' ? 72 : 86;
+  const bpm = style === 'upbeat' ? 104 : style === 'lofi' ? 72 : 86;
   const beat = 60 / bpm;
 
   const schedulePad = (freq, time, dur) => {
@@ -81,7 +81,7 @@ function createBackgroundMusicEngine(style = 'luxury') {
     }
     while (nextBeatTime < ctx.currentTime + 1.0) {
       if (step % 4 === 0) {
-        notes.forEach((f, idx) => schedulePad(f, nextBeatTime, beat * 3.5));
+        notes.forEach((f) => schedulePad(f, nextBeatTime, beat * 3.5));
       }
       if (step % 2 === 0) {
         scheduleThump(nextBeatTime);
@@ -106,9 +106,77 @@ function createBackgroundMusicEngine(style = 'luxury') {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   5 COMPLETE COMMERCIAL ADS DATA
+   8 COMPLETE COMMERCIAL ADS DATA (Including 3 High-Production Motion Graphics)
 ───────────────────────────────────────────────────────────────────────────── */
 export const DEFAULT_AD_VIDEOS = [
+  /* ══════════════════════════════════════════════════════════
+     AD 1 — MOTION GRAPHICS: The 30-Second Booking Journey
+  ══════════════════════════════════════════════════════════ */
+  {
+    id: 'v6-motion-journey',
+    title: 'Kinetic Workflow — 30s Booking Journey',
+    category: 'motion',
+    duration: 20,
+    durationText: '0:20',
+    aspectRatio: '9:16',
+    badge: 'Motion Graphics · 4K 60fps',
+    hasVoice: true,
+    musicStyle: 'upbeat',
+    themeColor: '#f5b942',
+    accentGradient: 'linear-gradient(135deg, #2b1800 0%, #0d0a14 100%)',
+    hook: 'Step-by-step kinetic workflow: 1. Search style, 2. AI matches top verified stylists in Lagos & Ibadan, 3. Escrow locked, 4. Instant glam.',
+    voiceScript: "Need your hair braided or a fresh fade today? Step one: open StyleCorner and search your desired look. Step two: our smart AI locks onto vetted specialists in your neighborhood with real client ratings. Step three: book with escrow protection. Your money is safe until you are completely satisfied. Look fresh with zero stress. Book now on stylecorner dot world.",
+    cta: '⚡ START YOUR 30S BOOKING',
+    tags: ['MotionGraphics', 'BookingWorkflow', 'StyleCornerAI', 'EscrowSafe'],
+    description: 'Kinetic motion graphics commercial demonstrating the 3-step transformation: search query, AI radar specialist lock-on, and escrow vault guarantee.',
+  },
+
+  /* ══════════════════════════════════════════════════════════
+     AD 2 — MOTION GRAPHICS: Pro Stylist Calendar & Revenue Growth
+  ══════════════════════════════════════════════════════════ */
+  {
+    id: 'v7-motion-pro-earnings',
+    title: 'Kinetic Growth — Stylist Bookings & Payouts',
+    category: 'motion',
+    duration: 20,
+    durationText: '0:20',
+    aspectRatio: '9:16',
+    badge: 'Motion Graphics · Pro Revenue',
+    hasVoice: true,
+    musicStyle: 'luxury',
+    themeColor: '#f59e0b',
+    accentGradient: 'linear-gradient(135deg, #251200 0%, #0c0915 100%)',
+    hook: 'Kinetic infographic showing live calendar bookings filling up, live revenue ticker from ₦0 to ₦185,000, and 1-tap instant bank transfer.',
+    voiceScript: "Attention barbers, braiders and beauty specialists! Watch your weekly calendar fill up automatically with paying clients. With StyleCorner Pro, withdraw your daily earnings instantly to any Nigerian bank account. Keep one hundred percent of your tips. Zero registration fees. Build your brand with a free QR business profile. Apply today at stylecorner dot world slash role hyphen selection.",
+    cta: '✂️ JOIN STYLECORNER PRO TODAY',
+    tags: ['ProGrowth', 'BarberEarnings', 'InstantPayout', 'ZeroFees'],
+    description: 'Infographic motion graphics commercial for beauty pros. Dynamic weekly calendar filling up, live digital Naira revenue ticker, and instant bank wire animation.',
+  },
+
+  /* ══════════════════════════════════════════════════════════
+     AD 3 — MOTION GRAPHICS: VIP At-Home Glam Experience
+  ══════════════════════════════════════════════════════════ */
+  {
+    id: 'v8-motion-vip-home',
+    title: 'VIP At-Home Glam — Skip the Lagos Traffic',
+    category: 'motion',
+    duration: 18,
+    durationText: '0:18',
+    aspectRatio: '9:16',
+    badge: 'Motion Graphics · VIP Mobile',
+    hasVoice: false,
+    musicStyle: 'luxury',
+    themeColor: '#e879f9',
+    accentGradient: 'linear-gradient(135deg, #250222 0%, #0c0812 100%)',
+    hook: 'Skip the 3-hour Lagos traffic. Book vetted braiders, barbers, lash techs & nail artists directly to your living room or hotel suite in comfort.',
+    cta: '🌟 BOOK VIP HOME GLAM VISIT',
+    tags: ['VIPHomeVisit', 'NoTraffic', 'LuxuryGlam', 'LagosVIP'],
+    description: 'Cinematic motion graphics commercial comparing painful Lagos traffic vs luxurious AC living-room beauty appointments with verified mobile artists.',
+  },
+
+  /* ══════════════════════════════════════════════════════════
+     AD 4 — VOICE AD: StyleCorner Brand Story
+  ══════════════════════════════════════════════════════════ */
   {
     id: 'v1-voice-brand',
     title: 'Your Beauty, Elevated.',
@@ -127,6 +195,10 @@ export const DEFAULT_AD_VIDEOS = [
     tags: ['StyleCorner', 'LagosStylist', 'BeautyNetwork', 'BookNow'],
     description: 'Full voice narrated brand commercial. Highlights verified specialists, 100% escrow protection, and 30-second mobile booking.',
   },
+
+  /* ══════════════════════════════════════════════════════════
+     AD 5 — VOICE AD: Expert Recruitment Drive
+  ══════════════════════════════════════════════════════════ */
   {
     id: 'v2-voice-recruit',
     title: 'Stylists & Pros — Join StyleCorner',
@@ -145,6 +217,10 @@ export const DEFAULT_AD_VIDEOS = [
     tags: ['ExpertJoin', 'BarberLife', 'BeautyPro', 'StyleCorner'],
     description: 'Expert recruitment commercial with full voiceover. Focuses on zero fees, instant bank payouts, and guaranteed client bookings.',
   },
+
+  /* ══════════════════════════════════════════════════════════
+     AD 6 — MUSIC ONLY: Luxury Salon Booking Experience
+  ══════════════════════════════════════════════════════════ */
   {
     id: 'v3-music-salon',
     title: 'Luxury Salon Booking — Lagos & Ibadan',
@@ -162,6 +238,10 @@ export const DEFAULT_AD_VIDEOS = [
     tags: ['LuxurySalon', 'Braiders', 'LashTech', 'Lagos'],
     description: 'Luxury lounge music commercial. Highlighting the 5-star beauty booking experience, rotating services, and seamless appointments.',
   },
+
+  /* ══════════════════════════════════════════════════════════
+     AD 7 — MUSIC ONLY: Atelier Store Products
+  ══════════════════════════════════════════════════════════ */
   {
     id: 'v4-music-store',
     title: 'StyleCorner Atelier — Premium Beauty Products',
@@ -179,6 +259,10 @@ export const DEFAULT_AD_VIDEOS = [
     tags: ['AtelierStore', 'NaturalHair', 'GroomingProducts', 'StyleCorner'],
     description: 'Lofi background music commercial for the Atelier store. Highlights authentic edge controls, clipper kits, and fast dispatch.',
   },
+
+  /* ══════════════════════════════════════════════════════════
+     AD 8 — MUSIC ONLY: AI Stylist Matcher
+  ══════════════════════════════════════════════════════════ */
   {
     id: 'v5-music-ai',
     title: 'AI Stylist Matcher — Find Your Match in 10s',
@@ -199,7 +283,7 @@ export const DEFAULT_AD_VIDEOS = [
 ];
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   CANVAS FRAME RENDERER — COMPLETE COMMERCIAL SCENES
+   CANVAS FRAME RENDERER — COMPLETE SCENES & MOTION GRAPHICS
 ───────────────────────────────────────────────────────────────────────────── */
 function renderCommercialFrame(ctx, W, H, ad, progress) {
   const t = Math.max(0, Math.min(1, progress));
@@ -213,14 +297,14 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
   const glowX = W * 0.5 + Math.sin(t * Math.PI * 2) * W * 0.08;
   const glowY = H * 0.35 + Math.cos(t * Math.PI * 2) * H * 0.05;
   const bgGrad = ctx.createRadialGradient(glowX, glowY, 10, W * 0.5, H * 0.4, Math.max(W, H) * 0.85);
-  bgGrad.addColorStop(0, color === '#38bdf8' ? 'rgba(56,189,248,0.22)' : color === '#34d399' ? 'rgba(52,211,153,0.22)' : 'rgba(245,185,66,0.25)');
+  bgGrad.addColorStop(0, color === '#e879f9' ? 'rgba(232,121,249,0.22)' : color === '#38bdf8' ? 'rgba(56,189,248,0.22)' : color === '#34d399' ? 'rgba(52,211,153,0.22)' : 'rgba(245,185,66,0.25)');
   bgGrad.addColorStop(0.5, '#0c0e15');
   bgGrad.addColorStop(1, '#050608');
   ctx.fillStyle = bgGrad;
   ctx.fillRect(0, 0, W, H);
 
-  // 2. Floating Golden Stardust Particles
-  for (let i = 0; i < 18; i++) {
+  // 2. Floating Stardust Particles
+  for (let i = 0; i < 20; i++) {
     const px = (W * ((i * 137.5 + t * 90) % 100) / 100);
     const py = H - ((H * ((i * 73.1 + t * 65) % 100) / 100) + t * H * 0.25) % H;
     const alpha = 0.2 + 0.3 * Math.sin(t * Math.PI * 4 + i);
@@ -237,10 +321,10 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
   const pillW = isVertical ? W * 0.82 : 460;
   const pillH = isVertical ? 46 : 42;
   const pillX = (W - pillW) / 2;
-  const pillY = isVertical ? H * 0.05 : 30;
+  const pillY = isVertical ? H * 0.045 : 28;
 
   ctx.save();
-  ctx.fillStyle = 'rgba(24,24,27,0.85)';
+  ctx.fillStyle = 'rgba(24,24,27,0.88)';
   ctx.strokeStyle = 'rgba(245,185,66,0.4)';
   ctx.lineWidth = 1.5;
   ctx.beginPath();
@@ -254,11 +338,376 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
   ctx.fillText('✦ STYLECORNER NIGERIA · LAGOS & IBADAN ✦', W / 2, pillY + pillH * 0.65);
   ctx.restore();
 
-  // 4. Scene 1 / 2 / 3 Dynamic Content
-  if (ad.category === 'salon' && ad.hasVoice) {
-    // ── AD 1: Brand Story ──
+  // ───────────────────────────────────────────────────────────────────────────
+  // SCENE RENDERERS
+  // ───────────────────────────────────────────────────────────────────────────
+
+  if (ad.id === 'v6-motion-journey') {
+    // ═════════════════════════════════════════════════════════════════════════
+    // MOTION GRAPHICS 1: 30-Second Booking Journey (Kinetic Multi-Stage)
+    // ═════════════════════════════════════════════════════════════════════════
+    const step = t < 0.30 ? 1 : t < 0.62 ? 2 : 3;
+
+    // Kinetic Step Indicator Badge
+    const stepBadgeY = isVertical ? H * 0.14 : H * 0.18;
+    ctx.save();
+    ctx.fillStyle = 'rgba(245,185,66,0.18)';
+    ctx.strokeStyle = '#F5B942';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect((W - 260) / 2, stepBadgeY, 260, 34, 17);
+    ctx.fill();
+    ctx.stroke();
+    ctx.font = '900 13px Outfit, sans-serif';
+    ctx.fillStyle = '#F5B942';
+    ctx.textAlign = 'center';
+    ctx.fillText(
+      step === 1 ? 'STEP 1 OF 3 · SEARCH YOUR STYLE' :
+      step === 2 ? 'STEP 2 OF 3 · AI SPECIALIST MATCH' :
+      'STEP 3 OF 3 · ESCROW LOCKED',
+      W / 2, stepBadgeY + 22
+    );
+    ctx.restore();
+
+    if (step === 1) {
+      // ── Step 1: Kinetic Search Input ──
+      const searchBoxY = isVertical ? H * 0.28 : H * 0.36;
+      const sW = W * 0.86;
+      const sH = 64;
+      const sX = (W - sW) / 2;
+
+      ctx.save();
+      ctx.fillStyle = 'rgba(18,18,24,0.95)';
+      ctx.strokeStyle = '#F5B942';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.roundRect(sX, searchBoxY, sW, sH, 20);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.font = '24px serif';
+      ctx.fillText('🔍', sX + 28, searchBoxY + 41);
+
+      // Typing effect
+      const queryText = "Knotless Braids · Lagos 📍";
+      const charCount = Math.floor(Math.min(queryText.length, (t / 0.25) * queryText.length));
+      ctx.font = `800 ${isVertical ? 20 : 18}px Outfit, sans-serif`;
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'left';
+      ctx.fillText(queryText.slice(0, charCount) + (Math.floor(t * 20) % 2 === 0 ? '|' : ''), sX + 62, searchBoxY + 39);
+      ctx.restore();
+
+      // Filter chips sliding in
+      const chips = ['+ Lekki Phase 1', '+ Ikeja GRA', '+ Bodija, Ibadan'];
+      chips.forEach((c, idx) => {
+        const chipY = searchBoxY + 85 + idx * 48;
+        ctx.save();
+        ctx.fillStyle = 'rgba(255,255,255,0.06)';
+        ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.roundRect(W * 0.12, chipY, W * 0.76, 40, 20);
+        ctx.fill();
+        ctx.stroke();
+        ctx.font = '700 15px Outfit, sans-serif';
+        ctx.fillStyle = '#e4e4e7';
+        ctx.textAlign = 'center';
+        ctx.fillText(c, W / 2, chipY + 25);
+        ctx.restore();
+      });
+
+    } else if (step === 2) {
+      // ── Step 2: AI Radar Target Lock ──
+      const radarCenterY = isVertical ? H * 0.28 : H * 0.36;
+      // Rotating scan crosshair
+      ctx.save();
+      ctx.strokeStyle = '#F5B942';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([8, 6]);
+      ctx.lineDashOffset = -t * 120;
+      ctx.beginPath();
+      ctx.arc(W / 2, radarCenterY, 65, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+
+      // Specialist Result Card
+      const cardY = isVertical ? H * 0.40 : H * 0.50;
+      const cW = W * 0.88;
+      const cH = 150;
+      const cX = (W - cW) / 2;
+
+      ctx.save();
+      ctx.fillStyle = 'rgba(20,20,28,0.95)';
+      ctx.strokeStyle = '#F5B942';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.roundRect(cX, cardY, cW, cH, 22);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.font = '900 19px Outfit, sans-serif';
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'center';
+      ctx.fillText('Chioma Braids Atelier', W / 2, cardY + 38);
+
+      ctx.font = '700 15px Outfit, sans-serif';
+      ctx.fillStyle = '#F5B942';
+      ctx.fillText('⭐ 5.0 Rating · 142 Verified Bookings', W / 2, cardY + 68);
+
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillText('📍 1.2km away · In-Salon or VIP Home', W / 2, cardY + 96);
+
+      // Match badge
+      ctx.fillStyle = '#22c55e';
+      ctx.font = '900 16px Outfit, sans-serif';
+      ctx.fillText('99% AI MATCH LOCKED ✓', W / 2, cardY + 128);
+      ctx.restore();
+
+    } else {
+      // ── Step 3: Escrow Shield & Safe Vault ──
+      const shieldY = isVertical ? H * 0.28 : H * 0.36;
+      ctx.save();
+      ctx.font = '56px serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('🛡️', W / 2, shieldY + 10);
+      ctx.restore();
+
+      const vaultY = isVertical ? H * 0.38 : H * 0.48;
+      ctx.save();
+      ctx.font = `900 ${isVertical ? 32 : 28}px Outfit, sans-serif`;
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'center';
+      ctx.fillText('100% Escrow Protection', W / 2, vaultY);
+      ctx.fillStyle = '#F5B942';
+      ctx.fillText('Zero Client Risk.', W / 2, vaultY + 40);
+
+      ctx.font = '700 15px Outfit, sans-serif';
+      ctx.fillStyle = '#a1a1aa';
+      ctx.fillText('Your payment is securely held in vault.', W / 2, vaultY + 80);
+      ctx.fillText('Released ONLY after service is completed.', W / 2, vaultY + 106);
+      ctx.restore();
+    }
+
+  } else if (ad.id === 'v7-motion-pro-earnings') {
+    // ═════════════════════════════════════════════════════════════════════════
+    // MOTION GRAPHICS 2: Stylist Kinetic Growth & Revenue Infographic
+    // ═════════════════════════════════════════════════════════════════════════
+    const isRevenueStage = t >= 0.42;
+
+    if (!isRevenueStage) {
+      // ── Stage 1: Weekly Calendar Filling Up ──
+      const calHeadY = isVertical ? H * 0.16 : H * 0.20;
+      ctx.save();
+      ctx.font = '900 14px Outfit, sans-serif';
+      ctx.fillStyle = '#f59e0b';
+      ctx.textAlign = 'center';
+      ctx.fillText('YOUR WEEKLY AUTOMATED APPOINTMENTS', W / 2, calHeadY);
+      ctx.restore();
+
+      const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+      const barStartY = isVertical ? H * 0.22 : H * 0.28;
+      const barH = isVertical ? 150 : 120;
+      const colW = (W * 0.84) / 7;
+      const startX = W * 0.08;
+
+      days.forEach((day, idx) => {
+        const fillPercent = Math.min(1, Math.max(0, (t / 0.38) * 7 - idx));
+        const currentH = barH * (0.2 + fillPercent * 0.8);
+        const bx = startX + idx * colW + 4;
+        const by = barStartY + (barH - currentH);
+
+        ctx.save();
+        ctx.fillStyle = idx >= 4 ? 'rgba(245,158,11,0.95)' : 'rgba(245,158,11,0.65)';
+        ctx.beginPath();
+        ctx.roundRect(bx, by, colW - 8, currentH, 6);
+        ctx.fill();
+
+        ctx.font = '800 12px Outfit, sans-serif';
+        ctx.fillStyle = '#ffffff';
+        ctx.textAlign = 'center';
+        ctx.fillText(day, bx + (colW - 8) / 2, barStartY + barH + 20);
+
+        if (fillPercent >= 1) {
+          ctx.font = '900 11px Outfit, sans-serif';
+          ctx.fillStyle = '#09090b';
+          ctx.fillText(idx >= 4 ? 'FULL' : `${idx + 2}`, bx + (colW - 8) / 2, by + 18);
+        }
+        ctx.restore();
+      });
+
+      const calFootY = isVertical ? H * 0.48 : H * 0.58;
+      ctx.save();
+      ctx.font = '800 18px Outfit, sans-serif';
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'center';
+      ctx.fillText('Verified Paying Clients Book 24/7', W / 2, calFootY);
+      ctx.font = '700 14px Outfit, sans-serif';
+      ctx.fillStyle = '#f59e0b';
+      ctx.fillText('No more empty salon chairs.', W / 2, calFootY + 28);
+      ctx.restore();
+
+    } else {
+      // ── Stage 2: Digital Revenue Counter & Bank Wire ──
+      const revHeadY = isVertical ? H * 0.16 : H * 0.20;
+      ctx.save();
+      ctx.font = '900 14px Outfit, sans-serif';
+      ctx.fillStyle = '#f59e0b';
+      ctx.textAlign = 'center';
+      ctx.fillText('REAL-TIME REVENUE & WITHDRAWALS', W / 2, revHeadY);
+      ctx.restore();
+
+      const curNaira = Math.floor(Math.min(1, (t - 0.42) / 0.45) * 185500);
+      const tickerY = isVertical ? H * 0.25 : H * 0.32;
+      ctx.save();
+      ctx.font = `900 ${isVertical ? 52 : 44}px Outfit, sans-serif`;
+      ctx.fillStyle = '#F5B942';
+      ctx.textAlign = 'center';
+      ctx.shadowColor = 'rgba(245,158,11,0.5)';
+      ctx.shadowBlur = 20;
+      ctx.fillText(`₦${curNaira.toLocaleString()}`, W / 2, tickerY);
+      ctx.shadowBlur = 0;
+
+      ctx.font = '700 15px Outfit, sans-serif';
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillText('Monthly Earnings Deposited Direct to Wallet', W / 2, tickerY + 34);
+      ctx.restore();
+
+      // Bank Transfer Graphic
+      const wireY = isVertical ? H * 0.38 : H * 0.48;
+      const wBoxW = W * 0.86;
+      ctx.save();
+      ctx.fillStyle = 'rgba(20,24,35,0.95)';
+      ctx.strokeStyle = 'rgba(245,158,11,0.4)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.roundRect((W - wBoxW) / 2, wireY, wBoxW, 90, 18);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.font = '800 15px Outfit, sans-serif';
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'center';
+      ctx.fillText('StyleCorner Wallet  ➔  Your Nigerian Bank', W / 2, wireY + 36);
+
+      ctx.font = '900 14px Outfit, sans-serif';
+      ctx.fillStyle = '#22c55e';
+      ctx.fillText('⚡ Instant Payout Released in 5 Seconds ✓', W / 2, wireY + 66);
+      ctx.restore();
+
+      const feeY = isVertical ? H * 0.54 : H * 0.65;
+      ctx.save();
+      ctx.font = '800 16px Outfit, sans-serif';
+      ctx.fillStyle = '#f59e0b';
+      ctx.textAlign = 'center';
+      ctx.fillText('✓ 0% Platform Onboarding Fee', W / 2, feeY);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText('✓ Keep 100% of Your Client Tips', W / 2, feeY + 28);
+      ctx.restore();
+    }
+
+  } else if (ad.id === 'v8-motion-vip-home') {
+    // ═════════════════════════════════════════════════════════════════════════
+    // MOTION GRAPHICS 3: VIP At-Home Glam (Lagos Traffic vs Comfort)
+    // ═════════════════════════════════════════════════════════════════════════
+    const isComparisonStage = t >= 0.38;
+
+    if (!isComparisonStage) {
+      // ── Stage 1: GPS City Radar Pin Drop ──
+      const radarCenterY = isVertical ? H * 0.28 : H * 0.36;
+
+      // Pulsing radar circles
+      [1, 0.65, 0.3].forEach((sc, i) => {
+        const ringT = (t * 2 + i * 0.3) % 1;
+        ctx.save();
+        ctx.globalAlpha = (1 - ringT) * 0.5;
+        ctx.strokeStyle = '#e879f9';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(W / 2, radarCenterY, 80 * ringT * sc, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+      });
+
+      // Pin
+      ctx.save();
+      ctx.font = '48px serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('📍', W / 2, radarCenterY + 16);
+      ctx.restore();
+
+      const homeHeadY = isVertical ? H * 0.44 : H * 0.54;
+      ctx.save();
+      ctx.font = `900 ${isVertical ? 32 : 28}px Outfit, sans-serif`;
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'center';
+      ctx.fillText('Your Living Room is the Salon.', W / 2, homeHeadY);
+      ctx.fillStyle = '#e879f9';
+      ctx.fillText('VIP Service At Your Door.', W / 2, homeHeadY + 40);
+
+      ctx.font = '700 15px Outfit, sans-serif';
+      ctx.fillStyle = '#a1a1aa';
+      ctx.fillText('Victoria Island · Lekki · Ikoyi · Ikeja · Bodija', W / 2, homeHeadY + 80);
+      ctx.restore();
+
+    } else {
+      // ── Stage 2: Comparison Cards (Traffic vs VIP Comfort) ──
+      const cardW = W * 0.88;
+      const startX = (W - cardW) / 2;
+      const card1Y = isVertical ? H * 0.18 : H * 0.24;
+      const card2Y = isVertical ? H * 0.36 : H * 0.44;
+
+      // Card 1: Traffic Struggle
+      ctx.save();
+      ctx.fillStyle = 'rgba(30,12,16,0.9)';
+      ctx.strokeStyle = 'rgba(239,68,68,0.4)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.roundRect(startX, card1Y, cardW, 85, 18);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.font = '900 17px Outfit, sans-serif';
+      ctx.fillStyle = '#f87171';
+      ctx.textAlign = 'center';
+      ctx.fillText('3 Hours in Lagos Traffic Jam  ❌', W / 2, card1Y + 34);
+      ctx.font = '700 14px Outfit, sans-serif';
+      ctx.fillStyle = '#a1a1aa';
+      ctx.fillText('Hot sun, parking struggle & wasted weekend', W / 2, card1Y + 62);
+      ctx.restore();
+
+      // Card 2: VIP Home Glam
+      ctx.save();
+      ctx.fillStyle = 'rgba(30,14,35,0.95)';
+      ctx.strokeStyle = '#e879f9';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.roundRect(startX, card2Y, cardW, 95, 18);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.font = '900 18px Outfit, sans-serif';
+      ctx.fillStyle = '#e879f9';
+      ctx.textAlign = 'center';
+      ctx.fillText('VIP Specialist In AC Comfort  ✨  ✅', W / 2, card2Y + 38);
+      ctx.font = '700 14px Outfit, sans-serif';
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText('Top verified artist arrives with full luxury kit', W / 2, card2Y + 68);
+      ctx.restore();
+
+      const perksY = isVertical ? H * 0.54 : H * 0.65;
+      ctx.save();
+      ctx.font = '800 15px Outfit, sans-serif';
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'center';
+      ctx.fillText('✦ Frontals · Braids · Fades · Soft Glam · Lashes', W / 2, perksY);
+      ctx.fillStyle = '#e879f9';
+      ctx.fillText('100% Background-Verified Specialists', W / 2, perksY + 28);
+      ctx.restore();
+    }
+
+  } else if (ad.category === 'salon' && ad.hasVoice) {
+    // ── AD 4: Brand Story ──
     const iconY = isVertical ? H * 0.21 : H * 0.28;
-    // Central Emblem
     ctx.save();
     ctx.fillStyle = 'rgba(245,185,66,0.15)';
     ctx.strokeStyle = '#F5B942';
@@ -267,13 +716,11 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
     ctx.arc(W / 2, iconY, isVertical ? 50 : 42, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
-
     ctx.font = `${isVertical ? 48 : 38}px serif`;
     ctx.textAlign = 'center';
     ctx.fillText('✂️', W / 2, iconY + 16);
     ctx.restore();
 
-    // Main Headline
     const headY = isVertical ? H * 0.37 : H * 0.46;
     ctx.save();
     ctx.font = `900 ${isVertical ? '38px' : '34px'} Outfit, sans-serif`;
@@ -284,7 +731,6 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
     ctx.fillText('In Seconds.', W / 2, headY + 46);
     ctx.restore();
 
-    // Features Strip
     const boxY = isVertical ? H * 0.52 : H * 0.64;
     const boxW = W * 0.86;
     const boxH = isVertical ? 140 : 100;
@@ -308,7 +754,7 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
     ctx.restore();
 
   } else if (ad.category === 'recruitment') {
-    // ── AD 2: Expert Recruitment ──
+    // ── AD 5: Expert Recruitment ──
     const meterY = isVertical ? H * 0.22 : H * 0.28;
     const earnings = Math.floor(15000 + 50000 * Math.min(1, t * 1.5));
     ctx.save();
@@ -354,7 +800,7 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
     ctx.restore();
 
   } else if (ad.category === 'store') {
-    // ── AD 4: Atelier Store Products ──
+    // ── AD 7: Atelier Store Products ──
     const shelfY = isVertical ? H * 0.22 : H * 0.32;
     ctx.save();
     ctx.font = `900 ${isVertical ? '36px' : '32px'} Outfit, sans-serif`;
@@ -365,7 +811,6 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
     ctx.fillText('Authentic Beauty Essentials', W / 2, shelfY + 42);
     ctx.restore();
 
-    // Floating product items
     const products = [
       '🧴 Hair Hydration Serum · ₦8,500',
       '✂️ Master Barber Fade Clipper · ₦24,000',
@@ -393,9 +838,8 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
     });
 
   } else if (ad.category === 'ai') {
-    // ── AD 5: AI Stylist Matcher ──
+    // ── AD 8: AI Stylist Matcher ──
     const radarY = isVertical ? H * 0.24 : H * 0.32;
-    // Radar pulse rings
     [1, 0.65, 0.35].forEach((scale, i) => {
       const pulseT = (t + i * 0.33) % 1;
       ctx.save();
@@ -408,7 +852,6 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
       ctx.restore();
     });
 
-    // Center icon
     ctx.save();
     ctx.fillStyle = 'rgba(56,189,248,0.18)';
     ctx.beginPath();
@@ -429,7 +872,6 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
     ctx.fillText('Matched in 10 Seconds.', W / 2, matchHeadY + 42);
     ctx.restore();
 
-    // Match badges
     const locY = isVertical ? H * 0.58 : H * 0.72;
     ctx.save();
     ctx.fillStyle = 'rgba(14,24,40,0.85)';
@@ -450,7 +892,7 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
     ctx.restore();
 
   } else {
-    // ── AD 3: Luxury Salon Experience ──
+    // ── AD 6: Luxury Salon Experience ──
     const center = { x: W / 2, y: isVertical ? H * 0.24 : H * 0.32 };
     const radius = isVertical ? 75 : 60;
     const services = ['💇', '✂️', '💅', '👁️', '💋', '🪮'];
@@ -540,7 +982,6 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
 ───────────────────────────────────────────────────────────────────────────── */
 export const generateAndDownloadVideo = async (ad, onProgress) => {
   return new Promise(async (resolve, reject) => {
-    // 1. Create canvas and attach to DOM (hidden) so browser GPU emits video frames
     const isVertical = ad.aspectRatio === '9:16';
     const W = isVertical ? 720 : 1280;
     const H = isVertical ? 1280 : 720;
@@ -570,7 +1011,6 @@ export const generateAndDownloadVideo = async (ad, onProgress) => {
     };
 
     try {
-      // Audio stream
       const stream = canvas.captureStream(FPS);
 
       if (ad.musicStyle) {
@@ -581,7 +1021,6 @@ export const generateAndDownloadVideo = async (ad, onProgress) => {
         }
       }
 
-      // Check best supported mimeType (MP4 on Safari/iOS, WebM on Chrome/Edge)
       const candidateMimes = [
         'video/mp4;codecs=avc1.42E01E,mp4a.40.2',
         'video/mp4',
@@ -606,7 +1045,6 @@ export const generateAndDownloadVideo = async (ad, onProgress) => {
         const blob = new Blob(chunks, { type: selectedMime });
         const filename = `StyleCorner_${ad.title.replace(/[^a-zA-Z0-9]/g, '_')}_Ad.${ext}`;
 
-        // Safe mobile download / share
         if (navigator.share && navigator.canShare && navigator.canShare({ files: [new File([blob], filename, { type: blob.type })] })) {
           try {
             await navigator.share({
@@ -634,7 +1072,6 @@ export const generateAndDownloadVideo = async (ad, onProgress) => {
 
       recorder.start(100);
 
-      // Speak if voice ad
       if (ad.hasVoice && window.speechSynthesis) {
         window.speechSynthesis.cancel();
         synthUtterance = new SpeechSynthesisUtterance(ad.voiceScript || ad.hook);
@@ -648,7 +1085,6 @@ export const generateAndDownloadVideo = async (ad, onProgress) => {
         }, 300);
       }
 
-      // Render loop
       let frame = 0;
       const renderNext = () => {
         if (frame >= TOTAL_FRAMES) {
@@ -684,7 +1120,6 @@ const VideoAdPlayerModal = ({ ad, onClose, onDownload, isDownloading }) => {
 
   const duration = ad.duration || 15;
 
-  // Initialize Audio
   useEffect(() => {
     if (ad.musicStyle) {
       musicRef.current = createBackgroundMusicEngine(ad.musicStyle);
@@ -708,14 +1143,12 @@ const VideoAdPlayerModal = ({ ad, onClose, onDownload, isDownloading }) => {
     };
   }, [ad]);
 
-  // Handle Mute toggle
   useEffect(() => {
     if (musicRef.current) {
       musicRef.current.setMute(isMuted);
     }
   }, [isMuted]);
 
-  // Animation Loop
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -728,7 +1161,6 @@ const VideoAdPlayerModal = ({ ad, onClose, onDownload, isDownloading }) => {
       const elapsed = (now - startTimeRef.current) / 1000 + pausedAtRef.current;
 
       if (elapsed >= duration) {
-        // Commercial reached the end -> pause or loop
         setCurrentTime(duration);
         setIsPlaying(false);
         return;
@@ -756,7 +1188,6 @@ const VideoAdPlayerModal = ({ ad, onClose, onDownload, isDownloading }) => {
       if (window.speechSynthesis) window.speechSynthesis.pause();
     } else {
       if (currentTime >= duration) {
-        // Replay from beginning
         pausedAtRef.current = 0;
         setCurrentTime(0);
         if (ad.hasVoice && window.speechSynthesis) {
@@ -901,7 +1332,6 @@ const VideoAdPlayerModal = ({ ad, onClose, onDownload, isDownloading }) => {
           {/* Action Row */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              {/* Play / Pause */}
               <button
                 type="button"
                 onClick={togglePlay}
@@ -915,7 +1345,6 @@ const VideoAdPlayerModal = ({ ad, onClose, onDownload, isDownloading }) => {
                 {isPlaying ? <Pause size={18} /> : <Play size={18} style={{ marginLeft: '2px' }} />}
               </button>
 
-              {/* Replay */}
               <button
                 type="button"
                 onClick={restartCommercial}
@@ -930,7 +1359,6 @@ const VideoAdPlayerModal = ({ ad, onClose, onDownload, isDownloading }) => {
                 <RotateCcw size={15} />
               </button>
 
-              {/* Mute toggle */}
               <button
                 type="button"
                 onClick={() => setIsMuted(!isMuted)}
@@ -946,7 +1374,6 @@ const VideoAdPlayerModal = ({ ad, onClose, onDownload, isDownloading }) => {
               </button>
             </div>
 
-            {/* Direct Download in Player */}
             <button
               type="button"
               disabled={isDownloading}
@@ -990,7 +1417,12 @@ export const VideoAdsStudio = ({ adVideos, onAddCustomVideo, showToast, isMobile
   const [creatingNew, setCreatingNew] = useState(false);
   const [selectedVideoToWatch, setSelectedVideoToWatch] = useState(null);
 
-  const filtered = activeFilter === 'all' ? videos : videos.filter(v => v.category === activeFilter);
+  // Filter logic including motion category
+  const filtered = activeFilter === 'all'
+    ? videos
+    : activeFilter === 'motion'
+    ? videos.filter(v => v.category === 'motion' || v.badge?.toLowerCase().includes('motion'))
+    : videos.filter(v => v.category === activeFilter);
 
   const handleDownload = async (ad) => {
     setGeneratingId(ad.id);
@@ -1051,7 +1483,7 @@ export const VideoAdsStudio = ({ adVideos, onAddCustomVideo, showToast, isMobile
 
       {/* Studio Header Banner */}
       <div style={{
-        background: 'linear-gradient(135deg, rgba(245,185,66,0.18) 0%, rgba(56,189,248,0.12) 60%, rgba(52,211,153,0.1) 100%)',
+        background: 'linear-gradient(135deg, rgba(245,185,66,0.18) 0%, rgba(56,189,248,0.12) 60%, rgba(232,121,249,0.12) 100%)',
         border: '1.5px solid rgba(245,185,66,0.4)',
         borderRadius: '24px',
         padding: isMobile ? '1.25rem 1rem' : '1.75rem 2rem',
@@ -1071,20 +1503,23 @@ export const VideoAdsStudio = ({ adVideos, onAddCustomVideo, showToast, isMobile
           </div>
 
           <h2 style={{ fontSize: isMobile ? '1.3rem' : '1.75rem', fontWeight: 900, color: '#ffffff', margin: '0 0 0.5rem', fontFamily: 'Outfit' }}>
-            5 Complete StyleCorner Video Ads
+            8 StyleCorner Video Ads &amp; Motion Graphics
           </h2>
 
-          <p style={{ fontSize: '0.86rem', color: '#94a3b8', lineHeight: 1.6, margin: 0, maxWidth: '720px' }}>
+          <p style={{ fontSize: '0.86rem', color: '#94a3b8', lineHeight: 1.6, margin: 0, maxWidth: '750px' }}>
             Watch each video live directly on this screen or download high-definition commercials to your device.
-            Includes <strong style={{ color: '#f5b942' }}>2 voice-narrated commercials</strong> (complete script + synchronized voice) and <strong style={{ color: '#38bdf8' }}>3 luxury music commercials</strong> (lounge chords, lofi & upbeat beats).
+            Includes <strong style={{ color: '#f5b942' }}>3 kinetic motion graphics commercials</strong> (animated step workflow, pro calendar/revenue ticker &amp; VIP at-home comparison), <strong style={{ color: '#38bdf8' }}>voice-narrated commercials</strong>, and luxury background music commercials.
           </p>
 
           <div style={{ display: 'flex', gap: '1rem', marginTop: '0.85rem', flexWrap: 'wrap' }}>
             <span style={{ fontSize: '0.74rem', color: '#f5b942', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
               <Play size={12} fill="#f5b942" /> Tap Any Card to Watch Live
             </span>
+            <span style={{ fontSize: '0.74rem', color: '#e879f9', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+              <Sparkles size={12} /> 3 Motion Graphics Commercials
+            </span>
             <span style={{ fontSize: '0.74rem', color: '#38bdf8', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-              <Mic size={12} /> Full Voiceover &amp; Music
+              <Mic size={12} /> Synchronized Voiceover
             </span>
             <span style={{ fontSize: '0.74rem', color: '#34d399', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
               <Download size={12} /> Direct Video File Export
@@ -1159,6 +1594,7 @@ export const VideoAdsStudio = ({ adVideos, onAddCustomVideo, showToast, isMobile
       }}>
         {[
           { id: 'all', label: `All (${videos.length})` },
+          { id: 'motion', label: '✨ Motion Graphics (3)' },
           { id: 'salon', label: '💇 Salon Booking' },
           { id: 'recruitment', label: '✂️ Expert Recruitment' },
           { id: 'store', label: '🛍️ Atelier Store' },
@@ -1209,7 +1645,7 @@ export const VideoAdsStudio = ({ adVideos, onAddCustomVideo, showToast, isMobile
                 onClick={() => setSelectedVideoToWatch(ad)}
                 title="Tap to watch commercial"
                 style={{
-                  height: '190px',
+                  height: '195px',
                   background: ad.accentGradient || 'linear-gradient(135deg,#1f1807,#0c0e14)',
                   position: 'relative',
                   display: 'flex',
@@ -1227,7 +1663,7 @@ export const VideoAdsStudio = ({ adVideos, onAddCustomVideo, showToast, isMobile
                     letterSpacing: '0.04em', padding: '0.2rem 0.55rem', borderRadius: '5px',
                     background: 'rgba(0,0,0,0.65)', border: `1px solid ${ad.themeColor}55`, color: ad.themeColor,
                   }}>
-                    {ad.badge} · {ad.aspectRatio}
+                    {ad.badge}
                   </span>
 
                   <span style={{
@@ -1244,7 +1680,7 @@ export const VideoAdsStudio = ({ adVideos, onAddCustomVideo, showToast, isMobile
                 <div style={{ textAlign: 'center' }}>
                   <div style={{
                     width: '52px', height: '52px', borderRadius: '50%',
-                    background: `rgba(${ad.themeColor === '#38bdf8' ? '56,189,248' : '245,185,66'},0.25)`,
+                    background: `rgba(${ad.themeColor === '#38bdf8' ? '56,189,248' : ad.themeColor === '#e879f9' ? '232,121,249' : '245,185,66'},0.25)`,
                     border: `2px solid ${ad.themeColor}`,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     margin: '0 auto 0.5rem',
@@ -1289,7 +1725,7 @@ export const VideoAdsStudio = ({ adVideos, onAddCustomVideo, showToast, isMobile
                       fontWeight: 800, marginBottom: '0.2rem', display: 'flex', alignItems: 'center', gap: '0.3rem',
                     }}>
                       {ad.hasVoice ? <Mic size={11} color="#f5b942" /> : <Volume2 size={11} color="#38bdf8" />}
-                      {ad.hasVoice ? 'Voice Script Script' : 'Commercial Hook'}
+                      {ad.hasVoice ? 'Voice Script Preview' : 'Commercial Hook'}
                     </div>
                     <div style={{ fontSize: '0.75rem', color: '#e2e8f0', fontWeight: 600, lineHeight: 1.45 }}>
                       "{(ad.hook || '').slice(0, 110)}…"
@@ -1306,7 +1742,6 @@ export const VideoAdsStudio = ({ adVideos, onAddCustomVideo, showToast, isMobile
 
                 {/* Two Action Buttons: Watch Commercial & Download Video */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
-                  {/* Watch Button */}
                   <button
                     type="button"
                     onClick={() => setSelectedVideoToWatch(ad)}
@@ -1321,14 +1756,13 @@ export const VideoAdsStudio = ({ adVideos, onAddCustomVideo, showToast, isMobile
                     <Play size={14} fill="#ffffff" /> Watch Ad
                   </button>
 
-                  {/* Download Button */}
                   <button
                     type="button"
                     disabled={isRend}
                     onClick={() => handleDownload(ad)}
                     style={{
                       minHeight: '44px', borderRadius: '12px', border: 'none',
-                      background: isRend ? 'rgba(245,185,66,0.25)' : `linear-gradient(135deg, #c8930a, ${ad.themeColor === '#38bdf8' ? '#38bdf8' : '#f5b942'})`,
+                      background: isRend ? 'rgba(245,185,66,0.25)' : `linear-gradient(135deg, #c8930a, ${ad.themeColor === '#38bdf8' ? '#38bdf8' : ad.themeColor === '#e879f9' ? '#e879f9' : '#f5b942'})`,
                       color: '#0c0e14', fontFamily: 'Outfit', fontWeight: 900, fontSize: '0.8rem',
                       cursor: isRend ? 'wait' : 'pointer',
                       display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
