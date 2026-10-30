@@ -2018,7 +2018,7 @@ export const AdminDashboard = () => {
                   <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                     <button
                       type="button"
-                      onClick={() => navigate('/billboard-flyers?style=showcase')}
+                      onClick={() => window.open('/billboard-flyers?style=showcase', '_blank')}
                       style={{
                         display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
                         padding: '0.55rem 1rem', borderRadius: '10px', fontSize: '0.8rem', fontWeight: 800,
@@ -2032,7 +2032,7 @@ export const AdminDashboard = () => {
                     </button>
                     <button
                       type="button"
-                      onClick={() => navigate('/billboard-flyers')}
+                      onClick={() => window.open('/billboard-flyers', '_blank')}
                       style={{
                         display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
                         padding: '0.55rem 1rem', borderRadius: '10px', fontSize: '0.8rem', fontWeight: 800,
@@ -3359,7 +3359,7 @@ export const AdminDashboard = () => {
                 type="button"
                 onClick={() => {
                   const targetDesign = activeBannerModal === 'portrait' ? 'street' : activeBannerModal;
-                  navigate(`/billboard-flyers?design=${targetDesign}`);
+                  window.open(`/billboard-flyers?design=${targetDesign}`, '_blank');
                 }}
                 style={{
                   flex: isMobile ? '1 1 calc(50% - 0.25rem)' : 'none',
