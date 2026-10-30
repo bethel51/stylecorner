@@ -41,6 +41,9 @@ import {
   Printer,
   ExternalLink,
   QrCode,
+  Video,
+  Play,
+  Film,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
@@ -51,6 +54,7 @@ import { NotificationSheet } from '../components/common/NotificationSheet';
 import { exportOrdersToCSV, exportBookingsToCSV } from '../utils/exportUtils';
 import { QrWorldSvg, QrRecruitSvg } from '../components/common/QrCodeSvgs';
 import { CheckInScannerModal } from '../components/booking/CheckInScannerModal';
+import { VideoAdsStudio } from '../components/admin/VideoAdsStudio';
 
 export const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -81,13 +85,81 @@ export const AdminDashboard = () => {
   const [rejectionModalWithdrawal, setRejectionModalWithdrawal] = useState(null);
   const [rejectionReasonInput, setRejectionReasonInput] = useState('');
   const [copiedWithdrawalId, setCopiedWithdrawalId] = useState(null);
-  const [marketingFilter, setMarketingFilter] = useState('all'); // 'all' | 'billboard' | 'portrait' | 'recruit'
+  const [marketingFilter, setMarketingFilter] = useState('all');
+  const [videoCategoryFilter, setVideoCategoryFilter] = useState('all');
+  const [generatingVideo, setGeneratingVideo] = useState(false);
+  const [customVideoPrompt, setCustomVideoPrompt] = useState('');
+  const [videoFormat, setVideoFormat] = useState('9:16');
+  const [selectedVideoToPlay, setSelectedVideoToPlay] = useState(null);
+  const [downloadingVideoId, setDownloadingVideoId] = useState(null);
+  const [adVideos, setAdVideos] = useState([
+    {
+      id: 'vid-1',
+      title: 'StyleCorner Atelier Experience',
+      category: 'salon',
+      duration: '0:15',
+      aspectRatio: '9:16',
+      badge: 'Instagram Reel / TikTok',
+      description: 'Ultra-luxury showcase featuring master barbering, bespoke braiding, and lash aesthetics.',
+      hook: 'Discover Lagos & Ibadan top verified beauty and grooming masters on StyleCorner.',
+      callToAction: 'Book online on stylecorner.world — Escrow Protected',
+      tags: ['Barber', 'Braids', 'Luxury', 'Lagos', 'Ibadan'],
+      themeColor: '#f5b942',
+      accentGradient: 'linear-gradient(135deg, #171a26, #0c0e14)',
+      soundtrack: 'Afro-Lofi Luxury Chill Beat (320kbps)',
+    },
+    {
+      id: 'vid-2',
+      title: 'Stylist & Specialist Recruitment Drive',
+      category: 'recruitment',
+      duration: '0:20',
+      aspectRatio: '9:16',
+      badge: 'Social Media Ad',
+      description: 'Compelling invitation for barbers, nail techs, braiders & lash artists to earn daily.',
+      hook: 'Are you a beauty professional? Get booked by VIP clients in your city.',
+      callToAction: 'Join 500+ verified experts today on stylecorner.world/join',
+      tags: ['Recruit', 'Barbers', 'Stylists', 'Instant Payouts'],
+      themeColor: '#10b981',
+      accentGradient: 'linear-gradient(135deg, #06281e, #0c0e14)',
+      soundtrack: 'Upbeat Cinematic Afrobeats (High Energy)',
+    },
+    {
+      id: 'vid-3',
+      title: 'Atelier Grooming Products Store Promo',
+      category: 'store',
+      duration: '0:12',
+      aspectRatio: '16:9',
+      badge: 'Landscape / YouTube',
+      description: 'Highlighting premium hair straighteners, organic beard oils, and salon-grade essentials.',
+      hook: 'Salon-grade grooming essentials delivered straight to your doorstep.',
+      callToAction: 'Shop the Atelier Store at stylecorner.world/store',
+      tags: ['Store', 'Products', 'Beard Care', 'Fast Delivery'],
+      themeColor: '#38bdf8',
+      accentGradient: 'linear-gradient(135deg, #0c1a2e, #0c0e14)',
+      soundtrack: 'Modern Deep Bass Synth Wave',
+    },
+    {
+      id: 'vid-4',
+      title: 'AI Stylist Matcher In Action',
+      category: 'ai',
+      duration: '0:16',
+      aspectRatio: '9:16',
+      badge: 'Feature Highlight',
+      description: 'Step-by-step visual of entering style preferences and getting matched with a 5-star stylist.',
+      hook: 'Cant find the right stylist? Let our AI match you in 3 seconds.',
+      callToAction: 'Try the AI Matcher free on stylecorner.world/ai-matcher',
+      tags: ['AI Matcher', 'Instant Match', 'Top Rated'],
+      themeColor: '#a855f7',
+      accentGradient: 'linear-gradient(135deg, #220e36, #0c0e14)',
+      soundtrack: 'Futuristic Smooth Chillhop',
+    }
+  ]); // 'all' | 'billboard' | 'portrait' | 'recruit'
   const [copiedMarketingUrl, setCopiedMarketingUrl] = useState(null);
   const [activeBannerModal, setActiveBannerModal] = useState(null); // 'billboard' | 'portrait' | 'recruit' | null
 
   const handleDownloadBannerPdf = (type) => {
     const hash = type === 'portrait' ? 'street' : (type || 'all');
-    const downloadUrl = `/admin/marketing-flyers?design=${hash}&download=true`;
+    const downloadUrl = `/billboard-flyers?design=${hash}&download=true`;
     try {
       const win = window.open(downloadUrl, '_blank');
       if (!win || win.closed || typeof win.closed === 'undefined') {
@@ -595,6 +667,7 @@ export const AdminDashboard = () => {
     { id: 'products', label: 'Manage Products', icon: Tag, count: productsList.length },
     { id: 'payouts', label: 'Expert Payouts', icon: DollarSign, count: pendingPayoutsCount },
     { id: 'marketing', label: 'Billboards & Flyers', icon: Sparkles, count: 3 },
+    { id: 'video_ads', label: 'Video Ads Generator', icon: Video, count: 'AI' },
   ];
 
   return (
@@ -797,10 +870,10 @@ export const AdminDashboard = () => {
             )}
             <div style={{ minWidth: 0, overflow: 'hidden' }}>
               <h1 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: isMobile ? '1rem' : '1.3rem', color: '#ffffff', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                {activeTab === 'orders' ? 'Store Orders' : activeTab === 'messages' ? 'Order Inquiries' : activeTab === 'bookings' ? 'Salon Bookings' : activeTab === 'users' ? 'User Accounts' : activeTab === 'products' ? 'Store Products' : activeTab === 'payouts' ? 'Expert Payouts' : 'Billboards & Marketing Flyers'}
+                {activeTab === 'orders' ? 'Store Orders' : activeTab === 'messages' ? 'Order Inquiries' : activeTab === 'bookings' ? 'Salon Bookings' : activeTab === 'users' ? 'User Accounts' : activeTab === 'products' ? 'Store Products' : activeTab === 'payouts' ? 'Expert Payouts' : activeTab === 'video_ads' ? 'AI Video Ads Generator' : 'Billboards & Marketing Flyers'}
               </h1>
               <p style={{ color: '#94a3b8', fontSize: '0.75rem', margin: '0.1rem 0 0 0', display: isMobile ? 'none' : 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                {activeTab === 'orders' ? 'Manage customer orders in real-time' : activeTab === 'messages' ? 'Reply to customer inquiries and send instant real-time notifications' : activeTab === 'bookings' ? 'Manage appointment bookings' : activeTab === 'users' ? 'Manage registered client and expert accounts' : activeTab === 'products' ? 'Upload and manage products displayed on the public store page' : activeTab === 'payouts' ? 'Review and settle expert earnings withdrawals' : 'View, preview, and print official billboard and promotional flyer assets with live QR codes'}
+                {activeTab === 'orders' ? 'Manage customer orders in real-time' : activeTab === 'messages' ? 'Reply to customer inquiries and send instant real-time notifications' : activeTab === 'bookings' ? 'Manage appointment bookings' : activeTab === 'users' ? 'Manage registered client and expert accounts' : activeTab === 'products' ? 'Upload and manage products displayed on the public store page' : activeTab === 'payouts' ? 'Review and settle expert earnings withdrawals' : activeTab === 'video_ads' ? 'Generate descriptive promotional video commercials and download MP4s directly to your device' : 'View, preview, and print official billboard and promotional flyer assets with live QR codes'}
               </p>
             </div>
           </div>
@@ -931,7 +1004,7 @@ export const AdminDashboard = () => {
           )}
 
           {/* Search Bar + Filter Chips Row */}
-          {activeTab !== 'marketing' && (
+          {activeTab !== 'marketing' && activeTab !== 'video_ads' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.25rem' }}>
             <div style={{ position: 'relative', width: '100%' }}>
               <Search size={16} style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
@@ -1983,7 +2056,7 @@ export const AdminDashboard = () => {
                   <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                     <button
                       type="button"
-                      onClick={() => navigate('/admin/marketing-flyers')}
+                      onClick={() => navigate('/billboard-flyers')}
                       style={{
                         display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
                         padding: '0.55rem 1rem', borderRadius: '10px', fontSize: '0.8rem', fontWeight: 800,
@@ -3235,7 +3308,7 @@ export const AdminDashboard = () => {
                 type="button"
                 onClick={() => {
                   const targetDesign = activeBannerModal === 'portrait' ? 'street' : activeBannerModal;
-                  navigate(`/admin/marketing-flyers?design=${targetDesign}`);
+                  navigate(`/billboard-flyers?design=${targetDesign}`);
                 }}
                 style={{
                   flex: isMobile ? '1 1 calc(50% - 0.25rem)' : 'none',

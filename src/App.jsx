@@ -444,6 +444,11 @@ export const App = () => {
                 }
               />
 
+              {/* Marketing & Billboard Flyers Routes (Must be before /admin/* catch-all) */}
+              <Route path="/admin/marketing-flyers" element={<BillboardFlyersPage />} />
+              <Route path="/billboard-flyers" element={<BillboardFlyersPage />} />
+              <Route path="/billboard-flyers.html" element={<BillboardFlyersPage />} />
+
               {/* Admin Routes */}
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route
@@ -473,11 +478,6 @@ export const App = () => {
                 }
               />
               <Route path="/policies" element={<Policies />} />
-
-              {/* Marketing & Billboard Flyers Routes */}
-              <Route path="/billboard-flyers" element={<BillboardFlyersPage />} />
-              <Route path="/billboard-flyers.html" element={<BillboardFlyersPage />} />
-              <Route path="/admin/marketing-flyers" element={<BillboardFlyersPage />} />
 
               {/* Fallback Catch-all */}
               <Route path="*" element={<Navigate to="/" replace />} />
