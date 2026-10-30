@@ -329,7 +329,7 @@ export const BillboardFlyersPage = () => {
   );
   const isFullscreen = isCssFullscreen || isNativeFullscreen;
 
-  const currentRolesList = flyerStyle === 'showcase' ? PHONE_SHOWCASE_FLYERS : FLYER_ROLES;
+  const currentRolesList = FLYER_ROLES; // always show classic billboard flyers
   const visibleRoles = activeDesign === 'all'
     ? currentRolesList
     : currentRolesList.filter(r => r.id === activeDesign);
@@ -458,53 +458,7 @@ export const BillboardFlyersPage = () => {
             <ArrowLeft size={16} />
           </button>
 
-          {/* Collection / Style Switcher Pill */}
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            backgroundColor: 'rgba(255,255,255,0.06)',
-            borderRadius: '50px',
-            padding: '2px',
-            border: '1px solid rgba(245,185,66,0.25)',
-            flexShrink: 0,
-          }}>
-            <button
-              type="button"
-              onClick={() => { setFlyerStyle('showcase'); setActiveDesign('all'); }}
-              style={{
-                backgroundColor: flyerStyle === 'showcase' ? '#F5B942' : 'transparent',
-                color: flyerStyle === 'showcase' ? '#08090C' : '#cbd5e1',
-                border: 'none',
-                borderRadius: '50px',
-                padding: '0.35rem 0.75rem',
-                fontSize: '0.72rem',
-                fontWeight: 900,
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              📱 3 Phone Flyers
-            </button>
-            <button
-              type="button"
-              onClick={() => { setFlyerStyle('classic'); setActiveDesign('all'); }}
-              style={{
-                backgroundColor: flyerStyle === 'classic' ? '#F5B942' : 'transparent',
-                color: flyerStyle === 'classic' ? '#08090C' : '#cbd5e1',
-                border: 'none',
-                borderRadius: '50px',
-                padding: '0.35rem 0.75rem',
-                fontSize: '0.72rem',
-                fontWeight: 900,
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              📋 Classic Billboards
-            </button>
-          </div>
 
-          <div style={{ width: '1px', height: '18px', backgroundColor: 'rgba(255,255,255,0.15)', flexShrink: 0 }} />
 
           {/* All tab */}
           <button
@@ -713,19 +667,8 @@ export const BillboardFlyersPage = () => {
               </span>
             </div>
 
-            {/* If Showcase Style: Render PhoneShowcaseFlyerCard */}
-            {flyerStyle === 'showcase' ? (
-              <PhoneShowcaseFlyerCard
-                ref={flyerRefs.current[role.id]}
-                flyer={role}
-                onSavePdf={saveToPdf}
-                onSaveImage={saveToImage}
-                onCopyLink={copyUrl}
-                copied={copiedType}
-                savingPdf={savingPdf}
-              />
-            ) : (
-              <div
+            {/* Classic Billboard Flyer Card */}
+            <div
                 ref={flyerRefs.current[role.id]}
                 className="print-card"
                 data-design={role.id}
@@ -1094,7 +1037,6 @@ export const BillboardFlyersPage = () => {
 
               </div>
             </div>
-            )}
           </div>
         ))}
       </div>
