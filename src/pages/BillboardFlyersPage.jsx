@@ -104,9 +104,9 @@ export const BillboardFlyersPage = () => {
         await downloadElementAsPdf(el, filename, isLandscape);
       }
     } catch (err) {
-      console.warn('Direct PDF download error, attempting printable window fallback:', err);
-      // Fallback only if canvas rendering failed
-      window.print();
+      console.error('PDF export error:', err);
+      // Show a user-friendly alert — never fall back to print dialog
+      alert('⚠️ PDF export failed. Please try the "Save Image (PNG)" button instead, or open in Chrome/Edge for best results.');
     } finally {
       setSavingPdf(false);
     }

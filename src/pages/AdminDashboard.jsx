@@ -1977,6 +1977,16 @@ export const AdminDashboard = () => {
                 </div>
               )}
             </div>
+          ) : activeTab === 'video_ads' ? (
+            /* --- TAB: AI VIDEO ADS STUDIO --- */
+            <div style={{ paddingBottom: '2rem' }}>
+              <VideoAdsStudio
+                adVideos={adVideos}
+                onAddCustomVideo={(ad) => setAdVideos(prev => [...prev, ad])}
+                showToast={showToast}
+                isMobile={isMobile}
+              />
+            </div>
           ) : activeTab === 'marketing' ? (
             /* --- TAB 7: BILLBOARDS & MARKETING FLYERS --- */
             <div>
