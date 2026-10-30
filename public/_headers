@@ -15,3 +15,4 @@
 ## SPA fallback pages — short cache
 /*
   Cache-Control: public, max-age=0, must-revalidate
+

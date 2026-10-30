@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Check, Copy, Loader, Maximize, Minimize, X, FileDown, Image as ImageIcon } from 'lucide-react';
 import { QrWorldSvg, QrRecruitSvg } from '../components/common/QrCodeSvgs';
-import PhoneShowcaseFlyerCard from '../components/common/PhoneShowcaseFlyerCard';
 import { downloadElementAsPdf, downloadMultipleElementsAsPdf, downloadElementAsImage } from '../utils/flyerPdfExport';
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -187,13 +186,6 @@ export const BillboardFlyersPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const getInitialStyle = () => {
-    const params = new URLSearchParams(location.search);
-    const qStyle = params.get('style');
-    if (qStyle === 'showcase') return 'showcase'; // from admin dashboard phone flyers button
-    return 'classic'; // default: show classic billboard flyers
-  };
-
   const getInitialDesign = () => {
     const params = new URLSearchParams(location.search);
     const qDesign = params.get('design');
@@ -208,7 +200,6 @@ export const BillboardFlyersPage = () => {
     return 'all';
   };
 
-  const [flyerStyle, setFlyerStyle] = useState(getInitialStyle); // 'showcase' (phone flyers) or 'classic'
   const [activeDesign, setActiveDesign] = useState('all');
   const [copiedType, setCopiedType] = useState(null);
   const [screenshotMode, setScreenshotMode] = useState(false);
@@ -217,7 +208,7 @@ export const BillboardFlyersPage = () => {
 
   // Dynamic ref map for all flyer cards across both styles
   const flyerRefs = useRef({});
-  [...PHONE_SHOWCASE_FLYERS, ...FLYER_ROLES].forEach(r => {
+  FLYER_ROLES.forEach(r => {
     if (!flyerRefs.current[r.id]) {
       flyerRefs.current[r.id] = React.createRef();
     }
@@ -260,8 +251,6 @@ export const BillboardFlyersPage = () => {
   useEffect(() => {
     const current = getInitialDesign();
     setActiveDesign(current);
-    const newStyle = getInitialStyle();
-    setFlyerStyle(newStyle);
     const params = new URLSearchParams(location.search);
     if (params.get('download') === 'true') {
       setTimeout(() => saveToPdf(current), 1500);
@@ -277,8 +266,7 @@ export const BillboardFlyersPage = () => {
 
     try {
       if (target === 'all') {
-        const activeList = flyerStyle === 'showcase' ? PHONE_SHOWCASE_FLYERS : FLYER_ROLES;
-        const elementsWithConfig = activeList.map(role => ({
+        const elementsWithConfig = FLYER_ROLES.map(role => ({
           el: flyerRefs.current[role.id]?.current,
           isLandscape: false,
         })).filter(item => Boolean(item.el));
@@ -287,9 +275,7 @@ export const BillboardFlyersPage = () => {
           throw new Error('Flyer elements not found in DOM');
         }
 
-        const packName = flyerStyle === 'showcase'
-          ? 'StyleCorner_PhoneShowcase_Flyers_Pack.pdf'
-          : 'StyleCorner_Marketing_Flyers_Pack.pdf';
+        const packName = 'StyleCorner_Marketing_Flyers_Pack.pdf';
         await downloadMultipleElementsAsPdf(elementsWithConfig, packName);
       } else {
         const el = flyerRefs.current[target]?.current || document.querySelector(`.print-card[data-design="${target}"]`);

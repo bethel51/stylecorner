@@ -2018,29 +2018,17 @@ export const AdminDashboard = () => {
                   <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                     <button
                       type="button"
-                      onClick={() => window.open('/billboard-flyers?style=showcase', '_blank')}
-                      style={{
-                        display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
-                        padding: '0.55rem 1rem', borderRadius: '10px', fontSize: '0.8rem', fontWeight: 800,
-                        background: 'linear-gradient(135deg, #F5B942, #C8930A)',
-                        border: 'none',
-                        color: '#08090C', cursor: 'pointer', fontFamily: 'Outfit',
-                        boxShadow: '0 4px 18px rgba(245,185,66,0.35)',
-                      }}
-                    >
-                      📱 Phone Flyers
-                    </button>
-                    <button
-                      type="button"
                       onClick={() => window.open('/billboard-flyers', '_blank')}
                       style={{
                         display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
                         padding: '0.55rem 1rem', borderRadius: '10px', fontSize: '0.8rem', fontWeight: 800,
-                        backgroundColor: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)',
-                        color: '#ffffff', cursor: 'pointer', fontFamily: 'Outfit',
+                        background: 'linear-gradient(135deg, #d4af37, #f5b942)',
+                        border: 'none',
+                        color: '#0c0e14', cursor: 'pointer', fontFamily: 'Outfit',
+                        boxShadow: '0 4px 14px rgba(212,175,55,0.35)',
                       }}
                     >
-                      <ExternalLink size={13} /> Classic Billboards
+                      <ExternalLink size={13} /> View Marketing Flyers
                     </button>
                     <button
                       type="button"
