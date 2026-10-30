@@ -703,7 +703,20 @@ export const CustomerDashboard = () => {
           <div className="dashboard-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '0.65rem' }}>
             {[
               { label: 'Bookings', value: bookings.length, color: 'var(--color-accent)', icon: Calendar, action: () => navigate('/my-bookings') },
-              { label: 'Orders', value: orders.length, color: '#38bdf8', icon: ShoppingBag, action: () => navigate('/my-bookings?tab=orders') },
+              {
+                label: 'Orders',
+                value: orders.length,
+                color: '#38bdf8',
+                icon: ShoppingBag,
+                action: () => {
+                  if (orders.length > 0) {
+                    navigate(`/order-tracking/${orders[0]._id}`);
+                  } else {
+                    showToast('No active orders. Visit the store first.', 'accent');
+                    navigate('/store');
+                  }
+                },
+              },
               { label: 'Completed', value: completedCount, color: '#10b981', icon: CheckCircle, action: () => navigate('/my-bookings?tab=history') },
             ].map((stat) => {
               const Icon = stat.icon;

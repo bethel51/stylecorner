@@ -257,12 +257,17 @@ export const AiStylistFinder = () => {
   };
 
   const handleBookDirectly = (stylist) => {
+    // Map time slot period to concrete time slot format accepted by Booking page
+    let defaultTime = '12:00 PM';
+    if (selectedTimeSlot.toLowerCase().includes('morning')) defaultTime = '10:00 AM';
+    else if (selectedTimeSlot.toLowerCase().includes('evening')) defaultTime = '5:00 PM';
+
     const params = new URLSearchParams({
       stylist: stylist.name,
       stylistId: stylist.id,
       service: selectedService,
       date: selectedDate,
-      time: selectedTimeSlot.split(' ')[0] || '12:00 PM',
+      time: defaultTime,
       location: `${selectedLocation} (${serviceMode === 'home' ? 'Home Service' : 'In-Salon'})`,
     });
     navigate(`/booking?${params.toString()}`);

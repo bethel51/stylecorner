@@ -397,12 +397,16 @@ export const MyBookings = () => {
           }}
         >
           <div
+            onClick={() => handleTabChange('upcoming')}
+            role="button"
+            tabIndex={0}
             style={{
-              background: activeTab === 'upcoming' ? 'rgba(16, 185, 129, 0.12)' : 'var(--color-surface, #151822)',
+              background: activeTab === 'upcoming' ? 'rgba(16, 185, 129, 0.16)' : 'var(--color-surface, #151822)',
               border: activeTab === 'upcoming' ? '1.5px solid #10b981' : '1px solid var(--color-border, rgba(255, 255, 255, 0.06))',
               borderRadius: '14px',
               padding: '0.75rem 0.5rem',
               textAlign: 'center',
+              cursor: 'pointer',
               transition: 'all 0.15s ease',
             }}
           >
@@ -415,12 +419,16 @@ export const MyBookings = () => {
           </div>
 
           <div
+            onClick={() => handleTabChange('history')}
+            role="button"
+            tabIndex={0}
             style={{
-              background: activeTab === 'history' ? 'rgba(245, 185, 66, 0.12)' : 'var(--color-surface, #151822)',
+              background: activeTab === 'history' ? 'rgba(245, 185, 66, 0.16)' : 'var(--color-surface, #151822)',
               border: activeTab === 'history' ? '1.5px solid #f5b942' : '1px solid var(--color-border, rgba(255, 255, 255, 0.06))',
               borderRadius: '14px',
               padding: '0.75rem 0.5rem',
               textAlign: 'center',
+              cursor: 'pointer',
               transition: 'all 0.15s ease',
             }}
           >
@@ -433,12 +441,16 @@ export const MyBookings = () => {
           </div>
 
           <div
+            onClick={() => handleTabChange('cancelled')}
+            role="button"
+            tabIndex={0}
             style={{
-              background: activeTab === 'cancelled' ? 'rgba(239, 68, 68, 0.12)' : 'var(--color-surface, #151822)',
+              background: activeTab === 'cancelled' ? 'rgba(239, 68, 68, 0.16)' : 'var(--color-surface, #151822)',
               border: activeTab === 'cancelled' ? '1.5px solid #ef4444' : '1px solid var(--color-border, rgba(255, 255, 255, 0.06))',
               borderRadius: '14px',
               padding: '0.75rem 0.5rem',
               textAlign: 'center',
+              cursor: 'pointer',
               transition: 'all 0.15s ease',
             }}
           >
@@ -451,12 +463,16 @@ export const MyBookings = () => {
           </div>
 
           <div
+            onClick={() => handleTabChange('all')}
+            role="button"
+            tabIndex={0}
             style={{
-              background: activeTab === 'all' ? 'rgba(99, 102, 241, 0.14)' : 'var(--color-surface, #151822)',
+              background: activeTab === 'all' ? 'rgba(99, 102, 241, 0.18)' : 'var(--color-surface, #151822)',
               border: activeTab === 'all' ? '1.5px solid #6366f1' : '1px solid var(--color-border, rgba(255, 255, 255, 0.06))',
               borderRadius: '14px',
               padding: '0.75rem 0.5rem',
               textAlign: 'center',
+              cursor: 'pointer',
               transition: 'all 0.15s ease',
             }}
           >
@@ -464,7 +480,7 @@ export const MyBookings = () => {
               {counts.total}
             </div>
             <div style={{ fontSize: '0.7rem', fontWeight: 700, color: '#94a3b8', marginTop: '0.3rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-              All Total
+              All
             </div>
           </div>
         </div>
@@ -483,13 +499,17 @@ export const MyBookings = () => {
           {/* Segmented Tab Pill */}
           <div
             style={{
-              display: 'inline-flex',
+              display: 'flex',
+              overflowX: 'auto',
+              WebkitOverflowScrolling: 'touch',
               background: 'var(--color-surface, #151822)',
               borderRadius: '14px',
               padding: '0.25rem',
               border: '1px solid var(--color-border, rgba(255, 255, 255, 0.06))',
               gap: '0.25rem',
               flex: '1 1 auto',
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none',
             }}
           >
             {[
@@ -504,7 +524,7 @@ export const MyBookings = () => {
                   key={t.id}
                   onClick={() => handleTabChange(t.id)}
                   style={{
-                    flex: 1,
+                    flex: '1 0 auto',
                     minHeight: '36px',
                     borderRadius: '10px',
                     border: 'none',
@@ -520,7 +540,7 @@ export const MyBookings = () => {
                     gap: '0.35rem',
                     transition: 'all 0.15s ease',
                     whiteSpace: 'nowrap',
-                    padding: '0 0.5rem',
+                    padding: '0 0.75rem',
                   }}
                 >
                   <span>{t.label}</span>
