@@ -64,53 +64,42 @@ export const PopupModal = ({ isOpen, onClose, title, children, maxWidth = '480px
         }}
       />
 
-      {/* Sheet / Modal panel */}
+      {/* Centered Modal panel (Web Dialog style, no flutter mobile sheet) */}
       <div
         className={`pm-panel ${closing ? 'pm-panel-closing' : ''}`}
         onClick={(e) => e.stopPropagation()}
         style={{
           position: 'fixed',
-          bottom: 0,
-          left: 0,
-          right: 0,
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
           zIndex: 99999,
           background: 'var(--color-surface)',
-          borderTop: '1.5px solid var(--color-border-accent)',
-          borderLeft: '1px solid var(--color-border)',
-          borderRight: '1px solid var(--color-border)',
-          borderTopLeftRadius: '24px',
-          borderTopRightRadius: '24px',
+          border: '1px solid var(--color-border)',
+          borderRadius: '24px',
+          width: 'calc(100% - 2rem)',
+          maxWidth: maxWidth,
+          maxHeight: '88vh',
           display: 'flex',
           flexDirection: 'column',
-          boxShadow: '0 -20px 60px rgba(0, 0, 0, 0.5)',
+          boxShadow: '0 25px 60px -12px rgba(0, 0, 0, 0.7), 0 0 1px 1px rgba(255, 255, 255, 0.08)',
           '--pm-max-width': maxWidth,
+          overflow: 'hidden',
         }}
       >
-        {/* Drag handle */}
-        <div style={{ flexShrink: 0, padding: '0.6rem 1.25rem 0' }}>
-          <div style={{
-            width: '40px',
-            height: '4px',
-            background: 'var(--color-border-accent)',
-            borderRadius: '10px',
-            margin: '0 auto 0.7rem',
-            opacity: 0.5,
-          }} />
-        </div>
-
         {/* Header */}
         <div style={{
           flexShrink: 0,
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          padding: '0 1.25rem 0.75rem',
+          padding: '1.1rem 1.35rem 0.85rem',
           borderBottom: '1px solid var(--color-border)',
         }}>
           {title && (
             <h3 style={{
               fontFamily: 'Outfit',
-              fontSize: '1.1rem',
+              fontSize: '1.12rem',
               fontWeight: 800,
               color: 'var(--color-text-primary)',
               margin: 0,
@@ -157,7 +146,7 @@ export const PopupModal = ({ isOpen, onClose, title, children, maxWidth = '480px
             WebkitOverflowScrolling: 'touch',
             touchAction: 'pan-y',
             overscrollBehaviorY: 'contain',
-            padding: '1rem 1.25rem calc(2rem + env(safe-area-inset-bottom, 20px))',
+            padding: '1.15rem 1.35rem 1.5rem',
             minHeight: 0,
           }}
         >
@@ -182,93 +171,34 @@ export const PopupModal = ({ isOpen, onClose, title, children, maxWidth = '480px
           from { opacity: 1; }
           to   { opacity: 0; }
         }
-        .pm-overlay-in  { animation: pmOverlayIn  0.22s ease-out forwards; }
-        .pm-overlay-out { animation: pmOverlayOut 0.22s ease-in  forwards; }
+        .pm-overlay-in  { animation: pmOverlayIn  0.2s ease-out forwards; }
+        .pm-overlay-out { animation: pmOverlayOut 0.18s ease-in  forwards; }
 
-        /* ── Sheet entry / exit (mobile) ── */
-        @keyframes pmSheetUp {
-          from {
-            opacity: 0.4;
-            transform: translateY(60%) scale(0.97);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-          }
-        }
-        @keyframes pmSheetDown {
-          from {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-          }
-          to {
-            opacity: 0;
-            transform: translateY(55%) scale(0.97);
-          }
-        }
-
-        /* ── Dialog entry / exit (desktop) ── */
+        /* ── Centered Web Dialog animations ── */
         @keyframes pmDialogIn {
-          0%   { opacity: 0;   transform: translate(-50%, -46%) scale(0.90); }
-          70%  { opacity: 1;   transform: translate(-50%, -51%) scale(1.02); }
+          0%   { opacity: 0;   transform: translate(-50%, -46%) scale(0.94); }
           100% { opacity: 1;   transform: translate(-50%, -50%) scale(1);    }
         }
         @keyframes pmDialogOut {
           from { opacity: 1; transform: translate(-50%, -50%) scale(1);    }
-          to   { opacity: 0; transform: translate(-50%, -46%) scale(0.92); }
+          to   { opacity: 0; transform: translate(-50%, -46%) scale(0.94); }
         }
 
-        /* Mobile sheet */
+        .pm-panel {
+          animation: pmDialogIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+        .pm-panel.pm-panel-closing {
+          animation: pmDialogOut 0.18s ease-in both;
+        }
+
         @media (max-width: 640px) {
           .pm-panel {
-            height: 90vh !important;
-            height: 90dvh !important;
-            max-height: 90dvh !important;
-            border-top-left-radius: 22px !important;
-            border-top-right-radius: 22px !important;
-            animation: pmSheetUp 0.38s cubic-bezier(0.32, 1.15, 0.58, 1) both !important;
-          }
-          .pm-panel.pm-panel-closing {
-            animation: pmSheetDown 0.26s cubic-bezier(0.4, 0, 0.8, 0.6) both !important;
+            width: calc(100% - 1.5rem) !important;
+            max-height: 88vh !important;
+            border-radius: 20px !important;
           }
           .pm-scroll-body {
-            padding-left: 1rem !important;
-            padding-right: 1rem !important;
-            touch-action: pan-y !important;
-            -webkit-overflow-scrolling: touch !important;
-          }
-        }
-
-        @media (max-width: 380px) {
-          .pm-panel {
-            height: 92vh !important;
-            height: 92dvh !important;
-            max-height: 92dvh !important;
-          }
-          .pm-scroll-body {
-            padding-left: 0.75rem !important;
-            padding-right: 0.75rem !important;
-          }
-        }
-
-        /* Desktop centered dialog */
-        @media (min-width: 641px) {
-          .pm-panel {
-            top: 50% !important;
-            left: 50% !important;
-            bottom: auto !important;
-            right: auto !important;
-            transform: translate(-50%, -50%) !important;
-            width: calc(100% - 2rem) !important;
-            max-width: var(--pm-max-width) !important;
-            max-height: 85vh !important;
-            height: auto !important;
-            border-radius: 22px !important;
-            border: 1px solid var(--color-border) !important;
-            animation: pmDialogIn 0.32s cubic-bezier(0.32, 1.15, 0.58, 1) both !important;
-          }
-          .pm-panel.pm-panel-closing {
-            animation: pmDialogOut 0.22s cubic-bezier(0.4, 0, 0.8, 0.6) both !important;
+            padding: 1rem 1rem 1.25rem !important;
           }
         }
       `}</style>

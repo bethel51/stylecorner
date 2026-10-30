@@ -1241,7 +1241,7 @@ export const ExpertDashboard = () => {
                 {/* Real Rating & Review Count Badge */}
                 <button
                   type="button"
-                  onClick={() => setShowReviewsSheet(true)}
+                  onClick={() => navigate('/expert/reviews')}
                   style={{
                     background: 'rgba(245, 185, 66, 0.12)',
                     border: '1px solid rgba(245, 185, 66, 0.3)',
@@ -1256,7 +1256,7 @@ export const ExpertDashboard = () => {
                     alignItems: 'center',
                     gap: '0.3rem',
                   }}
-                  title="View client reviews"
+                  title="View client reviews page"
                 >
                   <Star size={11} fill="#f5b942" />
                   <span>{averageRating ? `${averageRating} (${reviews.length} ${reviews.length === 1 ? 'review' : 'reviews'})` : `${reviews.length} reviews`}</span>
@@ -1307,7 +1307,7 @@ export const ExpertDashboard = () => {
             </button>
 
             <button
-              onClick={handleOpenProfileEdit}
+              onClick={() => navigate('/expert/profile-edit')}
               style={{
                 background: 'rgba(255, 255, 255, 0.04)',
                 border: '1px solid rgba(255, 255, 255, 0.1)',
@@ -1329,7 +1329,7 @@ export const ExpertDashboard = () => {
             </button>
 
             <button
-              onClick={() => setShowReviewsSheet(true)}
+              onClick={() => navigate('/expert/reviews')}
               style={{
                 background: 'rgba(255, 255, 255, 0.04)',
                 border: '1px solid rgba(255, 255, 255, 0.1)',
@@ -1347,7 +1347,29 @@ export const ExpertDashboard = () => {
                 transition: 'all 0.2s ease',
               }}
             >
-              <MessageSquare size={14} color="#f5b942" /> Reviews ({reviews.length})
+              <Star size={14} color="#f5b942" /> Reviews ({reviews.length})
+            </button>
+
+            <button
+              onClick={() => navigate('/expert/chat')}
+              style={{
+                background: 'rgba(255, 255, 255, 0.04)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                color: '#e2e8f0',
+                padding: '0.65rem 0.85rem',
+                borderRadius: '14px',
+                fontSize: '0.78rem',
+                fontFamily: 'Outfit',
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.4rem',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              <MessageSquare size={14} color="#a78bfa" /> Client Messages
             </button>
 
             <button
@@ -1404,7 +1426,7 @@ export const ExpertDashboard = () => {
             </div>
 
             <button
-              onClick={() => setShowWalletHistorySheet(true)}
+              onClick={() => navigate('/expert/transactions')}
               style={{
                 background: 'rgba(245, 185, 66, 0.1)',
                 border: '1px solid rgba(245, 185, 66, 0.25)',
@@ -1455,7 +1477,7 @@ export const ExpertDashboard = () => {
             </button>
 
             <button
-              onClick={() => setShowTopupModal(true)}
+              onClick={() => navigate('/payment', { state: { title: 'Wallet Funding', amount: 5000, description: 'Direct Deposit to Atelier Wallet', isTopup: true } })}
               style={{
                 background: 'rgba(255, 255, 255, 0.05)',
                 color: '#ffffff',
@@ -1589,7 +1611,7 @@ export const ExpertDashboard = () => {
 
             {/* Revenue */}
             <div
-              onClick={() => setShowWalletHistorySheet(true)}
+              onClick={() => navigate('/expert/transactions')}
               style={{
                 background: 'linear-gradient(145deg, #151824 0%, #0f121a 100%)',
                 borderRadius: '20px',
@@ -1631,7 +1653,29 @@ export const ExpertDashboard = () => {
               </h3>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexWrap: 'wrap' }}>
+              <button
+                onClick={() => navigate('/expert/appointments')}
+                style={{
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  color: '#e2e8f0',
+                  borderRadius: '12px',
+                  padding: '0.35rem 0.75rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  fontSize: '0.76rem',
+                  fontFamily: 'Outfit',
+                  fontWeight: 700,
+                  transition: 'all 0.15s ease',
+                }}
+                title="Open full dedicated appointments management page"
+              >
+                <Calendar size={13} color="#f5b942" /> View All ({bookings.length})
+              </button>
+
               <button
                 onClick={() => setShowCheckInDesk(true)}
                 style={{
@@ -1768,7 +1812,7 @@ export const ExpertDashboard = () => {
                   onDecline={() => handleUpdateStatus(b._id, 'rejected')}
                   onComplete={() => handleUpdateStatus(b._id, 'completed')}
                   openClientWhatsApp={openClientWhatsApp}
-                  onChatClient={(booking) => setChatBooking(booking)}
+                  onChatClient={(booking) => navigate(`/expert/chat?bookingId=${booking._id}`)}
                 />
               ))}
             </div>
@@ -1854,7 +1898,7 @@ export const ExpertDashboard = () => {
             </div>
 
             <button
-              onClick={() => handleOpenAddWorkModal(activePortfolioService !== 'All' ? activePortfolioService : null)}
+              onClick={() => navigate('/expert/portfolio')}
               style={{
                 background: 'linear-gradient(135deg, #f5b942 0%, #e0a32d 100%)',
                 color: '#0c0e14',
@@ -2030,7 +2074,7 @@ export const ExpertDashboard = () => {
                   </p>
                   <button
                     type="button"
-                    onClick={() => handleOpenAddWorkModal(activePortfolioService !== 'All' ? activePortfolioService : null)}
+                    onClick={() => navigate('/expert/portfolio')}
                     style={{
                       background: 'linear-gradient(135deg, #f5b942 0%, #e0a32d 100%)',
                       color: '#0c0e14',
@@ -2065,7 +2109,7 @@ export const ExpertDashboard = () => {
                 >
                   {/* Quick Add Slot */}
                   <div
-                    onClick={() => handleOpenAddWorkModal(activePortfolioService !== 'All' ? activePortfolioService : null)}
+                    onClick={() => navigate('/expert/portfolio')}
                     style={{
                       aspectRatio: '1 / 1',
                       borderRadius: '16px',
@@ -2424,169 +2468,7 @@ export const ExpertDashboard = () => {
         }}
       />
 
-      {/* 2. Paystack Top-Up Modal */}
-      {showTopupModal && (
-        <PopupModal
-          isOpen={showTopupModal}
-          onClose={() => setShowTopupModal(false)}
-          title="Top Up Atelier Wallet"
-        >
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <p style={{ color: '#94a3b8', fontSize: '0.84rem', margin: 0 }}>
-              Add funds directly to your wallet via Paystack secure payment card or bank transfer.
-            </p>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              <label style={{ fontSize: '0.78rem', color: '#94a3b8', fontWeight: 600 }}>
-                Amount (₦)
-              </label>
-              <input
-                type="number"
-                inputMode="numeric"
-                min="500"
-                placeholder="e.g. 5000"
-                value={topupAmount}
-                onChange={(e) => setTopupAmount(e.target.value)}
-                style={{
-                  background: '#10131b',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                  borderRadius: '12px',
-                  padding: '0.75rem',
-                  minHeight: '48px',
-                  boxSizing: 'border-box',
-                  color: '#ffffff',
-                  fontFamily: 'Outfit',
-                  fontSize: '16px',
-                  fontWeight: 700,
-                  outline: 'none',
-                }}
-              />
-            </div>
-
-            <div style={{ display: 'flex', gap: '0.65rem' }}>
-              {[2000, 5000, 10000, 20000].map((quick) => (
-                <button
-                  key={quick}
-                  type="button"
-                  onClick={() => setTopupAmount(String(quick))}
-                  style={{
-                    flex: 1,
-                    background: '#1c202d',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                    color: '#f5b942',
-                    borderRadius: '8px',
-                    padding: '0.4rem 0',
-                    minHeight: '44px',
-                    fontSize: '0.78rem',
-                    fontFamily: 'Outfit',
-                    fontWeight: 700,
-                    cursor: 'pointer',
-                    touchAction: 'manipulation',
-                    WebkitTapHighlightColor: 'transparent',
-                  }}
-                >
-                  ₦{quick.toLocaleString()}
-                </button>
-              ))}
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginTop: '0.5rem' }}>
-              <button
-                type="button"
-                onClick={() => setShowTopupModal(false)}
-                style={{
-                  background: 'transparent',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                  color: '#94a3b8',
-                  borderRadius: '50px',
-                  height: '46px',
-                  minHeight: '46px',
-                  fontSize: '0.84rem',
-                  fontWeight: 700,
-                  fontFamily: 'Outfit',
-                  cursor: 'pointer',
-                  touchAction: 'manipulation',
-                  WebkitTapHighlightColor: 'transparent',
-                }}
-              >
-                Cancel
-              </button>
-
-              <button
-                type="button"
-                onClick={handleTopupSubmit}
-                disabled={topupSubmitting || !topupAmount}
-                style={{
-                  background: '#f5b942',
-                  border: 'none',
-                  color: '#0c0e14',
-                  borderRadius: '50px',
-                  height: '46px',
-                  minHeight: '46px',
-                  fontSize: '0.84rem',
-                  fontWeight: 800,
-                  fontFamily: 'Outfit',
-                  cursor: topupSubmitting ? 'not-allowed' : 'pointer',
-                  touchAction: 'manipulation',
-                  WebkitTapHighlightColor: 'transparent',
-                }}
-              >
-                {topupSubmitting ? 'Processing…' : 'Proceed to Paystack'}
-              </button>
-            </div>
-          </div>
-        </PopupModal>
-      )}
-
-      {/* 3. Wallet Transactions Bottom Sheet */}
-      <BottomSheet
-        isOpen={showWalletHistorySheet}
-        onClose={() => setShowWalletHistorySheet(false)}
-        title="Wallet Transaction History"
-      >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', maxHeight: '70vh', overflowY: 'auto' }}>
-          {transactions.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '2.5rem 1rem', color: '#64748b' }}>
-              <Wallet size={36} color="#f5b942" style={{ marginBottom: '0.5rem', opacity: 0.6 }} />
-              <p style={{ margin: 0, fontSize: '0.84rem' }}>No transaction history recorded yet.</p>
-            </div>
-          ) : (
-            transactions.map((t, idx) => (
-              <div
-                key={t._id || idx}
-                style={{
-                  background: '#10131b',
-                  borderRadius: '14px',
-                  padding: '0.85rem 1rem',
-                  border: '1px solid rgba(255, 255, 255, 0.06)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <div>
-                  <div style={{ fontFamily: 'Outfit', fontSize: '0.88rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.2rem' }}>
-                    {t.description || t.type || 'Wallet Activity'}
-                  </div>
-                  <div style={{ fontSize: '0.72rem', color: '#64748b' }}>
-                    {t.createdAt ? new Date(t.createdAt).toLocaleDateString() : 'Recent'}
-                  </div>
-                </div>
-                <div
-                  style={{
-                    fontFamily: 'Outfit',
-                    fontSize: '0.94rem',
-                    fontWeight: 900,
-                    color: t.type === 'credit' || t.amount > 0 ? '#10b981' : '#f87171',
-                  }}
-                >
-                  {t.type === 'credit' || t.amount > 0 ? '+' : '-'}₦{Math.abs(Number(t.amount || 0)).toLocaleString()}
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      </BottomSheet>
 
       {/* 4. Request Payout / Withdraw Funds Modal */}
       <WithdrawFundsModal
@@ -2600,88 +2482,7 @@ export const ExpertDashboard = () => {
         }}
       />
 
-      {/* 5. Client Reviews Bottom Sheet */}
-      <BottomSheet
-        isOpen={showReviewsSheet}
-        onClose={() => setShowReviewsSheet(false)}
-        title="Client Reviews & Ratings"
-      >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', maxHeight: '70vh', overflowY: 'auto' }}>
-          {/* Summary Card */}
-          <div
-            style={{
-              background: 'linear-gradient(135deg, rgba(245, 185, 66, 0.12) 0%, #151822 100%)',
-              border: '1px solid rgba(245, 185, 66, 0.25)',
-              borderRadius: '16px',
-              padding: '1rem',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}
-          >
-            <div>
-              <div style={{ fontFamily: 'Outfit', fontSize: '1.75rem', fontWeight: 900, color: '#f5b942', lineHeight: 1 }}>
-                {averageRating || '5.0'} ★
-              </div>
-              <div style={{ fontSize: '0.74rem', color: '#94a3b8', marginTop: '0.2rem' }}>
-                Overall Specialist Rating
-              </div>
-            </div>
-            <div style={{ textAlign: 'right' }}>
-              <div style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 800, color: '#ffffff' }}>
-                {reviews.length}
-              </div>
-              <div style={{ fontSize: '0.72rem', color: '#64748b' }}>
-                Total Verified Reviews
-              </div>
-            </div>
-          </div>
 
-          {reviews.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '2.5rem 1rem', color: '#64748b' }}>
-              <Star size={36} color="#f5b942" style={{ marginBottom: '0.6rem', opacity: 0.5 }} />
-              <h4 style={{ fontFamily: 'Outfit', fontSize: '0.98rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.35rem' }}>
-                No reviews yet
-              </h4>
-              <p style={{ margin: 0, fontSize: '0.8rem', color: '#94a3b8' }}>
-                When clients complete appointments with you, their ratings and feedback will appear here in real-time.
-              </p>
-            </div>
-          ) : (
-            reviews.map((r, idx) => (
-              <div
-                key={r._id || idx}
-                style={{
-                  background: '#151822',
-                  borderRadius: '16px',
-                  padding: '1rem',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
-                }}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
-                  <span style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 800, color: '#ffffff' }}>
-                    {r.customerName || 'Verified Client'}
-                  </span>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#f5b942', fontSize: '0.8rem', fontWeight: 800, fontFamily: 'Outfit' }}>
-                    <Star size={12} fill="#f5b942" />
-                    <span>{Number(r.rating || 5).toFixed(1)}</span>
-                  </div>
-                </div>
-
-                <div style={{ fontSize: '0.74rem', color: '#64748b', marginBottom: '0.45rem' }}>
-                  Service: <span style={{ color: '#94a3b8', fontWeight: 600 }}>{r.serviceName || 'Specialist Appointment'}</span> • {r.createdAt ? new Date(r.createdAt).toLocaleDateString() : 'Recent'}
-                </div>
-
-                {r.comment && (
-                  <p style={{ margin: 0, fontSize: '0.82rem', color: '#cbd5e1', lineHeight: 1.4, fontStyle: 'italic' }}>
-                    "{r.comment}"
-                  </p>
-                )}
-              </div>
-            ))
-          )}
-        </div>
-      </BottomSheet>
 
       {/* 5. Add Work to Lookbook & Portfolio Modal */}
       {showAddWorkModal && (
@@ -3123,101 +2924,7 @@ export const ExpertDashboard = () => {
         onClose={() => setChatBooking(null)}
       />
 
-      {/* ── Expert Profile Edit Sheet ── */}
-      <BottomSheet isOpen={showProfileEditSheet} onClose={() => setShowProfileEditSheet(false)} title="Edit Profile & Location">
-        <form onSubmit={handleExpertProfileSave} style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem' }}>
-            <div className="app-input-group" style={{ marginBottom: 0 }}>
-              <label className="app-label">First Name *</label>
-              <input
-                type="text"
-                value={expertProfileForm.firstname}
-                onChange={(e) => setExpertProfileForm(p => ({ ...p, firstname: e.target.value }))}
-                className="app-input"
-                style={{ fontSize: '16px' }}
-                required
-              />
-            </div>
-            <div className="app-input-group" style={{ marginBottom: 0 }}>
-              <label className="app-label">Last Name</label>
-              <input
-                type="text"
-                value={expertProfileForm.lastname}
-                onChange={(e) => setExpertProfileForm(p => ({ ...p, lastname: e.target.value }))}
-                className="app-input"
-                style={{ fontSize: '16px' }}
-              />
-            </div>
-          </div>
-
-          <div className="app-input-group" style={{ marginBottom: 0 }}>
-            <label className="app-label">Phone Number</label>
-            <input
-              type="tel"
-              value={expertProfileForm.phone}
-              onChange={(e) => setExpertProfileForm(p => ({ ...p, phone: e.target.value }))}
-              className="app-input"
-              style={{ fontSize: '16px' }}
-            />
-          </div>
-
-          <div className="app-input-group" style={{ marginBottom: 0 }}>
-            <label className="app-label">Professional Title</label>
-            <input
-              type="text"
-              value={expertProfileForm.title}
-              onChange={(e) => setExpertProfileForm(p => ({ ...p, title: e.target.value }))}
-              className="app-input"
-              placeholder="e.g. Certified Lash Tech"
-              style={{ fontSize: '16px' }}
-            />
-          </div>
-
-          {/* Business Location */}
-          <div
-            style={{
-              background: 'rgba(245, 185, 66, 0.06)',
-              border: '1px solid rgba(245, 185, 66, 0.25)',
-              borderRadius: '16px',
-              padding: '0.85rem',
-            }}
-          >
-            <label
-              className="app-label"
-              style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#f5b942', fontWeight: 800, marginBottom: '0.75rem' }}
-            >
-              <MapPin size={14} />
-              Business Location
-            </label>
-            <p style={{ color: '#94a3b8', fontSize: '0.72rem', margin: '0 0 0.75rem', lineHeight: 1.4 }}>
-              This is used to match you with nearby customers. Choose your working area accurately.
-            </p>
-            <LocationSelector location={expertLocation} onChange={setExpertLocation} />
-          </div>
-
-          <div className="app-input-group" style={{ marginBottom: 0 }}>
-            <label className="app-label">Full Business Address</label>
-            <input
-              type="text"
-              value={expertProfileForm.businessAddress}
-              onChange={(e) => setExpertProfileForm(p => ({ ...p, businessAddress: e.target.value }))}
-              className="app-input"
-              placeholder="e.g. 23 Allen Avenue, Ikeja, Lagos"
-              style={{ fontSize: '16px' }}
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={savingProfile}
-            className="app-btn app-btn-accent"
-            style={{ minHeight: '48px', touchAction: 'manipulation', marginTop: '0.25rem' }}
-          >
-            {savingProfile ? 'Saving...' : 'Save Profile & Location'}
-          </button>
-        </form>
-      </BottomSheet>
 
       {/* ── Atelier Check-In Desk Scanner Modal ── */}
       <CheckInScannerModal

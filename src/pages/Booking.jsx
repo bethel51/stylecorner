@@ -247,7 +247,6 @@ export const Booking = () => {
   const [submitting, setSubmitting] = useState(false);
   const [isAiMatched, setIsAiMatched] = useState(Boolean(queryStylist && queryService));
   const [walletBalance, setWalletBalance] = useState(0);
-  const [showAllSpecialists, setShowAllSpecialists] = useState(false);
 
   const currentCategory = useMemo(() => {
     return getServiceCategory(selectedService);
@@ -259,10 +258,8 @@ export const Booking = () => {
   }, [specialistsList, currentCategory]);
 
   const displayedSpecialists = useMemo(() => {
-    if (showAllSpecialists) return specialistsList;
-    if (matchingSpecialists.length > 0) return matchingSpecialists;
-    return specialistsList;
-  }, [showAllSpecialists, matchingSpecialists, specialistsList]);
+    return matchingSpecialists;
+  }, [matchingSpecialists]);
 
   // Fetch wallet balance so we can gate booking before it's created
   useEffect(() => {
@@ -382,17 +379,22 @@ export const Booking = () => {
             }
           }
           if (!target && sorted.length > 0) {
-            // Find the best specialist matching the selected service first
+            // Find specialist strictly matching the selected service category
             const matchingSpec = sorted.find((m) => specialistMatchesService(m, currentCategory));
-            target = matchingSpec || sorted[0];
+            target = matchingSpec || null;
           }
 
           if (target) {
             setStylist(target.name);
             setSelectedSpecialist(target);
+          } else {
+            setStylist('');
+            setSelectedSpecialist(null);
           }
         } else {
           setSpecialistsList([]);
+          setStylist('');
+          setSelectedSpecialist(null);
         }
       })
       .catch(() => {
@@ -422,10 +424,13 @@ export const Booking = () => {
       selectedSpecialist && specialistMatchesService(selectedSpecialist, currentCategory);
 
     if (!isCurrentSpecialistValid) {
-      const best = matchingSpecialists.length > 0 ? matchingSpecialists[0] : specialistsList[0];
-      if (best && (!selectedSpecialist || String(selectedSpecialist.id) !== String(best.id))) {
+      if (matchingSpecialists.length > 0) {
+        const best = matchingSpecialists[0];
         setSelectedSpecialist(best);
         setStylist(best.name);
+      } else {
+        setSelectedSpecialist(null);
+        setStylist('');
       }
     }
   }, [currentCategory, matchingSpecialists, specialistsList, loadingSpecialists, queryStylist, queryStylistId]);
@@ -475,6 +480,16 @@ export const Booking = () => {
   const totalPrice = Math.max(0, rawTotalPrice - discountAmount);
 
   const handleNextStep = () => {
+    if (activeStep === 2) {
+      if (!selectedSpecialist || !stylist) {
+        showToast(`Please select a verified ${currentCategory || 'service'} specialist to continue.`, 'error');
+        return;
+      }
+      if (!specialistMatchesService(selectedSpecialist, currentCategory)) {
+        showToast(`Selected specialist does not offer ${currentCategory || selectedService}. Please select a verified specialist.`, 'error');
+        return;
+      }
+    }
     if (activeStep < 4) {
       setActiveStep((prev) => prev + 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -874,7 +889,6 @@ export const Booking = () => {
                     key={s.id}
                     onClick={() => {
                       setSelectedService(s.title);
-                      setShowAllSpecialists(false);
                     }}
                     style={{
                       background: '#151822',
@@ -985,7 +999,7 @@ export const Booking = () => {
                   </span>
                 </div>
                 <p style={{ color: '#94a3b8', fontSize: '0.78rem', margin: 0 }}>
-                  {!showAllSpecialists && matchingSpecialists.length > 0
+                  {matchingSpecialists.length > 0
                     ? `Showing verified ${currentCategory} artists for ${selectedService} (${matchingSpecialists.length} available)`
                     : user?.lga || user?.state
                     ? `Showing verified artists near you · ${user.lga || user.state}`
@@ -1016,107 +1030,100 @@ export const Booking = () => {
               </button>
             </div>
 
-            {/* Filter Toggle Pills: Focus on Selected Service vs All Specialists */}
-            {specialistsList.length > 0 && (
+            {/* Category Focus Indicator */}
+            {matchingSpecialists.length > 0 && (
               <div
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.5rem',
                   marginBottom: '1rem',
-                  overflowX: 'auto',
-                  paddingBottom: '0.25rem',
-                  scrollbarWidth: 'none',
                 }}
               >
-                <button
-                  type="button"
-                  onClick={() => setShowAllSpecialists(false)}
+                <div
                   style={{
                     padding: '0.38rem 0.85rem',
                     borderRadius: '20px',
                     fontFamily: 'Outfit, sans-serif',
                     fontSize: '0.74rem',
-                    fontWeight: !showAllSpecialists ? 800 : 600,
-                    cursor: 'pointer',
-                    background: !showAllSpecialists ? '#f5b942' : '#151822',
-                    color: !showAllSpecialists ? '#0c0e14' : '#94a3b8',
-                    border: `1.5px solid ${!showAllSpecialists ? '#f5b942' : 'rgba(255, 255, 255, 0.08)'}`,
-                    whiteSpace: 'nowrap',
+                    fontWeight: 800,
+                    background: '#f5b942',
+                    color: '#0c0e14',
+                    border: '1.5px solid #f5b942',
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '0.35rem',
-                    transition: 'all 0.18s ease',
                   }}
                 >
-                  <span>✦ {currentCategory} Only</span>
+                  <span>✦ Certified {currentCategory} Experts</span>
                   <span
                     style={{
                       fontSize: '0.66rem',
                       padding: '0.08rem 0.35rem',
                       borderRadius: '10px',
-                      background: !showAllSpecialists ? 'rgba(12,14,20,0.2)' : 'rgba(255,255,255,0.08)',
-                      color: !showAllSpecialists ? '#0c0e14' : '#64748b',
+                      background: 'rgba(12,14,20,0.2)',
+                      color: '#0c0e14',
                       fontWeight: 800,
                     }}
                   >
-                    {matchingSpecialists.length}
+                    {matchingSpecialists.length} available
                   </span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setShowAllSpecialists(true)}
-                  style={{
-                    padding: '0.38rem 0.85rem',
-                    borderRadius: '20px',
-                    fontFamily: 'Outfit, sans-serif',
-                    fontSize: '0.74rem',
-                    fontWeight: showAllSpecialists ? 800 : 600,
-                    cursor: 'pointer',
-                    background: showAllSpecialists ? '#f5b942' : '#151822',
-                    color: showAllSpecialists ? '#0c0e14' : '#94a3b8',
-                    border: `1.5px solid ${showAllSpecialists ? '#f5b942' : 'rgba(255, 255, 255, 0.08)'}`,
-                    whiteSpace: 'nowrap',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.35rem',
-                    transition: 'all 0.18s ease',
-                  }}
-                >
-                  <span>All Specialists</span>
-                  <span
-                    style={{
-                      fontSize: '0.66rem',
-                      padding: '0.08rem 0.35rem',
-                      borderRadius: '10px',
-                      background: showAllSpecialists ? 'rgba(12,14,20,0.2)' : 'rgba(255,255,255,0.08)',
-                      color: showAllSpecialists ? '#0c0e14' : '#64748b',
-                      fontWeight: 800,
-                    }}
-                  >
-                    {specialistsList.length}
-                  </span>
-                </button>
+                </div>
               </div>
             )}
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.5rem' }}>
               {displayedSpecialists.length === 0 ? (
-                <div style={{ textAlign: 'center', padding: '2.5rem 1rem', background: '#151822', borderRadius: '16px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
-                  <p style={{ color: '#94a3b8', fontSize: '0.85rem', margin: '0 0 0.85rem' }}>
+                <div style={{
+                  textAlign: 'center',
+                  padding: '2.5rem 1.25rem',
+                  background: '#151822',
+                  borderRadius: '20px',
+                  border: '1.5px dashed rgba(245, 185, 66, 0.3)',
+                  boxShadow: '0 8px 24px -10px rgba(0, 0, 0, 0.5)',
+                }}>
+                  <div style={{
+                    width: '56px',
+                    height: '56px',
+                    borderRadius: '50%',
+                    background: 'rgba(245, 185, 66, 0.12)',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#f5b942',
+                    marginBottom: '1rem',
+                  }}>
+                    <Scissors size={26} />
+                  </div>
+                  <h3 style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.45rem' }}>
+                    {loadingSpecialists ? 'Checking Specialist Availability…' : `No Verified ${currentCategory} Specialists Available`}
+                  </h3>
+                  <p style={{ color: '#94a3b8', fontSize: '0.84rem', margin: '0 auto 1.35rem', maxWidth: '380px', lineHeight: 1.5 }}>
                     {loadingSpecialists
-                      ? 'Loading verified specialists...'
-                      : `No verified ${currentCategory} artists found in your immediate location yet.`}
+                      ? 'Looking up licensed specialists matching this service...'
+                      : `Currently, no verified ${currentCategory} artists have registered or activated their profile yet. We are actively vetting new specialists. Please choose another service or check back soon!`}
                   </p>
-                  {!loadingSpecialists && specialistsList.length > 0 && (
+                  {!loadingSpecialists && (
                     <button
                       type="button"
-                      onClick={() => setShowAllSpecialists(true)}
-                      className="app-btn app-btn-ghost"
-                      style={{ fontSize: '0.8rem', padding: '0.45rem 1rem' }}
+                      onClick={() => setActiveStep(1)}
+                      style={{
+                        background: 'linear-gradient(135deg, #f5b942 0%, #e0a32d 100%)',
+                        color: '#0c0e14',
+                        border: 'none',
+                        borderRadius: '50px',
+                        padding: '0.6rem 1.4rem',
+                        fontFamily: 'Outfit',
+                        fontSize: '0.82rem',
+                        fontWeight: 800,
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.4rem',
+                        boxShadow: '0 4px 14px rgba(245, 185, 66, 0.3)',
+                      }}
                     >
-                      View All Atelier Specialists ({specialistsList.length})
+                      <ArrowLeft size={14} /> Choose Another Service
                     </button>
                   )}
                 </div>
@@ -1272,8 +1279,16 @@ export const Booking = () => {
               </button>
               <button
                 onClick={handleNextStep}
+                disabled={!selectedSpecialist || !specialistMatchesService(selectedSpecialist, currentCategory)}
                 className="app-btn app-btn-accent"
-                style={{ flex: 2, minHeight: '48px', borderRadius: '14px', touchAction: 'manipulation' }}
+                style={{
+                  flex: 2,
+                  minHeight: '48px',
+                  borderRadius: '14px',
+                  touchAction: 'manipulation',
+                  opacity: (!selectedSpecialist || !specialistMatchesService(selectedSpecialist, currentCategory)) ? 0.45 : 1,
+                  cursor: (!selectedSpecialist || !specialistMatchesService(selectedSpecialist, currentCategory)) ? 'not-allowed' : 'pointer',
+                }}
               >
                 <span>Next: Date & Time</span>
                 <ArrowRight size={18} />

@@ -270,8 +270,8 @@ export const Wallet = () => {
           <div
             role="button"
             tabIndex={0}
-            onClick={() => setShowTransactionsModal(true)}
-            onKeyDown={e => e.key === 'Enter' && setShowTransactionsModal(true)}
+            onClick={() => navigate('/wallet/transactions')}
+            onKeyDown={e => e.key === 'Enter' && navigate('/wallet/transactions')}
             style={{
               background: 'var(--color-surface)',
               borderRadius: '16px',

@@ -393,7 +393,13 @@ export const Profile = () => {
 
             {/* Reviews Counter -> Opens dedicated Reviews Modal */}
             <div
-              onClick={() => setShowReviewsModal(true)}
+              onClick={() => {
+                if (isStaff) {
+                  navigate('/expert/reviews');
+                } else {
+                  setShowReviewsModal(true);
+                }
+              }}
               style={{
                 borderLeft: '1px solid rgba(255, 255, 255, 0.08)',
                 borderRight: '1px solid rgba(255, 255, 255, 0.08)',

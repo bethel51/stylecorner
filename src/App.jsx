@@ -38,6 +38,17 @@ const routeLoaders = {
   '/ai-stylist-finder': () => import('./pages/AiStylistFinder'),
   '/wallet': () => import('./pages/Wallet'),
   '/notifications': () => import('./pages/Notifications'),
+  '/expert/reviews': () => import('./pages/ExpertReviewsPage'),
+  '/expert-reviews': () => import('./pages/ExpertReviewsPage'),
+  '/expert/transactions': () => import('./pages/ExpertTransactionsPage'),
+  '/wallet/transactions': () => import('./pages/ExpertTransactionsPage'),
+  '/expert/profile-edit': () => import('./pages/ExpertProfileEditPage'),
+  '/expert/portfolio': () => import('./pages/ExpertPortfolioPage'),
+  '/expert/lookbook': () => import('./pages/ExpertPortfolioPage'),
+  '/expert/appointments': () => import('./pages/ExpertAppointmentsPage'),
+  '/expert-appointments': () => import('./pages/ExpertAppointmentsPage'),
+  '/expert/chat': () => import('./pages/ExpertChatPage'),
+  '/expert-chat': () => import('./pages/ExpertChatPage'),
 };
 
 // Global helper to prefetch route JavaScript chunk on hover/touchstart
@@ -94,6 +105,12 @@ const Notifications = safeLazy(() => import('./pages/Notifications').then(m => (
 const AdminLogin = safeLazy(() => import('./pages/AdminLogin').then(m => ({ default: m.AdminLogin })));
 const AdminDashboard = safeLazy(() => import('./pages/AdminDashboard').then(m => ({ default: m.AdminDashboard })));
 const BillboardFlyersPage = safeLazy(() => import('./pages/BillboardFlyersPage').then(m => ({ default: m.BillboardFlyersPage || m.default })));
+const ExpertReviewsPage = safeLazy(() => import('./pages/ExpertReviewsPage').then(m => ({ default: m.ExpertReviewsPage || m.default })));
+const ExpertTransactionsPage = safeLazy(() => import('./pages/ExpertTransactionsPage').then(m => ({ default: m.ExpertTransactionsPage || m.default })));
+const ExpertProfileEditPage = safeLazy(() => import('./pages/ExpertProfileEditPage').then(m => ({ default: m.ExpertProfileEditPage || m.default })));
+const ExpertPortfolioPage = safeLazy(() => import('./pages/ExpertPortfolioPage').then(m => ({ default: m.ExpertPortfolioPage || m.default })));
+const ExpertAppointmentsPage = safeLazy(() => import('./pages/ExpertAppointmentsPage').then(m => ({ default: m.ExpertAppointmentsPage || m.default })));
+const ExpertChatPage = safeLazy(() => import('./pages/ExpertChatPage').then(m => ({ default: m.ExpertChatPage || m.default })));
 
 // High-Performance Smooth PageLoader (Theme Responsive & 60fps)
 export const PageLoader = () => (
@@ -307,6 +324,110 @@ export const App = () => {
                 element={
                   <ProtectedRoute requiredRole="staff">
                     <ExpertDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/expert/reviews"
+                element={
+                  <ProtectedRoute requiredRole="staff">
+                    <ExpertReviewsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/expert-reviews"
+                element={
+                  <ProtectedRoute requiredRole="staff">
+                    <ExpertReviewsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/expert/transactions"
+                element={
+                  <ProtectedRoute>
+                    <ExpertTransactionsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/wallet/transactions"
+                element={
+                  <ProtectedRoute>
+                    <ExpertTransactionsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/transactions"
+                element={
+                  <ProtectedRoute>
+                    <ExpertTransactionsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/expert/profile-edit"
+                element={
+                  <ProtectedRoute requiredRole="staff">
+                    <ExpertProfileEditPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/expert-edit-profile"
+                element={
+                  <ProtectedRoute requiredRole="staff">
+                    <ExpertProfileEditPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/expert/portfolio"
+                element={
+                  <ProtectedRoute requiredRole="staff">
+                    <ExpertPortfolioPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/expert/lookbook"
+                element={
+                  <ProtectedRoute requiredRole="staff">
+                    <ExpertPortfolioPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/expert/appointments"
+                element={
+                  <ProtectedRoute requiredRole="staff">
+                    <ExpertAppointmentsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/expert-appointments"
+                element={
+                  <ProtectedRoute requiredRole="staff">
+                    <ExpertAppointmentsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/expert/chat"
+                element={
+                  <ProtectedRoute requiredRole="staff">
+                    <ExpertChatPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/expert-chat"
+                element={
+                  <ProtectedRoute requiredRole="staff">
+                    <ExpertChatPage />
                   </ProtectedRoute>
                 }
               />
