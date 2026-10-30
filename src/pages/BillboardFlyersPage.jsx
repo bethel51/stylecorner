@@ -1,114 +1,30 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Check, Copy, Loader, Maximize, Minimize, X, FileDown, Image as ImageIcon } from 'lucide-react';
+import { ArrowLeft, Check, Copy, Maximize, Minimize, X, FileDown, Image as ImageIcon } from 'lucide-react';
 import { QrWorldSvg, QrRecruitSvg } from '../components/common/QrCodeSvgs';
 import { downloadElementAsPdf, downloadMultipleElementsAsPdf, downloadElementAsImage } from '../utils/flyerPdfExport';
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   NEW 3-PHONE SHOWCASE FLYERS (Based on Hand-Held Phone Reference)
-   - Flyer 1: Customer (Girl 1)
-   - Flyer 2: Expert Recruit (Boy)
-   - Flyer 3: Customer VIP Glam (Girl 2)
-───────────────────────────────────────────────────────────────────────────── */
-export const PHONE_SHOWCASE_FLYERS = [
-  {
-    id: 'showcase-customer-girl',
-    tabLabel: '👱‍♀️ Customer 1 (Girl)',
-    badgeTop: 'STYLECORNER NIGERIA',
-    badgeSub: 'LAGOS & IBADAN',
-    headlineWhite: 'Get Every Beauty Service You Need',
-    headlineGold: 'From One Place.',
-    description: "StyleCorner connects you with verified top-rated braiders, lash techs, nail artists & precision barbers near you in Lagos & Ibadan.",
-    characterType: 'girl-1',
-    floatingPillsLeft: ['+ Knotless Braids', '+ Precision Fade', '+ Gel Nail Art', '+ 100% Escrow'],
-    floatingPillsRight: ['+ Wispy Lash Ext.', '+ Soft Glam Makeup', '+ Frontal Lace Melt', '+ In-Salon / VIP Home'],
-    calloutText: 'Join Us Now!! ✨',
-    trustPoints: [
-      { icon: '🛡️', text: '100% Escrow Protected' },
-      { icon: '⭐', text: '4.9 ★ Community Rated' },
-      { icon: '📍', text: 'Lagos & Ibadan' },
-    ],
-    cardTitle: '⚡ INSTANT MOBILE BOOKING',
-    cardScanText: 'SCAN WITH CAMERA',
-    cardSubText: 'Point phone camera to join ·',
-    cardUrl: 'www.stylecorner.world',
-    fullUrl: 'https://www.stylecorner.world',
-    qrType: 'world',
-    accentGold: '#F5B942',
-  },
-  {
-    id: 'showcase-expert-boy',
-    tabLabel: '✂️ Expert Recruit (Boy)',
-    badgeTop: 'STYLECORNER PRO',
-    badgeSub: 'EXPERT ONBOARDING',
-    headlineWhite: 'Get Verified Paying Clients',
-    headlineGold: 'Direct To Your Phone.',
-    description: "Join Nigeria's fastest growing beauty network. Direct verified paying clients, instant wallet payouts to your bank & zero registration fees.",
-    characterType: 'boy-1',
-    floatingPillsLeft: ['+ ₦15k–₦60k+ Daily', '+ 0% Registration Fee', '+ Instant Bank Payouts', '+ Free Pro Profile'],
-    floatingPillsRight: ['+ AI Client Matching', '+ QR Business Card', '+ Salon Seat Host', '+ Escrow Guaranteed Pay'],
-    calloutText: 'Start Earning Today!! 💰',
-    trustPoints: [
-      { icon: '💰', text: '₦15k–₦60k+ Daily Earnings' },
-      { icon: '🛡️', text: 'Escrow Protected Payouts' },
-      { icon: '📍', text: 'Lagos & Ibadan LGAs' },
-    ],
-    cardTitle: '✂️ EXPERT REGISTRATION',
-    cardScanText: 'SCAN TO JOIN AS EXPERT',
-    cardSubText: 'Scan to apply — zero fees ·',
-    cardUrl: 'stylecorner.world/role-selection',
-    fullUrl: 'https://www.stylecorner.world/role-selection',
-    qrType: 'recruit',
-    accentGold: '#F5B942',
-  },
-  {
-    id: 'showcase-vip-girl',
-    tabLabel: '✨ VIP Glam (Girl)',
-    badgeTop: 'STYLECORNER VIP',
-    badgeSub: 'AT-HOME LUXURY GLAM',
-    headlineWhite: 'Skip Lagos Traffic. Bring The Salon',
-    headlineGold: 'To Your Living Room.',
-    description: "Book verified 5-star beauty experts for VIP mobile home visits or luxury salon appointments in AC comfort across Lagos & Ibadan.",
-    characterType: 'girl-2',
-    floatingPillsLeft: ['+ 100% AC Comfort', '+ Zero Lagos Traffic', '+ Vetted Beauty Techs', '+ 100% Escrow Vault'],
-    floatingPillsRight: ['+ Frontals & Braids', '+ Luxury Nail Care', '+ VIP Home Fades', '+ 30-Second Booking'],
-    calloutText: 'Experience VIP Glam!! 🏡',
-    trustPoints: [
-      { icon: '🏡', text: 'In-Home VIP Convenience' },
-      { icon: '⭐', text: '4.9 ★ Verified Reviews' },
-      { icon: '📍', text: 'Lekki · Ikeja · Ikoyi · Bodija' },
-    ],
-    cardTitle: '✨ VIP AT-HOME BOOKING',
-    cardScanText: 'SCAN FOR VIP HOME VISIT',
-    cardSubText: 'Scan to schedule home visit ·',
-    cardUrl: 'www.stylecorner.world',
-    fullUrl: 'https://www.stylecorner.world',
-    qrType: 'world',
-    accentGold: '#F5B942',
-  },
-];
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   ROLE CONFIGURATIONS — Premium Black + Gold Cinematic Flyer (Reference Layout)
-───────────────────────────────────────────────────────────────────────────── */
+   ROLE CONFIGURATIONS — Premium Black + Gold Cinematic Billboard Flyers
+   ───────────────────────────────────────────────────────────────────────────── */
 const FLYER_ROLES = [
   {
     id: 'billboard',
-    tabLabel: '📋 Customer Booking',
+    tabLabel: '✨ Customer Booking',
     badgeTop: 'STYLECORNER NIGERIA',
     badgeSub: 'LAGOS & IBADAN',
     headlineWhite: 'Book Verified Stylists, Barbers & Braiders.',
     headlineGold: 'In Seconds.',
     description: "Lagos & Ibadan's premier beauty network. AI matches you with top-rated barbers, braiders, lash techs & nail artists near you. In-salon or VIP home visits.",
-    tags: ['+ Hair Braiders', '+ Precision Barbers', '+ Lash Techs', '+ Nail Art', '+ Soft Glam Makeup', '+ Wig Frontal Install'],
+    tags: ['+ Knotless Braids', '+ Precision Barbers', '+ Wispy Lash Techs', '+ Gel Nail Art', '+ Soft Glam Makeup', '+ Frontal Lace Melt'],
     trustPoints: [
       { icon: '🛡️', text: '100% Escrow Protected' },
-      { icon: '⭐', text: '4.9 ★ Community Rated' },
+      { icon: '⭐', text: '4.9 Community Rated' },
       { icon: '📍', text: 'Lagos & Ibadan' },
     ],
-    cardTitle: '⚡ INSTANT MOBILE BOOKING',
+    cardTitle: '📱 INSTANT MOBILE BOOKING',
     cardScanText: 'SCAN WITH CAMERA',
-    cardSubText: 'Point phone camera to join ·',
+    cardSubText: 'Point phone camera to join →',
     cardUrl: 'www.stylecorner.world',
     fullUrl: 'https://www.stylecorner.world',
     qrType: 'world',
@@ -116,21 +32,21 @@ const FLYER_ROLES = [
   },
   {
     id: 'recruit',
-    tabLabel: '✂️ Expert Recruit',
+    tabLabel: '💼 Expert Recruit',
     badgeTop: 'STYLECORNER PRO',
     badgeSub: 'EXPERT ONBOARDING',
     headlineWhite: 'Are You a Barber, Braider or Lash Tech?',
     headlineGold: 'Get Booked. Get Paid.',
     description: "Join Nigeria's fastest growing verified beauty platform. Direct verified paying clients, instant wallet payouts to your bank & zero registration fees.",
-    tags: ['+ Instant Wallet Payouts', '+ Free Pro Profile', '+ AI Client Matching', '+ QR Business Card', '+ VIP Home Bookings', '+ Salon Seat Host'],
+    tags: ['+ Instant Bank Payouts', '+ Free Pro Profile', '+ AI Client Matching', '+ QR Business Card', '+ VIP Home Bookings', '+ Salon Seat Host'],
     trustPoints: [
       { icon: '💰', text: '₦15k–₦60k+ Daily Earnings' },
       { icon: '🛡️', text: 'Escrow Protected Payouts' },
       { icon: '📍', text: 'Lagos & Ibadan LGAs' },
     ],
-    cardTitle: '✂️ EXPERT REGISTRATION',
+    cardTitle: '💼 EXPERT REGISTRATION',
     cardScanText: 'SCAN TO JOIN AS EXPERT',
-    cardSubText: 'Scan to apply — zero fees ·',
+    cardSubText: 'Scan to apply — zero fees →',
     cardUrl: 'stylecorner.world/role-selection',
     fullUrl: 'https://www.stylecorner.world/role-selection',
     qrType: 'recruit',
@@ -147,12 +63,12 @@ const FLYER_ROLES = [
     tags: ['+ Edge Control Gel', '+ Scalp Growth Oil', '+ Fade Clipper Kit', '+ Lash Care Serum', '+ Frontal Lace Glue', '+ Sulfate-Free Shampoo'],
     trustPoints: [
       { icon: '🚚', text: 'Express Nationwide Delivery' },
-      { icon: '✨', text: '100% Authentic Guaranteed' },
+      { icon: '✅', text: '100% Authentic Guaranteed' },
       { icon: '💳', text: 'Secure Paystack Escrow' },
     ],
     cardTitle: '🛍️ ATELIER STORE',
     cardScanText: 'SCAN TO SHOP PRODUCTS',
-    cardSubText: 'Scan to browse & order ·',
+    cardSubText: 'Scan to browse & order →',
     cardUrl: 'www.stylecorner.world/store',
     fullUrl: 'https://www.stylecorner.world/store',
     qrType: 'world',
@@ -169,12 +85,12 @@ const FLYER_ROLES = [
     tags: ['+ 10-Second Match', '+ Budget Filter', '+ Neighborhood Match', '+ Verified Portfolio', '+ In-Salon / Home Visit', '+ Escrow Protection'],
     trustPoints: [
       { icon: '🤖', text: 'Smart AI Concierge' },
-      { icon: '⭐', text: '4.9 ★ Verified Reviews' },
+      { icon: '⭐', text: '4.9 Verified Reviews' },
       { icon: '🛡️', text: 'Escrow Protected' },
     ],
     cardTitle: '🤖 AI STYLIST MATCHER',
     cardScanText: 'SCAN TO MATCH NOW',
-    cardSubText: 'Scan for instant AI match ·',
+    cardSubText: 'Scan for instant AI match →',
     cardUrl: 'www.stylecorner.world/ai-matcher',
     fullUrl: 'https://www.stylecorner.world/ai-matcher',
     qrType: 'world',
@@ -206,7 +122,7 @@ export const BillboardFlyersPage = () => {
   const [savingPdf, setSavingPdf] = useState(false);
   const [isCssFullscreen, setIsCssFullscreen] = useState(false);
 
-  // Dynamic ref map for all flyer cards across both styles
+  // Dynamic ref map for all flyer cards
   const flyerRefs = useRef({});
   FLYER_ROLES.forEach(r => {
     if (!flyerRefs.current[r.id]) {
@@ -257,9 +173,7 @@ export const BillboardFlyersPage = () => {
     }
   }, [location.search, location.hash]);
 
-  /* ─────────────────────────────────────────────────────────────────
-     saveToPdf — Direct real PDF download without print dialog
-  ───────────────────────────────────────────────────────────────── */
+  /* ── saveToPdf — Direct real PDF download without print dialog ── */
   const saveToPdf = async (designType) => {
     const target = designType || activeDesign;
     setSavingPdf(true);
@@ -295,9 +209,20 @@ export const BillboardFlyersPage = () => {
   const saveToImage = async (designType) => {
     const target = designType || activeDesign;
     try {
-      const el = flyerRefs.current[target]?.current || document.querySelector(`.print-card[data-design="${target}"]`);
-      if (!el) return;
-      await downloadElementAsImage(el, `StyleCorner_${target.toUpperCase()}_Flyer.png`);
+      if (target === 'all') {
+        for (const role of FLYER_ROLES) {
+          const el = flyerRefs.current[role.id]?.current;
+          if (el) {
+            await downloadElementAsImage(el, `StyleCorner_${role.id.toUpperCase()}_Flyer.png`);
+            await new Promise(r => setTimeout(r, 600));
+          }
+        }
+      } else {
+        const el = flyerRefs.current[target]?.current;
+        if (el) {
+          await downloadElementAsImage(el, `StyleCorner_${target.toUpperCase()}_Flyer.png`);
+        }
+      }
     } catch (err) {
       console.error('Image export failed:', err);
     }
@@ -315,7 +240,7 @@ export const BillboardFlyersPage = () => {
   );
   const isFullscreen = isCssFullscreen || isNativeFullscreen;
 
-  const currentRolesList = FLYER_ROLES; // always show classic billboard flyers
+  const currentRolesList = FLYER_ROLES;
   const visibleRoles = activeDesign === 'all'
     ? currentRolesList
     : currentRolesList.filter(r => r.id === activeDesign);
@@ -444,8 +369,6 @@ export const BillboardFlyersPage = () => {
             <ArrowLeft size={16} />
           </button>
 
-
-
           {/* All tab */}
           <button
             type="button"
@@ -513,30 +436,27 @@ export const BillboardFlyersPage = () => {
               flexShrink: 0,
             }}
           >
-            {savingPdf
-              ? <><Loader size={13} style={{ animation: 'spin 1s linear infinite' }} /> Saving PDF…</>
-              : <><FileDown size={13} /> Save as PDF</>
-            }
+            <FileDown size={13} />
+            {savingPdf ? 'Exporting PDF...' : 'Save as PDF'}
           </button>
 
-          {/* Download Image (PNG) */}
+          {/* Save Image */}
           <button
             type="button"
-            onClick={() => saveToImage(activeDesign === 'all' ? 'billboard' : activeDesign)}
-            disabled={savingPdf}
+            onClick={() => saveToImage(activeDesign)}
             style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.08)',
-              color: '#cbd5e1',
-              border: '1px solid rgba(255, 255, 255, 0.15)',
+              backgroundColor: 'rgba(255,255,255,0.08)',
+              color: '#ffffff',
+              border: '1px solid rgba(255,255,255,0.15)',
               borderRadius: '50px',
               padding: '0.35rem 0.8rem',
               fontSize: '0.72rem',
               fontWeight: 700,
               cursor: 'pointer',
+              whiteSpace: 'nowrap',
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.3rem',
-              whiteSpace: 'nowrap',
               flexShrink: 0,
             }}
           >
@@ -585,7 +505,7 @@ export const BillboardFlyersPage = () => {
               flexShrink: 0,
             }}
           >
-            📷 Clean View
+            👁️ Clean View
           </button>
         </div>
       )}
@@ -603,7 +523,7 @@ export const BillboardFlyersPage = () => {
             fontSize: '0.78rem', fontWeight: 800, cursor: 'pointer', zIndex: 9999,
           }}
         >
-          📷 Tap anywhere to restore controls
+          👁️ Tap anywhere to restore controls
         </div>
       )}
 
@@ -655,9 +575,9 @@ export const BillboardFlyersPage = () => {
 
             {/* Classic Billboard Flyer Card */}
             <div
-                ref={flyerRefs.current[role.id]}
-                className="print-card"
-                data-design={role.id}
+              ref={flyerRefs.current[role.id]}
+              className="print-card"
+              data-design={role.id}
               style={{
                 width: '100%',
                 backgroundColor: '#09090b',
@@ -678,7 +598,7 @@ export const BillboardFlyersPage = () => {
               {/* BOTTOM gold accent line */}
               <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '3.5px', background: 'linear-gradient(90deg, #F5B942, #c8930a, #F5B942)', zIndex: 10 }} />
 
-              {/* ─── GIANT GOLD ORGANIC BLOB (top-right, rounded, just like reference) ─── */}
+              {/* GIANT GOLD ORGANIC BLOB */}
               <div
                 className="flyer-gold-blob"
                 style={{
@@ -702,7 +622,7 @@ export const BillboardFlyersPage = () => {
                 zIndex: 1, pointerEvents: 'none',
               }} />
 
-              {/* ─── FLYER BODY CONTENT ─── */}
+              {/* FLYER BODY CONTENT */}
               <div style={{
                 position: 'relative',
                 zIndex: 2,
@@ -710,7 +630,7 @@ export const BillboardFlyersPage = () => {
                 boxSizing: 'border-box',
               }}>
 
-                {/* ─── TOP-LEFT PILL BADGE WITH STYLECORNER SQUARE LOGO ─── */}
+                {/* TOP-LEFT PILL BADGE WITH STYLECORNER SQUARE LOGO */}
                 <div style={{
                   display: 'inline-flex',
                   alignItems: 'center',
@@ -764,7 +684,7 @@ export const BillboardFlyersPage = () => {
                   </div>
                 </div>
 
-                {/* ─── MAIN CONTENT GRID: Left Info & Right QR Card ─── */}
+                {/* MAIN CONTENT GRID: Left Info & Right QR Card */}
                 <div
                   className="flyer-content-grid"
                   style={{
@@ -774,7 +694,7 @@ export const BillboardFlyersPage = () => {
                     justifyContent: 'space-between',
                   }}
                 >
-                  {/* ─── LEFT COLUMN: Headlines, Description, Tags, Trust ─── */}
+                  {/* LEFT COLUMN: Headlines, Description, Tags, Trust */}
                   <div style={{ flex: 1, minWidth: 0 }}>
 
                     {/* Big Bold White Headline */}
@@ -867,7 +787,7 @@ export const BillboardFlyersPage = () => {
                     </div>
                   </div>
 
-                  {/* ─── RIGHT COLUMN: Floating QR Card (sits over the gold curve) ─── */}
+                  {/* RIGHT COLUMN: Floating QR Card */}
                   <div
                     className="flyer-qr-card"
                     style={{
@@ -899,7 +819,7 @@ export const BillboardFlyersPage = () => {
                       {role.cardTitle}
                     </div>
 
-                    {/* QR Code — White card container matching reference */}
+                    {/* QR Code Container */}
                     <div style={{
                       backgroundColor: '#ffffff',
                       borderRadius: '14px',
@@ -946,7 +866,7 @@ export const BillboardFlyersPage = () => {
                   </div>
                 </div>
 
-                {/* ─── Bottom Action Buttons (hidden when printing / PDF) ─── */}
+                {/* Bottom Action Buttons */}
                 <div
                   className="no-print"
                   style={{
