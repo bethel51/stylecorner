@@ -45,7 +45,6 @@ import { PopupModal } from '../components/common/PopupModal';
 import { WithdrawFundsModal } from '../components/common/WithdrawFundsModal';
 import { ImagePreviewModal } from '../components/common/ImagePreviewModal';
 import { Avatar } from '../components/common/Avatar';
-import { OrderTrackingSheet } from '../components/store/OrderTrackingSheet';
 import { LocationSelector } from '../components/store/LocationSelector';
 import { downloadBookingHistoryCSV, printBookingHistoryReport } from '../utils/bookingHistoryExport';
 import { OptimizedImage } from '../components/common/OptimizedImage';
@@ -70,7 +69,6 @@ export const CustomerDashboard = () => {
   const [showHistorySheet, setShowHistorySheet] = useState(false);
   const [showActivitySheet, setShowActivitySheet] = useState(false);
 
-  const [selectedOrderForTracking, setSelectedOrderForTracking] = useState(null);
   const [showProfileSheet, setShowProfileSheet] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEnlargedAvatar, setShowEnlargedAvatar] = useState(false);
@@ -998,7 +996,7 @@ export const CustomerDashboard = () => {
                 sub: 'Order status & items',
                 iconColor: '#38bdf8',
                 action: () => {
-                  if (orders.length > 0) setSelectedOrderForTracking(orders[0]);
+                  if (orders.length > 0) navigate(`/order-tracking/${orders[0]._id}`);
                   else { showToast('No active orders. Visit the store first.', 'accent'); navigate('/store'); }
                 },
               },
@@ -1466,7 +1464,7 @@ export const CustomerDashboard = () => {
                       </div>
                       <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '0.55rem', display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                         <button
-                          onClick={() => { setShowHistorySheet(false); setSelectedOrderForTracking(o); }}
+                          onClick={() => { setShowHistorySheet(false); navigate(`/order-tracking/${o._id}`); }}
                           className="app-btn app-btn-accent"
                           style={{ flex: 1, minHeight: '44px', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' }}
                         >
@@ -1661,17 +1659,6 @@ export const CustomerDashboard = () => {
 
       {/* Avatar Full Size */}
       <ImagePreviewModal isOpen={showEnlargedAvatar} onClose={() => setShowEnlargedAvatar(false)} imageUrl={user?.avatarUrl} title={`${user?.firstname || 'User'}'s Profile Picture`} />
-
-      {/* Order Tracking */}
-      <OrderTrackingSheet
-        isOpen={!!selectedOrderForTracking}
-        onClose={() => setSelectedOrderForTracking(null)}
-        order={selectedOrderForTracking}
-        onOrderUpdated={(updated) => {
-          setOrders(prev => prev.map(o => o._id === updated._id ? updated : o));
-          setSelectedOrderForTracking(updated);
-        }}
-      />
 
       {/* Rate & Review Specialist Sheet */}
       <BottomSheet

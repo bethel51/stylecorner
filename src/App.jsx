@@ -49,6 +49,7 @@ const routeLoaders = {
   '/expert-appointments': () => import('./pages/ExpertAppointmentsPage'),
   '/expert/chat': () => import('./pages/ExpertChatPage'),
   '/expert-chat': () => import('./pages/ExpertChatPage'),
+  '/order-tracking': () => import('./pages/OrderTrackingPage'),
 };
 
 // Global helper to prefetch route JavaScript chunk on hover/touchstart
@@ -111,6 +112,7 @@ const ExpertProfileEditPage = safeLazy(() => import('./pages/ExpertProfileEditPa
 const ExpertPortfolioPage = safeLazy(() => import('./pages/ExpertPortfolioPage').then(m => ({ default: m.ExpertPortfolioPage || m.default })));
 const ExpertAppointmentsPage = safeLazy(() => import('./pages/ExpertAppointmentsPage').then(m => ({ default: m.ExpertAppointmentsPage || m.default })));
 const ExpertChatPage = safeLazy(() => import('./pages/ExpertChatPage').then(m => ({ default: m.ExpertChatPage || m.default })));
+const OrderTrackingPage = safeLazy(() => import('./pages/OrderTrackingPage').then(m => ({ default: m.OrderTrackingPage || m.default })));
 
 // High-Performance Smooth PageLoader (Theme Responsive & 60fps)
 export const PageLoader = () => (
@@ -428,6 +430,16 @@ export const App = () => {
                 element={
                   <ProtectedRoute requiredRole="staff">
                     <ExpertChatPage />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Order Tracking Standalone Route */}
+              <Route
+                path="/order-tracking/:orderId"
+                element={
+                  <ProtectedRoute>
+                    <OrderTrackingPage />
                   </ProtectedRoute>
                 }
               />

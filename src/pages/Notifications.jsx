@@ -92,20 +92,41 @@ export const Notifications = () => {
       } catch (e) {}
     }
 
+    const isExpert = user?.role === 'staff' || user?.role === 'expert';
+    const isAdmin = user?.role === 'admin';
+
+    // Message-type notifications → go to chat
+    if (n.type === 'message' && n.bookingId) {
+      if (isExpert) {
+        navigate(`/expert/chat?bookingId=${n.bookingId}`);
+      } else if (isAdmin) {
+        navigate('/admin');
+      } else {
+        navigate('/customer-dashboard');
+      }
+      return;
+    }
+
+    // Booking-type notifications → go to appointments page
     if (n.bookingId) {
-      if (user?.role === 'staff' || user?.role === 'expert') {
-        navigate('/expert-profile');
-      } else if (user?.role === 'admin') {
+      if (isExpert) {
+        navigate(`/expert/appointments?bookingId=${n.bookingId}`);
+      } else if (isAdmin) {
         navigate('/admin');
       } else {
-        navigate('/customer-dashboard');
+        navigate('/my-bookings');
       }
-    } else if (n.orderId) {
-      if (user?.role === 'admin') {
+      return;
+    }
+
+    // Order-type notifications → go to order tracking page
+    if (n.orderId) {
+      if (isAdmin) {
         navigate('/admin');
       } else {
-        navigate('/customer-dashboard');
+        navigate(`/order-tracking/${n.orderId}`);
       }
+      return;
     }
   };
 
