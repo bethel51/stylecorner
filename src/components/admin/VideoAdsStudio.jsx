@@ -403,17 +403,24 @@ export function drawStyleCornerLogo(ctx, cx, cy, size, { hasHalo = true, withTex
   ctx.fill();
   ctx.stroke();
 
-  // 3. Inner golden rounded circle/squircle
+  // 3. Inner golden rounded circle/squircle with 24K metallic luster
   const goldSize = sqSize * 0.68;
   const gx = cx - goldSize / 2;
   const gy = cy - goldSize / 2;
   const goldGrad = ctx.createLinearGradient(gx, gy, gx + goldSize, gy + goldSize);
-  goldGrad.addColorStop(0, '#f9c85d');
-  goldGrad.addColorStop(1, '#c8930a');
+  goldGrad.addColorStop(0, '#FFF3C4');
+  goldGrad.addColorStop(0.25, '#F5B942');
+  goldGrad.addColorStop(0.75, '#C8930A');
+  goldGrad.addColorStop(1, '#8C6000');
   ctx.fillStyle = goldGrad;
   ctx.beginPath();
   ctx.roundRect(gx, gy, goldSize, goldSize, goldSize * 0.26);
   ctx.fill();
+
+  // Subtle bevel edge reflection
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
 
   // 4. Center dark square cutout (iconic StyleCorner square)
   const cutSize = goldSize * 0.44;
@@ -423,6 +430,11 @@ export function drawStyleCornerLogo(ctx, cx, cy, size, { hasHalo = true, withTex
   ctx.beginPath();
   ctx.roundRect(cutX, cutY, cutSize, cutSize, cutSize * 0.22);
   ctx.fill();
+
+  // Fine gold hairline border on square cutout
+  ctx.strokeStyle = 'rgba(245, 185, 66, 0.5)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
 
   // 5. Optional brand typography beside or below logo
   if (withText) {
@@ -436,6 +448,36 @@ export function drawStyleCornerLogo(ctx, cx, cy, size, { hasHalo = true, withTex
     ctx.fillText('ATELIER GROOMING & STYLING', cx, cy + size * 0.94);
   }
 
+  ctx.restore();
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   CINEMATIC SPECULAR STAR GLINT (FOR METALLIC GOLD & RAZOR LINEUPS)
+───────────────────────────────────────────────────────────────────────────── */
+export function drawStarGlint(ctx, x, y, radius, color = '#ffffff') {
+  ctx.save();
+  ctx.fillStyle = color;
+  ctx.shadowColor = '#F5B942';
+  ctx.shadowBlur = 10;
+  ctx.beginPath();
+  ctx.arc(x, y, radius * 0.45, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.3;
+  ctx.beginPath();
+  ctx.moveTo(x - radius, y); ctx.lineTo(x + radius, y);
+  ctx.moveTo(x, y - radius); ctx.lineTo(x, y + radius);
+  ctx.stroke();
+
+  // Subtle 45-degree diagonal glint rays
+  ctx.strokeStyle = 'rgba(245, 185, 66, 0.75)';
+  ctx.lineWidth = 0.9;
+  const diag = radius * 0.65;
+  ctx.beginPath();
+  ctx.moveTo(x - diag, y - diag); ctx.lineTo(x + diag, y + diag);
+  ctx.moveTo(x - diag, y + diag); ctx.lineTo(x + diag, y - diag);
+  ctx.stroke();
   ctx.restore();
 }
 
@@ -591,19 +633,12 @@ function drawAnimatedBarberScene(ctx, W, H, ad, t, isVertical, color) {
       ctx.fill();
     }
 
-    // Razor Sharp Hairline Glint (Gold light traversing across the edge)
+    // Razor Sharp Hairline Glint (Specular Gold & White Flare)
     if (t >= 0.35) {
       const glintPos = ((t * 2.5) % 1);
       const gx = clientHeadX - 25 + glintPos * 50;
       const gy = clientHeadY - 26;
-      ctx.save();
-      ctx.fillStyle = '#F5B942';
-      ctx.shadowColor = '#F5B942';
-      ctx.shadowBlur = 12;
-      ctx.beginPath();
-      ctx.arc(gx, gy, 3, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
+      drawStarGlint(ctx, gx, gy, 8, '#ffffff');
     }
     ctx.restore();
 
@@ -896,13 +931,14 @@ function drawAnimatedBraiderScene(ctx, W, H, ad, t, isVertical, color) {
       ctx.lineWidth = 1.5;
       ctx.stroke();
 
-      // Gold Hair Cuff
+      // Specular 24K Gold Hair Cuff with Star Glint
       const cuffX = sx + sway * 0.6;
       const cuffY = sy + b.cuffY;
       ctx.fillStyle = '#F5B942';
-      ctx.shadowColor = '#F5B942';
-      ctx.shadowBlur = 8;
-      ctx.fillRect(cuffX - 3, cuffY, 6, 5);
+      ctx.beginPath();
+      ctx.roundRect(cuffX - 3.5, cuffY - 1, 7, 6, 2);
+      ctx.fill();
+      drawStarGlint(ctx, cuffX, cuffY + 2, 5, '#FFF2B2');
       ctx.restore();
     });
     ctx.restore();
@@ -1036,6 +1072,12 @@ function drawMasterCinematicCommercial(ctx, W, H, ad, t, isVertical, color) {
   const cx = W / 2;
   const cy = H / 2;
 
+  // Subtle continuous camera drift (cinematic handheld feel)
+  const driftX = Math.sin(t * Math.PI * 3.7) * (W * 0.004);
+  const driftY = Math.cos(t * Math.PI * 2.9) * (H * 0.003);
+  ctx.save();
+  ctx.translate(driftX, driftY);
+
   // 1. Deepest Obsidian Anamorphic Canvas
   ctx.fillStyle = '#06070a';
   ctx.fillRect(0, 0, W, H);
@@ -1074,15 +1116,32 @@ function drawMasterCinematicCommercial(ctx, W, H, ad, t, isVertical, color) {
   ctx.moveTo(0, H - barH); ctx.lineTo(W, H - barH);
   ctx.stroke();
 
-  // 5. Film Director Metadata Overlay (Top Bar)
+  // 5. Film Director Metadata Overlay (Top Bar) with Broadcast Telemetry
   ctx.save();
+
+  // Blinking REC dot
+  const recVisible = Math.floor(t * 3) % 2 === 0;
+  if (recVisible) {
+    ctx.fillStyle = '#ff3131';
+    ctx.shadowColor = '#ff3131';
+    ctx.shadowBlur = 8;
+    ctx.beginPath();
+    ctx.arc(20, barH - 14, 4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '700 9px Outfit, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('REC', 30, barH - 10);
+  }
+
   ctx.font = '800 11px Outfit, sans-serif';
   ctx.fillStyle = '#F5B942';
   ctx.textAlign = 'left';
-  ctx.fillText('✦ STYLECORNER CINEMATIC FILM', 20, barH - 12);
+  ctx.fillText('✦ STYLECORNER CINEMATIC FILM', 58, barH - 12);
   ctx.textAlign = 'right';
   ctx.fillStyle = '#a1a1aa';
-  ctx.fillText('LAGOS & IBADAN · 4K 60FPS', W - 20, barH - 12);
+  ctx.fillText('4K UHD 60FPS · LAGOS & IBADAN', W - 20, barH - 12);
   ctx.restore();
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -1648,6 +1707,9 @@ function drawMasterCinematicCommercial(ctx, W, H, ad, t, isVertical, color) {
   ctx.fillRect(0, H - 4, W, 4);
   ctx.fillStyle = '#F5B942';
   ctx.fillRect(0, H - 4, W * t, 4);
+
+  // End cinematic drift transform
+  ctx.restore();
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -2388,8 +2450,8 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
 export const generateAndDownloadVideo = async (ad, onProgress) => {
   return new Promise(async (resolve, reject) => {
     const isVertical = ad.aspectRatio === '9:16';
-    const W = isVertical ? 720 : 1280;
-    const H = isVertical ? 1280 : 720;
+    const W = isVertical ? 1080 : 1920;
+    const H = isVertical ? 1920 : 1080;
 
     const canvas = document.createElement('canvas');
     canvas.width = W;
@@ -2438,7 +2500,7 @@ export const generateAndDownloadVideo = async (ad, onProgress) => {
 
       const recorder = new MediaRecorder(stream, {
         mimeType: selectedMime,
-        videoBitsPerSecond: 4_500_000,
+        videoBitsPerSecond: 12_000_000,
       });
       const chunks = [];
       recorder.ondataavailable = (e) => {
@@ -2496,6 +2558,8 @@ export const generateAndDownloadVideo = async (ad, onProgress) => {
           recorder.stop();
           return;
         }
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
         renderCommercialFrame(ctx, W, H, ad, frame / TOTAL_FRAMES);
         frame++;
         if (onProgress) onProgress(Math.round((frame / TOTAL_FRAMES) * 100));
@@ -2631,6 +2695,8 @@ const VideoAdPlayerModal = ({ ad, onClose, onDownload, isDownloading }) => {
       }
 
       setCurrentTime(elapsed);
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
       renderCommercialFrame(ctx, canvas.width, canvas.height, ad, elapsed / duration);
       animFrameRef.current = requestAnimationFrame(tick);
     };
@@ -2822,8 +2888,8 @@ const VideoAdPlayerModal = ({ ad, onClose, onDownload, isDownloading }) => {
         >
           <canvas
             ref={canvasRef}
-            width={isVertical ? 540 : 960}
-            height={isVertical ? 960 : 540}
+            width={isVertical ? 720 : 1280}
+            height={isVertical ? 1280 : 720}
             style={{
               width: '100%',
               maxHeight: isVertical ? '58vh' : '48vh',

@@ -5,7 +5,7 @@ import { QrWorldSvg, QrRecruitSvg } from '../components/common/QrCodeSvgs';
 import { downloadElementAsPdf, downloadMultipleElementsAsPdf, downloadElementAsImage } from '../utils/flyerPdfExport';
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   ROLE CONFIGURATIONS — Bold Black + Gold Curve Aesthetic
+   ROLE CONFIGURATIONS — Premium Black + Gold Cinematic Flyer (Reference Layout)
 ───────────────────────────────────────────────────────────────────────────── */
 const FLYER_ROLES = [
   {
@@ -28,6 +28,7 @@ const FLYER_ROLES = [
     cardUrl: 'www.stylecorner.world',
     fullUrl: 'https://www.stylecorner.world',
     qrType: 'world',
+    accentGold: '#F5B942',
   },
   {
     id: 'recruit',
@@ -49,6 +50,7 @@ const FLYER_ROLES = [
     cardUrl: 'stylecorner.world/role-selection',
     fullUrl: 'https://www.stylecorner.world/role-selection',
     qrType: 'recruit',
+    accentGold: '#F5B942',
   },
   {
     id: 'store',
@@ -70,6 +72,7 @@ const FLYER_ROLES = [
     cardUrl: 'www.stylecorner.world/store',
     fullUrl: 'https://www.stylecorner.world/store',
     qrType: 'world',
+    accentGold: '#F5B942',
   },
   {
     id: 'ai_matcher',
@@ -91,6 +94,7 @@ const FLYER_ROLES = [
     cardUrl: 'www.stylecorner.world/ai-matcher',
     fullUrl: 'https://www.stylecorner.world/ai-matcher',
     qrType: 'world',
+    accentGold: '#F5B942',
   },
 ];
 
@@ -543,7 +547,7 @@ export const BillboardFlyersPage = () => {
           gap: '3rem',
           alignItems: 'center',
           width: '100%',
-          maxWidth: '680px',
+          maxWidth: '700px',
         }}
       >
         {visibleRoles.map((role) => (
@@ -561,7 +565,9 @@ export const BillboardFlyersPage = () => {
               </span>
             </div>
 
-            {/* Flyer Card — Bold Black + Gold Curve Vector Shape */}
+            {/* ═══════════════════════════════════════════════════════════
+                PREMIUM FLYER CARD — Reference-Matched Layout
+            ═══════════════════════════════════════════════════════════ */}
             <div
               ref={flyerRefs.current[role.id]}
               className="print-card"
@@ -569,93 +575,102 @@ export const BillboardFlyersPage = () => {
               style={{
                 width: '100%',
                 backgroundColor: '#09090b',
-                borderRadius: '32px',
+                borderRadius: '28px',
                 padding: '0',
-                boxShadow: '0 30px 90px rgba(0,0,0,0.95), 0 0 40px rgba(245,185,66,0.08)',
+                boxShadow: '0 32px 96px rgba(0,0,0,0.97), 0 0 60px rgba(245,185,66,0.10)',
                 display: 'flex',
                 flexDirection: 'column',
                 boxSizing: 'border-box',
                 position: 'relative',
                 overflow: 'hidden',
-                border: '1.5px solid rgba(245,185,66,0.3)',
+                border: '1.5px solid rgba(245,185,66,0.28)',
+                minHeight: '480px',
               }}
             >
-              {/* Top and Bottom Razor-Thin Gold Accent Lines */}
-              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '3px', background: '#F5B942', zIndex: 10 }} />
-              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '3px', background: '#F5B942', zIndex: 10 }} />
+              {/* TOP gold accent line */}
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '3.5px', background: 'linear-gradient(90deg, #F5B942, #c8930a, #F5B942)', zIndex: 10 }} />
+              {/* BOTTOM gold accent line */}
+              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '3.5px', background: 'linear-gradient(90deg, #F5B942, #c8930a, #F5B942)', zIndex: 10 }} />
 
-              {/* ─────────────────────────────────────────────────────────────
-                  THE GIANT GOLD CURVE BLOB (Matching Reference Image)
-              ───────────────────────────────────────────────────────────── */}
+              {/* ─── GIANT GOLD ORGANIC BLOB (top-right, rounded, just like reference) ─── */}
               <div
                 className="flyer-gold-blob"
                 style={{
                   position: 'absolute',
-                  top: '-12%',
-                  right: '-16%',
-                  width: '74%',
-                  height: '92%',
+                  top: '-18%',
+                  right: '-18%',
+                  width: '72%',
+                  height: '95%',
                   borderRadius: '50%',
-                  backgroundColor: '#F5B942',
+                  background: 'radial-gradient(ellipse at 40% 40%, #FFCF5C 0%, #F5B942 45%, #C8930A 100%)',
                   zIndex: 0,
                   pointerEvents: 'none',
+                  opacity: 0.97,
                 }}
               />
 
-              {/* Flyer Body Content */}
+              {/* Subtle dark vignette on left side over the blob */}
+              <div style={{
+                position: 'absolute', inset: 0,
+                background: 'linear-gradient(100deg, rgba(9,9,11,0.96) 38%, rgba(9,9,11,0.0) 68%)',
+                zIndex: 1, pointerEvents: 'none',
+              }} />
+
+              {/* ─── FLYER BODY CONTENT ─── */}
               <div style={{
                 position: 'relative',
                 zIndex: 2,
-                padding: 'clamp(1.5rem, 5vw, 2.75rem)',
+                padding: 'clamp(1.5rem, 5vw, 2.5rem)',
                 boxSizing: 'border-box',
               }}>
 
-                {/* Top-Left Pill Badge with Gold Square Logo */}
+                {/* ─── TOP-LEFT PILL BADGE WITH STYLECORNER SQUARE LOGO ─── */}
                 <div style={{
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '0.65rem',
-                  backgroundColor: '#18181b',
-                  border: '1.5px solid rgba(245,185,66,0.5)',
-                  borderRadius: '50px',
-                  padding: '0.4rem 1rem 0.4rem 0.5rem',
-                  marginBottom: '1.75rem',
-                  boxShadow: '0 4px 15px rgba(0,0,0,0.4)',
+                  gap: '0.6rem',
+                  backgroundColor: 'rgba(18,18,20,0.95)',
+                  border: '1.5px solid rgba(245,185,66,0.55)',
+                  borderRadius: '100px',
+                  padding: '0.38rem 1.1rem 0.38rem 0.45rem',
+                  marginBottom: '2rem',
+                  boxShadow: '0 4px 18px rgba(0,0,0,0.55), 0 0 12px rgba(245,185,66,0.08)',
                 }}>
-                  {/* Gold Square Emblem with inner square */}
+                  {/* StyleCorner Square Emblem */}
                   <div style={{
-                    width: '26px',
-                    height: '26px',
-                    borderRadius: '7px',
-                    backgroundColor: '#F5B942',
+                    width: '28px',
+                    height: '28px',
+                    borderRadius: '8px',
+                    background: 'linear-gradient(135deg, #F5B942 0%, #C8930A 100%)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     flexShrink: 0,
+                    boxShadow: '0 2px 8px rgba(245,185,66,0.3)',
                   }}>
                     <div style={{
-                      width: '12px',
-                      height: '12px',
-                      borderRadius: '2.5px',
-                      border: '2px solid #09090b',
+                      width: '13px',
+                      height: '13px',
+                      borderRadius: '3px',
+                      border: '2.5px solid #09090b',
                     }} />
                   </div>
-                  {/* Badge Text */}
+                  {/* Badge Text: Two lines */}
                   <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.15 }}>
                     <span style={{
-                      fontSize: '0.7rem',
+                      fontSize: '0.68rem',
                       fontWeight: 900,
                       color: '#F5B942',
-                      letterSpacing: '0.06em',
+                      letterSpacing: '0.07em',
                       textTransform: 'uppercase',
                     }}>
                       {role.badgeTop}
                     </span>
                     <span style={{
-                      fontSize: '0.62rem',
+                      fontSize: '0.61rem',
                       fontWeight: 800,
-                      color: '#d4af37',
-                      letterSpacing: '0.04em',
+                      color: '#c8930a',
+                      letterSpacing: '0.05em',
                       textTransform: 'uppercase',
                     }}>
                       {role.badgeSub}
@@ -663,7 +678,7 @@ export const BillboardFlyersPage = () => {
                   </div>
                 </div>
 
-                {/* Main Content Grid: Left Info & Right Floating QR Card */}
+                {/* ─── MAIN CONTENT GRID: Left Info & Right QR Card ─── */}
                 <div
                   className="flyer-content-grid"
                   style={{
@@ -673,36 +688,43 @@ export const BillboardFlyersPage = () => {
                     justifyContent: 'space-between',
                   }}
                 >
-                  {/* Left Column: Headlines, Description, Tags, Trust */}
+                  {/* ─── LEFT COLUMN: Headlines, Description, Tags, Trust ─── */}
                   <div style={{ flex: 1, minWidth: 0 }}>
+
+                    {/* Big Bold White Headline */}
                     <h1 style={{
-                      fontSize: 'clamp(1.9rem, 5.5vw, 2.7rem)',
+                      fontSize: 'clamp(1.85rem, 5.2vw, 2.6rem)',
                       fontWeight: 900,
-                      lineHeight: 1.12,
-                      letterSpacing: '-0.035em',
+                      lineHeight: 1.1,
+                      letterSpacing: '-0.04em',
                       color: '#ffffff',
-                      margin: '0 0 0.35rem',
+                      margin: '0 0 0.3rem',
+                      textShadow: '0 2px 20px rgba(0,0,0,0.6)',
                     }}>
                       {role.headlineWhite}
                     </h1>
 
+                    {/* Gold Highlighted Sub-Headline */}
                     <div style={{
-                      fontSize: 'clamp(1.9rem, 5.5vw, 2.7rem)',
+                      fontSize: 'clamp(1.85rem, 5.2vw, 2.6rem)',
                       fontWeight: 900,
                       color: '#F5B942',
-                      lineHeight: 1.12,
-                      letterSpacing: '-0.035em',
-                      marginBottom: '1.15rem',
+                      lineHeight: 1.1,
+                      letterSpacing: '-0.04em',
+                      marginBottom: '1.1rem',
+                      textShadow: '0 0 30px rgba(245,185,66,0.35)',
                     }}>
                       {role.headlineGold}
                     </div>
 
+                    {/* Description */}
                     <p style={{
-                      fontSize: '0.88rem',
+                      fontSize: '0.86rem',
                       color: '#a1a1aa',
-                      lineHeight: 1.6,
-                      marginBottom: '1.5rem',
-                      maxWidth: '340px',
+                      lineHeight: 1.65,
+                      marginBottom: '1.4rem',
+                      maxWidth: '330px',
+                      fontWeight: 500,
                     }}>
                       {role.description}
                     </p>
@@ -711,21 +733,22 @@ export const BillboardFlyersPage = () => {
                     <div style={{
                       display: 'flex',
                       flexWrap: 'wrap',
-                      gap: '0.45rem',
-                      marginBottom: '1.6rem',
+                      gap: '0.42rem',
+                      marginBottom: '1.5rem',
                     }}>
                       {role.tags.map((tag) => (
                         <span
                           key={tag}
                           style={{
-                            backgroundColor: '#18181b',
-                            border: '1px solid #27272a',
-                            borderRadius: '50px',
-                            padding: '0.42rem 0.95rem',
-                            fontSize: '0.78rem',
+                            backgroundColor: 'rgba(24,24,27,0.92)',
+                            border: '1px solid rgba(255,255,255,0.12)',
+                            borderRadius: '100px',
+                            padding: '0.4rem 1rem',
+                            fontSize: '0.77rem',
                             fontWeight: 700,
-                            color: '#ffffff',
+                            color: '#e4e4e7',
                             whiteSpace: 'nowrap',
+                            letterSpacing: '0.01em',
                           }}
                         >
                           {tag}
@@ -737,7 +760,7 @@ export const BillboardFlyersPage = () => {
                     <div style={{
                       display: 'flex',
                       flexDirection: 'column',
-                      gap: '0.55rem',
+                      gap: '0.52rem',
                     }}>
                       {role.trustPoints.map(({ icon, text }) => (
                         <div
@@ -746,81 +769,88 @@ export const BillboardFlyersPage = () => {
                             display: 'flex',
                             alignItems: 'center',
                             gap: '0.6rem',
-                            fontSize: '0.82rem',
+                            fontSize: '0.83rem',
                             fontWeight: 700,
                             color: '#e4e4e7',
                           }}
                         >
-                          <span style={{ fontSize: '1rem' }}>{icon}</span>
+                          <span style={{ fontSize: '1.05rem', lineHeight: 1 }}>{icon}</span>
                           <span>{text}</span>
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  {/* Right Column: Floating QR Card (Sitting on the gold curve) */}
+                  {/* ─── RIGHT COLUMN: Floating QR Card (sits over the gold curve) ─── */}
                   <div
                     className="flyer-qr-card"
                     style={{
                       flexShrink: 0,
-                      backgroundColor: '#111114',
-                      border: '1.5px solid rgba(255,255,255,0.08)',
-                      borderRadius: '26px',
-                      padding: '1.4rem 1.15rem',
+                      backgroundColor: '#0f1014',
+                      border: '1.5px solid rgba(255,255,255,0.1)',
+                      borderRadius: '22px',
+                      padding: '1.35rem 1.1rem 1.2rem',
                       display: 'flex',
                       flexDirection: 'column',
                       alignItems: 'center',
                       textAlign: 'center',
-                      minWidth: '190px',
-                      maxWidth: '220px',
-                      boxShadow: '0 25px 60px rgba(0,0,0,0.85), 0 0 25px rgba(245,185,66,0.12)',
+                      minWidth: '185px',
+                      maxWidth: '215px',
+                      boxShadow: '0 20px 60px rgba(0,0,0,0.92), 0 0 30px rgba(245,185,66,0.14)',
                       boxSizing: 'border-box',
                     }}
                   >
                     {/* Card Top Title */}
                     <div style={{
-                      fontSize: '0.72rem',
+                      fontSize: '0.7rem',
                       fontWeight: 900,
                       color: '#F5B942',
                       letterSpacing: '0.05em',
                       textTransform: 'uppercase',
-                      marginBottom: '0.85rem',
-                      lineHeight: 1.3,
+                      marginBottom: '0.9rem',
+                      lineHeight: 1.35,
                     }}>
                       {role.cardTitle}
                     </div>
 
-                    {/* QR Code Container */}
-                    <div style={{ marginBottom: '0.85rem' }}>
+                    {/* QR Code — White card container matching reference */}
+                    <div style={{
+                      backgroundColor: '#ffffff',
+                      borderRadius: '14px',
+                      padding: '10px',
+                      marginBottom: '0.9rem',
+                      boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
+                    }}>
                       {role.qrType === 'recruit' ? (
-                        <QrRecruitSvg size={165} logoSize={34} />
+                        <QrRecruitSvg size={150} logoSize={32} />
                       ) : (
-                        <QrWorldSvg size={165} logoSize={34} />
+                        <QrWorldSvg size={150} logoSize={32} />
                       )}
                     </div>
 
-                    {/* Card Scan Text */}
+                    {/* SCAN WITH CAMERA */}
                     <div style={{
-                      fontSize: '0.82rem',
+                      fontSize: '0.83rem',
                       fontWeight: 900,
                       color: '#ffffff',
-                      marginBottom: '0.2rem',
+                      marginBottom: '0.18rem',
                       letterSpacing: '0.04em',
                     }}>
                       {role.cardScanText}
                     </div>
 
                     <div style={{
-                      fontSize: '0.72rem',
-                      color: '#a1a1aa',
+                      fontSize: '0.7rem',
+                      color: '#71717a',
                       fontWeight: 600,
-                      marginBottom: '0.25rem',
+                      marginBottom: '0.22rem',
+                      lineHeight: 1.4,
                     }}>
                       {role.cardSubText}
                     </div>
 
                     <div style={{
-                      fontSize: '0.8rem',
+                      fontSize: '0.78rem',
                       fontWeight: 900,
                       color: '#F5B942',
                       letterSpacing: '0.02em',
@@ -830,7 +860,7 @@ export const BillboardFlyersPage = () => {
                   </div>
                 </div>
 
-                {/* Bottom Action Buttons (Hidden when printing or PDF rendering) */}
+                {/* ─── Bottom Action Buttons (hidden when printing / PDF) ─── */}
                 <div
                   className="no-print"
                   style={{
@@ -847,7 +877,7 @@ export const BillboardFlyersPage = () => {
                     onClick={() => saveToPdf(role.id)}
                     disabled={savingPdf}
                     style={{
-                      backgroundColor: '#F5B942',
+                      background: 'linear-gradient(135deg, #F5B942 0%, #C8930A 100%)',
                       color: '#09090b',
                       border: 'none',
                       borderRadius: '50px',
@@ -858,7 +888,7 @@ export const BillboardFlyersPage = () => {
                       display: 'inline-flex',
                       alignItems: 'center',
                       gap: '0.4rem',
-                      boxShadow: '0 4px 15px rgba(245,185,66,0.3)',
+                      boxShadow: '0 4px 18px rgba(245,185,66,0.35)',
                     }}
                   >
                     <FileDown size={14} /> Save as PDF
@@ -868,9 +898,9 @@ export const BillboardFlyersPage = () => {
                     type="button"
                     onClick={() => saveToImage(role.id)}
                     style={{
-                      backgroundColor: '#18181b',
+                      backgroundColor: 'rgba(24,24,27,0.95)',
                       color: '#e4e4e7',
-                      border: '1px solid #27272a',
+                      border: '1px solid rgba(255,255,255,0.14)',
                       borderRadius: '50px',
                       padding: '0.6rem 1.15rem',
                       fontSize: '0.82rem',
@@ -888,9 +918,9 @@ export const BillboardFlyersPage = () => {
                     type="button"
                     onClick={() => copyUrl(role.id, role.fullUrl)}
                     style={{
-                      backgroundColor: '#18181b',
+                      backgroundColor: 'rgba(24,24,27,0.95)',
                       color: copiedType === role.id ? '#4ade80' : '#e4e4e7',
-                      border: '1px solid #27272a',
+                      border: '1px solid rgba(255,255,255,0.14)',
                       borderRadius: '50px',
                       padding: '0.6rem 1rem',
                       fontSize: '0.82rem',
