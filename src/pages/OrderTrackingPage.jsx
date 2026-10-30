@@ -45,6 +45,7 @@ export const OrderTrackingPage = () => {
   const { user, showToast } = useAuth();
 
   const [order, setOrder] = useState(null);
+  const [allOrders, setAllOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [messageText, setMessageText] = useState('');
   const [sendingMsg, setSendingMsg] = useState(false);
@@ -65,13 +66,18 @@ export const OrderTrackingPage = () => {
 
       const data = await api.getOrders();
       const orders = Array.isArray(data) ? data : data?.orders || [];
-      const found = orders.find((o) => o._id === orderId);
+      setAllOrders(orders);
+
+      const targetId = orderId || (orders.length > 0 ? (orders[0]._id || orders[0].id) : null);
+      const found = orders.find((o) => (o._id || o.id) === targetId) || (orders.length > 0 ? orders[0] : null);
 
       if (found) {
         setOrder(found);
         setAdminTrackingStatus(found.trackingStatus || found.status || 'Order Placed');
         setAdminTrackingNumber(found.trackingNumber || '');
         setAdminEstDelivery(found.estimatedDelivery || '');
+      } else {
+        setOrder(null);
       }
       if (showRefreshToast) showToast('Order refreshed', 'success');
     } catch (err) {
@@ -83,7 +89,7 @@ export const OrderTrackingPage = () => {
   };
 
   useEffect(() => {
-    if (orderId) fetchOrder();
+    fetchOrder();
   }, [orderId]);
 
   const currentStatus = order?.trackingStatus || order?.status || 'Order Placed';
@@ -178,8 +184,9 @@ export const OrderTrackingPage = () => {
     );
   }
 
-  /* ─── NOT FOUND ─────────────────────────────────── */
+  /* ─── NOT FOUND OR EMPTY ─────────────────────────── */
   if (!order) {
+    const hasAnyOrders = allOrders.length > 0;
     return (
       <div
         style={{
@@ -198,11 +205,15 @@ export const OrderTrackingPage = () => {
             borderRadius: '24px',
             padding: '2.5rem 2rem',
             textAlign: 'center',
-            maxWidth: '400px',
+            maxWidth: '420px',
             width: '100%',
           }}
         >
-          <AlertCircle size={40} style={{ color: '#ef4444', marginBottom: '1rem' }} />
+          {hasAnyOrders ? (
+            <AlertCircle size={44} style={{ color: '#ef4444', marginBottom: '1rem' }} />
+          ) : (
+            <Package size={44} style={{ color: accent, marginBottom: '1rem' }} />
+          )}
           <h2
             style={{
               color: textPrimary,
@@ -212,27 +223,47 @@ export const OrderTrackingPage = () => {
               marginBottom: '0.5rem',
             }}
           >
-            Order Not Found
+            {hasAnyOrders ? 'Order Not Found' : 'No Store Orders Yet'}
           </h2>
-          <p style={{ color: textSecondary, fontSize: '0.85rem', marginBottom: '1.5rem' }}>
-            We couldn't locate this order. It may have been deleted or the link is invalid.
+          <p style={{ color: textSecondary, fontSize: '0.85rem', marginBottom: '1.5rem', lineHeight: 1.5 }}>
+            {hasAnyOrders
+              ? "We couldn't locate this specific order. Select an order from your history or return to your account."
+              : 'Browse our luxury collection of grooming essentials, styling kits, and premium hair products.'}
           </p>
-          <button
-            onClick={() => navigate(-1)}
-            style={{
-              background: accent,
-              color: '#0c0e14',
-              border: 'none',
-              borderRadius: '14px',
-              padding: '0.75rem 2rem',
-              fontWeight: 800,
-              fontFamily: 'Outfit',
-              fontSize: '0.85rem',
-              cursor: 'pointer',
-            }}
-          >
-            Go Back
-          </button>
+          <div style={{ display: 'flex', gap: '0.65rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <button
+              onClick={() => navigate(hasAnyOrders ? '/customer-dashboard' : '/store')}
+              style={{
+                background: accent,
+                color: '#0c0e14',
+                border: 'none',
+                borderRadius: '14px',
+                padding: '0.75rem 1.75rem',
+                fontWeight: 800,
+                fontFamily: 'Outfit',
+                fontSize: '0.85rem',
+                cursor: 'pointer',
+              }}
+            >
+              {hasAnyOrders ? 'Go to Dashboard' : 'Visit Atelier Store'}
+            </button>
+            <button
+              onClick={() => navigate(-1)}
+              style={{
+                background: 'rgba(255,255,255,0.06)',
+                color: textPrimary,
+                border: `1px solid ${border}`,
+                borderRadius: '14px',
+                padding: '0.75rem 1.25rem',
+                fontWeight: 700,
+                fontFamily: 'Outfit',
+                fontSize: '0.85rem',
+                cursor: 'pointer',
+              }}
+            >
+              Back
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -330,6 +361,74 @@ export const OrderTrackingPage = () => {
 
       {/* ─── Content ─── */}
       <div style={{ maxWidth: '620px', margin: '0 auto', padding: '1.25rem 1rem 5rem' }}>
+        {/* Multi-Order Switcher Pill Row (If customer has multiple orders) */}
+        {allOrders.length > 1 && (
+          <div style={{ marginBottom: '1.15rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.45rem' }}>
+              <span style={{ fontSize: '0.74rem', color: textSecondary, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                Your Orders ({allOrders.length})
+              </span>
+              <span style={{ fontSize: '0.72rem', color: accent, fontWeight: 700 }}>
+                Swipe to select
+              </span>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                gap: '0.45rem',
+                overflowX: 'auto',
+                WebkitOverflowScrolling: 'touch',
+                scrollbarWidth: 'none',
+                paddingBottom: '0.2rem',
+              }}
+            >
+              {allOrders.map((o, idx) => {
+                const isCur = String(o._id || o.id) === String(order._id || order.id);
+                const orderCode = String(o._id || o.id || idx).slice(-6).toUpperCase();
+                return (
+                  <button
+                    key={o._id || o.id || idx}
+                    type="button"
+                    onClick={() => {
+                      setOrder(o);
+                      setAdminTrackingStatus(o.trackingStatus || o.status || 'Order Placed');
+                      setAdminTrackingNumber(o.trackingNumber || '');
+                      setAdminEstDelivery(o.estimatedDelivery || '');
+                      navigate(`/order-tracking/${o._id || o.id}`, { replace: true });
+                    }}
+                    style={{
+                      flexShrink: 0,
+                      padding: '0.45rem 0.8rem',
+                      borderRadius: '12px',
+                      background: isCur ? 'rgba(245, 185, 66, 0.18)' : surface,
+                      border: isCur ? `1.5px solid ${accent}` : `1px solid ${border}`,
+                      color: isCur ? accent : textSecondary,
+                      fontFamily: 'Outfit',
+                      fontSize: '0.78rem',
+                      fontWeight: isCur ? 800 : 600,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.35rem',
+                      whiteSpace: 'nowrap',
+                      transition: 'all 0.15s ease',
+                      touchAction: 'manipulation',
+                    }}
+                  >
+                    <Package size={13} color={isCur ? accent : '#64748b'} />
+                    <span>#{orderCode}</span>
+                    {o.item && (
+                      <span style={{ opacity: 0.85, maxWidth: '90px', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        • {o.item}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {/* ══════════════ ORDER SUMMARY CARD ══════════════ */}
         <div
           style={{

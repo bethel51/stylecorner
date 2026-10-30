@@ -102,6 +102,25 @@ export const MyBookings = () => {
     fetchBookings();
   }, [fetchBookings]);
 
+  // Handle direct tab=orders navigation by smoothly redirecting to Order Tracking
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab === 'orders') {
+      api.getOrders().then((ordersList) => {
+        const valid = Array.isArray(ordersList) ? ordersList : ordersList?.orders || [];
+        if (valid.length > 0) {
+          const targetId = valid[0]._id || valid[0].id;
+          navigate(`/order-tracking/${targetId}`, { replace: true });
+        } else {
+          showToast('No active orders found. Visit our Atelier Store.', 'info');
+          navigate('/store', { replace: true });
+        }
+      }).catch(() => {
+        navigate('/store', { replace: true });
+      });
+    }
+  }, [searchParams, navigate, showToast]);
+
   // Status classifier helper
   const isUpcoming = (status) => {
     const s = (status || 'pending').toLowerCase();
@@ -256,16 +275,33 @@ export const MyBookings = () => {
 
   return (
     <PageContainer showBack={true} backTo="/profile">
-      <div style={{ maxWidth: '780px', margin: '0 auto', paddingBottom: '4rem' }}>
+      <div
+        style={{
+          maxWidth: '780px',
+          width: '100%',
+          margin: '0 auto',
+          boxSizing: 'border-box',
+          paddingBottom: 'calc(var(--bottom-nav-height, 70px) + env(safe-area-inset-bottom, 24px) + 3.5rem)',
+        }}
+      >
         
         {/* Top Header & Breadcrumb */}
-        <div style={{ marginBottom: '1.25rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', marginBottom: '0.4rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <div style={{ marginBottom: '1.25rem', width: '100%', boxSizing: 'border-box' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '0.65rem',
+              marginBottom: '0.4rem',
+              flexWrap: 'wrap',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', minWidth: 0, flex: '1 1 220px' }}>
               <div
                 style={{
-                  width: '38px',
-                  height: '38px',
+                  width: '40px',
+                  height: '40px',
                   borderRadius: '12px',
                   background: 'rgba(245, 185, 66, 0.12)',
                   color: '#f5b942',
@@ -273,28 +309,32 @@ export const MyBookings = () => {
                   alignItems: 'center',
                   justifyContent: 'center',
                   border: '1px solid rgba(245, 185, 66, 0.25)',
+                  flexShrink: 0,
                 }}
               >
                 <Calendar size={20} />
               </div>
-              <div>
+              <div style={{ minWidth: 0, flex: 1 }}>
                 <h1
                   style={{
                     fontFamily: 'Outfit',
-                    fontSize: '1.45rem',
+                    fontSize: 'clamp(1.2rem, 4.4vw, 1.45rem)',
                     fontWeight: 900,
                     color: 'var(--color-text-primary, #ffffff)',
                     margin: 0,
                     letterSpacing: '-0.02em',
+                    lineHeight: 1.25,
+                    wordBreak: 'break-word',
                   }}
                 >
                   {isStaff ? 'Client Appointments & History' : 'My Bookings & History'}
                 </h1>
                 <p
                   style={{
-                    fontSize: '0.8rem',
+                    fontSize: 'clamp(0.74rem, 2.3vw, 0.8rem)',
                     color: 'var(--color-text-secondary, #94a3b8)',
-                    margin: 0,
+                    margin: '0.15rem 0 0',
+                    lineHeight: 1.35,
                   }}
                 >
                   {isStaff
@@ -304,7 +344,7 @@ export const MyBookings = () => {
               </div>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', flexShrink: 0 }}>
               <button
                 onClick={() => fetchBookings(true)}
                 disabled={refreshing}
@@ -313,14 +353,15 @@ export const MyBookings = () => {
                   background: 'var(--color-surface, #151822)',
                   border: '1px solid var(--color-border, rgba(255, 255, 255, 0.08))',
                   color: '#94a3b8',
-                  borderRadius: '10px',
-                  width: '36px',
-                  height: '36px',
+                  borderRadius: '12px',
+                  width: '38px',
+                  height: '38px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   cursor: 'pointer',
                   transition: 'all 0.15s ease',
+                  touchAction: 'manipulation',
                 }}
               >
                 <RefreshCw size={16} className={refreshing ? 'spin-animation' : ''} />
@@ -332,12 +373,14 @@ export const MyBookings = () => {
                   className="app-btn app-btn-accent"
                   style={{
                     borderRadius: '12px',
-                    padding: '0.45rem 0.85rem',
-                    fontSize: '0.82rem',
+                    padding: '0.5rem 0.95rem',
+                    fontSize: 'clamp(0.78rem, 2.4vw, 0.84rem)',
                     fontWeight: 800,
                     display: 'flex',
                     alignItems: 'center',
                     gap: '0.35rem',
+                    minHeight: '38px',
+                    touchAction: 'manipulation',
                   }}
                 >
                   <Sparkles size={14} /> Book New
@@ -358,6 +401,7 @@ export const MyBookings = () => {
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 gap: '0.75rem',
+                flexWrap: 'wrap',
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -387,13 +431,15 @@ export const MyBookings = () => {
           )}
         </div>
 
-        {/* Hero Quick Stat Metrics */}
+        {/* Hero Quick Stat Metrics (Fluid 4-column grid with zero mobile clipping) */}
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
-            gap: '0.5rem',
-            marginBottom: '1.25rem',
+            gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+            gap: '0.45rem',
+            marginBottom: '1.15rem',
+            width: '100%',
+            boxSizing: 'border-box',
           }}
         >
           <div
@@ -404,16 +450,18 @@ export const MyBookings = () => {
               background: activeTab === 'upcoming' ? 'rgba(16, 185, 129, 0.16)' : 'var(--color-surface, #151822)',
               border: activeTab === 'upcoming' ? '1.5px solid #10b981' : '1px solid var(--color-border, rgba(255, 255, 255, 0.06))',
               borderRadius: '14px',
-              padding: '0.75rem 0.5rem',
+              padding: 'clamp(0.6rem, 2vw, 0.75rem) 0.35rem',
               textAlign: 'center',
               cursor: 'pointer',
               transition: 'all 0.15s ease',
+              touchAction: 'manipulation',
+              minWidth: 0,
             }}
           >
-            <div style={{ fontFamily: 'Outfit', fontSize: '1.35rem', fontWeight: 900, color: '#10b981', lineHeight: 1 }}>
+            <div style={{ fontFamily: 'Outfit', fontSize: 'clamp(1.15rem, 3.8vw, 1.35rem)', fontWeight: 900, color: '#10b981', lineHeight: 1 }}>
               {counts.upcoming}
             </div>
-            <div style={{ fontSize: '0.7rem', fontWeight: 700, color: '#94a3b8', marginTop: '0.3rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+            <div style={{ fontSize: 'clamp(0.62rem, 1.9vw, 0.7rem)', fontWeight: 800, color: '#94a3b8', marginTop: '0.35rem', textTransform: 'uppercase', letterSpacing: '0.04em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               Upcoming
             </div>
           </div>
@@ -426,16 +474,18 @@ export const MyBookings = () => {
               background: activeTab === 'history' ? 'rgba(245, 185, 66, 0.16)' : 'var(--color-surface, #151822)',
               border: activeTab === 'history' ? '1.5px solid #f5b942' : '1px solid var(--color-border, rgba(255, 255, 255, 0.06))',
               borderRadius: '14px',
-              padding: '0.75rem 0.5rem',
+              padding: 'clamp(0.6rem, 2vw, 0.75rem) 0.35rem',
               textAlign: 'center',
               cursor: 'pointer',
               transition: 'all 0.15s ease',
+              touchAction: 'manipulation',
+              minWidth: 0,
             }}
           >
-            <div style={{ fontFamily: 'Outfit', fontSize: '1.35rem', fontWeight: 900, color: '#f5b942', lineHeight: 1 }}>
+            <div style={{ fontFamily: 'Outfit', fontSize: 'clamp(1.15rem, 3.8vw, 1.35rem)', fontWeight: 900, color: '#f5b942', lineHeight: 1 }}>
               {counts.completed}
             </div>
-            <div style={{ fontSize: '0.7rem', fontWeight: 700, color: '#94a3b8', marginTop: '0.3rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+            <div style={{ fontSize: 'clamp(0.62rem, 1.9vw, 0.7rem)', fontWeight: 800, color: '#94a3b8', marginTop: '0.35rem', textTransform: 'uppercase', letterSpacing: '0.04em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               Completed
             </div>
           </div>
@@ -448,16 +498,18 @@ export const MyBookings = () => {
               background: activeTab === 'cancelled' ? 'rgba(239, 68, 68, 0.16)' : 'var(--color-surface, #151822)',
               border: activeTab === 'cancelled' ? '1.5px solid #ef4444' : '1px solid var(--color-border, rgba(255, 255, 255, 0.06))',
               borderRadius: '14px',
-              padding: '0.75rem 0.5rem',
+              padding: 'clamp(0.6rem, 2vw, 0.75rem) 0.35rem',
               textAlign: 'center',
               cursor: 'pointer',
               transition: 'all 0.15s ease',
+              touchAction: 'manipulation',
+              minWidth: 0,
             }}
           >
-            <div style={{ fontFamily: 'Outfit', fontSize: '1.35rem', fontWeight: 900, color: '#ef4444', lineHeight: 1 }}>
+            <div style={{ fontFamily: 'Outfit', fontSize: 'clamp(1.15rem, 3.8vw, 1.35rem)', fontWeight: 900, color: '#ef4444', lineHeight: 1 }}>
               {counts.cancelled}
             </div>
-            <div style={{ fontSize: '0.7rem', fontWeight: 700, color: '#94a3b8', marginTop: '0.3rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+            <div style={{ fontSize: 'clamp(0.62rem, 1.9vw, 0.7rem)', fontWeight: 800, color: '#94a3b8', marginTop: '0.35rem', textTransform: 'uppercase', letterSpacing: '0.04em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               Cancelled
             </div>
           </div>
@@ -470,46 +522,41 @@ export const MyBookings = () => {
               background: activeTab === 'all' ? 'rgba(99, 102, 241, 0.18)' : 'var(--color-surface, #151822)',
               border: activeTab === 'all' ? '1.5px solid #6366f1' : '1px solid var(--color-border, rgba(255, 255, 255, 0.06))',
               borderRadius: '14px',
-              padding: '0.75rem 0.5rem',
+              padding: 'clamp(0.6rem, 2vw, 0.75rem) 0.35rem',
               textAlign: 'center',
               cursor: 'pointer',
               transition: 'all 0.15s ease',
+              touchAction: 'manipulation',
+              minWidth: 0,
             }}
           >
-            <div style={{ fontFamily: 'Outfit', fontSize: '1.35rem', fontWeight: 900, color: 'var(--color-text-primary, #ffffff)', lineHeight: 1 }}>
+            <div style={{ fontFamily: 'Outfit', fontSize: 'clamp(1.15rem, 3.8vw, 1.35rem)', fontWeight: 900, color: 'var(--color-text-primary, #ffffff)', lineHeight: 1 }}>
               {counts.total}
             </div>
-            <div style={{ fontSize: '0.7rem', fontWeight: 700, color: '#94a3b8', marginTop: '0.3rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-              All
+            <div style={{ fontSize: 'clamp(0.62rem, 1.9vw, 0.7rem)', fontWeight: 800, color: '#94a3b8', marginTop: '0.35rem', textTransform: 'uppercase', letterSpacing: '0.04em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              All Total
             </div>
           </div>
         </div>
 
-        {/* Tab Selector & Statement Export Bar */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '0.5rem',
-            marginBottom: '1rem',
-            flexWrap: 'wrap',
-          }}
-        >
-          {/* Segmented Tab Pill */}
+        {/* Tab Selector & Statement Export Bar (Mobile Optimized: Full-width smooth scroll, no truncation) */}
+        <div style={{ marginBottom: '1.15rem', width: '100%', boxSizing: 'border-box' }}>
+          {/* Segmented Tab Pill Strip */}
           <div
             style={{
               display: 'flex',
               overflowX: 'auto',
               WebkitOverflowScrolling: 'touch',
               background: 'var(--color-surface, #151822)',
-              borderRadius: '14px',
-              padding: '0.25rem',
-              border: '1px solid var(--color-border, rgba(255, 255, 255, 0.06))',
-              gap: '0.25rem',
-              flex: '1 1 auto',
+              borderRadius: '16px',
+              padding: '0.3rem',
+              border: '1px solid var(--color-border, rgba(255, 255, 255, 0.08))',
+              gap: '0.35rem',
+              width: '100%',
+              boxSizing: 'border-box',
               scrollbarWidth: 'none',
               msOverflowStyle: 'none',
+              marginBottom: '0.65rem',
             }}
           >
             {[
@@ -524,23 +571,24 @@ export const MyBookings = () => {
                   key={t.id}
                   onClick={() => handleTabChange(t.id)}
                   style={{
-                    flex: '1 0 auto',
-                    minHeight: '36px',
-                    borderRadius: '10px',
+                    flex: '0 0 auto',
+                    minHeight: '38px',
+                    borderRadius: '11px',
                     border: 'none',
                     background: active ? '#f5b942' : 'transparent',
                     color: active ? '#0c0e14' : '#94a3b8',
                     fontFamily: 'Outfit',
                     fontSize: '0.82rem',
-                    fontWeight: active ? 800 : 600,
+                    fontWeight: active ? 800 : 700,
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: '0.35rem',
+                    gap: '0.4rem',
                     transition: 'all 0.15s ease',
                     whiteSpace: 'nowrap',
-                    padding: '0 0.75rem',
+                    padding: '0 0.85rem',
+                    touchAction: 'manipulation',
                   }}
                 >
                   <span>{t.label}</span>
@@ -550,7 +598,7 @@ export const MyBookings = () => {
                       color: active ? '#f5b942' : '#ffffff',
                       fontSize: '0.68rem',
                       fontWeight: 800,
-                      padding: '0.1rem 0.4rem',
+                      padding: '0.1rem 0.45rem',
                       borderRadius: '999px',
                     }}
                   >
@@ -561,46 +609,64 @@ export const MyBookings = () => {
             })}
           </div>
 
-          {/* Statement Export Buttons */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-            <button
-              onClick={handleExportCSV}
-              title="Download CSV Statement"
-              style={{
-                background: 'var(--color-surface, #151822)',
-                border: '1px solid var(--color-border, rgba(255, 255, 255, 0.08))',
-                borderRadius: '10px',
-                padding: '0.45rem 0.65rem',
-                fontSize: '0.76rem',
-                fontWeight: 700,
-                color: '#94a3b8',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.3rem',
-                cursor: 'pointer',
-              }}
-            >
-              <Download size={14} color="#f5b942" /> CSV
-            </button>
-            <button
-              onClick={handlePrintStatement}
-              title="Print Booking Report"
-              style={{
-                background: 'var(--color-surface, #151822)',
-                border: '1px solid var(--color-border, rgba(255, 255, 255, 0.08))',
-                borderRadius: '10px',
-                padding: '0.45rem 0.65rem',
-                fontSize: '0.76rem',
-                fontWeight: 700,
-                color: '#94a3b8',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.3rem',
-                cursor: 'pointer',
-              }}
-            >
-              <Printer size={14} color="#f5b942" /> Print
-            </button>
+          {/* Statement Export Toolbar */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '0.5rem',
+              flexWrap: 'wrap',
+            }}
+          >
+            <div style={{ fontSize: '0.74rem', color: '#64748b', fontWeight: 700 }}>
+              Showing {filteredBookings.length} {filteredBookings.length === 1 ? 'session' : 'sessions'}
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+              <button
+                onClick={handleExportCSV}
+                title="Download CSV Statement"
+                style={{
+                  background: 'var(--color-surface, #151822)',
+                  border: '1px solid var(--color-border, rgba(255, 255, 255, 0.08))',
+                  borderRadius: '10px',
+                  padding: '0.45rem 0.75rem',
+                  fontSize: '0.76rem',
+                  fontWeight: 700,
+                  color: '#94a3b8',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  cursor: 'pointer',
+                  minHeight: '34px',
+                  touchAction: 'manipulation',
+                }}
+              >
+                <Download size={13} color="#f5b942" /> CSV
+              </button>
+              <button
+                onClick={handlePrintStatement}
+                title="Print Booking Report"
+                style={{
+                  background: 'var(--color-surface, #151822)',
+                  border: '1px solid var(--color-border, rgba(255, 255, 255, 0.08))',
+                  borderRadius: '10px',
+                  padding: '0.45rem 0.75rem',
+                  fontSize: '0.76rem',
+                  fontWeight: 700,
+                  color: '#94a3b8',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  cursor: 'pointer',
+                  minHeight: '34px',
+                  touchAction: 'manipulation',
+                }}
+              >
+                <Printer size={13} color="#f5b942" /> Print
+              </button>
+            </div>
           </div>
         </div>
 
@@ -611,15 +677,18 @@ export const MyBookings = () => {
             flexDirection: 'column',
             gap: '0.65rem',
             marginBottom: '1.25rem',
+            width: '100%',
+            boxSizing: 'border-box',
           }}
         >
-          {/* Search Input */}
+          {/* Search Input (Responsive placeholder, 16px to prevent iOS auto-zoom) */}
           <div
             style={{
               position: 'relative',
               display: 'flex',
               alignItems: 'center',
               width: '100%',
+              boxSizing: 'border-box',
             }}
           >
             <Search
@@ -629,7 +698,7 @@ export const MyBookings = () => {
             />
             <input
               type="text"
-              placeholder={isStaff ? 'Search by client, service, or pass code...' : 'Search by specialist, service, pass code, or date...'}
+              placeholder={isStaff ? 'Search client, service, code...' : 'Search specialist, service, code...'}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               style={{
@@ -638,10 +707,11 @@ export const MyBookings = () => {
                 border: '1px solid var(--color-border, rgba(255, 255, 255, 0.08))',
                 borderRadius: '14px',
                 padding: '0.7rem 2.2rem 0.7rem 2.4rem',
-                fontSize: '0.88rem',
+                fontSize: '16px', // 16px prevents iOS Safari auto-zoom
                 color: 'var(--color-text-primary, #ffffff)',
                 outline: 'none',
                 fontFamily: 'Outfit',
+                boxSizing: 'border-box',
               }}
             />
             {searchQuery && (
@@ -662,18 +732,31 @@ export const MyBookings = () => {
             )}
           </div>
 
-          {/* Category Chips & Sort dropdown */}
+          {/* Category Chips & Sort dropdown (Smooth horizontal touch scroll) */}
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
               gap: '0.5rem',
-              overflowX: 'auto',
-              paddingBottom: '0.25rem',
+              width: '100%',
+              boxSizing: 'border-box',
             }}
           >
-            <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'nowrap' }}>
+            <div
+              style={{
+                display: 'flex',
+                gap: '0.4rem',
+                flexWrap: 'nowrap',
+                overflowX: 'auto',
+                WebkitOverflowScrolling: 'touch',
+                scrollbarWidth: 'none',
+                msOverflowStyle: 'none',
+                paddingBottom: '0.2rem',
+                minWidth: 0,
+                flex: 1,
+              }}
+            >
               {[
                 { id: 'all', label: 'All Services' },
                 { id: 'barber', label: 'Barber Grooming' },

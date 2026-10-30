@@ -710,7 +710,8 @@ export const CustomerDashboard = () => {
                 icon: ShoppingBag,
                 action: () => {
                   if (orders.length > 0) {
-                    navigate(`/order-tracking/${orders[0]._id}`);
+                    const firstId = orders[0]._id || orders[0].id || '';
+                    navigate(firstId ? `/order-tracking/${firstId}` : '/order-tracking');
                   } else {
                     showToast('No active orders. Visit the store first.', 'accent');
                     navigate('/store');
@@ -1470,14 +1471,14 @@ export const CustomerDashboard = () => {
                         </div>
                         <div style={{ textAlign: 'right', flexShrink: 0 }}>
                           <StatusBadge status={o.trackingStatus || o.status || 'processing'} />
-                          <div style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '0.95rem', color: '#171717', marginTop: '0.25rem', whiteSpace: 'nowrap' }}>
+                          <div style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '0.95rem', color: '#f5b942', marginTop: '0.25rem', whiteSpace: 'nowrap' }}>
                             ₦{Number(o.totalPrice || o.price || 0).toLocaleString()}
                           </div>
                         </div>
                       </div>
                       <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '0.55rem', display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                         <button
-                          onClick={() => { setShowHistorySheet(false); navigate(`/order-tracking/${o._id}`); }}
+                          onClick={() => { setShowHistorySheet(false); navigate(`/order-tracking/${o._id || o.id}`); }}
                           className="app-btn app-btn-accent"
                           style={{ flex: 1, minHeight: '44px', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' }}
                         >

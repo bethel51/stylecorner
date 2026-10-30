@@ -436,6 +436,14 @@ export const App = () => {
 
               {/* Order Tracking Standalone Route */}
               <Route
+                path="/order-tracking"
+                element={
+                  <ProtectedRoute>
+                    <OrderTrackingPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/order-tracking/:orderId"
                 element={
                   <ProtectedRoute>
