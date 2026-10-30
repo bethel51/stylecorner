@@ -2050,10 +2050,11 @@ export const AdminDashboard = () => {
               {/* Filter Pills */}
               <div style={{ display: 'flex', gap: '0.4rem', overflowX: 'auto', paddingBottom: '0.4rem', marginBottom: '1.25rem', WebkitOverflowScrolling: 'touch' }}>
                 {[
-                  { id: 'all', label: 'All Templates', count: 3 },
-                  { id: 'billboard', label: 'Highway Billboard', count: 1 },
-                  { id: 'portrait', label: 'Street Flyer', count: 1 },
+                  { id: 'all', label: 'All Templates', count: 4 },
+                  { id: 'billboard', label: 'Customer Booking', count: 1 },
                   { id: 'recruit', label: 'Stylist Recruitment', count: 1 },
+                  { id: 'store', label: 'Atelier Store', count: 1 },
+                  { id: 'ai_matcher', label: 'AI Matcher', count: 1 },
                 ].map(f => (
                   <button
                     key={f.id}
@@ -2085,57 +2086,47 @@ export const AdminDashboard = () => {
                 gap: '1.25rem',
               }}>
 
-                {/* CARD 1 — Highway Billboard */}
+                {/* CARD 1 — Customer Booking Flyer */}
                 {(marketingFilter === 'all' || marketingFilter === 'billboard') && (
                   <div style={{
                     backgroundColor: '#151822', borderRadius: '20px',
-                    border: '1px solid rgba(212,175,55,0.2)',
-                    boxShadow: '0 8px 32px rgba(0,0,0,0.35), 0 0 0 1px rgba(212,175,55,0.05)',
+                    border: '1px solid rgba(245,185,66,0.3)',
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.35)',
                     overflow: 'hidden',
                   }}>
-                    {/* Preview (Clickable to view full banner & QR) */}
+                    {/* Preview */}
                     <div
                       onClick={() => setActiveBannerModal('billboard')}
-                      title="Click to view full banner & scannable QR code"
+                      title="Click to view full flyer & scannable QR code"
                       style={{
-                        background: 'linear-gradient(135deg, #1a1225 0%, #0d1117 40%, #1a1225 100%)',
+                        background: 'radial-gradient(circle at 80% 20%, rgba(245,185,66,0.22) 0%, transparent 55%), linear-gradient(135deg, #181204 0%, #0d0d14 50%, #151004 100%)',
                         padding: isMobile ? '1rem 0.85rem' : '1.5rem',
                         aspectRatio: isMobile ? 'auto' : '16/7',
                         minHeight: isMobile ? '135px' : 'auto',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
+                        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                         gap: isMobile ? '0.75rem' : '1rem',
-                        position: 'relative',
-                        overflow: 'hidden',
-                        cursor: 'pointer',
-                        transition: 'transform 0.2s ease',
-                        boxSizing: 'border-box',
+                        position: 'relative', overflow: 'hidden', cursor: 'pointer', boxSizing: 'border-box',
                       }}
                     >
-                      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 20% 50%, rgba(212,175,55,0.12) 0%, transparent 60%), radial-gradient(ellipse at 80% 50%, rgba(168,85,247,0.08) 0%, transparent 60%)' }} />
                       <div style={{ position: 'relative', zIndex: 1, flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: '0.52rem', fontWeight: 900, color: '#f5b942', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '0.2rem', fontFamily: 'Outfit' }}>✦ StyleCorner</div>
-                        <div style={{ fontSize: isMobile ? '1rem' : '1.4rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.15, fontFamily: 'Outfit', marginBottom: '0.25rem' }}>Your Style,<br/><span style={{ color: '#f5b942' }}>Delivered.</span></div>
-                        <div style={{ fontSize: isMobile ? '0.52rem' : '0.62rem', color: '#94a3b8', fontFamily: 'Outfit' }}>Book top stylists in Lagos & Ibadan</div>
-                        <div style={{ marginTop: '0.45rem', display: 'inline-flex', alignItems: 'center', gap: '0.3rem', backgroundColor: '#f5b942', padding: '0.2rem 0.55rem', borderRadius: '50px' }}>
-                          <span style={{ fontSize: '0.5rem', fontWeight: 900, color: '#0c0e14', fontFamily: 'Outfit' }}>Tap to view full banner</span>
-                        </div>
+                        <div style={{ fontSize: '0.55rem', fontWeight: 900, color: '#f5b942', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '0.2rem', fontFamily: 'Outfit' }}>STYLECORNER NIGERIA</div>
+                        <div style={{ fontSize: isMobile ? '0.98rem' : '1.18rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.15, fontFamily: 'Outfit', marginBottom: '0.25rem' }}>Book Verified Stylists,<br/><span style={{ background: 'linear-gradient(90deg, #f5b942, #ffd06e)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>In Seconds.</span></div>
+                        <div style={{ fontSize: isMobile ? '0.55rem' : '0.62rem', color: '#94a3b8' }}>Barbers, Braiders, Lashes & Nails · Lagos & Ibadan</div>
                       </div>
                       <div style={{ position: 'relative', zIndex: 1, flexShrink: 0, textAlign: 'center' }}>
                         <QrWorldSvg size={isMobile ? 54 : 64} logoSize={isMobile ? 14 : 16} />
-                        <div style={{ fontSize: '0.42rem', color: '#94a3b8', marginTop: '0.25rem', fontFamily: 'Outfit' }}>Scan to book</div>
+                        <div style={{ fontSize: '0.45rem', color: '#f5b942', marginTop: '0.25rem', fontFamily: 'Outfit', fontWeight: 800 }}>Scan with camera</div>
                       </div>
                     </div>
                     {/* Card Footer */}
                     <div style={{ padding: '1rem 1.25rem' }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.6rem' }}>
                         <div>
-                          <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#ffffff', fontFamily: 'Outfit' }}>Highway Billboard</div>
-                          <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>16:9 Landscape — LED screens, roadside hoardings</div>
+                          <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#ffffff', fontFamily: 'Outfit' }}>Customer Booking Flyer</div>
+                          <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>Client discovery · Salon & VIP home visit</div>
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', backgroundColor: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.25)', padding: '0.2rem 0.55rem', borderRadius: '50px' }}>
-                          <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#f5b942' }} />
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', backgroundColor: 'rgba(245,185,66,0.12)', border: '1px solid rgba(245,185,66,0.3)', padding: '0.2rem 0.55rem', borderRadius: '50px' }}>
+                          <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#22c55e' }} />
                           <span style={{ fontSize: '0.65rem', color: '#f5b942', fontWeight: 800 }}>Live QR</span>
                         </div>
                       </div>
@@ -2153,7 +2144,7 @@ export const AdminDashboard = () => {
                             backgroundColor: copiedMarketingUrl === 'billboard' ? 'rgba(34,197,94,0.15)' : 'rgba(255,255,255,0.05)',
                             border: copiedMarketingUrl === 'billboard' ? '1px solid rgba(34,197,94,0.4)' : '1px solid rgba(255,255,255,0.1)',
                             color: copiedMarketingUrl === 'billboard' ? '#4ade80' : '#94a3b8',
-                            cursor: 'pointer', fontFamily: 'Outfit', transition: 'all 0.15s ease',
+                            cursor: 'pointer', fontFamily: 'Outfit',
                           }}
                         >
                           {copiedMarketingUrl === 'billboard' ? <Check size={12} /> : <Copy size={12} />}
@@ -2165,16 +2156,15 @@ export const AdminDashboard = () => {
                           style={{
                             flex: 1.2, minWidth: '110px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem',
                             padding: '0.5rem', borderRadius: '8px', fontSize: '0.73rem', fontWeight: 800,
-                            backgroundColor: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.35)',
+                            backgroundColor: 'rgba(245,185,66,0.15)', border: '1px solid rgba(245,185,66,0.4)',
                             color: '#f5b942', cursor: 'pointer', fontFamily: 'Outfit',
                           }}
                         >
-                          <Eye size={12} /> View Banner & QR
+                          <Eye size={12} /> View Flyer & QR
                         </button>
                         <button
                           type="button"
                           onClick={() => handleDownloadBannerPdf('billboard')}
-                          title="Save as PDF / Download to phone"
                           style={{
                             display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem',
                             padding: '0.5rem 0.75rem', borderRadius: '8px', fontSize: '0.73rem', fontWeight: 700,
@@ -2182,174 +2172,55 @@ export const AdminDashboard = () => {
                             color: '#ffffff', cursor: 'pointer', fontFamily: 'Outfit',
                           }}
                         >
-                          <Download size={12} /> Save to PDF
+                          <Download size={12} /> Save PDF
                         </button>
                       </div>
                     </div>
                   </div>
                 )}
 
-                {/* CARD 2 — Street Flyer / Portrait */}
-                {(marketingFilter === 'all' || marketingFilter === 'portrait') && (
-                  <div style={{
-                    backgroundColor: '#151822', borderRadius: '20px',
-                    border: '1px solid rgba(245,185,66,0.3)',
-                    boxShadow: '0 8px 32px rgba(0,0,0,0.35), 0 0 0 1px rgba(168,85,247,0.05)',
-                    overflow: 'hidden',
-                  }}>
-                    {/* Preview */}
-                    <div
-                      onClick={() => setActiveBannerModal('portrait')}
-                      title="Click to view full flyer & scannable QR code"
-                      style={{
-                        background: 'radial-gradient(circle at 50% 10%, rgba(245,185,66,0.18) 0%, transparent 55%), linear-gradient(160deg, #181204 0%, #0d0d14 50%, #120d02 100%)',
-                        padding: isMobile ? '1rem 0.85rem' : '1.5rem 1rem',
-                        aspectRatio: isMobile ? 'auto' : '16/7',
-                        minHeight: isMobile ? '135px' : 'auto',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        gap: isMobile ? '0.75rem' : '1rem',
-                        position: 'relative',
-                        overflow: 'hidden',
-                        cursor: 'pointer',
-                        transition: 'transform 0.2s ease',
-                        boxSizing: 'border-box',
-                      }}
-                    >
-                      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 30% 50%, rgba(245,185,66,0.15) 0%, transparent 60%)' }} />
-                      <div style={{ position: 'relative', zIndex: 1, flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: '0.48rem', fontWeight: 900, color: '#f5b942', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '0.2rem', fontFamily: 'Outfit' }}>✦ StyleCorner</div>
-                        <div style={{ fontSize: isMobile ? '0.98rem' : '1.2rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.15, fontFamily: 'Outfit', marginBottom: '0.25rem' }}>Style that<br/><span style={{ background: 'linear-gradient(90deg, #f5b942, #ffd06e)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>moves with you.</span></div>
-                        <div style={{ fontSize: isMobile ? '0.52rem' : '0.6rem', color: '#94a3b8' }}>Browse. Book. Slay — same day.</div>
-                        <div style={{ marginTop: '0.45rem', display: 'inline-block', backgroundColor: 'rgba(168,85,247,0.2)', border: '1px solid rgba(168,85,247,0.4)', padding: '0.2rem 0.55rem', borderRadius: '50px' }}>
-                          <span style={{ fontSize: '0.48rem', fontWeight: 900, color: '#c084fc', fontFamily: 'Outfit' }}>Tap to view flyer</span>
-                        </div>
-                      </div>
-                      <div style={{ position: 'relative', zIndex: 1, flexShrink: 0, textAlign: 'center' }}>
-                        <QrWorldSvg size={isMobile ? 54 : 64} logoSize={isMobile ? 14 : 16} />
-                        <div style={{ fontSize: '0.42rem', color: '#94a3b8', marginTop: '0.25rem', fontFamily: 'Outfit' }}>Scan to book</div>
-                      </div>
-                    </div>
-                    {/* Card Footer */}
-                    <div style={{ padding: '1rem 1.25rem' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.6rem' }}>
-                        <div>
-                          <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#ffffff', fontFamily: 'Outfit' }}>Street Flyer / Social Story</div>
-                          <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>4:5 / 9:16 Portrait — salons, malls, social media</div>
-                        </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', backgroundColor: 'rgba(245,185,66,0.12)', border: '1px solid rgba(245,185,66,0.25)', padding: '0.2rem 0.55rem', borderRadius: '50px' }}>
-                          <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#f5b942' }} />
-                          <span style={{ fontSize: '0.65rem', color: '#c084fc', fontWeight: 800 }}>Live QR</span>
-                        </div>
-                      </div>
-                      <div style={{ display: 'flex', gap: '0.45rem', flexWrap: 'wrap' }}>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            navigator.clipboard.writeText('https://www.stylecorner.world');
-                            setCopiedMarketingUrl('portrait');
-                            setTimeout(() => setCopiedMarketingUrl(null), 2000);
-                          }}
-                          style={{
-                            flex: 1, minWidth: '90px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem',
-                            padding: '0.5rem', borderRadius: '8px', fontSize: '0.73rem', fontWeight: 700,
-                            backgroundColor: copiedMarketingUrl === 'portrait' ? 'rgba(34,197,94,0.15)' : 'rgba(255,255,255,0.05)',
-                            border: copiedMarketingUrl === 'portrait' ? '1px solid rgba(34,197,94,0.4)' : '1px solid rgba(255,255,255,0.1)',
-                            color: copiedMarketingUrl === 'portrait' ? '#4ade80' : '#94a3b8',
-                            cursor: 'pointer', fontFamily: 'Outfit', transition: 'all 0.15s ease',
-                          }}
-                        >
-                          {copiedMarketingUrl === 'portrait' ? <Check size={12} /> : <Copy size={12} />}
-                          {copiedMarketingUrl === 'portrait' ? 'Copied!' : 'Copy URL'}
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setActiveBannerModal('portrait')}
-                          style={{
-                            flex: 1.2, minWidth: '110px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem',
-                            padding: '0.5rem', borderRadius: '8px', fontSize: '0.73rem', fontWeight: 800,
-                            backgroundColor: 'rgba(168,85,247,0.15)', border: '1px solid rgba(168,85,247,0.35)',
-                            color: '#c084fc', cursor: 'pointer', fontFamily: 'Outfit',
-                          }}
-                        >
-                          <Eye size={12} /> View Banner & QR
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleDownloadBannerPdf('portrait')}
-                          title="Save as PDF / Download to phone"
-                          style={{
-                            display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem',
-                            padding: '0.5rem 0.75rem', borderRadius: '8px', fontSize: '0.73rem', fontWeight: 700,
-                            backgroundColor: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)',
-                            color: '#ffffff', cursor: 'pointer', fontFamily: 'Outfit',
-                          }}
-                        >
-                          <Download size={12} /> Save to PDF
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* CARD 3 — Stylist Recruitment */}
+                {/* CARD 2 — Stylist Recruitment Flyer */}
                 {(marketingFilter === 'all' || marketingFilter === 'recruit') && (
                   <div style={{
                     backgroundColor: '#151822', borderRadius: '20px',
                     border: '1px solid rgba(245,185,66,0.3)',
-                    boxShadow: '0 8px 32px rgba(0,0,0,0.35), 0 0 0 1px rgba(16,185,129,0.05)',
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.35)',
                     overflow: 'hidden',
                   }}>
                     {/* Preview */}
                     <div
                       onClick={() => setActiveBannerModal('recruit')}
-                      title="Click to view recruitment poster & scannable QR code"
+                      title="Click to view full recruitment poster & scannable QR code"
                       style={{
-                        background: 'radial-gradient(circle at 50% 10%, rgba(245,185,66,0.18) 0%, transparent 55%), linear-gradient(135deg, #181204 0%, #0d1117 50%, #120d02 100%)',
-                        padding: isMobile ? '1rem 0.85rem' : '1.5rem 1rem',
+                        background: 'radial-gradient(circle at 80% 20%, rgba(245,185,66,0.22) 0%, transparent 55%), linear-gradient(135deg, #091217 0%, #0d1217 50%, #151a14 100%)',
+                        padding: isMobile ? '1rem 0.85rem' : '1.5rem',
                         aspectRatio: isMobile ? 'auto' : '16/7',
                         minHeight: isMobile ? '135px' : 'auto',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
+                        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                         gap: isMobile ? '0.75rem' : '1rem',
-                        position: 'relative',
-                        overflow: 'hidden',
-                        cursor: 'pointer',
-                        transition: 'transform 0.2s ease',
-                        boxSizing: 'border-box',
+                        position: 'relative', overflow: 'hidden', cursor: 'pointer', boxSizing: 'border-box',
                       }}
                     >
-                      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 30% 50%, rgba(245,185,66,0.15) 0%, transparent 60%)' }} />
                       <div style={{ position: 'relative', zIndex: 1, flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: '0.48rem', fontWeight: 900, color: '#f5b942', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '0.2rem', fontFamily: 'Outfit' }}>We're Hiring ✦</div>
-                        <div style={{ fontSize: isMobile ? '0.95rem' : '1.15rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.15, fontFamily: 'Outfit', marginBottom: '0.25rem' }}>Are you a <br/><span style={{ color: '#f5b942' }}>Top Stylist?</span></div>
-                        <div style={{ fontSize: isMobile ? '0.5rem' : '0.58rem', color: '#94a3b8' }}>Join StyleCorner. Earn more. Work free.</div>
-                        <div style={{ marginTop: '0.4rem', display: 'flex', gap: '0.25rem', flexWrap: 'wrap' }}>
-                          {['Barbers', 'Braiders', 'Lash Techs', 'Nail Artists'].map(r => (
-                            <span key={r} style={{ fontSize: '0.42rem', fontWeight: 700, color: '#f5b942', backgroundColor: 'rgba(245,185,66,0.15)', border: '1px solid rgba(245,185,66,0.3)', padding: '0.1rem 0.3rem', borderRadius: '4px', fontFamily: 'Outfit' }}>{r}</span>
-                          ))}
-                        </div>
-                        <div style={{ marginTop: '0.4rem', display: 'inline-block', backgroundColor: 'rgba(16,185,129,0.2)', border: '1px solid rgba(16,185,129,0.4)', padding: '0.2rem 0.55rem', borderRadius: '50px' }}>
-                          <span style={{ fontSize: '0.48rem', fontWeight: 900, color: '#4ade80', fontFamily: 'Outfit' }}>Tap to view poster</span>
-                        </div>
+                        <div style={{ fontSize: '0.55rem', fontWeight: 900, color: '#f5b942', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '0.2rem', fontFamily: 'Outfit' }}>STYLECORNER PRO</div>
+                        <div style={{ fontSize: isMobile ? '0.98rem' : '1.18rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.15, fontFamily: 'Outfit', marginBottom: '0.25rem' }}>Barbers & Braiders:<br/><span style={{ color: '#F5B942' }}>Get Booked. Get Paid.</span></div>
+                        <div style={{ fontSize: isMobile ? '0.55rem' : '0.62rem', color: '#94a3b8' }}>₦15k–₦60k+ Daily · Instant Payouts</div>
                       </div>
                       <div style={{ position: 'relative', zIndex: 1, flexShrink: 0, textAlign: 'center' }}>
                         <QrRecruitSvg size={isMobile ? 54 : 64} logoSize={isMobile ? 14 : 16} />
-                        <div style={{ fontSize: '0.42rem', color: '#94a3b8', marginTop: '0.25rem', fontFamily: 'Outfit' }}>Scan to join</div>
+                        <div style={{ fontSize: '0.45rem', color: '#F5B942', marginTop: '0.25rem', fontFamily: 'Outfit', fontWeight: 800 }}>Join free</div>
                       </div>
                     </div>
                     {/* Card Footer */}
                     <div style={{ padding: '1rem 1.25rem' }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.6rem' }}>
                         <div>
-                          <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#ffffff', fontFamily: 'Outfit' }}>Stylist Recruitment Poster</div>
-                          <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>For salons, barber hubs, beauty schools, social ads</div>
+                          <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#ffffff', fontFamily: 'Outfit' }}>Stylist Recruitment Flyer</div>
+                          <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>Barbers, braiders & lash tech onboarding</div>
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', backgroundColor: 'rgba(245,185,66,0.12)', border: '1px solid rgba(245,185,66,0.25)', padding: '0.2rem 0.55rem', borderRadius: '50px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', backgroundColor: 'rgba(245,185,66,0.12)', border: '1px solid rgba(245,185,66,0.3)', padding: '0.2rem 0.55rem', borderRadius: '50px' }}>
                           <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#22c55e' }} />
-                          <span style={{ fontSize: '0.65rem', color: '#4ade80', fontWeight: 800 }}>Live QR</span>
+                          <span style={{ fontSize: '0.65rem', color: '#F5B942', fontWeight: 800 }}>Live QR</span>
                         </div>
                       </div>
                       <div style={{ display: 'flex', gap: '0.45rem', flexWrap: 'wrap' }}>
@@ -2366,7 +2237,7 @@ export const AdminDashboard = () => {
                             backgroundColor: copiedMarketingUrl === 'recruit' ? 'rgba(34,197,94,0.15)' : 'rgba(255,255,255,0.05)',
                             border: copiedMarketingUrl === 'recruit' ? '1px solid rgba(34,197,94,0.4)' : '1px solid rgba(255,255,255,0.1)',
                             color: copiedMarketingUrl === 'recruit' ? '#4ade80' : '#94a3b8',
-                            cursor: 'pointer', fontFamily: 'Outfit', transition: 'all 0.15s ease',
+                            cursor: 'pointer', fontFamily: 'Outfit',
                           }}
                         >
                           {copiedMarketingUrl === 'recruit' ? <Check size={12} /> : <Copy size={12} />}
@@ -2378,16 +2249,15 @@ export const AdminDashboard = () => {
                           style={{
                             flex: 1.2, minWidth: '110px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem',
                             padding: '0.5rem', borderRadius: '8px', fontSize: '0.73rem', fontWeight: 800,
-                            backgroundColor: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.35)',
-                            color: '#4ade80', cursor: 'pointer', fontFamily: 'Outfit',
+                            backgroundColor: 'rgba(245,185,66,0.15)', border: '1px solid rgba(245,185,66,0.4)',
+                            color: '#F5B942', cursor: 'pointer', fontFamily: 'Outfit',
                           }}
                         >
-                          <Eye size={12} /> View Poster & QR
+                          <Eye size={12} /> View Flyer & QR
                         </button>
                         <button
                           type="button"
                           onClick={() => handleDownloadBannerPdf('recruit')}
-                          title="Save as PDF / Download to phone"
                           style={{
                             display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem',
                             padding: '0.5rem 0.75rem', borderRadius: '8px', fontSize: '0.73rem', fontWeight: 700,
@@ -2395,7 +2265,193 @@ export const AdminDashboard = () => {
                             color: '#ffffff', cursor: 'pointer', fontFamily: 'Outfit',
                           }}
                         >
-                          <Download size={12} /> Save to PDF
+                          <Download size={12} /> Save PDF
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* CARD 3 — Atelier Care Store Flyer */}
+                {(marketingFilter === 'all' || marketingFilter === 'store') && (
+                  <div style={{
+                    backgroundColor: '#151822', borderRadius: '20px',
+                    border: '1px solid rgba(245,185,66,0.3)',
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.35)',
+                    overflow: 'hidden',
+                  }}>
+                    {/* Preview */}
+                    <div
+                      onClick={() => setActiveBannerModal('store')}
+                      title="Click to view full store flyer & scannable QR code"
+                      style={{
+                        background: 'radial-gradient(circle at 80% 20%, rgba(245,185,66,0.22) 0%, transparent 55%), linear-gradient(135deg, #181005 0%, #100e16 50%, #1a1205 100%)',
+                        padding: isMobile ? '1rem 0.85rem' : '1.5rem',
+                        aspectRatio: isMobile ? 'auto' : '16/7',
+                        minHeight: isMobile ? '135px' : 'auto',
+                        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                        gap: isMobile ? '0.75rem' : '1rem',
+                        position: 'relative', overflow: 'hidden', cursor: 'pointer', boxSizing: 'border-box',
+                      }}
+                    >
+                      <div style={{ position: 'relative', zIndex: 1, flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: '0.55rem', fontWeight: 900, color: '#f5b942', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '0.2rem', fontFamily: 'Outfit' }}>STYLECORNER ATELIER</div>
+                        <div style={{ fontSize: isMobile ? '0.98rem' : '1.18rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.15, fontFamily: 'Outfit', marginBottom: '0.25rem' }}>Curated Hair Care &<br/><span style={{ color: '#F5B942' }}>Grooming Essentials.</span></div>
+                        <div style={{ fontSize: isMobile ? '0.55rem' : '0.62rem', color: '#94a3b8' }}>Clippers, Oils, Lace Glue · Fast Delivery</div>
+                      </div>
+                      <div style={{ position: 'relative', zIndex: 1, flexShrink: 0, textAlign: 'center' }}>
+                        <QrWorldSvg size={isMobile ? 54 : 64} logoSize={isMobile ? 14 : 16} />
+                        <div style={{ fontSize: '0.45rem', color: '#f5b942', marginTop: '0.25rem', fontFamily: 'Outfit', fontWeight: 800 }}>Shop store</div>
+                      </div>
+                    </div>
+                    {/* Card Footer */}
+                    <div style={{ padding: '1rem 1.25rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.6rem' }}>
+                        <div>
+                          <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#ffffff', fontFamily: 'Outfit' }}>Atelier Store Flyer</div>
+                          <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>Hair care, clippers, serums & styling tools</div>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', backgroundColor: 'rgba(245,185,66,0.12)', border: '1px solid rgba(245,185,66,0.3)', padding: '0.2rem 0.55rem', borderRadius: '50px' }}>
+                          <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#22c55e' }} />
+                          <span style={{ fontSize: '0.65rem', color: '#f5b942', fontWeight: 800 }}>Live QR</span>
+                        </div>
+                      </div>
+                      <div style={{ display: 'flex', gap: '0.45rem', flexWrap: 'wrap' }}>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            navigator.clipboard.writeText('https://www.stylecorner.world/store');
+                            setCopiedMarketingUrl('store');
+                            setTimeout(() => setCopiedMarketingUrl(null), 2000);
+                          }}
+                          style={{
+                            flex: 1, minWidth: '90px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem',
+                            padding: '0.5rem', borderRadius: '8px', fontSize: '0.73rem', fontWeight: 700,
+                            backgroundColor: copiedMarketingUrl === 'store' ? 'rgba(34,197,94,0.15)' : 'rgba(255,255,255,0.05)',
+                            border: copiedMarketingUrl === 'store' ? '1px solid rgba(34,197,94,0.4)' : '1px solid rgba(255,255,255,0.1)',
+                            color: copiedMarketingUrl === 'store' ? '#4ade80' : '#94a3b8',
+                            cursor: 'pointer', fontFamily: 'Outfit',
+                          }}
+                        >
+                          {copiedMarketingUrl === 'store' ? <Check size={12} /> : <Copy size={12} />}
+                          {copiedMarketingUrl === 'store' ? 'Copied!' : 'Copy URL'}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setActiveBannerModal('store')}
+                          style={{
+                            flex: 1.2, minWidth: '110px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem',
+                            padding: '0.5rem', borderRadius: '8px', fontSize: '0.73rem', fontWeight: 800,
+                            backgroundColor: 'rgba(245,185,66,0.15)', border: '1px solid rgba(245,185,66,0.4)',
+                            color: '#f5b942', cursor: 'pointer', fontFamily: 'Outfit',
+                          }}
+                        >
+                          <Eye size={12} /> View Flyer & QR
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDownloadBannerPdf('store')}
+                          style={{
+                            display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem',
+                            padding: '0.5rem 0.75rem', borderRadius: '8px', fontSize: '0.73rem', fontWeight: 700,
+                            backgroundColor: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)',
+                            color: '#ffffff', cursor: 'pointer', fontFamily: 'Outfit',
+                          }}
+                        >
+                          <Download size={12} /> Save PDF
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* CARD 4 — AI Stylist Matcher Flyer */}
+                {(marketingFilter === 'all' || marketingFilter === 'ai_matcher') && (
+                  <div style={{
+                    backgroundColor: '#151822', borderRadius: '20px',
+                    border: '1px solid rgba(245,185,66,0.3)',
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.35)',
+                    overflow: 'hidden',
+                  }}>
+                    {/* Preview */}
+                    <div
+                      onClick={() => setActiveBannerModal('ai_matcher')}
+                      title="Click to view full AI Matcher flyer & scannable QR code"
+                      style={{
+                        background: 'radial-gradient(circle at 80% 20%, rgba(245,185,66,0.22) 0%, transparent 55%), linear-gradient(135deg, #0d0f1a 0%, #10121d 50%, #151825 100%)',
+                        padding: isMobile ? '1rem 0.85rem' : '1.5rem',
+                        aspectRatio: isMobile ? 'auto' : '16/7',
+                        minHeight: isMobile ? '135px' : 'auto',
+                        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                        gap: isMobile ? '0.75rem' : '1rem',
+                        position: 'relative', overflow: 'hidden', cursor: 'pointer', boxSizing: 'border-box',
+                      }}
+                    >
+                      <div style={{ position: 'relative', zIndex: 1, flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: '0.55rem', fontWeight: 900, color: '#f5b942', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '0.2rem', fontFamily: 'Outfit' }}>STYLECORNER AI</div>
+                        <div style={{ fontSize: isMobile ? '0.98rem' : '1.18rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.15, fontFamily: 'Outfit', marginBottom: '0.25rem' }}>Find Your Stylist In<br/><span style={{ color: '#F5B942' }}>Your Neighborhood.</span></div>
+                        <div style={{ fontSize: isMobile ? '0.55rem' : '0.62rem', color: '#94a3b8' }}>10-Second Match · Lagos & Ibadan</div>
+                      </div>
+                      <div style={{ position: 'relative', zIndex: 1, flexShrink: 0, textAlign: 'center' }}>
+                        <QrWorldSvg size={isMobile ? 54 : 64} logoSize={isMobile ? 14 : 16} />
+                        <div style={{ fontSize: '0.45rem', color: '#f5b942', marginTop: '0.25rem', fontFamily: 'Outfit', fontWeight: 800 }}>Match in 10s</div>
+                      </div>
+                    </div>
+                    {/* Card Footer */}
+                    <div style={{ padding: '1rem 1.25rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.6rem' }}>
+                        <div>
+                          <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#ffffff', fontFamily: 'Outfit' }}>AI Stylist Matcher Flyer</div>
+                          <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>Smart neighborhood & budget beauty matcher</div>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', backgroundColor: 'rgba(245,185,66,0.12)', border: '1px solid rgba(245,185,66,0.3)', padding: '0.2rem 0.55rem', borderRadius: '50px' }}>
+                          <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#22c55e' }} />
+                          <span style={{ fontSize: '0.65rem', color: '#f5b942', fontWeight: 800 }}>Live QR</span>
+                        </div>
+                      </div>
+                      <div style={{ display: 'flex', gap: '0.45rem', flexWrap: 'wrap' }}>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            navigator.clipboard.writeText('https://www.stylecorner.world/ai-matcher');
+                            setCopiedMarketingUrl('ai_matcher');
+                            setTimeout(() => setCopiedMarketingUrl(null), 2000);
+                          }}
+                          style={{
+                            flex: 1, minWidth: '90px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem',
+                            padding: '0.5rem', borderRadius: '8px', fontSize: '0.73rem', fontWeight: 700,
+                            backgroundColor: copiedMarketingUrl === 'ai_matcher' ? 'rgba(34,197,94,0.15)' : 'rgba(255,255,255,0.05)',
+                            border: copiedMarketingUrl === 'ai_matcher' ? '1px solid rgba(34,197,94,0.4)' : '1px solid rgba(255,255,255,0.1)',
+                            color: copiedMarketingUrl === 'ai_matcher' ? '#4ade80' : '#94a3b8',
+                            cursor: 'pointer', fontFamily: 'Outfit',
+                          }}
+                        >
+                          {copiedMarketingUrl === 'ai_matcher' ? <Check size={12} /> : <Copy size={12} />}
+                          {copiedMarketingUrl === 'ai_matcher' ? 'Copied!' : 'Copy URL'}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setActiveBannerModal('ai_matcher')}
+                          style={{
+                            flex: 1.2, minWidth: '110px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem',
+                            padding: '0.5rem', borderRadius: '8px', fontSize: '0.73rem', fontWeight: 800,
+                            backgroundColor: 'rgba(245,185,66,0.15)', border: '1px solid rgba(245,185,66,0.4)',
+                            color: '#f5b942', cursor: 'pointer', fontFamily: 'Outfit',
+                          }}
+                        >
+                          <Eye size={12} /> View Flyer & QR
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDownloadBannerPdf('ai_matcher')}
+                          style={{
+                            display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem',
+                            padding: '0.5rem 0.75rem', borderRadius: '8px', fontSize: '0.73rem', fontWeight: 700,
+                            backgroundColor: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)',
+                            color: '#ffffff', cursor: 'pointer', fontFamily: 'Outfit',
+                          }}
+                        >
+                          <Download size={12} /> Save PDF
                         </button>
                       </div>
                     </div>
@@ -3040,16 +3096,17 @@ export const AdminDashboard = () => {
                 />
                 <div style={{ minWidth: 0 }}>
                   <div style={{ fontSize: isMobile ? '0.82rem' : '1rem', fontWeight: 800, color: '#ffffff', fontFamily: 'Outfit', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                    {activeBannerModal === 'billboard' && 'Highway Billboard (16:9 Landscape)'}
-                    {activeBannerModal === 'portrait' && 'Street Flyer & Social Story (Portrait)'}
-                    {activeBannerModal === 'recruit' && 'Stylist Recruitment Poster'}
+                    {activeBannerModal === 'billboard' && 'Customer Booking Flyer'}
+                    {activeBannerModal === 'recruit' && 'Stylist & Barber Recruitment Flyer'}
+                    {activeBannerModal === 'store' && 'Atelier Store & Care Flyer'}
+                    {activeBannerModal === 'ai_matcher' && 'AI Stylist Matcher Flyer'}
                   </div>
                   <div style={{
                     fontSize: '0.65rem',
-                    color: activeBannerModal === 'portrait' ? '#c084fc' : activeBannerModal === 'recruit' ? '#4ade80' : '#f5b942',
+                    color: '#f5b942',
                     fontWeight: 600
                   }}>
-                    {activeBannerModal === 'recruit' ? 'stylecorner.world/role-selection' : 'www.stylecorner.world'}
+                    {activeBannerModal === 'recruit' ? 'stylecorner.world/role-selection' : activeBannerModal === 'store' ? 'www.stylecorner.world/store' : activeBannerModal === 'ai_matcher' ? 'www.stylecorner.world/ai-matcher' : 'www.stylecorner.world'}
                   </div>
                 </div>
               </div>
@@ -3067,7 +3124,7 @@ export const AdminDashboard = () => {
 
             {/* Modal Body / Scrollable Banner Display */}
             <div ref={bannerModalRef} style={{ padding: isMobile ? '0.65rem' : '1.5rem', overflowY: 'auto', flex: 1, boxSizing: 'border-box' }}>
-              {/* Customer Booking Banner (Billboard) */}
+              {/* Customer Booking Banner */}
               {activeBannerModal === 'billboard' && (
                 <div style={{
                   backgroundColor: '#09090b',
@@ -3078,162 +3135,75 @@ export const AdminDashboard = () => {
                   overflow: 'hidden',
                   boxSizing: 'border-box',
                 }}>
-                  {/* Top and Bottom Gold Accent Lines */}
-                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '3px', background: '#F5B942', zIndex: 10 }} />
-                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '3px', background: '#F5B942', zIndex: 10 }} />
-
-                  {/* Giant Gold Curve Blob */}
                   <div style={{
-                    position: 'absolute', top: '-15%', right: '-15%', width: '70%', height: '95%',
-                    borderRadius: '50%', backgroundColor: '#F5B942', zIndex: 0, pointerEvents: 'none',
+                    position: 'absolute', top: '-18%', right: '-18%', width: '72%', height: '95%',
+                    borderRadius: '50%',
+                    background: 'radial-gradient(ellipse at 40% 40%, #FFCF5C 0%, #F5B942 45%, #C8930A 100%)',
+                    zIndex: 0, pointerEvents: 'none', opacity: 0.97,
+                  }} />
+                  <div style={{
+                    position: 'absolute', inset: 0,
+                    background: 'linear-gradient(100deg, rgba(9,9,11,0.96) 38%, rgba(9,9,11,0.0) 68%)',
+                    zIndex: 1, pointerEvents: 'none',
                   }} />
 
                   <div style={{ position: 'relative', zIndex: 2 }}>
-                    {/* Top Pill Badge */}
                     <div style={{
-                      display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-                      backgroundColor: '#18181b', border: '1.5px solid rgba(245,185,66,0.5)',
-                      borderRadius: '50px', padding: '0.35rem 0.85rem 0.35rem 0.45rem', marginBottom: '1.25rem',
+                      display: 'inline-flex', alignItems: 'center', gap: '0.6rem',
+                      backgroundColor: 'rgba(18,18,20,0.95)', border: '1.5px solid rgba(245,185,66,0.55)',
+                      borderRadius: '100px', padding: '0.38rem 1.1rem 0.38rem 0.45rem', marginBottom: '1.5rem',
                     }}>
-                      <div style={{ width: '22px', height: '22px', borderRadius: '6px', backgroundColor: '#F5B942', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <div style={{ width: '10px', height: '10px', borderRadius: '2px', border: '2px solid #09090b' }} />
+                      <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'linear-gradient(135deg, #F5B942 0%, #C8930A 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ width: '13px', height: '13px', borderRadius: '3px', border: '2.5px solid #09090b' }} />
                       </div>
                       <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.15 }}>
-                        <span style={{ fontSize: '0.66rem', fontWeight: 900, color: '#F5B942', letterSpacing: '0.06em', textTransform: 'uppercase' }}>STYLECORNER NIGERIA</span>
-                        <span style={{ fontSize: '0.58rem', fontWeight: 800, color: '#d4af37', letterSpacing: '0.04em', textTransform: 'uppercase' }}>LAGOS & IBADAN</span>
+                        <span style={{ fontSize: '0.68rem', fontWeight: 900, color: '#F5B942', letterSpacing: '0.07em' }}>STYLECORNER NIGERIA</span>
+                        <span style={{ fontSize: '0.61rem', fontWeight: 800, color: '#c8930a', letterSpacing: '0.05em' }}>LAGOS & IBADAN</span>
                       </div>
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: '1.5rem', alignItems: isMobile ? 'center' : 'flex-start' }}>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <h2 style={{ fontSize: isMobile ? '1.4rem' : '2.1rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.12, letterSpacing: '-0.03em', margin: '0 0 0.25rem', fontFamily: 'Outfit' }}>
+                        <h2 style={{ fontSize: isMobile ? '1.4rem' : '2.1rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.1, letterSpacing: '-0.04em', margin: '0 0 0.3rem', fontFamily: 'Outfit' }}>
                           Book Verified Stylists, Barbers & Braiders.
                         </h2>
-                        <div style={{ fontSize: isMobile ? '1.4rem' : '2.1rem', fontWeight: 900, color: '#F5B942', lineHeight: 1.12, letterSpacing: '-0.03em', marginBottom: '0.85rem', fontFamily: 'Outfit' }}>
+                        <div style={{ fontSize: isMobile ? '1.4rem' : '2.1rem', fontWeight: 900, color: '#F5B942', lineHeight: 1.1, letterSpacing: '-0.04em', marginBottom: '1rem', fontFamily: 'Outfit' }}>
                           In Seconds.
                         </div>
-
-                        <p style={{ fontSize: '0.82rem', color: '#a1a1aa', lineHeight: 1.55, marginBottom: '1.1rem', maxWidth: '340px', fontFamily: 'Outfit' }}>
+                        <p style={{ fontSize: '0.86rem', color: '#a1a1aa', lineHeight: 1.6, marginBottom: '1.25rem', maxWidth: '350px' }}>
                           Lagos & Ibadan's premier beauty network. AI matches you with top-rated barbers, braiders, lash techs & nail artists near you. In-salon or VIP home visits.
                         </p>
-
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', marginBottom: '1.1rem' }}>
-                          {['+ Hair Braiders', '+ Precision Barbers', '+ Lash Techs', '+ Nail Art', '+ Soft Glam', '+ Wig Install'].map(p => (
-                            <span key={p} style={{ backgroundColor: '#18181b', border: '1px solid #27272a', borderRadius: '50px', padding: '0.32rem 0.75rem', fontSize: '0.72rem', fontWeight: 700, color: '#ffffff', fontFamily: 'Outfit' }}>{p}</span>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginBottom: '1.25rem' }}>
+                          {['+ Knotless Braids', '+ Precision Barbers', '+ Wispy Lash Techs', '+ Gel Nail Art', '+ Soft Glam Makeup', '+ Frontal Lace Melt'].map(t => (
+                            <span key={t} style={{ backgroundColor: 'rgba(24,24,27,0.92)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '100px', padding: '0.35rem 0.85rem', fontSize: '0.75rem', fontWeight: 700, color: '#e4e4e7' }}>{t}</span>
                           ))}
                         </div>
-
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', color: '#e4e4e7', fontSize: '0.78rem', fontWeight: 700, fontFamily: 'Outfit' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', color: '#e4e4e7', fontSize: '0.82rem', fontWeight: 700 }}>
                           <div>🛡️ 100% Escrow Protected</div>
-                          <div>⭐ 4.9 ★ Community Rated</div>
+                          <div>⭐ 4.9 Community Rated</div>
                           <div>📍 Lagos & Ibadan</div>
                         </div>
                       </div>
 
-                      {/* Floating QR Card */}
                       <div style={{
-                        flexShrink: 0, backgroundColor: '#111114', border: '1.5px solid rgba(255,255,255,0.08)',
-                        borderRadius: '24px', padding: '1.25rem 1rem', display: 'flex', flexDirection: 'column',
-                        alignItems: 'center', textAlign: 'center', minWidth: '190px', maxWidth: '210px',
-                        boxShadow: '0 20px 50px rgba(0,0,0,0.85)',
+                        flexShrink: 0, backgroundColor: '#0f1014', border: '1.5px solid rgba(255,255,255,0.1)',
+                        borderRadius: '22px', padding: '1.35rem 1.1rem 1.2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', minWidth: '185px', maxWidth: '215px',
+                        boxShadow: '0 20px 60px rgba(0,0,0,0.92)',
                       }}>
-                        <div style={{ fontSize: '0.68rem', fontWeight: 900, color: '#F5B942', textTransform: 'uppercase', marginBottom: '0.75rem', letterSpacing: '0.05em' }}>
-                          ⚡ INSTANT MOBILE BOOKING
+                        <div style={{ fontSize: '0.7rem', fontWeight: 900, color: '#F5B942', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '0.9rem' }}>📱 INSTANT MOBILE BOOKING</div>
+                        <div style={{ backgroundColor: '#ffffff', borderRadius: '14px', padding: '10px', marginBottom: '0.9rem' }}>
+                          <QrWorldSvg size={140} logoSize={30} />
                         </div>
-                        <div style={{ marginBottom: '0.75rem' }}>
-                          <QrWorldSvg size={150} logoSize={30} />
-                        </div>
-                        <div style={{ fontSize: '0.78rem', fontWeight: 900, color: '#ffffff', marginBottom: '0.15rem' }}>SCAN WITH CAMERA</div>
-                        <div style={{ fontSize: '0.68rem', color: '#a1a1aa', marginBottom: '0.2rem' }}>Point camera to join ·</div>
-                        <div style={{ fontSize: '0.76rem', fontWeight: 900, color: '#F5B942' }}>www.stylecorner.world</div>
+                        <div style={{ fontSize: '0.83rem', fontWeight: 900, color: '#ffffff', marginBottom: '0.18rem' }}>SCAN WITH CAMERA</div>
+                        <div style={{ fontSize: '0.7rem', color: '#71717a', fontWeight: 600, marginBottom: '0.22rem' }}>Point phone camera to join →</div>
+                        <div style={{ fontSize: '0.78rem', fontWeight: 900, color: '#F5B942' }}>www.stylecorner.world</div>
                       </div>
                     </div>
                   </div>
                 </div>
               )}
 
-              {/* Street Flyer / Portrait */}
-              {activeBannerModal === 'portrait' && (
-                <div style={{
-                  backgroundColor: '#09090b',
-                  border: '1.5px solid rgba(245, 185, 66, 0.35)',
-                  borderRadius: isMobile ? '20px' : '28px',
-                  padding: isMobile ? '1.25rem 1rem' : '2.25rem 2rem',
-                  position: 'relative',
-                  overflow: 'hidden',
-                  boxSizing: 'border-box',
-                }}>
-                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '3px', background: '#F5B942', zIndex: 10 }} />
-                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '3px', background: '#F5B942', zIndex: 10 }} />
-
-                  <div style={{
-                    position: 'absolute', top: '-15%', right: '-15%', width: '70%', height: '95%',
-                    borderRadius: '50%', backgroundColor: '#F5B942', zIndex: 0, pointerEvents: 'none',
-                  }} />
-
-                  <div style={{ position: 'relative', zIndex: 2 }}>
-                    <div style={{
-                      display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-                      backgroundColor: '#18181b', border: '1.5px solid rgba(245,185,66,0.5)',
-                      borderRadius: '50px', padding: '0.35rem 0.85rem 0.35rem 0.45rem', marginBottom: '1.25rem',
-                    }}>
-                      <div style={{ width: '22px', height: '22px', borderRadius: '6px', backgroundColor: '#F5B942', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <div style={{ width: '10px', height: '10px', borderRadius: '2px', border: '2px solid #09090b' }} />
-                      </div>
-                      <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.15 }}>
-                        <span style={{ fontSize: '0.66rem', fontWeight: 900, color: '#F5B942', letterSpacing: '0.06em', textTransform: 'uppercase' }}>STYLECORNER NIGERIA</span>
-                        <span style={{ fontSize: '0.58rem', fontWeight: 800, color: '#d4af37', letterSpacing: '0.04em', textTransform: 'uppercase' }}>STREET FLYER · STORY</span>
-                      </div>
-                    </div>
-
-                    <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: '1.5rem', alignItems: isMobile ? 'center' : 'flex-start' }}>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <h2 style={{ fontSize: isMobile ? '1.4rem' : '2.1rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.12, letterSpacing: '-0.03em', margin: '0 0 0.25rem', fontFamily: 'Outfit' }}>
-                          Your Next Look. Verified Stylist.
-                        </h2>
-                        <div style={{ fontSize: isMobile ? '1.4rem' : '2.1rem', fontWeight: 900, color: '#F5B942', lineHeight: 1.12, letterSpacing: '-0.03em', marginBottom: '0.85rem', fontFamily: 'Outfit' }}>
-                          Booked In 30s.
-                        </div>
-
-                        <p style={{ fontSize: '0.82rem', color: '#a1a1aa', lineHeight: 1.55, marginBottom: '1.1rem', maxWidth: '340px', fontFamily: 'Outfit' }}>
-                          No more guessing salon quality. Get matched to vetted braiders, barbers, lash techs & makeup artists in your LGA across Lagos & Ibadan.
-                        </p>
-
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', marginBottom: '1.1rem' }}>
-                          {['+ Knotless Braids', '+ Fade & Beard', '+ Volume Lash', '+ Gel Nails', '+ Soft Glam', '+ Wig Frontal'].map(t => (
-                            <span key={t} style={{ backgroundColor: '#18181b', border: '1px solid #27272a', borderRadius: '50px', padding: '0.32rem 0.75rem', fontSize: '0.72rem', fontWeight: 700, color: '#ffffff', fontFamily: 'Outfit' }}>{t}</span>
-                          ))}
-                        </div>
-
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', color: '#e4e4e7', fontSize: '0.78rem', fontWeight: 700, fontFamily: 'Outfit' }}>
-                          <div>📍 Lagos & Ibadan LGAs</div>
-                          <div>🛡️ 100% Escrow Protected</div>
-                          <div>⭐ 4.9 ★ Community Rated</div>
-                        </div>
-                      </div>
-
-                      <div style={{
-                        flexShrink: 0, backgroundColor: '#111114', border: '1.5px solid rgba(255,255,255,0.08)',
-                        borderRadius: '24px', padding: '1.25rem 1rem', display: 'flex', flexDirection: 'column',
-                        alignItems: 'center', textAlign: 'center', minWidth: '190px', maxWidth: '210px',
-                        boxShadow: '0 20px 50px rgba(0,0,0,0.85)',
-                      }}>
-                        <div style={{ fontSize: '0.68rem', fontWeight: 900, color: '#F5B942', textTransform: 'uppercase', marginBottom: '0.75rem', letterSpacing: '0.05em' }}>
-                          ⚡ SCAN TO BOOK NOW
-                        </div>
-                        <div style={{ marginBottom: '0.75rem' }}>
-                          <QrWorldSvg size={150} logoSize={30} />
-                        </div>
-                        <div style={{ fontSize: '0.78rem', fontWeight: 900, color: '#ffffff', marginBottom: '0.15rem' }}>POINT CAMERA TO SCAN</div>
-                        <div style={{ fontSize: '0.68rem', color: '#a1a1aa', marginBottom: '0.2rem' }}>Fast mobile booking ·</div>
-                        <div style={{ fontSize: '0.76rem', fontWeight: 900, color: '#F5B942' }}>www.stylecorner.world</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Expert Recruitment Banner */}
+              {/* Stylist Recruitment Flyer */}
               {activeBannerModal === 'recruit' && (
                 <div style={{
                   backgroundColor: '#09090b',
@@ -3244,49 +3214,50 @@ export const AdminDashboard = () => {
                   overflow: 'hidden',
                   boxSizing: 'border-box',
                 }}>
-                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '3px', background: '#F5B942', zIndex: 10 }} />
-                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '3px', background: '#F5B942', zIndex: 10 }} />
-
                   <div style={{
-                    position: 'absolute', top: '-15%', right: '-15%', width: '70%', height: '95%',
-                    borderRadius: '50%', backgroundColor: '#F5B942', zIndex: 0, pointerEvents: 'none',
+                    position: 'absolute', top: '-18%', right: '-18%', width: '72%', height: '95%',
+                    borderRadius: '50%',
+                    background: 'radial-gradient(ellipse at 40% 40%, #FFCF5C 0%, #F5B942 45%, #C8930A 100%)',
+                    zIndex: 0, pointerEvents: 'none', opacity: 0.97,
+                  }} />
+                  <div style={{
+                    position: 'absolute', inset: 0,
+                    background: 'linear-gradient(100deg, rgba(9,9,11,0.96) 38%, rgba(9,9,11,0.0) 68%)',
+                    zIndex: 1, pointerEvents: 'none',
                   }} />
 
                   <div style={{ position: 'relative', zIndex: 2 }}>
                     <div style={{
-                      display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-                      backgroundColor: '#18181b', border: '1.5px solid rgba(245,185,66,0.5)',
-                      borderRadius: '50px', padding: '0.35rem 0.85rem 0.35rem 0.45rem', marginBottom: '1.25rem',
+                      display: 'inline-flex', alignItems: 'center', gap: '0.6rem',
+                      backgroundColor: 'rgba(18,18,20,0.95)', border: '1.5px solid rgba(245,185,66,0.55)',
+                      borderRadius: '100px', padding: '0.38rem 1.1rem 0.38rem 0.45rem', marginBottom: '1.5rem',
                     }}>
-                      <div style={{ width: '22px', height: '22px', borderRadius: '6px', backgroundColor: '#F5B942', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <div style={{ width: '10px', height: '10px', borderRadius: '2px', border: '2px solid #09090b' }} />
+                      <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'linear-gradient(135deg, #F5B942 0%, #C8930A 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ width: '13px', height: '13px', borderRadius: '3px', border: '2.5px solid #09090b' }} />
                       </div>
                       <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.15 }}>
-                        <span style={{ fontSize: '0.66rem', fontWeight: 900, color: '#F5B942', letterSpacing: '0.06em', textTransform: 'uppercase' }}>STYLECORNER PRO</span>
-                        <span style={{ fontSize: '0.58rem', fontWeight: 800, color: '#d4af37', letterSpacing: '0.04em', textTransform: 'uppercase' }}>EXPERT ONBOARDING</span>
+                        <span style={{ fontSize: '0.68rem', fontWeight: 900, color: '#F5B942', letterSpacing: '0.07em' }}>STYLECORNER PRO</span>
+                        <span style={{ fontSize: '0.61rem', fontWeight: 800, color: '#c8930a', letterSpacing: '0.05em' }}>EXPERT ONBOARDING</span>
                       </div>
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: '1.5rem', alignItems: isMobile ? 'center' : 'flex-start' }}>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <h2 style={{ fontSize: isMobile ? '1.35rem' : '2rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.12, letterSpacing: '-0.03em', margin: '0 0 0.25rem', fontFamily: 'Outfit' }}>
+                        <h2 style={{ fontSize: isMobile ? '1.4rem' : '2.1rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.1, letterSpacing: '-0.04em', margin: '0 0 0.3rem', fontFamily: 'Outfit' }}>
                           Are You a Barber, Braider or Lash Tech?
                         </h2>
-                        <div style={{ fontSize: isMobile ? '1.35rem' : '2rem', fontWeight: 900, color: '#F5B942', lineHeight: 1.12, letterSpacing: '-0.03em', marginBottom: '0.85rem', fontFamily: 'Outfit' }}>
+                        <div style={{ fontSize: isMobile ? '1.4rem' : '2.1rem', fontWeight: 900, color: '#F5B942', lineHeight: 1.1, letterSpacing: '-0.04em', marginBottom: '1rem', fontFamily: 'Outfit' }}>
                           Get Booked. Get Paid.
                         </div>
-
-                        <p style={{ fontSize: '0.82rem', color: '#a1a1aa', lineHeight: 1.55, marginBottom: '1.1rem', maxWidth: '340px', fontFamily: 'Outfit' }}>
-                          Join StyleCorner's verified beauty network in Lagos & Ibadan. Fill your open calendar slots with high-value paying clients. Zero registration fees.
+                        <p style={{ fontSize: '0.86rem', color: '#a1a1aa', lineHeight: 1.6, marginBottom: '1.25rem', maxWidth: '350px' }}>
+                          Join Nigeria's fastest growing verified beauty platform. Direct verified paying clients, instant wallet payouts to your bank & zero registration fees.
                         </p>
-
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', marginBottom: '1.1rem' }}>
-                          {['+ Instant Payouts', '+ Free Pro Profile', '+ AI Client Match', '+ QR Business Card', '+ VIP Home Bookings', '+ Salon Seat Host'].map(t => (
-                            <span key={t} style={{ backgroundColor: '#18181b', border: '1px solid #27272a', borderRadius: '50px', padding: '0.32rem 0.75rem', fontSize: '0.72rem', fontWeight: 700, color: '#ffffff', fontFamily: 'Outfit' }}>{t}</span>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginBottom: '1.25rem' }}>
+                          {['+ Instant Bank Payouts', '+ Free Pro Profile', '+ AI Client Matching', '+ QR Business Card', '+ VIP Home Bookings', '+ Salon Seat Host'].map(t => (
+                            <span key={t} style={{ backgroundColor: 'rgba(24,24,27,0.92)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '100px', padding: '0.35rem 0.85rem', fontSize: '0.75rem', fontWeight: 700, color: '#e4e4e7' }}>{t}</span>
                           ))}
                         </div>
-
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', color: '#e4e4e7', fontSize: '0.78rem', fontWeight: 700, fontFamily: 'Outfit' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', color: '#e4e4e7', fontSize: '0.82rem', fontWeight: 700 }}>
                           <div>💰 ₦15k–₦60k+ Daily Earnings</div>
                           <div>🛡️ Escrow Protected Payouts</div>
                           <div>📍 Lagos & Ibadan LGAs</div>
@@ -3294,20 +3265,175 @@ export const AdminDashboard = () => {
                       </div>
 
                       <div style={{
-                        flexShrink: 0, backgroundColor: '#111114', border: '1.5px solid rgba(255,255,255,0.08)',
-                        borderRadius: '24px', padding: '1.25rem 1rem', display: 'flex', flexDirection: 'column',
-                        alignItems: 'center', textAlign: 'center', minWidth: '190px', maxWidth: '210px',
-                        boxShadow: '0 20px 50px rgba(0,0,0,0.85)',
+                        flexShrink: 0, backgroundColor: '#0f1014', border: '1.5px solid rgba(255,255,255,0.1)',
+                        borderRadius: '22px', padding: '1.35rem 1.1rem 1.2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', minWidth: '185px', maxWidth: '215px',
+                        boxShadow: '0 20px 60px rgba(0,0,0,0.92)',
                       }}>
-                        <div style={{ fontSize: '0.68rem', fontWeight: 900, color: '#F5B942', textTransform: 'uppercase', marginBottom: '0.75rem', letterSpacing: '0.05em' }}>
-                          ✂️ EXPERT REGISTRATION
+                        <div style={{ fontSize: '0.7rem', fontWeight: 900, color: '#F5B942', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '0.9rem' }}>💼 EXPERT REGISTRATION</div>
+                        <div style={{ backgroundColor: '#ffffff', borderRadius: '14px', padding: '10px', marginBottom: '0.9rem' }}>
+                          <QrRecruitSvg size={140} logoSize={30} />
                         </div>
-                        <div style={{ marginBottom: '0.75rem' }}>
-                          <QrRecruitSvg size={150} logoSize={30} />
+                        <div style={{ fontSize: '0.83rem', fontWeight: 900, color: '#ffffff', marginBottom: '0.18rem' }}>SCAN TO JOIN AS EXPERT</div>
+                        <div style={{ fontSize: '0.7rem', color: '#71717a', fontWeight: 600, marginBottom: '0.22rem' }}>Scan to apply — zero fees →</div>
+                        <div style={{ fontSize: '0.78rem', fontWeight: 900, color: '#F5B942' }}>stylecorner.world/role-selection</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Atelier Store Flyer */}
+              {activeBannerModal === 'store' && (
+                <div style={{
+                  backgroundColor: '#09090b',
+                  border: '1.5px solid rgba(245, 185, 66, 0.35)',
+                  borderRadius: isMobile ? '20px' : '28px',
+                  padding: isMobile ? '1.25rem 1rem' : '2.25rem 2rem',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  boxSizing: 'border-box',
+                }}>
+                  <div style={{
+                    position: 'absolute', top: '-18%', right: '-18%', width: '72%', height: '95%',
+                    borderRadius: '50%',
+                    background: 'radial-gradient(ellipse at 40% 40%, #FFCF5C 0%, #F5B942 45%, #C8930A 100%)',
+                    zIndex: 0, pointerEvents: 'none', opacity: 0.97,
+                  }} />
+                  <div style={{
+                    position: 'absolute', inset: 0,
+                    background: 'linear-gradient(100deg, rgba(9,9,11,0.96) 38%, rgba(9,9,11,0.0) 68%)',
+                    zIndex: 1, pointerEvents: 'none',
+                  }} />
+
+                  <div style={{ position: 'relative', zIndex: 2 }}>
+                    <div style={{
+                      display: 'inline-flex', alignItems: 'center', gap: '0.6rem',
+                      backgroundColor: 'rgba(18,18,20,0.95)', border: '1.5px solid rgba(245,185,66,0.55)',
+                      borderRadius: '100px', padding: '0.38rem 1.1rem 0.38rem 0.45rem', marginBottom: '1.5rem',
+                    }}>
+                      <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'linear-gradient(135deg, #F5B942 0%, #C8930A 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ width: '13px', height: '13px', borderRadius: '3px', border: '2.5px solid #09090b' }} />
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.15 }}>
+                        <span style={{ fontSize: '0.68rem', fontWeight: 900, color: '#F5B942', letterSpacing: '0.07em' }}>STYLECORNER ATELIER</span>
+                        <span style={{ fontSize: '0.61rem', fontWeight: 800, color: '#c8930a', letterSpacing: '0.05em' }}>STORE & CARE</span>
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: '1.5rem', alignItems: isMobile ? 'center' : 'flex-start' }}>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <h2 style={{ fontSize: isMobile ? '1.4rem' : '2.1rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.1, letterSpacing: '-0.04em', margin: '0 0 0.3rem', fontFamily: 'Outfit' }}>
+                          Curated Hair Care & Grooming Essentials.
+                        </h2>
+                        <div style={{ fontSize: isMobile ? '1.4rem' : '2.1rem', fontWeight: 900, color: '#F5B942', lineHeight: 1.1, letterSpacing: '-0.04em', marginBottom: '1rem', fontFamily: 'Outfit' }}>
+                          Delivered Fast.
                         </div>
-                        <div style={{ fontSize: '0.78rem', fontWeight: 900, color: '#ffffff', marginBottom: '0.15rem' }}>SCAN TO JOIN — FREE</div>
-                        <div style={{ fontSize: '0.68rem', color: '#a1a1aa', marginBottom: '0.2rem' }}>Apply in 60s ·</div>
-                        <div style={{ fontSize: '0.76rem', fontWeight: 900, color: '#F5B942' }}>stylecorner.world/role-selection</div>
+                        <p style={{ fontSize: '0.86rem', color: '#a1a1aa', lineHeight: 1.6, marginBottom: '1.25rem', maxWidth: '350px' }}>
+                          Shop authentic edge control, scalp treatment oils, professional clippers, lash serums & lace glue. Fast dispatch directly to Lagos & Ibadan.
+                        </p>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginBottom: '1.25rem' }}>
+                          {['+ Edge Control Gel', '+ Scalp Growth Oil', '+ Fade Clipper Kit', '+ Lash Care Serum', '+ Frontal Lace Glue', '+ Sulfate-Free Shampoo'].map(t => (
+                            <span key={t} style={{ backgroundColor: 'rgba(24,24,27,0.92)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '100px', padding: '0.35rem 0.85rem', fontSize: '0.75rem', fontWeight: 700, color: '#e4e4e7' }}>{t}</span>
+                          ))}
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', color: '#e4e4e7', fontSize: '0.82rem', fontWeight: 700 }}>
+                          <div>🚚 Express Nationwide Delivery</div>
+                          <div>✅ 100% Authentic Guaranteed</div>
+                          <div>💳 Secure Paystack Escrow</div>
+                        </div>
+                      </div>
+
+                      <div style={{
+                        flexShrink: 0, backgroundColor: '#0f1014', border: '1.5px solid rgba(255,255,255,0.1)',
+                        borderRadius: '22px', padding: '1.35rem 1.1rem 1.2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', minWidth: '185px', maxWidth: '215px',
+                        boxShadow: '0 20px 60px rgba(0,0,0,0.92)',
+                      }}>
+                        <div style={{ fontSize: '0.7rem', fontWeight: 900, color: '#F5B942', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '0.9rem' }}>🛍️ ATELIER STORE</div>
+                        <div style={{ backgroundColor: '#ffffff', borderRadius: '14px', padding: '10px', marginBottom: '0.9rem' }}>
+                          <QrWorldSvg size={140} logoSize={30} />
+                        </div>
+                        <div style={{ fontSize: '0.83rem', fontWeight: 900, color: '#ffffff', marginBottom: '0.18rem' }}>SCAN TO SHOP PRODUCTS</div>
+                        <div style={{ fontSize: '0.7rem', color: '#71717a', fontWeight: 600, marginBottom: '0.22rem' }}>Scan to browse & order →</div>
+                        <div style={{ fontSize: '0.78rem', fontWeight: 900, color: '#F5B942' }}>www.stylecorner.world/store</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* AI Stylist Matcher Flyer */}
+              {activeBannerModal === 'ai_matcher' && (
+                <div style={{
+                  backgroundColor: '#09090b',
+                  border: '1.5px solid rgba(245, 185, 66, 0.35)',
+                  borderRadius: isMobile ? '20px' : '28px',
+                  padding: isMobile ? '1.25rem 1rem' : '2.25rem 2rem',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  boxSizing: 'border-box',
+                }}>
+                  <div style={{
+                    position: 'absolute', top: '-18%', right: '-18%', width: '72%', height: '95%',
+                    borderRadius: '50%',
+                    background: 'radial-gradient(ellipse at 40% 40%, #FFCF5C 0%, #F5B942 45%, #C8930A 100%)',
+                    zIndex: 0, pointerEvents: 'none', opacity: 0.97,
+                  }} />
+                  <div style={{
+                    position: 'absolute', inset: 0,
+                    background: 'linear-gradient(100deg, rgba(9,9,11,0.96) 38%, rgba(9,9,11,0.0) 68%)',
+                    zIndex: 1, pointerEvents: 'none',
+                  }} />
+
+                  <div style={{ position: 'relative', zIndex: 2 }}>
+                    <div style={{
+                      display: 'inline-flex', alignItems: 'center', gap: '0.6rem',
+                      backgroundColor: 'rgba(18,18,20,0.95)', border: '1.5px solid rgba(245,185,66,0.55)',
+                      borderRadius: '100px', padding: '0.38rem 1.1rem 0.38rem 0.45rem', marginBottom: '1.5rem',
+                    }}>
+                      <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'linear-gradient(135deg, #F5B942 0%, #C8930A 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ width: '13px', height: '13px', borderRadius: '3px', border: '2.5px solid #09090b' }} />
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.15 }}>
+                        <span style={{ fontSize: '0.68rem', fontWeight: 900, color: '#F5B942', letterSpacing: '0.07em' }}>STYLECORNER AI</span>
+                        <span style={{ fontSize: '0.61rem', fontWeight: 800, color: '#c8930a', letterSpacing: '0.05em' }}>SMART MATCHER</span>
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: '1.5rem', alignItems: isMobile ? 'center' : 'flex-start' }}>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <h2 style={{ fontSize: isMobile ? '1.4rem' : '2.1rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.1, letterSpacing: '-0.04em', margin: '0 0 0.3rem', fontFamily: 'Outfit' }}>
+                          Find Your Perfect Stylist In Your Neighborhood.
+                        </h2>
+                        <div style={{ fontSize: isMobile ? '1.4rem' : '2.1rem', fontWeight: 900, color: '#F5B942', lineHeight: 1.1, letterSpacing: '-0.04em', marginBottom: '1rem', fontFamily: 'Outfit' }}>
+                          In 10 Seconds.
+                        </div>
+                        <p style={{ fontSize: '0.86rem', color: '#a1a1aa', lineHeight: 1.6, marginBottom: '1.25rem', maxWidth: '350px' }}>
+                          Tell our AI your desired hairstyle, budget & neighborhood. Instant match with vetted top-rated beauty specialists. Zero guesswork.
+                        </p>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginBottom: '1.25rem' }}>
+                          {['+ 10-Second Match', '+ Budget Filter', '+ Neighborhood Match', '+ Verified Portfolio', '+ In-Salon / Home Visit', '+ Escrow Protection'].map(t => (
+                            <span key={t} style={{ backgroundColor: 'rgba(24,24,27,0.92)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '100px', padding: '0.35rem 0.85rem', fontSize: '0.75rem', fontWeight: 700, color: '#e4e4e7' }}>{t}</span>
+                          ))}
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', color: '#e4e4e7', fontSize: '0.82rem', fontWeight: 700 }}>
+                          <div>🤖 Smart AI Concierge</div>
+                          <div>⭐ 4.9 Verified Reviews</div>
+                          <div>🛡️ Escrow Protected</div>
+                        </div>
+                      </div>
+
+                      <div style={{
+                        flexShrink: 0, backgroundColor: '#0f1014', border: '1.5px solid rgba(255,255,255,0.1)',
+                        borderRadius: '22px', padding: '1.35rem 1.1rem 1.2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', minWidth: '185px', maxWidth: '215px',
+                        boxShadow: '0 20px 60px rgba(0,0,0,0.92)',
+                      }}>
+                        <div style={{ fontSize: '0.7rem', fontWeight: 900, color: '#F5B942', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '0.9rem' }}>🤖 AI STYLIST MATCHER</div>
+                        <div style={{ backgroundColor: '#ffffff', borderRadius: '14px', padding: '10px', marginBottom: '0.9rem' }}>
+                          <QrWorldSvg size={140} logoSize={30} />
+                        </div>
+                        <div style={{ fontSize: '0.83rem', fontWeight: 900, color: '#ffffff', marginBottom: '0.18rem' }}>SCAN TO MATCH NOW</div>
+                        <div style={{ fontSize: '0.7rem', color: '#71717a', fontWeight: 600, marginBottom: '0.22rem' }}>Scan for instant AI match →</div>
+                        <div style={{ fontSize: '0.78rem', fontWeight: 900, color: '#F5B942' }}>www.stylecorner.world/ai-matcher</div>
                       </div>
                     </div>
                   </div>
@@ -3327,7 +3453,7 @@ export const AdminDashboard = () => {
               <button
                 type="button"
                 onClick={() => {
-                  const targetUrl = activeBannerModal === 'recruit' ? 'https://www.stylecorner.world/role-selection' : 'https://www.stylecorner.world';
+                  const targetUrl = activeBannerModal === 'recruit' ? 'https://www.stylecorner.world/role-selection' : activeBannerModal === 'store' ? 'https://www.stylecorner.world/store' : activeBannerModal === 'ai_matcher' ? 'https://www.stylecorner.world/ai-matcher' : 'https://www.stylecorner.world';
                   navigator.clipboard.writeText(targetUrl);
                   showToast('URL copied to clipboard!', 'success');
                 }}
@@ -3346,7 +3472,7 @@ export const AdminDashboard = () => {
               <button
                 type="button"
                 onClick={() => {
-                  const targetDesign = activeBannerModal === 'portrait' ? 'street' : activeBannerModal;
+                  const targetDesign = activeBannerModal;
                   window.open(`/billboard-flyers?design=${targetDesign}`, '_blank');
                 }}
                 style={{
