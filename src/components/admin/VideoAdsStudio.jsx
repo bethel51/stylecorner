@@ -481,6 +481,988 @@ export function drawStarGlint(ctx, x, y, radius, color = '#ffffff') {
   ctx.restore();
 }
 
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   UNIVERSAL HIGH-END COMMERCIAL OUTRO (SPACIOUS, UNCLUTTERED, EDITORIAL)
+   Fixes vertical rhythm: Top Pill -> Hero Logo -> Brand -> Headline -> Chips -> Waveform -> CTA -> Footer
+───────────────────────────────────────────────────────────────────────────── */
+export function drawUniversalCommercialOutro(ctx, W, H, ad, t, isVertical, color = '#F5B942') {
+  const cx = W / 2;
+  const outroT = Math.max(0, Math.min(1, (t - 0.78) / 0.22));
+
+  // 1. Solid Deep Obsidian Canvas & Warm Golden Backlight Glow
+  ctx.fillStyle = '#050608';
+  ctx.fillRect(0, 0, W, H);
+
+  const glowY = isVertical ? H * 0.23 : H * 0.25;
+  const haloRadius = isVertical ? W * 0.82 : H * 0.75;
+  const haloGrad = ctx.createRadialGradient(cx, glowY, 15, cx, glowY, haloRadius);
+  haloGrad.addColorStop(0, 'rgba(245, 185, 66, 0.32)');
+  haloGrad.addColorStop(0.35, 'rgba(245, 185, 66, 0.10)');
+  haloGrad.addColorStop(0.75, 'rgba(10, 12, 18, 0.65)');
+  haloGrad.addColorStop(1, '#050608');
+  ctx.fillStyle = haloGrad;
+  ctx.fillRect(0, 0, W, H);
+
+  // 2. Ambient Floating Embers (Upward drifting gold specs)
+  for (let i = 0; i < 22; i++) {
+    const px = (W * ((i * 137.3 + outroT * 45) % 100) / 100);
+    const py = H * 0.08 + ((H * 0.70 * ((i * 83.1 + outroT * 35) % 100) / 100));
+    const alpha = 0.15 + 0.35 * Math.sin(outroT * Math.PI * 4 + i);
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = '#F5B942';
+    ctx.beginPath();
+    ctx.arc(px, py, 1.4 + (i % 3) * 0.8, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // 3. Top Region Pill: Verified Network & Location (Y: H * 0.075)
+  const topPillY = isVertical ? H * 0.075 : H * 0.085;
+  const pillW = isVertical ? Math.min(W * 0.84, 380) : 420;
+  const pillH = isVertical ? 38 : 34;
+  ctx.save();
+  ctx.fillStyle = 'rgba(16, 18, 26, 0.92)';
+  ctx.strokeStyle = 'rgba(245, 185, 66, 0.45)';
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.roundRect((W - pillW) / 2, topPillY - pillH / 2, pillW, pillH, pillH / 2);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.font = `800 ${isVertical ? 12 : 11}px Outfit, sans-serif`;
+  ctx.fillStyle = '#F5B942';
+  ctx.textAlign = 'center';
+  ctx.fillText('✦ STYLECORNER NIGERIA · LAGOS & IBADAN ✦', cx, topPillY + 4);
+  ctx.restore();
+
+  // 4. Large Official Squircle Logo with Star Glints (Y: H * 0.215)
+  const logoY = isVertical ? H * 0.215 : H * 0.24;
+  const logoSize = isVertical ? 94 : 82;
+  const logoPulse = 1 + 0.02 * Math.sin(outroT * Math.PI * 6);
+  ctx.save();
+  ctx.translate(cx, logoY);
+  ctx.scale(logoPulse, logoPulse);
+  drawStyleCornerLogo(ctx, 0, 0, logoSize, { hasHalo: true, withText: false });
+  ctx.restore();
+
+  // Specular 4-Ray Star Glints on Logo Corners
+  drawStarGlint(ctx, cx + logoSize * 0.38, logoY - logoSize * 0.38, 9, '#ffffff');
+  drawStarGlint(ctx, cx - logoSize * 0.38, logoY + logoSize * 0.38, 7, '#F5B942');
+
+  // 5. Brand Identity & Sub-brand Badge (Y: H * 0.325 to H * 0.365)
+  const brandTitleY = isVertical ? H * 0.325 : H * 0.355;
+  ctx.save();
+  ctx.font = `900 ${isVertical ? 34 : 28}px Outfit, sans-serif`;
+  ctx.fillStyle = '#ffffff';
+  ctx.textAlign = 'center';
+  ctx.fillText('STYLECORNER', cx, brandTitleY);
+
+  const subBrandY = brandTitleY + (isVertical ? 26 : 22);
+  ctx.font = `800 ${isVertical ? 12 : 11}px Outfit, sans-serif`;
+  ctx.fillStyle = '#F5B942';
+  ctx.fillText('ATELIER BEAUTY & GROOMING NETWORK', cx, subBrandY);
+  ctx.restore();
+
+  // 6. Bold Headline & Sub-headline (Spacious Y: H * 0.435 to H * 0.485)
+  const headY = isVertical ? H * 0.43 : H * 0.46;
+  const defaultHead = ad.id === 'v9-human-barber' ? 'Look Sharp. Feel Confident.'
+    : ad.id === 'v10-human-braids' ? 'Your Beauty. Verified Stylists.'
+    : ad.category === 'recruitment' ? 'Are You a Barber or Braider?'
+    : ad.category === 'store' ? 'Curated Essentials. Delivered Fast.'
+    : 'Your Beauty. Your Expert. Your Convenience.';
+
+  const defaultSub = ad.id === 'v9-human-barber' ? 'Top Lagos & Ibadan Master Barbers Ready For You'
+    : ad.id === 'v10-human-braids' ? 'Book Salon or VIP Mobile Home Visits in Lagos & Ibadan'
+    : ad.category === 'recruitment' ? "Join Nigeria's Fastest Growing Beauty Network Today"
+    : ad.category === 'store' ? 'Authentic Clipper Kits, Lace Glue & Serums'
+    : "Lagos & Ibadan's Premier Verified Beauty Platform";
+
+  ctx.save();
+  ctx.font = `900 ${isVertical ? 28 : 24}px Outfit, sans-serif`;
+  ctx.fillStyle = '#ffffff';
+  ctx.textAlign = 'center';
+  ctx.fillText(ad.headline || defaultHead, cx, headY);
+
+  const subHeadY = headY + (isVertical ? 30 : 25);
+  ctx.font = `700 ${isVertical ? 15 : 13}px Outfit, sans-serif`;
+  ctx.fillStyle = '#e4e4e7';
+  ctx.fillText(ad.subline || defaultSub, cx, subHeadY);
+  ctx.restore();
+
+  // 7. Value Proposition Chips (Y: H * 0.535 to H * 0.63)
+  const chips = [
+    { icon: '🛡️', text: '100% Escrow Protected Bookings' },
+    { icon: '⭐', text: '4.9 ★ Community-Rated Specialists' },
+    { icon: '📍', text: 'In-Salon & VIP Mobile Home Visits' },
+  ];
+  const chipStartY = isVertical ? H * 0.535 : H * 0.56;
+  const chipGap = isVertical ? 35 : 29;
+  chips.forEach((c, idx) => {
+    const cy = chipStartY + idx * chipGap;
+    ctx.save();
+    ctx.fillStyle = 'rgba(20, 22, 30, 0.85)';
+    ctx.strokeStyle = 'rgba(245, 185, 66, 0.22)';
+    ctx.lineWidth = 1;
+    const cW = isVertical ? Math.min(W * 0.84, 380) : 400;
+    const cH = isVertical ? 30 : 25;
+    ctx.beginPath();
+    ctx.roundRect((W - cW) / 2, cy - cH / 2, cW, cH, 15);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.font = `700 ${isVertical ? 13 : 11}px Outfit, sans-serif`;
+    ctx.fillStyle = '#d4d4d8';
+    ctx.textAlign = 'center';
+    ctx.fillText(`${c.icon}  ${c.text}`, cx, cy + 4);
+    ctx.restore();
+  });
+
+  // 8. Sound Waveform Bars (Y: H * 0.705)
+  const waveW = isVertical ? Math.min(W * 0.65, 300) : 320;
+  const waveX = (W - waveW) / 2;
+  const waveY = isVertical ? H * 0.705 : H * 0.725;
+  ctx.save();
+  for (let b = 0; b < 26; b++) {
+    const barH = 5 + 18 * Math.abs(Math.sin(b * 0.45 + outroT * Math.PI * 6));
+    const bx = waveX + (b / 26) * waveW;
+    ctx.fillStyle = '#F5B942';
+    ctx.globalAlpha = 0.55 + 0.45 * Math.sin(b + outroT * 4);
+    ctx.beginPath();
+    ctx.roundRect(bx, waveY - barH / 2, waveW / 26 - 3, barH, 2);
+    ctx.fill();
+  }
+  ctx.restore();
+
+  // 9. Pulsing Luxury CTA Button (Y: H * 0.785 to H * 0.855)
+  const btnPulse = 1 + 0.02 * Math.sin(outroT * Math.PI * 6);
+  const btnW = isVertical ? Math.min(W * 0.86, 400) : 460;
+  const btnH = isVertical ? 62 : 52;
+  const btnX = (W - btnW) / 2;
+  const btnY = isVertical ? H * 0.785 : H * 0.805;
+
+  ctx.save();
+  ctx.translate(cx, btnY + btnH / 2);
+  ctx.scale(btnPulse, btnPulse);
+  ctx.translate(-cx, -(btnY + btnH / 2));
+
+  const btnGrad = ctx.createLinearGradient(btnX, btnY, btnX + btnW, btnY + btnH);
+  btnGrad.addColorStop(0, '#c8930a');
+  btnGrad.addColorStop(0.5, '#F5B942');
+  btnGrad.addColorStop(1, '#eab308');
+  ctx.fillStyle = btnGrad;
+  ctx.shadowColor = 'rgba(245, 185, 66, 0.45)';
+  ctx.shadowBlur = 18;
+  ctx.beginPath();
+  ctx.roundRect(btnX, btnY, btnW, btnH, 20);
+  ctx.fill();
+
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+  ctx.lineWidth = 1.2;
+  ctx.stroke();
+
+  ctx.shadowBlur = 0;
+  ctx.font = `900 ${isVertical ? 18 : 16}px Outfit, sans-serif`;
+  ctx.fillStyle = '#08090C';
+  ctx.textAlign = 'center';
+  ctx.fillText(ad.cta || 'BOOK YOUR APPOINTMENT NOW ➔', cx, btnY + btnH * 0.62);
+  ctx.restore();
+
+  // 10. Clean Watermark Footer (Y: H * 0.925)
+  const footY = isVertical ? H * 0.925 : H * 0.945;
+  ctx.save();
+  const footText = 'www.stylecorner.world · Instant Mobile Booking';
+  ctx.font = `800 ${isVertical ? 13 : 11}px Outfit, sans-serif`;
+  ctx.fillStyle = '#94a3b8';
+  ctx.textAlign = 'center';
+  drawStyleCornerLogo(ctx, cx - 145, footY - 1, 16, { hasHalo: false });
+  ctx.fillText(footText, cx + 10, footY + 4);
+  ctx.restore();
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ANIMATED CARTOON CHARACTER COMMERCIAL 3: GLAM NAIL ART & GEL SCULPTING
+───────────────────────────────────────────────────────────────────────────── */
+function drawCartoonNailTechScene(ctx, W, H, ad, t, isVertical, color = '#f5b942') {
+  const cx = W / 2;
+  const deskY = isVertical ? H * 0.46 : H * 0.54;
+
+  const glow = ctx.createRadialGradient(cx, deskY - 60, 20, cx, deskY - 60, isVertical ? W * 0.75 : 500);
+  glow.addColorStop(0, 'rgba(245, 185, 66, 0.20)');
+  glow.addColorStop(0.6, 'rgba(245, 185, 66, 0.05)');
+  glow.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, deskY - 240, W, 400);
+
+  const hudY = isVertical ? H * 0.14 : H * 0.18;
+  ctx.save();
+  ctx.fillStyle = 'rgba(20, 22, 30, 0.92)';
+  ctx.strokeStyle = '#F5B942';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.roundRect((W - 320) / 2, hudY, 320, 36, 18);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.font = '900 13px Outfit, sans-serif';
+  ctx.fillStyle = '#F5B942';
+  ctx.textAlign = 'center';
+  ctx.fillText('💅 LIVE NAIL ART & GEL SCULPTING', cx, hudY + 23);
+  ctx.restore();
+
+  const tableW = isVertical ? W * 0.88 : 580;
+  const tableH = isVertical ? 150 : 130;
+  const tableX = (W - tableW) / 2;
+  ctx.save();
+  ctx.fillStyle = '#0f1118';
+  ctx.strokeStyle = 'rgba(245, 185, 66, 0.4)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.roundRect(tableX, deskY, tableW, tableH, 20);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.strokeStyle = '#F5B942';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(tableX + 15, deskY + 6);
+  ctx.lineTo(tableX + tableW - 15, deskY + 6);
+  ctx.stroke();
+
+  const cushX = cx - 110;
+  const cushY = deskY + 30;
+  ctx.fillStyle = '#1e1b2e';
+  ctx.strokeStyle = 'rgba(232, 121, 249, 0.45)';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.roundRect(cushX, cushY, 140, 50, 20);
+  ctx.fill();
+  ctx.stroke();
+
+  const handX = cushX + 35;
+  const handY = cushY - 10;
+  ctx.fillStyle = '#804d2e';
+  ctx.beginPath();
+  ctx.roundRect(handX - 45, handY + 12, 60, 32, 12);
+  ctx.fill();
+
+  const fingerY = handY + 6;
+  const nailPositions = [
+    { x: handX + 18, y: fingerY - 2, len: 44, thick: 11, angle: -0.15 },
+    { x: handX + 24, y: fingerY + 8, len: 48, thick: 11.5, angle: 0 },
+    { x: handX + 20, y: fingerY + 20, len: 44, thick: 10.5, angle: 0.12 },
+    { x: handX + 12, y: fingerY + 31, len: 38, thick: 9.5, angle: 0.22 },
+  ];
+
+  nailPositions.forEach((f, idx) => {
+    ctx.save();
+    ctx.translate(f.x, f.y);
+    ctx.rotate(f.angle);
+    ctx.fillStyle = '#784526';
+    ctx.beginPath();
+    ctx.roundRect(0, -f.thick / 2, f.len, f.thick, f.thick / 2);
+    ctx.fill();
+
+    const tipX = f.len - 4;
+    ctx.fillStyle = '#F5B942';
+    ctx.beginPath();
+    ctx.ellipse(tipX, 0, 9, f.thick / 2, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    if (t >= 0.30 && (idx === 1 || idx === 2)) {
+      drawStarGlint(ctx, tipX + 2, 0, 7, '#ffffff');
+    }
+    ctx.restore();
+  });
+
+  const brushSweep = Math.sin(t * Math.PI * 14) * 8;
+  const techHandX = handX + 90 + brushSweep * 0.4;
+  const techHandY = fingerY + 8 + brushSweep * 0.6;
+
+  ctx.fillStyle = '#141419';
+  ctx.beginPath();
+  ctx.roundRect(techHandX + 20, techHandY - 40, 70, 28, 12);
+  ctx.fill();
+
+  ctx.fillStyle = '#F5B942';
+  ctx.fillRect(techHandX + 20, techHandY - 40, 7, 28);
+
+  ctx.fillStyle = '#6e3f22';
+  ctx.beginPath();
+  ctx.ellipse(techHandX + 16, techHandY - 26, 14, 18, -0.3, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.strokeStyle = '#c8930a';
+  ctx.lineWidth = 3.5;
+  ctx.beginPath();
+  ctx.moveTo(techHandX + 14, techHandY - 24);
+  ctx.lineTo(handX + 66, fingerY + 8 + brushSweep * 0.3);
+  ctx.stroke();
+
+  ctx.fillStyle = '#F5B942';
+  ctx.beginPath();
+  ctx.arc(handX + 66, fingerY + 8 + brushSweep * 0.3, 3, 0, Math.PI * 2);
+  ctx.fill();
+
+  const lampX = cx + 80;
+  const lampY = deskY + 24;
+  ctx.save();
+  ctx.fillStyle = '#161922';
+  ctx.strokeStyle = '#38bdf8';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.roundRect(lampX, lampY, 110, 60, [30, 30, 8, 8]);
+  ctx.fill();
+  ctx.stroke();
+
+  const lampPulse = 0.5 + 0.5 * Math.sin(t * Math.PI * 8);
+  ctx.fillStyle = `rgba(56, 189, 248, ${0.25 * lampPulse})`;
+  ctx.fillRect(lampX + 10, lampY + 35, 90, 20);
+
+  ctx.font = '800 11px Outfit, sans-serif';
+  ctx.fillStyle = '#38bdf8';
+  ctx.textAlign = 'center';
+  ctx.fillText('UV GEL CURE', lampX + 55, lampY + 26);
+  ctx.restore();
+
+  const reviewY = deskY + tableH + (isVertical ? 24 : 16);
+  ctx.save();
+  ctx.fillStyle = 'rgba(24, 24, 30, 0.9)';
+  ctx.strokeStyle = 'rgba(245, 185, 66, 0.5)';
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.roundRect((W - 320) / 2, reviewY, 320, 56, 16);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.font = '16px sans-serif';
+  ctx.fillStyle = '#F5B942';
+  ctx.textAlign = 'center';
+  ctx.fillText('★★★★★', cx, reviewY + 22);
+
+  ctx.font = '800 13px Outfit, sans-serif';
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText('"Flawless 3-Week Retention!" · Verified Tech', cx, reviewY + 44);
+  ctx.restore();
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ANIMATED CARTOON CHARACTER COMMERCIAL 4: PRECISION WISPY LASH EXTENSIONS
+───────────────────────────────────────────────────────────────────────────── */
+function drawCartoonLashTechScene(ctx, W, H, ad, t, isVertical, color = '#e879f9') {
+  const cx = W / 2;
+  const eyeCenterY = isVertical ? H * 0.44 : H * 0.50;
+
+  const ringGrad = ctx.createRadialGradient(cx, eyeCenterY, 30, cx, eyeCenterY, isVertical ? W * 0.72 : 460);
+  ringGrad.addColorStop(0, 'rgba(232, 121, 249, 0.22)');
+  ringGrad.addColorStop(0.5, 'rgba(245, 185, 66, 0.08)');
+  ringGrad.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = ringGrad;
+  ctx.fillRect(0, eyeCenterY - 220, W, 440);
+
+  const hudY = isVertical ? H * 0.14 : H * 0.18;
+  ctx.save();
+  ctx.fillStyle = 'rgba(20, 22, 30, 0.92)';
+  ctx.strokeStyle = '#e879f9';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.roundRect((W - 320) / 2, hudY, 320, 36, 18);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.font = '900 13px Outfit, sans-serif';
+  ctx.fillStyle = '#e879f9';
+  ctx.textAlign = 'center';
+  ctx.fillText('👁️ PRECISION WISPY LASH EXTENSIONS', cx, hudY + 23);
+  ctx.restore();
+
+  ctx.save();
+  ctx.fillStyle = '#7a4b2c';
+  ctx.beginPath();
+  ctx.roundRect(cx - 150, eyeCenterY - 110, 300, 220, 35);
+  ctx.fill();
+
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.18)';
+  ctx.beginPath();
+  ctx.ellipse(cx, eyeCenterY, 85, 55, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  const blinkCycle = Math.sin(t * Math.PI * 8);
+  const eyeOpen = blinkCycle > 0.85 && t < 0.65 ? 0.12 : 1;
+
+  ctx.save();
+  ctx.translate(cx, eyeCenterY);
+  ctx.scale(1, eyeOpen);
+
+  ctx.fillStyle = '#ffffff';
+  ctx.beginPath();
+  ctx.ellipse(0, 0, 70, 38, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = '#6b3e1b';
+  ctx.beginPath();
+  ctx.arc(0, 0, 26, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = '#0a0a0f';
+  ctx.beginPath();
+  ctx.arc(0, 0, 14, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.arc(4, -4, 11, 0, Math.PI * 2);
+  ctx.stroke();
+
+  drawStarGlint(ctx, 8, -8, 6, '#ffffff');
+  ctx.restore();
+
+  const flutter = Math.sin(t * Math.PI * 16) * 2;
+  ctx.strokeStyle = '#090a0f';
+  ctx.lineWidth = 2.8;
+  ctx.lineCap = 'round';
+
+  const lashCount = 18;
+  for (let l = 0; l < lashCount; l++) {
+    const lx = cx - 62 + (l / lashCount) * 124;
+    const norm = (l - lashCount / 2) / (lashCount / 2);
+    const lashLen = 22 + (1 - Math.abs(norm)) * 18 + flutter;
+    const curveDir = norm * 14;
+
+    ctx.beginPath();
+    ctx.moveTo(lx, eyeCenterY - 32 * eyeOpen);
+    ctx.quadraticCurveTo(lx + curveDir * 0.6, eyeCenterY - 32 * eyeOpen - lashLen * 0.6, lx + curveDir, eyeCenterY - 32 * eyeOpen - lashLen);
+    ctx.stroke();
+  }
+
+  const tweezerSweep = Math.sin(t * Math.PI * 10) * 10;
+  const twX = cx + 22 + tweezerSweep * 0.3;
+  const twY = eyeCenterY - 46 + tweezerSweep * 0.4;
+
+  ctx.strokeStyle = '#F5B942';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(twX + 80, twY - 70);
+  ctx.lineTo(twX + 8, twY + 4);
+  ctx.moveTo(twX + 88, twY - 65);
+  ctx.lineTo(twX + 4, twY + 5);
+  ctx.stroke();
+
+  ctx.strokeStyle = '#090a0f';
+  ctx.lineWidth = 1.8;
+  for (let f = -2; f <= 2; f++) {
+    ctx.beginPath();
+    ctx.moveTo(twX + 6, twY + 4);
+    ctx.lineTo(twX + 6 + f * 5, twY + 4 + 12);
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  const reviewY = eyeCenterY + 125;
+  ctx.save();
+  ctx.fillStyle = 'rgba(24, 24, 30, 0.9)';
+  ctx.strokeStyle = 'rgba(232, 121, 249, 0.5)';
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.roundRect((W - 320) / 2, reviewY, 320, 56, 16);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.font = '16px sans-serif';
+  ctx.fillStyle = '#F5B942';
+  ctx.textAlign = 'center';
+  ctx.fillText('★★★★★', cx, reviewY + 22);
+
+  ctx.font = '800 13px Outfit, sans-serif';
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText('Zero Eye Stinging · Lightweight Volume', cx, reviewY + 44);
+  ctx.restore();
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ANIMATED CARTOON CHARACTER COMMERCIAL 5: 30-SECOND SMART CUSTOMER BOOKING
+───────────────────────────────────────────────────────────────────────────── */
+function drawCartoonCustomerBookingScene(ctx, W, H, ad, t, isVertical, color = '#38bdf8') {
+  const cx = W / 2;
+  const stageY = isVertical ? H * 0.44 : H * 0.50;
+
+  const hudY = isVertical ? H * 0.14 : H * 0.18;
+  ctx.save();
+  ctx.fillStyle = 'rgba(20, 22, 30, 0.92)';
+  ctx.strokeStyle = '#38bdf8';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.roundRect((W - 320) / 2, hudY, 320, 36, 18);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.font = '900 13px Outfit, sans-serif';
+  ctx.fillStyle = '#38bdf8';
+  ctx.textAlign = 'center';
+  ctx.fillText('⚡ 30-SECOND AI SPECIALIST MATCH', cx, hudY + 23);
+  ctx.restore();
+
+  const bob = Math.sin(t * Math.PI * 6) * 3;
+  const headX = cx - (isVertical ? 65 : 85);
+  const headY = stageY - 40 + bob;
+
+  ctx.save();
+  ctx.fillStyle = '#161a29';
+  ctx.beginPath();
+  ctx.roundRect(headX - 35, headY + 50, 70, 110, 18);
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  ctx.fillStyle = '#7a4b2c';
+  ctx.fillRect(headX - 10, headY + 30, 20, 25);
+
+  ctx.beginPath();
+  ctx.ellipse(headX, headY + 10, 26, 32, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.strokeStyle = '#F5B942';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.arc(headX - 25, headY + 16, 8, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.fillStyle = '#090a0f';
+  ctx.beginPath();
+  ctx.arc(headX, headY - 22, 28, 0, Math.PI * 2);
+  ctx.fill();
+
+  const blink = (t * 12) % 1 > 0.88;
+  if (!blink) {
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.ellipse(headX + 10, headY + 8, 5, 4, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#090a0f';
+    ctx.beginPath();
+    ctx.arc(headX + 11, headY + 8, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+  } else {
+    ctx.strokeStyle = '#27170e';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(headX + 5, headY + 8);
+    ctx.lineTo(headX + 15, headY + 8);
+    ctx.stroke();
+  }
+
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(headX + 10, headY + 22, 8, 0.1 * Math.PI, 0.9 * Math.PI);
+  ctx.stroke();
+  ctx.restore();
+
+  const phoneX = cx + (isVertical ? 40 : 55);
+  const phoneY = stageY - 70;
+  const phoneW = isVertical ? 140 : 150;
+  const phoneH = 220;
+
+  ctx.save();
+  ctx.fillStyle = '#0c0d14';
+  ctx.strokeStyle = '#F5B942';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.roundRect(phoneX - phoneW / 2, phoneY, phoneW, phoneH, 20);
+  ctx.fill();
+  ctx.stroke();
+
+  drawStyleCornerLogo(ctx, phoneX, phoneY + 22, 16, { hasHalo: false });
+
+  const pulseR = 15 + (t * 50) % 25;
+  ctx.strokeStyle = '#38bdf8';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.arc(phoneX, phoneY + 70, pulseR, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.font = '20px serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('📍', phoneX, phoneY + 75);
+
+  ctx.fillStyle = 'rgba(24, 28, 40, 0.95)';
+  ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.roundRect(phoneX - 58, phoneY + 105, 116, 55, 10);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.font = '800 10px Outfit, sans-serif';
+  ctx.fillStyle = '#ffffff';
+  ctx.textAlign = 'center';
+  ctx.fillText('Chioma Braids', phoneX, phoneY + 120);
+
+  ctx.font = '700 9px Outfit, sans-serif';
+  ctx.fillStyle = '#F5B942';
+  ctx.fillText('⭐ 5.0 · Lekki Phase 1', phoneX, phoneY + 134);
+
+  ctx.fillStyle = '#22c55e';
+  ctx.fillText('99% MATCH LOCKED ✓', phoneX, phoneY + 148);
+
+  ctx.fillStyle = '#F5B942';
+  ctx.beginPath();
+  ctx.roundRect(phoneX - 55, phoneY + 172, 110, 28, 14);
+  ctx.fill();
+
+  ctx.font = '900 10px Outfit, sans-serif';
+  ctx.fillStyle = '#090a0f';
+  ctx.fillText('BOOK IN 30S ➔', phoneX, phoneY + 190);
+  ctx.restore();
+
+  const vaultY = stageY + 120;
+  ctx.save();
+  ctx.fillStyle = 'rgba(20, 24, 35, 0.9)';
+  ctx.strokeStyle = 'rgba(245, 185, 66, 0.4)';
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.roundRect((W - 320) / 2, vaultY, 320, 52, 16);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.font = '800 13px Outfit, sans-serif';
+  ctx.fillStyle = '#ffffff';
+  ctx.textAlign = 'center';
+  ctx.fillText('🛡️ 100% Escrow Vault Protected', cx, vaultY + 24);
+
+  ctx.font = '700 11px Outfit, sans-serif';
+  ctx.fillStyle = '#F5B942';
+  ctx.fillText('Payment Released Only After Service is Done', cx, vaultY + 42);
+  ctx.restore();
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ANIMATED CARTOON CHARACTER COMMERCIAL 6: PRO STYLIST EARNINGS & WALLET
+───────────────────────────────────────────────────────────────────────────── */
+function drawCartoonProEarningsScene(ctx, W, H, ad, t, isVertical, color = '#f59e0b') {
+  const cx = W / 2;
+  const stageY = isVertical ? H * 0.44 : H * 0.50;
+
+  const hudY = isVertical ? H * 0.14 : H * 0.18;
+  ctx.save();
+  ctx.fillStyle = 'rgba(20, 22, 30, 0.92)';
+  ctx.strokeStyle = '#f59e0b';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.roundRect((W - 320) / 2, hudY, 320, 36, 18);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.font = '900 13px Outfit, sans-serif';
+  ctx.fillStyle = '#f59e0b';
+  ctx.textAlign = 'center';
+  ctx.fillText('💰 DIRECT CLIENT BOOKINGS & DAILY PAYOUTS', cx, hudY + 23);
+  ctx.restore();
+
+  const proX = cx - (isVertical ? 85 : 110);
+  const proY = stageY - 30;
+
+  ctx.save();
+  ctx.fillStyle = '#181924';
+  ctx.beginPath();
+  ctx.roundRect(proX - 30, proY + 45, 60, 115, 16);
+  ctx.fill();
+
+  ctx.font = '16px serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('✂️', proX, proY + 80);
+
+  ctx.fillStyle = '#653b21';
+  ctx.fillRect(proX - 8, proY + 24, 16, 22);
+  ctx.beginPath();
+  ctx.ellipse(proX, proY + 8, 22, 28, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = '#090a0f';
+  ctx.beginPath();
+  ctx.arc(proX, proY + 2, 23, Math.PI * 0.9, Math.PI * 2.1);
+  ctx.fill();
+
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(proX + 6, proY + 16, 8, 0.1 * Math.PI, 0.9 * Math.PI);
+  ctx.stroke();
+  ctx.restore();
+
+  const cardX = cx + (isVertical ? 45 : 55);
+  const cardY = stageY - 75;
+  const cardW = isVertical ? 175 : 190;
+  const cardH = 200;
+
+  ctx.save();
+  ctx.fillStyle = 'rgba(18, 22, 32, 0.95)';
+  ctx.strokeStyle = '#F5B942';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.roundRect(cardX - cardW / 2, cardY, cardW, cardH, 18);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.font = '800 11px Outfit, sans-serif';
+  ctx.fillStyle = '#94a3b8';
+  ctx.textAlign = 'center';
+  ctx.fillText('STYLECORNER WALLET', cardX, cardY + 26);
+
+  const earnings = Math.floor(15000 + 170500 * Math.min(1, t * 1.6));
+  ctx.font = '900 24px Outfit, sans-serif';
+  ctx.fillStyle = '#F5B942';
+  ctx.fillText(`₦${earnings.toLocaleString()}`, cardX, cardY + 60);
+
+  const days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+  const barW = 12;
+  const startBX = cardX - (days.length * (barW + 4)) / 2;
+  days.forEach((d, i) => {
+    const bh = 15 + ((i * 7 + 10) % 35);
+    ctx.fillStyle = i >= 4 ? '#22c55e' : 'rgba(245, 185, 66, 0.65)';
+    ctx.fillRect(startBX + i * (barW + 4), cardY + 125 - bh, barW, bh);
+    ctx.font = '700 9px Outfit, sans-serif';
+    ctx.fillStyle = '#a1a1aa';
+    ctx.fillText(d, startBX + i * (barW + 4) + barW / 2, cardY + 140);
+  });
+
+  ctx.fillStyle = '#22c55e';
+  ctx.font = '900 10px Outfit, sans-serif';
+  ctx.fillText('⚡ 5S DIRECT BANK WIRE ✓', cardX, cardY + 172);
+  ctx.fillText('0% ONBOARDING FEE', cardX, cardY + 188);
+  ctx.restore();
+
+  for (let c = 0; c < 5; c++) {
+    const coinY = cardY + 20 + ((c * 42 + t * 90) % 160);
+    const coinX = cardX - 55 + c * 28;
+    ctx.save();
+    ctx.fillStyle = '#F5B942';
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(coinX, coinY, 7, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.font = '900 8px Outfit, sans-serif';
+    ctx.fillStyle = '#090a0f';
+    ctx.textAlign = 'center';
+    ctx.fillText('₦', coinX, coinY + 3);
+    ctx.restore();
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ANIMATED CARTOON CHARACTER COMMERCIAL 7: VIP AT-HOME MOBILE GLAM
+───────────────────────────────────────────────────────────────────────────── */
+function drawCartoonVipHomeScene(ctx, W, H, ad, t, isVertical, color = '#e879f9') {
+  const cx = W / 2;
+  const stageY = isVertical ? H * 0.44 : H * 0.50;
+
+  const hudY = isVertical ? H * 0.14 : H * 0.18;
+  ctx.save();
+  ctx.fillStyle = 'rgba(20, 22, 30, 0.92)';
+  ctx.strokeStyle = '#e879f9';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.roundRect((W - 320) / 2, hudY, 320, 36, 18);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.font = '900 13px Outfit, sans-serif';
+  ctx.fillStyle = '#e879f9';
+  ctx.textAlign = 'center';
+  ctx.fillText('🏡 VIP AT-HOME MOBILE BEAUTY VISIT', cx, hudY + 23);
+  ctx.restore();
+
+  const sofaW = isVertical ? W * 0.84 : 460;
+  const sofaH = 110;
+  const sofaX = (W - sofaW) / 2;
+  const sofaY = stageY - 10;
+
+  ctx.save();
+  ctx.fillStyle = '#1c1b29';
+  ctx.strokeStyle = 'rgba(232, 121, 249, 0.4)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.roundRect(sofaX, sofaY, sofaW, sofaH, 24);
+  ctx.fill();
+  ctx.stroke();
+
+  for (let w = 0; w < 4; w++) {
+    const wx = sofaX + 30 + w * 70;
+    const wy = sofaY - 45 + Math.sin(t * 10 + w) * 8;
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.45)';
+    ctx.lineWidth = 1.8;
+    ctx.beginPath();
+    ctx.moveTo(wx, wy);
+    ctx.quadraticCurveTo(wx + 25, wy - 10, wx + 50, wy);
+    ctx.stroke();
+  }
+
+  const clientX = cx - 50;
+  const clientY = sofaY - 20;
+  ctx.fillStyle = '#7a4b2c';
+  ctx.beginPath();
+  ctx.ellipse(clientX, clientY, 22, 26, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = '#090a0f';
+  ctx.beginPath();
+  ctx.arc(clientX, clientY - 8, 24, Math.PI * 0.8, Math.PI * 2.2);
+  ctx.fill();
+
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(clientX + 6, clientY + 6, 6, 0.1 * Math.PI, 0.9 * Math.PI);
+  ctx.stroke();
+
+  ctx.fillStyle = '#F5B942';
+  ctx.fillRect(clientX - 35, clientY + 18, 14, 20);
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(clientX - 35, clientY + 18, 14, 20);
+  ctx.beginPath();
+  ctx.moveTo(clientX - 28, clientY + 16);
+  ctx.lineTo(clientX - 24, clientY + 8);
+  ctx.stroke();
+
+  const stylistX = cx + 80;
+  const stylistY = sofaY - 40;
+
+  ctx.fillStyle = '#161822';
+  ctx.beginPath();
+  ctx.roundRect(stylistX - 22, stylistY + 35, 44, 90, 14);
+  ctx.fill();
+
+  drawStyleCornerLogo(ctx, stylistX, stylistY + 52, 14, { hasHalo: false });
+
+  ctx.fillStyle = '#653b21';
+  ctx.beginPath();
+  ctx.ellipse(stylistX, stylistY + 10, 18, 22, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#090a0f';
+  ctx.beginPath();
+  ctx.arc(stylistX, stylistY + 2, 20, Math.PI * 0.8, Math.PI * 2.2);
+  ctx.fill();
+
+  const caseX = stylistX + 32;
+  const caseY = sofaY + 10;
+  ctx.fillStyle = '#0c0d14';
+  ctx.strokeStyle = '#F5B942';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.roundRect(caseX, caseY, 36, 52, 8);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.strokeStyle = '#F5B942';
+  ctx.beginPath();
+  ctx.moveTo(caseX + 18, caseY);
+  ctx.lineTo(caseX + 18, caseY - 20);
+  ctx.lineTo(caseX + 28, caseY - 20);
+  ctx.lineTo(caseX + 28, caseY);
+  ctx.stroke();
+  ctx.restore();
+
+  const compY = stageY + 120;
+  ctx.save();
+  ctx.fillStyle = 'rgba(20, 22, 32, 0.9)';
+  ctx.strokeStyle = 'rgba(232, 121, 249, 0.4)';
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.roundRect((W - 320) / 2, compY, 320, 56, 16);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.font = '800 13px Outfit, sans-serif';
+  ctx.fillStyle = '#f87171';
+  ctx.textAlign = 'center';
+  ctx.fillText('❌ Skip 3 Hours in Lagos Traffic Jam', cx, compY + 22);
+
+  ctx.font = '900 13px Outfit, sans-serif';
+  ctx.fillStyle = '#e879f9';
+  ctx.fillText('✨ 100% Luxury Salon Service In Your AC Living Room', cx, compY + 44);
+  ctx.restore();
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ANIMATED CARTOON CHARACTER COMMERCIAL 8: ATELIER STORE & EXPRESS DISPATCH
+───────────────────────────────────────────────────────────────────────────── */
+function drawCartoonStoreScene(ctx, W, H, ad, t, isVertical, color = '#34d399') {
+  const cx = W / 2;
+  const stageY = isVertical ? H * 0.44 : H * 0.50;
+
+  const hudY = isVertical ? H * 0.14 : H * 0.18;
+  ctx.save();
+  ctx.fillStyle = 'rgba(20, 22, 30, 0.92)';
+  ctx.strokeStyle = '#34d399';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.roundRect((W - 320) / 2, hudY, 320, 36, 18);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.font = '900 13px Outfit, sans-serif';
+  ctx.fillStyle = '#34d399';
+  ctx.textAlign = 'center';
+  ctx.fillText('🛍️ AUTHENTIC ATELIER CARE & DISPATCH', cx, hudY + 23);
+  ctx.restore();
+
+  // 3 Pedestals with Products
+  const products = [
+    { icon: '🧴', name: 'Scalp Oil', price: '₦8,500', color: '#34d399' },
+    { icon: '✂️', name: 'Fade Clipper', price: '₦24,000', color: '#F5B942' },
+    { icon: '🪮', name: 'Edge Control', price: '₦4,500', color: '#38bdf8' },
+  ];
+
+  const pedW = isVertical ? 95 : 120;
+  const startX = cx - (products.length * (pedW + 12)) / 2;
+
+  products.forEach((p, idx) => {
+    const px = startX + idx * (pedW + 12);
+    const bob = Math.sin(t * Math.PI * 6 + idx * 1.5) * 5;
+    const py = stageY - 40 + bob;
+
+    ctx.save();
+    ctx.fillStyle = '#141824';
+    ctx.strokeStyle = p.color;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(px, py, pedW, 110, 16);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.font = '36px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(p.icon, px + pedW / 2, py + 48);
+
+    ctx.font = '900 11px Outfit, sans-serif';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(p.name, px + pedW / 2, py + 74);
+
+    ctx.font = '800 12px Outfit, sans-serif';
+    ctx.fillStyle = p.color;
+    ctx.fillText(p.price, px + pedW / 2, py + 94);
+    ctx.restore();
+  });
+
+  // Express Dispatch Bike Courier moving across
+  const bikeX = (t * (W + 200)) % (W + 300) - 100;
+  const bikeY = stageY + 115;
+  ctx.save();
+  ctx.font = '28px serif';
+  ctx.fillText('🏍️📦', bikeX, bikeY);
+
+  ctx.font = '800 12px Outfit, sans-serif';
+  ctx.fillStyle = '#34d399';
+  ctx.fillText('⚡ FAST DISPATCH · LAGOS & IBADAN', cx, bikeY + 36);
+  ctx.restore();
+}
+
 /* ─────────────────────────────────────────────────────────────────────────────
    ANIMATED HUMAN COMMERCIAL 1: MASTER BARBER & CLIENT LIVE SESSION
 ───────────────────────────────────────────────────────────────────────────── */
@@ -764,25 +1746,9 @@ function drawAnimatedBarberScene(ctx, W, H, ad, t, isVertical, color) {
     }
 
   } else {
-    // ── Phase 3: StyleCorner Outro & CTA ──
-    const outroY = isVertical ? H * 0.40 : H * 0.45;
-    const pulse = 1 + 0.03 * Math.sin(t * Math.PI * 6);
-    ctx.save();
-    ctx.translate(W / 2, outroY);
-    ctx.scale(pulse, pulse);
-    drawStyleCornerLogo(ctx, 0, 0, isVertical ? 96 : 84, { hasHalo: true, withText: true });
-    ctx.restore();
-
-    const textY = outroY + (isVertical ? 120 : 105);
-    ctx.save();
-    ctx.font = `900 ${isVertical ? '34px' : '30px'} Outfit, sans-serif`;
-    ctx.fillStyle = '#ffffff';
-    ctx.textAlign = 'center';
-    ctx.fillText('Look Sharp. Feel Confident.', W / 2, textY);
-    ctx.fillStyle = '#F5B942';
-    ctx.font = `800 ${isVertical ? '17px' : '15px'} Outfit, sans-serif`;
-    ctx.fillText('Top Lagos & Ibadan Barbers Ready For You', W / 2, textY + 36);
-    ctx.restore();
+    // ── Phase 3: StyleCorner Spacious Editorial Outro ──
+    drawUniversalCommercialOutro(ctx, W, H, ad, t, isVertical, color);
+    return;
   }
 }
 
@@ -1042,25 +2008,9 @@ function drawAnimatedBraiderScene(ctx, W, H, ad, t, isVertical, color) {
     }
 
   } else {
-    // ── Phase 3: StyleCorner Outro & CTA ──
-    const outroY = isVertical ? H * 0.40 : H * 0.45;
-    const pulse = 1 + 0.03 * Math.sin(t * Math.PI * 6);
-    ctx.save();
-    ctx.translate(W / 2, outroY);
-    ctx.scale(pulse, pulse);
-    drawStyleCornerLogo(ctx, 0, 0, isVertical ? 96 : 84, { hasHalo: true, withText: true });
-    ctx.restore();
-
-    const textY = outroY + (isVertical ? 120 : 105);
-    ctx.save();
-    ctx.font = `900 ${isVertical ? '34px' : '30px'} Outfit, sans-serif`;
-    ctx.fillStyle = '#ffffff';
-    ctx.textAlign = 'center';
-    ctx.fillText('Your Beauty. Verified Stylists.', W / 2, textY);
-    ctx.fillStyle = '#e879f9';
-    ctx.font = `800 ${isVertical ? '17px' : '15px'} Outfit, sans-serif`;
-    ctx.fillText('Book Salon or VIP Mobile Home Visits in Lagos & Ibadan', W / 2, textY + 36);
-    ctx.restore();
+    // ── Phase 3: StyleCorner Spacious Editorial Outro ──
+    drawUniversalCommercialOutro(ctx, W, H, ad, t, isVertical, color);
+    return;
   }
 }
 
@@ -1723,6 +2673,13 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
   // 0. Flagship Master Commercial: 6-Act Cinematic Brand Film
   if (ad.id === 'v0-cinematic-flagship' || ad.category === 'flagship') {
     drawMasterCinematicCommercial(ctx, W, H, ad, t, isVertical, color);
+    return;
+  }
+
+  // 0B. Universal Spacious Editorial Outro for ALL other commercials (t >= 0.78)
+  // Perfectly spaced: Top Region Pill -> Hero 24K Squircle -> Brand -> Headline -> Chips -> Waveform -> CTA -> Footer
+  if (t >= 0.78) {
+    drawUniversalCommercialOutro(ctx, W, H, ad, t, isVertical, color);
     return;
   }
 
