@@ -188,7 +188,10 @@ export const ExpertAppointmentsPage = () => {
             </button>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <h1 style={{ fontFamily: 'Outfit', fontSize: '1.45rem', fontWeight: 900, color: textPrimary, margin: 0 }}>
+                <h1
+                  className={isDark ? "keep-white" : ""}
+                  style={{ fontFamily: 'Outfit', fontSize: '1.45rem', fontWeight: 900, color: textPrimary, margin: 0 }}
+                >
                   Client Appointments
                 </h1>
                 <span
@@ -537,6 +540,7 @@ export const ExpertAppointmentsPage = () => {
                       <div style={{ minWidth: 0 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
                           <h3
+                            className={isDark ? "keep-white" : ""}
                             style={{
                               fontFamily: 'Outfit',
                               fontSize: '1.02rem',

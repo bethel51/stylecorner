@@ -1643,240 +1643,401 @@ export const ExpertDashboard = () => {
         </div>
 
 
-        {/* ── 4. Client Appointments & Requests Hub ── */}
-        <div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-              <Calendar size={15} color="#f5b942" />
-              <h3 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
-                Appointments
-              </h3>
+        {/* ── 4. Client Appointments & Requests Hub (Executive Overview) ── */}
+        <div
+          style={{
+            background: 'linear-gradient(145deg, #151824 0%, #10121c 100%)',
+            border: '1px solid rgba(245, 185, 66, 0.25)',
+            borderRadius: '24px',
+            padding: '1.4rem',
+            boxShadow: '0 12px 36px -10px rgba(0, 0, 0, 0.6)',
+            position: 'relative',
+            overflow: 'hidden',
+          }}
+        >
+          {/* Header row */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.15rem', flexWrap: 'wrap', gap: '0.65rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+              <div style={{
+                width: '42px',
+                height: '42px',
+                borderRadius: '14px',
+                background: 'linear-gradient(135deg, rgba(245, 185, 66, 0.2), rgba(212, 175, 55, 0.1))',
+                border: '1px solid rgba(245, 185, 66, 0.35)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#f5b942',
+              }}>
+                <Calendar size={20} />
+              </div>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                  <h3 className="keep-white" style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+                    Appointments & Schedule
+                  </h3>
+                  {pendingBookings.length > 0 && (
+                    <span style={{
+                      background: '#ef4444',
+                      color: '#ffffff',
+                      borderRadius: '50px',
+                      padding: '0.1rem 0.5rem',
+                      fontSize: '0.68rem',
+                      fontWeight: 800,
+                      fontFamily: 'Outfit',
+                      animation: 'pulse 1.8s infinite',
+                    }}>
+                      {pendingBookings.length} Action Needed
+                    </span>
+                  )}
+                </div>
+                <p style={{ color: '#94a3b8', fontSize: '0.78rem', margin: '0.15rem 0 0' }}>
+                  {bookings.length} total client bookings · {completedBookings.length} completed
+                </p>
+              </div>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
               <button
-                onClick={() => navigate('/expert/appointments')}
-                style={{
-                  background: 'rgba(255, 255, 255, 0.05)',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
-                  color: '#e2e8f0',
-                  borderRadius: '12px',
-                  padding: '0.35rem 0.75rem',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.35rem',
-                  fontSize: '0.76rem',
-                  fontFamily: 'Outfit',
-                  fontWeight: 700,
-                  transition: 'all 0.15s ease',
-                }}
-                title="Open full dedicated appointments management page"
-              >
-                <Calendar size={13} color="#f5b942" /> View All ({bookings.length})
-              </button>
-
-              <button
+                type="button"
                 onClick={() => setShowCheckInDesk(true)}
                 style={{
-                  background: 'linear-gradient(135deg, rgba(245, 185, 66, 0.18), rgba(212, 175, 55, 0.18))',
-                  border: '1px solid rgba(245, 185, 66, 0.4)',
+                  background: 'rgba(245, 185, 66, 0.12)',
+                  border: '1px solid rgba(245, 185, 66, 0.35)',
                   color: '#f5b942',
                   borderRadius: '12px',
-                  padding: '0.35rem 0.75rem',
+                  padding: '0.5rem 0.85rem',
                   cursor: 'pointer',
-                  display: 'flex',
+                  display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '0.35rem',
-                  fontSize: '0.76rem',
+                  gap: '0.4rem',
+                  fontSize: '0.78rem',
                   fontFamily: 'Outfit',
                   fontWeight: 800,
                 }}
               >
-                <QrCode size={13} /> Check-In Desk
+                <QrCode size={14} /> Check-In Desk
               </button>
 
               <button
-                onClick={fetchDashboardData}
+                type="button"
+                onClick={() => navigate('/expert/appointments')}
                 style={{
-                  background: 'none',
+                  background: 'linear-gradient(135deg, #f5b942 0%, #e0a32d 100%)',
                   border: 'none',
-                  color: '#94a3b8',
+                  color: '#0c0e14',
+                  borderRadius: '12px',
+                  padding: '0.5rem 1rem',
                   cursor: 'pointer',
-                  display: 'flex',
+                  display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '0.3rem',
-                  fontSize: '0.76rem',
+                  gap: '0.4rem',
+                  fontSize: '0.8rem',
                   fontFamily: 'Outfit',
+                  fontWeight: 800,
+                  boxShadow: '0 4px 14px rgba(245, 185, 66, 0.3)',
                 }}
               >
-                <RefreshCw size={13} className={loading ? 'spin' : ''} /> Refresh
+                <span>Manage All Hub</span>
+                <ChevronRight size={15} />
               </button>
             </div>
           </div>
 
-          {/* Filter Pills Bar */}
-          <div
-            style={{
-              display: 'flex',
-              gap: '0.55rem',
-              overflowX: 'auto',
-              paddingBottom: '0.45rem',
-              marginBottom: '1rem',
-              scrollbarWidth: 'none',
-            }}
-          >
-            {[
-              { id: 'all', label: 'All', count: bookings.length },
-              { id: 'pending', label: 'Pending', count: pendingBookings.length },
-              { id: 'accepted', label: 'Confirmed', count: acceptedBookings.length },
-              { id: 'completed', label: 'Completed', count: completedBookings.length },
-              { id: 'today', label: 'Today', count: bookings.filter((b) => isToday(b.date || b.createdAt)).length },
-            ].map((tab) => {
-              const isActive = filterTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setFilterTab(tab.id)}
-                  style={{
-                    background: isActive ? 'linear-gradient(135deg, #f5b942 0%, #e0a32d 100%)' : 'rgba(255, 255, 255, 0.04)',
-                    color: isActive ? '#0c0e14' : '#94a3b8',
-                    border: `1px solid ${isActive ? '#f5b942' : 'rgba(255, 255, 255, 0.08)'}`,
-                    borderRadius: '50px',
-                    padding: '0.4rem 0.95rem',
-                    fontFamily: 'Outfit',
-                    fontSize: '0.78rem',
-                    fontWeight: isActive ? 800 : 600,
-                    cursor: 'pointer',
-                    whiteSpace: 'nowrap',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.4rem',
-                    transition: 'all 0.15s ease',
-                    boxShadow: isActive ? '0 4px 14px rgba(245, 185, 66, 0.25)' : 'none',
-                  }}
-                >
-                  <span>{tab.label}</span>
-                  <span
-                    style={{
-                      background: isActive ? 'rgba(12, 14, 20, 0.25)' : 'rgba(255, 255, 255, 0.08)',
-                      color: isActive ? '#0c0e14' : '#f5b942',
-                      padding: '0.1rem 0.45rem',
-                      borderRadius: '50px',
-                      fontSize: '0.68rem',
-                      fontWeight: 800,
-                    }}
-                  >
-                    {tab.count}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Bookings List */}
-          {loading && <SkeletonList count={3} />}
-
-          {!loading && filteredBookings.length === 0 && (
+          {/* Quick Counter Grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.65rem', marginBottom: '1.15rem' }}>
             <div
+              onClick={() => navigate('/expert/appointments?status=today')}
               style={{
-                background: 'radial-gradient(circle at 50% 20%, rgba(245, 185, 66, 0.08) 0%, transparent 65%), #141722',
-                borderRadius: '24px',
-                padding: '3rem 1.5rem',
-                textAlign: 'center',
-                border: '1.5px dashed rgba(245, 185, 66, 0.25)',
+                background: 'rgba(255, 255, 255, 0.03)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: '16px',
+                padding: '0.85rem',
+                cursor: 'pointer',
               }}
             >
-              <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'rgba(245, 185, 66, 0.12)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: '#f5b942', marginBottom: '1rem' }}>
-                <Scissors size={28} />
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+                <span style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 700, fontFamily: 'Outfit' }}>TODAY</span>
+                <Clock size={13} color="#f5b942" />
               </div>
-              <h4 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.4rem' }}>
-                No {filterTab === 'all' ? '' : filterTab} appointments
-              </h4>
-              <p style={{ fontSize: '0.84rem', color: '#64748b', margin: 0, maxWidth: '380px', marginInline: 'auto', lineHeight: 1.4 }}>
-                {filterTab === 'pending'
-                  ? 'You are all caught up! New client booking requests will appear here in real-time.'
-                  : 'Appointments will be listed here when scheduled by clients.'}
-              </p>
+              <div style={{ fontFamily: 'Outfit', fontSize: '1.4rem', fontWeight: 900, color: '#f5b942' }}>
+                {bookings.filter((b) => isToday(b.date || b.createdAt)).length}
+              </div>
             </div>
-          )}
 
-          {!loading && filteredBookings.length > 0 && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-              {filteredBookings.map((b) => (
-                <SwipeableBookingCard
-                  key={b._id}
-                  booking={b}
-                  updatingId={updatingId}
-                  onAccept={() => handleUpdateStatus(b._id, 'accepted')}
-                  onDecline={() => handleUpdateStatus(b._id, 'rejected')}
-                  onComplete={() => handleUpdateStatus(b._id, 'completed')}
-                  openClientWhatsApp={openClientWhatsApp}
-                  onChatClient={(booking) => navigate(`/expert/chat?bookingId=${booking._id}`)}
-                />
-              ))}
+            <div
+              onClick={() => navigate('/expert/appointments?status=pending')}
+              style={{
+                background: pendingBookings.length > 0 ? 'rgba(239, 68, 68, 0.08)' : 'rgba(255, 255, 255, 0.03)',
+                border: `1px solid ${pendingBookings.length > 0 ? 'rgba(239, 68, 68, 0.3)' : 'rgba(255, 255, 255, 0.08)'}`,
+                borderRadius: '16px',
+                padding: '0.85rem',
+                cursor: 'pointer',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+                <span style={{ fontSize: '0.7rem', color: pendingBookings.length > 0 ? '#f87171' : '#94a3b8', fontWeight: 700, fontFamily: 'Outfit' }}>PENDING</span>
+                <AlertCircle size={13} color={pendingBookings.length > 0 ? '#ef4444' : '#94a3b8'} />
+              </div>
+              <div style={{ fontFamily: 'Outfit', fontSize: '1.4rem', fontWeight: 900, color: pendingBookings.length > 0 ? '#ef4444' : '#ffffff' }}>
+                {pendingBookings.length}
+              </div>
             </div>
-          )}
-        </div>
 
-        {/* ── 5. Appointment History Statement & Export Hub ── */}
-        <div
-          style={{
-            background: 'linear-gradient(135deg, #141724 0%, #0f121b 100%)',
-            borderRadius: '20px',
-            padding: '1.25rem 1.4rem',
-            border: '1px solid rgba(245, 185, 66, 0.25)',
-            boxShadow: '0 8px 24px -8px rgba(0, 0, 0, 0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '1rem',
-            flexWrap: 'wrap',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <div style={{ width: '38px', height: '38px', borderRadius: '12px', background: 'rgba(245, 185, 66, 0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#f5b942', flexShrink: 0 }}>
-              <Download size={18} />
+            <div
+              onClick={() => navigate('/expert/appointments?status=accepted')}
+              style={{
+                background: 'rgba(255, 255, 255, 0.03)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: '16px',
+                padding: '0.85rem',
+                cursor: 'pointer',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+                <span style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 700, fontFamily: 'Outfit' }}>CONFIRMED</span>
+                <CheckCircle size={13} color="#10b981" />
+              </div>
+              <div style={{ fontFamily: 'Outfit', fontSize: '1.4rem', fontWeight: 900, color: '#10b981' }}>
+                {acceptedBookings.length}
+              </div>
             </div>
-            <div>
-              <h4 style={{ fontFamily: 'Outfit', fontSize: '0.96rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.2rem' }}>
-                Export Booking Records
-              </h4>
-              <p style={{ fontSize: '0.78rem', color: '#94a3b8', margin: 0 }}>
-                Download official CSV log & printable statement
-              </p>
+
+            <div
+              onClick={() => navigate('/expert/appointments?status=completed')}
+              style={{
+                background: 'rgba(255, 255, 255, 0.03)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: '16px',
+                padding: '0.85rem',
+                cursor: 'pointer',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+                <span style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 700, fontFamily: 'Outfit' }}>COMPLETED</span>
+                <Sparkles size={13} color="#60a5fa" />
+              </div>
+              <div style={{ fontFamily: 'Outfit', fontSize: '1.4rem', fontWeight: 900, color: '#60a5fa' }}>
+                {completedBookings.length}
+              </div>
             </div>
           </div>
 
-          <button
-            onClick={() => {
-              if (bookings.length === 0) {
-                showToast('No booking records to download.', 'accent');
-                return;
-              }
-              downloadBookingHistoryCSV(bookings, `StyleCorner_Bookings_${user?.firstname || 'Stylist'}.csv`);
-              printBookingHistoryReport(bookings, `Appointment History - ${user?.firstname || 'Stylist'}`);
-              showToast('Export file downloaded & statement opened!', 'success');
-            }}
-            style={{
-              background: 'rgba(245, 185, 66, 0.12)',
-              border: '1px solid rgba(245, 185, 66, 0.35)',
-              color: '#f5b942',
-              padding: '0.6rem 1.15rem',
-              borderRadius: '50px',
-              fontFamily: 'Outfit',
-              fontSize: '0.8rem',
-              fontWeight: 800,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.4rem',
-              flexShrink: 0,
-              transition: 'all 0.15s ease',
-            }}
-          >
-            <Download size={14} /> Export Statement
-          </button>
+          {/* Pending Action Highlight (if any incoming booking needs confirmation) */}
+          {pendingBookings.length > 0 ? (
+            <div
+              style={{
+                background: 'radial-gradient(circle at 90% 10%, rgba(245, 185, 66, 0.12) 0%, transparent 60%), rgba(245, 185, 66, 0.05)',
+                border: '1.5px solid rgba(245, 185, 66, 0.4)',
+                borderRadius: '18px',
+                padding: '1rem 1.15rem',
+                marginBottom: '1rem',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.65rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                  <span style={{
+                    background: '#f5b942',
+                    color: '#0c0e14',
+                    borderRadius: '50px',
+                    padding: '0.15rem 0.55rem',
+                    fontSize: '0.7rem',
+                    fontWeight: 800,
+                    fontFamily: 'Outfit',
+                  }}>
+                    Action Required
+                  </span>
+                  <span className="keep-white" style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 800, color: '#ffffff' }}>
+                    {pendingBookings[0].clientName || 'New Client Booking'}
+                  </span>
+                </div>
+                <span style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 900, color: '#f5b942' }}>
+                  ₦{Number(pendingBookings[0].price || 0).toLocaleString()}
+                </span>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', flexWrap: 'wrap', fontSize: '0.76rem', color: '#cbd5e1', marginBottom: '0.85rem' }}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                  <Scissors size={12} color="#f5b942" /> {pendingBookings[0].service || 'Specialist Session'}
+                </span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                  <Calendar size={12} color="#f5b942" /> {pendingBookings[0].date} at {pendingBookings[0].time}
+                </span>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                <button
+                  type="button"
+                  disabled={updatingId === pendingBookings[0]._id}
+                  onClick={() => handleUpdateStatus(pendingBookings[0]._id, 'accepted')}
+                  style={{
+                    flex: 1,
+                    background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                    border: 'none',
+                    color: '#ffffff',
+                    borderRadius: '10px',
+                    padding: '0.55rem',
+                    fontFamily: 'Outfit',
+                    fontSize: '0.78rem',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                  }}
+                >
+                  {updatingId === pendingBookings[0]._id ? 'Updating…' : '✓ Accept Booking'}
+                </button>
+                <button
+                  type="button"
+                  disabled={updatingId === pendingBookings[0]._id}
+                  onClick={() => handleUpdateStatus(pendingBookings[0]._id, 'rejected')}
+                  style={{
+                    background: 'rgba(239, 68, 68, 0.1)',
+                    border: '1px solid rgba(239, 68, 68, 0.3)',
+                    color: '#f87171',
+                    borderRadius: '10px',
+                    padding: '0.55rem 0.95rem',
+                    fontFamily: 'Outfit',
+                    fontSize: '0.78rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                  }}
+                >
+                  Decline
+                </button>
+              </div>
+            </div>
+          ) : acceptedBookings.length > 0 ? (
+            /* Upcoming Confirmed Preview */
+            <div
+              style={{
+                background: 'rgba(255, 255, 255, 0.03)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: '18px',
+                padding: '1rem 1.15rem',
+                marginBottom: '1rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                flexWrap: 'wrap',
+                gap: '0.75rem',
+              }}
+            >
+              <div>
+                <span style={{ fontSize: '0.68rem', fontWeight: 800, color: '#10b981', textTransform: 'uppercase', letterSpacing: '0.06em', fontFamily: 'Outfit' }}>
+                  Next Upcoming Client
+                </span>
+                <h4 className="keep-white" style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 800, color: '#ffffff', margin: '0.2rem 0 0.25rem' }}>
+                  {acceptedBookings[0].clientName || 'Confirmed Client'}
+                </h4>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', fontSize: '0.76rem', color: '#94a3b8', flexWrap: 'wrap' }}>
+                  <span>{acceptedBookings[0].service}</span>
+                  <span>•</span>
+                  <span>{acceptedBookings[0].date} at {acceptedBookings[0].time}</span>
+                  {acceptedBookings[0].checkInCode && (
+                    <span style={{ color: '#f5b942', fontWeight: 800, fontFamily: 'monospace' }}>Pass: {acceptedBookings[0].checkInCode}</span>
+                  )}
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                {acceptedBookings[0].paymentStatus === 'paid' && (
+                  <button
+                    type="button"
+                    onClick={() => navigate(`/expert/chat?bookingId=${acceptedBookings[0]._id}`)}
+                    style={{
+                      background: 'rgba(167, 139, 250, 0.15)',
+                      border: '1px solid rgba(167, 139, 250, 0.35)',
+                      color: '#c4b5fd',
+                      borderRadius: '10px',
+                      padding: '0.45rem 0.8rem',
+                      fontSize: '0.76rem',
+                      fontFamily: 'Outfit',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.35rem',
+                    }}
+                  >
+                    <MessageSquare size={13} /> Chat
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={() => navigate('/expert/appointments')}
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.06)',
+                    border: '1px solid rgba(255, 255, 255, 0.12)',
+                    color: '#e2e8f0',
+                    borderRadius: '10px',
+                    padding: '0.45rem 0.85rem',
+                    fontSize: '0.76rem',
+                    fontFamily: 'Outfit',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                  }}
+                >
+                  View Details
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div
+              style={{
+                background: 'rgba(255, 255, 255, 0.02)',
+                border: '1px dashed rgba(255, 255, 255, 0.08)',
+                borderRadius: '18px',
+                padding: '1.25rem',
+                textAlign: 'center',
+                marginBottom: '1rem',
+              }}
+            >
+              <p style={{ color: '#94a3b8', fontSize: '0.82rem', margin: '0 0 0.5rem' }}>
+                All caught up! No active pending bookings.
+              </p>
+              <button
+                type="button"
+                onClick={() => navigate('/expert/appointments')}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#f5b942',
+                  fontSize: '0.78rem',
+                  fontWeight: 800,
+                  fontFamily: 'Outfit',
+                  cursor: 'pointer',
+                  textDecoration: 'underline',
+                }}
+              >
+                Browse Past History & Reports ({completedBookings.length} completed) →
+              </button>
+            </div>
+          )}
+
+          {/* Bottom Bar: Direct button to Dedicated Standalone Page */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '0.85rem', borderTop: '1px solid rgba(255, 255, 255, 0.08)', flexWrap: 'wrap', gap: '0.65rem' }}>
+            <span style={{ fontSize: '0.74rem', color: '#94a3b8' }}>
+              Full appointment calendar, check-in scanner desk, and client communication.
+            </span>
+            <button
+              type="button"
+              onClick={() => navigate('/expert/appointments')}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#f5b942',
+                fontSize: '0.78rem',
+                fontWeight: 800,
+                fontFamily: 'Outfit',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+              }}
+            >
+              <span>Go to Dedicated Appointments Page</span>
+              <ArrowRight size={14} />
+            </button>
+          </div>
         </div>
 
         {/* ── 6. Portfolio Work & Lookbook ── */}

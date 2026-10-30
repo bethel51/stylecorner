@@ -1717,11 +1717,11 @@ textarea:focus-visible {
 }
 
 /* Light mode text readability */
-[data-theme="light"] h1[style*="color: #ffffff"],
-[data-theme="light"] h2[style*="color: #ffffff"],
-[data-theme="light"] h3[style*="color: #ffffff"],
-[data-theme="light"] h4[style*="color: #ffffff"],
-[data-theme="light"] span[style*="color: #ffffff"]:not([style*="background: #f5b942"]):not([style*="background:#f5b942"]):not(.badge-dot) {
+[data-theme="light"] h1[style*="color: #ffffff"]:not(.keep-white):not(.dark-card-text),
+[data-theme="light"] h2[style*="color: #ffffff"]:not(.keep-white):not(.dark-card-text),
+[data-theme="light"] h3[style*="color: #ffffff"]:not(.keep-white):not(.dark-card-text),
+[data-theme="light"] h4[style*="color: #ffffff"]:not(.keep-white):not(.dark-card-text),
+[data-theme="light"] span[style*="color: #ffffff"]:not([style*="background: #f5b942"]):not([style*="background:#f5b942"]):not(.badge-dot):not(.keep-white):not(.dark-card-text) {
   color: #0f172a !important;
 }
 
