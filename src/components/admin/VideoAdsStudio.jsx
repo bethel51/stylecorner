@@ -31,15 +31,16 @@ function createBackgroundMusicEngine(style = 'luxury') {
   reverbGain.connect(reverb);
 
   const chords = {
-    luxury: [261.6, 329.6, 392.0, 523.3], // C major luxury chord
-    lofi:   [220.0, 261.6, 329.6, 440.0], // A minor lofi chill
-    upbeat: [349.2, 440.0, 523.3, 659.3], // F major modern kinetic
+    luxury:    [261.6, 329.6, 392.0, 523.3], // C major luxury chord
+    lofi:      [220.0, 261.6, 329.6, 440.0], // A minor lofi chill
+    upbeat:    [349.2, 440.0, 523.3, 659.3], // F major modern kinetic
+    cinematic: [130.8, 196.0, 261.6, 329.6, 392.0], // Cinematic orchestral build
   };
   const notes = chords[style] || chords.luxury;
 
   let isRunning = true;
   let nextBeatTime = ctx.currentTime + 0.1;
-  const bpm = style === 'upbeat' ? 104 : style === 'lofi' ? 72 : 86;
+  const bpm = style === 'cinematic' ? 96 : style === 'upbeat' ? 104 : style === 'lofi' ? 72 : 86;
   const beat = 60 / bpm;
 
   const schedulePad = (freq, time, dur) => {
@@ -58,6 +59,21 @@ function createBackgroundMusicEngine(style = 'luxury') {
     osc.stop(time + dur);
   };
 
+  const scheduleImpact = (time) => {
+    if (!isRunning) return;
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(90, time);
+    osc.frequency.exponentialRampToValueAtTime(28, time + 1.2);
+    g.gain.setValueAtTime(0.4, time);
+    g.gain.exponentialRampToValueAtTime(0.001, time + 1.4);
+    osc.connect(g);
+    g.connect(masterGain);
+    osc.start(time);
+    osc.stop(time + 1.5);
+  };
+
   const scheduleThump = (time) => {
     if (!isRunning) return;
     const osc = ctx.createOscillator();
@@ -72,6 +88,11 @@ function createBackgroundMusicEngine(style = 'luxury') {
     osc.start(time);
     osc.stop(time + 0.3);
   };
+
+  // Initial cinematic boom if cinematic
+  if (style === 'cinematic') {
+    scheduleImpact(ctx.currentTime + 0.05);
+  }
 
   let step = 0;
   const timer = setInterval(() => {
@@ -109,6 +130,29 @@ function createBackgroundMusicEngine(style = 'luxury') {
    8 COMPLETE COMMERCIAL ADS DATA (Including 3 High-Production Motion Graphics)
 ───────────────────────────────────────────────────────────────────────────── */
 export const DEFAULT_AD_VIDEOS = [
+  /* ══════════════════════════════════════════════════════════
+     FLAGSHIP MASTER COMMERCIAL: Premium Cinematic Brand Film (60s)
+     Director's Cut · 6-Scene Narrative Arc
+  ══════════════════════════════════════════════════════════ */
+  {
+    id: 'v0-cinematic-flagship',
+    title: 'STYLECORNER — The Cinematic Brand Commercial',
+    category: 'flagship',
+    duration: 55,
+    durationText: '0:55',
+    aspectRatio: '9:16',
+    badge: '👑 Flagship Film · Director\'s Cut',
+    hasVoice: true,
+    musicStyle: 'cinematic',
+    themeColor: '#f5b942',
+    accentGradient: 'linear-gradient(135deg, #3d2303 0%, #08090d 50%, #1c1103 100%)',
+    hook: 'A 6-act international-grade commercial: The Problem, The Discovery, 8 Beauty Experiences, 6-Step Workflow, The Glow Transformation, and The Anthem Finale.',
+    voiceScript: "Looking good shouldn't be complicated. The endless searching, unconfirmed bookings, and waiting for replies... It ends today. Meet StyleCorner. Your beauty. Your expert. Your convenience. From precision fades and knotless goddess braids, to melted frontal installs, volume lashes, pedicures, and nail artistry. Book your verified specialist in thirty seconds with complete escrow protection. Watch your expert accept in real-time, get pampered in-salon or at home, and release payment only when you are thrilled. Find your expert. Book your service. Own your look. StyleCorner. Beauty meets convenience. Start your experience today at stylecorner dot world.",
+    cta: '👑 BOOK YOUR CINEMATIC EXPERIENCE',
+    tags: ['MasterCommercial', 'CinematicFilm', 'DirectorsCut', 'StyleCornerOriginal', 'LagosBeauty'],
+    description: 'World-class 6-scene cinematic brand commercial directed in the style of Apple, Nike, and Coca-Cola. Includes dramatic problem setup, smartphone app discovery, 8-service rapid match cuts, animated 6-step platform workflow, radiant transformations, and monumental brand anthem finale.',
+  },
+
   /* ══════════════════════════════════════════════════════════
      AD 1 — ANIMATED HUMANS: Live Master Barber Session
   ══════════════════════════════════════════════════════════ */
@@ -985,12 +1029,640 @@ function drawAnimatedBraiderScene(ctx, W, H, ad, t, isVertical, color) {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
+   FLAGSHIP MASTER COMMERCIAL: 6-ACT CINEMATIC BRAND FILM RENDERER
+   Directed in the aesthetic of Apple, Nike & Coca-Cola
+───────────────────────────────────────────────────────────────────────────── */
+function drawMasterCinematicCommercial(ctx, W, H, ad, t, isVertical, color) {
+  const cx = W / 2;
+  const cy = H / 2;
+
+  // 1. Deepest Obsidian Anamorphic Canvas
+  ctx.fillStyle = '#06070a';
+  ctx.fillRect(0, 0, W, H);
+
+  // 2. Cinematic Lens Flare & Dynamic Ambient Glow
+  const flareGrad = ctx.createRadialGradient(cx, cy, 20, cx, cy, Math.max(W, H) * 0.9);
+  flareGrad.addColorStop(0, 'rgba(245, 185, 66, 0.22)');
+  flareGrad.addColorStop(0.4, 'rgba(20, 15, 8, 0.6)');
+  flareGrad.addColorStop(1, '#050608');
+  ctx.fillStyle = flareGrad;
+  ctx.fillRect(0, 0, W, H);
+
+  // 3. Stardust & Bokeh Embers
+  for (let i = 0; i < 22; i++) {
+    const bx = (W * ((i * 179.3 + t * 75) % 100) / 100);
+    const by = H - ((H * ((i * 91.7 + t * 60) % 100) / 100) + t * H * 0.2) % H;
+    const bAlpha = 0.15 + 0.35 * Math.sin(t * Math.PI * 4 + i);
+    ctx.save();
+    ctx.globalAlpha = bAlpha;
+    ctx.fillStyle = '#F5B942';
+    ctx.beginPath();
+    ctx.arc(bx, by, 1.5 + (i % 3) * 1.2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // 4. Filmic 2.39:1 Letterbox Bars (Top & Bottom)
+  const barH = isVertical ? 38 : 28;
+  ctx.fillStyle = '#000000';
+  ctx.fillRect(0, 0, W, barH);
+  ctx.fillRect(0, H - barH, W, barH);
+  ctx.strokeStyle = 'rgba(245, 185, 66, 0.25)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(0, barH); ctx.lineTo(W, barH);
+  ctx.moveTo(0, H - barH); ctx.lineTo(W, H - barH);
+  ctx.stroke();
+
+  // 5. Film Director Metadata Overlay (Top Bar)
+  ctx.save();
+  ctx.font = '800 11px Outfit, sans-serif';
+  ctx.fillStyle = '#F5B942';
+  ctx.textAlign = 'left';
+  ctx.fillText('✦ STYLECORNER CINEMATIC FILM', 20, barH - 12);
+  ctx.textAlign = 'right';
+  ctx.fillStyle = '#a1a1aa';
+  ctx.fillText('LAGOS & IBADAN · 4K 60FPS', W - 20, barH - 12);
+  ctx.restore();
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // ACT 1: SCENE 1 — THE PROBLEM (t: 0.00 -> 0.16)
+  // "Looking good shouldn't be complicated."
+  // ───────────────────────────────────────────────────────────────────────────
+  if (t < 0.16) {
+    const actT = t / 0.16;
+    const dolly = 1 + actT * 0.05;
+
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.scale(dolly, dolly);
+    ctx.translate(-cx, -cy);
+
+    // Moody Dressing Room Mirror
+    const mirW = isVertical ? W * 0.76 : 520;
+    const mirH = isVertical ? H * 0.44 : 360;
+    const mirX = (W - mirW) / 2;
+    const mirY = isVertical ? H * 0.18 : H * 0.22;
+
+    // Amber Dressing Lamp Glow
+    const lampGlow = ctx.createRadialGradient(mirX + 40, mirY + 40, 10, mirX + 40, mirY + 40, 220);
+    lampGlow.addColorStop(0, 'rgba(245,185,66,0.28)');
+    lampGlow.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = lampGlow;
+    ctx.fillRect(mirX - 40, mirY - 40, mirW + 80, mirH + 80);
+
+    // Mirror Frame
+    ctx.fillStyle = '#0a0b10';
+    ctx.strokeStyle = 'rgba(245,185,66,0.4)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(mirX, mirY, mirW, mirH, 20);
+    ctx.fill();
+    ctx.stroke();
+
+    // Seated Person (Silhouette looking in mirror with troubled expression)
+    const px = cx - 30;
+    const py = mirY + mirH * 0.65;
+    ctx.fillStyle = '#6b4124';
+    ctx.beginPath();
+    ctx.ellipse(px, py - 40, 32, 42, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Hand touching unstyled hair
+    ctx.strokeStyle = '#6b4124';
+    ctx.lineWidth = 10;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(px + 45, py + 20);
+    ctx.quadraticCurveTo(px + 50, py - 20, px + 18, py - 60);
+    ctx.stroke();
+
+    // Troubled expression
+    ctx.strokeStyle = '#18181b';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(px + 10, py - 20, 8, 0.85 * Math.PI, 0.15 * Math.PI); // Frown
+    ctx.stroke();
+
+    // Floating Smartphone with Frustrating Chat Bubble
+    const phoneX = cx + (isVertical ? 45 : 90);
+    const phoneY = mirY + mirH * 0.22;
+    ctx.fillStyle = 'rgba(24,24,28,0.95)';
+    ctx.strokeStyle = 'rgba(239,68,68,0.6)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(phoneX, phoneY, isVertical ? 175 : 190, 75, 14);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.font = '800 11px Outfit, sans-serif';
+    ctx.fillStyle = '#ef4444';
+    ctx.textAlign = 'left';
+    ctx.fillText('❌ "Sorry, fully booked!"', phoneX + 12, phoneY + 26);
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillText('"Read 4:15 PM · No reply"', phoneX + 12, phoneY + 48);
+    ctx.fillText('No confirmed appointment', phoneX + 12, phoneY + 64);
+
+    // Dramatic statement overlay
+    const textY = isVertical ? H * 0.68 : H * 0.74;
+    ctx.font = `900 ${isVertical ? '30px' : '28px'} Outfit, sans-serif`;
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'center';
+    ctx.fillText('Looking good shouldn’t be', cx, textY);
+    ctx.fillStyle = '#F5B942';
+    ctx.fillText('complicated.', cx, textY + 38);
+
+    ctx.font = '800 13px Outfit, sans-serif';
+    ctx.fillStyle = '#71717a';
+    ctx.fillText('LAGOS & IBADAN · FRIDAY 6:30 PM · EVENT IN 2 HOURS', cx, textY + 74);
+    ctx.restore();
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // ACT 2: SCENE 2 — THE DISCOVERY (t: 0.16 -> 0.32)
+  // "Meet Stylecorner. Your beauty. Your expert. Your convenience."
+  // ───────────────────────────────────────────────────────────────────────────
+  } else if (t < 0.32) {
+    const actT = (t - 0.16) / 0.16;
+
+    // Golden Lens Flare Transition at start of scene
+    if (actT < 0.25) {
+      const flash = (1 - actT / 0.25);
+      ctx.fillStyle = `rgba(245, 185, 66, ${flash * 0.4})`;
+      ctx.fillRect(0, 0, W, H);
+    }
+
+    // High-End Smartphone Held in Hand
+    const phoneW = isVertical ? W * 0.72 : 360;
+    const phoneH = isVertical ? H * 0.52 : 440;
+    const phoneX = (W - phoneW) / 2;
+    const phoneY = isVertical ? H * 0.16 : H * 0.18;
+
+    // Smartphone Outer Glass Chassis
+    ctx.save();
+    ctx.fillStyle = '#0f1118';
+    ctx.strokeStyle = 'rgba(245,185,66,0.6)';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.roundRect(phoneX, phoneY, phoneW, phoneH, 36);
+    ctx.fill();
+    ctx.stroke();
+
+    // Phone Dynamic Island Notch
+    ctx.fillStyle = '#000000';
+    ctx.beginPath();
+    ctx.roundRect(phoneX + (phoneW - 90) / 2, phoneY + 10, 90, 20, 10);
+    ctx.fill();
+
+    // Phone Screen: StyleCorner App Live Interface
+    const screenX = phoneX + 10;
+    const screenY = phoneY + 34;
+    const screenW = phoneW - 20;
+    const screenH = phoneH - 46;
+
+    ctx.fillStyle = '#090a0f';
+    ctx.fillRect(screenX, screenY, screenW, screenH);
+
+    // App Header with Official Logo
+    drawStyleCornerLogo(ctx, cx, screenY + 45, 42, { hasHalo: true });
+
+    ctx.font = '900 16px Outfit, sans-serif';
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'center';
+    ctx.fillText('StyleCorner', cx, screenY + 85);
+
+    ctx.font = '800 11px Outfit, sans-serif';
+    ctx.fillStyle = '#F5B942';
+    ctx.fillText('TOP VERIFIED SPECIALISTS NEAR YOU', cx, screenY + 102);
+
+    // Auto-typing Search Input
+    ctx.fillStyle = '#181922';
+    ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.roundRect(screenX + 14, screenY + 115, screenW - 28, 34, 10);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.font = '700 12px Outfit, sans-serif';
+    ctx.fillStyle = '#38bdf8';
+    ctx.textAlign = 'left';
+    ctx.fillText('🔍 Braiders, Barbers & Lashes... ✓', screenX + 26, screenY + 137);
+
+    // Two Live Stylist Cards on Screen
+    [
+      { name: 'Chioma Adebayo', spec: 'Knotless Goddess Braids', loc: 'Lekki Phase 1', rating: '4.9 ★' },
+      { name: 'Tunde Olatunji', spec: 'Master Skin Fade & Beard', loc: 'Ikeja GRA', rating: '5.0 ★' },
+    ].forEach((s, idx) => {
+      const cardY = screenY + 160 + idx * 56;
+      ctx.fillStyle = 'rgba(255,255,255,0.04)';
+      ctx.strokeStyle = 'rgba(245,185,66,0.3)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.roundRect(screenX + 14, cardY, screenW - 28, 48, 10);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.font = '900 12px Outfit, sans-serif';
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'left';
+      ctx.fillText(s.name, screenX + 24, cardY + 20);
+
+      ctx.font = '700 11px Outfit, sans-serif';
+      ctx.fillStyle = '#F5B942';
+      ctx.fillText(`${s.spec} · ${s.loc}`, screenX + 24, cardY + 38);
+
+      ctx.fillStyle = '#34d399';
+      ctx.textAlign = 'right';
+      ctx.fillText(s.rating, screenX + screenW - 24, cardY + 28);
+    });
+    ctx.restore();
+
+    // Cinematic Discovery Text
+    const discY = isVertical ? H * 0.73 : H * 0.77;
+    ctx.save();
+    ctx.font = `900 ${isVertical ? '34px' : '30px'} Outfit, sans-serif`;
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'center';
+    ctx.fillText('Meet Stylecorner.', cx, discY);
+
+    ctx.font = `800 ${isVertical ? '18px' : '16px'} Outfit, sans-serif`;
+    ctx.fillStyle = '#F5B942';
+    ctx.fillText('Your beauty. Your expert. Your convenience.', cx, discY + 36);
+    ctx.restore();
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // ACT 3: SCENE 3 — THE EXPERIENCE (t: 0.32 -> 0.54)
+  // Fast-Paced Montage of 8 Professional Services
+  // ───────────────────────────────────────────────────────────────────────────
+  } else if (t < 0.54) {
+    const actT = (t - 0.32) / 0.22;
+    const serviceIndex = Math.min(7, Math.floor(actT * 8));
+
+    const services = [
+      { name: 'Chrome Gel Manicure', role: 'Nail Technician', icon: '💅', detail: 'Precision Russian cuticle prep & mirror chrome foil.' },
+      { name: 'Russian Volume Lashes', role: 'Lash Technician', icon: '👁️', detail: 'Lightweight cashmere volume fans, isolation styling.' },
+      { name: 'Silk Press & Treatment', role: 'Professional Hairstylist', icon: '💇', detail: 'Glossy thermal hydration & titanium ceramic curl.' },
+      { name: 'Knotless Goddess Braids', role: 'Master Braider', icon: '🪮', detail: 'Painless diamond parting & cascading gold cuffs.' },
+      { name: 'Melted Frontal Install', role: 'Wig Specialist', icon: '👑', detail: 'Invisible HD Swiss lace melt & custom hairline pluck.' },
+      { name: 'Premium Wig Revamp', role: 'Revamp Master', icon: '✨', detail: 'Deep detox, steam treatment & bone-straight finish.' },
+      { name: 'Skin Fade & Razor Lineup', role: 'Master Barber', icon: '✂️', detail: 'Zero-gap clipper taper & hot lather razor finish.' },
+      { name: 'Spa Detox Pedicure', role: 'Pedicurist', icon: '🌸', detail: 'Warm eucalyptus soak, rose petals & organic scrub.' },
+    ];
+
+    const current = services[serviceIndex];
+
+    // Cinematic Macro Close-up Frame
+    const boxW = isVertical ? W * 0.86 : 640;
+    const boxH = isVertical ? H * 0.44 : 360;
+    const boxX = (W - boxW) / 2;
+    const boxY = isVertical ? H * 0.18 : H * 0.20;
+
+    ctx.save();
+    ctx.fillStyle = '#0d0f17';
+    ctx.strokeStyle = '#F5B942';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.roundRect(boxX, boxY, boxW, boxH, 24);
+    ctx.fill();
+    ctx.stroke();
+
+    // Ambient Service Radiance
+    const servGlow = ctx.createRadialGradient(cx, boxY + boxH * 0.45, 20, cx, boxY + boxH * 0.45, boxW * 0.6);
+    servGlow.addColorStop(0, 'rgba(245,185,66,0.3)');
+    servGlow.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = servGlow;
+    ctx.fillRect(boxX, boxY, boxW, boxH);
+
+    // Big Icon Emblem
+    ctx.font = `${isVertical ? 72 : 62}px serif`;
+    ctx.textAlign = 'center';
+    ctx.fillText(current.icon, cx, boxY + (isVertical ? 95 : 85));
+
+    // Service Title
+    ctx.font = `900 ${isVertical ? '26px' : '24px'} Outfit, sans-serif`;
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(current.name, cx, boxY + (isVertical ? 150 : 135));
+
+    // Role Badge
+    ctx.fillStyle = '#F5B942';
+    ctx.font = '800 14px Outfit, sans-serif';
+    ctx.fillText(`✦ ${current.role} ✦`, cx, boxY + (isVertical ? 180 : 162));
+
+    // Detail Description Card
+    ctx.fillStyle = 'rgba(255,255,255,0.06)';
+    ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.roundRect(boxX + 24, boxY + (isVertical ? 205 : 185), boxW - 48, 54, 12);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.font = '700 13px Outfit, sans-serif';
+    ctx.fillStyle = '#e4e4e7';
+    ctx.fillText(current.detail, cx, boxY + (isVertical ? 238 : 217));
+
+    // Progress Bar across 8 services
+    ctx.fillStyle = 'rgba(255,255,255,0.1)';
+    ctx.fillRect(boxX + 24, boxY + boxH - 24, boxW - 48, 6);
+    ctx.fillStyle = '#F5B942';
+    ctx.fillRect(boxX + 24, boxY + boxH - 24, (boxW - 48) * ((serviceIndex + 1) / 8), 6);
+    ctx.restore();
+
+    // Scene Header
+    const expHeadY = isVertical ? H * 0.69 : H * 0.74;
+    ctx.save();
+    ctx.font = `900 ${isVertical ? '24px' : '22px'} Outfit, sans-serif`;
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'center';
+    ctx.fillText(`EXPERIENCE ${serviceIndex + 1} OF 8`, cx, expHeadY);
+    ctx.fillStyle = '#38bdf8';
+    ctx.font = '800 14px Outfit, sans-serif';
+    ctx.fillText('100% Background-Checked Nigerian Specialists', cx, expHeadY + 28);
+    ctx.restore();
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // ACT 4: SCENE 4 — HOW STYLECORNER WORKS (t: 0.54 -> 0.74)
+  // 6-Step Platform Workflow
+  // ───────────────────────────────────────────────────────────────────────────
+  } else if (t < 0.74) {
+    const actT = (t - 0.54) / 0.20;
+    const step = Math.min(6, Math.floor(actT * 6) + 1);
+
+    const steps = [
+      { num: 'STEP 1', title: 'Open & Select Service', desc: 'Browse verified salons, braiders, barbers & mobile experts.', icon: '📱' },
+      { num: 'STEP 2', title: 'Book Verified Expert', desc: 'Pick your date, time slot, and secure booking in 30 seconds.', icon: '📅' },
+      { num: 'STEP 3', title: 'Dashboard Alert', desc: 'Expert receives instant audio notification and client brief.', icon: '🔔' },
+      { num: 'STEP 4', title: 'Expert Accepts', desc: 'Confirmed booking locked in calendar with direct client chat.', icon: '🛡️' },
+      { num: 'STEP 5', title: 'Service Completed', desc: 'Luxury in-salon or VIP at-home session delivered to perfection.', icon: '✨' },
+      { num: 'STEP 6', title: 'Instant Escrow Transfer', desc: 'Payment released automatically to expert’s bank account.', icon: '💳' },
+    ];
+    const curStep = steps[step - 1];
+
+    // Step Stepper Indicator Header
+    const stepBarY = isVertical ? H * 0.16 : H * 0.18;
+    ctx.save();
+    const dotsW = isVertical ? W * 0.82 : 480;
+    const dotSpacing = dotsW / 5;
+    const startX = (W - dotsW) / 2;
+
+    for (let d = 0; d < 6; d++) {
+      const dx = startX + d * dotSpacing;
+      const isPast = d + 1 <= step;
+      ctx.fillStyle = isPast ? '#F5B942' : 'rgba(255,255,255,0.15)';
+      ctx.beginPath();
+      ctx.arc(dx, stepBarY, isPast ? 9 : 6, 0, Math.PI * 2);
+      ctx.fill();
+
+      if (d < 5) {
+        ctx.strokeStyle = d + 1 < step ? '#F5B942' : 'rgba(255,255,255,0.15)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(dx + 9, stepBarY);
+        ctx.lineTo(startX + (d + 1) * dotSpacing - 9, stepBarY);
+        ctx.stroke();
+      }
+    }
+    ctx.restore();
+
+    // Step Visual Card
+    const cardW = isVertical ? W * 0.86 : 600;
+    const cardH = isVertical ? H * 0.42 : 340;
+    const cardX = (W - cardW) / 2;
+    const cardY = isVertical ? H * 0.22 : H * 0.24;
+
+    ctx.save();
+    ctx.fillStyle = '#0f111a';
+    ctx.strokeStyle = '#F5B942';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(cardX, cardY, cardW, cardH, 22);
+    ctx.fill();
+    ctx.stroke();
+
+    // Step Pill Badge
+    ctx.fillStyle = 'rgba(245,185,66,0.18)';
+    ctx.strokeStyle = '#F5B942';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.roundRect(cx - 75, cardY + 22, 150, 32, 16);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.font = '900 13px Outfit, sans-serif';
+    ctx.fillStyle = '#F5B942';
+    ctx.textAlign = 'center';
+    ctx.fillText(`${curStep.num} OF 6`, cx, cardY + 43);
+
+    // Big Icon
+    ctx.font = `${isVertical ? 64 : 54}px serif`;
+    ctx.fillText(curStep.icon, cx, cardY + (isVertical ? 120 : 105));
+
+    // Title & Description
+    ctx.font = `900 ${isVertical ? '24px' : '22px'} Outfit, sans-serif`;
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(curStep.title, cx, cardY + (isVertical ? 175 : 155));
+
+    ctx.font = '700 14px Outfit, sans-serif';
+    ctx.fillStyle = '#a1a1aa';
+    ctx.fillText(curStep.desc, cx, cardY + (isVertical ? 210 : 188));
+
+    // Escrow Guarantee Pill
+    ctx.fillStyle = 'rgba(52,211,153,0.15)';
+    ctx.strokeStyle = '#34d399';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.roundRect(cardX + 24, cardY + cardH - 52, cardW - 48, 36, 12);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.font = '800 12px Outfit, sans-serif';
+    ctx.fillStyle = '#34d399';
+    ctx.fillText('🔒 100% Escrow Protected · Payment Safe Until Complete', cx, cardY + cardH - 29);
+    ctx.restore();
+
+    // Workflow Footer Header
+    const workHeadY = isVertical ? H * 0.71 : H * 0.76;
+    ctx.save();
+    ctx.font = `900 ${isVertical ? '24px' : '22px'} Outfit, sans-serif`;
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'center';
+    ctx.fillText('HOW STYLECORNER WORKS', cx, workHeadY);
+    ctx.fillStyle = '#F5B942';
+    ctx.font = '800 14px Outfit, sans-serif';
+    ctx.fillText('Smooth. Transparent. Fully Protected.', cx, workHeadY + 28);
+    ctx.restore();
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // ACT 5: SCENE 5 — THE TRANSFORMATION (t: 0.74 -> 0.88)
+  // "Find your expert. Book your service. Own your look."
+  // ───────────────────────────────────────────────────────────────────────────
+  } else if (t < 0.88) {
+    const actT = (t - 0.74) / 0.14;
+
+    // Golden Sunlight Radiance
+    const sunGlow = ctx.createRadialGradient(cx, cy - 40, 20, cx, cy - 40, W * 0.8);
+    sunGlow.addColorStop(0, 'rgba(245, 185, 66, 0.35)');
+    sunGlow.addColorStop(0.6, 'rgba(245, 185, 66, 0.08)');
+    sunGlow.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = sunGlow;
+    ctx.fillRect(0, 0, W, H);
+
+    // Radiating Sunburst Rays
+    ctx.save();
+    ctx.strokeStyle = 'rgba(245,185,66,0.12)';
+    ctx.lineWidth = 2;
+    for (let r = 0; r < 16; r++) {
+      const angle = (r / 16) * Math.PI * 2 + actT * 0.2;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy - 40);
+      ctx.lineTo(cx + Math.cos(angle) * (W * 0.9), (cy - 40) + Math.sin(angle) * (W * 0.9));
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    // Confident Glowing Client Silhouette with Sparkles
+    ctx.save();
+    ctx.fillStyle = '#7a4b2c';
+    ctx.beginPath();
+    ctx.ellipse(cx, cy - 60, 36, 44, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Smiling Face
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.arc(cx, cy - 44, 12, 0.15 * Math.PI, 0.85 * Math.PI);
+    ctx.stroke();
+
+    // Luscious Braid & Fade Texture
+    ctx.fillStyle = '#090a0f';
+    ctx.beginPath();
+    ctx.arc(cx, cy - 76, 38, Math.PI, Math.PI * 2);
+    ctx.fill();
+
+    // 5 Gold Stars Cascading with Physics
+    ctx.font = '32px sans-serif';
+    ctx.fillStyle = '#F5B942';
+    ctx.textAlign = 'center';
+    ctx.fillText('★★★★★', cx, cy + 18);
+    ctx.restore();
+
+    // Monumental Anthem Typography
+    const tranY = isVertical ? H * 0.64 : H * 0.68;
+    ctx.save();
+    ctx.font = `900 ${isVertical ? '32px' : '28px'} Outfit, sans-serif`;
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'center';
+    ctx.fillText('Find your expert.', cx, tranY);
+    ctx.fillStyle = '#F5B942';
+    ctx.fillText('Book your service.', cx, tranY + 40);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText('Own your look.', cx, tranY + 80);
+    ctx.restore();
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // ACT 6: SCENE 6 — THE BRAND FINALE (t: 0.88 -> 1.00)
+  // Monumental StyleCorner Anthem & Logo Reveal
+  // ───────────────────────────────────────────────────────────────────────────
+  } else {
+    const actT = (t - 0.88) / 0.12;
+
+    // Cinematic Radial Golden Eclipse
+    const eclipseGlow = ctx.createRadialGradient(cx, isVertical ? H * 0.36 : H * 0.40, 20, cx, isVertical ? H * 0.36 : H * 0.40, W * 0.75);
+    eclipseGlow.addColorStop(0, 'rgba(245, 185, 66, 0.35)');
+    eclipseGlow.addColorStop(0.5, 'rgba(245, 185, 66, 0.12)');
+    eclipseGlow.addColorStop(1, '#06070a');
+    ctx.fillStyle = eclipseGlow;
+    ctx.fillRect(0, 0, W, H);
+
+    // Official Large-Scale StyleCorner Squircle Emblem with Orbital Pulse
+    const logoY = isVertical ? H * 0.34 : H * 0.38;
+    const logoScale = 1 + 0.03 * Math.sin(actT * Math.PI * 4);
+    ctx.save();
+    ctx.translate(cx, logoY);
+    ctx.scale(logoScale, logoScale);
+    drawStyleCornerLogo(ctx, 0, 0, isVertical ? 110 : 96, { hasHalo: true });
+    ctx.restore();
+
+    // Brand Name & Slogan
+    const brandY = logoY + (isVertical ? 90 : 80);
+    ctx.save();
+    ctx.font = `900 ${isVertical ? '42px' : '36px'} Outfit, sans-serif`;
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'center';
+    ctx.fillText('STYLECORNER', cx, brandY);
+
+    ctx.font = `800 ${isVertical ? '18px' : '16px'} Outfit, sans-serif`;
+    ctx.fillStyle = '#F5B942';
+    ctx.fillText('Beauty meets convenience.', cx, brandY + 34);
+
+    ctx.font = '700 14px Outfit, sans-serif';
+    ctx.fillStyle = '#e4e4e7';
+    ctx.fillText('Discover your expert. Book your experience.', cx, brandY + 64);
+
+    ctx.font = '600 13px Outfit, sans-serif';
+    ctx.fillStyle = '#a1a1aa';
+    ctx.fillText('Coming to transform the way you book beauty services.', cx, brandY + 92);
+    ctx.restore();
+
+    // Official Website Pill & CTA
+    const ctaY = isVertical ? H * 0.78 : H * 0.82;
+    const ctaW = isVertical ? W * 0.86 : 520;
+    const ctaH = isVertical ? 60 : 50;
+    const ctaX = (W - ctaW) / 2;
+
+    ctx.save();
+    const ctaGrad = ctx.createLinearGradient(ctaX, ctaY, ctaX + ctaW, ctaY + ctaH);
+    ctaGrad.addColorStop(0, '#c8930a');
+    ctaGrad.addColorStop(1, '#f5b942');
+    ctx.fillStyle = ctaGrad;
+    ctx.beginPath();
+    ctx.roundRect(ctaX, ctaY, ctaW, ctaH, 18);
+    ctx.fill();
+
+    ctx.font = `900 ${isVertical ? '18px' : '16px'} Outfit, sans-serif`;
+    ctx.fillStyle = '#08090c';
+    ctx.textAlign = 'center';
+    ctx.fillText('VISIT WWW.STYLECORNER.WORLD ➔', cx, ctaY + ctaH * 0.62);
+    ctx.restore();
+  }
+
+  // 6. Sound Waveform Bars (Active Audio Visualizer)
+  ctx.save();
+  const waveW = W * 0.7;
+  const waveX = (W - waveW) / 2;
+  const waveY = H - barH - (isVertical ? 20 : 16);
+  for (let b = 0; b < 28; b++) {
+    const barHeight = 4 + 18 * Math.abs(Math.sin(b * 0.4 + t * Math.PI * 8));
+    const bx = waveX + (b / 28) * waveW;
+    ctx.fillStyle = '#F5B942';
+    ctx.globalAlpha = 0.5 + 0.5 * Math.sin(b + t * 5);
+    ctx.beginPath();
+    ctx.roundRect(bx, waveY - barHeight / 2, waveW / 28 - 3, barHeight, 2);
+    ctx.fill();
+  }
+  ctx.restore();
+
+  // 7. Scrubber Progress Line
+  ctx.fillStyle = 'rgba(255,255,255,0.1)';
+  ctx.fillRect(0, H - 4, W, 4);
+  ctx.fillStyle = '#F5B942';
+  ctx.fillRect(0, H - 4, W * t, 4);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
    CANVAS FRAME RENDERER — COMPLETE SCENES & MOTION GRAPHICS
 ───────────────────────────────────────────────────────────────────────────── */
 function renderCommercialFrame(ctx, W, H, ad, progress) {
   const t = Math.max(0, Math.min(1, progress));
   const isVertical = H > W;
   const color = ad.themeColor || '#f5b942';
+
+  // 0. Flagship Master Commercial: 6-Act Cinematic Brand Film
+  if (ad.id === 'v0-cinematic-flagship' || ad.category === 'flagship') {
+    drawMasterCinematicCommercial(ctx, W, H, ad, t, isVertical, color);
+    return;
+  }
 
   // 1. Solid Luxury Black & Radial Glow Background
   ctx.fillStyle = '#08090d';
@@ -2150,9 +2822,11 @@ export const VideoAdsStudio = ({ adVideos, onAddCustomVideo, showToast, isMobile
   const [creatingNew, setCreatingNew] = useState(false);
   const [selectedVideoToWatch, setSelectedVideoToWatch] = useState(null);
 
-  // Filter logic including motion and human characters category
+  // Filter logic including flagship, human characters and motion graphics
   const filtered = activeFilter === 'all'
     ? videos
+    : activeFilter === 'flagship'
+    ? videos.filter(v => v.id === 'v0-cinematic-flagship' || v.category === 'flagship')
     : activeFilter === 'characters'
     ? videos.filter(v => v.category === 'characters' || v.badge?.toLowerCase().includes('human'))
     : activeFilter === 'motion'
@@ -2238,12 +2912,12 @@ export const VideoAdsStudio = ({ adVideos, onAddCustomVideo, showToast, isMobile
           </div>
 
           <h2 style={{ fontSize: isMobile ? '1.3rem' : '1.75rem', fontWeight: 900, color: '#ffffff', margin: '0 0 0.5rem', fontFamily: 'Outfit' }}>
-            10 StyleCorner Video Ads &amp; Motion Commercials
+            11 StyleCorner Video Ads &amp; Cinematic Commercials
           </h2>
 
           <p style={{ fontSize: '0.86rem', color: '#94a3b8', lineHeight: 1.6, margin: 0, maxWidth: '750px' }}>
             Watch each video live directly on this screen or download high-definition commercials to your device.
-            Featuring the <strong style={{ color: '#f5b942' }}>Official StyleCorner Squircle Emblem</strong> across every video, <strong style={{ color: '#f5b942' }}>2 live animated human commercials</strong> (master barber precision fade &amp; goddess braider hair physics), <strong style={{ color: '#e879f9' }}>3 kinetic motion graphics commercials</strong>, and voice-narrated ads.
+            Featuring the <strong style={{ color: '#f5b942' }}>👑 Flagship 60s Cinematic Brand Film (Director's Cut)</strong>, the <strong style={{ color: '#f5b942' }}>Official StyleCorner Squircle Emblem</strong> across every video, <strong style={{ color: '#f5b942' }}>2 live animated human commercials</strong>, and <strong style={{ color: '#e879f9' }}>3 kinetic motion graphics commercials</strong>.
           </p>
 
           <div style={{ display: 'flex', gap: '1rem', marginTop: '0.85rem', flexWrap: 'wrap' }}>
@@ -2251,16 +2925,16 @@ export const VideoAdsStudio = ({ adVideos, onAddCustomVideo, showToast, isMobile
               <Play size={12} fill="#f5b942" /> Tap Any Card to Watch Live
             </span>
             <span style={{ fontSize: '0.74rem', color: '#f5b942', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-              🧑 2 Animated Human Character Ads
+              👑 Flagship 60s Brand Film
             </span>
             <span style={{ fontSize: '0.74rem', color: '#e879f9', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-              <Sparkles size={12} /> 3 Motion Graphics Commercials
+              🧑 2 Animated Human Character Ads
             </span>
             <span style={{ fontSize: '0.74rem', color: '#38bdf8', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-              <Mic size={12} /> Synchronized Voiceover
+              <Sparkles size={12} /> 3 Motion Graphics Commercials
             </span>
             <span style={{ fontSize: '0.74rem', color: '#34d399', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-              <Download size={12} /> Direct Video File Export
+              <Download size={12} /> Direct MP4 File Export
             </span>
           </div>
         </div>
@@ -2332,6 +3006,7 @@ export const VideoAdsStudio = ({ adVideos, onAddCustomVideo, showToast, isMobile
       }}>
         {[
           { id: 'all', label: `All (${videos.length})` },
+          { id: 'flagship', label: '👑 Master Film (1)' },
           { id: 'characters', label: '🧑 Animated Humans (2)' },
           { id: 'motion', label: '✨ Motion Graphics (3)' },
           { id: 'salon', label: '💇 Salon Booking' },
