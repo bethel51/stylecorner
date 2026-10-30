@@ -2518,12 +2518,71 @@ const VideoAdPlayerModal = ({ ad, onClose, onDownload, isDownloading }) => {
   const [isPlaying, setIsPlaying] = useState(true);
   const [currentTime, setCurrentTime] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
+  const [playbackSpeed, setPlaybackSpeed] = useState(1.0);
+  const [activeRatio, setActiveRatio] = useState(ad.aspectRatio || '9:16');
+  const [showCenterIcon, setShowCenterIcon] = useState(false);
+
   const musicRef = useRef(null);
   const animFrameRef = useRef(null);
   const startTimeRef = useRef(null);
   const pausedAtRef = useRef(0);
 
   const duration = ad.duration || 15;
+
+  // Scene definitions for instant timeline jumping
+  const getScenes = () => {
+    if (ad.id === 'v0-cinematic-flagship') {
+      return [
+        { label: 'Act 1: Problem', time: 0 },
+        { label: 'Act 2: Discovery', time: 9 },
+        { label: 'Act 3: 8 Experiences', time: 18 },
+        { label: 'Act 4: 6-Step Workflow', time: 30 },
+        { label: 'Act 5: Glow Transform', time: 41 },
+        { label: 'Act 6: Brand Finale', time: 49 },
+      ];
+    } else if (ad.id === 'v6-motion-journey') {
+      return [
+        { label: 'Step 1: Search', time: 0 },
+        { label: 'Step 2: AI Match', time: 6 },
+        { label: 'Step 3: Escrow Vault', time: 13 },
+        { label: 'Outro', time: 17 },
+      ];
+    } else if (ad.id === 'v7-motion-pro-earnings') {
+      return [
+        { label: 'Calendar Fill', time: 0 },
+        { label: '₦ Revenue Ticker', time: 6 },
+        { label: '5s Bank Wire', time: 12 },
+        { label: 'Pro Outro', time: 17 },
+      ];
+    } else if (ad.id === 'v8-motion-vip-home') {
+      return [
+        { label: 'Lagos GPS Pin', time: 0 },
+        { label: 'Traffic vs Home AC', time: 5 },
+        { label: 'VIP Services', time: 11 },
+        { label: 'VIP Outro', time: 15 },
+      ];
+    } else if (ad.id === 'v9-human-barber') {
+      return [
+        { label: 'Live Taper Fade', time: 0 },
+        { label: 'Razor Glint & 5★', time: 11 },
+        { label: 'Barber Outro', time: 17 },
+      ];
+    } else if (ad.id === 'v10-human-braids') {
+      return [
+        { label: 'Goddess Braiding', time: 0 },
+        { label: 'Mirror Glow & 5★', time: 11 },
+        { label: 'Braids Outro', time: 17 },
+      ];
+    }
+    return [
+      { label: 'Scene 1: Intro', time: 0 },
+      { label: 'Scene 2: Core Action', time: Math.floor(duration * 0.35) },
+      { label: 'Scene 3: Guarantee', time: Math.floor(duration * 0.70) },
+      { label: 'Scene 4: Outro', time: Math.floor(duration * 0.88) },
+    ];
+  };
+
+  const scenes = getScenes();
 
   useEffect(() => {
     if (ad.musicStyle) {
@@ -2532,7 +2591,7 @@ const VideoAdPlayerModal = ({ ad, onClose, onDownload, isDownloading }) => {
     if (ad.hasVoice && window.speechSynthesis) {
       window.speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(ad.voiceScript || ad.hook);
-      u.rate = 0.95;
+      u.rate = 0.95 * playbackSpeed;
       const voices = window.speechSynthesis.getVoices();
       const v = voices.find(vo => vo.lang.startsWith('en') && (vo.name.includes('Natural') || vo.name.includes('Google')));
       if (v) u.voice = v;
@@ -2549,7 +2608,7 @@ const VideoAdPlayerModal = ({ ad, onClose, onDownload, isDownloading }) => {
   }, [ad]);
 
   useEffect(() => {
-    if (musicRef.current) {
+    if (musicRef.current && musicRef.current.setMute) {
       musicRef.current.setMute(isMuted);
     }
   }, [isMuted]);
@@ -2563,7 +2622,7 @@ const VideoAdPlayerModal = ({ ad, onClose, onDownload, isDownloading }) => {
       if (!isPlaying) return;
 
       if (!startTimeRef.current) startTimeRef.current = now;
-      const elapsed = (now - startTimeRef.current) / 1000 + pausedAtRef.current;
+      const elapsed = ((now - startTimeRef.current) / 1000) * playbackSpeed + pausedAtRef.current;
 
       if (elapsed >= duration) {
         setCurrentTime(duration);
@@ -2583,9 +2642,12 @@ const VideoAdPlayerModal = ({ ad, onClose, onDownload, isDownloading }) => {
     return () => {
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
     };
-  }, [isPlaying, ad, duration]);
+  }, [isPlaying, ad, duration, playbackSpeed, activeRatio]);
 
   const togglePlay = () => {
+    setShowCenterIcon(true);
+    setTimeout(() => setShowCenterIcon(false), 550);
+
     if (isPlaying) {
       pausedAtRef.current = currentTime;
       startTimeRef.current = null;
@@ -2598,13 +2660,30 @@ const VideoAdPlayerModal = ({ ad, onClose, onDownload, isDownloading }) => {
         if (ad.hasVoice && window.speechSynthesis) {
           window.speechSynthesis.cancel();
           const u = new SpeechSynthesisUtterance(ad.voiceScript || ad.hook);
-          u.rate = 0.95;
+          u.rate = 0.95 * playbackSpeed;
           window.speechSynthesis.speak(u);
         }
       } else {
         if (window.speechSynthesis) window.speechSynthesis.resume();
       }
       startTimeRef.current = performance.now();
+      setIsPlaying(true);
+    }
+  };
+
+  const jumpToTime = (targetSec) => {
+    const clamped = Math.max(0, Math.min(duration, targetSec));
+    pausedAtRef.current = clamped;
+    setCurrentTime(clamped);
+    startTimeRef.current = performance.now();
+
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      renderCommercialFrame(ctx, canvas.width, canvas.height, ad, clamped / duration);
+    }
+
+    if (!isPlaying) {
       setIsPlaying(true);
     }
   };
@@ -2617,12 +2696,12 @@ const VideoAdPlayerModal = ({ ad, onClose, onDownload, isDownloading }) => {
     if (ad.hasVoice && window.speechSynthesis) {
       window.speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(ad.voiceScript || ad.hook);
-      u.rate = 0.95;
+      u.rate = 0.95 * playbackSpeed;
       window.speechSynthesis.speak(u);
     }
   };
 
-  const isVertical = ad.aspectRatio === '9:16';
+  const isVertical = activeRatio === '9:16';
   const progressPercent = Math.min(100, (currentTime / duration) * 100);
 
   return (
@@ -2632,131 +2711,282 @@ const VideoAdPlayerModal = ({ ad, onClose, onDownload, isDownloading }) => {
         position: 'fixed',
         inset: 0,
         zIndex: 10000,
-        backgroundColor: 'rgba(0,0,0,0.85)',
-        backdropFilter: 'blur(16px)',
+        backgroundColor: 'rgba(5,6,9,0.92)',
+        backdropFilter: 'blur(20px)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '1rem',
+        padding: '0.75rem',
         boxSizing: 'border-box',
+        animation: 'fadeIn 0.2s ease-out',
       }}
     >
       <div
         onClick={(e) => e.stopPropagation()}
         style={{
-          backgroundColor: '#0f1117',
-          border: '1.5px solid rgba(245,185,66,0.4)',
-          borderRadius: '28px',
+          backgroundColor: '#0c0e14',
+          border: '1.5px solid rgba(245,185,66,0.45)',
+          borderRadius: '26px',
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          maxWidth: isVertical ? '420px' : '720px',
+          maxWidth: isVertical ? '440px' : '780px',
           width: '100%',
-          boxShadow: '0 30px 90px rgba(0,0,0,0.95), 0 0 40px rgba(245,185,66,0.15)',
+          boxShadow: '0 30px 100px rgba(0,0,0,0.95), 0 0 50px rgba(245,185,66,0.18)',
           position: 'relative',
         }}
       >
-        {/* Top Header Row */}
+        {/* Top Header Row with Logo, Title, Sound Equalizer & Close */}
         <div style={{
           width: '100%',
-          padding: '0.85rem 1.25rem',
+          padding: '0.75rem 1.15rem',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           borderBottom: '1px solid rgba(255,255,255,0.08)',
-          backgroundColor: '#151822',
+          backgroundColor: '#12151f',
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ fontSize: '0.72rem', fontWeight: 900, color: ad.themeColor, textTransform: 'uppercase', padding: '0.2rem 0.6rem', borderRadius: '50px', background: 'rgba(255,255,255,0.06)' }}>
-              {ad.badge}
-            </span>
-            <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#ffffff', fontFamily: 'Outfit' }}>
-              {ad.title}
-            </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+            <div style={{
+              width: '28px', height: '28px', borderRadius: '8px',
+              backgroundColor: '#F5B942', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              boxShadow: '0 2px 10px rgba(245,185,66,0.3)',
+            }}>
+              <div style={{ width: '12px', height: '12px', borderRadius: '3px', border: '2px solid #09090b' }} />
+            </div>
+
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <span style={{ fontSize: '0.65rem', fontWeight: 900, color: ad.themeColor, textTransform: 'uppercase', padding: '0.15rem 0.5rem', borderRadius: '50px', background: 'rgba(255,255,255,0.06)' }}>
+                  {ad.badge}
+                </span>
+                <span style={{ fontSize: '0.65rem', fontWeight: 800, color: '#34d399', display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+                  <Check size={10} /> 4K 60FPS
+                </span>
+              </div>
+              <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#ffffff', fontFamily: 'Outfit', lineHeight: 1.2, marginTop: '2px' }}>
+                {ad.title}
+              </div>
+            </div>
           </div>
 
-          <button
-            type="button"
-            onClick={onClose}
-            style={{
-              background: 'none', border: 'none', color: '#94a3b8',
-              cursor: 'pointer', padding: '0.25rem', borderRadius: '50%',
-            }}
-          >
-            <X size={20} />
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            {/* Live Mini Equalizer */}
+            {isPlaying && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '2px', padding: '0.2rem 0.5rem', background: 'rgba(245,185,66,0.1)', borderRadius: '12px' }}>
+                {[0.4, 0.8, 0.6, 1.0, 0.5].map((h, i) => (
+                  <span
+                    key={i}
+                    style={{
+                      width: '2.5px',
+                      height: `${12 * h}px`,
+                      backgroundColor: '#F5B942',
+                      borderRadius: '1px',
+                      animation: `pulse 0.${6 + i * 2}s ease infinite alternate`,
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+
+            <button
+              type="button"
+              onClick={onClose}
+              style={{
+                background: 'rgba(255,255,255,0.06)', border: 'none', color: '#94a3b8',
+                cursor: 'pointer', padding: '0.35rem', borderRadius: '50%',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                transition: 'all 0.15s ease',
+              }}
+            >
+              <X size={18} />
+            </button>
+          </div>
         </div>
 
-        {/* Live Canvas Screen */}
-        <div style={{
-          width: '100%',
-          position: 'relative',
-          display: 'flex',
-          justifyContent: 'center',
-          backgroundColor: '#050608',
-          padding: isVertical ? '0.5rem 0' : '0',
-        }}>
+        {/* Live Canvas Screen with Center Click-to-Play Pulse */}
+        <div
+          onClick={togglePlay}
+          title="Click to Play / Pause"
+          style={{
+            width: '100%',
+            position: 'relative',
+            display: 'flex',
+            justifyContent: 'center',
+            backgroundColor: '#040507',
+            padding: isVertical ? '0.5rem 0' : '0',
+            cursor: 'pointer',
+            overflow: 'hidden',
+          }}
+        >
           <canvas
             ref={canvasRef}
             width={isVertical ? 540 : 960}
             height={isVertical ? 960 : 540}
             style={{
               width: '100%',
-              maxHeight: isVertical ? '65vh' : '55vh',
+              maxHeight: isVertical ? '58vh' : '48vh',
               objectFit: 'contain',
               display: 'block',
+              transition: 'all 0.2s ease',
             }}
           />
+
+          {/* Center Play / Pause Indicator on Click */}
+          {showCenterIcon && (
+            <div style={{
+              position: 'absolute', inset: 0,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              pointerEvents: 'none',
+              animation: 'scaleFade 0.5s ease-out forwards',
+            }}>
+              <div style={{
+                width: '68px', height: '68px', borderRadius: '50%',
+                backgroundColor: 'rgba(245,185,66,0.3)', backdropFilter: 'blur(10px)',
+                border: '2px solid #F5B942',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                {isPlaying ? <Play size={28} fill="#F5B942" color="#F5B942" style={{ marginLeft: '4px' }} /> : <Pause size={28} color="#F5B942" />}
+              </div>
+            </div>
+          )}
+
+          {/* Floating Aspect Ratio Switcher Badge on Screen */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setActiveRatio(activeRatio === '9:16' ? '16:9' : '9:16');
+            }}
+            title="Toggle between 9:16 Story and 16:9 Cinema"
+            style={{
+              position: 'absolute', top: '12px', right: '12px',
+              backgroundColor: 'rgba(18,20,28,0.85)', backdropFilter: 'blur(8px)',
+              border: '1px solid rgba(245,185,66,0.4)', borderRadius: '50px',
+              padding: '0.25rem 0.65rem', color: '#F5B942', fontSize: '0.68rem',
+              fontWeight: 800, fontFamily: 'Outfit', cursor: 'pointer',
+              display: 'inline-flex', alignItems: 'center', gap: '0.3rem',
+            }}
+          >
+            <Maximize size={10} /> {isVertical ? '📱 9:16 Vertical' : '🖥️ 16:9 Cinema'}
+          </button>
+        </div>
+
+        {/* Interactive Scene Navigation Timeline Chips */}
+        <div style={{
+          width: '100%',
+          padding: '0.55rem 1rem 0.4rem',
+          backgroundColor: '#0f1118',
+          borderTop: '1px solid rgba(255,255,255,0.06)',
+          display: 'flex',
+          gap: '0.4rem',
+          overflowX: 'auto',
+          scrollbarWidth: 'none',
+          WebkitOverflowScrolling: 'touch',
+        }}>
+          {scenes.map((s, idx) => {
+            const nextTime = scenes[idx + 1]?.time || duration;
+            const isCurrent = currentTime >= s.time && currentTime < nextTime;
+            return (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => jumpToTime(s.time)}
+                style={{
+                  padding: '0.28rem 0.65rem',
+                  borderRadius: '50px',
+                  whiteSpace: 'nowrap',
+                  flexShrink: 0,
+                  fontSize: '0.70rem',
+                  fontWeight: 800,
+                  fontFamily: 'Outfit',
+                  border: isCurrent ? '1.5px solid #F5B942' : '1px solid rgba(255,255,255,0.08)',
+                  backgroundColor: isCurrent ? 'rgba(245,185,66,0.18)' : 'rgba(255,255,255,0.03)',
+                  color: isCurrent ? '#F5B942' : '#94a3b8',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                {s.label} ({s.time}s)
+              </button>
+            );
+          })}
         </div>
 
         {/* Bottom Interactive Controls */}
         <div style={{
           width: '100%',
-          padding: '1rem 1.25rem',
-          backgroundColor: '#151822',
+          padding: '0.85rem 1.15rem',
+          backgroundColor: '#12151f',
           borderTop: '1px solid rgba(255,255,255,0.08)',
           display: 'flex',
           flexDirection: 'column',
-          gap: '0.75rem',
+          gap: '0.65rem',
           boxSizing: 'border-box',
         }}>
-          {/* Scrubber Bar */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8', minWidth: '35px' }}>
+          {/* Interactive Seekable Slider Scrubber */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+            <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#F5B942', minWidth: '35px', fontFamily: 'monospace' }}>
               0:{Math.floor(currentTime).toString().padStart(2, '0')}
             </span>
-            <div style={{ flex: 1, height: '6px', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '50px', overflow: 'hidden' }}>
-              <div style={{ height: '100%', width: `${progressPercent}%`, backgroundColor: ad.themeColor, transition: 'width 0.1s linear' }} />
+
+            <div style={{ flex: 1, position: 'relative', display: 'flex', alignItems: 'center' }}>
+              <input
+                type="range"
+                min={0}
+                max={duration}
+                step={0.1}
+                value={currentTime}
+                onChange={(e) => jumpToTime(parseFloat(e.target.value))}
+                style={{
+                  width: '100%',
+                  height: '6px',
+                  appearance: 'none',
+                  WebkitAppearance: 'none',
+                  backgroundColor: 'rgba(255,255,255,0.12)',
+                  borderRadius: '50px',
+                  outline: 'none',
+                  cursor: 'pointer',
+                  accentColor: '#F5B942',
+                  backgroundImage: `linear-gradient(#F5B942, #F5B942)`,
+                  backgroundSize: `${progressPercent}% 100%`,
+                  backgroundRepeat: 'no-repeat',
+                }}
+              />
             </div>
-            <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8', minWidth: '35px' }}>
+
+            <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#71717a', minWidth: '35px', fontFamily: 'monospace' }}>
               0:{duration}
             </span>
           </div>
 
           {/* Action Row */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+              {/* Play / Pause */}
               <button
                 type="button"
                 onClick={togglePlay}
                 style={{
-                  width: '38px', height: '38px', borderRadius: '50%',
+                  width: '40px', height: '40px', borderRadius: '50%',
                   backgroundColor: '#F5B942', border: 'none', color: '#09090b',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  cursor: 'pointer',
+                  cursor: 'pointer', boxShadow: '0 4px 15px rgba(245,185,66,0.3)',
+                  transition: 'transform 0.15s ease',
                 }}
               >
                 {isPlaying ? <Pause size={18} /> : <Play size={18} style={{ marginLeft: '2px' }} />}
               </button>
 
+              {/* Replay */}
               <button
                 type="button"
                 onClick={restartCommercial}
                 title="Replay from start"
                 style={{
                   width: '36px', height: '36px', borderRadius: '50%',
-                  backgroundColor: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)',
+                  backgroundColor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
                   color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center',
                   cursor: 'pointer',
                 }}
@@ -2764,43 +2994,64 @@ const VideoAdPlayerModal = ({ ad, onClose, onDownload, isDownloading }) => {
                 <RotateCcw size={15} />
               </button>
 
+              {/* Mute */}
               <button
                 type="button"
                 onClick={() => setIsMuted(!isMuted)}
                 title={isMuted ? 'Unmute' : 'Mute'}
                 style={{
                   width: '36px', height: '36px', borderRadius: '50%',
-                  backgroundColor: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)',
+                  backgroundColor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
                   color: isMuted ? '#ef4444' : '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center',
                   cursor: 'pointer',
                 }}
               >
                 {isMuted ? <VolumeX size={15} /> : <Volume2 size={15} />}
               </button>
+
+              {/* Speed Selector */}
+              <div style={{ display: 'flex', gap: '2px', backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: '8px', padding: '2px' }}>
+                {[1.0, 1.25, 1.5].map((spd) => (
+                  <button
+                    key={spd}
+                    type="button"
+                    onClick={() => setPlaybackSpeed(spd)}
+                    style={{
+                      background: playbackSpeed === spd ? '#F5B942' : 'none',
+                      color: playbackSpeed === spd ? '#09090b' : '#94a3b8',
+                      border: 'none', borderRadius: '6px', fontSize: '0.65rem',
+                      fontWeight: 800, padding: '0.2rem 0.4rem', cursor: 'pointer',
+                    }}
+                  >
+                    {spd}x
+                  </button>
+                ))}
+              </div>
             </div>
 
+            {/* Direct Video Download Button */}
             <button
               type="button"
               disabled={isDownloading}
               onClick={() => onDownload(ad)}
               style={{
-                backgroundColor: 'linear-gradient(135deg, #c8930a, #F5B942)',
                 background: 'linear-gradient(135deg, #c8930a, #F5B942)',
                 color: '#09090b',
                 border: 'none',
                 borderRadius: '50px',
-                padding: '0.5rem 1.25rem',
+                padding: '0.55rem 1.25rem',
                 fontSize: '0.82rem',
                 fontWeight: 900,
                 fontFamily: 'Outfit',
                 cursor: isDownloading ? 'wait' : 'pointer',
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '0.4rem',
+                gap: '0.45rem',
+                boxShadow: '0 4px 18px rgba(245,185,66,0.3)',
               }}
             >
               {isDownloading ? <RefreshCw size={14} style={{ animation: 'spin 1s linear infinite' }} /> : <Download size={14} />}
-              {isDownloading ? 'Downloading…' : 'Download Video'}
+              {isDownloading ? 'Rendering MP4…' : 'Download Video'}
             </button>
           </div>
         </div>
@@ -2953,6 +3204,47 @@ export const VideoAdsStudio = ({ adVideos, onAddCustomVideo, showToast, isMobile
           <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#ffffff', margin: 0, fontFamily: 'Outfit' }}>
             Generate Custom Ad From Your Prompt
           </h3>
+        </div>
+
+        {/* Quick Clickable Prompt Suggestion Chips */}
+        <div style={{
+          display: 'flex', gap: '0.4rem', overflowX: 'auto',
+          paddingBottom: '0.55rem', marginBottom: '0.75rem',
+          scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch',
+        }}>
+          {[
+            { label: '👑 60s Luxury Gala Promo', text: '60s luxury Lagos gala commercial — knotless braids, frontal install & master fade', fmt: '9:16' },
+            { label: '✂️ Master Barber Fade', text: 'Master barber razor taper fade session — Ikeja GRA salon & hot towel pampering', fmt: '9:16' },
+            { label: '🪮 Knotless Goddess Braids', text: 'Painless knotless goddess braids commercial with gold hair cuffs — Lekki mobile service', fmt: '9:16' },
+            { label: '💅 Russian Gel Manicure', text: 'Luxury chrome gel manicure & spa pedicure treatment — Victoria Island atelier', fmt: '9:16' },
+            { label: '🛍️ Atelier Hair Serum', text: 'StyleCorner Atelier authentic organic hair growth oil & hydration serum launch', fmt: '16:9' },
+            { label: '🤖 10s AI Stylist Matcher', text: 'Smart AI stylist matcher — instant match to top verified beauty specialists in Lagos', fmt: '9:16' },
+          ].map((chip, idx) => (
+            <button
+              key={idx}
+              type="button"
+              onClick={() => {
+                setPromptText(chip.text);
+                setSelectedFormat(chip.fmt);
+              }}
+              style={{
+                padding: '0.3rem 0.75rem',
+                borderRadius: '50px',
+                whiteSpace: 'nowrap',
+                flexShrink: 0,
+                fontSize: '0.72rem',
+                fontWeight: 700,
+                fontFamily: 'Outfit',
+                background: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(255,255,255,0.1)',
+                color: '#e4e4e7',
+                cursor: 'pointer',
+                transition: 'all 0.15s ease',
+              }}
+            >
+              {chip.label}
+            </button>
+          ))}
         </div>
 
         <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: '0.65rem' }}>
@@ -3194,7 +3486,12 @@ export const VideoAdsStudio = ({ adVideos, onAddCustomVideo, showToast, isMobile
         })}
       </div>
 
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      <style>{`
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes scaleFade { 0% { transform: scale(0.6); opacity: 0; } 50% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(1); opacity: 0; } }
+        @keyframes pulse { from { opacity: 0.4; } to { opacity: 1; } }
+      `}</style>
     </div>
   );
 };
