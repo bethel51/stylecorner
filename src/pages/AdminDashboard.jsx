@@ -54,7 +54,7 @@ import { NotificationSheet } from '../components/common/NotificationSheet';
 import { exportOrdersToCSV, exportBookingsToCSV } from '../utils/exportUtils';
 import { QrWorldSvg, QrRecruitSvg } from '../components/common/QrCodeSvgs';
 import { CheckInScannerModal } from '../components/booking/CheckInScannerModal';
-import { VideoAdsStudio } from '../components/admin/VideoAdsStudio';
+import { VideoAdsStudio, DEFAULT_AD_VIDEOS } from '../components/admin/VideoAdsStudio';
 
 export const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -92,68 +92,7 @@ export const AdminDashboard = () => {
   const [videoFormat, setVideoFormat] = useState('9:16');
   const [selectedVideoToPlay, setSelectedVideoToPlay] = useState(null);
   const [downloadingVideoId, setDownloadingVideoId] = useState(null);
-  const [adVideos, setAdVideos] = useState([
-    {
-      id: 'vid-1',
-      title: 'StyleCorner Atelier Experience',
-      category: 'salon',
-      duration: '0:15',
-      aspectRatio: '9:16',
-      badge: 'Instagram Reel / TikTok',
-      description: 'Ultra-luxury showcase featuring master barbering, bespoke braiding, and lash aesthetics.',
-      hook: 'Discover Lagos & Ibadan top verified beauty and grooming masters on StyleCorner.',
-      callToAction: 'Book online on stylecorner.world — Escrow Protected',
-      tags: ['Barber', 'Braids', 'Luxury', 'Lagos', 'Ibadan'],
-      themeColor: '#f5b942',
-      accentGradient: 'linear-gradient(135deg, #171a26, #0c0e14)',
-      soundtrack: 'Afro-Lofi Luxury Chill Beat (320kbps)',
-    },
-    {
-      id: 'vid-2',
-      title: 'Stylist & Specialist Recruitment Drive',
-      category: 'recruitment',
-      duration: '0:20',
-      aspectRatio: '9:16',
-      badge: 'Social Media Ad',
-      description: 'Compelling invitation for barbers, nail techs, braiders & lash artists to earn daily.',
-      hook: 'Are you a beauty professional? Get booked by VIP clients in your city.',
-      callToAction: 'Join 500+ verified experts today on stylecorner.world/join',
-      tags: ['Recruit', 'Barbers', 'Stylists', 'Instant Payouts'],
-      themeColor: '#10b981',
-      accentGradient: 'linear-gradient(135deg, #06281e, #0c0e14)',
-      soundtrack: 'Upbeat Cinematic Afrobeats (High Energy)',
-    },
-    {
-      id: 'vid-3',
-      title: 'Atelier Grooming Products Store Promo',
-      category: 'store',
-      duration: '0:12',
-      aspectRatio: '16:9',
-      badge: 'Landscape / YouTube',
-      description: 'Highlighting premium hair straighteners, organic beard oils, and salon-grade essentials.',
-      hook: 'Salon-grade grooming essentials delivered straight to your doorstep.',
-      callToAction: 'Shop the Atelier Store at stylecorner.world/store',
-      tags: ['Store', 'Products', 'Beard Care', 'Fast Delivery'],
-      themeColor: '#38bdf8',
-      accentGradient: 'linear-gradient(135deg, #0c1a2e, #0c0e14)',
-      soundtrack: 'Modern Deep Bass Synth Wave',
-    },
-    {
-      id: 'vid-4',
-      title: 'AI Stylist Matcher In Action',
-      category: 'ai',
-      duration: '0:16',
-      aspectRatio: '9:16',
-      badge: 'Feature Highlight',
-      description: 'Step-by-step visual of entering style preferences and getting matched with a 5-star stylist.',
-      hook: 'Cant find the right stylist? Let our AI match you in 3 seconds.',
-      callToAction: 'Try the AI Matcher free on stylecorner.world/ai-matcher',
-      tags: ['AI Matcher', 'Instant Match', 'Top Rated'],
-      themeColor: '#a855f7',
-      accentGradient: 'linear-gradient(135deg, #220e36, #0c0e14)',
-      soundtrack: 'Futuristic Smooth Chillhop',
-    }
-  ]); // 'all' | 'billboard' | 'portrait' | 'recruit'
+  const [adVideos, setAdVideos] = useState(DEFAULT_AD_VIDEOS); // 5 real ads: 2 voice + 3 music
   const [copiedMarketingUrl, setCopiedMarketingUrl] = useState(null);
   const [activeBannerModal, setActiveBannerModal] = useState(null); // 'billboard' | 'portrait' | 'recruit' | null
 
