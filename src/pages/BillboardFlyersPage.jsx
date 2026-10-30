@@ -176,6 +176,96 @@ export const BillboardFlyersPage = () => {
     >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap');
+        
+        * {
+          box-sizing: border-box;
+        }
+
+        /* Mobile toolbar scroll & touch smoothness */
+        .flyer-toolbar {
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+        }
+        .flyer-toolbar::-webkit-scrollbar { display: none; }
+
+        /* Mobile responsive adjustments */
+        @media (max-width: 860px) {
+          .billboard-wide-grid {
+            grid-template-columns: 1fr !important;
+            min-height: auto !important;
+          }
+          .bb-left-panel {
+            padding: 2.2rem 1.5rem !important;
+          }
+          .bb-right-panel {
+            min-height: 360px !important;
+          }
+        }
+
+        @media (max-width: 600px) {
+          .flyers-page-root {
+            padding: 0.75rem 0.5rem calc(3.5rem + env(safe-area-inset-bottom, 0px)) !important;
+          }
+          .flyer-toolbar {
+            width: calc(100% - 0.5rem) !important;
+            padding: 0.35rem 0.55rem !important;
+            gap: 0.35rem !important;
+            margin-bottom: 1.5rem !important;
+            border-radius: 20px !important;
+          }
+          .flyer-toolbar button {
+            font-size: 0.72rem !important;
+            padding: 0.35rem 0.65rem !important;
+          }
+          .billboard-container {
+            gap: 2.5rem !important;
+          }
+          .bb-left-panel {
+            padding: 1.75rem 1.15rem !important;
+          }
+          .bb-right-panel {
+            min-height: 340px !important;
+          }
+          .street-photo-hero, .recruit-photo-hero {
+            height: 300px !important;
+          }
+          .street-body, .recruit-body {
+            padding: 1.25rem 1.1rem 2rem !important;
+          }
+          .recruit-features-grid {
+            grid-template-columns: 1fr !important;
+            gap: 0.6rem !important;
+          }
+          .stat-chips-container {
+            left: 0.5rem !important;
+            right: 0.5rem !important;
+            gap: 0.4rem !important;
+          }
+          .stat-chip {
+            padding: 0.35rem 0.5rem !important;
+          }
+          .stat-chip-num {
+            font-size: 0.88rem !important;
+          }
+          .stat-chip-lbl {
+            font-size: 0.55rem !important;
+          }
+          .qr-box-mobile {
+            max-width: 100% !important;
+            padding: 1.2rem 1rem !important;
+          }
+        }
+
+        @media (max-width: 400px) {
+          .bb-qr-float-card {
+            right: 50% !important;
+            transform: translateX(50%) !important;
+            bottom: 1rem !important;
+            width: calc(100% - 2rem) !important;
+            max-width: 220px !important;
+          }
+        }
+
         @media print {
           * {
             -webkit-print-color-adjust: exact !important;
@@ -208,22 +298,6 @@ export const BillboardFlyersPage = () => {
             margin: 0 !important; max-width: 100% !important; width: 100% !important;
           }
           .print-card:last-child { page-break-after: avoid !important; break-after: avoid !important; }
-        }
-
-        /* Mobile toolbar scroll */
-        .flyer-toolbar { scrollbar-width: none; }
-        .flyer-toolbar::-webkit-scrollbar { display: none; }
-
-        @media (max-width: 860px) {
-          .billboard-wide-grid {
-            grid-template-columns: 1fr !important;
-          }
-          .bb-right-panel {
-            min-height: 380px !important;
-          }
-          .bb-left-panel {
-            padding: 2.2rem 1.75rem !important;
-          }
         }
       `}</style>
 
@@ -511,7 +585,7 @@ export const BillboardFlyersPage = () => {
                 </div>
 
                 {/* Floating QR Card */}
-                <div style={{
+                <div className="bb-qr-float-card" style={{
                   position: 'absolute', bottom: '1.5rem', right: '1.5rem', zIndex: 3,
                   backgroundColor: 'rgba(8,9,13,0.92)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
                   border: '1.5px solid rgba(245,185,66,0.45)', borderRadius: '22px', padding: '1.2rem',
@@ -578,7 +652,7 @@ export const BillboardFlyersPage = () => {
               }}
             >
               {/* Photo hero */}
-              <div style={{ width: '100%', height: '390px', position: 'relative', flexShrink: 0 }}>
+              <div className="street-photo-hero" style={{ width: '100%', height: '390px', position: 'relative', flexShrink: 0 }}>
                 <img src="/banner-barber.jpg" alt="Barbershop Scene" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%', display: 'block' }} />
                 <div style={{
                   position: 'absolute', inset: 0,
@@ -610,7 +684,7 @@ export const BillboardFlyersPage = () => {
               </div>
 
               {/* Content body */}
-              <div style={{ padding: '1.5rem 2rem 2.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', flex: 1 }}>
+              <div className="street-body" style={{ padding: '1.5rem 2rem 2.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', flex: 1 }}>
                 <div style={{
                   display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
                   backgroundColor: 'rgba(168,85,247,0.12)', border: '1px solid rgba(168,85,247,0.4)',
@@ -634,7 +708,7 @@ export const BillboardFlyersPage = () => {
                 </div>
 
                 {/* Purple QR Box */}
-                <div style={{
+                <div className="qr-box-mobile" style={{
                   backgroundColor: 'rgba(168,85,247,0.08)', border: '1.5px solid rgba(168,85,247,0.5)',
                   borderRadius: '24px', padding: '1.5rem 2rem', display: 'flex', flexDirection: 'column',
                   alignItems: 'center', gap: '0.55rem', width: '100%', maxWidth: '320px', marginBottom: '1.5rem',
@@ -707,7 +781,7 @@ export const BillboardFlyersPage = () => {
               }}
             >
               {/* Photo hero */}
-              <div style={{ width: '100%', height: '390px', position: 'relative', flexShrink: 0 }}>
+              <div className="recruit-photo-hero" style={{ width: '100%', height: '390px', position: 'relative', flexShrink: 0 }}>
                 <img src="/banner-beauty-team.jpg" alt="Nigerian Beauty Professionals Team" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%', display: 'block' }} />
                 <div style={{
                   position: 'absolute', inset: 0,
@@ -727,7 +801,7 @@ export const BillboardFlyersPage = () => {
                 </div>
 
                 {/* Floating stat chips on photo bottom */}
-                <div style={{
+                <div className="stat-chips-container" style={{
                   position: 'absolute', bottom: '1.2rem', left: '1.5rem', right: '1.5rem',
                   display: 'flex', justifyContent: 'center', gap: '0.75rem', zIndex: 2,
                 }}>
@@ -736,20 +810,20 @@ export const BillboardFlyersPage = () => {
                     { num: '₦0', label: 'Joining Fee' },
                     { num: '24h', label: 'Fast Payouts' },
                   ].map(s => (
-                    <div key={s.label} style={{
+                    <div key={s.label} className="stat-chip" style={{
                       backgroundColor: 'rgba(6,15,10,0.85)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
                       border: '1px solid rgba(16,185,129,0.3)', borderRadius: '14px', padding: '0.45rem 0.9rem',
                       textAlign: 'center', flex: 1,
                     }}>
-                      <div style={{ fontSize: '1rem', fontWeight: 900, color: '#4ade80', lineHeight: 1.1 }}>{s.num}</div>
-                      <div style={{ fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{s.label}</div>
+                      <div className="stat-chip-num" style={{ fontSize: '1rem', fontWeight: 900, color: '#4ade80', lineHeight: 1.1 }}>{s.num}</div>
+                      <div className="stat-chip-lbl" style={{ fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{s.label}</div>
                     </div>
                   ))}
                 </div>
               </div>
 
               {/* Content body */}
-              <div style={{ padding: '1.5rem 2rem 2.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', flex: 1 }}>
+              <div className="recruit-body" style={{ padding: '1.5rem 2rem 2.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', flex: 1 }}>
                 <div style={{
                   display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
                   backgroundColor: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.4)',
@@ -771,7 +845,7 @@ export const BillboardFlyersPage = () => {
                 </p>
 
                 {/* 2x2 Feature Grid */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.7rem', width: '100%', marginBottom: '1.6rem', textAlign: 'left' }}>
+                <div className="recruit-features-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.7rem', width: '100%', marginBottom: '1.6rem', textAlign: 'left' }}>
                   <div style={{ backgroundColor: 'rgba(16,185,129,0.07)', border: '1px solid rgba(16,185,129,0.18)', borderRadius: '14px', padding: '0.9rem' }}>
                     <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#4ade80', marginBottom: '0.25rem' }}>💰 Instant Wallet Payouts</div>
                     <div style={{ fontSize: '0.72rem', color: '#94a3b8', lineHeight: 1.4 }}>Get paid directly upon service completion with full escrow protection.</div>
