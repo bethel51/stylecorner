@@ -51,11 +51,16 @@ export const ExpertAppointmentsPage = () => {
   const [showCheckInModal, setShowCheckInModal] = useState(false);
   const [copiedCode, setCopiedCode] = useState(null);
 
-  // Sync tab with URL
+  // Sync tab and search query with URL (e.g. from notifications with ?bookingId=... or ?status=...)
   useEffect(() => {
     const qStatus = searchParams.get('status');
+    const qBookingId = searchParams.get('bookingId');
     if (qStatus && qStatus !== statusFilter) {
       setStatusFilter(qStatus);
+    }
+    if (qBookingId) {
+      setSearchQuery(qBookingId);
+      setStatusFilter('all');
     }
   }, [searchParams]);
 
@@ -167,6 +172,7 @@ export const ExpertAppointmentsPage = () => {
       // Search match
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase().trim();
+        const id = (b._id || '').toLowerCase();
         const client = (b.clientName || '').toLowerCase();
         const email = (b.clientEmail || '').toLowerCase();
         const phone = (b.clientPhone || '').toLowerCase();
@@ -174,6 +180,7 @@ export const ExpertAppointmentsPage = () => {
         const code = (b.checkInCode || '').toLowerCase();
         const location = (b.location || '').toLowerCase();
         const match =
+          id.includes(q) ||
           client.includes(q) ||
           email.includes(q) ||
           phone.includes(q) ||

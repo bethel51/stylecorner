@@ -95,8 +95,10 @@ export const Notifications = () => {
     const isExpert = user?.role === 'staff' || user?.role === 'expert';
     const isAdmin = user?.role === 'admin';
 
-    // Message-type notifications → go to chat
-    if (n.type === 'message' && n.bookingId) {
+    // Message-type or title-indicated message notifications → go to chat
+    const isChatNotification = n.type === 'message' || (n.title && n.title.toLowerCase().includes('message'));
+
+    if (isChatNotification && n.bookingId) {
       if (isExpert) {
         navigate(`/expert/chat?bookingId=${n.bookingId}`);
       } else if (isAdmin) {
@@ -128,12 +130,31 @@ export const Notifications = () => {
       }
       return;
     }
+
+    // System / General updates for expert (e.g. Account Activated, Wallet)
+    if (isExpert) {
+      if (n.title?.toLowerCase().includes('wallet') || n.message?.toLowerCase().includes('wallet')) {
+        navigate('/expert/transactions');
+      } else {
+        navigate('/expert-dashboard');
+      }
+      return;
+    } else if (!isAdmin) {
+      navigate('/customer-dashboard');
+      return;
+    }
   };
 
   const filteredNotifs = useMemo(() => {
-    if (activeTab === 'Bookings') return notifications.filter(n => n.type === 'booking');
-    if (activeTab === 'Orders') return notifications.filter(n => n.type === 'order');
-    if (activeTab === 'Messages') return notifications.filter(n => n.type === 'message');
+    if (activeTab === 'Bookings') {
+      return notifications.filter(n => n.type === 'booking' && !n.title?.toLowerCase().includes('message'));
+    }
+    if (activeTab === 'Orders') {
+      return notifications.filter(n => n.type === 'order');
+    }
+    if (activeTab === 'Messages') {
+      return notifications.filter(n => n.type === 'message' || n.title?.toLowerCase().includes('message'));
+    }
     return notifications;
   }, [notifications, activeTab]);
 
@@ -269,9 +290,10 @@ export const Notifications = () => {
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             {filteredNotifs.map((n) => {
-              const isBooking = n.type === 'booking';
+              const isMsgNotification = n.type === 'message' || n.title?.toLowerCase().includes('message');
+              const isBooking = !isMsgNotification && n.type === 'booking';
               const isOrder = n.type === 'order';
-              const isMessage = n.type === 'message';
+              const isMessage = isMsgNotification;
 
               const Icon = isOrder ? Package : isMessage ? MessageSquare : isBooking ? Calendar : Sparkles;
               const accentColor = isMessage ? '#3b82f6' : isBooking ? '#10b981' : 'var(--color-accent, #d4af37)';
@@ -374,20 +396,18 @@ export const Notifications = () => {
                       {n.message}
                     </p>
 
-                    {(n.bookingId || n.orderId) && (
-                      <div style={{
-                        marginTop: '0.5rem',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '0.3rem',
-                        fontSize: '0.72rem',
-                        fontWeight: 700,
-                        color: 'var(--color-accent, #d4af37)'
-                      }}>
-                        <span>View details</span>
-                        <ArrowRight size={12} />
-                      </div>
-                    )}
+                    <div style={{
+                      marginTop: '0.5rem',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.3rem',
+                      fontSize: '0.72rem',
+                      fontWeight: 700,
+                      color: 'var(--color-accent, #d4af37)'
+                    }}>
+                      <span>{isMessage ? 'Open conversation' : 'View details'}</span>
+                      <ArrowRight size={12} />
+                    </div>
                   </div>
 
                   {/* Delete Button */}

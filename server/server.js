@@ -2113,7 +2113,7 @@ app.post('/api/bookings/:id/messages', authenticateToken, async (req, res) => {
         userEmail: booking.clientEmail,
         title: `💬 ${booking.stylist} replied on your ${booking.service} booking`,
         message: `"${text.trim()}"`,
-        type: 'booking',
+        type: 'message',
         bookingId: booking._id
       });
       await sendNotificationSafe(
@@ -2128,7 +2128,7 @@ app.post('/api/bookings/:id/messages', authenticateToken, async (req, res) => {
           userEmail: booking.stylistEmail,
           title: `💬 New message from ${booking.clientName} on booking`,
           message: `${booking.service} — ${booking.date} at ${booking.time}: "${text.trim()}"`,
-          type: 'booking',
+          type: 'message',
           bookingId: booking._id
         });
         await sendNotificationSafe(
