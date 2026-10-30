@@ -3065,166 +3065,249 @@ export const AdminDashboard = () => {
 
             {/* Modal Body / Scrollable Banner Display */}
             <div ref={bannerModalRef} style={{ padding: isMobile ? '0.65rem' : '1.5rem', overflowY: 'auto', flex: 1, boxSizing: 'border-box' }}>
+              {/* Customer Booking Banner (Billboard) */}
               {activeBannerModal === 'billboard' && (
                 <div style={{
-                  background: 'radial-gradient(circle at 85% 20%, rgba(245, 185, 66, 0.18) 0%, transparent 45%), linear-gradient(135deg, #0d0f16 0%, #08090d 60%, #050608 100%)',
-                  border: '1.5px solid rgba(245, 185, 66, 0.4)',
-                  borderRadius: isMobile ? '16px' : '24px',
-                  padding: isMobile ? '1rem 0.85rem' : '2rem',
-                  display: 'grid',
-                  gridTemplateColumns: isMobile ? '1fr' : '1.3fr 1fr',
-                  gap: isMobile ? '1rem' : '1.5rem',
-                  alignItems: 'center',
+                  backgroundColor: '#09090b',
+                  border: '1.5px solid rgba(245, 185, 66, 0.35)',
+                  borderRadius: isMobile ? '20px' : '28px',
+                  padding: isMobile ? '1.25rem 1rem' : '2.25rem 2rem',
+                  position: 'relative',
+                  overflow: 'hidden',
                   boxSizing: 'border-box',
                 }}>
-                  <div>
-                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', backgroundColor: 'rgba(245, 185, 66, 0.12)', border: '1px solid rgba(245, 185, 66, 0.35)', borderRadius: '50px', padding: '0.25rem 0.65rem', marginBottom: '0.65rem' }}>
-                      <img src="/pwa-icon-192.png" alt="SC" style={{ width: '14px', height: '14px', borderRadius: '3px', objectFit: 'cover' }} />
-                      <span style={{ fontSize: '0.62rem', fontWeight: 800, color: '#f5b942', letterSpacing: '0.05em', textTransform: 'uppercase', fontFamily: 'Outfit' }}>StyleCorner Nigeria · Lagos & Ibadan</span>
+                  {/* Top and Bottom Gold Accent Lines */}
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '3px', background: '#F5B942', zIndex: 10 }} />
+                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '3px', background: '#F5B942', zIndex: 10 }} />
+
+                  {/* Giant Gold Curve Blob */}
+                  <div style={{
+                    position: 'absolute', top: '-15%', right: '-15%', width: '70%', height: '95%',
+                    borderRadius: '50%', backgroundColor: '#F5B942', zIndex: 0, pointerEvents: 'none',
+                  }} />
+
+                  <div style={{ position: 'relative', zIndex: 2 }}>
+                    {/* Top Pill Badge */}
+                    <div style={{
+                      display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
+                      backgroundColor: '#18181b', border: '1.5px solid rgba(245,185,66,0.5)',
+                      borderRadius: '50px', padding: '0.35rem 0.85rem 0.35rem 0.45rem', marginBottom: '1.25rem',
+                    }}>
+                      <div style={{ width: '22px', height: '22px', borderRadius: '6px', backgroundColor: '#F5B942', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ width: '10px', height: '10px', borderRadius: '2px', border: '2px solid #09090b' }} />
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.15 }}>
+                        <span style={{ fontSize: '0.66rem', fontWeight: 900, color: '#F5B942', letterSpacing: '0.06em', textTransform: 'uppercase' }}>STYLECORNER NIGERIA</span>
+                        <span style={{ fontSize: '0.58rem', fontWeight: 800, color: '#d4af37', letterSpacing: '0.04em', textTransform: 'uppercase' }}>LAGOS & IBADAN</span>
+                      </div>
                     </div>
 
-                    <h2 style={{ fontSize: isMobile ? '1.15rem' : '1.85rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.15, fontFamily: 'Outfit', marginBottom: '0.5rem' }}>
-                      Book Verified Stylists, Barbers & Braiders. <br />
-                      <span style={{ background: 'linear-gradient(135deg, #F5B942 0%, #ffc857 40%, #e8891d 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>In Seconds.</span>
-                    </h2>
+                    <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: '1.5rem', alignItems: isMobile ? 'center' : 'flex-start' }}>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <h2 style={{ fontSize: isMobile ? '1.4rem' : '2.1rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.12, letterSpacing: '-0.03em', margin: '0 0 0.25rem', fontFamily: 'Outfit' }}>
+                          Book Verified Stylists, Barbers & Braiders.
+                        </h2>
+                        <div style={{ fontSize: isMobile ? '1.4rem' : '2.1rem', fontWeight: 900, color: '#F5B942', lineHeight: 1.12, letterSpacing: '-0.03em', marginBottom: '0.85rem', fontFamily: 'Outfit' }}>
+                          In Seconds.
+                        </div>
 
-                    <p style={{ fontSize: isMobile ? '0.76rem' : '0.82rem', color: '#94a3b8', lineHeight: 1.45, marginBottom: '0.85rem', fontFamily: 'Outfit' }}>
-                      Lagos & Ibadan’s premier beauty network. AI matches you with top-rated barbers, braiders, lash techs & nail artists near you. In-salon or VIP home visits.
-                    </p>
+                        <p style={{ fontSize: '0.82rem', color: '#a1a1aa', lineHeight: 1.55, marginBottom: '1.1rem', maxWidth: '340px', fontFamily: 'Outfit' }}>
+                          Lagos & Ibadan's premier beauty network. AI matches you with top-rated barbers, braiders, lash techs & nail artists near you. In-salon or VIP home visits.
+                        </p>
 
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.3rem', marginBottom: '0.85rem' }}>
-                      {['✦ Braiders', '✦ Barbers', '✦ Lash Techs', '✦ Nails', '✦ Soft Glam', '✦ Frontal Install'].map(p => (
-                        <span key={p} style={{ backgroundColor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '50px', padding: '0.2rem 0.55rem', fontSize: '0.65rem', fontWeight: 700, color: '#e2e8f0', fontFamily: 'Outfit' }}>{p}</span>
-                      ))}
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', marginBottom: '1.1rem' }}>
+                          {['+ Hair Braiders', '+ Precision Barbers', '+ Lash Techs', '+ Nail Art', '+ Soft Glam', '+ Wig Install'].map(p => (
+                            <span key={p} style={{ backgroundColor: '#18181b', border: '1px solid #27272a', borderRadius: '50px', padding: '0.32rem 0.75rem', fontSize: '0.72rem', fontWeight: 700, color: '#ffffff', fontFamily: 'Outfit' }}>{p}</span>
+                          ))}
+                        </div>
+
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', color: '#e4e4e7', fontSize: '0.78rem', fontWeight: 700, fontFamily: 'Outfit' }}>
+                          <div>🛡️ 100% Escrow Protected</div>
+                          <div>⭐ 4.9 ★ Community Rated</div>
+                          <div>📍 Lagos & Ibadan</div>
+                        </div>
+                      </div>
+
+                      {/* Floating QR Card */}
+                      <div style={{
+                        flexShrink: 0, backgroundColor: '#111114', border: '1.5px solid rgba(255,255,255,0.08)',
+                        borderRadius: '24px', padding: '1.25rem 1rem', display: 'flex', flexDirection: 'column',
+                        alignItems: 'center', textAlign: 'center', minWidth: '190px', maxWidth: '210px',
+                        boxShadow: '0 20px 50px rgba(0,0,0,0.85)',
+                      }}>
+                        <div style={{ fontSize: '0.68rem', fontWeight: 900, color: '#F5B942', textTransform: 'uppercase', marginBottom: '0.75rem', letterSpacing: '0.05em' }}>
+                          ⚡ INSTANT MOBILE BOOKING
+                        </div>
+                        <div style={{ marginBottom: '0.75rem' }}>
+                          <QrWorldSvg size={150} logoSize={30} />
+                        </div>
+                        <div style={{ fontSize: '0.78rem', fontWeight: 900, color: '#ffffff', marginBottom: '0.15rem' }}>SCAN WITH CAMERA</div>
+                        <div style={{ fontSize: '0.68rem', color: '#a1a1aa', marginBottom: '0.2rem' }}>Point camera to join ·</div>
+                        <div style={{ fontSize: '0.76rem', fontWeight: 900, color: '#F5B942' }}>www.stylecorner.world</div>
+                      </div>
                     </div>
-
-                    <div style={{ display: 'flex', gap: '0.65rem', color: '#cbd5e1', fontSize: '0.68rem', fontWeight: 700, fontFamily: 'Outfit', flexWrap: 'wrap' }}>
-                      <span>🛡️ Escrow Protected</span>
-                      <span>⭐ 4.9 ★ Rated</span>
-                      <span>📍 Lagos & Ibadan</span>
-                    </div>
-                  </div>
-
-                  {/* QR Box */}
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', backgroundColor: 'rgba(255, 255, 255, 0.04)', border: '1.5px solid rgba(245, 185, 66, 0.35)', borderRadius: '18px', padding: isMobile ? '0.85rem 1rem' : '1.25rem', textAlign: 'center', boxSizing: 'border-box', width: '100%', maxWidth: isMobile ? '230px' : '280px', margin: '0 auto' }}>
-                    <div style={{ backgroundColor: '#f5b942', color: '#08090C', fontSize: '0.65rem', fontWeight: 900, padding: '0.25rem 0.75rem', borderRadius: '50px', textTransform: 'uppercase', marginBottom: '0.6rem', fontFamily: 'Outfit' }}>
-                      ⚡ Instant Booking
-                    </div>
-
-                    <div style={{ marginBottom: '0.6rem' }}>
-                      <QrWorldSvg size={isMobile ? 140 : 200} logoSize={isMobile ? 30 : 42} />
-                    </div>
-
-                    <div style={{ fontSize: '0.82rem', fontWeight: 900, color: '#ffffff', fontFamily: 'Outfit', marginBottom: '0.15rem' }}>POINT CAMERA TO SCAN</div>
-                    <div style={{ fontSize: '0.72rem', color: '#f5b942', fontWeight: 800, fontFamily: 'Outfit' }}>www.stylecorner.world</div>
                   </div>
                 </div>
               )}
 
+              {/* Street Flyer / Portrait */}
               {activeBannerModal === 'portrait' && (
                 <div style={{
-                  background: 'radial-gradient(circle at 50% 10%, rgba(245, 185, 66, 0.2) 0%, transparent 50%), linear-gradient(180deg, #181204 0%, #0d0a01 65%, #050400 100%)',
-                  border: '1.5px solid rgba(245, 185, 66, 0.5)',
-                  borderRadius: isMobile ? '16px' : '24px',
-                  padding: isMobile ? '1.2rem 0.85rem' : '2.2rem 1.8rem',
-                  display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center',
+                  backgroundColor: '#09090b',
+                  border: '1.5px solid rgba(245, 185, 66, 0.35)',
+                  borderRadius: isMobile ? '20px' : '28px',
+                  padding: isMobile ? '1.25rem 1rem' : '2.25rem 2rem',
+                  position: 'relative',
+                  overflow: 'hidden',
                   boxSizing: 'border-box',
                 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
-                    <img src="/pwa-icon-192.png" alt="StyleCorner" style={{ width: '32px', height: '32px', borderRadius: '10px', objectFit: 'cover' }} />
-                    <span style={{ fontSize: '1.2rem', fontWeight: 900, color: '#ffffff', fontFamily: 'Outfit' }}>StyleCorner</span>
-                  </div>
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '3px', background: '#F5B942', zIndex: 10 }} />
+                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '3px', background: '#F5B942', zIndex: 10 }} />
 
-                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', backgroundColor: 'rgba(245, 185, 66, 0.14)', border: '1px solid rgba(245, 185, 66, 0.4)', borderRadius: '50px', padding: '0.25rem 0.75rem', marginBottom: '0.75rem', fontSize: '0.68rem', fontWeight: 800, color: '#f5b942', textTransform: 'uppercase', fontFamily: 'Outfit' }}>
-                    ⚡ Nigeria's Smart Beauty Network
-                  </div>
+                  <div style={{
+                    position: 'absolute', top: '-15%', right: '-15%', width: '70%', height: '95%',
+                    borderRadius: '50%', backgroundColor: '#F5B942', zIndex: 0, pointerEvents: 'none',
+                  }} />
 
-                  <h2 style={{ fontSize: isMobile ? '1.25rem' : '2rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.15, fontFamily: 'Outfit', marginBottom: '0.6rem' }}>
-                    Your Next Look. <br />
-                    <span style={{ background: 'linear-gradient(135deg, #F5B942 0%, #ffd06e 45%, #e8891d 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Verified Stylist.</span> <br />
-                    Booked In 30s.
-                  </h2>
-
-                  <p style={{ fontSize: isMobile ? '0.76rem' : '0.82rem', color: '#94a3b8', lineHeight: 1.45, marginBottom: '0.85rem', maxWidth: '360px', fontFamily: 'Outfit' }}>
-                    No more guessing salon quality. Get matched to vetted braiders, barbers, lash techs & makeup artists in your LGA across Lagos & Ibadan.
-                  </p>
-
-                  <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0.3rem', marginBottom: '1rem' }}>
-                    {['✦ Knotless Braids', '✦ Fade & Beard', '✦ Lash Tech', '✦ Gel Nails', '✦ Soft Glam', '✦ Frontal Wig'].map(t => (
-                      <span key={t} style={{ backgroundColor: 'rgba(168, 85, 247, 0.1)', border: '1px solid rgba(168, 85, 247, 0.35)', borderRadius: '50px', padding: '0.2rem 0.55rem', fontSize: '0.64rem', fontWeight: 700, color: '#e9d5ff', fontFamily: 'Outfit' }}>{t}</span>
-                    ))}
-                  </div>
-
-                  {/* QR Box */}
-                  <div style={{ backgroundColor: 'rgba(245, 185, 66, 0.1)', border: '2px solid rgba(245, 185, 66, 0.5)', borderRadius: '18px', padding: isMobile ? '0.85rem 1.1rem' : '1.25rem 1.8rem', display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '0.85rem', width: '100%', maxWidth: isMobile ? '220px' : '280px', boxSizing: 'border-box' }}>
-                    <div style={{ marginBottom: '0.6rem' }}>
-                      <QrWorldSvg size={isMobile ? 140 : 200} logoSize={isMobile ? 30 : 42} />
+                  <div style={{ position: 'relative', zIndex: 2 }}>
+                    <div style={{
+                      display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
+                      backgroundColor: '#18181b', border: '1.5px solid rgba(245,185,66,0.5)',
+                      borderRadius: '50px', padding: '0.35rem 0.85rem 0.35rem 0.45rem', marginBottom: '1.25rem',
+                    }}>
+                      <div style={{ width: '22px', height: '22px', borderRadius: '6px', backgroundColor: '#F5B942', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ width: '10px', height: '10px', borderRadius: '2px', border: '2px solid #09090b' }} />
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.15 }}>
+                        <span style={{ fontSize: '0.66rem', fontWeight: 900, color: '#F5B942', letterSpacing: '0.06em', textTransform: 'uppercase' }}>STYLECORNER NIGERIA</span>
+                        <span style={{ fontSize: '0.58rem', fontWeight: 800, color: '#d4af37', letterSpacing: '0.04em', textTransform: 'uppercase' }}>STREET FLYER · STORY</span>
+                      </div>
                     </div>
-                    <div style={{ fontSize: '0.8rem', fontWeight: 900, color: '#c084fc', letterSpacing: '0.04em', fontFamily: 'Outfit' }}>POINT CAMERA TO SCAN</div>
-                    <div style={{ fontSize: '0.76rem', fontWeight: 800, color: '#ffffff', marginTop: '2px', fontFamily: 'Outfit' }}>www.stylecorner.world</div>
-                  </div>
 
-                  <div style={{ display: 'flex', gap: '0.75rem', color: '#64748b', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit' }}>
-                    <span>📍 Lagos & Ibadan</span>
-                    <span>🛡️ Protected Escrow</span>
-                    <span>⭐ 4.9 ★ Rating</span>
+                    <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: '1.5rem', alignItems: isMobile ? 'center' : 'flex-start' }}>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <h2 style={{ fontSize: isMobile ? '1.4rem' : '2.1rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.12, letterSpacing: '-0.03em', margin: '0 0 0.25rem', fontFamily: 'Outfit' }}>
+                          Your Next Look. Verified Stylist.
+                        </h2>
+                        <div style={{ fontSize: isMobile ? '1.4rem' : '2.1rem', fontWeight: 900, color: '#F5B942', lineHeight: 1.12, letterSpacing: '-0.03em', marginBottom: '0.85rem', fontFamily: 'Outfit' }}>
+                          Booked In 30s.
+                        </div>
+
+                        <p style={{ fontSize: '0.82rem', color: '#a1a1aa', lineHeight: 1.55, marginBottom: '1.1rem', maxWidth: '340px', fontFamily: 'Outfit' }}>
+                          No more guessing salon quality. Get matched to vetted braiders, barbers, lash techs & makeup artists in your LGA across Lagos & Ibadan.
+                        </p>
+
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', marginBottom: '1.1rem' }}>
+                          {['+ Knotless Braids', '+ Fade & Beard', '+ Volume Lash', '+ Gel Nails', '+ Soft Glam', '+ Wig Frontal'].map(t => (
+                            <span key={t} style={{ backgroundColor: '#18181b', border: '1px solid #27272a', borderRadius: '50px', padding: '0.32rem 0.75rem', fontSize: '0.72rem', fontWeight: 700, color: '#ffffff', fontFamily: 'Outfit' }}>{t}</span>
+                          ))}
+                        </div>
+
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', color: '#e4e4e7', fontSize: '0.78rem', fontWeight: 700, fontFamily: 'Outfit' }}>
+                          <div>📍 Lagos & Ibadan LGAs</div>
+                          <div>🛡️ 100% Escrow Protected</div>
+                          <div>⭐ 4.9 ★ Community Rated</div>
+                        </div>
+                      </div>
+
+                      <div style={{
+                        flexShrink: 0, backgroundColor: '#111114', border: '1.5px solid rgba(255,255,255,0.08)',
+                        borderRadius: '24px', padding: '1.25rem 1rem', display: 'flex', flexDirection: 'column',
+                        alignItems: 'center', textAlign: 'center', minWidth: '190px', maxWidth: '210px',
+                        boxShadow: '0 20px 50px rgba(0,0,0,0.85)',
+                      }}>
+                        <div style={{ fontSize: '0.68rem', fontWeight: 900, color: '#F5B942', textTransform: 'uppercase', marginBottom: '0.75rem', letterSpacing: '0.05em' }}>
+                          ⚡ SCAN TO BOOK NOW
+                        </div>
+                        <div style={{ marginBottom: '0.75rem' }}>
+                          <QrWorldSvg size={150} logoSize={30} />
+                        </div>
+                        <div style={{ fontSize: '0.78rem', fontWeight: 900, color: '#ffffff', marginBottom: '0.15rem' }}>POINT CAMERA TO SCAN</div>
+                        <div style={{ fontSize: '0.68rem', color: '#a1a1aa', marginBottom: '0.2rem' }}>Fast mobile booking ·</div>
+                        <div style={{ fontSize: '0.76rem', fontWeight: 900, color: '#F5B942' }}>www.stylecorner.world</div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
 
+              {/* Expert Recruitment Banner */}
               {activeBannerModal === 'recruit' && (
                 <div style={{
-                  background: 'radial-gradient(circle at 50% 10%, rgba(245, 185, 66, 0.2) 0%, transparent 50%), linear-gradient(180deg, #181204 0%, #0d0a01 65%, #050400 100%)',
-                  border: '1.5px solid rgba(245, 185, 66, 0.5)',
-                  borderRadius: isMobile ? '16px' : '24px',
-                  padding: isMobile ? '1.2rem 0.85rem' : '2.2rem 1.8rem',
-                  display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center',
+                  backgroundColor: '#09090b',
+                  border: '1.5px solid rgba(245, 185, 66, 0.35)',
+                  borderRadius: isMobile ? '20px' : '28px',
+                  padding: isMobile ? '1.25rem 1rem' : '2.25rem 2rem',
+                  position: 'relative',
+                  overflow: 'hidden',
                   boxSizing: 'border-box',
                 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
-                    <img src="/pwa-icon-192.png" alt="StyleCorner" style={{ width: '32px', height: '32px', borderRadius: '10px', objectFit: 'cover' }} />
-                    <span style={{ fontSize: '1.2rem', fontWeight: 900, color: '#ffffff', fontFamily: 'Outfit' }}>StyleCorner</span>
-                  </div>
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '3px', background: '#F5B942', zIndex: 10 }} />
+                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '3px', background: '#F5B942', zIndex: 10 }} />
 
-                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', backgroundColor: 'rgba(245, 185, 66, 0.14)', border: '1px solid rgba(245, 185, 66, 0.4)', borderRadius: '50px', padding: '0.25rem 0.75rem', marginBottom: '0.75rem', fontSize: '0.68rem', fontWeight: 800, color: '#f5b942', textTransform: 'uppercase', fontFamily: 'Outfit' }}>
-                    ✂️ Calling All Beauty & Grooming Professionals
-                  </div>
+                  <div style={{
+                    position: 'absolute', top: '-15%', right: '-15%', width: '70%', height: '95%',
+                    borderRadius: '50%', backgroundColor: '#F5B942', zIndex: 0, pointerEvents: 'none',
+                  }} />
 
-                  <h2 style={{ fontSize: isMobile ? '1.15rem' : '1.85rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.15, fontFamily: 'Outfit', marginBottom: '0.6rem' }}>
-                    Are You a Barber, Braider, Lash Tech or Stylist? <br />
-                    <span style={{ background: 'linear-gradient(135deg, #F5B942 0%, #ffd06e 45%, #e8891d 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Get Booked. Get Paid.</span>
-                  </h2>
+                  <div style={{ position: 'relative', zIndex: 2 }}>
+                    <div style={{
+                      display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
+                      backgroundColor: '#18181b', border: '1.5px solid rgba(245,185,66,0.5)',
+                      borderRadius: '50px', padding: '0.35rem 0.85rem 0.35rem 0.45rem', marginBottom: '1.25rem',
+                    }}>
+                      <div style={{ width: '22px', height: '22px', borderRadius: '6px', backgroundColor: '#F5B942', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ width: '10px', height: '10px', borderRadius: '2px', border: '2px solid #09090b' }} />
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.15 }}>
+                        <span style={{ fontSize: '0.66rem', fontWeight: 900, color: '#F5B942', letterSpacing: '0.06em', textTransform: 'uppercase' }}>STYLECORNER PRO</span>
+                        <span style={{ fontSize: '0.58rem', fontWeight: 800, color: '#d4af37', letterSpacing: '0.04em', textTransform: 'uppercase' }}>EXPERT ONBOARDING</span>
+                      </div>
+                    </div>
 
-                  <p style={{ fontSize: isMobile ? '0.76rem' : '0.82rem', color: '#94a3b8', lineHeight: 1.45, marginBottom: '0.85rem', maxWidth: '380px', fontFamily: 'Outfit' }}>
-                    Join StyleCorner’s verified beauty network in Lagos & Ibadan. Fill your open calendar slots with high-value clients.
-                  </p>
+                    <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: '1.5rem', alignItems: isMobile ? 'center' : 'flex-start' }}>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <h2 style={{ fontSize: isMobile ? '1.35rem' : '2rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.12, letterSpacing: '-0.03em', margin: '0 0 0.25rem', fontFamily: 'Outfit' }}>
+                          Are You a Barber, Braider or Lash Tech?
+                        </h2>
+                        <div style={{ fontSize: isMobile ? '1.35rem' : '2rem', fontWeight: 900, color: '#F5B942', lineHeight: 1.12, letterSpacing: '-0.03em', marginBottom: '0.85rem', fontFamily: 'Outfit' }}>
+                          Get Booked. Get Paid.
+                        </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.4rem', marginBottom: '1rem', width: '100%', maxWidth: '380px' }}>
-                    <div style={{ backgroundColor: 'rgba(245, 185, 66, 0.08)', border: '1px solid rgba(245, 185, 66, 0.25)', borderRadius: '10px', padding: '0.5rem', textAlign: 'left' }}>
-                      <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#f5b942', fontFamily: 'Outfit' }}>💰 Instant Payouts</div>
-                      <div style={{ fontSize: '0.62rem', color: '#94a3b8', marginTop: '2px' }}>Direct to wallet</div>
-                    </div>
-                    <div style={{ backgroundColor: 'rgba(245, 185, 66, 0.08)', border: '1px solid rgba(245, 185, 66, 0.25)', borderRadius: '10px', padding: '0.5rem', textAlign: 'left' }}>
-                      <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#f5b942', fontFamily: 'Outfit' }}>📍 Local Clients</div>
-                      <div style={{ fontSize: '0.62rem', color: '#94a3b8', marginTop: '2px' }}>Near your LGA</div>
-                    </div>
-                    <div style={{ backgroundColor: 'rgba(245, 185, 66, 0.08)', border: '1px solid rgba(245, 185, 66, 0.25)', borderRadius: '10px', padding: '0.5rem', textAlign: 'left' }}>
-                      <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#f5b942', fontFamily: 'Outfit' }}>🏠 Salon or Mobile</div>
-                      <div style={{ fontSize: '0.62rem', color: '#94a3b8', marginTop: '2px' }}>Your choice</div>
-                    </div>
-                    <div style={{ backgroundColor: 'rgba(245, 185, 66, 0.08)', border: '1px solid rgba(245, 185, 66, 0.25)', borderRadius: '10px', padding: '0.5rem', textAlign: 'left' }}>
-                      <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#f5b942', fontFamily: 'Outfit' }}>⭐ Free Joining</div>
-                      <div style={{ fontSize: '0.62rem', color: '#94a3b8', marginTop: '2px' }}>Zero upfront fee</div>
-                    </div>
-                  </div>
+                        <p style={{ fontSize: '0.82rem', color: '#a1a1aa', lineHeight: 1.55, marginBottom: '1.1rem', maxWidth: '340px', fontFamily: 'Outfit' }}>
+                          Join StyleCorner's verified beauty network in Lagos & Ibadan. Fill your open calendar slots with high-value paying clients. Zero registration fees.
+                        </p>
 
-                  {/* QR Box */}
-                  <div style={{ backgroundColor: 'rgba(245, 185, 66, 0.1)', border: '2px solid rgba(245, 185, 66, 0.5)', borderRadius: '18px', padding: isMobile ? '0.85rem 1.1rem' : '1.25rem 1.8rem', display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '0.85rem', width: '100%', maxWidth: isMobile ? '220px' : '280px', boxSizing: 'border-box' }}>
-                    <div style={{ marginBottom: '0.6rem' }}>
-                      <QrRecruitSvg size={isMobile ? 140 : 200} logoSize={isMobile ? 30 : 42} />
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', marginBottom: '1.1rem' }}>
+                          {['+ Instant Payouts', '+ Free Pro Profile', '+ AI Client Match', '+ QR Business Card', '+ VIP Home Bookings', '+ Salon Seat Host'].map(t => (
+                            <span key={t} style={{ backgroundColor: '#18181b', border: '1px solid #27272a', borderRadius: '50px', padding: '0.32rem 0.75rem', fontSize: '0.72rem', fontWeight: 700, color: '#ffffff', fontFamily: 'Outfit' }}>{t}</span>
+                          ))}
+                        </div>
+
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', color: '#e4e4e7', fontSize: '0.78rem', fontWeight: 700, fontFamily: 'Outfit' }}>
+                          <div>💰 ₦15k–₦60k+ Daily Earnings</div>
+                          <div>🛡️ Escrow Protected Payouts</div>
+                          <div>📍 Lagos & Ibadan LGAs</div>
+                        </div>
+                      </div>
+
+                      <div style={{
+                        flexShrink: 0, backgroundColor: '#111114', border: '1.5px solid rgba(255,255,255,0.08)',
+                        borderRadius: '24px', padding: '1.25rem 1rem', display: 'flex', flexDirection: 'column',
+                        alignItems: 'center', textAlign: 'center', minWidth: '190px', maxWidth: '210px',
+                        boxShadow: '0 20px 50px rgba(0,0,0,0.85)',
+                      }}>
+                        <div style={{ fontSize: '0.68rem', fontWeight: 900, color: '#F5B942', textTransform: 'uppercase', marginBottom: '0.75rem', letterSpacing: '0.05em' }}>
+                          ✂️ EXPERT REGISTRATION
+                        </div>
+                        <div style={{ marginBottom: '0.75rem' }}>
+                          <QrRecruitSvg size={150} logoSize={30} />
+                        </div>
+                        <div style={{ fontSize: '0.78rem', fontWeight: 900, color: '#ffffff', marginBottom: '0.15rem' }}>SCAN TO JOIN — FREE</div>
+                        <div style={{ fontSize: '0.68rem', color: '#a1a1aa', marginBottom: '0.2rem' }}>Apply in 60s ·</div>
+                        <div style={{ fontSize: '0.76rem', fontWeight: 900, color: '#F5B942' }}>stylecorner.world/role-selection</div>
+                      </div>
                     </div>
-                    <div style={{ fontSize: '0.8rem', fontWeight: 900, color: '#f5b942', textTransform: 'uppercase', fontFamily: 'Outfit' }}>SCAN TO JOIN AS EXPERT</div>
-                    <div style={{ fontSize: '0.74rem', fontWeight: 700, color: '#ffffff', marginTop: '2px', fontFamily: 'Outfit' }}>stylecorner.world/role-selection</div>
                   </div>
                 </div>
               )}
