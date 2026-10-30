@@ -2,7 +2,92 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Check, Copy, Loader, Maximize, Minimize, X, FileDown, Image as ImageIcon } from 'lucide-react';
 import { QrWorldSvg, QrRecruitSvg } from '../components/common/QrCodeSvgs';
+import PhoneShowcaseFlyerCard from '../components/common/PhoneShowcaseFlyerCard';
 import { downloadElementAsPdf, downloadMultipleElementsAsPdf, downloadElementAsImage } from '../utils/flyerPdfExport';
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   NEW 3-PHONE SHOWCASE FLYERS (Based on Hand-Held Phone Reference)
+   - Flyer 1: Customer (Girl 1)
+   - Flyer 2: Expert Recruit (Boy)
+   - Flyer 3: Customer VIP Glam (Girl 2)
+───────────────────────────────────────────────────────────────────────────── */
+export const PHONE_SHOWCASE_FLYERS = [
+  {
+    id: 'showcase-customer-girl',
+    tabLabel: '👱‍♀️ Customer 1 (Girl)',
+    badgeTop: 'STYLECORNER NIGERIA',
+    badgeSub: 'LAGOS & IBADAN',
+    headlineWhite: 'Get Every Beauty Service You Need',
+    headlineGold: 'From One Place.',
+    description: "StyleCorner connects you with verified top-rated braiders, lash techs, nail artists & precision barbers near you in Lagos & Ibadan.",
+    characterType: 'girl-1',
+    floatingPillsLeft: ['+ Knotless Braids', '+ Precision Fade', '+ Gel Nail Art', '+ 100% Escrow'],
+    floatingPillsRight: ['+ Wispy Lash Ext.', '+ Soft Glam Makeup', '+ Frontal Lace Melt', '+ In-Salon / VIP Home'],
+    calloutText: 'Join Us Now!! ✨',
+    trustPoints: [
+      { icon: '🛡️', text: '100% Escrow Protected' },
+      { icon: '⭐', text: '4.9 ★ Community Rated' },
+      { icon: '📍', text: 'Lagos & Ibadan' },
+    ],
+    cardTitle: '⚡ INSTANT MOBILE BOOKING',
+    cardScanText: 'SCAN WITH CAMERA',
+    cardSubText: 'Point phone camera to join ·',
+    cardUrl: 'www.stylecorner.world',
+    fullUrl: 'https://www.stylecorner.world',
+    qrType: 'world',
+    accentGold: '#F5B942',
+  },
+  {
+    id: 'showcase-expert-boy',
+    tabLabel: '✂️ Expert Recruit (Boy)',
+    badgeTop: 'STYLECORNER PRO',
+    badgeSub: 'EXPERT ONBOARDING',
+    headlineWhite: 'Get Verified Paying Clients',
+    headlineGold: 'Direct To Your Phone.',
+    description: "Join Nigeria's fastest growing beauty network. Direct verified paying clients, instant wallet payouts to your bank & zero registration fees.",
+    characterType: 'boy-1',
+    floatingPillsLeft: ['+ ₦15k–₦60k+ Daily', '+ 0% Registration Fee', '+ Instant Bank Payouts', '+ Free Pro Profile'],
+    floatingPillsRight: ['+ AI Client Matching', '+ QR Business Card', '+ Salon Seat Host', '+ Escrow Guaranteed Pay'],
+    calloutText: 'Start Earning Today!! 💰',
+    trustPoints: [
+      { icon: '💰', text: '₦15k–₦60k+ Daily Earnings' },
+      { icon: '🛡️', text: 'Escrow Protected Payouts' },
+      { icon: '📍', text: 'Lagos & Ibadan LGAs' },
+    ],
+    cardTitle: '✂️ EXPERT REGISTRATION',
+    cardScanText: 'SCAN TO JOIN AS EXPERT',
+    cardSubText: 'Scan to apply — zero fees ·',
+    cardUrl: 'stylecorner.world/role-selection',
+    fullUrl: 'https://www.stylecorner.world/role-selection',
+    qrType: 'recruit',
+    accentGold: '#F5B942',
+  },
+  {
+    id: 'showcase-vip-girl',
+    tabLabel: '✨ VIP Glam (Girl)',
+    badgeTop: 'STYLECORNER VIP',
+    badgeSub: 'AT-HOME LUXURY GLAM',
+    headlineWhite: 'Skip Lagos Traffic. Bring The Salon',
+    headlineGold: 'To Your Living Room.',
+    description: "Book verified 5-star beauty experts for VIP mobile home visits or luxury salon appointments in AC comfort across Lagos & Ibadan.",
+    characterType: 'girl-2',
+    floatingPillsLeft: ['+ 100% AC Comfort', '+ Zero Lagos Traffic', '+ Vetted Beauty Techs', '+ 100% Escrow Vault'],
+    floatingPillsRight: ['+ Frontals & Braids', '+ Luxury Nail Care', '+ VIP Home Fades', '+ 30-Second Booking'],
+    calloutText: 'Experience VIP Glam!! 🏡',
+    trustPoints: [
+      { icon: '🏡', text: 'In-Home VIP Convenience' },
+      { icon: '⭐', text: '4.9 ★ Verified Reviews' },
+      { icon: '📍', text: 'Lekki · Ikeja · Ikoyi · Bodija' },
+    ],
+    cardTitle: '✨ VIP AT-HOME BOOKING',
+    cardScanText: 'SCAN FOR VIP HOME VISIT',
+    cardSubText: 'Scan to schedule home visit ·',
+    cardUrl: 'www.stylecorner.world',
+    fullUrl: 'https://www.stylecorner.world',
+    qrType: 'world',
+    accentGold: '#F5B942',
+  },
+];
 
 /* ─────────────────────────────────────────────────────────────────────────────
    ROLE CONFIGURATIONS — Premium Black + Gold Cinematic Flyer (Reference Layout)
@@ -116,15 +201,16 @@ export const BillboardFlyersPage = () => {
     return 'all';
   };
 
-  const [activeDesign, setActiveDesign] = useState(getInitialDesign());
+  const [flyerStyle, setFlyerStyle] = useState('showcase'); // 'showcase' (new reference) or 'classic'
+  const [activeDesign, setActiveDesign] = useState('all');
   const [copiedType, setCopiedType] = useState(null);
   const [screenshotMode, setScreenshotMode] = useState(false);
   const [savingPdf, setSavingPdf] = useState(false);
   const [isCssFullscreen, setIsCssFullscreen] = useState(false);
 
-  // Dynamic ref map for all flyer cards
+  // Dynamic ref map for all flyer cards across both styles
   const flyerRefs = useRef({});
-  FLYER_ROLES.forEach(r => {
+  [...PHONE_SHOWCASE_FLYERS, ...FLYER_ROLES].forEach(r => {
     if (!flyerRefs.current[r.id]) {
       flyerRefs.current[r.id] = React.createRef();
     }
@@ -182,7 +268,8 @@ export const BillboardFlyersPage = () => {
 
     try {
       if (target === 'all') {
-        const elementsWithConfig = FLYER_ROLES.map(role => ({
+        const activeList = flyerStyle === 'showcase' ? PHONE_SHOWCASE_FLYERS : FLYER_ROLES;
+        const elementsWithConfig = activeList.map(role => ({
           el: flyerRefs.current[role.id]?.current,
           isLandscape: false,
         })).filter(item => Boolean(item.el));
@@ -191,7 +278,10 @@ export const BillboardFlyersPage = () => {
           throw new Error('Flyer elements not found in DOM');
         }
 
-        await downloadMultipleElementsAsPdf(elementsWithConfig, 'StyleCorner_Marketing_Flyers_Pack.pdf');
+        const packName = flyerStyle === 'showcase'
+          ? 'StyleCorner_PhoneShowcase_Flyers_Pack.pdf'
+          : 'StyleCorner_Marketing_Flyers_Pack.pdf';
+        await downloadMultipleElementsAsPdf(elementsWithConfig, packName);
       } else {
         const el = flyerRefs.current[target]?.current || document.querySelector(`.print-card[data-design="${target}"]`);
         if (!el) throw new Error(`Flyer ${target} not found`);
@@ -230,9 +320,10 @@ export const BillboardFlyersPage = () => {
   );
   const isFullscreen = isCssFullscreen || isNativeFullscreen;
 
+  const currentRolesList = flyerStyle === 'showcase' ? PHONE_SHOWCASE_FLYERS : FLYER_ROLES;
   const visibleRoles = activeDesign === 'all'
-    ? FLYER_ROLES
-    : FLYER_ROLES.filter(r => r.id === activeDesign);
+    ? currentRolesList
+    : currentRolesList.filter(r => r.id === activeDesign);
 
   return (
     <div
@@ -358,6 +449,54 @@ export const BillboardFlyersPage = () => {
             <ArrowLeft size={16} />
           </button>
 
+          {/* Collection / Style Switcher Pill */}
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            backgroundColor: 'rgba(255,255,255,0.06)',
+            borderRadius: '50px',
+            padding: '2px',
+            border: '1px solid rgba(245,185,66,0.25)',
+            flexShrink: 0,
+          }}>
+            <button
+              type="button"
+              onClick={() => { setFlyerStyle('showcase'); setActiveDesign('all'); }}
+              style={{
+                backgroundColor: flyerStyle === 'showcase' ? '#F5B942' : 'transparent',
+                color: flyerStyle === 'showcase' ? '#08090C' : '#cbd5e1',
+                border: 'none',
+                borderRadius: '50px',
+                padding: '0.35rem 0.75rem',
+                fontSize: '0.72rem',
+                fontWeight: 900,
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              📱 3 Phone Flyers
+            </button>
+            <button
+              type="button"
+              onClick={() => { setFlyerStyle('classic'); setActiveDesign('all'); }}
+              style={{
+                backgroundColor: flyerStyle === 'classic' ? '#F5B942' : 'transparent',
+                color: flyerStyle === 'classic' ? '#08090C' : '#cbd5e1',
+                border: 'none',
+                borderRadius: '50px',
+                padding: '0.35rem 0.75rem',
+                fontSize: '0.72rem',
+                fontWeight: 900,
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              📋 Classic Billboards
+            </button>
+          </div>
+
+          <div style={{ width: '1px', height: '18px', backgroundColor: 'rgba(255,255,255,0.15)', flexShrink: 0 }} />
+
           {/* All tab */}
           <button
             type="button"
@@ -376,11 +515,11 @@ export const BillboardFlyersPage = () => {
               flexShrink: 0,
             }}
           >
-            All 4
+            All {currentRolesList.length}
           </button>
 
           {/* Role tabs */}
-          {FLYER_ROLES.map((role) => (
+          {currentRolesList.map((role) => (
             <button
               key={role.id}
               type="button"
@@ -565,13 +704,22 @@ export const BillboardFlyersPage = () => {
               </span>
             </div>
 
-            {/* ═══════════════════════════════════════════════════════════
-                PREMIUM FLYER CARD — Reference-Matched Layout
-            ═══════════════════════════════════════════════════════════ */}
-            <div
-              ref={flyerRefs.current[role.id]}
-              className="print-card"
-              data-design={role.id}
+            {/* If Showcase Style: Render PhoneShowcaseFlyerCard */}
+            {flyerStyle === 'showcase' ? (
+              <PhoneShowcaseFlyerCard
+                ref={flyerRefs.current[role.id]}
+                flyer={role}
+                onSavePdf={saveToPdf}
+                onSaveImage={saveToImage}
+                onCopyLink={copyUrl}
+                copied={copiedType}
+                savingPdf={savingPdf}
+              />
+            ) : (
+              <div
+                ref={flyerRefs.current[role.id]}
+                className="print-card"
+                data-design={role.id}
               style={{
                 width: '100%',
                 backgroundColor: '#09090b',
@@ -937,6 +1085,7 @@ export const BillboardFlyersPage = () => {
 
               </div>
             </div>
+            )}
           </div>
         ))}
       </div>
