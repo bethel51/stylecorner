@@ -41,15 +41,15 @@ export const Home = () => {
     preloadRoute("/experts");
     preloadRoute("/ai-matcher");
 
-    // Smooth deterministic progress increment
-    const pTimer1 = setTimeout(() => setLoadingProgress(55), 250);
-    const pTimer2 = setTimeout(() => setLoadingProgress(95), 650);
-    const pTimer3 = setTimeout(() => setLoadingProgress(100), 1050);
+    // Ultra-smooth 1-second deterministic loading sequence
+    const pTimer1 = setTimeout(() => setLoadingProgress(45), 160);
+    const pTimer2 = setTimeout(() => setLoadingProgress(82), 460);
+    const pTimer3 = setTimeout(() => setLoadingProgress(100), 750);
 
-    // Cross-fade to onboarding
+    // Silky cross-fade to onboarding at exactly 1.0 second
     const transitionTimer = setTimeout(() => {
       setPhase("onboarding");
-    }, 1350);
+    }, 1000);
 
     return () => {
       clearTimeout(pTimer1);
@@ -107,12 +107,33 @@ export const Home = () => {
 
         @keyframes ringFloat {
           0%, 100% { transform: translateY(0) rotate(0deg); }
-          50% { transform: translateY(-6px) rotate(4deg); }
+          50% { transform: translateY(-5px) rotate(3deg); }
         }
 
         @keyframes softShimmer {
           0% { background-position: -200% 0; }
           100% { background-position: 200% 0; }
+        }
+
+        @keyframes shimmerSweep {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(200%); }
+        }
+
+        @keyframes subtleBreathe {
+          0%, 100% { opacity: 0.65; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.02); }
+        }
+
+        @keyframes glowPulseSubtle {
+          0%, 100% {
+            box-shadow: 0 0 28px rgba(245, 185, 66, 0.3), 0 12px 30px rgba(0, 0, 0, 0.5);
+            border-color: rgba(245, 185, 66, 0.55);
+          }
+          50% {
+            box-shadow: 0 0 48px rgba(245, 185, 66, 0.55), 0 16px 40px rgba(0, 0, 0, 0.65);
+            border-color: rgba(245, 185, 66, 0.85);
+          }
         }
 
         /* Interactive Role Card Styles */
@@ -354,7 +375,7 @@ export const Home = () => {
         </header>
 
         {/* ══════════════════════════════════════════════════════════════════
-            LAYER 1: ICON LOADING SCREEN (Pulsing square icon & progress)
+            LAYER 1: ICON LOADING SCREEN (Pulsing luxury emblem & progress)
            ══════════════════════════════════════════════════════════════════ */}
         <div
           onClick={handleSkipIntro}
@@ -368,65 +389,107 @@ export const Home = () => {
             alignItems: "center",
             justifyContent: "center",
             textAlign: "center",
-            maxWidth: "420px",
+            maxWidth: "440px",
             width: "100%",
-            margin: phase === "loading" ? "auto 0" : "0 auto",
+            minHeight: "calc(100dvh - 130px)",
+            margin: "0 auto",
             opacity: phase === "loading" ? 1 : 0,
-            transform: phase === "loading" ? "scale(1)" : "scale(0.92)",
+            transform: phase === "loading" ? "scale(1) translate3d(0, 0, 0)" : "scale(0.94) translate3d(0, -12px, 0)",
             pointerEvents: phase === "loading" ? "auto" : "none",
-            transition: "opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
-            padding: "2rem 0",
+            transition: "opacity 0.42s cubic-bezier(0.16, 1, 0.3, 1), transform 0.42s cubic-bezier(0.16, 1, 0.3, 1)",
+            padding: "1rem 1.25rem",
+            boxSizing: "border-box",
+            userSelect: "none",
+            cursor: "pointer",
           }}
         >
-          {/* Animated Square Icon Container */}
+          {/* Animated Luxury Emblem Container with Concentric Glow Rings */}
           <div
             style={{
               position: "relative",
-              width: "110px",
-              height: "110px",
+              width: "128px",
+              height: "128px",
               marginBottom: "1.75rem",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
             }}
           >
-            {/* Ambient Animated Ring */}
+            {/* Outer Ambient Aura Glow */}
             <div
               style={{
                 position: "absolute",
-                inset: "-10px",
-                borderRadius: "32px",
-                border: "2px solid rgba(245, 185, 66, 0.35)",
-                animation: "ringFloat 4.5s ease-in-out infinite",
+                inset: "-22px",
+                borderRadius: "44px",
+                background: "radial-gradient(circle, rgba(245, 185, 66, 0.24) 0%, transparent 72%)",
+                pointerEvents: "none",
+                animation: "subtleBreathe 2.4s ease-in-out infinite",
+              }}
+            />
+
+            {/* Outer Concentric Floating Ring */}
+            <div
+              style={{
+                position: "absolute",
+                inset: "-12px",
+                borderRadius: "36px",
+                border: "1.5px solid rgba(245, 185, 66, 0.32)",
+                animation: "ringFloat 5s ease-in-out infinite",
                 pointerEvents: "none",
               }}
             />
 
-            {/* Official Style Corner Square Icon */}
-            <img
-              src="/pwa-icon-192.png"
-              alt="Style Corner"
+            {/* Inner Concentric Accent Ring */}
+            <div
               style={{
-                width: "98px",
-                height: "98px",
-                borderRadius: "26px",
-                objectFit: "cover",
-                boxShadow: "0 14px 40px rgba(245, 185, 66, 0.45)",
-                animation: "iconPulseGlow 2.4s ease-in-out infinite",
-                border: "1.5px solid rgba(245, 185, 66, 0.6)",
+                position: "absolute",
+                inset: "-5px",
+                borderRadius: "30px",
+                border: "1px solid rgba(245, 185, 66, 0.45)",
+                pointerEvents: "none",
               }}
             />
+
+            {/* Official Style Corner Squircle Emblem */}
+            <div
+              style={{
+                width: "104px",
+                height: "104px",
+                borderRadius: "26px",
+                overflow: "hidden",
+                background: "#08090C",
+                border: "2px solid rgba(245, 185, 66, 0.75)",
+                animation: "glowPulseSubtle 2.2s ease-in-out infinite",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                position: "relative",
+                boxSizing: "border-box",
+              }}
+            >
+              <img
+                src="/pwa-icon-192.png"
+                alt="Style Corner"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  display: "block",
+                }}
+              />
+            </div>
           </div>
 
           {/* Luxury Typography */}
           <h1
             style={{
               fontFamily: "Outfit, sans-serif",
-              fontSize: "clamp(1.75rem, 5.5vw, 2.25rem)",
+              fontSize: "clamp(1.85rem, 6vw, 2.35rem)",
               fontWeight: 900,
               color: isDark ? "#FFFFFF" : "#0F172A",
               margin: "0 0 0.4rem",
-              letterSpacing: "-0.025em",
+              letterSpacing: "-0.03em",
+              lineHeight: 1.15,
             }}
           >
             Style Corner
@@ -434,50 +497,74 @@ export const Home = () => {
 
           <p
             style={{
-              fontFamily: "Plus Jakarta Sans, sans-serif",
-              fontSize: "0.85rem",
-              color: "#94a3b8",
-              margin: "0 0 1.75rem",
-              letterSpacing: "0.1em",
+              fontFamily: "Outfit, sans-serif",
+              fontSize: "clamp(0.72rem, 2.4vw, 0.8rem)",
+              color: "#F5B942",
+              margin: "0 0 1.85rem",
+              letterSpacing: "0.14em",
               textTransform: "uppercase",
-              fontWeight: 700,
+              fontWeight: 800,
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
             }}
           >
-            Atelier Grooming &amp; Styling
+            <span>Atelier Grooming &amp; Styling</span>
           </p>
 
-          {/* Smooth Progress Indicator */}
+          {/* High-Precision Fluid Progress Pill */}
           <div
             style={{
-              width: "180px",
-              height: "4px",
-              background: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)",
-              borderRadius: "50px",
+              width: "min(220px, 65vw)",
+              height: "5px",
+              background: isDark ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.08)",
+              borderRadius: "999px",
               overflow: "hidden",
               marginBottom: "1.25rem",
+              position: "relative",
+              border: "1px solid rgba(255, 255, 255, 0.06)",
+              boxSizing: "border-box",
             }}
           >
             <div
               style={{
                 height: "100%",
                 width: `${loadingProgress}%`,
-                background: "linear-gradient(90deg, #F5B942, #E8912D)",
-                borderRadius: "50px",
-                transition: "width 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+                background: "linear-gradient(90deg, #F5B942 0%, #ffd06e 50%, #F5B942 100%)",
+                borderRadius: "999px",
+                transition: "width 0.28s cubic-bezier(0.16, 1, 0.3, 1)",
+                position: "relative",
+                boxShadow: "0 0 12px rgba(245, 185, 66, 0.75)",
               }}
-            />
+            >
+              {/* Shimmer light pass */}
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  background: "linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.6) 50%, transparent 100%)",
+                  animation: "shimmerSweep 1.1s ease-in-out infinite",
+                }}
+              />
+            </div>
           </div>
 
-          <span
+          {/* Micro Enter Prompt */}
+          <div
             style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.4rem",
               fontSize: "0.78rem",
-              color: "#64748b",
+              color: "#94a3b8",
               fontFamily: "Outfit, sans-serif",
-              fontWeight: 600,
+              fontWeight: 700,
+              animation: "subtleBreathe 2s ease-in-out infinite",
             }}
           >
-            Tap anywhere to enter →
-          </span>
+            <span>Tap anywhere to enter</span>
+            <span style={{ color: "#F5B942" }}>→</span>
+          </div>
         </div>
 
         {/* ══════════════════════════════════════════════════════════════════
