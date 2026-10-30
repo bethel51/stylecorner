@@ -55,6 +55,7 @@ import { exportOrdersToCSV, exportBookingsToCSV } from '../utils/exportUtils';
 import { QrWorldSvg, QrRecruitSvg } from '../components/common/QrCodeSvgs';
 import { CheckInScannerModal } from '../components/booking/CheckInScannerModal';
 import { VideoAdsStudio, DEFAULT_AD_VIDEOS } from '../components/admin/VideoAdsStudio';
+import { downloadElementAsPdf } from '../utils/flyerPdfExport';
 
 export const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -95,8 +96,20 @@ export const AdminDashboard = () => {
   const [adVideos, setAdVideos] = useState(DEFAULT_AD_VIDEOS); // 5 real ads: 2 voice + 3 music
   const [copiedMarketingUrl, setCopiedMarketingUrl] = useState(null);
   const [activeBannerModal, setActiveBannerModal] = useState(null); // 'billboard' | 'portrait' | 'recruit' | null
+  const bannerModalRef = useRef(null);
 
-  const handleDownloadBannerPdf = (type) => {
+  const handleDownloadBannerPdf = async (type) => {
+    if (bannerModalRef.current) {
+      try {
+        showToast('Rendering official flyer PDF file...', 'info');
+        const filename = `StyleCorner_${(type || 'flyer').toUpperCase()}_Banner.pdf`;
+        await downloadElementAsPdf(bannerModalRef.current, filename, type === 'billboard');
+        showToast('Official PDF downloaded to your device!', 'success');
+        return;
+      } catch (err) {
+        console.warn('Direct modal PDF export failed, opening full flyer viewer:', err);
+      }
+    }
     const hash = type === 'portrait' ? 'street' : (type || 'all');
     const downloadUrl = `/billboard-flyers?design=${hash}&download=true`;
     try {
@@ -2168,7 +2181,7 @@ export const AdminDashboard = () => {
                 {(marketingFilter === 'all' || marketingFilter === 'portrait') && (
                   <div style={{
                     backgroundColor: '#151822', borderRadius: '20px',
-                    border: '1px solid rgba(168,85,247,0.2)',
+                    border: '1px solid rgba(245,185,66,0.3)',
                     boxShadow: '0 8px 32px rgba(0,0,0,0.35), 0 0 0 1px rgba(168,85,247,0.05)',
                     overflow: 'hidden',
                   }}>
@@ -2177,7 +2190,7 @@ export const AdminDashboard = () => {
                       onClick={() => setActiveBannerModal('portrait')}
                       title="Click to view full flyer & scannable QR code"
                       style={{
-                        background: 'linear-gradient(160deg, #120a1a 0%, #0d0d14 50%, #1a0d12 100%)',
+                        background: 'radial-gradient(circle at 50% 10%, rgba(245,185,66,0.18) 0%, transparent 55%), linear-gradient(160deg, #181204 0%, #0d0d14 50%, #120d02 100%)',
                         padding: isMobile ? '1rem 0.85rem' : '1.5rem 1rem',
                         aspectRatio: isMobile ? 'auto' : '16/7',
                         minHeight: isMobile ? '135px' : 'auto',
@@ -2192,10 +2205,10 @@ export const AdminDashboard = () => {
                         boxSizing: 'border-box',
                       }}
                     >
-                      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 30% 50%, rgba(168,85,247,0.12) 0%, transparent 60%)' }} />
+                      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 30% 50%, rgba(245,185,66,0.15) 0%, transparent 60%)' }} />
                       <div style={{ position: 'relative', zIndex: 1, flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: '0.48rem', fontWeight: 900, color: '#c084fc', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '0.2rem', fontFamily: 'Outfit' }}>✦ StyleCorner</div>
-                        <div style={{ fontSize: isMobile ? '0.98rem' : '1.2rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.15, fontFamily: 'Outfit', marginBottom: '0.25rem' }}>Style that<br/><span style={{ background: 'linear-gradient(90deg, #a855f7, #f5b942)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>moves with you.</span></div>
+                        <div style={{ fontSize: '0.48rem', fontWeight: 900, color: '#f5b942', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '0.2rem', fontFamily: 'Outfit' }}>✦ StyleCorner</div>
+                        <div style={{ fontSize: isMobile ? '0.98rem' : '1.2rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.15, fontFamily: 'Outfit', marginBottom: '0.25rem' }}>Style that<br/><span style={{ background: 'linear-gradient(90deg, #f5b942, #ffd06e)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>moves with you.</span></div>
                         <div style={{ fontSize: isMobile ? '0.52rem' : '0.6rem', color: '#94a3b8' }}>Browse. Book. Slay — same day.</div>
                         <div style={{ marginTop: '0.45rem', display: 'inline-block', backgroundColor: 'rgba(168,85,247,0.2)', border: '1px solid rgba(168,85,247,0.4)', padding: '0.2rem 0.55rem', borderRadius: '50px' }}>
                           <span style={{ fontSize: '0.48rem', fontWeight: 900, color: '#c084fc', fontFamily: 'Outfit' }}>Tap to view flyer</span>
@@ -2213,8 +2226,8 @@ export const AdminDashboard = () => {
                           <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#ffffff', fontFamily: 'Outfit' }}>Street Flyer / Social Story</div>
                           <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>4:5 / 9:16 Portrait — salons, malls, social media</div>
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', backgroundColor: 'rgba(168,85,247,0.12)', border: '1px solid rgba(168,85,247,0.25)', padding: '0.2rem 0.55rem', borderRadius: '50px' }}>
-                          <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#a855f7' }} />
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', backgroundColor: 'rgba(245,185,66,0.12)', border: '1px solid rgba(245,185,66,0.25)', padding: '0.2rem 0.55rem', borderRadius: '50px' }}>
+                          <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#f5b942' }} />
                           <span style={{ fontSize: '0.65rem', color: '#c084fc', fontWeight: 800 }}>Live QR</span>
                         </div>
                       </div>
@@ -2272,7 +2285,7 @@ export const AdminDashboard = () => {
                 {(marketingFilter === 'all' || marketingFilter === 'recruit') && (
                   <div style={{
                     backgroundColor: '#151822', borderRadius: '20px',
-                    border: '1px solid rgba(16,185,129,0.2)',
+                    border: '1px solid rgba(245,185,66,0.3)',
                     boxShadow: '0 8px 32px rgba(0,0,0,0.35), 0 0 0 1px rgba(16,185,129,0.05)',
                     overflow: 'hidden',
                   }}>
@@ -2281,7 +2294,7 @@ export const AdminDashboard = () => {
                       onClick={() => setActiveBannerModal('recruit')}
                       title="Click to view recruitment poster & scannable QR code"
                       style={{
-                        background: 'linear-gradient(135deg, #0a1a12 0%, #0d1117 50%, #0a1a12 100%)',
+                        background: 'radial-gradient(circle at 50% 10%, rgba(245,185,66,0.18) 0%, transparent 55%), linear-gradient(135deg, #181204 0%, #0d1117 50%, #120d02 100%)',
                         padding: isMobile ? '1rem 0.85rem' : '1.5rem 1rem',
                         aspectRatio: isMobile ? 'auto' : '16/7',
                         minHeight: isMobile ? '135px' : 'auto',
@@ -2296,14 +2309,14 @@ export const AdminDashboard = () => {
                         boxSizing: 'border-box',
                       }}
                     >
-                      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 30% 50%, rgba(16,185,129,0.12) 0%, transparent 60%)' }} />
+                      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 30% 50%, rgba(245,185,66,0.15) 0%, transparent 60%)' }} />
                       <div style={{ position: 'relative', zIndex: 1, flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: '0.48rem', fontWeight: 900, color: '#4ade80', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '0.2rem', fontFamily: 'Outfit' }}>We're Hiring ✦</div>
-                        <div style={{ fontSize: isMobile ? '0.95rem' : '1.15rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.15, fontFamily: 'Outfit', marginBottom: '0.25rem' }}>Are you a <br/><span style={{ color: '#4ade80' }}>Top Stylist?</span></div>
+                        <div style={{ fontSize: '0.48rem', fontWeight: 900, color: '#f5b942', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '0.2rem', fontFamily: 'Outfit' }}>We're Hiring ✦</div>
+                        <div style={{ fontSize: isMobile ? '0.95rem' : '1.15rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.15, fontFamily: 'Outfit', marginBottom: '0.25rem' }}>Are you a <br/><span style={{ color: '#f5b942' }}>Top Stylist?</span></div>
                         <div style={{ fontSize: isMobile ? '0.5rem' : '0.58rem', color: '#94a3b8' }}>Join StyleCorner. Earn more. Work free.</div>
                         <div style={{ marginTop: '0.4rem', display: 'flex', gap: '0.25rem', flexWrap: 'wrap' }}>
                           {['Barbers', 'Braiders', 'Lash Techs', 'Nail Artists'].map(r => (
-                            <span key={r} style={{ fontSize: '0.42rem', fontWeight: 700, color: '#4ade80', backgroundColor: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.3)', padding: '0.1rem 0.3rem', borderRadius: '4px', fontFamily: 'Outfit' }}>{r}</span>
+                            <span key={r} style={{ fontSize: '0.42rem', fontWeight: 700, color: '#f5b942', backgroundColor: 'rgba(245,185,66,0.15)', border: '1px solid rgba(245,185,66,0.3)', padding: '0.1rem 0.3rem', borderRadius: '4px', fontFamily: 'Outfit' }}>{r}</span>
                           ))}
                         </div>
                         <div style={{ marginTop: '0.4rem', display: 'inline-block', backgroundColor: 'rgba(16,185,129,0.2)', border: '1px solid rgba(16,185,129,0.4)', padding: '0.2rem 0.55rem', borderRadius: '50px' }}>
@@ -2322,7 +2335,7 @@ export const AdminDashboard = () => {
                           <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#ffffff', fontFamily: 'Outfit' }}>Stylist Recruitment Poster</div>
                           <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>For salons, barber hubs, beauty schools, social ads</div>
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', backgroundColor: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.25)', padding: '0.2rem 0.55rem', borderRadius: '50px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', backgroundColor: 'rgba(245,185,66,0.12)', border: '1px solid rgba(245,185,66,0.25)', padding: '0.2rem 0.55rem', borderRadius: '50px' }}>
                           <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#22c55e' }} />
                           <span style={{ fontSize: '0.65rem', color: '#4ade80', fontWeight: 800 }}>Live QR</span>
                         </div>
@@ -2987,23 +3000,15 @@ export const AdminDashboard = () => {
             onClick={e => e.stopPropagation()}
             style={{
               backgroundColor: '#0c0e14',
-              border: activeBannerModal === 'portrait'
-                ? '1.5px solid rgba(168, 85, 247, 0.5)'
-                : activeBannerModal === 'recruit'
-                ? '1.5px solid rgba(16, 185, 129, 0.5)'
-                : '1.5px solid rgba(245, 185, 66, 0.4)',
-              borderRadius: isMobile ? '16px' : '28px',
+              border: '1.5px solid rgba(245, 185, 66, 0.45)',
+              borderRadius: isMobile ? '18px' : '28px',
               width: '100%',
               maxWidth: activeBannerModal === 'billboard' ? '820px' : '520px',
-              maxHeight: isMobile ? '96vh' : '92vh',
+              maxHeight: isMobile ? '94vh' : '90vh',
               display: 'flex',
               flexDirection: 'column',
               overflow: 'hidden',
-              boxShadow: activeBannerModal === 'portrait'
-                ? '0 25px 60px rgba(0, 0, 0, 0.85), 0 0 35px rgba(168, 85, 247, 0.22)'
-                : activeBannerModal === 'recruit'
-                ? '0 25px 60px rgba(0, 0, 0, 0.85), 0 0 35px rgba(16, 185, 129, 0.22)'
-                : '0 25px 60px rgba(0, 0, 0, 0.85), 0 0 35px rgba(245, 185, 66, 0.15)',
+              boxShadow: '0 25px 60px rgba(0, 0, 0, 0.85), 0 0 35px rgba(245, 185, 66, 0.15)',
               boxSizing: 'border-box',
             }}
           >
@@ -3049,7 +3054,7 @@ export const AdminDashboard = () => {
             </div>
 
             {/* Modal Body / Scrollable Banner Display */}
-            <div style={{ padding: isMobile ? '0.65rem' : '1.5rem', overflowY: 'auto', flex: 1, boxSizing: 'border-box' }}>
+            <div ref={bannerModalRef} style={{ padding: isMobile ? '0.65rem' : '1.5rem', overflowY: 'auto', flex: 1, boxSizing: 'border-box' }}>
               {activeBannerModal === 'billboard' && (
                 <div style={{
                   background: 'radial-gradient(circle at 85% 20%, rgba(245, 185, 66, 0.18) 0%, transparent 45%), linear-gradient(135deg, #0d0f16 0%, #08090d 60%, #050608 100%)',
@@ -3108,8 +3113,8 @@ export const AdminDashboard = () => {
 
               {activeBannerModal === 'portrait' && (
                 <div style={{
-                  background: 'radial-gradient(circle at 50% 10%, rgba(168, 85, 247, 0.25) 0%, transparent 50%), linear-gradient(180deg, #150d24 0%, #0d0817 65%, #06040a 100%)',
-                  border: '1.5px solid rgba(168, 85, 247, 0.5)',
+                  background: 'radial-gradient(circle at 50% 10%, rgba(245, 185, 66, 0.2) 0%, transparent 50%), linear-gradient(180deg, #181204 0%, #0d0a01 65%, #050400 100%)',
+                  border: '1.5px solid rgba(245, 185, 66, 0.5)',
                   borderRadius: isMobile ? '16px' : '24px',
                   padding: isMobile ? '1.2rem 0.85rem' : '2.2rem 1.8rem',
                   display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center',
@@ -3120,13 +3125,13 @@ export const AdminDashboard = () => {
                     <span style={{ fontSize: '1.2rem', fontWeight: 900, color: '#ffffff', fontFamily: 'Outfit' }}>StyleCorner</span>
                   </div>
 
-                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', backgroundColor: 'rgba(168, 85, 247, 0.16)', border: '1px solid rgba(168, 85, 247, 0.45)', borderRadius: '50px', padding: '0.25rem 0.75rem', marginBottom: '0.75rem', fontSize: '0.68rem', fontWeight: 800, color: '#c084fc', textTransform: 'uppercase', fontFamily: 'Outfit' }}>
+                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', backgroundColor: 'rgba(245, 185, 66, 0.14)', border: '1px solid rgba(245, 185, 66, 0.4)', borderRadius: '50px', padding: '0.25rem 0.75rem', marginBottom: '0.75rem', fontSize: '0.68rem', fontWeight: 800, color: '#f5b942', textTransform: 'uppercase', fontFamily: 'Outfit' }}>
                     ⚡ Nigeria's Smart Beauty Network
                   </div>
 
                   <h2 style={{ fontSize: isMobile ? '1.25rem' : '2rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.15, fontFamily: 'Outfit', marginBottom: '0.6rem' }}>
                     Your Next Look. <br />
-                    <span style={{ background: 'linear-gradient(135deg, #c084fc 0%, #a855f7 50%, #f472b6 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Verified Stylist.</span> <br />
+                    <span style={{ background: 'linear-gradient(135deg, #F5B942 0%, #ffd06e 45%, #e8891d 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Verified Stylist.</span> <br />
                     Booked In 30s.
                   </h2>
 
@@ -3141,7 +3146,7 @@ export const AdminDashboard = () => {
                   </div>
 
                   {/* QR Box */}
-                  <div style={{ backgroundColor: 'rgba(168, 85, 247, 0.12)', border: '2px solid rgba(168, 85, 247, 0.55)', borderRadius: '18px', padding: isMobile ? '0.85rem 1.1rem' : '1.25rem 1.8rem', display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '0.85rem', width: '100%', maxWidth: isMobile ? '220px' : '280px', boxSizing: 'border-box' }}>
+                  <div style={{ backgroundColor: 'rgba(245, 185, 66, 0.1)', border: '2px solid rgba(245, 185, 66, 0.5)', borderRadius: '18px', padding: isMobile ? '0.85rem 1.1rem' : '1.25rem 1.8rem', display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '0.85rem', width: '100%', maxWidth: isMobile ? '220px' : '280px', boxSizing: 'border-box' }}>
                     <div style={{ marginBottom: '0.6rem' }}>
                       <QrWorldSvg size={isMobile ? 140 : 200} logoSize={isMobile ? 30 : 42} />
                     </div>
@@ -3159,8 +3164,8 @@ export const AdminDashboard = () => {
 
               {activeBannerModal === 'recruit' && (
                 <div style={{
-                  background: 'radial-gradient(circle at 50% 10%, rgba(16, 185, 129, 0.25) 0%, transparent 50%), linear-gradient(180deg, #0a1f14 0%, #07150d 65%, #040a06 100%)',
-                  border: '1.5px solid rgba(16, 185, 129, 0.5)',
+                  background: 'radial-gradient(circle at 50% 10%, rgba(245, 185, 66, 0.2) 0%, transparent 50%), linear-gradient(180deg, #181204 0%, #0d0a01 65%, #050400 100%)',
+                  border: '1.5px solid rgba(245, 185, 66, 0.5)',
                   borderRadius: isMobile ? '16px' : '24px',
                   padding: isMobile ? '1.2rem 0.85rem' : '2.2rem 1.8rem',
                   display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center',
@@ -3171,13 +3176,13 @@ export const AdminDashboard = () => {
                     <span style={{ fontSize: '1.2rem', fontWeight: 900, color: '#ffffff', fontFamily: 'Outfit' }}>StyleCorner</span>
                   </div>
 
-                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', backgroundColor: 'rgba(16, 185, 129, 0.16)', border: '1px solid rgba(16, 185, 129, 0.45)', borderRadius: '50px', padding: '0.25rem 0.75rem', marginBottom: '0.75rem', fontSize: '0.68rem', fontWeight: 800, color: '#4ade80', textTransform: 'uppercase', fontFamily: 'Outfit' }}>
+                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', backgroundColor: 'rgba(245, 185, 66, 0.14)', border: '1px solid rgba(245, 185, 66, 0.4)', borderRadius: '50px', padding: '0.25rem 0.75rem', marginBottom: '0.75rem', fontSize: '0.68rem', fontWeight: 800, color: '#f5b942', textTransform: 'uppercase', fontFamily: 'Outfit' }}>
                     ✂️ Calling All Beauty & Grooming Professionals
                   </div>
 
                   <h2 style={{ fontSize: isMobile ? '1.15rem' : '1.85rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.15, fontFamily: 'Outfit', marginBottom: '0.6rem' }}>
                     Are You a Barber, Braider, Lash Tech or Stylist? <br />
-                    <span style={{ background: 'linear-gradient(135deg, #4ade80 0%, #22c55e 50%, #10b981 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Get Booked. Get Paid.</span>
+                    <span style={{ background: 'linear-gradient(135deg, #F5B942 0%, #ffd06e 45%, #e8891d 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Get Booked. Get Paid.</span>
                   </h2>
 
                   <p style={{ fontSize: isMobile ? '0.76rem' : '0.82rem', color: '#94a3b8', lineHeight: 1.45, marginBottom: '0.85rem', maxWidth: '380px', fontFamily: 'Outfit' }}>
@@ -3185,30 +3190,30 @@ export const AdminDashboard = () => {
                   </p>
 
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.4rem', marginBottom: '1rem', width: '100%', maxWidth: '380px' }}>
-                    <div style={{ backgroundColor: 'rgba(16, 185, 129, 0.08)', border: '1px solid rgba(16, 185, 129, 0.2)', borderRadius: '10px', padding: '0.5rem', textAlign: 'left' }}>
-                      <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#4ade80', fontFamily: 'Outfit' }}>💰 Instant Payouts</div>
+                    <div style={{ backgroundColor: 'rgba(245, 185, 66, 0.08)', border: '1px solid rgba(245, 185, 66, 0.25)', borderRadius: '10px', padding: '0.5rem', textAlign: 'left' }}>
+                      <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#f5b942', fontFamily: 'Outfit' }}>💰 Instant Payouts</div>
                       <div style={{ fontSize: '0.62rem', color: '#94a3b8', marginTop: '2px' }}>Direct to wallet</div>
                     </div>
-                    <div style={{ backgroundColor: 'rgba(16, 185, 129, 0.08)', border: '1px solid rgba(16, 185, 129, 0.2)', borderRadius: '10px', padding: '0.5rem', textAlign: 'left' }}>
-                      <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#4ade80', fontFamily: 'Outfit' }}>📍 Local Clients</div>
+                    <div style={{ backgroundColor: 'rgba(245, 185, 66, 0.08)', border: '1px solid rgba(245, 185, 66, 0.25)', borderRadius: '10px', padding: '0.5rem', textAlign: 'left' }}>
+                      <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#f5b942', fontFamily: 'Outfit' }}>📍 Local Clients</div>
                       <div style={{ fontSize: '0.62rem', color: '#94a3b8', marginTop: '2px' }}>Near your LGA</div>
                     </div>
-                    <div style={{ backgroundColor: 'rgba(16, 185, 129, 0.08)', border: '1px solid rgba(16, 185, 129, 0.2)', borderRadius: '10px', padding: '0.5rem', textAlign: 'left' }}>
-                      <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#4ade80', fontFamily: 'Outfit' }}>🏠 Salon or Mobile</div>
+                    <div style={{ backgroundColor: 'rgba(245, 185, 66, 0.08)', border: '1px solid rgba(245, 185, 66, 0.25)', borderRadius: '10px', padding: '0.5rem', textAlign: 'left' }}>
+                      <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#f5b942', fontFamily: 'Outfit' }}>🏠 Salon or Mobile</div>
                       <div style={{ fontSize: '0.62rem', color: '#94a3b8', marginTop: '2px' }}>Your choice</div>
                     </div>
-                    <div style={{ backgroundColor: 'rgba(16, 185, 129, 0.08)', border: '1px solid rgba(16, 185, 129, 0.2)', borderRadius: '10px', padding: '0.5rem', textAlign: 'left' }}>
-                      <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#4ade80', fontFamily: 'Outfit' }}>⭐ Free Joining</div>
+                    <div style={{ backgroundColor: 'rgba(245, 185, 66, 0.08)', border: '1px solid rgba(245, 185, 66, 0.25)', borderRadius: '10px', padding: '0.5rem', textAlign: 'left' }}>
+                      <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#f5b942', fontFamily: 'Outfit' }}>⭐ Free Joining</div>
                       <div style={{ fontSize: '0.62rem', color: '#94a3b8', marginTop: '2px' }}>Zero upfront fee</div>
                     </div>
                   </div>
 
                   {/* QR Box */}
-                  <div style={{ backgroundColor: 'rgba(16, 185, 129, 0.12)', border: '2px solid rgba(16, 185, 129, 0.55)', borderRadius: '18px', padding: isMobile ? '0.85rem 1.1rem' : '1.25rem 1.8rem', display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '0.85rem', width: '100%', maxWidth: isMobile ? '220px' : '280px', boxSizing: 'border-box' }}>
+                  <div style={{ backgroundColor: 'rgba(245, 185, 66, 0.1)', border: '2px solid rgba(245, 185, 66, 0.5)', borderRadius: '18px', padding: isMobile ? '0.85rem 1.1rem' : '1.25rem 1.8rem', display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '0.85rem', width: '100%', maxWidth: isMobile ? '220px' : '280px', boxSizing: 'border-box' }}>
                     <div style={{ marginBottom: '0.6rem' }}>
                       <QrRecruitSvg size={isMobile ? 140 : 200} logoSize={isMobile ? 30 : 42} />
                     </div>
-                    <div style={{ fontSize: '0.8rem', fontWeight: 900, color: '#4ade80', textTransform: 'uppercase', fontFamily: 'Outfit' }}>SCAN TO JOIN AS EXPERT</div>
+                    <div style={{ fontSize: '0.8rem', fontWeight: 900, color: '#f5b942', textTransform: 'uppercase', fontFamily: 'Outfit' }}>SCAN TO JOIN AS EXPERT</div>
                     <div style={{ fontSize: '0.74rem', fontWeight: 700, color: '#ffffff', marginTop: '2px', fontFamily: 'Outfit' }}>stylecorner.world/role-selection</div>
                   </div>
                 </div>
@@ -3269,19 +3274,11 @@ export const AdminDashboard = () => {
                   minHeight: '44px', width: isMobile ? '100%' : 'auto',
                   display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem',
                   padding: '0.55rem 1.15rem', borderRadius: '10px', fontSize: '0.8rem', fontWeight: 800,
-                  background: activeBannerModal === 'portrait'
-                    ? 'linear-gradient(135deg, #9333ea, #a855f7)'
-                    : activeBannerModal === 'recruit'
-                    ? 'linear-gradient(135deg, #059669, #10b981)'
-                    : 'linear-gradient(135deg, #d4af37, #f5b942)',
+                  background: 'linear-gradient(135deg, #d4af37, #f5b942)',
                   border: 'none',
-                  color: activeBannerModal === 'billboard' ? '#08090C' : '#ffffff',
+                  color: '#08090C',
                   cursor: 'pointer', fontFamily: 'Outfit',
-                  boxShadow: activeBannerModal === 'portrait'
-                    ? '0 4px 14px rgba(168,85,247,0.4)'
-                    : activeBannerModal === 'recruit'
-                    ? '0 4px 14px rgba(16,185,129,0.4)'
-                    : '0 4px 14px rgba(245,185,66,0.35)',
+                  boxShadow: '0 4px 14px rgba(245,185,66,0.35)',
                 }}
               >
                 <Download size={14} /> Save to PDF

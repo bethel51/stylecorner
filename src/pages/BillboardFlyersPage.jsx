@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Download, Check, Copy, Loader, Maximize, Minimize, X, FileDown } from 'lucide-react';
+import { ArrowLeft, Download, Check, Copy, Loader, Maximize, Minimize, X, FileDown, Image as ImageIcon } from 'lucide-react';
 import { QrWorldSvg, QrRecruitSvg } from '../components/common/QrCodeSvgs';
+import { downloadElementAsPdf, downloadMultipleElementsAsPdf, downloadElementAsImage } from '../utils/flyerPdfExport';
 
 export const BillboardFlyersPage = () => {
   const location = useLocation();
@@ -72,143 +73,54 @@ export const BillboardFlyersPage = () => {
   }, [location.search, location.hash]);
 
   /* ─────────────────────────────────────────────────────────────────
-     saveToPdf — Opens a print-optimised window and triggers Save to PDF
-     via the browser's native print dialog (File > Print > Save as PDF).
-     On iOS Safari this opens the system Share sheet with "Save to Files".
-     This is the most reliable cross-platform PDF approach without
-     any backend or paid library.
+     saveToPdf — Directly generates a high-resolution, downloadable PDF
+     file via jsPDF & html2canvas and saves it directly to the user's
+     device / downloads folder (no printer dialog).
   ───────────────────────────────────────────────────────────────── */
   const saveToPdf = async (designType) => {
     const target = designType || activeDesign;
     setSavingPdf(true);
 
-    const refMap = { billboard: billboardRef, street: streetRef, recruit: recruitRef };
-    let cardEls = [];
-    if (target === 'all') {
-      cardEls = [billboardRef, streetRef, recruitRef].map(r => r.current).filter(Boolean);
-    } else if (refMap[target]?.current) {
-      cardEls = [refMap[target].current];
-    }
-
-    if (cardEls.length === 0) {
-      const sel = target === 'all' ? '.print-card' : `.print-card[data-design="${target}"]`;
-      cardEls = Array.from(document.querySelectorAll(sel));
-    }
-
-    if (cardEls.length === 0) {
-      setSavingPdf(false);
-      alert('Could not find the flyer to export. Please try again.');
-      return;
-    }
-
-    const isBillboard = (target === 'billboard');
-    const pageSize = isBillboard ? 'size: A4 landscape; margin: 0;' : 'size: A4 portrait; margin: 0;';
-
-    const cardsHtml = cardEls.map(el => {
-      const clone = el.cloneNode(true);
-      clone.querySelectorAll('.no-print').forEach(np => np.remove());
-      clone.style.maxWidth = '100%';
-      clone.style.width = '100%';
-      clone.style.borderRadius = '0';
-      clone.style.margin = '0 auto';
-      clone.style.boxShadow = 'none';
-      return clone.outerHTML;
-    }).join('<div style="page-break-after:always"></div>');
-
-    const logoUrl = `${window.location.origin}/pwa-icon-192.png`;
-
-    const printDoc = `<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>StyleCorner Flyer — Save as PDF</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; }
-    html, body {
-      margin: 0; padding: 0;
-      background: #050608;
-      color: #fff;
-      font-family: 'Outfit', -apple-system, sans-serif;
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
-    }
-    @page { ${pageSize} }
-    @media print {
-      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-      body { background: #050608 !important; }
-      .no-print { display: none !important; }
-    }
-    .print-card { width: 100%; page-break-after: always; break-after: page; }
-    .print-card:last-child { page-break-after: avoid; break-after: avoid; }
-    img { max-width: 100%; display: block; }
-    /* Save PDF instruction bar */
-    .save-bar {
-      position: fixed; bottom: 0; left: 0; right: 0;
-      background: #F5B942; color: #08090C;
-      padding: 12px 20px;
-      text-align: center;
-      font-family: 'Outfit', sans-serif;
-      font-weight: 800; font-size: 15px;
-      z-index: 9999;
-    }
-    @media print { .save-bar { display: none !important; } }
-  </style>
-</head>
-<body>
-  <div class="save-bar">
-    📄 Press <strong>Ctrl+P</strong> (or Cmd+P on Mac) → Choose "Save as PDF" as Destination → Click Save
-  </div>
-  ${cardsHtml.replace(/\/pwa-icon-192\.png/g, logoUrl)}
-  <script>
-    document.querySelectorAll('img').forEach(function(img){
-      if(img.src && img.src.indexOf('pwa-icon') !== -1 && !img.src.startsWith('http')) {
-        img.src = '${logoUrl}';
-      }
-    });
-    var ready = false;
-    function doPrint() {
-      if (ready) return;
-      ready = true;
-      // Small delay to let fonts + images load
-      setTimeout(function(){
-        window.print();
-      }, 900);
-    }
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(doPrint);
-    } else {
-      setTimeout(doPrint, 1000);
-    }
-    window.onafterprint = function(){ window.close(); };
-  <\/script>
-</body>
-</html>`;
-
     try {
-      const pw = window.open('', '_blank', 'width=960,height=740,scrollbars=yes');
-      if (pw) {
-        pw.document.open();
-        pw.document.write(printDoc);
-        pw.document.close();
+      if (target === 'all') {
+        const elementsWithConfig = [
+          { el: billboardRef.current, isLandscape: true },
+          { el: streetRef.current, isLandscape: false },
+          { el: recruitRef.current, isLandscape: false },
+        ].filter(item => Boolean(item.el));
+
+        if (elementsWithConfig.length === 0) {
+          throw new Error('Flyer elements not found in DOM');
+        }
+
+        await downloadMultipleElementsAsPdf(elementsWithConfig, 'StyleCorner_Marketing_Flyers_Pack.pdf');
       } else {
-        // Popup blocked — open as blob
-        const blob = new Blob([printDoc], { type: 'text/html' });
-        const blobUrl = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = blobUrl;
-        a.target = '_blank';
-        a.rel = 'noopener';
-        a.click();
-        setTimeout(() => URL.revokeObjectURL(blobUrl), 6000);
+        const refMap = { billboard: billboardRef, street: streetRef, recruit: recruitRef };
+        const el = refMap[target]?.current || document.querySelector(`.print-card[data-design="${target}"]`);
+        if (!el) throw new Error(`Flyer ${target} not found`);
+
+        const isLandscape = (target === 'billboard');
+        const filename = `StyleCorner_${target.toUpperCase()}_Flyer.pdf`;
+        await downloadElementAsPdf(el, filename, isLandscape);
       }
     } catch (err) {
-      console.warn('Print window failed', err);
-      alert('Could not open print window. Please allow popups for this site and try again.');
+      console.warn('Direct PDF download error, attempting printable window fallback:', err);
+      // Fallback only if canvas rendering failed
+      window.print();
     } finally {
       setSavingPdf(false);
+    }
+  };
+
+  const saveToImage = async (designType) => {
+    const target = designType || activeDesign;
+    try {
+      const refMap = { billboard: billboardRef, street: streetRef, recruit: recruitRef };
+      const el = refMap[target]?.current || document.querySelector(`.print-card[data-design="${target}"]`);
+      if (!el) return;
+      await downloadElementAsImage(el, `StyleCorner_${target.toUpperCase()}_Flyer.png`);
+    } catch (err) {
+      console.error('Image export failed:', err);
     }
   };
 
@@ -289,6 +201,20 @@ export const BillboardFlyersPage = () => {
         /* Mobile toolbar scroll */
         .flyer-toolbar { scrollbar-width: none; }
         .flyer-toolbar::-webkit-scrollbar { display: none; }
+
+        /* Mobile sweep: let billboard fit phone screens cleanly */
+        @media (max-width: 768px) {
+          .billboard-main-card {
+            min-width: 0 !important;
+            width: 100% !important;
+            grid-template-columns: 1fr !important;
+            padding: 1.25rem 1rem !important;
+            gap: 1.5rem !important;
+          }
+          .billboard-scroll-wrapper {
+            overflow-x: visible !important;
+          }
+        }
 
         /* Fullscreen scrollable banner wrapper */
         .banner-fullscreen-scroll {
@@ -398,9 +324,33 @@ export const BillboardFlyersPage = () => {
             }}
           >
             {savingPdf
-              ? <><Loader size={13} style={{ animation: 'spin 1s linear infinite' }} /> Preparing…</>
+              ? <><Loader size={13} style={{ animation: 'spin 1s linear infinite' }} /> Saving PDF…</>
               : <><FileDown size={13} /> Save as PDF</>
             }
+          </button>
+
+          {/* Download Image (PNG) */}
+          <button
+            type="button"
+            onClick={() => saveToImage(activeDesign)}
+            disabled={savingPdf}
+            style={{
+              backgroundColor: 'rgba(255, 255, 255, 0.08)',
+              color: '#cbd5e1',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
+              borderRadius: '50px',
+              padding: '0.35rem 0.8rem',
+              fontSize: '0.72rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.3rem',
+              whiteSpace: 'nowrap',
+              flexShrink: 0,
+            }}
+          >
+            <ImageIcon size={13} /> Save Image (PNG)
           </button>
 
           {/* Fullscreen */}
@@ -515,20 +465,23 @@ export const BillboardFlyersPage = () => {
             </div>
 
             {/* Horizontally scrollable wrapper on mobile */}
-            <div style={{
-              width: '100%',
-              overflowX: 'auto',
-              overflowY: 'visible',
-              WebkitOverflowScrolling: 'touch',
-              borderRadius: '32px',
-              scrollbarWidth: 'none',
-            }}>
+            <div
+              className="billboard-scroll-wrapper"
+              style={{
+                width: '100%',
+                overflowX: 'auto',
+                overflowY: 'visible',
+                WebkitOverflowScrolling: 'touch',
+                borderRadius: '32px',
+                scrollbarWidth: 'none',
+              }}
+            >
               <div
                 ref={billboardRef}
-                className="print-card"
+                className="print-card billboard-main-card"
                 data-design="billboard"
                 style={{
-                  minWidth: '680px', // keeps landscape ratio on small phones
+                  minWidth: '680px', // keeps landscape ratio on desktop
                   width: '100%',
                   background: 'radial-gradient(circle at 85% 20%, rgba(245,185,66,0.18) 0%, transparent 45%), linear-gradient(135deg, #0d0f16 0%, #08090d 60%, #050608 100%)',
                   border: '2px solid rgba(245,185,66,0.45)',
