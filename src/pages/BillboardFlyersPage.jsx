@@ -190,8 +190,8 @@ export const BillboardFlyersPage = () => {
   const getInitialStyle = () => {
     const params = new URLSearchParams(location.search);
     const qStyle = params.get('style');
-    if (qStyle === 'classic') return 'classic';
-    return 'showcase'; // default: always open phone showcase flyers
+    if (qStyle === 'showcase') return 'showcase'; // from admin dashboard phone flyers button
+    return 'classic'; // default: show classic billboard flyers
   };
 
   const getInitialDesign = () => {
