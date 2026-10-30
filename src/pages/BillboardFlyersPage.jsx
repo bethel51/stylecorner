@@ -1,102 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Check, Copy, Maximize, Minimize, X, FileDown, Image as ImageIcon } from 'lucide-react';
+import { ArrowLeft, Check, Copy, Maximize, Minimize, X, FileDown, Image as ImageIcon, Sparkles } from 'lucide-react';
 import { QrWorldSvg, QrRecruitSvg } from '../components/common/QrCodeSvgs';
 import { downloadElementAsPdf, downloadMultipleElementsAsPdf, downloadElementAsImage } from '../utils/flyerPdfExport';
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   ROLE CONFIGURATIONS — Premium Black + Gold Cinematic Billboard Flyers
-   ───────────────────────────────────────────────────────────────────────────── */
-const FLYER_ROLES = [
-  {
-    id: 'billboard',
-    tabLabel: '✨ Customer Booking',
-    badgeTop: 'STYLECORNER NIGERIA',
-    badgeSub: 'LAGOS & IBADAN',
-    headlineWhite: 'Book Verified Stylists, Barbers & Braiders.',
-    headlineGold: 'In Seconds.',
-    description: "Lagos & Ibadan's premier beauty network. AI matches you with top-rated barbers, braiders, lash techs & nail artists near you. In-salon or VIP home visits.",
-    tags: ['+ Knotless Braids', '+ Precision Barbers', '+ Wispy Lash Techs', '+ Gel Nail Art', '+ Soft Glam Makeup', '+ Frontal Lace Melt'],
-    trustPoints: [
-      { icon: '🛡️', text: '100% Escrow Protected' },
-      { icon: '⭐', text: '4.9 Community Rated' },
-      { icon: '📍', text: 'Lagos & Ibadan' },
-    ],
-    cardTitle: '📱 INSTANT MOBILE BOOKING',
-    cardScanText: 'SCAN WITH CAMERA',
-    cardSubText: 'Point phone camera to join →',
-    cardUrl: 'www.stylecorner.world',
-    fullUrl: 'https://www.stylecorner.world',
-    qrType: 'world',
-    accentGold: '#F5B942',
-  },
-  {
-    id: 'recruit',
-    tabLabel: '💼 Expert Recruit',
-    badgeTop: 'STYLECORNER PRO',
-    badgeSub: 'EXPERT ONBOARDING',
-    headlineWhite: 'Are You a Barber, Braider or Lash Tech?',
-    headlineGold: 'Get Booked. Get Paid.',
-    description: "Join Nigeria's fastest growing verified beauty platform. Direct verified paying clients, instant wallet payouts to your bank & zero registration fees.",
-    tags: ['+ Instant Bank Payouts', '+ Free Pro Profile', '+ AI Client Matching', '+ QR Business Card', '+ VIP Home Bookings', '+ Salon Seat Host'],
-    trustPoints: [
-      { icon: '💰', text: '₦15k–₦60k+ Daily Earnings' },
-      { icon: '🛡️', text: 'Escrow Protected Payouts' },
-      { icon: '📍', text: 'Lagos & Ibadan LGAs' },
-    ],
-    cardTitle: '💼 EXPERT REGISTRATION',
-    cardScanText: 'SCAN TO JOIN AS EXPERT',
-    cardSubText: 'Scan to apply — zero fees →',
-    cardUrl: 'stylecorner.world/role-selection',
-    fullUrl: 'https://www.stylecorner.world/role-selection',
-    qrType: 'recruit',
-    accentGold: '#F5B942',
-  },
-  {
-    id: 'store',
-    tabLabel: '🛍️ Atelier Store',
-    badgeTop: 'STYLECORNER ATELIER',
-    badgeSub: 'STORE & CARE',
-    headlineWhite: 'Curated Hair Care & Grooming Essentials.',
-    headlineGold: 'Delivered Fast.',
-    description: 'Shop authentic edge control, scalp treatment oils, professional clippers, lash serums & lace glue. Fast dispatch directly to Lagos & Ibadan.',
-    tags: ['+ Edge Control Gel', '+ Scalp Growth Oil', '+ Fade Clipper Kit', '+ Lash Care Serum', '+ Frontal Lace Glue', '+ Sulfate-Free Shampoo'],
-    trustPoints: [
-      { icon: '🚚', text: 'Express Nationwide Delivery' },
-      { icon: '✅', text: '100% Authentic Guaranteed' },
-      { icon: '💳', text: 'Secure Paystack Escrow' },
-    ],
-    cardTitle: '🛍️ ATELIER STORE',
-    cardScanText: 'SCAN TO SHOP PRODUCTS',
-    cardSubText: 'Scan to browse & order →',
-    cardUrl: 'www.stylecorner.world/store',
-    fullUrl: 'https://www.stylecorner.world/store',
-    qrType: 'world',
-    accentGold: '#F5B942',
-  },
-  {
-    id: 'ai_matcher',
-    tabLabel: '🤖 AI Matcher',
-    badgeTop: 'STYLECORNER AI',
-    badgeSub: 'SMART MATCHER',
-    headlineWhite: 'Find Your Perfect Stylist In Your Neighborhood.',
-    headlineGold: 'In 10 Seconds.',
-    description: 'Tell our AI your desired hairstyle, budget & neighborhood. Instant match with vetted top-rated beauty specialists. Zero guesswork.',
-    tags: ['+ 10-Second Match', '+ Budget Filter', '+ Neighborhood Match', '+ Verified Portfolio', '+ In-Salon / Home Visit', '+ Escrow Protection'],
-    trustPoints: [
-      { icon: '🤖', text: 'Smart AI Concierge' },
-      { icon: '⭐', text: '4.9 Verified Reviews' },
-      { icon: '🛡️', text: 'Escrow Protected' },
-    ],
-    cardTitle: '🤖 AI STYLIST MATCHER',
-    cardScanText: 'SCAN TO MATCH NOW',
-    cardSubText: 'Scan for instant AI match →',
-    cardUrl: 'www.stylecorner.world/ai-matcher',
-    fullUrl: 'https://www.stylecorner.world/ai-matcher',
-    qrType: 'world',
-    accentGold: '#F5B942',
-  },
-];
 
 export const BillboardFlyersPage = () => {
   const location = useLocation();
@@ -105,14 +11,16 @@ export const BillboardFlyersPage = () => {
   const getInitialDesign = () => {
     const params = new URLSearchParams(location.search);
     const qDesign = params.get('design');
-    if (qDesign) return qDesign.toLowerCase();
+    if (qDesign) {
+      const lower = qDesign.toLowerCase();
+      if (lower === 'billboard' || lower === 'landscape') return 'billboard';
+      if (lower === 'street' || lower === 'portrait') return 'street';
+      if (lower === 'recruit' || lower === 'recruitment') return 'recruit';
+    }
     const hash = (location.hash || '').replace('#', '').toLowerCase();
-    if (hash === 'portrait' || hash === 'flyer' || hash === 'street') return 'billboard';
-    if (hash === 'recruitment' || hash === 'stylist') return 'recruit';
-    if (hash === 'highway' || hash === 'banner') return 'billboard';
-    if (hash === 'store') return 'store';
-    if (hash === 'ai' || hash === 'ai-matcher') return 'ai_matcher';
-    if (['billboard', 'recruit', 'store', 'ai_matcher'].includes(hash)) return hash;
+    if (hash === 'billboard' || hash === 'landscape') return 'billboard';
+    if (hash === 'street' || hash === 'portrait') return 'street';
+    if (hash === 'recruit' || hash === 'recruitment') return 'recruit';
     return 'all';
   };
 
@@ -122,13 +30,12 @@ export const BillboardFlyersPage = () => {
   const [savingPdf, setSavingPdf] = useState(false);
   const [isCssFullscreen, setIsCssFullscreen] = useState(false);
 
-  // Dynamic ref map for all flyer cards
-  const flyerRefs = useRef({});
-  FLYER_ROLES.forEach(r => {
-    if (!flyerRefs.current[r.id]) {
-      flyerRefs.current[r.id] = React.createRef();
-    }
-  });
+  // Dynamic ref map for all 3 flyer cards
+  const flyerRefs = {
+    billboard: useRef(null),
+    street: useRef(null),
+    recruit: useRef(null),
+  };
 
   /* ── CSS Fullscreen ── */
   const toggleFullscreen = () => {
@@ -180,10 +87,11 @@ export const BillboardFlyersPage = () => {
 
     try {
       if (target === 'all') {
-        const elementsWithConfig = FLYER_ROLES.map(role => ({
-          el: flyerRefs.current[role.id]?.current,
-          isLandscape: false,
-        })).filter(item => Boolean(item.el));
+        const elementsWithConfig = [
+          { el: flyerRefs.billboard.current, isLandscape: true },
+          { el: flyerRefs.street.current, isLandscape: false },
+          { el: flyerRefs.recruit.current, isLandscape: false },
+        ].filter(item => Boolean(item.el));
 
         if (elementsWithConfig.length === 0) {
           throw new Error('Flyer elements not found in DOM');
@@ -192,11 +100,12 @@ export const BillboardFlyersPage = () => {
         const packName = 'StyleCorner_Marketing_Flyers_Pack.pdf';
         await downloadMultipleElementsAsPdf(elementsWithConfig, packName);
       } else {
-        const el = flyerRefs.current[target]?.current || document.querySelector(`.print-card[data-design="${target}"]`);
+        const el = flyerRefs[target]?.current || document.querySelector(`.print-card[data-design="${target}"]`);
         if (!el) throw new Error(`Flyer ${target} not found`);
 
+        const isLandscape = target === 'billboard';
         const filename = `StyleCorner_${target.toUpperCase()}_Flyer.pdf`;
-        await downloadElementAsPdf(el, filename, false);
+        await downloadElementAsPdf(el, filename, isLandscape);
       }
     } catch (err) {
       console.error('PDF export error:', err);
@@ -210,15 +119,16 @@ export const BillboardFlyersPage = () => {
     const target = designType || activeDesign;
     try {
       if (target === 'all') {
-        for (const role of FLYER_ROLES) {
-          const el = flyerRefs.current[role.id]?.current;
+        const list = ['billboard', 'street', 'recruit'];
+        for (const id of list) {
+          const el = flyerRefs[id]?.current;
           if (el) {
-            await downloadElementAsImage(el, `StyleCorner_${role.id.toUpperCase()}_Flyer.png`);
+            await downloadElementAsImage(el, `StyleCorner_${id.toUpperCase()}_Flyer.png`);
             await new Promise(r => setTimeout(r, 600));
           }
         }
       } else {
-        const el = flyerRefs.current[target]?.current;
+        const el = flyerRefs[target]?.current;
         if (el) {
           await downloadElementAsImage(el, `StyleCorner_${target.toUpperCase()}_Flyer.png`);
         }
@@ -240,11 +150,6 @@ export const BillboardFlyersPage = () => {
   );
   const isFullscreen = isCssFullscreen || isNativeFullscreen;
 
-  const currentRolesList = FLYER_ROLES;
-  const visibleRoles = activeDesign === 'all'
-    ? currentRolesList
-    : currentRolesList.filter(r => r.id === activeDesign);
-
   return (
     <div
       className="flyers-page-root"
@@ -256,7 +161,7 @@ export const BillboardFlyersPage = () => {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        padding: screenshotMode ? '0' : '1rem 0.75rem 3rem',
+        padding: screenshotMode ? '0' : '1.5rem 1rem 4rem',
         boxSizing: 'border-box',
         ...(isCssFullscreen ? {
           position: 'fixed',
@@ -264,7 +169,7 @@ export const BillboardFlyersPage = () => {
           zIndex: 9999,
           overflowY: 'auto',
           overflowX: 'hidden',
-          padding: '0.75rem 0.5rem 3rem',
+          padding: '1rem 0.5rem 3rem',
           WebkitOverflowScrolling: 'touch',
         } : {}),
       }}
@@ -304,29 +209,20 @@ export const BillboardFlyersPage = () => {
           }
           .print-card:last-child { page-break-after: avoid !important; break-after: avoid !important; }
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
 
         /* Mobile toolbar scroll */
         .flyer-toolbar { scrollbar-width: none; }
         .flyer-toolbar::-webkit-scrollbar { display: none; }
 
-        /* Responsive flyer grid */
-        @media (max-width: 680px) {
-          .flyer-content-grid {
-            flex-direction: column !important;
-            gap: 1.75rem !important;
+        @media (max-width: 860px) {
+          .billboard-wide-grid {
+            grid-template-columns: 1fr !important;
           }
-          .flyer-qr-card {
-            width: 100% !important;
-            max-width: 280px !important;
-            align-self: center !important;
-            margin-top: 0.5rem !important;
+          .bb-right-panel {
+            min-height: 380px !important;
           }
-          .flyer-gold-blob {
-            width: 95% !important;
-            height: 60% !important;
-            top: -5% !important;
-            right: -25% !important;
+          .bb-left-panel {
+            padding: 2.2rem 1.75rem !important;
           }
         }
       `}</style>
@@ -339,19 +235,19 @@ export const BillboardFlyersPage = () => {
             position: 'sticky',
             top: '0.75rem',
             zIndex: 100,
-            backgroundColor: 'rgba(15, 17, 24, 0.97)',
+            backgroundColor: 'rgba(15, 17, 24, 0.96)',
             backdropFilter: 'blur(16px)',
             WebkitBackdropFilter: 'blur(16px)',
             border: '1px solid rgba(245, 185, 66, 0.4)',
             borderRadius: '50px',
-            padding: '0.4rem 0.75rem',
+            padding: '0.45rem 0.85rem',
             display: 'flex',
             alignItems: 'center',
-            gap: '0.4rem',
-            marginBottom: '1.5rem',
-            boxShadow: '0 10px 30px rgba(0,0,0,0.8), 0 0 20px rgba(245,185,66,0.15)',
+            gap: '0.5rem',
+            marginBottom: '2.5rem',
+            boxShadow: '0 12px 30px rgba(0,0,0,0.85), 0 0 20px rgba(245,185,66,0.15)',
             width: 'calc(100% - 1.5rem)',
-            maxWidth: '960px',
+            maxWidth: '980px',
             overflowX: 'auto',
             WebkitOverflowScrolling: 'touch',
           }}
@@ -378,8 +274,8 @@ export const BillboardFlyersPage = () => {
               color: activeDesign === 'all' ? '#08090C' : '#cbd5e1',
               border: activeDesign === 'all' ? '1px solid #F5B942' : '1px solid transparent',
               borderRadius: '50px',
-              padding: '0.35rem 0.7rem',
-              fontSize: '0.72rem',
+              padding: '0.4rem 0.85rem',
+              fontSize: '0.76rem',
               fontWeight: 800,
               cursor: 'pointer',
               whiteSpace: 'nowrap',
@@ -387,32 +283,70 @@ export const BillboardFlyersPage = () => {
               flexShrink: 0,
             }}
           >
-            All {currentRolesList.length}
+            All 3 Designs
           </button>
 
-          {/* Role tabs */}
-          {currentRolesList.map((role) => (
-            <button
-              key={role.id}
-              type="button"
-              onClick={() => setActiveDesign(role.id)}
-              style={{
-                backgroundColor: activeDesign === role.id ? '#F5B942' : 'transparent',
-                color: activeDesign === role.id ? '#08090C' : '#cbd5e1',
-                border: activeDesign === role.id ? '1px solid #F5B942' : '1px solid transparent',
-                borderRadius: '50px',
-                padding: '0.35rem 0.7rem',
-                fontSize: '0.72rem',
-                fontWeight: 800,
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-                transition: 'all 0.15s ease',
-                flexShrink: 0,
-              }}
-            >
-              {role.tabLabel}
-            </button>
-          ))}
+          <button
+            type="button"
+            onClick={() => setActiveDesign('billboard')}
+            style={{
+              backgroundColor: activeDesign === 'billboard' ? '#F5B942' : 'transparent',
+              color: activeDesign === 'billboard' ? '#08090C' : '#cbd5e1',
+              border: activeDesign === 'billboard' ? '1px solid #F5B942' : '1px solid transparent',
+              borderRadius: '50px',
+              padding: '0.4rem 0.85rem',
+              fontSize: '0.76rem',
+              fontWeight: 800,
+              cursor: 'pointer',
+              whiteSpace: 'nowrap',
+              transition: 'all 0.15s ease',
+              flexShrink: 0,
+            }}
+          >
+            1. Landscape Billboard
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveDesign('street')}
+            style={{
+              backgroundColor: activeDesign === 'street' ? '#F5B942' : 'transparent',
+              color: activeDesign === 'street' ? '#08090C' : '#cbd5e1',
+              border: activeDesign === 'street' ? '1px solid #F5B942' : '1px solid transparent',
+              borderRadius: '50px',
+              padding: '0.4rem 0.85rem',
+              fontSize: '0.76rem',
+              fontWeight: 800,
+              cursor: 'pointer',
+              whiteSpace: 'nowrap',
+              transition: 'all 0.15s ease',
+              flexShrink: 0,
+            }}
+          >
+            2. Street Flyer
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveDesign('recruit')}
+            style={{
+              backgroundColor: activeDesign === 'recruit' ? '#F5B942' : 'transparent',
+              color: activeDesign === 'recruit' ? '#08090C' : '#cbd5e1',
+              border: activeDesign === 'recruit' ? '1px solid #F5B942' : '1px solid transparent',
+              borderRadius: '50px',
+              padding: '0.4rem 0.85rem',
+              fontSize: '0.76rem',
+              fontWeight: 800,
+              cursor: 'pointer',
+              whiteSpace: 'nowrap',
+              transition: 'all 0.15s ease',
+              flexShrink: 0,
+            }}
+          >
+            3. Recruitment Poster
+          </button>
+
+          <div style={{ flex: 1 }} />
 
           {/* Save as PDF */}
           <button
@@ -424,20 +358,20 @@ export const BillboardFlyersPage = () => {
               color: '#F5B942',
               border: '1px solid #F5B942',
               borderRadius: '50px',
-              padding: '0.35rem 0.85rem',
-              fontSize: '0.72rem',
+              padding: '0.4rem 0.95rem',
+              fontSize: '0.76rem',
               fontWeight: 800,
               cursor: savingPdf ? 'not-allowed' : 'pointer',
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '0.3rem',
+              gap: '0.35rem',
               whiteSpace: 'nowrap',
               opacity: savingPdf ? 0.7 : 1,
               flexShrink: 0,
             }}
           >
-            <FileDown size={13} />
-            {savingPdf ? 'Exporting PDF...' : 'Save as PDF'}
+            <FileDown size={14} />
+            {savingPdf ? 'Exporting PDF...' : 'Download PDF'}
           </button>
 
           {/* Save Image */}
@@ -449,18 +383,18 @@ export const BillboardFlyersPage = () => {
               color: '#ffffff',
               border: '1px solid rgba(255,255,255,0.15)',
               borderRadius: '50px',
-              padding: '0.35rem 0.8rem',
-              fontSize: '0.72rem',
+              padding: '0.4rem 0.85rem',
+              fontSize: '0.76rem',
               fontWeight: 700,
               cursor: 'pointer',
               whiteSpace: 'nowrap',
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '0.3rem',
+              gap: '0.35rem',
               flexShrink: 0,
             }}
           >
-            <ImageIcon size={13} /> Save Image (PNG)
+            <ImageIcon size={14} /> Save PNG
           </button>
 
           {/* Fullscreen */}
@@ -472,78 +406,20 @@ export const BillboardFlyersPage = () => {
               color: isFullscreen ? '#F5B942' : '#ffffff',
               border: isFullscreen ? '1px solid #F5B942' : '1px solid rgba(255,255,255,0.15)',
               borderRadius: '50px',
-              padding: '0.35rem 0.8rem',
-              fontSize: '0.72rem',
+              padding: '0.4rem 0.85rem',
+              fontSize: '0.76rem',
               fontWeight: 700,
               cursor: 'pointer',
               whiteSpace: 'nowrap',
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '0.3rem',
+              gap: '0.35rem',
               flexShrink: 0,
             }}
           >
-            {isFullscreen
-              ? <><Minimize size={13} /> Exit</>
-              : <><Maximize size={13} /> Fullscreen</>
-            }
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setScreenshotMode(true)}
-            style={{
-              backgroundColor: 'rgba(255,255,255,0.06)',
-              color: '#94a3b8',
-              border: '1px solid rgba(255,255,255,0.1)',
-              borderRadius: '50px',
-              padding: '0.35rem 0.75rem',
-              fontSize: '0.72rem',
-              fontWeight: 700,
-              cursor: 'pointer',
-              whiteSpace: 'nowrap',
-              flexShrink: 0,
-            }}
-          >
-            👁️ Clean View
+            {isFullscreen ? <><Minimize size={14} /> Exit</> : <><Maximize size={14} /> Fullscreen</>}
           </button>
         </div>
-      )}
-
-      {screenshotMode && (
-        <div
-          onClick={() => setScreenshotMode(false)}
-          className="no-print"
-          style={{
-            position: 'fixed', bottom: '1rem', left: '50%',
-            transform: 'translateX(-50%)',
-            backgroundColor: 'rgba(0,0,0,0.85)',
-            border: '1px solid #F5B942', color: '#F5B942',
-            padding: '0.5rem 1.25rem', borderRadius: '50px',
-            fontSize: '0.78rem', fontWeight: 800, cursor: 'pointer', zIndex: 9999,
-          }}
-        >
-          👁️ Tap anywhere to restore controls
-        </div>
-      )}
-
-      {/* CSS Fullscreen Exit Button */}
-      {isCssFullscreen && (
-        <button
-          type="button"
-          onClick={() => setIsCssFullscreen(false)}
-          className="no-print"
-          style={{
-            position: 'fixed', top: '0.75rem', right: '0.75rem', zIndex: 10001,
-            background: 'rgba(245,185,66,0.9)', color: '#08090C',
-            border: 'none', borderRadius: '50%',
-            width: '40px', height: '40px',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            cursor: 'pointer', boxShadow: '0 4px 14px rgba(0,0,0,0.5)',
-          }}
-        >
-          <X size={18} strokeWidth={2.5} />
-        </button>
       )}
 
       {/* Main Container */}
@@ -552,399 +428,407 @@ export const BillboardFlyersPage = () => {
         style={{
           display: 'flex',
           flexDirection: 'column',
-          gap: '3rem',
+          gap: '3.5rem',
           alignItems: 'center',
           width: '100%',
-          maxWidth: '700px',
+          maxWidth: '1080px',
         }}
       >
-        {visibleRoles.map((role) => (
-          <div key={role.id} style={{ width: '100%' }}>
-            {/* Header label above each flyer */}
-            <div className="no-print" style={{
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              marginBottom: '0.65rem', paddingInline: '0.35rem',
-            }}>
-              <span style={{ fontSize: '0.76rem', color: '#94a3b8', fontWeight: 700 }}>
-                {role.tabLabel} · StyleCorner Official Flyer
+        {/* ═════════════════════════════════════════════════════════════════════
+            DESIGN 1 — LANDSCAPE BILLBOARD (Gold Accent)
+            ═════════════════════════════════════════════════════════════════════ */}
+        {(activeDesign === 'all' || activeDesign === 'billboard') && (
+          <div style={{ width: '100%' }}>
+            <div className="no-print" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem', paddingInline: '0.5rem' }}>
+              <span style={{ fontSize: '0.8rem', color: '#F5B942', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <Sparkles size={14} /> 1. Landscape Billboard · 16:9 Format
               </span>
-              <span style={{ fontSize: '0.7rem', color: '#F5B942', fontWeight: 800 }}>
-                {role.cardUrl}
-              </span>
+              <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 600 }}>www.stylecorner.world</span>
             </div>
 
-            {/* Classic Billboard Flyer Card */}
             <div
-              ref={flyerRefs.current[role.id]}
-              className="print-card"
-              data-design={role.id}
+              ref={flyerRefs.billboard}
+              className="print-card billboard-wide-grid"
+              data-design="billboard"
               style={{
                 width: '100%',
-                backgroundColor: '#09090b',
-                borderRadius: '28px',
-                padding: '0',
-                boxShadow: '0 32px 96px rgba(0,0,0,0.97), 0 0 60px rgba(245,185,66,0.10)',
-                display: 'flex',
-                flexDirection: 'column',
-                boxSizing: 'border-box',
+                minHeight: '540px',
+                backgroundColor: '#08090d',
+                borderRadius: '32px',
+                border: '1.5px solid rgba(245,185,66,0.35)',
+                boxShadow: '0 40px 90px -10px rgba(0,0,0,0.95), 0 0 60px rgba(245,185,66,0.12)',
                 position: 'relative',
                 overflow: 'hidden',
-                border: '1.5px solid rgba(245,185,66,0.28)',
-                minHeight: '480px',
+                display: 'grid',
+                gridTemplateColumns: '1fr 420px',
+                boxSizing: 'border-box',
               }}
             >
-              {/* TOP gold accent line */}
-              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '3.5px', background: 'linear-gradient(90deg, #F5B942, #c8930a, #F5B942)', zIndex: 10 }} />
-              {/* BOTTOM gold accent line */}
-              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '3.5px', background: 'linear-gradient(90deg, #F5B942, #c8930a, #F5B942)', zIndex: 10 }} />
+              {/* Left copy panel */}
+              <div className="bb-left-panel" style={{ position: 'relative', zIndex: 2, padding: '3.2rem 2.8rem 3.2rem 3.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.55rem', backgroundColor: 'rgba(245,185,66,0.1)', border: '1px solid rgba(245,185,66,0.35)', borderRadius: '50px', padding: '0.35rem 0.95rem', marginBottom: '1.3rem', width: 'fit-content' }}>
+                  <img src="/pwa-icon-192.png" alt="SC" style={{ width: '18px', height: '18px', borderRadius: '5px', objectFit: 'cover' }} />
+                  <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#F5B942', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                    StyleCorner Nigeria · Lagos &amp; Ibadan
+                  </span>
+                </div>
 
-              {/* GIANT GOLD ORGANIC BLOB */}
-              <div
-                className="flyer-gold-blob"
-                style={{
-                  position: 'absolute',
-                  top: '-18%',
-                  right: '-18%',
-                  width: '72%',
-                  height: '95%',
-                  borderRadius: '50%',
-                  background: 'radial-gradient(ellipse at 40% 40%, #FFCF5C 0%, #F5B942 45%, #C8930A 100%)',
-                  zIndex: 0,
-                  pointerEvents: 'none',
-                  opacity: 0.97,
-                }}
-              />
+                <h1 style={{ fontSize: 'clamp(2.1rem, 4vw, 3.2rem)', fontWeight: 900, lineHeight: 1.08, letterSpacing: '-0.03em', margin: '0 0 1rem', color: '#ffffff' }}>
+                  Book Verified Stylists,<br />
+                  Barbers &amp; Braiders.<br />
+                  <span style={{ background: 'linear-gradient(135deg, #F5B942 0%, #ffd57e 45%, #e8891d 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                    In Seconds.
+                  </span>
+                </h1>
 
-              {/* Subtle dark vignette on left side over the blob */}
-              <div style={{
-                position: 'absolute', inset: 0,
-                background: 'linear-gradient(100deg, rgba(9,9,11,0.96) 38%, rgba(9,9,11,0.0) 68%)',
-                zIndex: 1, pointerEvents: 'none',
-              }} />
+                <p style={{ fontSize: '0.96rem', color: '#94a3b8', lineHeight: 1.65, margin: '0 0 1.6rem', maxWidth: '440px', fontWeight: 500 }}>
+                  Lagos &amp; Ibadan's premier beauty network. AI matches you with top-rated barbers, braiders, lash techs &amp; nail artists near you. In-salon or VIP home visits.
+                </p>
 
-              {/* FLYER BODY CONTENT */}
-              <div style={{
-                position: 'relative',
-                zIndex: 2,
-                padding: 'clamp(1.5rem, 5vw, 2.5rem)',
-                boxSizing: 'border-box',
-              }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1.6rem' }}>
+                  {['✓ Hair Braiders', '✓ Precision Barbers', '✓ Lash Techs', '✓ Nail Art', '✓ Soft Glam Makeup', '✓ Wig Frontal Install'].map(p => (
+                    <div key={p} style={{ backgroundColor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '50px', padding: '0.38rem 0.9rem', fontSize: '0.78rem', fontWeight: 700, color: '#e2e8f0' }}>
+                      {p}
+                    </div>
+                  ))}
+                </div>
 
-                {/* TOP-LEFT PILL BADGE WITH STYLECORNER SQUARE LOGO */}
+                <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '1.2rem', fontSize: '0.82rem', fontWeight: 700, color: '#94a3b8' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>🛡️ <span>100% Escrow Protected</span></div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>⭐ <span>4.9★ Community Rated</span></div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>📍 <span>Lagos &amp; Ibadan</span></div>
+                </div>
+              </div>
+
+              {/* Right photo + floating QR card panel */}
+              <div className="bb-right-panel" style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', minHeight: '480px' }}>
+                <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+                  <img src="/banner-braider.jpg" alt="Nigerian Braider" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }} />
+                  {/* Left gradient fade */}
+                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(90deg, #08090d 0%, rgba(8,9,13,0.3) 30%, transparent 60%)', zIndex: 1, pointerEvents: 'none' }} />
+                  {/* Bottom gradient fade */}
+                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '45%', background: 'linear-gradient(to top, #08090d 0%, transparent 100%)', zIndex: 1, pointerEvents: 'none' }} />
+                </div>
+
+                {/* Floating QR Card */}
                 <div style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.6rem',
-                  backgroundColor: 'rgba(18,18,20,0.95)',
-                  border: '1.5px solid rgba(245,185,66,0.55)',
-                  borderRadius: '100px',
-                  padding: '0.38rem 1.1rem 0.38rem 0.45rem',
-                  marginBottom: '2rem',
-                  boxShadow: '0 4px 18px rgba(0,0,0,0.55), 0 0 12px rgba(245,185,66,0.08)',
+                  position: 'absolute', bottom: '1.5rem', right: '1.5rem', zIndex: 3,
+                  backgroundColor: 'rgba(8,9,13,0.92)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+                  border: '1.5px solid rgba(245,185,66,0.45)', borderRadius: '22px', padding: '1.2rem',
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem',
+                  boxShadow: '0 20px 50px rgba(0,0,0,0.85), 0 0 30px rgba(245,185,66,0.15)', width: '185px',
+                  boxSizing: 'border-box',
                 }}>
-                  {/* StyleCorner Square Emblem */}
-                  <div style={{
-                    width: '28px',
-                    height: '28px',
-                    borderRadius: '8px',
-                    background: 'linear-gradient(135deg, #F5B942 0%, #C8930A 100%)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0,
-                    boxShadow: '0 2px 8px rgba(245,185,66,0.3)',
-                  }}>
-                    <div style={{
-                      width: '13px',
-                      height: '13px',
-                      borderRadius: '3px',
-                      border: '2.5px solid #09090b',
-                    }} />
+                  <div style={{ width: '130px', height: '130px', backgroundColor: '#ffffff', borderRadius: '12px', padding: '7px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <QrWorldSvg size={120} logoSize={26} />
                   </div>
-                  {/* Badge Text: Two lines */}
-                  <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.15 }}>
-                    <span style={{
-                      fontSize: '0.68rem',
-                      fontWeight: 900,
-                      color: '#F5B942',
-                      letterSpacing: '0.07em',
-                      textTransform: 'uppercase',
-                    }}>
-                      {role.badgeTop}
-                    </span>
-                    <span style={{
-                      fontSize: '0.61rem',
-                      fontWeight: 800,
-                      color: '#c8930a',
-                      letterSpacing: '0.05em',
-                      textTransform: 'uppercase',
-                    }}>
-                      {role.badgeSub}
-                    </span>
+                  <div style={{ fontSize: '0.78rem', fontWeight: 900, color: '#F5B942', letterSpacing: '0.04em', textTransform: 'uppercase', textAlign: 'center' }}>
+                    POINT CAMERA TO BOOK
                   </div>
-                </div>
-
-                {/* MAIN CONTENT GRID: Left Info & Right QR Card */}
-                <div
-                  className="flyer-content-grid"
-                  style={{
-                    display: 'flex',
-                    gap: '1.5rem',
-                    alignItems: 'flex-start',
-                    justifyContent: 'space-between',
-                  }}
-                >
-                  {/* LEFT COLUMN: Headlines, Description, Tags, Trust */}
-                  <div style={{ flex: 1, minWidth: 0 }}>
-
-                    {/* Big Bold White Headline */}
-                    <h1 style={{
-                      fontSize: 'clamp(1.85rem, 5.2vw, 2.6rem)',
-                      fontWeight: 900,
-                      lineHeight: 1.1,
-                      letterSpacing: '-0.04em',
-                      color: '#ffffff',
-                      margin: '0 0 0.3rem',
-                      textShadow: '0 2px 20px rgba(0,0,0,0.6)',
-                    }}>
-                      {role.headlineWhite}
-                    </h1>
-
-                    {/* Gold Highlighted Sub-Headline */}
-                    <div style={{
-                      fontSize: 'clamp(1.85rem, 5.2vw, 2.6rem)',
-                      fontWeight: 900,
-                      color: '#F5B942',
-                      lineHeight: 1.1,
-                      letterSpacing: '-0.04em',
-                      marginBottom: '1.1rem',
-                      textShadow: '0 0 30px rgba(245,185,66,0.35)',
-                    }}>
-                      {role.headlineGold}
-                    </div>
-
-                    {/* Description */}
-                    <p style={{
-                      fontSize: '0.86rem',
-                      color: '#a1a1aa',
-                      lineHeight: 1.65,
-                      marginBottom: '1.4rem',
-                      maxWidth: '330px',
-                      fontWeight: 500,
-                    }}>
-                      {role.description}
-                    </p>
-
-                    {/* Service / Feature Pill Tags */}
-                    <div style={{
-                      display: 'flex',
-                      flexWrap: 'wrap',
-                      gap: '0.42rem',
-                      marginBottom: '1.5rem',
-                    }}>
-                      {role.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          style={{
-                            backgroundColor: 'rgba(24,24,27,0.92)',
-                            border: '1px solid rgba(255,255,255,0.12)',
-                            borderRadius: '100px',
-                            padding: '0.4rem 1rem',
-                            fontSize: '0.77rem',
-                            fontWeight: 700,
-                            color: '#e4e4e7',
-                            whiteSpace: 'nowrap',
-                            letterSpacing: '0.01em',
-                          }}
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* Trust Badges */}
-                    <div style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '0.52rem',
-                    }}>
-                      {role.trustPoints.map(({ icon, text }) => (
-                        <div
-                          key={text}
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '0.6rem',
-                            fontSize: '0.83rem',
-                            fontWeight: 700,
-                            color: '#e4e4e7',
-                          }}
-                        >
-                          <span style={{ fontSize: '1.05rem', lineHeight: 1 }}>{icon}</span>
-                          <span>{text}</span>
-                        </div>
-                      ))}
-                    </div>
+                  <div style={{ fontSize: '0.7rem', fontWeight: 700, color: '#ffffff' }}>
+                    www.stylecorner.world
                   </div>
-
-                  {/* RIGHT COLUMN: Floating QR Card */}
-                  <div
-                    className="flyer-qr-card"
-                    style={{
-                      flexShrink: 0,
-                      backgroundColor: '#0f1014',
-                      border: '1.5px solid rgba(255,255,255,0.1)',
-                      borderRadius: '22px',
-                      padding: '1.35rem 1.1rem 1.2rem',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      textAlign: 'center',
-                      minWidth: '185px',
-                      maxWidth: '215px',
-                      boxShadow: '0 20px 60px rgba(0,0,0,0.92), 0 0 30px rgba(245,185,66,0.14)',
-                      boxSizing: 'border-box',
-                    }}
-                  >
-                    {/* Card Top Title */}
-                    <div style={{
-                      fontSize: '0.7rem',
-                      fontWeight: 900,
-                      color: '#F5B942',
-                      letterSpacing: '0.05em',
-                      textTransform: 'uppercase',
-                      marginBottom: '0.9rem',
-                      lineHeight: 1.35,
-                    }}>
-                      {role.cardTitle}
-                    </div>
-
-                    {/* QR Code Container */}
-                    <div style={{
-                      backgroundColor: '#ffffff',
-                      borderRadius: '14px',
-                      padding: '10px',
-                      marginBottom: '0.9rem',
-                      boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
-                    }}>
-                      {role.qrType === 'recruit' ? (
-                        <QrRecruitSvg size={150} logoSize={32} />
-                      ) : (
-                        <QrWorldSvg size={150} logoSize={32} />
-                      )}
-                    </div>
-
-                    {/* SCAN WITH CAMERA */}
-                    <div style={{
-                      fontSize: '0.83rem',
-                      fontWeight: 900,
-                      color: '#ffffff',
-                      marginBottom: '0.18rem',
-                      letterSpacing: '0.04em',
-                    }}>
-                      {role.cardScanText}
-                    </div>
-
-                    <div style={{
-                      fontSize: '0.7rem',
-                      color: '#71717a',
-                      fontWeight: 600,
-                      marginBottom: '0.22rem',
-                      lineHeight: 1.4,
-                    }}>
-                      {role.cardSubText}
-                    </div>
-
-                    <div style={{
-                      fontSize: '0.78rem',
-                      fontWeight: 900,
-                      color: '#F5B942',
-                      letterSpacing: '0.02em',
-                    }}>
-                      {role.cardUrl}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Bottom Action Buttons */}
-                <div
-                  className="no-print"
-                  style={{
-                    display: 'flex',
-                    gap: '0.55rem',
-                    marginTop: '1.6rem',
-                    flexWrap: 'wrap',
-                    paddingTop: '1.2rem',
-                    borderTop: '1px solid rgba(255,255,255,0.06)',
-                  }}
-                >
                   <button
                     type="button"
-                    onClick={() => saveToPdf(role.id)}
-                    disabled={savingPdf}
+                    onClick={() => saveToPdf('billboard')}
+                    className="no-print"
                     style={{
-                      background: 'linear-gradient(135deg, #F5B942 0%, #C8930A 100%)',
-                      color: '#09090b',
-                      border: 'none',
-                      borderRadius: '50px',
-                      padding: '0.6rem 1.4rem',
-                      fontSize: '0.82rem',
-                      fontWeight: 900,
-                      cursor: savingPdf ? 'wait' : 'pointer',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '0.4rem',
-                      boxShadow: '0 4px 18px rgba(245,185,66,0.35)',
+                      background: 'linear-gradient(135deg, #F5B942, #C8930A)', color: '#08090C',
+                      border: 'none', borderRadius: '50px', padding: '0.35rem 0.9rem', fontSize: '0.68rem',
+                      fontWeight: 900, cursor: 'pointer', marginTop: '0.2rem', width: '100%',
                     }}
                   >
-                    <FileDown size={14} /> Save as PDF
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => saveToImage(role.id)}
-                    style={{
-                      backgroundColor: 'rgba(24,24,27,0.95)',
-                      color: '#e4e4e7',
-                      border: '1px solid rgba(255,255,255,0.14)',
-                      borderRadius: '50px',
-                      padding: '0.6rem 1.15rem',
-                      fontSize: '0.82rem',
-                      fontWeight: 700,
-                      cursor: 'pointer',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '0.4rem',
-                    }}
-                  >
-                    <ImageIcon size={14} /> Save PNG
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => copyUrl(role.id, role.fullUrl)}
-                    style={{
-                      backgroundColor: 'rgba(24,24,27,0.95)',
-                      color: copiedType === role.id ? '#4ade80' : '#e4e4e7',
-                      border: '1px solid rgba(255,255,255,0.14)',
-                      borderRadius: '50px',
-                      padding: '0.6rem 1rem',
-                      fontSize: '0.82rem',
-                      fontWeight: 700,
-                      cursor: 'pointer',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '0.4rem',
-                    }}
-                  >
-                    {copiedType === role.id ? <><Check size={14} /> Copied</> : <><Copy size={14} /> Copy Link</>}
+                    Save as PDF
                   </button>
                 </div>
-
               </div>
             </div>
           </div>
-        ))}
+        )}
+
+        {/* ═════════════════════════════════════════════════════════════════════
+            DESIGN 2 — STREET FLYER (Purple Accent)
+            ═════════════════════════════════════════════════════════════════════ */}
+        {(activeDesign === 'all' || activeDesign === 'street') && (
+          <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div className="no-print" style={{ width: '100%', maxWidth: '620px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem', paddingInline: '0.5rem' }}>
+              <span style={{ fontSize: '0.8rem', color: '#c084fc', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <Sparkles size={14} /> 2. Street Flyer · 4:5 / 9:16 Portrait
+              </span>
+              <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 600 }}>www.stylecorner.world</span>
+            </div>
+
+            <div
+              ref={flyerRefs.street}
+              className="print-card"
+              data-design="street"
+              style={{
+                width: '100%',
+                maxWidth: '620px',
+                minHeight: '880px',
+                backgroundColor: '#0a0812',
+                border: '2px solid rgba(168,85,247,0.4)',
+                borderRadius: '40px',
+                position: 'relative',
+                overflow: 'hidden',
+                boxShadow: '0 40px 90px -10px rgba(0,0,0,0.95), 0 0 60px rgba(168,85,247,0.2)',
+                display: 'flex',
+                flexDirection: 'column',
+                boxSizing: 'border-box',
+              }}
+            >
+              {/* Photo hero */}
+              <div style={{ width: '100%', height: '390px', position: 'relative', flexShrink: 0 }}>
+                <img src="/banner-barber.jpg" alt="Barbershop Scene" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%', display: 'block' }} />
+                <div style={{
+                  position: 'absolute', inset: 0,
+                  background: 'linear-gradient(to bottom, rgba(10,8,18,0.15) 0%, rgba(10,8,18,0.65) 65%, #0a0812 100%)',
+                }} />
+
+                {/* Logo pill top-centre */}
+                <div style={{
+                  position: 'absolute', top: '1.5rem', left: '50%', transform: 'translateX(-50%)',
+                  zIndex: 2, display: 'inline-flex', alignItems: 'center', gap: '0.55rem',
+                  backgroundColor: 'rgba(10,8,18,0.85)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)',
+                  border: '1.5px solid rgba(245,185,66,0.6)', borderRadius: '50px', padding: '0.45rem 1.25rem',
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.6)',
+                }}>
+                  <img src="/pwa-icon-192.png" alt="SC" style={{ width: '22px', height: '22px', borderRadius: '6px', objectFit: 'cover' }} />
+                  <span style={{ fontSize: '0.85rem', fontWeight: 900, color: '#F5B942', letterSpacing: '0.04em' }}>StyleCorner</span>
+                </div>
+
+                {/* Headline overlay */}
+                <div style={{ position: 'absolute', bottom: '1.2rem', left: '2rem', right: '2rem', zIndex: 2, textAlign: 'center' }}>
+                  <h2 style={{ fontSize: 'clamp(1.8rem, 5.5vw, 2.6rem)', fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.03em', margin: 0, textShadow: '0 2px 20px rgba(0,0,0,0.8)' }}>
+                    Your Next Look.<br />
+                    <span style={{ background: 'linear-gradient(135deg, #c084fc 0%, #a855f7 50%, #7c3aed 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                      Verified Stylist.
+                    </span><br />
+                    Booked In 30s.
+                  </h2>
+                </div>
+              </div>
+
+              {/* Content body */}
+              <div style={{ padding: '1.5rem 2rem 2.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', flex: 1 }}>
+                <div style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
+                  backgroundColor: 'rgba(168,85,247,0.12)', border: '1px solid rgba(168,85,247,0.4)',
+                  borderRadius: '50px', padding: '0.35rem 0.9rem', fontSize: '0.72rem', fontWeight: 800,
+                  color: '#c084fc', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '1.1rem',
+                }}>
+                  ✨ Nigeria's Smart Beauty Network
+                </div>
+
+                <p style={{ fontSize: '0.92rem', color: '#94a3b8', lineHeight: 1.6, margin: '0 0 1.5rem', maxWidth: '440px', fontWeight: 500 }}>
+                  Browse top-rated braiders, barbers, lash techs &amp; makeup artists in your LGA across Lagos &amp; Ibadan.
+                </p>
+
+                {/* Tags */}
+                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0.5rem', marginBottom: '1.8rem' }}>
+                  {['Knotless Braids', 'Fades & Beard Trims', 'Volume Lash Tech', 'Gel & Acrylic Nails', 'Soft Glam Makeup', 'Frontal Wig Install'].map(t => (
+                    <div key={t} style={{ backgroundColor: 'rgba(168,85,247,0.1)', border: '1px solid rgba(168,85,247,0.3)', borderRadius: '50px', padding: '0.38rem 0.9rem', fontSize: '0.78rem', fontWeight: 800, color: '#e9d5ff' }}>
+                      {t}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Purple QR Box */}
+                <div style={{
+                  backgroundColor: 'rgba(168,85,247,0.08)', border: '1.5px solid rgba(168,85,247,0.5)',
+                  borderRadius: '24px', padding: '1.5rem 2rem', display: 'flex', flexDirection: 'column',
+                  alignItems: 'center', gap: '0.55rem', width: '100%', maxWidth: '320px', marginBottom: '1.5rem',
+                  boxShadow: '0 12px 40px rgba(0,0,0,0.6), 0 0 30px rgba(168,85,247,0.2)',
+                  boxSizing: 'border-box',
+                }}>
+                  <div style={{ width: '150px', height: '150px', backgroundColor: '#ffffff', borderRadius: '16px', padding: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <QrWorldSvg size={140} logoSize={30} />
+                  </div>
+                  <div style={{ fontSize: '0.88rem', fontWeight: 900, color: '#c084fc', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    POINT CAMERA TO SCAN
+                  </div>
+                  <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#ffffff' }}>
+                    www.stylecorner.world
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => saveToPdf('street')}
+                    className="no-print"
+                    style={{
+                      background: 'linear-gradient(135deg, #a855f7, #7c3aed)', color: '#ffffff',
+                      border: 'none', borderRadius: '50px', padding: '0.45rem 1.4rem', fontSize: '0.76rem',
+                      fontWeight: 900, cursor: 'pointer', marginTop: '0.3rem', width: '100%',
+                    }}
+                  >
+                    Save as PDF
+                  </button>
+                </div>
+
+                {/* Footer trust */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1.5rem', fontSize: '0.75rem', fontWeight: 700, color: '#94a3b8', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '1.2rem', width: '100%' }}>
+                  <span>📍 Lagos &amp; Ibadan</span>
+                  <span>🛡️ Protected Escrow</span>
+                  <span>⭐ 4.9★ Rating</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ═════════════════════════════════════════════════════════════════════
+            DESIGN 3 — RECRUITMENT POSTER (Emerald Green Accent)
+            ═════════════════════════════════════════════════════════════════════ */}
+        {(activeDesign === 'all' || activeDesign === 'recruit') && (
+          <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div className="no-print" style={{ width: '100%', maxWidth: '620px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem', paddingInline: '0.5rem' }}>
+              <span style={{ fontSize: '0.8rem', color: '#4ade80', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <Sparkles size={14} /> 3. Recruitment Poster · Pro Onboarding
+              </span>
+              <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 600 }}>stylecorner.world/role-selection</span>
+            </div>
+
+            <div
+              ref={flyerRefs.recruit}
+              className="print-card"
+              data-design="recruit"
+              style={{
+                width: '100%',
+                maxWidth: '620px',
+                minHeight: '900px',
+                backgroundColor: '#060f0a',
+                border: '2px solid rgba(16,185,129,0.4)',
+                borderRadius: '40px',
+                position: 'relative',
+                overflow: 'hidden',
+                boxShadow: '0 40px 90px -10px rgba(0,0,0,0.95), 0 0 60px rgba(16,185,129,0.18)',
+                display: 'flex',
+                flexDirection: 'column',
+                boxSizing: 'border-box',
+              }}
+            >
+              {/* Photo hero */}
+              <div style={{ width: '100%', height: '390px', position: 'relative', flexShrink: 0 }}>
+                <img src="/banner-beauty-team.jpg" alt="Nigerian Beauty Professionals Team" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%', display: 'block' }} />
+                <div style={{
+                  position: 'absolute', inset: 0,
+                  background: 'linear-gradient(to bottom, rgba(6,15,10,0.15) 0%, rgba(6,15,10,0.65) 65%, #060f0a 100%)',
+                }} />
+
+                {/* Logo pill top-centre */}
+                <div style={{
+                  position: 'absolute', top: '1.5rem', left: '50%', transform: 'translateX(-50%)',
+                  zIndex: 2, display: 'inline-flex', alignItems: 'center', gap: '0.55rem',
+                  backgroundColor: 'rgba(6,15,10,0.85)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)',
+                  border: '1.5px solid rgba(16,185,129,0.5)', borderRadius: '50px', padding: '0.45rem 1.25rem',
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.6)',
+                }}>
+                  <img src="/pwa-icon-192.png" alt="SC" style={{ width: '22px', height: '22px', borderRadius: '6px', objectFit: 'cover' }} />
+                  <span style={{ fontSize: '0.85rem', fontWeight: 900, color: '#4ade80', letterSpacing: '0.04em' }}>StyleCorner Pro</span>
+                </div>
+
+                {/* Floating stat chips on photo bottom */}
+                <div style={{
+                  position: 'absolute', bottom: '1.2rem', left: '1.5rem', right: '1.5rem',
+                  display: 'flex', justifyContent: 'center', gap: '0.75rem', zIndex: 2,
+                }}>
+                  {[
+                    { num: '2,400+', label: 'Active Clients' },
+                    { num: '₦0', label: 'Joining Fee' },
+                    { num: '24h', label: 'Fast Payouts' },
+                  ].map(s => (
+                    <div key={s.label} style={{
+                      backgroundColor: 'rgba(6,15,10,0.85)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+                      border: '1px solid rgba(16,185,129,0.3)', borderRadius: '14px', padding: '0.45rem 0.9rem',
+                      textAlign: 'center', flex: 1,
+                    }}>
+                      <div style={{ fontSize: '1rem', fontWeight: 900, color: '#4ade80', lineHeight: 1.1 }}>{s.num}</div>
+                      <div style={{ fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{s.label}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Content body */}
+              <div style={{ padding: '1.5rem 2rem 2.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', flex: 1 }}>
+                <div style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
+                  backgroundColor: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.4)',
+                  borderRadius: '50px', padding: '0.35rem 0.9rem', fontSize: '0.72rem', fontWeight: 800,
+                  color: '#4ade80', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '1.1rem',
+                }}>
+                  📢 Calling All Beauty &amp; Grooming Professionals
+                </div>
+
+                <h2 style={{ fontSize: 'clamp(1.8rem, 5.5vw, 2.6rem)', fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.03em', margin: '0 0 0.9rem' }}>
+                  Are You a Barber,<br />Braider or Stylist?<br />
+                  <span style={{ background: 'linear-gradient(135deg, #4ade80 0%, #22c55e 50%, #10b981 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                    Get Booked. Get Paid.
+                  </span>
+                </h2>
+
+                <p style={{ fontSize: '0.92rem', color: '#94a3b8', lineHeight: 1.6, margin: '0 0 1.5rem', maxWidth: '440px', fontWeight: 500 }}>
+                  Join StyleCorner's verified beauty network in Lagos &amp; Ibadan. Fill your open calendar slots with high-value clients — zero commission for first 3 months.
+                </p>
+
+                {/* 2x2 Feature Grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.7rem', width: '100%', marginBottom: '1.6rem', textAlign: 'left' }}>
+                  <div style={{ backgroundColor: 'rgba(16,185,129,0.07)', border: '1px solid rgba(16,185,129,0.18)', borderRadius: '14px', padding: '0.9rem' }}>
+                    <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#4ade80', marginBottom: '0.25rem' }}>💰 Instant Wallet Payouts</div>
+                    <div style={{ fontSize: '0.72rem', color: '#94a3b8', lineHeight: 1.4 }}>Get paid directly upon service completion with full escrow protection.</div>
+                  </div>
+                  <div style={{ backgroundColor: 'rgba(16,185,129,0.07)', border: '1px solid rgba(16,185,129,0.18)', borderRadius: '14px', padding: '0.9rem' }}>
+                    <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#4ade80', marginBottom: '0.25rem' }}>📍 Direct Local Clients</div>
+                    <div style={{ fontSize: '0.72rem', color: '#94a3b8', lineHeight: 1.4 }}>Matched with clients right in your neighborhood and preferred LGA.</div>
+                  </div>
+                  <div style={{ backgroundColor: 'rgba(16,185,129,0.07)', border: '1px solid rgba(16,185,129,0.18)', borderRadius: '14px', padding: '0.9rem' }}>
+                    <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#4ade80', marginBottom: '0.25rem' }}>💈 Salon or Home Service</div>
+                    <div style={{ fontSize: '0.72rem', color: '#94a3b8', lineHeight: 1.4 }}>Host clients at your station or offer premium home visits.</div>
+                  </div>
+                  <div style={{ backgroundColor: 'rgba(16,185,129,0.07)', border: '1px solid rgba(16,185,129,0.18)', borderRadius: '14px', padding: '0.9rem' }}>
+                    <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#4ade80', marginBottom: '0.25rem' }}>⭐ Free Verification</div>
+                    <div style={{ fontSize: '0.72rem', color: '#94a3b8', lineHeight: 1.4 }}>Zero joining fee. Build a verified profile with client reviews &amp; portfolio.</div>
+                  </div>
+                </div>
+
+                {/* Green QR Box */}
+                <div style={{
+                  backgroundColor: 'rgba(16,185,129,0.07)', border: '1.5px solid rgba(16,185,129,0.5)',
+                  borderRadius: '22px', padding: '1.4rem 1.8rem', display: 'flex', flexDirection: 'column',
+                  alignItems: 'center', gap: '0.5rem', width: '100%', maxWidth: '300px', marginBottom: '1.4rem',
+                  boxShadow: '0 12px 40px rgba(0,0,0,0.6), 0 0 30px rgba(16,185,129,0.18)',
+                  boxSizing: 'border-box',
+                }}>
+                  <div style={{ width: '150px', height: '150px', backgroundColor: '#ffffff', borderRadius: '14px', padding: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <QrRecruitSvg size={140} logoSize={30} />
+                  </div>
+                  <div style={{ fontSize: '0.85rem', fontWeight: 900, color: '#4ade80', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    Scan to Join as Expert
+                  </div>
+                  <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#ffffff' }}>
+                    stylecorner.world/role-selection
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => saveToPdf('recruit')}
+                    className="no-print"
+                    style={{
+                      background: 'linear-gradient(135deg, #10b981, #059669)', color: '#ffffff',
+                      border: 'none', borderRadius: '50px', padding: '0.45rem 1.4rem', fontSize: '0.76rem',
+                      fontWeight: 900, cursor: 'pointer', marginTop: '0.3rem', width: '100%',
+                    }}
+                  >
+                    Save as PDF
+                  </button>
+                </div>
+
+                {/* Footer */}
+                <div style={{ fontSize: '0.75rem', color: '#64748b', textAlign: 'center', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '1.2rem', width: '100%' }}>
+                  StyleCorner Nigeria · Lagos &amp; Ibadan Verified Beauty &amp; Grooming Platform
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
