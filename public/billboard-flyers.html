@@ -1058,6 +1058,48 @@
 
     function filterDesign(type) { applyFilter(type); }
 
+    async function savePng(type) {
+      var target = type || activeDesign;
+      var btn = document.getElementById('btn-download-png');
+      var originalBtnText = btn ? btn.innerHTML : '';
+      if (btn) { btn.innerHTML = '⏳ Saving PNG...'; btn.disabled = true; }
+
+      try {
+        var map = { billboard: 'design-billboard', street: 'design-portrait', recruit: 'design-recruit' };
+        var list = target === 'all' ? ['billboard', 'street', 'recruit'] : [target];
+
+        for (var i = 0; i < list.length; i++) {
+          var id = list[i];
+          var el = document.getElementById(map[id]);
+          if (!el) continue;
+
+          var canvas = await html2canvas(el, {
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: '#08090C',
+            logging: false,
+            ignoreElements: function(el) {
+              return el.tagName === 'BUTTON' || (el.classList && el.classList.contains('no-print'));
+            }
+          });
+
+          var link = document.createElement('a');
+          link.download = 'StyleCorner_' + id.toUpperCase() + '_Banner.png';
+          link.href = canvas.toDataURL('image/png');
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          if (list.length > 1) await new Promise(function(r) { setTimeout(r, 600); });
+        }
+      } catch (err) {
+        console.error('PNG error:', err);
+        alert('Could not export PNG. Please try again.');
+      } finally {
+        if (btn) { btn.innerHTML = originalBtnText; btn.disabled = false; }
+      }
+    }
+
     async function savePdf(type) {
       var target = type || activeDesign;
       var btn = document.getElementById('btn-download-pdf');

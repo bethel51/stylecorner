@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Check, Copy, Maximize, Minimize, X, FileDown, Image as ImageIcon, Sparkles } from 'lucide-react';
+import { ArrowLeft, Check, Copy, Maximize, Minimize, X, Image as ImageIcon, Sparkles } from 'lucide-react';
 import { QrWorldSvg, QrRecruitSvg } from '../components/common/QrCodeSvgs';
-import { downloadElementAsPdf, downloadMultipleElementsAsPdf, downloadElementAsImage } from '../utils/flyerPdfExport';
+import { downloadElementAsImage } from '../utils/flyerPdfExport';
 
 export const BillboardFlyersPage = () => {
   const location = useLocation();
@@ -24,11 +24,16 @@ export const BillboardFlyersPage = () => {
     return 'all';
   };
 
-  const [activeDesign, setActiveDesign] = useState('all');
+  const [activeDesign, setActiveDesign] = useState(getInitialDesign);
   const [copiedType, setCopiedType] = useState(null);
   const [screenshotMode, setScreenshotMode] = useState(false);
-  const [savingPdf, setSavingPdf] = useState(false);
   const [isCssFullscreen, setIsCssFullscreen] = useState(false);
+  const [savingImage, setSavingImage] = useState(false);
+
+  useEffect(() => {
+    const initial = getInitialDesign();
+    if (initial) setActiveDesign(initial);
+  }, [location.search, location.hash]);
 
   // Dynamic ref map for all 3 flyer cards
   const flyerRefs = {
@@ -75,66 +80,45 @@ export const BillboardFlyersPage = () => {
     const current = getInitialDesign();
     setActiveDesign(current);
     const params = new URLSearchParams(location.search);
-    if (params.get('download') === 'true') {
-      setTimeout(() => saveToPdf(current), 1500);
+    if (params.get('download') === 'true' || params.get('download') === 'png') {
+      setTimeout(() => saveToImage(current), 1500);
     }
   }, [location.search, location.hash]);
 
-  /* ── saveToPdf — Direct real PDF download without print dialog ── */
-  const saveToPdf = async (designType) => {
-    const target = designType || activeDesign;
-    setSavingPdf(true);
-
-    try {
-      if (target === 'all') {
-        const elementsWithConfig = [
-          { el: flyerRefs.billboard.current, isLandscape: true },
-          { el: flyerRefs.street.current, isLandscape: false },
-          { el: flyerRefs.recruit.current, isLandscape: false },
-        ].filter(item => Boolean(item.el));
-
-        if (elementsWithConfig.length === 0) {
-          throw new Error('Flyer elements not found in DOM');
-        }
-
-        const packName = 'StyleCorner_Marketing_Flyers_Pack.pdf';
-        await downloadMultipleElementsAsPdf(elementsWithConfig, packName);
-      } else {
-        const el = flyerRefs[target]?.current || document.querySelector(`.print-card[data-design="${target}"]`);
-        if (!el) throw new Error(`Flyer ${target} not found`);
-
-        const isLandscape = target === 'billboard';
-        const filename = `StyleCorner_${target.toUpperCase()}_Flyer.pdf`;
-        await downloadElementAsPdf(el, filename, isLandscape);
-      }
-    } catch (err) {
-      console.error('PDF export error:', err);
-      alert('⚠️ PDF direct export failed. You can tap "Save PNG" instead, or try in Chrome/Edge.');
-    } finally {
-      setSavingPdf(false);
-    }
-  };
-
+  /* ── saveToImage — Studio-grade PNG direct download ── */
   const saveToImage = async (designType) => {
     const target = designType || activeDesign;
+    setSavingImage(true);
     try {
       if (target === 'all') {
-        const list = ['billboard', 'street', 'recruit'];
-        for (const id of list) {
-          const el = flyerRefs[id]?.current;
+        const list = [
+          { id: 'billboard', name: 'StyleCorner_BILLBOARD_Banner.png' },
+          { id: 'street', name: 'StyleCorner_STREET_Flyer.png' },
+          { id: 'recruit', name: 'StyleCorner_RECRUITMENT_Poster.png' },
+        ];
+        for (const item of list) {
+          const el = flyerRefs[item.id]?.current;
           if (el) {
-            await downloadElementAsImage(el, `StyleCorner_${id.toUpperCase()}_Flyer.png`);
+            await downloadElementAsImage(el, item.name);
             await new Promise(r => setTimeout(r, 600));
           }
         }
       } else {
         const el = flyerRefs[target]?.current;
         if (el) {
-          await downloadElementAsImage(el, `StyleCorner_${target.toUpperCase()}_Flyer.png`);
+          const names = {
+            billboard: 'StyleCorner_BILLBOARD_Banner.png',
+            street: 'StyleCorner_STREET_Flyer.png',
+            recruit: 'StyleCorner_RECRUITMENT_Poster.png',
+          };
+          await downloadElementAsImage(el, names[target] || `StyleCorner_${target.toUpperCase()}_Flyer.png`);
         }
       }
     } catch (err) {
       console.error('Image export failed:', err);
+      alert('⚠️ PNG export failed. Please verify browser permissions.');
+    } finally {
+      setSavingImage(false);
     }
   };
 
@@ -204,55 +188,91 @@ export const BillboardFlyersPage = () => {
 
         @media (max-width: 600px) {
           .flyers-page-root {
-            padding: 0.75rem 0.5rem calc(3.5rem + env(safe-area-inset-bottom, 0px)) !important;
+            padding: 0.5rem 0.35rem calc(4rem + env(safe-area-inset-bottom, 0px)) !important;
           }
           .flyer-toolbar {
-            width: calc(100% - 0.5rem) !important;
-            padding: 0.35rem 0.55rem !important;
-            gap: 0.35rem !important;
-            margin-bottom: 1.5rem !important;
-            border-radius: 20px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 0.3rem 0.5rem !important;
+            gap: 0.3rem !important;
+            margin-bottom: 1.2rem !important;
+            border-radius: 50px !important;
           }
           .flyer-toolbar button {
             font-size: 0.72rem !important;
-            padding: 0.35rem 0.65rem !important;
+            padding: 0.32rem 0.65rem !important;
           }
           .billboard-container {
-            gap: 2.5rem !important;
+            gap: 1.75rem !important;
+            width: 100% !important;
+          }
+          .billboard-wide-grid {
+            grid-template-columns: 1fr !important;
+            min-height: auto !important;
+            border-radius: 20px !important;
           }
           .bb-left-panel {
-            padding: 1.75rem 1.15rem !important;
+            padding: 1.25rem 0.95rem !important;
+          }
+          .bb-left-panel h1 {
+            font-size: clamp(1.4rem, 6.5vw, 2.1rem) !important;
+            line-height: 1.15 !important;
+            margin-bottom: 0.75rem !important;
+          }
+          .bb-left-panel p {
+            font-size: 0.82rem !important;
+            line-height: 1.5 !important;
+            margin-bottom: 1rem !important;
           }
           .bb-right-panel {
-            min-height: 340px !important;
+            min-height: 270px !important;
+          }
+          .bb-qr-float-card {
+            bottom: 0.75rem !important;
+            right: 0.75rem !important;
+            width: 145px !important;
+            padding: 0.7rem !important;
+            border-radius: 16px !important;
           }
           .street-photo-hero, .recruit-photo-hero {
-            height: 300px !important;
+            height: 230px !important;
+          }
+          .street-photo-hero h2, .recruit-photo-hero h2 {
+            font-size: clamp(1.25rem, 5.5vw, 1.75rem) !important;
+            line-height: 1.2 !important;
           }
           .street-body, .recruit-body {
-            padding: 1.25rem 1.1rem 2rem !important;
+            padding: 1rem 0.85rem 1.5rem !important;
           }
           .recruit-features-grid {
             grid-template-columns: 1fr !important;
-            gap: 0.6rem !important;
+            gap: 0.5rem !important;
           }
           .stat-chips-container {
-            left: 0.5rem !important;
-            right: 0.5rem !important;
-            gap: 0.4rem !important;
+            left: 0.4rem !important;
+            right: 0.4rem !important;
+            gap: 0.3rem !important;
+            bottom: 0.6rem !important;
           }
           .stat-chip {
-            padding: 0.35rem 0.5rem !important;
+            padding: 0.25rem 0.45rem !important;
+            border-radius: 8px !important;
           }
           .stat-chip-num {
-            font-size: 0.88rem !important;
+            font-size: 0.78rem !important;
           }
           .stat-chip-lbl {
-            font-size: 0.55rem !important;
+            font-size: 0.5rem !important;
           }
           .qr-box-mobile {
+            max-width: 270px !important;
+            padding: 1rem 0.85rem !important;
+            border-radius: 20px !important;
+          }
+          .print-card {
+            border-radius: 20px !important;
+            width: 100% !important;
             max-width: 100% !important;
-            padding: 1.2rem 1rem !important;
           }
         }
 
@@ -422,53 +442,31 @@ export const BillboardFlyersPage = () => {
 
           <div style={{ flex: 1 }} />
 
-          {/* Save as PDF */}
-          <button
-            type="button"
-            onClick={() => saveToPdf(activeDesign)}
-            disabled={savingPdf}
-            style={{
-              backgroundColor: savingPdf ? 'rgba(245,185,66,0.08)' : 'rgba(245,185,66,0.18)',
-              color: '#F5B942',
-              border: '1px solid #F5B942',
-              borderRadius: '50px',
-              padding: '0.4rem 0.95rem',
-              fontSize: '0.76rem',
-              fontWeight: 800,
-              cursor: savingPdf ? 'not-allowed' : 'pointer',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.35rem',
-              whiteSpace: 'nowrap',
-              opacity: savingPdf ? 0.7 : 1,
-              flexShrink: 0,
-            }}
-          >
-            <FileDown size={14} />
-            {savingPdf ? 'Exporting PDF...' : 'Download PDF'}
-          </button>
-
-          {/* Save Image */}
+          {/* Save PNG button */}
           <button
             type="button"
             onClick={() => saveToImage(activeDesign)}
+            disabled={savingImage}
             style={{
-              backgroundColor: 'rgba(255,255,255,0.08)',
-              color: '#ffffff',
-              border: '1px solid rgba(255,255,255,0.15)',
+              background: 'linear-gradient(135deg, #F5B942, #d4af37)',
+              color: '#08090C',
+              border: 'none',
               borderRadius: '50px',
-              padding: '0.4rem 0.85rem',
+              padding: '0.42rem 1.05rem',
               fontSize: '0.76rem',
-              fontWeight: 700,
-              cursor: 'pointer',
+              fontWeight: 800,
+              cursor: savingImage ? 'not-allowed' : 'pointer',
               whiteSpace: 'nowrap',
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.35rem',
               flexShrink: 0,
+              boxShadow: '0 4px 14px rgba(245,185,66,0.35)',
+              opacity: savingImage ? 0.7 : 1,
             }}
           >
-            <ImageIcon size={14} /> Save PNG
+            <ImageIcon size={14} />
+            {savingImage ? 'Exporting PNG...' : 'Save PNG'}
           </button>
 
           {/* Fullscreen */}
@@ -604,15 +602,17 @@ export const BillboardFlyersPage = () => {
                   </div>
                   <button
                     type="button"
-                    onClick={() => saveToPdf('billboard')}
+                    onClick={() => saveToImage('billboard')}
                     className="no-print"
                     style={{
                       background: 'linear-gradient(135deg, #F5B942, #C8930A)', color: '#08090C',
-                      border: 'none', borderRadius: '50px', padding: '0.35rem 0.9rem', fontSize: '0.68rem',
-                      fontWeight: 900, cursor: 'pointer', marginTop: '0.2rem', width: '100%',
+                      border: 'none', borderRadius: '50px', padding: '0.38rem 0.9rem', fontSize: '0.7rem',
+                      fontWeight: 900, cursor: 'pointer', marginTop: '0.25rem', width: '100%',
+                      display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem',
+                      boxShadow: '0 2px 8px rgba(245,185,66,0.3)',
                     }}
                   >
-                    Save as PDF
+                    <ImageIcon size={12} /> Save PNG
                   </button>
                 </div>
               </div>
@@ -726,15 +726,17 @@ export const BillboardFlyersPage = () => {
                   </div>
                   <button
                     type="button"
-                    onClick={() => saveToPdf('street')}
+                    onClick={() => saveToImage('street')}
                     className="no-print"
                     style={{
                       background: 'linear-gradient(135deg, #a855f7, #7c3aed)', color: '#ffffff',
                       border: 'none', borderRadius: '50px', padding: '0.45rem 1.4rem', fontSize: '0.76rem',
                       fontWeight: 900, cursor: 'pointer', marginTop: '0.3rem', width: '100%',
+                      display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem',
+                      boxShadow: '0 2px 8px rgba(168,85,247,0.35)',
                     }}
                   >
-                    Save as PDF
+                    <ImageIcon size={13} /> Save PNG
                   </button>
                 </div>
 
@@ -883,15 +885,17 @@ export const BillboardFlyersPage = () => {
                   </div>
                   <button
                     type="button"
-                    onClick={() => saveToPdf('recruit')}
+                    onClick={() => saveToImage('recruit')}
                     className="no-print"
                     style={{
                       background: 'linear-gradient(135deg, #10b981, #059669)', color: '#ffffff',
                       border: 'none', borderRadius: '50px', padding: '0.45rem 1.4rem', fontSize: '0.76rem',
                       fontWeight: 900, cursor: 'pointer', marginTop: '0.3rem', width: '100%',
+                      display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem',
+                      boxShadow: '0 2px 8px rgba(16,185,129,0.35)',
                     }}
                   >
-                    Save as PDF
+                    <ImageIcon size={13} /> Save PNG
                   </button>
                 </div>
 

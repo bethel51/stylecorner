@@ -44,6 +44,7 @@ import {
   Video,
   Play,
   Film,
+  Image as ImageIcon,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
@@ -55,7 +56,7 @@ import { exportOrdersToCSV, exportBookingsToCSV } from '../utils/exportUtils';
 import { QrWorldSvg, QrRecruitSvg } from '../components/common/QrCodeSvgs';
 import { CheckInScannerModal } from '../components/booking/CheckInScannerModal';
 import { VideoAdsStudio, DEFAULT_AD_VIDEOS } from '../components/admin/VideoAdsStudio';
-import { downloadElementAsPdf } from '../utils/flyerPdfExport';
+import { downloadElementAsImage } from '../utils/flyerPdfExport';
 
 export const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -97,28 +98,61 @@ export const AdminDashboard = () => {
   const [copiedMarketingUrl, setCopiedMarketingUrl] = useState(null);
   const [activeBannerModal, setActiveBannerModal] = useState(null); // 'billboard' | 'portrait' | 'recruit' | null
   const bannerModalRef = useRef(null);
+  const exportBillboardRef = useRef(null);
+  const exportStreetRef = useRef(null);
+  const exportRecruitRef = useRef(null);
 
-  const handleDownloadBannerPdf = async (type) => {
-    if (bannerModalRef.current) {
-      try {
-        showToast('Rendering official flyer PDF file...', 'info');
-        const filename = `StyleCorner_${(type || 'flyer').toUpperCase()}_Banner.pdf`;
-        await downloadElementAsPdf(bannerModalRef.current, filename, type === 'billboard');
-        showToast('Official PDF downloaded to your device!', 'success');
-        return;
-      } catch (err) {
-        console.warn('Direct modal PDF export failed, opening full flyer viewer:', err);
-      }
-    }
-    const hash = type === 'portrait' ? 'street' : (type || 'all');
-    const downloadUrl = `/billboard-flyers?design=${hash}&download=true`;
+  const handleDownloadBannerPng = async (type) => {
     try {
-      const win = window.open(downloadUrl, '_blank');
-      if (!win || win.closed || typeof win.closed === 'undefined') {
-        navigate(downloadUrl);
+      showToast('Rendering official high-definition PNG...', 'info');
+
+      // 1. If modal is open, export from active modal
+      if (activeBannerModal && bannerModalRef.current) {
+        const filename = `StyleCorner_${(activeBannerModal || 'flyer').toUpperCase()}_Banner.png`;
+        await downloadElementAsImage(bannerModalRef.current, filename);
+        showToast('Official PNG downloaded!', 'success');
+        return;
       }
-    } catch (e) {
-      navigate(downloadUrl);
+
+      // 2. Direct offscreen reference export
+      const targetRef = type === 'billboard' ? exportBillboardRef.current
+        : type === 'street' ? exportStreetRef.current
+        : type === 'recruit' ? exportRecruitRef.current
+        : null;
+
+      if (targetRef) {
+        const filename = `StyleCorner_${(type || 'flyer').toUpperCase()}_Banner.png`;
+        await downloadElementAsImage(targetRef, filename);
+        showToast('Official PNG downloaded!', 'success');
+        return;
+      }
+
+      if (type === 'all') {
+        let count = 0;
+        if (exportBillboardRef.current) {
+          await downloadElementAsImage(exportBillboardRef.current, 'StyleCorner_BILLBOARD_Banner.png');
+          count++;
+          await new Promise(r => setTimeout(r, 600));
+        }
+        if (exportStreetRef.current) {
+          await downloadElementAsImage(exportStreetRef.current, 'StyleCorner_STREET_Flyer.png');
+          count++;
+          await new Promise(r => setTimeout(r, 600));
+        }
+        if (exportRecruitRef.current) {
+          await downloadElementAsImage(exportRecruitRef.current, 'StyleCorner_RECRUITMENT_Poster.png');
+          count++;
+        }
+        if (count > 0) {
+          showToast('All 3 flyer PNGs downloaded!', 'success');
+          return;
+        }
+      }
+
+      window.open(`/billboard-flyers?design=${type || 'all'}&download=png`, '_blank');
+    } catch (err) {
+      console.warn('PNG export fallback to viewer:', err);
+      window.open(`/billboard-flyers?design=${type || 'all'}`, '_blank');
     }
   };
 
@@ -2012,7 +2046,7 @@ export const AdminDashboard = () => {
                       </h3>
                     </div>
                     <p style={{ color: '#94a3b8', fontSize: '0.8rem', margin: 0, maxWidth: '520px' }}>
-                      Official promotional templates with live QR codes pointing to <strong style={{ color: '#f5b942' }}>www.stylecorner.world</strong>. Screenshot, print, or export to PDF for outdoor advertising and social media.
+                      Official promotional templates with live QR codes pointing to <strong style={{ color: '#f5b942' }}>www.stylecorner.world</strong>. View full screen, save high-resolution PNGs, or print for outdoor advertising and social media.
                     </p>
                   </div>
                   <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
@@ -2032,7 +2066,7 @@ export const AdminDashboard = () => {
                     </button>
                     <button
                       type="button"
-                      onClick={() => handleDownloadBannerPdf('all')}
+                      onClick={() => handleDownloadBannerPng('all')}
                       style={{
                         display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
                         padding: '0.55rem 1rem', borderRadius: '10px', fontSize: '0.8rem', fontWeight: 800,
@@ -2041,7 +2075,7 @@ export const AdminDashboard = () => {
                         boxShadow: '0 4px 14px rgba(212,175,55,0.35)',
                       }}
                     >
-                      <Download size={13} /> Save to PDF
+                      <ImageIcon size={13} /> Save PNG
                     </button>
                   </div>
                 </div>
@@ -2161,15 +2195,15 @@ export const AdminDashboard = () => {
                         </button>
                         <button
                           type="button"
-                          onClick={() => handleDownloadBannerPdf('billboard')}
+                          onClick={() => handleDownloadBannerPng('billboard')}
                           style={{
                             display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem',
                             padding: '0.55rem 0.8rem', borderRadius: '8px', fontSize: '0.73rem', fontWeight: 700,
-                            backgroundColor: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)',
-                            color: '#ffffff', cursor: 'pointer', fontFamily: 'Outfit',
+                            backgroundColor: 'rgba(245,185,66,0.12)', border: '1px solid rgba(245,185,66,0.35)',
+                            color: '#f5b942', cursor: 'pointer', fontFamily: 'Outfit',
                           }}
                         >
-                          <Download size={12} /> Save PDF
+                          <ImageIcon size={12} /> Save PNG
                         </button>
                       </div>
                     </div>
@@ -2252,15 +2286,15 @@ export const AdminDashboard = () => {
                         </button>
                         <button
                           type="button"
-                          onClick={() => handleDownloadBannerPdf('street')}
+                          onClick={() => handleDownloadBannerPng('street')}
                           style={{
                             display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem',
                             padding: '0.55rem 0.8rem', borderRadius: '8px', fontSize: '0.73rem', fontWeight: 700,
-                            backgroundColor: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)',
-                            color: '#ffffff', cursor: 'pointer', fontFamily: 'Outfit',
+                            backgroundColor: 'rgba(168,85,247,0.12)', border: '1px solid rgba(168,85,247,0.35)',
+                            color: '#c084fc', cursor: 'pointer', fontFamily: 'Outfit',
                           }}
                         >
-                          <Download size={12} /> Save PDF
+                          <ImageIcon size={12} /> Save PNG
                         </button>
                       </div>
                     </div>
@@ -2343,15 +2377,15 @@ export const AdminDashboard = () => {
                         </button>
                         <button
                           type="button"
-                          onClick={() => handleDownloadBannerPdf('recruit')}
+                          onClick={() => handleDownloadBannerPng('recruit')}
                           style={{
                             display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem',
                             padding: '0.55rem 0.8rem', borderRadius: '8px', fontSize: '0.73rem', fontWeight: 700,
-                            backgroundColor: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)',
-                            color: '#ffffff', cursor: 'pointer', fontFamily: 'Outfit',
+                            backgroundColor: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.35)',
+                            color: '#4ade80', cursor: 'pointer', fontFamily: 'Outfit',
                           }}
                         >
-                          <Download size={12} /> Save PDF
+                          <ImageIcon size={12} /> Save PNG
                         </button>
                       </div>
                     </div>
@@ -2960,7 +2994,7 @@ export const AdminDashboard = () => {
             position: 'fixed', inset: 0, zIndex: 9999,
             backgroundColor: 'rgba(5, 6, 8, 0.9)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            padding: isMobile ? '0.4rem' : '1.5rem',
+            padding: isMobile ? '0.35rem 0.25rem' : '1.5rem',
             boxSizing: 'border-box',
           }}
         >
@@ -2969,10 +3003,10 @@ export const AdminDashboard = () => {
             style={{
               backgroundColor: '#0c0e14',
               border: '1.5px solid rgba(245, 185, 66, 0.45)',
-              borderRadius: isMobile ? '18px' : '28px',
+              borderRadius: isMobile ? '16px' : '28px',
               width: '100%',
               maxWidth: activeBannerModal === 'billboard' ? '820px' : '520px',
-              maxHeight: isMobile ? '94vh' : '90vh',
+              maxHeight: isMobile ? '96vh' : '90vh',
               display: 'flex',
               flexDirection: 'column',
               overflow: 'hidden',
@@ -2982,7 +3016,7 @@ export const AdminDashboard = () => {
           >
             {/* Modal Header */}
             <div style={{
-              padding: isMobile ? '0.75rem 0.85rem' : '1rem 1.4rem',
+              padding: isMobile ? '0.65rem 0.85rem' : '1rem 1.4rem',
               borderBottom: '1px solid rgba(255,255,255,0.08)',
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               backgroundColor: '#10131b',
@@ -3022,7 +3056,7 @@ export const AdminDashboard = () => {
             </div>
 
             {/* Modal Body / Scrollable Banner Display */}
-            <div ref={bannerModalRef} style={{ padding: isMobile ? '0.65rem' : '1.5rem', overflowY: 'auto', flex: 1, boxSizing: 'border-box' }}>
+            <div ref={bannerModalRef} style={{ padding: isMobile ? '0.4rem 0.3rem' : '1.5rem', overflowY: 'auto', overflowX: 'hidden', flex: 1, boxSizing: 'border-box' }}>
               {/* 1. Landscape Billboard */}
               {activeBannerModal === 'billboard' && (
                 <div style={{
@@ -3035,12 +3069,12 @@ export const AdminDashboard = () => {
                   gridTemplateColumns: isMobile ? '1fr' : '1.2fr 1fr',
                   boxSizing: 'border-box',
                 }}>
-                  <div style={{ padding: isMobile ? '1.5rem 1.2rem' : '2.2rem 2rem', position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                  <div style={{ padding: isMobile ? '1.25rem 0.95rem' : '2.2rem 2rem', position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                     <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', backgroundColor: 'rgba(245,185,66,0.1)', border: '1px solid rgba(245,185,66,0.35)', borderRadius: '50px', padding: '0.35rem 0.85rem', marginBottom: '1.1rem', width: 'fit-content' }}>
                       <img src="/pwa-icon-192.png" alt="SC" style={{ width: '16px', height: '16px', borderRadius: '4px', objectFit: 'cover' }} />
                       <span style={{ fontSize: '0.68rem', fontWeight: 800, color: '#F5B942', letterSpacing: '0.06em', textTransform: 'uppercase' }}>StyleCorner Nigeria · Lagos &amp; Ibadan</span>
                     </div>
-                    <h2 style={{ fontSize: isMobile ? '1.4rem' : '2rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.1, letterSpacing: '-0.03em', margin: '0 0 0.8rem', fontFamily: 'Outfit' }}>
+                    <h2 style={{ fontSize: isMobile ? '1.3rem' : '2rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.1, letterSpacing: '-0.03em', margin: '0 0 0.8rem', fontFamily: 'Outfit' }}>
                       Book Verified Stylists,<br />Barbers &amp; Braiders.<br />
                       <span style={{ color: '#F5B942' }}>In Seconds.</span>
                     </h2>
@@ -3059,17 +3093,17 @@ export const AdminDashboard = () => {
                     </div>
                   </div>
 
-                  <div style={{ position: 'relative', minHeight: isMobile ? '240px' : '360px' }}>
+                  <div style={{ position: 'relative', minHeight: isMobile ? '220px' : '360px' }}>
                     <img src="/banner-braider.jpg" alt="Braider" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
                     <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(8,9,13,0.95) 0%, transparent 60%)' }} />
                     <div style={{
-                      position: 'absolute', bottom: '1rem', right: '1rem',
+                      position: 'absolute', bottom: isMobile ? '0.6rem' : '1rem', right: isMobile ? '0.6rem' : '1rem',
                       backgroundColor: 'rgba(8,9,13,0.92)', border: '1.5px solid rgba(245,185,66,0.45)',
-                      borderRadius: '16px', padding: '0.85rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.35rem',
-                      width: '145px', textAlign: 'center',
+                      borderRadius: isMobile ? '14px' : '16px', padding: isMobile ? '0.6rem' : '0.85rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem',
+                      width: isMobile ? '125px' : '145px', textAlign: 'center',
                     }}>
-                      <div style={{ width: '90px', height: '90px', backgroundColor: '#fff', borderRadius: '10px', padding: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <QrWorldSvg size={82} logoSize={18} />
+                      <div style={{ width: isMobile ? '76px' : '90px', height: isMobile ? '76px' : '90px', backgroundColor: '#fff', borderRadius: '10px', padding: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <QrWorldSvg size={isMobile ? 68 : 82} logoSize={isMobile ? 15 : 18} />
                       </div>
                       <div style={{ fontSize: '0.62rem', fontWeight: 900, color: '#F5B942', textTransform: 'uppercase' }}>Scan to Book</div>
                       <div style={{ fontSize: '0.58rem', fontWeight: 700, color: '#ffffff' }}>www.stylecorner.world</div>
@@ -3090,7 +3124,7 @@ export const AdminDashboard = () => {
                   maxWidth: '520px', margin: '0 auto',
                   boxSizing: 'border-box',
                 }}>
-                  <div style={{ position: 'relative', height: '240px' }}>
+                  <div style={{ position: 'relative', height: isMobile ? '200px' : '240px' }}>
                     <img src="/banner-barber.jpg" alt="Barbershop" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%' }} />
                     <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(10,8,18,0.2) 0%, rgba(10,8,18,0.7) 65%, #0a0812 100%)' }} />
                     <div style={{ position: 'absolute', bottom: '1rem', left: '1.25rem', right: '1.25rem', textAlign: 'center' }}>
@@ -3100,7 +3134,7 @@ export const AdminDashboard = () => {
                       </h2>
                     </div>
                   </div>
-                  <div style={{ padding: '1.25rem 1.5rem 1.8rem', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+                  <div style={{ padding: isMobile ? '1rem 0.85rem 1.4rem' : '1.25rem 1.5rem 1.8rem', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
                     <div style={{ backgroundColor: 'rgba(168,85,247,0.12)', border: '1px solid rgba(168,85,247,0.4)', borderRadius: '50px', padding: '0.3rem 0.8rem', fontSize: '0.68rem', fontWeight: 800, color: '#c084fc', textTransform: 'uppercase', marginBottom: '0.9rem' }}>
                       ✨ Nigeria's Smart Beauty Network
                     </div>
@@ -3139,12 +3173,12 @@ export const AdminDashboard = () => {
                   maxWidth: '520px', margin: '0 auto',
                   boxSizing: 'border-box',
                 }}>
-                  <div style={{ position: 'relative', height: '240px' }}>
+                  <div style={{ position: 'relative', height: isMobile ? '200px' : '240px' }}>
                     <img src="/banner-beauty-team.jpg" alt="Beauty Team" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%' }} />
                     <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(6,15,10,0.2) 0%, rgba(6,15,10,0.7) 65%, #060f0a 100%)' }} />
                     <div style={{
-                      position: 'absolute', bottom: '0.85rem', left: '1rem', right: '1rem',
-                      display: 'flex', justifyContent: 'center', gap: '0.5rem', zIndex: 2,
+                      position: 'absolute', bottom: isMobile ? '0.55rem' : '0.85rem', left: isMobile ? '0.4rem' : '1rem', right: isMobile ? '0.4rem' : '1rem',
+                      display: 'flex', justifyContent: 'center', gap: isMobile ? '0.35rem' : '0.5rem', zIndex: 2,
                     }}>
                       {[
                         { num: '2,400+', label: 'Active Clients' },
@@ -3233,7 +3267,7 @@ export const AdminDashboard = () => {
 
               <button
                 type="button"
-                onClick={() => handleDownloadBannerPdf(activeBannerModal)}
+                onClick={() => handleDownloadBannerPng(activeBannerModal)}
                 style={{
                   flex: isMobile ? '1 1 100%' : 'none',
                   minHeight: '44px', width: isMobile ? '100%' : 'auto',
@@ -3246,12 +3280,189 @@ export const AdminDashboard = () => {
                   boxShadow: '0 4px 14px rgba(245,185,66,0.35)',
                 }}
               >
-                <Download size={14} /> Save to PDF
+                <ImageIcon size={14} /> Save PNG
               </button>
             </div>
           </div>
         </div>
       )}
+
+
+      {/* ── Offscreen High-Definition Flyer Renderers for One-Click PNG Export ── */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'fixed',
+          left: '-99999px',
+          top: 0,
+          pointerEvents: 'none',
+          opacity: 0,
+          zIndex: -9999,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '2rem',
+        }}
+      >
+        {/* Billboard (1100px wide, landscape) */}
+        <div
+          ref={exportBillboardRef}
+          style={{
+            width: '1100px',
+            backgroundColor: '#08090d',
+            border: '2px solid rgba(245, 185, 66, 0.45)',
+            borderRadius: '28px',
+            overflow: 'hidden',
+            display: 'grid',
+            gridTemplateColumns: '1.2fr 1fr',
+            fontFamily: "'Outfit', sans-serif",
+            color: '#ffffff',
+            boxSizing: 'border-box',
+          }}
+        >
+          <div style={{ padding: '3rem 2.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.55rem', backgroundColor: 'rgba(245,185,66,0.1)', border: '1px solid rgba(245,185,66,0.35)', borderRadius: '50px', padding: '0.35rem 0.95rem', marginBottom: '1.3rem', width: 'fit-content' }}>
+              <img src="/pwa-icon-192.png" alt="SC" style={{ width: '18px', height: '18px', borderRadius: '5px', objectFit: 'cover' }} />
+              <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#F5B942', letterSpacing: '0.08em', textTransform: 'uppercase' }}>StyleCorner Nigeria • Lagos & Ibadan</span>
+            </div>
+            <h1 style={{ fontSize: '2.5rem', fontWeight: 900, lineHeight: 1.08, letterSpacing: '-0.03em', margin: '0 0 1rem', color: '#ffffff' }}>
+              Book Verified Stylists,<br />Barbers & Braiders.<br />
+              <span style={{ color: '#F5B942' }}>In Seconds.</span>
+            </h1>
+            <p style={{ fontSize: '0.92rem', color: '#94a3b8', lineHeight: 1.6, margin: '0 0 1.4rem', maxWidth: '440px' }}>
+              Lagos & Ibadan's premier beauty network. AI matches you with top-rated barbers, braiders, lash techs & nail artists near you.
+            </p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1.4rem' }}>
+              {['✔ Braiders', '✔ Barbers', '✔ Lash Techs', '✔ Nail Art', '✔ Makeup'].map(p => (
+                <span key={p} style={{ backgroundColor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '50px', padding: '0.35rem 0.85rem', fontSize: '0.75rem', fontWeight: 700, color: '#e2e8f0' }}>{p}</span>
+              ))}
+            </div>
+            <div style={{ display: 'flex', gap: '1.5rem', color: '#94a3b8', fontSize: '0.8rem', fontWeight: 700 }}>
+              <div>🛡️ 100% Escrow Protected</div>
+              <div>⭐ 4.9★ Community Rated</div>
+              <div>📍 Lagos & Ibadan</div>
+            </div>
+          </div>
+          <div style={{ position: 'relative', minHeight: '440px' }}>
+            <img src="/banner-braider.jpg" alt="Braider" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(8,9,13,0.95) 0%, transparent 60%)' }} />
+            <div style={{
+              position: 'absolute', bottom: '1.5rem', right: '1.5rem',
+              backgroundColor: 'rgba(8,9,13,0.95)', border: '1.5px solid rgba(245,185,66,0.45)',
+              borderRadius: '20px', padding: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem',
+              width: '160px', textAlign: 'center',
+            }}>
+              <div style={{ width: '105px', height: '105px', backgroundColor: '#fff', borderRadius: '12px', padding: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <QrWorldSvg size={95} logoSize={22} />
+              </div>
+              <div style={{ fontSize: '0.72rem', fontWeight: 900, color: '#F5B942', textTransform: 'uppercase' }}>Scan to Book</div>
+              <div style={{ fontSize: '0.64rem', fontWeight: 700, color: '#ffffff' }}>www.stylecorner.world</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Street Flyer (560px wide, portrait) */}
+        <div
+          ref={exportStreetRef}
+          style={{
+            width: '560px',
+            backgroundColor: '#0a0812',
+            border: '2px solid rgba(168,85,247,0.4)',
+            borderRadius: '28px',
+            overflow: 'hidden',
+            fontFamily: "'Outfit', sans-serif",
+            color: '#ffffff',
+            boxSizing: 'border-box',
+          }}
+        >
+          <div style={{ position: 'relative', height: '280px' }}>
+            <img src="/banner-barber.jpg" alt="Barber" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%' }} />
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(10,8,18,0.2) 0%, rgba(10,8,18,0.7) 65%, #0a0812 100%)' }} />
+            <div style={{ position: 'absolute', bottom: '1.2rem', left: '1.5rem', right: '1.5rem', textAlign: 'center' }}>
+              <h2 style={{ fontSize: '1.85rem', fontWeight: 900, color: '#ffffff', margin: 0 }}>
+                Your Next Look.<br />
+                <span style={{ color: '#c084fc' }}>Verified Stylist.</span> Booked In 30s.
+              </h2>
+            </div>
+          </div>
+          <div style={{ padding: '1.5rem 2rem 2.2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+            <div style={{ backgroundColor: 'rgba(168,85,247,0.12)', border: '1px solid rgba(168,85,247,0.4)', borderRadius: '50px', padding: '0.35rem 0.9rem', fontSize: '0.72rem', fontWeight: 800, color: '#c084fc', textTransform: 'uppercase', marginBottom: '1rem' }}>
+              ⚡ Nigeria's Smart Beauty Network
+            </div>
+            <p style={{ fontSize: '0.88rem', color: '#94a3b8', lineHeight: 1.55, margin: '0 0 1.25rem', maxWidth: '420px' }}>
+              Browse top-rated braiders, barbers, lash techs & makeup artists in your LGA across Lagos & Ibadan.
+            </p>
+            <div style={{
+              backgroundColor: 'rgba(168,85,247,0.08)', border: '1.5px solid rgba(168,85,247,0.5)',
+              borderRadius: '22px', padding: '1.25rem 1.8rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.45rem',
+              width: '100%', maxWidth: '280px',
+            }}>
+              <div style={{ width: '130px', height: '130px', backgroundColor: '#fff', borderRadius: '14px', padding: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <QrWorldSvg size={118} logoSize={26} />
+              </div>
+              <div style={{ fontSize: '0.82rem', fontWeight: 900, color: '#c084fc', textTransform: 'uppercase' }}>Scan to Book</div>
+              <div style={{ fontSize: '0.74rem', fontWeight: 700, color: '#ffffff' }}>www.stylecorner.world</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Recruitment Poster (560px wide, portrait) */}
+        <div
+          ref={exportRecruitRef}
+          style={{
+            width: '560px',
+            backgroundColor: '#060f0a',
+            border: '2px solid rgba(16,185,129,0.4)',
+            borderRadius: '28px',
+            overflow: 'hidden',
+            fontFamily: "'Outfit', sans-serif",
+            color: '#ffffff',
+            boxSizing: 'border-box',
+          }}
+        >
+          <div style={{ position: 'relative', height: '280px' }}>
+            <img src="/banner-beauty-team.jpg" alt="Beauty Team" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%' }} />
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(6,15,10,0.2) 0%, rgba(6,15,10,0.7) 65%, #060f0a 100%)' }} />
+            <div style={{
+              position: 'absolute', bottom: '1rem', left: '1.2rem', right: '1.2rem',
+              display: 'flex', justifyContent: 'center', gap: '0.6rem', zIndex: 2,
+            }}>
+              {[
+                { num: '2,400+', label: 'Active Clients' },
+                { num: '₦0', label: 'Joining Fee' },
+                { num: '24h', label: 'Fast Payouts' },
+              ].map(s => (
+                <div key={s.label} style={{ backgroundColor: 'rgba(6,15,10,0.85)', border: '1px solid rgba(16,185,129,0.3)', borderRadius: '10px', padding: '0.4rem 0.75rem', textAlign: 'center', flex: 1 }}>
+                  <div style={{ fontSize: '0.95rem', fontWeight: 900, color: '#4ade80', lineHeight: 1.1 }}>{s.num}</div>
+                  <div style={{ fontSize: '0.58rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase' }}>{s.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div style={{ padding: '1.5rem 2rem 2.2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+            <div style={{ backgroundColor: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.4)', borderRadius: '50px', padding: '0.35rem 0.9rem', fontSize: '0.72rem', fontWeight: 800, color: '#4ade80', textTransform: 'uppercase', marginBottom: '0.9rem' }}>
+              📢 Calling All Beauty Professionals
+            </div>
+            <h2 style={{ fontSize: '1.85rem', fontWeight: 900, color: '#ffffff', margin: '0 0 0.8rem' }}>
+              Are You a Barber, Braider or Stylist?<br />
+              <span style={{ color: '#4ade80' }}>Get Booked. Get Paid.</span>
+            </h2>
+            <p style={{ fontSize: '0.88rem', color: '#94a3b8', lineHeight: 1.55, margin: '0 0 1.25rem', maxWidth: '420px' }}>
+              Join StyleCorner's verified beauty network in Lagos & Ibadan. Fill your open calendar slots with high-value clients — zero commission for first 3 months.
+            </p>
+            <div style={{
+              backgroundColor: 'rgba(16,185,129,0.07)', border: '1.5px solid rgba(16,185,129,0.5)',
+              borderRadius: '22px', padding: '1.25rem 1.8rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.45rem',
+              width: '100%', maxWidth: '280px',
+            }}>
+              <div style={{ width: '130px', height: '130px', backgroundColor: '#fff', borderRadius: '14px', padding: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <QrRecruitSvg size={118} logoSize={26} />
+              </div>
+              <div style={{ fontSize: '0.82rem', fontWeight: 900, color: '#4ade80', textTransform: 'uppercase' }}>Scan to Join as Expert</div>
+              <div style={{ fontSize: '0.74rem', fontWeight: 700, color: '#ffffff' }}>stylecorner.world/role-selection</div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* ── Admin Atelier Check-In Desk Modal ── */}
       <CheckInScannerModal
