@@ -1317,14 +1317,32 @@ export const CustomerDashboard = () => {
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.25rem', flexShrink: 0 }}>
                           <StatusBadge status={b.status} />
                           {/* Payment status pill */}
-                          {b.paymentStatus && b.paymentStatus !== 'unpaid' && b.paymentStatus !== 'pending_payment' ? (
+                          {b.status === 'completed' ? (
                             <span style={{
                               display: 'inline-flex', alignItems: 'center', gap: '0.25rem',
                               background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)',
                               color: '#10b981', borderRadius: '6px', padding: '0.12rem 0.45rem',
                               fontSize: '0.64rem', fontFamily: 'Outfit', fontWeight: 800,
                             }}>
-                              💳 PAID
+                              🛡️ ESCROW RELEASED
+                            </span>
+                          ) : b.status === 'cancelled' || b.status === 'rejected' ? (
+                            <span style={{
+                              display: 'inline-flex', alignItems: 'center', gap: '0.25rem',
+                              background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)',
+                              color: '#f87171', borderRadius: '6px', padding: '0.12rem 0.45rem',
+                              fontSize: '0.64rem', fontFamily: 'Outfit', fontWeight: 800,
+                            }}>
+                              ↩️ ESCROW REFUNDED
+                            </span>
+                          ) : b.paymentStatus && b.paymentStatus !== 'unpaid' && b.paymentStatus !== 'pending_payment' ? (
+                            <span style={{
+                              display: 'inline-flex', alignItems: 'center', gap: '0.25rem',
+                              background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)',
+                              color: '#10b981', borderRadius: '6px', padding: '0.12rem 0.45rem',
+                              fontSize: '0.64rem', fontFamily: 'Outfit', fontWeight: 800,
+                            }}>
+                              🛡️ ESCROW HELD
                             </span>
                           ) : b.paymentStatus === 'pending_payment' || (!b.paymentStatus && b.status !== 'rejected' && b.status !== 'cancelled') ? (
                             <span style={{

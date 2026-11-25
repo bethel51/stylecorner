@@ -1150,7 +1150,7 @@ export const MyBookings = () => {
                           Price & Payment
                         </div>
                         <div style={{ fontSize: '0.84rem', fontWeight: 800, color: '#f5b942' }}>
-                          ₦{Number(b.price || 0).toLocaleString()} • {String(b.paymentStatus || '').startsWith('paid') ? 'Paid' : 'Awaiting Payment'}
+                          ₦{Number(b.price || 0).toLocaleString()} • {b.status === 'completed' ? '🛡️ Escrow Released' : b.status === 'cancelled' || b.status === 'rejected' ? '↩️ Escrow Refunded' : String(b.paymentStatus || '').startsWith('paid') ? '🛡️ Escrow Protected' : '⏳ Awaiting Payment'}
                         </div>
                       </div>
                     </div>

@@ -725,7 +725,7 @@ export const ExpertAppointmentsPage = () => {
         {!loading && filteredBookings.length > 0 && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             {filteredBookings.map((b) => {
-              const isPaid = b.paymentStatus === 'paid';
+              const isPaid = b.paymentStatus === 'paid' || String(b.paymentStatus || '').startsWith('paid_');
               const isCheckedIn = b.checkInStatus === 'checked_in' || b.checkedInAt;
               const isUpdating = updatingId === b._id;
 
@@ -822,12 +822,16 @@ export const ExpertAppointmentsPage = () => {
                           fontSize: '0.68rem',
                           fontWeight: 800,
                           fontFamily: 'Outfit',
-                          color: isPaid ? '#10b981' : '#f5b942',
+                          color: b.status === 'completed' ? '#10b981' : isPaid ? '#10b981' : '#f5b942',
                           marginTop: '0.25rem',
                           display: 'inline-block',
                         }}
                       >
-                        {isPaid ? '✓ Paid via Paystack' : '⏳ Payment Pending'}
+                        {b.status === 'completed'
+                          ? '💰 Escrow Released to Wallet'
+                          : isPaid
+                          ? '🛡️ Escrow Protected · In Vault'
+                          : '⏳ Payment Pending'}
                       </span>
                     </div>
                   </div>

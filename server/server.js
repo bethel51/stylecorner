@@ -1347,7 +1347,8 @@ app.post('/api/bookings', authenticateToken, async (req, res) => {
       checkInCode: req.body.checkInCode || generateCheckInCode(),
       checkInStatus: 'pending',
       status: 'pending',
-      paymentStatus: req.body.paymentStatus || 'pending_payment'
+      paymentStatus: req.body.paymentStatus || 'pending_payment',
+      escrowStatus: isBookingPaid(req.body.paymentStatus) ? 'held' : 'none'
     };
 
     const booking = new Booking(bookingPayload);
@@ -1454,6 +1455,8 @@ app.put('/api/bookings/:id', authenticateToken, async (req, res) => {
     const isTerminating = rawStatus === 'cancelled' || rawStatus === 'rejected';
     if (isTerminating && wasPaid && booking.paymentStatus !== 'refunded') {
       updateObj.paymentStatus = 'refunded';
+      updateObj.escrowStatus = 'refunded';
+      updateObj.escrowRefundedAt = new Date();
     }
 
     const updated = await Booking.findByIdAndUpdate(req.params.id, { $set: updateObj }, { new: true });
@@ -1479,56 +1482,62 @@ app.put('/api/bookings/:id', authenticateToken, async (req, res) => {
         });
       }
     } else if (newStatus === 'completed' && booking.status !== 'completed') {
-      // 1. Credit Expert's Atelier Wallet with earnings for rendered service (only once)
-      try {
-        let expertUser = null;
-        if (updated.stylistId) {
-          expertUser = await User.findById(updated.stylistId);
+      updateObj.escrowStatus = 'released';
+      updateObj.escrowReleasedAt = new Date();
+      // 1. Credit Expert's Atelier Wallet with earnings for rendered service (only once, strictly if client paid into escrow)
+      if (wasPaid) {
+        try {
+          let expertUser = null;
+          if (updated.stylistId) {
+            expertUser = await User.findById(updated.stylistId);
+          }
+          if (!expertUser && updated.stylist) {
+            expertUser = await User.findOne({
+              $or: [
+                { firstname: new RegExp('^' + escapeRegex(updated.stylist.trim().split(' ')[0]) + '$', 'i'), role: { $in: ['staff', 'expert'] } },
+                { firstname: new RegExp(escapeRegex(updated.stylist), 'i'), role: { $in: ['staff', 'expert'] } },
+                { email: updated.stylistEmail }
+              ]
+            });
+          }
+
+          if (expertUser) {
+            const earningAmount = Number(updated.price) || 0;
+            await User.findByIdAndUpdate(expertUser._id, { $inc: { walletBalance: earningAmount } });
+
+            const txn = new Transaction({
+              userId: expertUser._id,
+              userEmail: expertUser.email,
+              userName: `${expertUser.firstname} ${expertUser.lastname || ''}`.trim(),
+              type: 'service_earning',
+              amount: earningAmount,
+              direction: 'credit',
+              reference: `EARN-${Date.now()}-${String(updated._id).slice(-4)}`,
+              status: 'success',
+              description: `Earnings for completed appointment: ${updated.service} (${updated.clientName})`,
+              metadata: { bookingId: updated._id }
+            });
+            await txn.save();
+
+            await createInAppNotification({
+              userEmail: expertUser.email,
+              title: '💰 Service Earnings Credited!',
+              message: `₦${earningAmount.toLocaleString()} credited to your Atelier Wallet for completing ${updated.service} with ${updated.clientName}.`,
+              type: 'booking',
+              bookingId: updated._id
+            });
+
+            await sendNotificationSafe(
+              expertUser.email,
+              `Service Earnings Credited: ₦${earningAmount.toLocaleString()} 💰`,
+              `Hi ${expertUser.firstname},\n\nCongratulations on completing your styling session for ${updated.clientName} (${updated.service})!\n\nYour Atelier Wallet has been credited with ₦${earningAmount.toLocaleString()}.\nYou can view your balance and withdraw directly to your Nigerian bank account anytime from your Expert Dashboard.`
+            );
+          }
+        } catch (earnErr) {
+          console.error('Failed to credit expert wallet earnings:', earnErr);
         }
-        if (!expertUser && updated.stylist) {
-          expertUser = await User.findOne({
-            $or: [
-              { firstname: new RegExp('^' + escapeRegex(updated.stylist.trim().split(' ')[0]) + '$', 'i'), role: { $in: ['staff', 'expert'] } },
-              { firstname: new RegExp(escapeRegex(updated.stylist), 'i'), role: { $in: ['staff', 'expert'] } },
-              { email: updated.stylistEmail }
-            ]
-          });
-        }
-
-        if (expertUser) {
-          const earningAmount = Number(updated.price) || 0;
-          await User.findByIdAndUpdate(expertUser._id, { $inc: { walletBalance: earningAmount } });
-
-          const txn = new Transaction({
-            userId: expertUser._id,
-            userEmail: expertUser.email,
-            userName: `${expertUser.firstname} ${expertUser.lastname || ''}`.trim(),
-            type: 'service_earning',
-            amount: earningAmount,
-            direction: 'credit',
-            reference: `EARN-${Date.now()}-${String(updated._id).slice(-4)}`,
-            status: 'success',
-            description: `Earnings for completed appointment: ${updated.service} (${updated.clientName})`,
-            metadata: { bookingId: updated._id }
-          });
-          await txn.save();
-
-          await createInAppNotification({
-            userEmail: expertUser.email,
-            title: '💰 Service Earnings Credited!',
-            message: `₦${earningAmount.toLocaleString()} credited to your Atelier Wallet for completing ${updated.service} with ${updated.clientName}.`,
-            type: 'booking',
-            bookingId: updated._id
-          });
-
-          await sendNotificationSafe(
-            expertUser.email,
-            `Service Earnings Credited: ₦${earningAmount.toLocaleString()} 💰`,
-            `Hi ${expertUser.firstname},\n\nCongratulations on completing your styling session for ${updated.clientName} (${updated.service})!\n\nYour Atelier Wallet has been credited with ₦${earningAmount.toLocaleString()}.\nYou can view your balance and withdraw directly to your Nigerian bank account anytime from your Expert Dashboard.`
-          );
-        }
-      } catch (earnErr) {
-        console.error('Failed to credit expert wallet earnings:', earnErr);
+      } else {
+        console.warn(`[ESCROW] Booking ${booking._id} marked completed but was unpaid; no escrow funds were deposited or released.`);
       }
 
       if (updated.clientEmail) {
@@ -2787,7 +2796,7 @@ app.post('/api/wallet/pay', authenticateToken, async (req, res) => {
       // Keep booking status as 'pending' so the expert receives the incoming request and can Accept or Decline!
       const updatedBooking = await Booking.findByIdAndUpdate(
         bookingId,
-        { $set: { paymentStatus: 'paid_wallet', status: 'pending' } },
+        { $set: { paymentStatus: 'paid_wallet', status: 'pending', escrowStatus: 'held' } },
         { new: true }
       );
       if (updatedBooking) {
@@ -2939,6 +2948,7 @@ app.post('/api/paystack/verify', authenticateToken, async (req, res) => {
       if (!booking) return res.status(404).json({ error: 'Booking not found' });
 
       booking.paymentStatus = 'paid_paystack';
+      booking.escrowStatus = 'held';
       booking.status = 'pending'; // Keep pending for expert acceptance!
       await booking.save();
 

@@ -15,6 +15,13 @@ const bookingSchema = new mongoose.Schema({
   time: { type: String, required: true },
   staff: { type: String }, // Expert who accepted the booking
   paymentStatus: { type: String, default: 'unpaid' },
+  escrowStatus: { 
+    type: String, 
+    enum: ['none', 'held', 'released', 'refunded'], 
+    default: 'none' 
+  },
+  escrowReleasedAt: { type: Date },
+  escrowRefundedAt: { type: Date },
   status: { 
     type: String, 
     enum: ['pending', 'accepted', 'completed', 'cancelled', 'rejected'], 
