@@ -205,7 +205,7 @@ export const ExpertAppointmentsPage = () => {
   return (
     <PageContainer>
       <div style={{ maxWidth: '1060px', margin: '0 auto', padding: '1rem 0 3.5rem' }}>
-        
+
         {/* ── Top Header Navigation Bar ── */}
         <div
           style={{
@@ -589,13 +589,13 @@ export const ExpertAppointmentsPage = () => {
                     background: isActive
                       ? 'linear-gradient(135deg, #f5b942 0%, #e0a32d 100%)'
                       : isDark
-                      ? '#171c2b'
-                      : '#f1f5f9',
+                        ? '#171c2b'
+                        : '#f1f5f9',
                     color: isActive
                       ? '#0c0e14'
                       : isDark
-                      ? '#cbd5e1'
-                      : '#475569',
+                        ? '#cbd5e1'
+                        : '#475569',
                     border: `1.5px solid ${isActive ? '#f5b942' : 'transparent'}`,
                     whiteSpace: 'nowrap',
                     display: 'inline-flex',
@@ -678,8 +678,8 @@ export const ExpertAppointmentsPage = () => {
               {searchQuery
                 ? `No appointment matched your search query "${searchQuery}". Try searching another name or clearing filters.`
                 : statusFilter === 'pending'
-                ? 'You are all caught up! When clients schedule a session with you, their requests will appear here for instant acceptance.'
-                : 'No appointments currently recorded under this view.'}
+                  ? 'You are all caught up! When clients schedule a session with you, their requests will appear here for instant acceptance.'
+                  : 'No appointments currently recorded under this view.'}
             </p>
             {searchQuery ? (
               <button
@@ -734,10 +734,10 @@ export const ExpertAppointmentsPage = () => {
                 b.status === 'accepted'
                   ? '#10b981'
                   : b.status === 'pending'
-                  ? '#f5b942'
-                  : b.status === 'completed'
-                  ? '#38bdf8'
-                  : '#ef4444';
+                    ? '#f5b942'
+                    : b.status === 'completed'
+                      ? '#38bdf8'
+                      : '#ef4444';
 
               return (
                 <div
@@ -830,8 +830,8 @@ export const ExpertAppointmentsPage = () => {
                         {b.status === 'completed'
                           ? '💰 Escrow Released to Wallet'
                           : isPaid
-                          ? '🛡️ Escrow Protected · In Vault'
-                          : '⏳ Payment Pending'}
+                            ? '🛡️ Escrow Protected · In Vault'
+                            : '⏳ Payment Pending'}
                       </span>
                     </div>
                   </div>

@@ -65,7 +65,14 @@ export const Experts = () => {
     api.getSpecialists()
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          const verifiedStaff = data.filter((spec) => spec.role === 'staff' || spec.role === 'expert' || spec.isVerified === true);
+          // Strictly verified and ₦3,000-activated experts only (never customers)
+          const verifiedStaff = data.filter(
+            (spec) =>
+              (spec.role === 'staff' || spec.role === 'expert') &&
+              spec.role !== 'customer' &&
+              spec.isActivated === true &&
+              spec.isVerified === true
+          );
 
           const registeredTeam = verifiedStaff.map((spec) => {
             const fullName = `${spec.firstname || ''} ${spec.lastname || ''}`.trim() || 'Verified Specialist';

@@ -135,8 +135,14 @@ export const ExpertProfile = () => {
     api.getSpecialists()
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          const verifiedStaff = data.filter((s) => s.role === 'staff' || s.role === 'expert' || s.isVerified === true);
-          const pool = verifiedStaff.length > 0 ? verifiedStaff : data;
+          // Strictly verified and ₦3,000-activated experts only (never customers)
+          const pool = data.filter(
+            (s) =>
+              (s.role === 'staff' || s.role === 'expert') &&
+              s.role !== 'customer' &&
+              s.isActivated === true &&
+              s.isVerified === true
+          );
 
           let matched = null;
           if (queryId) {
