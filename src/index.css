@@ -239,18 +239,34 @@ html, body {
   }
 
   .bottom-nav {
+    position: fixed !important;
+    bottom: 0 !important;
     left: 0 !important;
     right: 0 !important;
     width: 100% !important;
     max-width: 100% !important;
+    margin: 0 !important;
     transform: none !important;
-    padding-left: 0.25rem !important;
-    padding-right: 0.25rem !important;
+    -webkit-transform: none !important;
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+    padding-bottom: max(env(safe-area-inset-bottom, 0px), 8px) !important;
+    height: calc(64px + max(env(safe-area-inset-bottom, 0px), 8px)) !important;
+    z-index: 9999 !important;
+    background: rgba(12, 14, 20, 0.96) !important;
+    backdrop-filter: blur(24px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.6) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-around !important;
+    box-sizing: border-box !important;
   }
 
   .page-content {
     padding: 0.85rem !important;
-    padding-bottom: calc(var(--bottom-nav-height, 70px) + env(safe-area-inset-bottom, 20px) + 2rem) !important;
+    padding-bottom: calc(var(--bottom-nav-height, 70px) + env(safe-area-inset-bottom, 20px) + 2.5rem) !important;
   }
 
   /* Prevent any inline-wide divs from causing horizontal scroll */
@@ -446,7 +462,7 @@ html, body {
   justify-content: space-around;
   padding: 0 0.5rem;
   padding-bottom: env(safe-area-inset-bottom, 0px);
-  z-index: 1000;
+  z-index: 9999;
   box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.5);
   box-sizing: border-box;
 }
@@ -885,12 +901,15 @@ html, body {
 
 /* ── Mobile Performance & Anti-Lag Fixes ── */
 
-/* GPU promote header and nav to prevent paint during scroll */
-.app-header,
+/* GPU promote active interactive surfaces without breaking position: fixed */
+.app-header {
+  will-change: auto;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
 .bottom-nav {
   will-change: auto;
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
@@ -900,34 +919,35 @@ html, body {
   Each route change gets a slide-sweep animation.
   Forward navigation: new page sweeps in from the RIGHT.
   Back navigation:   new page sweeps in from the LEFT.
-  The app-viewport clips overflow so pages never bleed outside the frame.
+  The animation finishes with transform: none so fixed position
+  elements are never trapped inside a local containing block.
 */
 
 @keyframes pageSweepForward {
   from {
     opacity: 0;
-    transform: translate3d(32px, 0, 0);
+    transform: translate3d(24px, 0, 0);
   }
   to {
     opacity: 1;
-    transform: translate3d(0, 0, 0);
+    transform: none;
   }
 }
 
 @keyframes pageSweepBack {
   from {
     opacity: 0;
-    transform: translate3d(-32px, 0, 0);
+    transform: translate3d(-24px, 0, 0);
   }
   to {
     opacity: 1;
-    transform: translate3d(0, 0, 0);
+    transform: none;
   }
 }
 
 .page-sweep-forward {
-  animation: pageSweepForward 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-  will-change: transform, opacity;
+  animation: pageSweepForward 0.22s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  will-change: opacity;
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
@@ -936,8 +956,8 @@ html, body {
 }
 
 .page-sweep-back {
-  animation: pageSweepBack 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-  will-change: transform, opacity;
+  animation: pageSweepBack 0.22s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  will-change: opacity;
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
@@ -1279,19 +1299,18 @@ button:active, .dashboard-quick-actions button:active {
 
 .page-enter {
   animation: pageEnter 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  will-change: transform, opacity;
-  transform: translateZ(0);
+  will-change: opacity;
   backface-visibility: hidden;
 }
 
 @keyframes pageEnter {
   0% {
     opacity: 0.7;
-    transform: translateY(4px) translateZ(0);
+    transform: translateY(4px);
   }
   100% {
     opacity: 1;
-    transform: translateY(0) translateZ(0);
+    transform: none;
   }
 }
 

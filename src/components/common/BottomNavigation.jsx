@@ -1,6 +1,7 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Home, Scissors, Plus, ShoppingBag, User, Sparkles, Users } from 'lucide-react';
+import { Home, Scissors, Plus, ShoppingBag, User, Users } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { preloadRoute } from '../../App';
 
@@ -8,12 +9,6 @@ export const BottomNavigation = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { isAuthenticated, role, showToast } = useAuth();
-
-  const getDashboardPath = () => {
-    if (!isAuthenticated) return '/login';
-    if (role === 'admin') return '/admin';
-    return role === 'staff' ? '/expert-dashboard' : '/customer-dashboard';
-  };
 
   const handleBookClick = () => {
     if (isAuthenticated && (role === 'staff' || role === 'admin')) {
@@ -46,8 +41,8 @@ export const BottomNavigation = () => {
     },
   ];
 
-  return (
-    <nav className="bottom-nav">
+  const navContent = (
+    <nav className="bottom-nav" role="navigation" aria-label="Bottom Navigation">
       {navItems.map((item) => {
         const Icon = item.icon;
         const isActive =
@@ -89,4 +84,9 @@ export const BottomNavigation = () => {
       })}
     </nav>
   );
+
+  // Mount directly into document.body to guarantee viewport-fixed positioning
+  // outside any route transition wrapper, page transform, or scroll container
+  if (typeof document === 'undefined') return navContent;
+  return createPortal(navContent, document.body);
 };
