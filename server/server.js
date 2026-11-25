@@ -805,6 +805,54 @@ app.get('/api/specialists/:id', async (req, res) => {
   }
 });
 
+// Public Lookbook / Gallery — returns authentic pictures uploaded by verified experts ONLY
+app.get('/api/gallery', async (req, res) => {
+  try {
+    const verifiedExperts = await User.find({
+      role: { $in: ['staff', 'expert'] },
+      isVerified: true,
+      'portfolio.0': { $exists: true }
+    }).select('-password');
+
+    const lookbookItems = [];
+    verifiedExperts.forEach((expert) => {
+      const expertName = expert.name || `${expert.firstname || ''} ${expert.lastname || ''}`.trim() || 'Verified Specialist';
+      const location = [expert.lga, expert.state].filter(Boolean).join(', ') || expert.businessAddress || expert.address || 'Lagos, Nigeria';
+      const studio = expert.businessAddress || `${expertName}'s Studio`;
+
+      if (Array.isArray(expert.portfolio)) {
+        expert.portfolio.forEach((item, idx) => {
+          if (item && item.imageUrl) {
+            lookbookItems.push({
+              id: item._id ? item._id.toString() : `${expert._id}-${idx}`,
+              expertId: expert._id,
+              stylist: expertName,
+              studio: studio,
+              location: location,
+              category: item.service || 'General',
+              title: item.title || `${item.service || 'Look'} by ${expertName}`,
+              desc: item.description || item.clientNote || '',
+              duration: item.duration || 'Flexible',
+              price: item.price ? (typeof item.price === 'number' ? item.price : Number(String(item.price).replace(/[^0-9]/g, '')) || 0) : 0,
+              displayPrice: item.price ? String(item.price) : '',
+              image: item.imageUrl,
+              rating: expert.rating || 5.0,
+              reviewCount: Array.isArray(expert.reviews) ? expert.reviews.length : 0,
+              createdAt: item.createdAt || new Date(),
+            });
+          }
+        });
+      }
+    });
+
+    lookbookItems.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    res.status(200).json(lookbookItems);
+  } catch (error) {
+    console.error('Gallery API error:', error);
+    res.status(500).json({ error: 'Failed to fetch gallery items' });
+  }
+});
+
 // Expert Account Activation — ₦3,000 one-time payment via Paystack
 app.post('/api/experts/activate', authenticateToken, async (req, res) => {
   try {

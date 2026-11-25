@@ -219,6 +219,54 @@ export const api = {
     }
   },
 
+  // Public Lookbook / Gallery Feed (authentic uploads from verified experts)
+  getGalleryItems: async () => {
+    try {
+      const res = await fetchWithTimeout(`${API_BASE}/gallery`);
+      const data = await safeJson(res);
+      if (res.ok && Array.isArray(data)) return data;
+    } catch (e) {
+      console.warn('Direct gallery API fetch notice:', e.message);
+    }
+    // Fallback: extract from specialists endpoint
+    try {
+      const specialists = await api.getSpecialists();
+      const items = [];
+      if (Array.isArray(specialists)) {
+        specialists.forEach((spec) => {
+          if (spec.isVerified && Array.isArray(spec.portfolio)) {
+            const specName = spec.name || `${spec.firstname || ''} ${spec.lastname || ''}`.trim() || 'Verified Specialist';
+            const loc = [spec.lga, spec.state].filter(Boolean).join(', ') || 'Lagos, Nigeria';
+            spec.portfolio.forEach((p, idx) => {
+              if (p && p.imageUrl) {
+                items.push({
+                  id: p._id ? p._id.toString() : `${spec._id}-${idx}`,
+                  expertId: spec._id,
+                  stylist: specName,
+                  studio: spec.businessAddress || `${specName}'s Studio`,
+                  location: loc,
+                  category: p.service || 'General',
+                  title: p.title || `${p.service || 'Look'} by ${specName}`,
+                  desc: p.description || p.clientNote || '',
+                  duration: p.duration || 'Flexible',
+                  price: p.price ? Number(String(p.price).replace(/[^0-9]/g, '')) || 0 : 0,
+                  displayPrice: p.price ? String(p.price) : '',
+                  image: p.imageUrl,
+                  rating: spec.rating || 5.0,
+                  reviewCount: Array.isArray(spec.reviews) ? spec.reviews.length : 0,
+                  createdAt: p.createdAt || new Date(),
+                });
+              }
+            });
+          }
+        });
+      }
+      return items;
+    } catch (err) {
+      return [];
+    }
+  },
+
   matchAiSpecialist: async (requestText, primaryService, secondaryService) => {
     const res = await fetchWithTimeout(`${API_BASE}/ai/match-specialist`, {
       method: 'POST',
