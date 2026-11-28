@@ -1,4 +1,4 @@
-const CACHE_NAME = 'style-corner-v15';
+const CACHE_NAME = 'style-corner-v16';
 const PRECACHE_ASSETS = [
   '/',
   '/index.html',
@@ -181,3 +181,4 @@ self.addEventListener('notificationclick', (event) => {
     })
   );
 });
+
