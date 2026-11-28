@@ -79,14 +79,16 @@ export const Home = () => {
           left: 0,
           right: 0,
           bottom: 0,
-          width: "100vw",
-          height: "100dvh",
+          width: "100%",
+          height: "100%",
+          minHeight: "100vh",
           zIndex: 99999,
           overflow: "hidden",
           backgroundColor: "#FFFFFF",
           userSelect: "none",
+          WebkitUserSelect: "none",
           overscrollBehavior: "none",
-          touchAction: "none",
+          touchAction: "manipulation",
         }}
       >
         <SEOHead
@@ -122,7 +124,7 @@ export const Home = () => {
             top: 0,
             left: 0,
             width: "100%",
-            height: "50dvh",
+            height: "50%",
             overflow: "hidden",
             transform: isSplitting ? "translate3d(0, -100%, 0)" : "translate3d(0, 0, 0)",
             transition: "transform 0.75s cubic-bezier(0.77, 0, 0.175, 1)",
@@ -134,17 +136,17 @@ export const Home = () => {
             WebkitTapHighlightColor: "transparent",
           }}
         >
-          {/* Top Half Artwork - Top 50% of the single 100dvh image */}
+          {/* Top Half Artwork - Top 50% of the single image */}
           <div
             style={{
               position: "absolute",
               top: 0,
               left: 0,
-              width: "100vw",
-              height: "100dvh",
+              width: "100%",
+              height: "200%",
               backgroundImage: "url('/images/landing-art.jpg')",
               backgroundSize: "cover",
-              backgroundPosition: "center center",
+              backgroundPosition: "center top",
               backgroundRepeat: "no-repeat",
             }}
           />
@@ -196,10 +198,10 @@ export const Home = () => {
           onClick={handleTriggerSplit}
           style={{
             position: "absolute",
-            top: "50dvh",
+            top: "50%",
             left: 0,
             width: "100%",
-            height: "50dvh",
+            height: "50%",
             overflow: "hidden",
             transform: isSplitting ? "translate3d(0, 100%, 0)" : "translate3d(0, 0, 0)",
             transition: "transform 0.75s cubic-bezier(0.77, 0, 0.175, 1)",
@@ -211,17 +213,17 @@ export const Home = () => {
             WebkitTapHighlightColor: "transparent",
           }}
         >
-          {/* Bottom Half Artwork - Bottom 50% of the single 100dvh image */}
+          {/* Bottom Half Artwork - Bottom 50% of the single image */}
           <div
             style={{
               position: "absolute",
-              top: "-50dvh",
+              top: "-100%",
               left: 0,
-              width: "100vw",
-              height: "100dvh",
+              width: "100%",
+              height: "200%",
               backgroundImage: "url('/images/landing-art.jpg')",
               backgroundSize: "cover",
-              backgroundPosition: "center center",
+              backgroundPosition: "center top",
               backgroundRepeat: "no-repeat",
             }}
           />
@@ -284,8 +286,8 @@ export const Home = () => {
           onClick={handleTriggerSplit}
           style={{
             position: "absolute",
-            top: "50dvh",
-            left: "50vw",
+            top: "50%",
+            left: "50%",
             transform: isSplitting ? "translate(-50%, -50%) scale(1.2)" : "translate(-50%, -50%)",
             opacity: isSplitting ? 0 : 1,
             transition: "transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.45s ease",
@@ -324,8 +326,8 @@ export const Home = () => {
           onClick={handleTriggerSplit}
           style={{
             position: "absolute",
-            top: "calc(50dvh + 54px)",
-            left: "50vw",
+            top: "calc(50% + 54px)",
+            left: "50%",
             transform: "translateX(-50%)",
             opacity: isSplitting ? 0 : 1,
             transition: "opacity 0.35s ease",

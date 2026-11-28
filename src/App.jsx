@@ -213,6 +213,12 @@ export const PageLoader = () => (
  */
 const PageTransition = ({ children }) => {
   const location = useLocation();
+
+  // The landing page at '/' is a standalone full-bleed door: do not wrap in pageSweep animation to prevent 0-height clipping in Safari
+  if (location.pathname === '/') {
+    return <>{children}</>;
+  }
+
   const prevPath = useRef(location.pathname);
 
   // Detect if we're going "back" by checking history state

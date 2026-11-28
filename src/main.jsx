@@ -35,14 +35,18 @@ window.addEventListener('error', (event) => {
 if ('serviceWorker' in navigator) {
   let refreshing = false;
 
-  // Auto-reload once when a new service worker replaces the old one
+  // Auto-reload once when a new service worker replaces an existing active one
   navigator.serviceWorker.addEventListener('controllerchange', () => {
-    if (!refreshing) {
+    if (sessionStorage.getItem('pwa_has_active_controller') && !refreshing) {
       refreshing = true;
       console.log('[PWA] New version activated. Reloading page for fresh update...');
       window.location.reload();
     }
   });
+
+  if (navigator.serviceWorker.controller) {
+    sessionStorage.setItem('pwa_has_active_controller', 'true');
+  }
 
   const setupRegistration = (registration) => {
     console.log('[PWA] Service Worker active with scope:', registration.scope);
