@@ -67,6 +67,298 @@ export const Home = () => {
   const isCustomer = selectedRole === "customer";
   const isSpecialist = selectedRole === "staff";
 
+  // ══════════════════════════════════════════════════════════════════
+  // STANDALONE SPLIT HORIZONTAL LANDING PAGE (Artwork in Two Halves)
+  // ══════════════════════════════════════════════════════════════════
+  if (phase === "landing") {
+    return (
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          width: "100vw",
+          height: "100dvh",
+          zIndex: 99999,
+          overflow: "hidden",
+          backgroundColor: "#FFFFFF",
+          userSelect: "none",
+          overscrollBehavior: "none",
+          touchAction: "none",
+        }}
+      >
+        <SEOHead
+          title="Book Barbers, Hairstylists, Nail Techs & Lash Artists"
+          description="Book top-rated beauty professionals on Style Corner. Connect with verified barbers, hairstylists, wig installers, nail technicians, and lash artists for bespoke salon and grooming appointments."
+          canonicalPath="/"
+          keywords="beauty professionals, nail technicians, lash artists, hairstylists, barbers, wig installers, salon booking, haircut appointment, braiders"
+        />
+
+        <style>{`
+          @keyframes emblemBreath {
+            0%, 100% {
+              transform: translate(-50%, -50%) scale(1);
+              box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 25px rgba(245, 185, 66, 0.4);
+            }
+            50% {
+              transform: translate(-50%, -50%) scale(1.05);
+              box-shadow: 0 12px 38px rgba(0, 0, 0, 0.5), 0 0 40px rgba(245, 185, 66, 0.7);
+            }
+          }
+
+          @keyframes promptPulse {
+            0%, 100% { opacity: 0.92; transform: translateX(-50%) translateY(0); }
+            50% { opacity: 1; transform: translateX(-50%) translateY(-2px); }
+          }
+        `}</style>
+
+        {/* Top Half (Slides UP when clicked) */}
+        <div
+          onClick={handleTriggerSplit}
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "50dvh",
+            overflow: "hidden",
+            transform: isSplitting ? "translate3d(0, -100%, 0)" : "translate3d(0, 0, 0)",
+            transition: "transform 0.75s cubic-bezier(0.77, 0, 0.175, 1)",
+            zIndex: 20,
+            borderBottom: "1.5px solid #F5B942",
+            boxShadow: "0 4px 20px rgba(0, 0, 0, 0.08)",
+            backgroundColor: "#FFFFFF",
+            cursor: "pointer",
+            WebkitTapHighlightColor: "transparent",
+          }}
+        >
+          {/* Top Half Artwork - Top 50% of the single 100dvh image */}
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100vw",
+              height: "100dvh",
+              backgroundImage: "url('/images/landing-art.jpg')",
+              backgroundSize: "cover",
+              backgroundPosition: "center center",
+              backgroundRepeat: "no-repeat",
+            }}
+          />
+          {/* Top Header Branding Badge */}
+          <div
+            style={{
+              position: "absolute",
+              top: "calc(env(safe-area-inset-top, 0px) + 1.15rem)",
+              left: 0,
+              right: 0,
+              display: "flex",
+              justifyContent: "center",
+              zIndex: 25,
+              pointerEvents: "none",
+            }}
+          >
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.45rem",
+                padding: "0.32rem 0.95rem",
+                borderRadius: "50px",
+                background: "rgba(255, 255, 255, 0.94)",
+                border: "1.5px solid rgba(245, 185, 66, 0.65)",
+                backdropFilter: "blur(12px)",
+                boxShadow: "0 4px 18px rgba(0, 0, 0, 0.08)",
+              }}
+            >
+              <Sparkles size={13} color="#F5B942" />
+              <span
+                style={{
+                  fontSize: "0.74rem",
+                  fontWeight: 800,
+                  color: "#B47806",
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                }}
+              >
+                Style Corner Atelier
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Half (Slides DOWN when clicked) */}
+        <div
+          onClick={handleTriggerSplit}
+          style={{
+            position: "absolute",
+            top: "50dvh",
+            left: 0,
+            width: "100%",
+            height: "50dvh",
+            overflow: "hidden",
+            transform: isSplitting ? "translate3d(0, 100%, 0)" : "translate3d(0, 0, 0)",
+            transition: "transform 0.75s cubic-bezier(0.77, 0, 0.175, 1)",
+            zIndex: 20,
+            borderTop: "1.5px solid #F5B942",
+            boxShadow: "0 -4px 20px rgba(0, 0, 0, 0.08)",
+            backgroundColor: "#FFFFFF",
+            cursor: "pointer",
+            WebkitTapHighlightColor: "transparent",
+          }}
+        >
+          {/* Bottom Half Artwork - Bottom 50% of the single 100dvh image */}
+          <div
+            style={{
+              position: "absolute",
+              top: "-50dvh",
+              left: 0,
+              width: "100vw",
+              height: "100dvh",
+              backgroundImage: "url('/images/landing-art.jpg')",
+              backgroundSize: "cover",
+              backgroundPosition: "center center",
+              backgroundRepeat: "no-repeat",
+            }}
+          />
+          {/* Bottom Tagline */}
+          <div
+            style={{
+              position: "absolute",
+              bottom: "calc(env(safe-area-inset-bottom, 0px) + 1.25rem)",
+              left: 0,
+              right: 0,
+              display: "flex",
+              justifyContent: "center",
+              zIndex: 25,
+              pointerEvents: "none",
+              padding: "0 1rem",
+            }}
+          >
+            <div
+              style={{
+                background: "rgba(255, 255, 255, 0.92)",
+                padding: "0.35rem 1rem",
+                borderRadius: "50px",
+                border: "1px solid rgba(0, 0, 0, 0.08)",
+                backdropFilter: "blur(10px)",
+                boxShadow: "0 4px 14px rgba(0, 0, 0, 0.06)",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  fontSize: "0.82rem",
+                  fontWeight: 700,
+                  color: "#0F172A",
+                  letterSpacing: "0.02em",
+                }}
+              >
+                Luxury Grooming &amp; Verified Artistry
+              </span>
+              <span
+                style={{
+                  fontFamily: "'Space Grotesk', monospace",
+                  fontSize: "0.68rem",
+                  color: "#B47806",
+                  fontWeight: 700,
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                }}
+              >
+                Lagos &bull; Ibadan
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Exact Center Seam: Squared Style Corner Logo ── */}
+        <div
+          onClick={handleTriggerSplit}
+          style={{
+            position: "absolute",
+            top: "50dvh",
+            left: "50vw",
+            transform: isSplitting ? "translate(-50%, -50%) scale(1.2)" : "translate(-50%, -50%)",
+            opacity: isSplitting ? 0 : 1,
+            transition: "transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.45s ease",
+            zIndex: 60,
+            cursor: "pointer",
+            width: "80px",
+            height: "80px",
+            borderRadius: "20px",
+            background: "#08090C",
+            border: "2.5px solid #F5B942",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            overflow: "hidden",
+            padding: "4px",
+            boxShadow: "0 8px 32px rgba(0, 0, 0, 0.4), 0 0 25px rgba(245, 185, 66, 0.4)",
+            animation: isSplitting ? "none" : "emblemBreath 2.6s ease-in-out infinite",
+            WebkitTapHighlightColor: "transparent",
+          }}
+        >
+          <img
+            src="/pwa-icon-192.png"
+            alt="Style Corner Logo"
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              borderRadius: "14px",
+              display: "block",
+            }}
+          />
+        </div>
+
+        {/* ── Tap to Enter Interactive Prompt (Positioned cleanly below the centered logo) ── */}
+        <div
+          onClick={handleTriggerSplit}
+          style={{
+            position: "absolute",
+            top: "calc(50dvh + 54px)",
+            left: "50vw",
+            transform: "translateX(-50%)",
+            opacity: isSplitting ? 0 : 1,
+            transition: "opacity 0.35s ease",
+            zIndex: 60,
+            cursor: "pointer",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.45rem",
+            padding: "0.38rem 0.95rem",
+            borderRadius: "50px",
+            background: "rgba(8, 9, 12, 0.9)",
+            border: "1.5px solid rgba(245, 185, 66, 0.65)",
+            backdropFilter: "blur(14px)",
+            boxShadow: "0 8px 24px rgba(0, 0, 0, 0.35)",
+            color: "#F5B942",
+            fontSize: "0.75rem",
+            fontWeight: 800,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+            whiteSpace: "nowrap",
+            animation: isSplitting ? "none" : "promptPulse 2s ease-in-out infinite",
+            WebkitTapHighlightColor: "transparent",
+          }}
+        >
+          <Sparkles size={13} color="#F5B942" />
+          <span>Tap Logo to Enter</span>
+          <span style={{ color: "#FFFFFF" }}>&rarr;</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <PageContainer hideHeader={true} hideNav={true} noPadding={true}>
       <SEOHead
@@ -84,22 +376,6 @@ export const Home = () => {
           backface-visibility: hidden;
           perspective: 1000px;
           will-change: transform, opacity;
-        }
-
-        @keyframes emblemBreath {
-          0%, 100% {
-            transform: scale(1);
-            box-shadow: 0 0 25px rgba(245, 185, 66, 0.55), 0 10px 30px rgba(0, 0, 0, 0.85);
-          }
-          50% {
-            transform: scale(1.06);
-            box-shadow: 0 0 45px rgba(245, 185, 66, 0.85), 0 12px 36px rgba(0, 0, 0, 0.95);
-          }
-        }
-
-        @keyframes promptPulse {
-          0%, 100% { opacity: 0.9; transform: translateY(0); }
-          50% { opacity: 1; transform: translateY(-2px); }
         }
 
         .role-editorial-item {
@@ -142,270 +418,6 @@ export const Home = () => {
           color: ${isDark ? "#cbd5e1" : "#475569"};
         }
       `}</style>
-
-      {/* ══════════════════════════════════════════════════════════════════
-          LAYER 1: SPLIT HORIZONTAL LANDING PAGE (Artwork in Two Equal Halves)
-         ══════════════════════════════════════════════════════════════════ */}
-      {phase === "landing" && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 1000,
-            overflow: "hidden",
-            backgroundColor: "#FFFFFF",
-            userSelect: "none",
-            overscrollBehavior: "none",
-            touchAction: "none",
-          }}
-        >
-          {/* Top Half (Slides UP when clicked) */}
-          <div
-            onClick={handleTriggerSplit}
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "50dvh",
-              overflow: "hidden",
-              transform: isSplitting ? "translate3d(0, -100%, 0)" : "translate3d(0, 0, 0)",
-              transition: "transform 0.75s cubic-bezier(0.77, 0, 0.175, 1)",
-              zIndex: 20,
-              borderBottom: "2px solid #F5B942",
-              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.08)",
-              backgroundColor: "#FFFFFF",
-              cursor: "pointer",
-              WebkitTapHighlightColor: "transparent",
-            }}
-          >
-            {/* Top Half Artwork - Top 50% of the single 100dvh image */}
-            <div
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100vw",
-                height: "100dvh",
-                backgroundImage: "url('/images/landing-art.jpg')",
-                backgroundSize: "cover",
-                backgroundPosition: "center center",
-                backgroundRepeat: "no-repeat",
-              }}
-            />
-            {/* Top Header Branding Badge */}
-            <div
-              style={{
-                position: "absolute",
-                top: "calc(env(safe-area-inset-top, 0px) + 1.25rem)",
-                left: 0,
-                right: 0,
-                display: "flex",
-                justifyContent: "center",
-                zIndex: 25,
-                pointerEvents: "none",
-              }}
-            >
-              <div
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "0.45rem",
-                  padding: "0.32rem 0.95rem",
-                  borderRadius: "50px",
-                  background: "rgba(255, 255, 255, 0.94)",
-                  border: "1.5px solid rgba(245, 185, 66, 0.65)",
-                  backdropFilter: "blur(12px)",
-                  boxShadow: "0 4px 18px rgba(0, 0, 0, 0.08)",
-                }}
-              >
-                <Sparkles size={13} color="#F5B942" />
-                <span
-                  style={{
-                    fontSize: "0.74rem",
-                    fontWeight: 800,
-                    color: "#B47806",
-                    letterSpacing: "0.08em",
-                    textTransform: "uppercase",
-                    fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  }}
-                >
-                  Style Corner Atelier
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Bottom Half (Slides DOWN when clicked) */}
-          <div
-            onClick={handleTriggerSplit}
-            style={{
-              position: "absolute",
-              top: "50dvh",
-              left: 0,
-              width: "100%",
-              height: "50dvh",
-              overflow: "hidden",
-              transform: isSplitting ? "translate3d(0, 100%, 0)" : "translate3d(0, 0, 0)",
-              transition: "transform 0.75s cubic-bezier(0.77, 0, 0.175, 1)",
-              zIndex: 20,
-              borderTop: "2px solid #F5B942",
-              boxShadow: "0 -4px 20px rgba(0, 0, 0, 0.08)",
-              backgroundColor: "#FFFFFF",
-              cursor: "pointer",
-              WebkitTapHighlightColor: "transparent",
-            }}
-          >
-            {/* Bottom Half Artwork - Bottom 50% of the same 100dvh image (shifted up by 50dvh) */}
-            <div
-              style={{
-                position: "absolute",
-                top: "-50dvh",
-                left: 0,
-                width: "100vw",
-                height: "100dvh",
-                backgroundImage: "url('/images/landing-art.jpg')",
-                backgroundSize: "cover",
-                backgroundPosition: "center center",
-                backgroundRepeat: "no-repeat",
-              }}
-            />
-            {/* Bottom Tagline */}
-            <div
-              style={{
-                position: "absolute",
-                bottom: "calc(env(safe-area-inset-bottom, 0px) + 1.5rem)",
-                left: 0,
-                right: 0,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: "0.25rem",
-                zIndex: 25,
-                pointerEvents: "none",
-                textAlign: "center",
-                padding: "0 1rem",
-              }}
-            >
-              <div
-                style={{
-                  background: "rgba(255, 255, 255, 0.92)",
-                  padding: "0.35rem 1rem",
-                  borderRadius: "50px",
-                  border: "1px solid rgba(0, 0, 0, 0.08)",
-                  backdropFilter: "blur(10px)",
-                  boxShadow: "0 4px 14px rgba(0, 0, 0, 0.06)",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                <span
-                  style={{
-                    fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    fontSize: "0.82rem",
-                    fontWeight: 700,
-                    color: "#0F172A",
-                    letterSpacing: "0.02em",
-                  }}
-                >
-                  Luxury Grooming &amp; Verified Artistry
-                </span>
-                <span
-                  style={{
-                    fontFamily: "'Space Grotesk', monospace",
-                    fontSize: "0.68rem",
-                    color: "#B47806",
-                    fontWeight: 700,
-                    letterSpacing: "0.1em",
-                    textTransform: "uppercase",
-                  }}
-                >
-                  Lagos &bull; Ibadan
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* ── Exact Center Seam: Squared Style Corner Logo ── */}
-          <div
-            onClick={handleTriggerSplit}
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: isSplitting
-                ? "translate(-50%, -50%) scale(1.2)"
-                : "translate(-50%, -50%) scale(1)",
-              opacity: isSplitting ? 0 : 1,
-              transition: "transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.45s ease",
-              zIndex: 35,
-              cursor: "pointer",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: "0.75rem",
-              WebkitTapHighlightColor: "transparent",
-            }}
-          >
-            {/* Squared Gold & Black Logo Emblem */}
-            <div
-              style={{
-                width: "82px",
-                height: "82px",
-                borderRadius: "20px",
-                background: "#08090C",
-                border: "2.5px solid #F5B942",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                overflow: "hidden",
-                padding: "4px",
-                boxShadow: "0 8px 30px rgba(0, 0, 0, 0.4), 0 0 25px rgba(245, 185, 66, 0.4)",
-                animation: isSplitting ? "none" : "emblemBreath 2.6s ease-in-out infinite",
-              }}
-            >
-              <img
-                src="/pwa-icon-192.png"
-                alt="Style Corner Logo"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  borderRadius: "14px",
-                  display: "block",
-                }}
-              />
-            </div>
-
-            {/* Tap to Enter Interactive Prompt */}
-            <div
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.45rem",
-                padding: "0.38rem 0.95rem",
-                borderRadius: "50px",
-                background: "rgba(8, 9, 12, 0.88)",
-                border: "1.5px solid rgba(245, 185, 66, 0.65)",
-                backdropFilter: "blur(14px)",
-                boxShadow: "0 8px 24px rgba(0, 0, 0, 0.35)",
-                color: "#F5B942",
-                fontSize: "0.75rem",
-                fontWeight: 800,
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
-                animation: isSplitting ? "none" : "promptPulse 2s ease-in-out infinite",
-              }}
-            >
-              <Sparkles size={13} color="#F5B942" />
-              <span>Tap Logo to Enter</span>
-              <span style={{ color: "#FFFFFF" }}>&rarr;</span>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* ══════════════════════════════════════════════════════════════════
           LAYER 2: ONBOARDING & REDESIGNED EDITORIAL ROLE SELECTION
