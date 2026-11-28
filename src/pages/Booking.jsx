@@ -601,7 +601,7 @@ export const Booking = () => {
         {/* Top Header */}
         <div style={{ marginBottom: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
-            <h1 style={{ fontFamily: 'Outfit', fontSize: '1.65rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: '0 0 0.2rem' }}>
+            <h1 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.65rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: '0 0 0.2rem' }}>
               Book Appointment
             </h1>
             <p style={{ color: '#94a3b8', fontSize: '0.8rem', margin: 0 }}>
@@ -621,7 +621,7 @@ export const Booking = () => {
               borderRadius: '20px',
               padding: '0.45rem 0.75rem',
               color: '#f5b942',
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontSize: '0.74rem',
               fontWeight: 800,
               cursor: 'pointer',
@@ -665,7 +665,7 @@ export const Booking = () => {
                 <Sparkles size={16} />
               </div>
               <div>
-                <p style={{ margin: 0, fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.84rem', color: '#ffffff' }}>
+                <p style={{ margin: 0, fontFamily: 'Plus Jakarta Sans', fontWeight: 800, fontSize: '0.84rem', color: '#ffffff' }}>
                   AI Match Applied
                 </p>
                 <p style={{ margin: 0, fontSize: '0.74rem', color: '#f5b942' }}>
@@ -683,7 +683,7 @@ export const Booking = () => {
                 fontSize: '0.72rem',
                 textDecoration: 'underline',
                 cursor: 'pointer',
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontWeight: 600,
               }}
             >
@@ -749,7 +749,7 @@ export const Booking = () => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     fontSize: '0.78rem',
-                    fontFamily: 'Outfit',
+                    fontFamily: 'Plus Jakarta Sans',
                     fontWeight: 800,
                     transition: 'all 0.2s ease',
                   }}
@@ -758,7 +758,7 @@ export const Booking = () => {
                 </div>
                 <span
                   style={{
-                    fontFamily: 'Outfit',
+                    fontFamily: 'Plus Jakarta Sans',
                     fontSize: '0.72rem',
                     fontWeight: 700,
                     color: isCurrent ? '#f5b942' : isCompleted ? '#ffffff' : '#94a3b8',
@@ -776,7 +776,7 @@ export const Booking = () => {
           <div>
             {/* Header with AI trigger CTA */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
-              <h2 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: 0 }}>
+              <h2 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.1rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: 0 }}>
                 Select Service
               </h2>
               <button
@@ -785,7 +785,7 @@ export const Booking = () => {
                   background: 'none',
                   border: 'none',
                   color: '#f5b942',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontWeight: 700,
                   fontSize: '0.78rem',
                   cursor: 'pointer',
@@ -814,7 +814,7 @@ export const Booking = () => {
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 <Sparkles size={18} color="#f5b942" />
                 <div>
-                  <p style={{ margin: 0, fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.85rem', color: '#ffffff' }}>
+                  <p style={{ margin: 0, fontFamily: 'Plus Jakarta Sans', fontWeight: 800, fontSize: '0.85rem', color: '#ffffff' }}>
                     Not sure what you need?
                   </p>
                   <p style={{ margin: 0, fontSize: '0.74rem', color: '#94a3b8' }}>
@@ -848,7 +848,7 @@ export const Booking = () => {
                     style={{
                       padding: '0.42rem 0.9rem',
                       borderRadius: '20px',
-                      fontFamily: 'Outfit, sans-serif',
+                      fontFamily: 'Plus Jakarta Sans, sans-serif',
                       fontSize: '0.75rem',
                       fontWeight: isCatActive ? 800 : 600,
                       cursor: 'pointer',
@@ -923,17 +923,17 @@ export const Booking = () => {
 
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <h3 style={{ fontFamily: 'Outfit', fontSize: '0.96rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+                        <h3 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.96rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
                           {s.title}
                         </h3>
-                        <span style={{ fontSize: '0.72rem', color: '#94a3b8', fontFamily: 'Outfit' }}>
+                        <span style={{ fontSize: '0.72rem', color: '#94a3b8', fontFamily: 'Plus Jakarta Sans' }}>
                           {s.duration}
                         </span>
                       </div>
                       <p style={{ fontSize: '0.74rem', color: '#94a3b8', margin: '0.2rem 0 0.4rem', lineHeight: 1.35 }}>
                         {s.desc}
                       </p>
-                      <span style={{ fontFamily: 'Outfit', fontSize: '0.95rem', fontWeight: 800, color: '#f5b942' }}>
+                      <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.95rem', fontWeight: 800, color: '#f5b942' }}>
                         ₦{Number(s.price).toLocaleString()}
                       </span>
                     </div>
@@ -986,7 +986,7 @@ export const Booking = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.85rem', gap: '0.75rem' }}>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', marginBottom: '0.2rem', flexWrap: 'wrap' }}>
-                  <h2 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: 0 }}>
+                  <h2 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.1rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: 0 }}>
                     Select Specialist
                   </h2>
                   <span
@@ -996,7 +996,7 @@ export const Booking = () => {
                       borderRadius: '8px',
                       padding: '0.12rem 0.5rem',
                       fontSize: '0.68rem',
-                      fontFamily: 'Outfit',
+                      fontFamily: 'Plus Jakarta Sans',
                       fontWeight: 800,
                       color: '#f5b942',
                     }}
@@ -1024,7 +1024,7 @@ export const Booking = () => {
                   borderRadius: '12px',
                   padding: '0.4rem 0.7rem',
                   color: '#f5b942',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontSize: '0.74rem',
                   fontWeight: 800,
                   cursor: 'pointer',
@@ -1050,7 +1050,7 @@ export const Booking = () => {
                   style={{
                     padding: '0.38rem 0.85rem',
                     borderRadius: '20px',
-                    fontFamily: 'Outfit, sans-serif',
+                    fontFamily: 'Plus Jakarta Sans, sans-serif',
                     fontSize: '0.74rem',
                     fontWeight: 800,
                     background: '#f5b942',
@@ -1101,7 +1101,7 @@ export const Booking = () => {
                   }}>
                     <Scissors size={26} />
                   </div>
-                  <h3 style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.45rem' }}>
+                  <h3 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.15rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.45rem' }}>
                     {loadingSpecialists ? 'Checking Specialist Availability…' : `No Verified ${currentCategory} Specialists Available`}
                   </h3>
                   <p style={{ color: '#94a3b8', fontSize: '0.84rem', margin: '0 auto 1.35rem', maxWidth: '380px', lineHeight: 1.5 }}>
@@ -1119,7 +1119,7 @@ export const Booking = () => {
                         border: 'none',
                         borderRadius: '50px',
                         padding: '0.6rem 1.4rem',
-                        fontFamily: 'Outfit',
+                        fontFamily: 'Plus Jakarta Sans',
                         fontSize: '0.82rem',
                         fontWeight: 800,
                         cursor: 'pointer',
@@ -1179,7 +1179,7 @@ export const Booking = () => {
                             borderRadius: '8px',
                             padding: '0.18rem 0.5rem',
                             fontSize: '0.64rem',
-                            fontFamily: 'Outfit',
+                            fontFamily: 'Plus Jakarta Sans',
                             fontWeight: 800,
                             color: isNearestLga ? '#4ade80' : '#93c5fd',
                             display: 'flex',
@@ -1202,7 +1202,7 @@ export const Booking = () => {
                         />
                         <div style={{ minWidth: 0 }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                            <h4 style={{ fontFamily: 'Outfit', fontSize: '0.96rem', fontWeight: 800, color: '#ffffff', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            <h4 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.96rem', fontWeight: 800, color: '#ffffff', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                               {sp.name}
                             </h4>
                             <ShieldCheck size={14} color="#f5b942" style={{ flexShrink: 0 }} />
@@ -1307,7 +1307,7 @@ export const Booking = () => {
         {activeStep === 3 && (
           <div>
             <div style={{ marginBottom: '1.25rem' }}>
-              <h2 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: 0 }}>
+              <h2 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.1rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: 0 }}>
                 Select Date & Time
               </h2>
               <p style={{ color: '#94a3b8', fontSize: '0.78rem', margin: '0.15rem 0 0' }}>
@@ -1317,7 +1317,7 @@ export const Booking = () => {
 
             {/* Date Header + Custom Date Picker Input */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-              <span style={{ fontSize: '0.82rem', fontFamily: 'Outfit', fontWeight: 700, color: '#ffffff' }}>
+              <span style={{ fontSize: '0.82rem', fontFamily: 'Plus Jakarta Sans', fontWeight: 700, color: '#ffffff' }}>
                 Upcoming Available Dates
               </span>
 
@@ -1328,7 +1328,7 @@ export const Booking = () => {
                   alignItems: 'center',
                   gap: '0.35rem',
                   fontSize: '0.74rem',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontWeight: 700,
                   color: '#f5b942',
                   cursor: 'pointer',
@@ -1394,7 +1394,7 @@ export const Booking = () => {
                     <span
                       style={{
                         fontSize: '0.68rem',
-                        fontFamily: 'Outfit',
+                        fontFamily: 'Plus Jakarta Sans',
                         fontWeight: 700,
                         color: isSelected ? '#0c0e14' : '#94a3b8',
                         textTransform: 'uppercase',
@@ -1405,7 +1405,7 @@ export const Booking = () => {
                     <span
                       style={{
                         fontSize: '1.15rem',
-                        fontFamily: 'Outfit',
+                        fontFamily: 'Plus Jakarta Sans',
                         fontWeight: 900,
                         lineHeight: 1.1,
                       }}
@@ -1415,7 +1415,7 @@ export const Booking = () => {
                     <span
                       style={{
                         fontSize: '0.66rem',
-                        fontFamily: 'Outfit',
+                        fontFamily: 'Plus Jakarta Sans',
                         fontWeight: 600,
                         color: isSelected ? '#0c0e14' : '#64748b',
                       }}
@@ -1442,11 +1442,11 @@ export const Booking = () => {
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: '#f5b942' }}>
                 <CalendarIcon size={14} />
-                <span style={{ fontSize: '0.8rem', fontFamily: 'Outfit', fontWeight: 800 }}>
+                <span style={{ fontSize: '0.8rem', fontFamily: 'Plus Jakarta Sans', fontWeight: 800 }}>
                   {readableDate}
                 </span>
               </div>
-              <span style={{ fontSize: '0.74rem', color: '#cbd5e1', fontFamily: 'Outfit' }}>
+              <span style={{ fontSize: '0.74rem', color: '#cbd5e1', fontFamily: 'Plus Jakarta Sans' }}>
                 Time: <strong style={{ color: '#ffffff' }}>{selectedTime}</strong>
               </span>
             </div>
@@ -1454,7 +1454,7 @@ export const Booking = () => {
             {/* Time Slot Selection by Periods */}
             <div style={{ marginBottom: '1.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.65rem' }}>
-                <span style={{ fontSize: '0.82rem', fontFamily: 'Outfit', fontWeight: 700, color: '#ffffff' }}>
+                <span style={{ fontSize: '0.82rem', fontFamily: 'Plus Jakarta Sans', fontWeight: 700, color: '#ffffff' }}>
                   Available Time Slots
                 </span>
                 {loadingBusySlots && (
@@ -1468,7 +1468,7 @@ export const Booking = () => {
                     <span
                       style={{
                         fontSize: '0.72rem',
-                        fontFamily: 'Outfit',
+                        fontFamily: 'Plus Jakarta Sans',
                         fontWeight: 800,
                         color: '#94a3b8',
                         textTransform: 'uppercase',
@@ -1511,7 +1511,7 @@ export const Booking = () => {
                                   : 'rgba(255, 255, 255, 0.08)'
                               }`,
                               color: isSelected ? '#0c0e14' : isDisabled ? '#475569' : '#ffffff',
-                              fontFamily: 'Outfit',
+                              fontFamily: 'Plus Jakarta Sans',
                               fontSize: '0.8rem',
                               fontWeight: 800,
                               cursor: isDisabled ? 'not-allowed' : 'pointer',
@@ -1588,7 +1588,7 @@ export const Booking = () => {
         {/* ── STEP 4: REVIEW & CONFIRM BOOKING ── */}
         {activeStep === 4 && (
           <div>
-            <h2 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', marginBottom: '0.85rem' }}>
+            <h2 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.1rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', marginBottom: '0.85rem' }}>
               Appointment Summary
             </h2>
 

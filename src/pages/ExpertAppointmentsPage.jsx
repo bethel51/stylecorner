@@ -244,7 +244,7 @@ export const ExpertAppointmentsPage = () => {
                 <h1
                   className="keep-white"
                   style={{
-                    fontFamily: 'Outfit, sans-serif',
+                    fontFamily: 'Plus Jakarta Sans, sans-serif',
                     fontSize: '1.45rem',
                     fontWeight: 900,
                     color: textPrimary,
@@ -263,7 +263,7 @@ export const ExpertAppointmentsPage = () => {
                     padding: '0.15rem 0.6rem',
                     fontSize: '0.74rem',
                     fontWeight: 800,
-                    fontFamily: 'Outfit',
+                    fontFamily: 'Plus Jakarta Sans',
                   }}
                 >
                   {bookings.length} Total
@@ -292,7 +292,7 @@ export const ExpertAppointmentsPage = () => {
                 padding: '0.55rem 0.95rem',
                 fontSize: '0.8rem',
                 fontWeight: 800,
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 cursor: 'pointer',
                 boxShadow: '0 4px 14px rgba(245, 185, 66, 0.18)',
               }}
@@ -316,7 +316,7 @@ export const ExpertAppointmentsPage = () => {
                 padding: '0.55rem 0.95rem',
                 fontSize: '0.8rem',
                 fontWeight: 800,
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 cursor: 'pointer',
               }}
             >
@@ -412,10 +412,10 @@ export const ExpertAppointmentsPage = () => {
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.35rem' }}>
-              <span style={{ fontSize: '0.7rem', color: textSecondary, fontWeight: 800, fontFamily: 'Outfit' }}>TODAY</span>
+              <span style={{ fontSize: '0.7rem', color: textSecondary, fontWeight: 800, fontFamily: 'Plus Jakarta Sans' }}>TODAY</span>
               <Clock size={14} color="#f5b942" />
             </div>
-            <div style={{ fontFamily: 'Outfit', fontSize: '1.5rem', fontWeight: 900, color: '#f5b942' }}>
+            <div style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.5rem', fontWeight: 900, color: '#f5b942' }}>
               {todayCount}
             </div>
             <span style={{ fontSize: '0.7rem', color: textSecondary }}>Scheduled sessions</span>
@@ -434,10 +434,10 @@ export const ExpertAppointmentsPage = () => {
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.35rem' }}>
-              <span style={{ fontSize: '0.7rem', color: pendingCount > 0 ? '#f87171' : textSecondary, fontWeight: 800, fontFamily: 'Outfit' }}>PENDING</span>
+              <span style={{ fontSize: '0.7rem', color: pendingCount > 0 ? '#f87171' : textSecondary, fontWeight: 800, fontFamily: 'Plus Jakarta Sans' }}>PENDING</span>
               <AlertCircle size={14} color={pendingCount > 0 ? '#ef4444' : textSecondary} />
             </div>
-            <div style={{ fontFamily: 'Outfit', fontSize: '1.5rem', fontWeight: 900, color: pendingCount > 0 ? '#ef4444' : textPrimary }}>
+            <div style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.5rem', fontWeight: 900, color: pendingCount > 0 ? '#ef4444' : textPrimary }}>
               {pendingCount}
             </div>
             <span style={{ fontSize: '0.7rem', color: textSecondary }}>Awaiting acceptance</span>
@@ -456,10 +456,10 @@ export const ExpertAppointmentsPage = () => {
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.35rem' }}>
-              <span style={{ fontSize: '0.7rem', color: textSecondary, fontWeight: 800, fontFamily: 'Outfit' }}>CONFIRMED</span>
+              <span style={{ fontSize: '0.7rem', color: textSecondary, fontWeight: 800, fontFamily: 'Plus Jakarta Sans' }}>CONFIRMED</span>
               <CheckCircle size={14} color="#10b981" />
             </div>
-            <div style={{ fontFamily: 'Outfit', fontSize: '1.5rem', fontWeight: 900, color: '#10b981' }}>
+            <div style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.5rem', fontWeight: 900, color: '#10b981' }}>
               {confirmedCount}
             </div>
             <span style={{ fontSize: '0.7rem', color: textSecondary }}>Upcoming active</span>
@@ -478,10 +478,10 @@ export const ExpertAppointmentsPage = () => {
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.35rem' }}>
-              <span style={{ fontSize: '0.7rem', color: textSecondary, fontWeight: 800, fontFamily: 'Outfit' }}>TOTAL EARNINGS</span>
+              <span style={{ fontSize: '0.7rem', color: textSecondary, fontWeight: 800, fontFamily: 'Plus Jakarta Sans' }}>TOTAL EARNINGS</span>
               <TrendingUp size={14} color="#38bdf8" />
             </div>
-            <div style={{ fontFamily: 'Outfit', fontSize: '1.5rem', fontWeight: 900, color: '#38bdf8' }}>
+            <div style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.5rem', fontWeight: 900, color: '#38bdf8' }}>
               ₦{totalRevenue.toLocaleString()}
             </div>
             <span style={{ fontSize: '0.7rem', color: textSecondary }}>{completedCount} completed visits</span>
@@ -582,7 +582,7 @@ export const ExpertAppointmentsPage = () => {
                   style={{
                     padding: '0.45rem 0.95rem',
                     borderRadius: '50px',
-                    fontFamily: 'Outfit, sans-serif',
+                    fontFamily: 'Plus Jakarta Sans, sans-serif',
                     fontSize: '0.78rem',
                     fontWeight: isActive ? 800 : 600,
                     cursor: 'pointer',
@@ -670,7 +670,7 @@ export const ExpertAppointmentsPage = () => {
             </div>
             <h3
               className="keep-white"
-              style={{ fontFamily: 'Outfit', fontSize: '1.2rem', fontWeight: 800, color: textPrimary, margin: '0 0 0.4rem' }}
+              style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.2rem', fontWeight: 800, color: textPrimary, margin: '0 0 0.4rem' }}
             >
               No {statusFilter === 'all' ? '' : statusFilter} appointments found
             </h3>
@@ -693,7 +693,7 @@ export const ExpertAppointmentsPage = () => {
                   padding: '0.55rem 1.25rem',
                   fontSize: '0.8rem',
                   fontWeight: 800,
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   cursor: 'pointer',
                 }}
               >
@@ -711,7 +711,7 @@ export const ExpertAppointmentsPage = () => {
                   padding: '0.55rem 1.25rem',
                   fontSize: '0.8rem',
                   fontWeight: 800,
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   cursor: 'pointer',
                 }}
               >
@@ -775,7 +775,7 @@ export const ExpertAppointmentsPage = () => {
                           <h3
                             className="keep-white"
                             style={{
-                              fontFamily: 'Outfit, sans-serif',
+                              fontFamily: 'Plus Jakarta Sans, sans-serif',
                               fontSize: '1.08rem',
                               fontWeight: 800,
                               color: textPrimary,
@@ -807,7 +807,7 @@ export const ExpertAppointmentsPage = () => {
                     <div style={{ textAlign: 'right', flexShrink: 0, marginLeft: 'auto' }}>
                       <span
                         style={{
-                          fontFamily: 'Outfit, sans-serif',
+                          fontFamily: 'Plus Jakarta Sans, sans-serif',
                           fontSize: '1.25rem',
                           fontWeight: 900,
                           color: '#f5b942',
@@ -821,7 +821,7 @@ export const ExpertAppointmentsPage = () => {
                         style={{
                           fontSize: '0.68rem',
                           fontWeight: 800,
-                          fontFamily: 'Outfit',
+                          fontFamily: 'Plus Jakarta Sans',
                           color: b.status === 'completed' ? '#10b981' : isPaid ? '#10b981' : '#f5b942',
                           marginTop: '0.25rem',
                           display: 'inline-block',
@@ -956,7 +956,7 @@ export const ExpertAppointmentsPage = () => {
                             padding: '0.45rem 0.8rem',
                             fontSize: '0.76rem',
                             fontWeight: 700,
-                            fontFamily: 'Outfit',
+                            fontFamily: 'Plus Jakarta Sans',
                             cursor: 'pointer',
                           }}
                         >
@@ -978,7 +978,7 @@ export const ExpertAppointmentsPage = () => {
                             padding: '0.45rem 0.8rem',
                             fontSize: '0.76rem',
                             fontWeight: 700,
-                            fontFamily: 'Outfit',
+                            fontFamily: 'Plus Jakarta Sans',
                             textDecoration: 'none',
                           }}
                         >
@@ -1001,7 +1001,7 @@ export const ExpertAppointmentsPage = () => {
                           padding: '0.45rem 0.8rem',
                           fontSize: '0.76rem',
                           fontWeight: 700,
-                          fontFamily: 'Outfit',
+                          fontFamily: 'Plus Jakarta Sans',
                           cursor: 'pointer',
                         }}
                       >
@@ -1024,7 +1024,7 @@ export const ExpertAppointmentsPage = () => {
                               color: '#ffffff',
                               borderRadius: '10px',
                               padding: '0.5rem 1.15rem',
-                              fontFamily: 'Outfit',
+                              fontFamily: 'Plus Jakarta Sans',
                               fontSize: '0.8rem',
                               fontWeight: 800,
                               cursor: isUpdating ? 'wait' : 'pointer',
@@ -1047,7 +1047,7 @@ export const ExpertAppointmentsPage = () => {
                               color: '#f87171',
                               borderRadius: '10px',
                               padding: '0.5rem 0.85rem',
-                              fontFamily: 'Outfit',
+                              fontFamily: 'Plus Jakarta Sans',
                               fontSize: '0.8rem',
                               fontWeight: 700,
                               cursor: isUpdating ? 'wait' : 'pointer',
@@ -1070,7 +1070,7 @@ export const ExpertAppointmentsPage = () => {
                               color: '#f5b942',
                               borderRadius: '10px',
                               padding: '0.5rem 0.85rem',
-                              fontFamily: 'Outfit',
+                              fontFamily: 'Plus Jakarta Sans',
                               fontSize: '0.78rem',
                               fontWeight: 700,
                               cursor: 'pointer',
@@ -1091,7 +1091,7 @@ export const ExpertAppointmentsPage = () => {
                               color: '#0c0e14',
                               borderRadius: '10px',
                               padding: '0.5rem 1.15rem',
-                              fontFamily: 'Outfit',
+                              fontFamily: 'Plus Jakarta Sans',
                               fontSize: '0.8rem',
                               fontWeight: 900,
                               cursor: isUpdating ? 'wait' : 'pointer',
@@ -1121,7 +1121,7 @@ export const ExpertAppointmentsPage = () => {
                             padding: '0.45rem 0.85rem',
                             fontSize: '0.78rem',
                             fontWeight: 800,
-                            fontFamily: 'Outfit',
+                            fontFamily: 'Plus Jakarta Sans',
                           }}
                         >
                           <Check size={14} />

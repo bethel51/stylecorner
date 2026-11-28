@@ -226,10 +226,10 @@ export const BookingChatSheet = ({ booking, currentUserEmail, viewerRole, isOpen
                 <MessageSquare size={17} color="#fff" />
               </div>
               <div>
-                <div style={{ fontFamily: 'Outfit, sans-serif', fontWeight: 800, fontSize: '0.98rem', color: 'var(--color-text-primary, #f1f5f9)', lineHeight: 1.15 }}>
+                <div style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800, fontSize: '0.98rem', color: 'var(--color-text-primary, #f1f5f9)', lineHeight: 1.15 }}>
                   Booking Chat
                 </div>
-                <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: '0.72rem', color: 'var(--color-text-secondary, #94a3b8)' }}>
+                <div style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.72rem', color: 'var(--color-text-secondary, #94a3b8)' }}>
                   with {otherParty}
                 </div>
               </div>
@@ -257,30 +257,30 @@ export const BookingChatSheet = ({ booking, currentUserEmail, viewerRole, isOpen
             padding: '0.6rem 0.9rem',
             display: 'flex', flexWrap: 'wrap', gap: '0.45rem 0.9rem', alignItems: 'center',
           }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '0.28rem', color: '#c4b5fd', fontSize: '0.75rem', fontWeight: 700, fontFamily: 'Outfit, sans-serif' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '0.28rem', color: '#c4b5fd', fontSize: '0.75rem', fontWeight: 700, fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
               <Scissors size={12} /> {booking.service || 'Service'}
             </span>
             {booking.date && (
-              <span style={{ display: 'flex', alignItems: 'center', gap: '0.28rem', color: 'var(--color-text-secondary, #94a3b8)', fontSize: '0.73rem', fontFamily: 'Outfit, sans-serif' }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '0.28rem', color: 'var(--color-text-secondary, #94a3b8)', fontSize: '0.73rem', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
                 <Calendar size={12} color="#a78bfa" /> {booking.date}
               </span>
             )}
             {booking.time && (
-              <span style={{ display: 'flex', alignItems: 'center', gap: '0.28rem', color: 'var(--color-text-secondary, #94a3b8)', fontSize: '0.73rem', fontFamily: 'Outfit, sans-serif' }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '0.28rem', color: 'var(--color-text-secondary, #94a3b8)', fontSize: '0.73rem', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
                 <Clock size={12} color="#a78bfa" /> {booking.time}
               </span>
             )}
             {booking.location && (
-              <span style={{ display: 'flex', alignItems: 'center', gap: '0.28rem', color: 'var(--color-text-secondary, #94a3b8)', fontSize: '0.73rem', fontFamily: 'Outfit, sans-serif' }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '0.28rem', color: 'var(--color-text-secondary, #94a3b8)', fontSize: '0.73rem', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
                 <MapPin size={12} color="#a78bfa" /> {booking.location}
               </span>
             )}
             {String(booking.paymentStatus || '').startsWith('paid') ? (
-              <span style={{ marginLeft: 'auto', background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.28)', borderRadius: 20, padding: '0.12rem 0.5rem', fontSize: '0.67rem', fontWeight: 800, color: '#34d399', fontFamily: 'Outfit, sans-serif' }}>
+              <span style={{ marginLeft: 'auto', background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.28)', borderRadius: 20, padding: '0.12rem 0.5rem', fontSize: '0.67rem', fontWeight: 800, color: '#34d399', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
                 ✓ PAID
               </span>
             ) : (
-              <span style={{ marginLeft: 'auto', background: 'rgba(245,185,66,0.12)', border: '1px solid rgba(245,185,66,0.28)', borderRadius: 20, padding: '0.12rem 0.5rem', fontSize: '0.67rem', fontWeight: 800, color: '#f5b942', fontFamily: 'Outfit, sans-serif' }}>
+              <span style={{ marginLeft: 'auto', background: 'rgba(245,185,66,0.12)', border: '1px solid rgba(245,185,66,0.28)', borderRadius: 20, padding: '0.12rem 0.5rem', fontSize: '0.67rem', fontWeight: 800, color: '#f5b942', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
                 ⏳ PENDING
               </span>
             )}
@@ -296,12 +296,12 @@ export const BookingChatSheet = ({ booking, currentUserEmail, viewerRole, isOpen
           {loading ? (
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '0.7rem', color: 'var(--color-text-secondary, #64748b)' }}>
               <Loader2 size={28} color="#a78bfa" style={{ animation: 'bcsSpin 1s linear infinite' }} />
-              <span style={{ fontSize: '0.82rem', fontFamily: 'Outfit, sans-serif' }}>Loading conversation…</span>
+              <span style={{ fontSize: '0.82rem', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Loading conversation…</span>
             </div>
           ) : error ? (
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '0.55rem', color: '#f87171', textAlign: 'center', padding: '2rem' }}>
               <span style={{ fontSize: '1.6rem' }}>⚠️</span>
-              <span style={{ fontSize: '0.82rem', fontFamily: 'Outfit, sans-serif', maxWidth: 260, lineHeight: 1.5 }}>{error}</span>
+              <span style={{ fontSize: '0.82rem', fontFamily: 'Plus Jakarta Sans, sans-serif', maxWidth: 260, lineHeight: 1.5 }}>{error}</span>
             </div>
           ) : messages.length === 0 ? (
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '0.8rem', textAlign: 'center', padding: '2.5rem 1.5rem' }}>
@@ -309,10 +309,10 @@ export const BookingChatSheet = ({ booking, currentUserEmail, viewerRole, isOpen
                 <MessageSquare size={28} color="#a78bfa" />
               </div>
               <div>
-                <div style={{ fontFamily: 'Outfit, sans-serif', fontWeight: 800, fontSize: '0.92rem', color: 'var(--color-text-primary, #f1f5f9)', marginBottom: '0.4rem' }}>
+                <div style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800, fontSize: '0.92rem', color: 'var(--color-text-primary, #f1f5f9)', marginBottom: '0.4rem' }}>
                   Start the conversation
                 </div>
-                <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: '0.78rem', color: 'var(--color-text-secondary, #64748b)', lineHeight: 1.6, maxWidth: 260 }}>
+                <div style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.78rem', color: 'var(--color-text-secondary, #64748b)', lineHeight: 1.6, maxWidth: 260 }}>
                   Send a message to your {isCustomer ? 'specialist' : 'client'} about this {booking.service} appointment.
                 </div>
               </div>
@@ -323,7 +323,7 @@ export const BookingChatSheet = ({ booking, currentUserEmail, viewerRole, isOpen
                 return (
                   <div key={`div-${idx}`} style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', margin: '0.55rem 0' }}>
                     <div style={{ flex: 1, height: 1, background: 'var(--color-border, rgba(255,255,255,0.07))' }} />
-                    <span style={{ fontSize: '0.67rem', fontWeight: 700, color: 'var(--color-text-secondary, #64748b)', fontFamily: 'Outfit, sans-serif', whiteSpace: 'nowrap', letterSpacing: '0.04em' }}>
+                    <span style={{ fontSize: '0.67rem', fontWeight: 700, color: 'var(--color-text-secondary, #64748b)', fontFamily: 'Plus Jakarta Sans, sans-serif', whiteSpace: 'nowrap', letterSpacing: '0.04em' }}>
                       {item.label}
                     </span>
                     <div style={{ flex: 1, height: 1, background: 'var(--color-border, rgba(255,255,255,0.07))' }} />
@@ -341,7 +341,7 @@ export const BookingChatSheet = ({ booking, currentUserEmail, viewerRole, isOpen
                     <div style={{
                       background: 'rgba(167,139,250,0.07)', border: '1px solid rgba(167,139,250,0.15)',
                       borderRadius: 12, padding: '0.45rem 0.75rem', maxWidth: '88%',
-                      fontSize: '0.72rem', color: '#c4b5fd', fontFamily: 'Outfit, sans-serif',
+                      fontSize: '0.72rem', color: '#c4b5fd', fontFamily: 'Plus Jakarta Sans, sans-serif',
                       textAlign: 'center', lineHeight: 1.55,
                     }}>
                       {msg.text}
@@ -357,7 +357,7 @@ export const BookingChatSheet = ({ booking, currentUserEmail, viewerRole, isOpen
                       <div style={{ width: 18, height: 18, borderRadius: '50%', background: 'rgba(167,139,250,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                         <User size={10} color="#a78bfa" />
                       </div>
-                      <span style={{ fontSize: '0.67rem', fontWeight: 700, color: 'var(--color-text-secondary, #64748b)', fontFamily: 'Outfit, sans-serif' }}>
+                      <span style={{ fontSize: '0.67rem', fontWeight: 700, color: 'var(--color-text-secondary, #64748b)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
                         {msg.sender}
                       </span>
                     </div>
@@ -372,14 +372,14 @@ export const BookingChatSheet = ({ booking, currentUserEmail, viewerRole, isOpen
                     border: isSelf ? 'none' : '1px solid var(--color-border, rgba(255,255,255,0.08))',
                     color: isSelf ? '#fff' : 'var(--color-text-primary, #f1f5f9)',
                     fontSize: '0.86rem',
-                    fontFamily: 'Inter, Outfit, sans-serif',
+                    fontFamily: "'Plus Jakarta Sans', sans-serif",
                     lineHeight: 1.55,
                     wordBreak: 'break-word',
                     boxShadow: isSelf ? '0 4px 14px rgba(109,40,217,0.3)' : 'none',
                   }}>
                     {msg.text}
                   </div>
-                  <div style={{ fontSize: '0.63rem', color: 'var(--color-text-secondary, #475569)', fontFamily: 'Outfit, sans-serif', marginTop: '0.18rem', [isSelf ? 'marginRight' : 'marginLeft']: '0.18rem' }}>
+                  <div style={{ fontSize: '0.63rem', color: 'var(--color-text-secondary, #475569)', fontFamily: 'Plus Jakarta Sans, sans-serif', marginTop: '0.18rem', [isSelf ? 'marginRight' : 'marginLeft']: '0.18rem' }}>
                     {formatTime(msg.createdAt)}
                   </div>
                 </div>
@@ -432,7 +432,7 @@ export const BookingChatSheet = ({ booking, currentUserEmail, viewerRole, isOpen
                 padding: '0.65rem 1rem',
                 color: 'var(--color-text-primary, #f1f5f9)',
                 fontSize: '0.87rem',
-                fontFamily: 'Inter, Outfit, sans-serif',
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
                 outline: 'none',
                 resize: 'none',
                 maxHeight: '100px',
@@ -469,7 +469,7 @@ export const BookingChatSheet = ({ booking, currentUserEmail, viewerRole, isOpen
               }
             </button>
           </div>
-          <div style={{ textAlign: 'center', fontSize: '0.62rem', color: 'var(--color-text-secondary, #475569)', marginTop: '0.35rem', fontFamily: 'Outfit, sans-serif' }}>
+          <div style={{ textAlign: 'center', fontSize: '0.62rem', color: 'var(--color-text-secondary, #475569)', marginTop: '0.35rem', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
             Enter to send · Shift+Enter for new line
           </div>
         </div>

@@ -181,7 +181,7 @@ export const ProductDetail = () => {
       <PageContainer title="Product Details">
         <div style={{ textAlign: 'center', padding: '4rem 1rem' }}>
           <RefreshCw size={32} color="#d4af37" style={{ animation: 'spin 1s linear infinite', marginBottom: '1rem' }} />
-          <p style={{ fontFamily: 'Outfit', color: '#6b7280' }}>Loading product details...</p>
+          <p style={{ fontFamily: 'Plus Jakarta Sans', color: '#6b7280' }}>Loading product details...</p>
         </div>
       </PageContainer>
     );
@@ -237,7 +237,7 @@ export const ProductDetail = () => {
               borderRadius: '12px',
               padding: '0.5rem 0.85rem',
               fontSize: '0.82rem',
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontWeight: 700,
               color: '#FFFFFF',
               cursor: 'pointer',
@@ -279,7 +279,7 @@ export const ProductDetail = () => {
                 borderRadius: '12px',
                 padding: '0.5rem 0.85rem',
                 fontSize: '0.82rem',
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontWeight: 800,
                 cursor: 'pointer',
                 display: 'flex',
@@ -324,7 +324,7 @@ export const ProductDetail = () => {
               backdropFilter: 'blur(6px)',
               color: '#F5B942',
               fontSize: '0.72rem',
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontWeight: 800,
               padding: '0.25rem 0.75rem',
               borderRadius: '50px',
@@ -434,25 +434,25 @@ export const ProductDetail = () => {
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.5rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#F5B942' }}>
               <Star size={15} fill="#F5B942" />
-              <span style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.9rem', color: 'var(--color-text-primary, #FFFFFF)' }}>
+              <span style={{ fontFamily: 'Plus Jakarta Sans', fontWeight: 800, fontSize: '0.9rem', color: 'var(--color-text-primary, #FFFFFF)' }}>
                 {product.rating || 4.9}
               </span>
             </div>
-            <span style={{ fontSize: '0.78rem', color: '#9AA2B3', fontFamily: 'Outfit' }}>
+            <span style={{ fontSize: '0.78rem', color: '#9AA2B3', fontFamily: 'Plus Jakarta Sans' }}>
               ({product.reviewsCount || 112} verified customer reviews)
             </span>
           </div>
 
           {/* Title & Price */}
-          <h1 style={{ fontFamily: 'Outfit', fontSize: '1.45rem', fontWeight: 800, color: 'var(--color-text-primary, #FFFFFF)', margin: '0 0 0.5rem', lineHeight: 1.2 }}>
+          <h1 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.45rem', fontWeight: 800, color: 'var(--color-text-primary, #FFFFFF)', margin: '0 0 0.5rem', lineHeight: 1.2 }}>
             {product.title}
           </h1>
 
           <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.6rem', marginBottom: '1.1rem' }}>
-            <span style={{ fontFamily: 'Outfit', fontSize: '1.75rem', fontWeight: 900, color: '#F5B942' }}>
+            <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.75rem', fontWeight: 900, color: '#F5B942' }}>
               ₦{Number(product.price).toLocaleString()}
             </span>
-            <span style={{ fontSize: '0.75rem', color: '#10b981', fontFamily: 'Outfit', fontWeight: 800, background: 'rgba(16,185,129,0.1)', padding: '0.2rem 0.6rem', borderRadius: '50px' }}>
+            <span style={{ fontSize: '0.75rem', color: '#10b981', fontFamily: 'Plus Jakarta Sans', fontWeight: 800, background: 'rgba(16,185,129,0.1)', padding: '0.2rem 0.6rem', borderRadius: '50px' }}>
               In Stock
             </span>
           </div>
@@ -470,7 +470,7 @@ export const ProductDetail = () => {
             border: '1px solid rgba(255,255,255,0.06)',
             marginBottom: '1.5rem'
           }}>
-            <h4 style={{ fontFamily: 'Outfit', fontSize: '0.8rem', fontWeight: 800, color: '#F5B942', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.65rem' }}>
+            <h4 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.8rem', fontWeight: 800, color: '#F5B942', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.65rem' }}>
               Key Product Highlights
             </h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
@@ -491,7 +491,7 @@ export const ProductDetail = () => {
 
           {/* Quantity Picker & Total */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
-            <span style={{ fontFamily: 'Outfit', fontWeight: 700, fontSize: '0.85rem', color: '#FFFFFF' }}>
+            <span style={{ fontFamily: 'Plus Jakarta Sans', fontWeight: 700, fontSize: '0.85rem', color: '#FFFFFF' }}>
               Quantity:
             </span>
 
@@ -522,7 +522,7 @@ export const ProductDetail = () => {
                 <Minus size={14} />
               </button>
 
-              <span style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '1rem', padding: '0 1rem', color: '#FFFFFF' }}>
+              <span style={{ fontFamily: 'Plus Jakarta Sans', fontWeight: 800, fontSize: '1rem', padding: '0 1rem', color: '#FFFFFF' }}>
                 {quantity}
               </span>
 
@@ -557,7 +557,7 @@ export const ProductDetail = () => {
                 borderRadius: '16px',
                 background: '#F5B942',
                 color: '#0C0E14',
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontWeight: 800,
                 fontSize: '0.95rem',
                 border: 'none',
@@ -581,7 +581,7 @@ export const ProductDetail = () => {
                 background: '#1E2330',
                 color: '#FFFFFF',
                 border: '1px solid rgba(255,255,255,0.1)',
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontWeight: 700,
                 fontSize: '0.92rem',
                 cursor: 'pointer',
@@ -600,10 +600,10 @@ export const ProductDetail = () => {
         {/* ── Related Recommendations Grid ── */}
         <div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
-            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: 'var(--color-text-primary, #FFFFFF)', margin: 0 }}>
+            <h3 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.05rem', fontWeight: 800, color: 'var(--color-text-primary, #FFFFFF)', margin: 0 }}>
               Recommended Products
             </h3>
-            <span style={{ fontSize: '0.75rem', color: '#F5B942', fontFamily: 'Outfit', fontWeight: 700 }}>
+            <span style={{ fontSize: '0.75rem', color: '#F5B942', fontFamily: 'Plus Jakarta Sans', fontWeight: 700 }}>
               Handpicked Essentials
             </span>
           </div>
@@ -631,19 +631,19 @@ export const ProductDetail = () => {
                   </div>
 
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.2rem' }}>
-                    <span style={{ fontSize: '0.65rem', color: '#10b981', fontWeight: 800, fontFamily: 'Outfit' }}>● In Stock</span>
+                    <span style={{ fontSize: '0.65rem', color: '#10b981', fontWeight: 800, fontFamily: 'Plus Jakarta Sans' }}>● In Stock</span>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.15rem', color: '#F5B942', fontWeight: 800, fontSize: '0.72rem' }}>
                       <Star size={11} fill="#F5B942" /><span>{rel.rating || 4.8}</span>
                     </div>
                   </div>
 
-                  <h4 style={{ fontFamily: 'Outfit', fontSize: '0.82rem', fontWeight: 700, color: 'var(--color-text-primary, #FFFFFF)', margin: '0 0 0.3rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <h4 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.82rem', fontWeight: 700, color: 'var(--color-text-primary, #FFFFFF)', margin: '0 0 0.3rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {rel.title}
                   </h4>
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.35rem' }}>
-                  <div style={{ fontFamily: 'Outfit', fontSize: '0.86rem', fontWeight: 800, color: '#F5B942' }}>
+                  <div style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.86rem', fontWeight: 800, color: '#F5B942' }}>
                     ₦{Number(rel.price).toLocaleString()}
                   </div>
                   <button
@@ -654,7 +654,7 @@ export const ProductDetail = () => {
                     }}
                     style={{
                       backgroundColor: '#F5B942', color: '#0C0E14', border: 'none',
-                      borderRadius: '8px', padding: '0.3rem 0.5rem', fontFamily: 'Outfit',
+                      borderRadius: '8px', padding: '0.3rem 0.5rem', fontFamily: 'Plus Jakarta Sans',
                       fontWeight: 800, fontSize: '0.7rem', cursor: 'pointer', display: 'flex',
                       alignItems: 'center', gap: '0.2rem'
                     }}

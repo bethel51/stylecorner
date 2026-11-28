@@ -169,7 +169,7 @@ export const AppointmentQrCode = ({
           >
             <span
               style={{
-                fontFamily: 'Outfit, sans-serif',
+                fontFamily: 'Plus Jakarta Sans, sans-serif',
                 fontWeight: 900,
                 fontSize: `${Math.round(logoSize * 0.38)}px`,
                 color: '#f5b942',
@@ -194,7 +194,7 @@ export const AppointmentQrCode = ({
             padding: '0.25rem 0.75rem',
           }}
         >
-          <span style={{ fontSize: '0.68rem', color: '#94a3b8', fontFamily: 'Outfit' }}>
+          <span style={{ fontSize: '0.68rem', color: '#94a3b8', fontFamily: 'Plus Jakarta Sans' }}>
             PASS CODE:
           </span>
           <strong

@@ -111,7 +111,7 @@ export const AppointmentPassModal = ({ booking, isOpen, onClose, onCheckInSucces
                 color: '#0d0e14',
                 fontWeight: 900,
                 fontSize: '0.85rem',
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 boxShadow: '0 4px 12px rgba(245, 185, 66, 0.3)',
               }}
             >
@@ -122,7 +122,7 @@ export const AppointmentPassModal = ({ booking, isOpen, onClose, onCheckInSucces
                 style={{
                   margin: 0,
                   fontSize: '0.98rem',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontWeight: 800,
                   color: '#ffffff',
                   letterSpacing: '0.3px',
@@ -181,7 +181,7 @@ export const AppointmentPassModal = ({ booking, isOpen, onClose, onCheckInSucces
                   borderRadius: '50px',
                   padding: '0.35rem 0.95rem',
                   fontSize: '0.78rem',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontWeight: 800,
                 }}
               >
@@ -199,7 +199,7 @@ export const AppointmentPassModal = ({ booking, isOpen, onClose, onCheckInSucces
                   borderRadius: '50px',
                   padding: '0.35rem 0.95rem',
                   fontSize: '0.78rem',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontWeight: 800,
                 }}
               >
@@ -251,7 +251,7 @@ export const AppointmentPassModal = ({ booking, isOpen, onClose, onCheckInSucces
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span style={{ fontSize: '0.78rem', color: '#94a3b8' }}>Service</span>
-              <strong style={{ fontSize: '0.88rem', color: '#ffffff', fontFamily: 'Outfit' }}>
+              <strong style={{ fontSize: '0.88rem', color: '#ffffff', fontFamily: 'Plus Jakarta Sans' }}>
                 {booking.service}
               </strong>
             </div>
@@ -262,7 +262,7 @@ export const AppointmentPassModal = ({ booking, isOpen, onClose, onCheckInSucces
                 style={{
                   fontSize: '0.86rem',
                   color: '#f5b942',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.3rem',
@@ -339,7 +339,7 @@ export const AppointmentPassModal = ({ booking, isOpen, onClose, onCheckInSucces
                   gap: '0.45rem',
                   color: '#ffffff',
                   fontSize: '0.78rem',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontWeight: 700,
                   cursor: 'pointer',
                   transition: 'all 0.15s ease',
@@ -362,7 +362,7 @@ export const AppointmentPassModal = ({ booking, isOpen, onClose, onCheckInSucces
                   gap: '0.45rem',
                   color: '#ffffff',
                   fontSize: '0.78rem',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontWeight: 700,
                   cursor: 'pointer',
                   transition: 'all 0.15s ease',
@@ -388,7 +388,7 @@ export const AppointmentPassModal = ({ booking, isOpen, onClose, onCheckInSucces
                   padding: '0.75rem',
                   color: '#0d0e14',
                   fontSize: '0.84rem',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontWeight: 800,
                   display: 'flex',
                   alignItems: 'center',
@@ -414,7 +414,7 @@ export const AppointmentPassModal = ({ booking, isOpen, onClose, onCheckInSucces
                 padding: '0.75rem',
                 color: '#ffffff',
                 fontSize: '0.82rem',
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontWeight: 700,
                 display: 'flex',
                 alignItems: 'center',

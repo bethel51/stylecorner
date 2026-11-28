@@ -166,7 +166,7 @@ export const Experts = () => {
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.75rem' }}>
           <div>
-            <h1 style={{ fontFamily: 'Outfit', fontSize: '1.65rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: '0 0 0.25rem' }}>
+            <h1 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.65rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: '0 0 0.25rem' }}>
               Verified Specialists
             </h1>
             <p style={{ color: '#94a3b8', fontSize: '0.84rem', margin: 0 }}>
@@ -180,7 +180,7 @@ export const Experts = () => {
               display: 'flex', alignItems: 'center', gap: '0.4rem',
               background: 'linear-gradient(135deg, rgba(245,185,66,0.18), rgba(245,185,66,0.06))',
               border: '1.5px solid rgba(245,185,66,0.45)', borderRadius: '50px',
-              padding: '0.45rem 0.85rem', color: '#f5b942', fontFamily: 'Outfit',
+              padding: '0.45rem 0.85rem', color: '#f5b942', fontFamily: 'Plus Jakarta Sans',
               fontSize: '0.76rem', fontWeight: 800, cursor: 'pointer', minHeight: '40px',
             }}
           >
@@ -332,7 +332,7 @@ export const Experts = () => {
                 {/* Stylist Details */}
                 <h3
                   style={{
-                    fontFamily: 'Outfit',
+                    fontFamily: 'Plus Jakarta Sans',
                     fontSize: '0.94rem',
                     fontWeight: 800,
                     color: 'var(--color-text-primary, #ffffff)',
@@ -366,7 +366,7 @@ export const Experts = () => {
                     fontSize: '0.72rem',
                     color: '#94a3b8',
                     margin: '0 0 0.75rem',
-                    fontFamily: 'Outfit',
+                    fontFamily: 'Plus Jakarta Sans',
                     lineHeight: 1.3,
                     display: '-webkit-box',
                     WebkitLineClamp: 2,
@@ -408,7 +408,7 @@ export const Experts = () => {
         {!loading && filteredStylists.length === 0 && (
           <div style={{ textAlign: 'center', padding: '3rem 1.5rem', background: 'var(--color-surface, #151822)', borderRadius: '20px', border: '1px solid var(--color-border, rgba(255,255,255,0.08))', marginTop: '1rem' }}>
             <Users size={36} color="#f5b942" style={{ opacity: 0.8, marginBottom: '0.65rem' }} />
-            <h4 style={{ fontFamily: 'Outfit', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: '0 0 0.35rem', fontSize: '1rem' }}>
+            <h4 style={{ fontFamily: 'Plus Jakarta Sans', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: '0 0 0.35rem', fontSize: '1rem' }}>
               {searchQuery ? `No specialists found for "${searchQuery}"` : `No ${activeCategory} Specialists Available`}
             </h4>
             <p style={{ color: '#94a3b8', fontSize: '0.82rem', margin: '0 0 1rem' }}>

@@ -141,7 +141,7 @@ export const BillboardFlyersPage = () => {
         backgroundColor: '#050608',
         color: '#FFFFFF',
         minHeight: '100vh',
-        fontFamily: "'Outfit', -apple-system, sans-serif",
+        fontFamily: "'Plus Jakarta Sans', -apple-system, sans-serif",
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -159,7 +159,7 @@ export const BillboardFlyersPage = () => {
       }}
     >
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus Jakarta Sans:wght@400;600;700;800;900&display=swap');
         
         * {
           box-sizing: border-box;

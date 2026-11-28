@@ -58,7 +58,7 @@ const AdminLoader = () => (
     </div>
     <span
       style={{
-        fontFamily: 'Outfit, sans-serif',
+        fontFamily: 'Plus Jakarta Sans, sans-serif',
         fontSize: '0.78rem',
         fontWeight: 700,
         letterSpacing: '0.14em',

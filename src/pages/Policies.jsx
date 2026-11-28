@@ -16,7 +16,7 @@ export const Policies = () => {
         <div className="app-card" style={{ marginBottom: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.5rem' }}>
             <ShieldCheck size={20} color="#d4af37" />
-            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: '#171717' }}>
+            <h3 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.1rem', fontWeight: 800, color: '#171717' }}>
               Cancellation & Rescheduling
             </h3>
           </div>
@@ -28,7 +28,7 @@ export const Policies = () => {
         <div className="app-card" style={{ marginBottom: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.5rem' }}>
             <FileText size={20} color="#d4af37" />
-            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: '#171717' }}>
+            <h3 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.1rem', fontWeight: 800, color: '#171717' }}>
               Privacy & Account Security
             </h3>
           </div>

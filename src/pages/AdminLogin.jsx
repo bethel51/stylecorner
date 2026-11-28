@@ -92,7 +92,7 @@ export const AdminLogin = () => {
               letterSpacing: '0.1em',
               textTransform: 'uppercase',
               marginBottom: '0.5rem',
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
             }}
           >
             Restricted Access · Executive Space
@@ -100,7 +100,7 @@ export const AdminLogin = () => {
 
           <h2
             style={{
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontSize: '1.85rem',
               fontWeight: 800,
               color: 'var(--color-text-primary, #ffffff)',

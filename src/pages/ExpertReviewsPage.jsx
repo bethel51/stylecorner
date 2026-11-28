@@ -129,7 +129,7 @@ export const ExpertReviewsPage = () => {
               borderRadius: '12px',
               padding: '0.55rem 0.95rem',
               color: '#e2e8f0',
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontSize: '0.84rem',
               fontWeight: 700,
               cursor: 'pointer',
@@ -151,7 +151,7 @@ export const ExpertReviewsPage = () => {
                 borderRadius: '12px',
                 padding: '0.55rem 0.95rem',
                 color: '#f5b942',
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontSize: '0.82rem',
                 fontWeight: 800,
                 cursor: 'pointer',
@@ -184,10 +184,10 @@ export const ExpertReviewsPage = () => {
 
         {/* Page Title */}
         <div style={{ marginBottom: '1.5rem' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: '#f5b942', fontSize: '0.76rem', fontWeight: 800, fontFamily: 'Outfit', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.35rem' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: '#f5b942', fontSize: '0.76rem', fontWeight: 800, fontFamily: 'Plus Jakarta Sans', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.35rem' }}>
             <Sparkles size={13} /> Specialist Reputation & Trust
           </div>
-          <h1 style={{ fontFamily: 'Outfit', fontSize: '1.9rem', fontWeight: 900, color: '#ffffff', margin: 0, lineHeight: 1.2 }}>
+          <h1 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.9rem', fontWeight: 900, color: '#ffffff', margin: 0, lineHeight: 1.2 }}>
             Client Reviews & Ratings
           </h1>
           <p style={{ color: '#94a3b8', fontSize: '0.86rem', marginTop: '0.35rem', marginBottom: 0 }}>
@@ -226,7 +226,7 @@ export const ExpertReviewsPage = () => {
                 flexShrink: 0,
               }}
             >
-              <div style={{ fontFamily: 'Outfit', fontSize: '2.1rem', fontWeight: 900, color: '#f5b942', lineHeight: 1 }}>
+              <div style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '2.1rem', fontWeight: 900, color: '#f5b942', lineHeight: 1 }}>
                 {averageRating}
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.15rem', color: '#f5b942', marginTop: '0.2rem' }}>
@@ -242,10 +242,10 @@ export const ExpertReviewsPage = () => {
             </div>
 
             <div>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.3)', color: '#10b981', padding: '0.2rem 0.55rem', borderRadius: '50px', fontSize: '0.72rem', fontWeight: 800, fontFamily: 'Outfit', marginBottom: '0.35rem' }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.3)', color: '#10b981', padding: '0.2rem 0.55rem', borderRadius: '50px', fontSize: '0.72rem', fontWeight: 800, fontFamily: 'Plus Jakarta Sans', marginBottom: '0.35rem' }}>
                 <ShieldCheck size={12} /> 100% Verified Clients
               </div>
-              <h3 style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+              <h3 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.15rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
                 Overall Specialist Rating
               </h3>
               <p style={{ fontSize: '0.78rem', color: '#94a3b8', margin: '0.2rem 0 0' }}>
@@ -261,7 +261,7 @@ export const ExpertReviewsPage = () => {
               const percent = totalReviews > 0 ? (count / totalReviews) * 100 : 0;
               return (
                 <div key={star} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.74rem' }}>
-                  <div style={{ width: '42px', display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#cbd5e1', fontWeight: 700, fontFamily: 'Outfit' }}>
+                  <div style={{ width: '42px', display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#cbd5e1', fontWeight: 700, fontFamily: 'Plus Jakarta Sans' }}>
                     <span>{star}</span> <Star size={10} fill="#f5b942" color="#f5b942" />
                   </div>
                   <div style={{ flex: 1, height: '7px', background: 'rgba(255, 255, 255, 0.07)', borderRadius: '10px', overflow: 'hidden' }}>
@@ -275,7 +275,7 @@ export const ExpertReviewsPage = () => {
                       }}
                     />
                   </div>
-                  <div style={{ width: '28px', textAlign: 'right', color: '#64748b', fontWeight: 700, fontFamily: 'Outfit' }}>
+                  <div style={{ width: '28px', textAlign: 'right', color: '#64748b', fontWeight: 700, fontFamily: 'Plus Jakarta Sans' }}>
                     {count}
                   </div>
                 </div>
@@ -301,7 +301,7 @@ export const ExpertReviewsPage = () => {
                 borderRadius: '14px',
                 padding: '0.75rem 1rem 0.75rem 2.6rem',
                 color: '#ffffff',
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontSize: '0.88rem',
                 outline: 'none',
                 boxSizing: 'border-box',
@@ -330,7 +330,7 @@ export const ExpertReviewsPage = () => {
                     border: active ? '1px solid #f5b942' : '1px solid rgba(255, 255, 255, 0.08)',
                     borderRadius: '50px',
                     padding: '0.4rem 0.85rem',
-                    fontFamily: 'Outfit',
+                    fontFamily: 'Plus Jakarta Sans',
                     fontSize: '0.76rem',
                     fontWeight: 800,
                     cursor: 'pointer',
@@ -376,7 +376,7 @@ export const ExpertReviewsPage = () => {
             <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(245, 185, 66, 0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem', color: '#f5b942' }}>
               <Star size={32} />
             </div>
-            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.4rem' }}>
+            <h3 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.4rem' }}>
               {searchQuery || starFilter !== 'all' ? 'No matching reviews found' : 'No client reviews yet'}
             </h3>
             <p style={{ color: '#94a3b8', fontSize: '0.86rem', maxWidth: '420px', margin: '0 auto 1.5rem', lineHeight: 1.5 }}>
@@ -396,7 +396,7 @@ export const ExpertReviewsPage = () => {
                   border: '1px solid rgba(245, 185, 66, 0.35)',
                   padding: '0.55rem 1.25rem',
                   borderRadius: '50px',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontSize: '0.82rem',
                   fontWeight: 800,
                   cursor: 'pointer',
@@ -443,7 +443,7 @@ export const ExpertReviewsPage = () => {
                           alignItems: 'center',
                           justifyContent: 'center',
                           color: '#f5b942',
-                          fontFamily: 'Outfit',
+                          fontFamily: 'Plus Jakarta Sans',
                           fontWeight: 800,
                           fontSize: '0.88rem',
                           flexShrink: 0,
@@ -453,10 +453,10 @@ export const ExpertReviewsPage = () => {
                       </div>
                       <div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', flexWrap: 'wrap' }}>
-                          <span style={{ fontFamily: 'Outfit', fontSize: '0.98rem', fontWeight: 800, color: '#ffffff' }}>
+                          <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.98rem', fontWeight: 800, color: '#ffffff' }}>
                             {r.customerName || 'Verified Client'}
                           </span>
-                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.2rem', background: 'rgba(16, 185, 129, 0.12)', color: '#10b981', fontSize: '0.68rem', fontWeight: 800, fontFamily: 'Outfit', padding: '0.1rem 0.45rem', borderRadius: '50px' }}>
+                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.2rem', background: 'rgba(16, 185, 129, 0.12)', color: '#10b981', fontSize: '0.68rem', fontWeight: 800, fontFamily: 'Plus Jakarta Sans', padding: '0.1rem 0.45rem', borderRadius: '50px' }}>
                             <CheckCircle2 size={10} /> Verified Booking
                           </span>
                         </div>
@@ -477,7 +477,7 @@ export const ExpertReviewsPage = () => {
                         borderRadius: '50px',
                         padding: '0.25rem 0.65rem',
                         color: '#f5b942',
-                        fontFamily: 'Outfit',
+                        fontFamily: 'Plus Jakarta Sans',
                         fontWeight: 900,
                         fontSize: '0.85rem',
                         flexShrink: 0,

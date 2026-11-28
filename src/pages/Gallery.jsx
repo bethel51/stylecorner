@@ -190,7 +190,7 @@ export const Gallery = () => {
                   color: '#f5b942',
                   letterSpacing: '0.05em',
                   textTransform: 'uppercase',
-                  fontFamily: 'Outfit, sans-serif',
+                  fontFamily: 'Plus Jakarta Sans, sans-serif',
                 }}
               >
                 Verified Lookbook
@@ -199,7 +199,7 @@ export const Gallery = () => {
 
             <h1
               style={{
-                fontFamily: 'Outfit, sans-serif',
+                fontFamily: 'Plus Jakarta Sans, sans-serif',
                 fontSize: 'clamp(1.35rem, 5vw, 2rem)',
                 fontWeight: 900,
                 color: '#ffffff',
@@ -294,7 +294,7 @@ export const Gallery = () => {
                 border: 'none',
                 outline: 'none',
                 color: '#ffffff',
-                fontFamily: 'Outfit, sans-serif',
+                fontFamily: 'Plus Jakarta Sans, sans-serif',
                 fontSize: '0.84rem',
                 padding: '0.4rem 0',
                 boxSizing: 'border-box',
@@ -346,7 +346,7 @@ export const Gallery = () => {
                     borderRadius: '50px',
                     fontSize: '0.74rem',
                     fontWeight: isActive ? 800 : 600,
-                    fontFamily: 'Outfit, sans-serif',
+                    fontFamily: 'Plus Jakarta Sans, sans-serif',
                     whiteSpace: 'nowrap',
                     cursor: 'pointer',
                     flexShrink: 0,
@@ -401,7 +401,7 @@ export const Gallery = () => {
 
             <h3
               style={{
-                fontFamily: 'Outfit, sans-serif',
+                fontFamily: 'Plus Jakarta Sans, sans-serif',
                 fontSize: '1.2rem',
                 fontWeight: 800,
                 color: '#ffffff',
@@ -443,7 +443,7 @@ export const Gallery = () => {
                   fontWeight: 800,
                   color: '#0c0e14',
                   cursor: 'pointer',
-                  fontFamily: 'Outfit, sans-serif',
+                  fontFamily: 'Plus Jakarta Sans, sans-serif',
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '0.4rem',
@@ -466,7 +466,7 @@ export const Gallery = () => {
                   fontWeight: 700,
                   color: '#ffffff',
                   cursor: 'pointer',
-                  fontFamily: 'Outfit, sans-serif',
+                  fontFamily: 'Plus Jakarta Sans, sans-serif',
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '0.4rem',
@@ -489,7 +489,7 @@ export const Gallery = () => {
             }}
           >
             <Sparkles size={32} color="#f5b942" style={{ margin: '0 auto 0.75rem', opacity: 0.6 }} />
-            <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '1rem', color: '#ffffff', margin: '0 0 0.4rem' }}>
+            <h3 style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '1rem', color: '#ffffff', margin: '0 0 0.4rem' }}>
               No Styles Found
             </h3>
             <p style={{ color: '#94a3b8', fontSize: '0.8rem', margin: '0 0 1rem' }}>
@@ -510,7 +510,7 @@ export const Gallery = () => {
                 fontWeight: 800,
                 color: '#0c0e14',
                 cursor: 'pointer',
-                fontFamily: 'Outfit, sans-serif',
+                fontFamily: 'Plus Jakarta Sans, sans-serif',
               }}
             >
               Reset Filters
@@ -601,7 +601,7 @@ export const Gallery = () => {
                           padding: '0.2rem 0.6rem',
                           fontSize: '0.66rem',
                           fontWeight: 800,
-                          fontFamily: 'Outfit, sans-serif',
+                          fontFamily: 'Plus Jakarta Sans, sans-serif',
                           textTransform: 'uppercase',
                         }}
                       >
@@ -644,7 +644,7 @@ export const Gallery = () => {
                       <div
                         style={{
                           color: '#ffffff',
-                          fontFamily: 'Outfit, sans-serif',
+                          fontFamily: 'Plus Jakarta Sans, sans-serif',
                           fontSize: '0.95rem',
                           fontWeight: 800,
                           lineHeight: 1.25,
@@ -681,7 +681,7 @@ export const Gallery = () => {
                             color: '#cbd5e1',
                             fontSize: '0.78rem',
                             fontWeight: 700,
-                            fontFamily: 'Outfit, sans-serif',
+                            fontFamily: 'Plus Jakarta Sans, sans-serif',
                             whiteSpace: 'nowrap',
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
@@ -758,12 +758,12 @@ export const Gallery = () => {
                             <div style={{ fontSize: '0.58rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 700 }}>
                               Starting from
                             </div>
-                            <div style={{ fontSize: '0.92rem', fontWeight: 900, color: '#f5b942', fontFamily: 'Outfit' }}>
+                            <div style={{ fontSize: '0.92rem', fontWeight: 900, color: '#f5b942', fontFamily: 'Plus Jakarta Sans' }}>
                               ₦{item.price.toLocaleString()}
                             </div>
                           </>
                         ) : (
-                          <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#f5b942', fontFamily: 'Outfit' }}>
+                          <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#f5b942', fontFamily: 'Plus Jakarta Sans' }}>
                             {item.displayPrice || 'Book Session'}
                           </div>
                         )}
@@ -810,7 +810,7 @@ export const Gallery = () => {
                             display: 'inline-flex',
                             alignItems: 'center',
                             gap: '0.2rem',
-                            fontFamily: 'Outfit, sans-serif',
+                            fontFamily: 'Plus Jakarta Sans, sans-serif',
                             boxShadow: '0 2px 8px rgba(245,185,66,0.3)',
                           }}
                         >
@@ -952,7 +952,7 @@ export const Gallery = () => {
                     right: '14px',
                   }}
                 >
-                  <div style={{ fontSize: '1.15rem', fontWeight: 900, color: '#ffffff', fontFamily: 'Outfit' }}>
+                  <div style={{ fontSize: '1.15rem', fontWeight: 900, color: '#ffffff', fontFamily: 'Plus Jakarta Sans' }}>
                     {selectedStyle.title}
                   </div>
                   <div style={{ fontSize: '0.78rem', color: '#f5b942', fontWeight: 700, marginTop: '0.2rem' }}>
@@ -1019,12 +1019,12 @@ export const Gallery = () => {
                     <div style={{ fontSize: '0.6rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 700 }}>
                       Base Rate
                     </div>
-                    <div style={{ fontSize: '1.05rem', fontWeight: 900, color: '#f5b942', fontFamily: 'Outfit' }}>
+                    <div style={{ fontSize: '1.05rem', fontWeight: 900, color: '#f5b942', fontFamily: 'Plus Jakarta Sans' }}>
                       ₦{selectedStyle.price.toLocaleString()}
                     </div>
                   </>
                 ) : (
-                  <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#f5b942', fontFamily: 'Outfit' }}>
+                  <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#f5b942', fontFamily: 'Plus Jakarta Sans' }}>
                     {selectedStyle.displayPrice || 'Book Session'}
                   </div>
                 )}
@@ -1045,7 +1045,7 @@ export const Gallery = () => {
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '0.35rem',
-                  fontFamily: 'Outfit, sans-serif',
+                  fontFamily: 'Plus Jakarta Sans, sans-serif',
                   boxShadow: '0 3px 12px rgba(245,185,66,0.3)',
                 }}
               >

@@ -665,7 +665,7 @@ export const AdminDashboard = () => {
       backgroundColor: '#0c0e14',
       display: 'flex',
       flexDirection: isMobile ? 'column' : 'row',
-      fontFamily: 'Outfit, sans-serif',
+      fontFamily: 'Plus Jakarta Sans, sans-serif',
       color: '#ffffff',
       boxSizing: 'border-box',
     }}>
@@ -760,7 +760,7 @@ export const AdminDashboard = () => {
                 backgroundColor: activeTab === item.id ? 'rgba(245,185,66,0.12)' : 'transparent',
                 color: activeTab === item.id ? '#f5b942' : '#94a3b8',
                 cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s ease',
-                fontFamily: 'Outfit', fontWeight: activeTab === item.id ? 700 : 500, fontSize: '0.88rem',
+                fontFamily: 'Plus Jakarta Sans', fontWeight: activeTab === item.id ? 700 : 500, fontSize: '0.88rem',
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
@@ -786,7 +786,7 @@ export const AdminDashboard = () => {
               display: 'flex', alignItems: 'center', gap: '0.6rem',
               padding: '0.65rem 0.85rem', borderRadius: '10px', width: '100%',
               backgroundColor: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
-              color: '#cbd5e1', cursor: 'pointer', fontFamily: 'Outfit', fontSize: '0.82rem', fontWeight: 500,
+              color: '#cbd5e1', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans', fontSize: '0.82rem', fontWeight: 500,
             }}
           >
             <RefreshCw size={14} /> Refresh Data
@@ -797,7 +797,7 @@ export const AdminDashboard = () => {
               display: 'flex', alignItems: 'center', gap: '0.6rem',
               padding: '0.65rem 0.85rem', borderRadius: '10px', width: '100%',
               backgroundColor: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
-              color: '#cbd5e1', cursor: 'pointer', fontFamily: 'Outfit', fontSize: '0.82rem', fontWeight: 500,
+              color: '#cbd5e1', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans', fontSize: '0.82rem', fontWeight: 500,
             }}
           >
             <Home size={14} /> Public Site
@@ -808,7 +808,7 @@ export const AdminDashboard = () => {
               display: 'flex', alignItems: 'center', gap: '0.6rem',
               padding: '0.65rem 0.85rem', borderRadius: '10px', width: '100%',
               backgroundColor: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.25)',
-              color: '#ef4444', cursor: 'pointer', fontFamily: 'Outfit', fontSize: '0.82rem', fontWeight: 600,
+              color: '#ef4444', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans', fontSize: '0.82rem', fontWeight: 600,
             }}
           >
             <LogOut size={14} /> Sign Out
@@ -855,7 +855,7 @@ export const AdminDashboard = () => {
               </button>
             )}
             <div style={{ minWidth: 0, overflow: 'hidden' }}>
-              <h1 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: isMobile ? '1rem' : '1.3rem', color: '#ffffff', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              <h1 style={{ fontFamily: 'Plus Jakarta Sans', fontWeight: 800, fontSize: isMobile ? '1rem' : '1.3rem', color: '#ffffff', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 {activeTab === 'orders' ? 'Store Orders' : activeTab === 'messages' ? 'Order Inquiries' : activeTab === 'bookings' ? 'Salon Bookings' : activeTab === 'users' ? 'User Accounts' : activeTab === 'products' ? 'Store Products' : activeTab === 'payouts' ? 'Expert Payouts' : activeTab === 'video_ads' ? 'AI Video Ads Generator' : 'Billboards & Marketing Flyers'}
               </h1>
               <p style={{ color: '#94a3b8', fontSize: '0.75rem', margin: '0.1rem 0 0 0', display: isMobile ? 'none' : 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -871,7 +871,7 @@ export const AdminDashboard = () => {
                 style={{
                   backgroundColor: '#f5b942', border: 'none', color: '#0c0e14',
                   padding: isMobile ? '0.45rem 0.65rem' : '0.45rem 0.85rem', borderRadius: '10px', fontWeight: 800,
-                  fontSize: isMobile ? '0.75rem' : '0.8rem', fontFamily: 'Outfit', cursor: 'pointer',
+                  fontSize: isMobile ? '0.75rem' : '0.8rem', fontFamily: 'Plus Jakarta Sans', cursor: 'pointer',
                   display: 'flex', alignItems: 'center', gap: '0.3rem',
                   boxShadow: '0 4px 14px rgba(245,185,66,0.35)', flexShrink: 0,
                 }}
@@ -946,7 +946,7 @@ export const AdminDashboard = () => {
                     <card.icon size={isMobile ? 14 : 16} color={card.color} />
                   </div>
                 </div>
-                <div style={{ fontSize: isMobile ? '1.2rem' : '1.6rem', fontWeight: 800, color: card.color === '#d4af37' ? '#f5b942' : card.color, fontFamily: 'Outfit', lineHeight: 1.1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{card.value}</div>
+                <div style={{ fontSize: isMobile ? '1.2rem' : '1.6rem', fontWeight: 800, color: card.color === '#d4af37' ? '#f5b942' : card.color, fontFamily: 'Plus Jakarta Sans', lineHeight: 1.1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{card.value}</div>
                 {card.sub && <div style={{ fontSize: '0.68rem', color: '#94a3b8', marginTop: '0.25rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{card.sub}</div>}
               </div>
             ))}
@@ -970,7 +970,7 @@ export const AdminDashboard = () => {
                     border: activeTab === item.id ? '1.5px solid #f5b942' : '1px solid rgba(255,255,255,0.1)',
                     backgroundColor: activeTab === item.id ? '#f5b942' : '#151822',
                     color: activeTab === item.id ? '#0c0e14' : '#94a3b8',
-                    fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.78rem',
+                    fontFamily: 'Plus Jakarta Sans', fontWeight: 800, fontSize: '0.78rem',
                     cursor: 'pointer', boxShadow: activeTab === item.id ? '0 4px 14px rgba(245,185,66,0.3)' : 'none',
                     minHeight: '38px',
                   }}
@@ -1012,7 +1012,7 @@ export const AdminDashboard = () => {
                 style={{
                   width: '100%', padding: '0.65rem 0.85rem 0.65rem 2.5rem', borderRadius: '10px',
                   backgroundColor: '#151822', border: '1px solid rgba(255,255,255,0.12)',
-                  color: '#ffffff', fontSize: isMobile ? '16px' : '0.83rem', outline: 'none', fontFamily: 'Outfit',
+                  color: '#ffffff', fontSize: isMobile ? '16px' : '0.83rem', outline: 'none', fontFamily: 'Plus Jakarta Sans',
                   boxSizing: 'border-box', minHeight: '44px',
                 }}
               />
@@ -1039,7 +1039,7 @@ export const AdminDashboard = () => {
                       color: datePeriodFilter === period.id ? '#0c0e14' : '#94a3b8',
                       border: datePeriodFilter === period.id ? '1px solid #f5b942' : '1px solid rgba(255,255,255,0.1)',
                       cursor: 'pointer',
-                      fontFamily: 'Outfit',
+                      fontFamily: 'Plus Jakarta Sans',
                       flexShrink: 0,
                     }}
                   >
@@ -1062,7 +1062,7 @@ export const AdminDashboard = () => {
                     color: '#f5b942',
                     fontSize: '0.75rem',
                     fontWeight: 800,
-                    fontFamily: 'Outfit',
+                    fontFamily: 'Plus Jakarta Sans',
                     cursor: 'pointer',
                     flexShrink: 0,
                   }}
@@ -1093,7 +1093,7 @@ export const AdminDashboard = () => {
                     color: '#f5b942',
                     fontSize: '0.75rem',
                     fontWeight: 800,
-                    fontFamily: 'Outfit',
+                    fontFamily: 'Plus Jakarta Sans',
                     cursor: 'pointer',
                     flexShrink: 0,
                   }}
@@ -1158,7 +1158,7 @@ export const AdminDashboard = () => {
                         backgroundColor: active ? '#f5b942' : '#151822',
                         color: active ? '#0c0e14' : '#94a3b8',
                         border: active ? '1px solid #f5b942' : '1px solid rgba(255,255,255,0.08)',
-                        fontFamily: 'Outfit', transition: 'all 0.15s ease',
+                        fontFamily: 'Plus Jakarta Sans', transition: 'all 0.15s ease',
                         display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
                       }}
                     >
@@ -1189,7 +1189,7 @@ export const AdminDashboard = () => {
             filteredOrders.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '3rem 1.5rem', backgroundColor: '#151822', borderRadius: '18px', border: '1px dashed rgba(255,255,255,0.12)' }}>
                 <Package size={40} color="#94a3b8" style={{ marginBottom: '0.75rem' }} />
-                <h3 style={{ color: '#ffffff', fontFamily: 'Outfit', margin: '0 0 0.25rem', fontSize: '1.05rem' }}>No Orders Found</h3>
+                <h3 style={{ color: '#ffffff', fontFamily: 'Plus Jakarta Sans', margin: '0 0 0.25rem', fontSize: '1.05rem' }}>No Orders Found</h3>
                 <p style={{ color: '#94a3b8', fontSize: '0.8rem' }}>{searchQuery || orderStatusFilter !== 'all' ? 'Try clearing your filters.' : 'Store orders will appear here once placed.'}</p>
               </div>
             ) : (
@@ -1210,7 +1210,7 @@ export const AdminDashboard = () => {
                         <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontFamily: 'monospace', marginBottom: '0.15rem' }}>
                           ORDER #{(order._id || '').slice(-6).toUpperCase()}
                         </div>
-                        <div style={{ fontSize: '0.98rem', fontWeight: 700, color: '#ffffff', fontFamily: 'Outfit' }}>
+                        <div style={{ fontSize: '0.98rem', fontWeight: 700, color: '#ffffff', fontFamily: 'Plus Jakarta Sans' }}>
                           {order.name || order.customerInfo?.name || 'Store Customer'}
                         </div>
                         <div style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '0.1rem', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '0.4rem' }}>
@@ -1220,7 +1220,7 @@ export const AdminDashboard = () => {
                               <button
                                 type="button"
                                 onClick={(e) => { e.stopPropagation(); openWhatsApp(order.phone || order.customerInfo?.phone, order.name || order.customerInfo?.name); }}
-                                style={{ background: 'rgba(34,197,94,0.15)', border: '1px solid rgba(34,197,94,0.35)', color: '#22c55e', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem' }}
+                                style={{ background: 'rgba(34,197,94,0.15)', border: '1px solid rgba(34,197,94,0.35)', color: '#22c55e', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Plus Jakarta Sans', display: 'inline-flex', alignItems: 'center', gap: '0.2rem' }}
                                 title="Chat on WhatsApp"
                               >
                                 <MessageSquare size={10} /> WhatsApp
@@ -1228,7 +1228,7 @@ export const AdminDashboard = () => {
                               <a
                                 href={`tel:${order.phone || order.customerInfo?.phone}`}
                                 onClick={e => e.stopPropagation()}
-                                style={{ background: 'rgba(59,130,246,0.15)', border: '1px solid rgba(59,130,246,0.35)', color: '#60a5fa', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem', textDecoration: 'none' }}
+                                style={{ background: 'rgba(59,130,246,0.15)', border: '1px solid rgba(59,130,246,0.35)', color: '#60a5fa', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Plus Jakarta Sans', display: 'inline-flex', alignItems: 'center', gap: '0.2rem', textDecoration: 'none' }}
                                 title="Call customer"
                               >
                                 <Phone size={10} /> Call
@@ -1238,7 +1238,7 @@ export const AdminDashboard = () => {
                         </div>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                        <span style={{ fontSize: '1.05rem', fontWeight: 800, color: '#f5b942', fontFamily: 'Outfit' }}>
+                        <span style={{ fontSize: '1.05rem', fontWeight: 800, color: '#f5b942', fontFamily: 'Plus Jakarta Sans' }}>
                           ₦{Number(order.totalPrice || order.price || 0).toLocaleString()}
                         </span>
                         <StatusBadge status={order.status || 'pending'} />
@@ -1265,7 +1265,7 @@ export const AdminDashboard = () => {
                         <button
                           disabled={updatingId === order._id}
                           onClick={(e) => handleUpdateOrderStatus(order._id, 'shipped', e)}
-                          style={{ flex: isMobile ? '1 1 calc(50% - 0.45rem)' : '1 1 120px', minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '10px', backgroundColor: '#f5b942', color: '#0c0e14', fontWeight: 800, fontSize: '0.78rem', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
+                          style={{ flex: isMobile ? '1 1 calc(50% - 0.45rem)' : '1 1 120px', minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '10px', backgroundColor: '#f5b942', color: '#0c0e14', fontWeight: 800, fontSize: '0.78rem', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Plus Jakarta Sans' }}
                         >
                           <Truck size={13} /> Mark Shipped
                         </button>
@@ -1274,21 +1274,21 @@ export const AdminDashboard = () => {
                         <button
                           disabled={updatingId === order._id}
                           onClick={(e) => handleUpdateOrderStatus(order._id, 'completed', e)}
-                          style={{ flex: isMobile ? '1 1 calc(50% - 0.45rem)' : '1 1 120px', minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '10px', backgroundColor: '#22c55e', color: '#0c0e14', fontWeight: 800, fontSize: '0.78rem', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
+                          style={{ flex: isMobile ? '1 1 calc(50% - 0.45rem)' : '1 1 120px', minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '10px', backgroundColor: '#22c55e', color: '#0c0e14', fontWeight: 800, fontSize: '0.78rem', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Plus Jakarta Sans' }}
                         >
                           <CheckCircle size={13} /> Mark Completed
                         </button>
                       )}
                       <button
                         onClick={(e) => { e.stopPropagation(); setSelectedOrderForTracking(order); }}
-                        style={{ flex: isMobile ? '1 1 calc(50% - 0.45rem)' : '1 1 140px', minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '10px', backgroundColor: 'rgba(245,185,66,0.12)', color: '#f5b942', fontWeight: 800, fontSize: '0.78rem', border: '1px solid rgba(245,185,66,0.3)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
+                        style={{ flex: isMobile ? '1 1 calc(50% - 0.45rem)' : '1 1 140px', minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '10px', backgroundColor: 'rgba(245,185,66,0.12)', color: '#f5b942', fontWeight: 800, fontSize: '0.78rem', border: '1px solid rgba(245,185,66,0.3)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Plus Jakarta Sans' }}
                       >
                         <Truck size={13} /> Track & Manage
                       </button>
 
                       <button
                         onClick={(e) => { e.stopPropagation(); setSelectedOrder(order); }}
-                        style={{ flex: isMobile ? '1 1 100%' : '0 0 auto', minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '10px', backgroundColor: 'rgba(255,255,255,0.06)', color: '#cbd5e1', fontWeight: 700, fontSize: '0.78rem', border: '1px solid rgba(255,255,255,0.1)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
+                        style={{ flex: isMobile ? '1 1 100%' : '0 0 auto', minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '10px', backgroundColor: 'rgba(255,255,255,0.06)', color: '#cbd5e1', fontWeight: 700, fontSize: '0.78rem', border: '1px solid rgba(255,255,255,0.1)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Plus Jakarta Sans' }}
                       >
                         <Eye size={13} /> Details
                       </button>
@@ -1302,7 +1302,7 @@ export const AdminDashboard = () => {
             ordersWithMessages.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '3.5rem 1.5rem', backgroundColor: '#151822', borderRadius: '18px', border: '1px dashed rgba(255,255,255,0.12)' }}>
                 <MessageSquare size={42} color="#94a3b8" style={{ marginBottom: '0.75rem' }} />
-                <h3 style={{ color: '#ffffff', fontFamily: 'Outfit', margin: '0 0 0.25rem', fontSize: '1.05rem', fontWeight: 800 }}>No Order Messages Yet</h3>
+                <h3 style={{ color: '#ffffff', fontFamily: 'Plus Jakarta Sans', margin: '0 0 0.25rem', fontSize: '1.05rem', fontWeight: 800 }}>No Order Messages Yet</h3>
                 <p style={{ color: '#94a3b8', fontSize: '0.8rem' }}>When customers message about their store orders, their conversations and inquiries will appear here.</p>
               </div>
             ) : (
@@ -1328,7 +1328,7 @@ export const AdminDashboard = () => {
                           <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontFamily: 'monospace', marginBottom: '0.15rem' }}>
                             ORDER #{(order._id || '').slice(-6).toUpperCase()}
                           </div>
-                          <h4 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '1rem', color: '#ffffff', margin: 0 }}>
+                          <h4 style={{ fontFamily: 'Plus Jakarta Sans', fontWeight: 800, fontSize: '1rem', color: '#ffffff', margin: 0 }}>
                             {order.name || order.customerInfo?.name || 'Store Customer'}
                           </h4>
                           <div style={{ fontSize: '0.76rem', color: '#94a3b8', marginTop: '0.1rem', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '0.4rem' }}>
@@ -1338,14 +1338,14 @@ export const AdminDashboard = () => {
                                 <button
                                   type="button"
                                   onClick={() => openWhatsApp(order.phone, order.name || order.customerInfo?.name)}
-                                  style={{ background: 'rgba(34,197,94,0.15)', border: '1px solid rgba(34,197,94,0.35)', color: '#22c55e', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem' }}
+                                  style={{ background: 'rgba(34,197,94,0.15)', border: '1px solid rgba(34,197,94,0.35)', color: '#22c55e', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Plus Jakarta Sans', display: 'inline-flex', alignItems: 'center', gap: '0.2rem' }}
                                   title="Chat on WhatsApp"
                                 >
                                   <MessageSquare size={10} /> WhatsApp
                                 </button>
                                 <a
                                   href={`tel:${order.phone}`}
-                                  style={{ background: 'rgba(59,130,246,0.15)', border: '1px solid rgba(59,130,246,0.35)', color: '#60a5fa', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem', textDecoration: 'none' }}
+                                  style={{ background: 'rgba(59,130,246,0.15)', border: '1px solid rgba(59,130,246,0.35)', color: '#60a5fa', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Plus Jakarta Sans', display: 'inline-flex', alignItems: 'center', gap: '0.2rem', textDecoration: 'none' }}
                                   title="Call customer"
                                 >
                                   <Phone size={10} /> Call
@@ -1356,7 +1356,7 @@ export const AdminDashboard = () => {
                         </div>
 
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                          <span style={{ fontSize: '0.95rem', fontWeight: 900, color: '#f5b942', fontFamily: 'Outfit' }}>
+                          <span style={{ fontSize: '0.95rem', fontWeight: 900, color: '#f5b942', fontFamily: 'Plus Jakarta Sans' }}>
                             ₦{Number(order.totalPrice || order.price || 0).toLocaleString()}
                           </span>
                           <StatusBadge status={order.status || 'pending'} />
@@ -1416,7 +1416,7 @@ export const AdminDashboard = () => {
                             flex: isMobile ? '1 1 100%' : 1, padding: '0.65rem 0.85rem', borderRadius: '10px',
                             backgroundColor: '#1c202d', border: '1px solid rgba(255,255,255,0.12)', color: '#ffffff',
                             fontSize: isMobile ? '16px' : '0.82rem',
-                            outline: 'none', fontFamily: 'Outfit', minHeight: '44px', boxSizing: 'border-box'
+                            outline: 'none', fontFamily: 'Plus Jakarta Sans', minHeight: '44px', boxSizing: 'border-box'
                           }}
                         />
                         <button
@@ -1425,7 +1425,7 @@ export const AdminDashboard = () => {
                           style={{
                             backgroundColor: '#f5b942', color: '#0c0e14', border: 'none',
                             padding: '0.65rem 1rem', borderRadius: '10px', fontWeight: 800,
-                            fontSize: '0.82rem', fontFamily: 'Outfit', cursor: replyText.trim() ? 'pointer' : 'not-allowed',
+                            fontSize: '0.82rem', fontFamily: 'Plus Jakarta Sans', cursor: replyText.trim() ? 'pointer' : 'not-allowed',
                             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
                             flex: isMobile ? 1 : '0 0 auto', minHeight: '44px'
                           }}
@@ -1439,7 +1439,7 @@ export const AdminDashboard = () => {
                           style={{
                             backgroundColor: 'rgba(255,255,255,0.06)', color: '#cbd5e1', border: '1px solid rgba(255,255,255,0.1)',
                             padding: '0.65rem 0.85rem', borderRadius: '10px', fontWeight: 600,
-                            fontSize: '0.82rem', fontFamily: 'Outfit', cursor: 'pointer',
+                            fontSize: '0.82rem', fontFamily: 'Plus Jakarta Sans', cursor: 'pointer',
                             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
                             flex: isMobile ? '0 0 auto' : '0 0 auto', minHeight: '44px'
                           }}
@@ -1456,7 +1456,7 @@ export const AdminDashboard = () => {
             filteredBookings.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '3rem 1.5rem', backgroundColor: '#151822', borderRadius: '18px', border: '1px dashed rgba(245,185,66,0.2)' }}>
                 <Calendar size={40} color="#f5b942" style={{ marginBottom: '0.75rem' }} />
-                <h3 style={{ color: '#ffffff', fontFamily: 'Outfit', margin: '0 0 0.25rem', fontSize: '1.05rem', fontWeight: 800 }}>No Bookings Found</h3>
+                <h3 style={{ color: '#ffffff', fontFamily: 'Plus Jakarta Sans', margin: '0 0 0.25rem', fontSize: '1.05rem', fontWeight: 800 }}>No Bookings Found</h3>
                 <p style={{ color: '#94a3b8', fontSize: '0.8rem' }}>{searchQuery || bookingStatusFilter !== 'all' ? 'Try clearing your filters.' : 'Customer appointments will appear here.'}</p>
               </div>
             ) : (
@@ -1474,7 +1474,7 @@ export const AdminDashboard = () => {
                   >
                     <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '0.65rem', flexWrap: 'wrap', gap: '0.5rem' }}>
                       <div>
-                        <div style={{ fontSize: '0.98rem', fontWeight: 700, color: '#ffffff', fontFamily: 'Outfit' }}>
+                        <div style={{ fontSize: '0.98rem', fontWeight: 700, color: '#ffffff', fontFamily: 'Plus Jakarta Sans' }}>
                           {b.serviceName || b.service || 'Grooming Service'}
                         </div>
                         <div style={{ fontSize: '0.76rem', color: '#f5b942', marginTop: '0.15rem', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '0.4rem' }}>
@@ -1486,7 +1486,7 @@ export const AdminDashboard = () => {
                               <button
                                 type="button"
                                 onClick={(e) => { e.stopPropagation(); openWhatsApp(b.phone || b.clientPhone, b.clientName || b.user?.firstname); }}
-                                style={{ background: 'rgba(34,197,94,0.15)', border: '1px solid rgba(34,197,94,0.35)', color: '#4ade80', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem' }}
+                                style={{ background: 'rgba(34,197,94,0.15)', border: '1px solid rgba(34,197,94,0.35)', color: '#4ade80', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Plus Jakarta Sans', display: 'inline-flex', alignItems: 'center', gap: '0.2rem' }}
                                 title="Chat on WhatsApp"
                               >
                                 <MessageSquare size={10} /> WhatsApp
@@ -1494,7 +1494,7 @@ export const AdminDashboard = () => {
                               <a
                                 href={`tel:${b.phone || b.clientPhone}`}
                                 onClick={e => e.stopPropagation()}
-                                style={{ background: 'rgba(59,130,246,0.15)', border: '1px solid rgba(59,130,246,0.35)', color: '#60a5fa', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem', textDecoration: 'none' }}
+                                style={{ background: 'rgba(59,130,246,0.15)', border: '1px solid rgba(59,130,246,0.35)', color: '#60a5fa', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Plus Jakarta Sans', display: 'inline-flex', alignItems: 'center', gap: '0.2rem', textDecoration: 'none' }}
                                 title="Call client"
                               >
                                 <Phone size={10} /> Call
@@ -1516,7 +1516,7 @@ export const AdminDashboard = () => {
                         <button
                           disabled={updatingId === b._id}
                           onClick={(e) => handleUpdateBookingStatus(b._id, 'confirmed', e)}
-                          style={{ flex: 1, minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: '#d4af37', color: '#0c0e14', fontWeight: 800, fontSize: '0.78rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+                          style={{ flex: 1, minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: '#d4af37', color: '#0c0e14', fontWeight: 800, fontSize: '0.78rem', border: 'none', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
                         >
                           Confirm
                         </button>
@@ -1525,7 +1525,7 @@ export const AdminDashboard = () => {
                         <button
                           disabled={updatingId === b._id}
                           onClick={(e) => handleUpdateBookingStatus(b._id, 'completed', e)}
-                          style={{ flex: 1, minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: '#16a34a', color: '#fff', fontWeight: 700, fontSize: '0.78rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+                          style={{ flex: 1, minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: '#16a34a', color: '#fff', fontWeight: 700, fontSize: '0.78rem', border: 'none', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
                         >
                           Complete
                         </button>
@@ -1534,14 +1534,14 @@ export const AdminDashboard = () => {
                         <button
                           disabled={updatingId === b._id}
                           onClick={(e) => handleUpdateBookingStatus(b._id, 'cancelled', e)}
-                          style={{ minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: 'rgba(239,68,68,0.15)', color: '#f87171', fontWeight: 600, fontSize: '0.78rem', border: '1px solid rgba(239,68,68,0.3)', cursor: 'pointer', fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+                          style={{ minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: 'rgba(239,68,68,0.15)', color: '#f87171', fontWeight: 600, fontSize: '0.78rem', border: '1px solid rgba(239,68,68,0.3)', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
                         >
                           Cancel
                         </button>
                       )}
                       <button
                         onClick={(e) => { e.stopPropagation(); setSelectedBooking(b); }}
-                        style={{ minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: 'rgba(255,255,255,0.06)', color: '#f1f5f9', fontWeight: 600, fontSize: '0.78rem', border: '1px solid rgba(255,255,255,0.12)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Outfit' }}
+                        style={{ minHeight: '44px', padding: '0.55rem 0.85rem', borderRadius: '8px', backgroundColor: 'rgba(255,255,255,0.06)', color: '#f1f5f9', fontWeight: 600, fontSize: '0.78rem', border: '1px solid rgba(255,255,255,0.12)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontFamily: 'Plus Jakarta Sans' }}
                       >
                         <Eye size={13} /> View Details
                       </button>
@@ -1555,7 +1555,7 @@ export const AdminDashboard = () => {
             filteredUsers.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '3rem 1.5rem', backgroundColor: '#151822', borderRadius: '18px', border: '1px dashed rgba(245,185,66,0.2)' }}>
                 <Users size={40} color="#f5b942" style={{ marginBottom: '0.75rem' }} />
-                <h3 style={{ color: '#ffffff', fontFamily: 'Outfit', margin: '0 0 0.25rem', fontSize: '1.05rem', fontWeight: 800 }}>No Accounts Found</h3>
+                <h3 style={{ color: '#ffffff', fontFamily: 'Plus Jakarta Sans', margin: '0 0 0.25rem', fontSize: '1.05rem', fontWeight: 800 }}>No Accounts Found</h3>
                 <p style={{ color: '#94a3b8', fontSize: '0.8rem' }}>{searchQuery || userRoleFilter !== 'all' ? 'Try clearing your search or role filter.' : 'Registered user accounts will appear here.'}</p>
               </div>
             ) : (
@@ -1580,7 +1580,7 @@ export const AdminDashboard = () => {
                           </div>
                           <div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
-                              <h4 style={{ color: '#ffffff', fontFamily: 'Outfit', fontWeight: 800, margin: 0, fontSize: '0.98rem' }}>
+                              <h4 style={{ color: '#ffffff', fontFamily: 'Plus Jakarta Sans', fontWeight: 800, margin: 0, fontSize: '0.98rem' }}>
                                 {fullName}
                               </h4>
                               <span style={{
@@ -1605,14 +1605,14 @@ export const AdminDashboard = () => {
                                   <button
                                     type="button"
                                     onClick={() => openWhatsApp(u.phone, fullName)}
-                                    style={{ background: 'rgba(34,197,94,0.15)', border: '1px solid rgba(34,197,94,0.35)', color: '#4ade80', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem' }}
+                                    style={{ background: 'rgba(34,197,94,0.15)', border: '1px solid rgba(34,197,94,0.35)', color: '#4ade80', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Plus Jakarta Sans', display: 'inline-flex', alignItems: 'center', gap: '0.2rem' }}
                                     title="Chat on WhatsApp"
                                   >
                                     <MessageSquare size={10} /> WhatsApp
                                   </button>
                                   <a
                                     href={`tel:${u.phone}`}
-                                    style={{ background: 'rgba(59,130,246,0.15)', border: '1px solid rgba(59,130,246,0.35)', color: '#60a5fa', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.2rem', textDecoration: 'none' }}
+                                    style={{ background: 'rgba(59,130,246,0.15)', border: '1px solid rgba(59,130,246,0.35)', color: '#60a5fa', padding: '0.15rem 0.45rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Plus Jakarta Sans', display: 'inline-flex', alignItems: 'center', gap: '0.2rem', textDecoration: 'none' }}
                                     title="Call user"
                                   >
                                     <Phone size={10} /> Call
@@ -1630,7 +1630,7 @@ export const AdminDashboard = () => {
                             backgroundColor: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)',
                             color: '#f87171', fontWeight: 700, fontSize: '0.78rem',
                             cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
-                            fontFamily: 'Outfit', transition: 'all 0.15s ease', flexShrink: 0,
+                            fontFamily: 'Plus Jakarta Sans', transition: 'all 0.15s ease', flexShrink: 0,
                           }}
                         >
                           <Trash2 size={13} /> Delete
@@ -1646,7 +1646,7 @@ export const AdminDashboard = () => {
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.5rem' }}>
                 <div>
-                  <h3 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '1.1rem', color: '#ffffff', margin: 0 }}>
+                  <h3 style={{ fontFamily: 'Plus Jakarta Sans', fontWeight: 800, fontSize: '1.1rem', color: '#ffffff', margin: 0 }}>
                     Manage Store Products ({filteredProducts.length})
                   </h3>
                   <p style={{ fontSize: '0.78rem', color: '#94a3b8', margin: '0.15rem 0 0' }}>
@@ -1658,7 +1658,7 @@ export const AdminDashboard = () => {
                   style={{
                     backgroundColor: '#d4af37', border: 'none', color: '#0c0e14',
                     padding: '0.6rem 1.1rem', borderRadius: '10px', fontWeight: 800,
-                    fontSize: '0.82rem', fontFamily: 'Outfit', cursor: 'pointer',
+                    fontSize: '0.82rem', fontFamily: 'Plus Jakarta Sans', cursor: 'pointer',
                     display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
                     boxShadow: '0 4px 14px rgba(212,175,55,0.35)'
                   }}
@@ -1670,11 +1670,11 @@ export const AdminDashboard = () => {
               {filteredProducts.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '3.5rem 1.5rem', backgroundColor: '#151822', borderRadius: '18px', border: '1px dashed rgba(245,185,66,0.2)' }}>
                   <Tag size={42} color="#f5b942" style={{ marginBottom: '0.75rem' }} />
-                  <h3 style={{ color: '#ffffff', fontFamily: 'Outfit', margin: '0 0 0.25rem', fontSize: '1.05rem', fontWeight: 800 }}>No Products Found</h3>
+                  <h3 style={{ color: '#ffffff', fontFamily: 'Plus Jakarta Sans', margin: '0 0 0.25rem', fontSize: '1.05rem', fontWeight: 800 }}>No Products Found</h3>
                   <p style={{ color: '#94a3b8', fontSize: '0.8rem', marginBottom: '1.25rem' }}>{searchQuery ? 'Try clearing your search term.' : 'Click below to upload products to your public store page.'}</p>
                   <button
                     onClick={handleOpenAddProduct}
-                    style={{ backgroundColor: '#d4af37', color: '#0c0e14', border: 'none', padding: '0.65rem 1.25rem', borderRadius: '10px', fontWeight: 800, fontSize: '0.85rem', fontFamily: 'Outfit', cursor: 'pointer' }}
+                    style={{ backgroundColor: '#d4af37', color: '#0c0e14', border: 'none', padding: '0.65rem 1.25rem', borderRadius: '10px', fontWeight: 800, fontSize: '0.85rem', fontFamily: 'Plus Jakarta Sans', cursor: 'pointer' }}
                   >
                     + Add Product Now
                   </button>
@@ -1700,7 +1700,7 @@ export const AdminDashboard = () => {
                               backgroundColor: 'rgba(12,14,20,0.88)', backdropFilter: 'blur(4px)',
                               color: '#f5b942', fontSize: '0.65rem', fontWeight: 800,
                               padding: '0.15rem 0.55rem', borderRadius: '50px',
-                              border: '1px solid rgba(245,185,66,0.35)', fontFamily: 'Outfit'
+                              border: '1px solid rgba(245,185,66,0.35)', fontFamily: 'Plus Jakarta Sans'
                             }}>
                               {p.badge}
                             </span>
@@ -1709,14 +1709,14 @@ export const AdminDashboard = () => {
                             position: 'absolute', bottom: '8px', right: '8px',
                             backgroundColor: '#10131b', color: '#f5b942', fontWeight: 900,
                             fontSize: '0.95rem', padding: '0.2rem 0.6rem', borderRadius: '8px',
-                            boxShadow: '0 2px 8px rgba(0,0,0,0.5)', fontFamily: 'Outfit',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.5)', fontFamily: 'Plus Jakarta Sans',
                             border: '1px solid rgba(245,185,66,0.3)'
                           }}>
                             ₦{Number(p.price).toLocaleString()}
                           </span>
                         </div>
 
-                        <h4 style={{ fontFamily: 'Outfit', fontWeight: 800, color: '#ffffff', fontSize: '0.98rem', margin: '0 0 0.25rem' }}>
+                        <h4 style={{ fontFamily: 'Plus Jakarta Sans', fontWeight: 800, color: '#ffffff', fontSize: '0.98rem', margin: '0 0 0.25rem' }}>
                           {p.title}
                         </h4>
 
@@ -1743,7 +1743,7 @@ export const AdminDashboard = () => {
                             color: p.badge === 'Out of Stock' ? '#f87171' : '#4ade80',
                             fontWeight: 800, fontSize: '0.72rem',
                             cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            fontFamily: 'Outfit', whiteSpace: 'nowrap'
+                            fontFamily: 'Plus Jakarta Sans', whiteSpace: 'nowrap'
                           }}
                           title="Toggle Stock Availability"
                         >
@@ -1756,7 +1756,7 @@ export const AdminDashboard = () => {
                             backgroundColor: 'rgba(245,185,66,0.15)', border: '1px solid rgba(245,185,66,0.35)',
                             color: '#f5b942', fontWeight: 700, fontSize: '0.75rem',
                             cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem',
-                            fontFamily: 'Outfit'
+                            fontFamily: 'Plus Jakarta Sans'
                           }}
                           title="Edit Product"
                         >
@@ -1769,7 +1769,7 @@ export const AdminDashboard = () => {
                             backgroundColor: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)',
                             color: '#f87171', fontWeight: 700, fontSize: '0.75rem',
                             cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem',
-                            fontFamily: 'Outfit'
+                            fontFamily: 'Plus Jakarta Sans'
                           }}
                           title="Delete Product"
                         >
@@ -1787,7 +1787,7 @@ export const AdminDashboard = () => {
               {/* Header & Metrics Banner */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.75rem' }}>
                 <div>
-                  <h3 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '1.1rem', color: '#ffffff', margin: 0 }}>
+                  <h3 style={{ fontFamily: 'Plus Jakarta Sans', fontWeight: 800, fontSize: '1.1rem', color: '#ffffff', margin: 0 }}>
                     Expert Payouts & Withdrawals ({filteredWithdrawals.length})
                   </h3>
                   <p style={{ fontSize: '0.78rem', color: '#94a3b8', margin: '0.15rem 0 0' }}>
@@ -1815,7 +1815,7 @@ export const AdminDashboard = () => {
                     padding: '0.45rem 0.85rem', borderRadius: '12px', display: 'flex', flexDirection: 'column'
                   }}>
                     <span style={{ fontSize: '0.65rem', color: '#f5b942', fontWeight: 700, textTransform: 'uppercase' }}>Awaiting Transfer</span>
-                    <span style={{ fontSize: '0.92rem', fontWeight: 900, color: '#ffffff', fontFamily: 'Outfit' }}>
+                    <span style={{ fontSize: '0.92rem', fontWeight: 900, color: '#ffffff', fontFamily: 'Plus Jakarta Sans' }}>
                       ₦{pendingPayoutsVolume.toLocaleString()} ({pendingPayoutsCount})
                     </span>
                   </div>
@@ -1824,7 +1824,7 @@ export const AdminDashboard = () => {
                     padding: '0.45rem 0.85rem', borderRadius: '12px', display: 'flex', flexDirection: 'column'
                   }}>
                     <span style={{ fontSize: '0.65rem', color: '#4ade80', fontWeight: 700, textTransform: 'uppercase' }}>Settled Volume</span>
-                    <span style={{ fontSize: '0.92rem', fontWeight: 900, color: '#ffffff', fontFamily: 'Outfit' }}>
+                    <span style={{ fontSize: '0.92rem', fontWeight: 900, color: '#ffffff', fontFamily: 'Plus Jakarta Sans' }}>
                       ₦{totalPayoutsVolume.toLocaleString()} ({completedPayoutsCount})
                     </span>
                   </div>
@@ -1834,7 +1834,7 @@ export const AdminDashboard = () => {
               {filteredWithdrawals.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '3.5rem 1.5rem', backgroundColor: '#151822', borderRadius: '18px', border: '1px dashed rgba(245,185,66,0.2)' }}>
                   <DollarSign size={42} color="#f5b942" style={{ marginBottom: '0.75rem' }} />
-                  <h3 style={{ color: '#ffffff', fontFamily: 'Outfit', margin: '0 0 0.25rem', fontSize: '1.05rem', fontWeight: 800 }}>No Payout Requests Found</h3>
+                  <h3 style={{ color: '#ffffff', fontFamily: 'Plus Jakarta Sans', margin: '0 0 0.25rem', fontSize: '1.05rem', fontWeight: 800 }}>No Payout Requests Found</h3>
                   <p style={{ color: '#94a3b8', fontSize: '0.8rem' }}>
                     {searchQuery || payoutStatusFilter !== 'all' ? 'Try changing your search or status filter.' : 'When specialists withdraw their earnings, payout requests will appear here.'}
                   </p>
@@ -1872,7 +1872,7 @@ export const AdminDashboard = () => {
                             </div>
                             <div>
                               <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
-                                <h4 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.98rem', color: '#ffffff', margin: 0 }}>
+                                <h4 style={{ fontFamily: 'Plus Jakarta Sans', fontWeight: 800, fontSize: '0.98rem', color: '#ffffff', margin: 0 }}>
                                   {w.expertName || 'Specialist'}
                                 </h4>
                                 <span style={{
@@ -1891,7 +1891,7 @@ export const AdminDashboard = () => {
                           </div>
 
                           <div style={{ textAlign: isMobile ? 'left' : 'right' }}>
-                            <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#ffffff', fontFamily: 'Outfit' }}>
+                            <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#ffffff', fontFamily: 'Plus Jakarta Sans' }}>
                               ₦{Number(w.amount).toLocaleString()}
                             </div>
                             <div style={{ marginTop: '0.2rem' }}>
@@ -1962,7 +1962,7 @@ export const AdminDashboard = () => {
                               backgroundColor: isCopied ? 'rgba(34,197,94,0.15)' : 'rgba(255,255,255,0.06)',
                               color: isCopied ? '#4ade80' : '#f1f5f9',
                               border: isCopied ? '1px solid rgba(34,197,94,0.35)' : '1px solid rgba(255,255,255,0.12)',
-                              cursor: 'pointer', fontFamily: 'Outfit', display: 'inline-flex', alignItems: 'center', gap: '0.35rem'
+                              cursor: 'pointer', fontFamily: 'Plus Jakarta Sans', display: 'inline-flex', alignItems: 'center', gap: '0.35rem'
                             }}
                           >
                             {isCopied ? <Check size={13} /> : <Copy size={13} />}
@@ -1981,7 +1981,7 @@ export const AdminDashboard = () => {
                                 style={{
                                   padding: '0.45rem 0.85rem', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 700,
                                   backgroundColor: 'rgba(239,68,68,0.15)', color: '#f87171',
-                                  border: '1px solid rgba(239,68,68,0.3)', cursor: 'pointer', fontFamily: 'Outfit',
+                                  border: '1px solid rgba(239,68,68,0.3)', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans',
                                   display: 'inline-flex', alignItems: 'center', gap: '0.35rem'
                                 }}
                               >
@@ -1995,7 +1995,7 @@ export const AdminDashboard = () => {
                                 style={{
                                   padding: '0.45rem 1rem', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 800,
                                   backgroundColor: '#16a34a', color: '#ffffff',
-                                  border: 'none', cursor: 'pointer', fontFamily: 'Outfit',
+                                  border: 'none', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans',
                                   display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
                                   boxShadow: '0 2px 8px rgba(22,163,74,0.3)'
                                 }}
@@ -2041,7 +2041,7 @@ export const AdminDashboard = () => {
                       <div style={{ width: '32px', height: '32px', borderRadius: '10px', background: 'linear-gradient(135deg, #d4af37, #f5b942)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <Sparkles size={16} color="#0c0e14" />
                       </div>
-                      <h3 style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: isMobile ? '1rem' : '1.2rem', color: '#ffffff', margin: 0 }}>
+                      <h3 style={{ fontFamily: 'Plus Jakarta Sans', fontWeight: 900, fontSize: isMobile ? '1rem' : '1.2rem', color: '#ffffff', margin: 0 }}>
                         Billboard & Marketing Assets
                       </h3>
                     </div>
@@ -2058,7 +2058,7 @@ export const AdminDashboard = () => {
                         padding: '0.55rem 1rem', borderRadius: '10px', fontSize: '0.8rem', fontWeight: 800,
                         background: 'linear-gradient(135deg, #d4af37, #f5b942)',
                         border: 'none',
-                        color: '#0c0e14', cursor: 'pointer', fontFamily: 'Outfit',
+                        color: '#0c0e14', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans',
                         boxShadow: '0 4px 14px rgba(212,175,55,0.35)',
                       }}
                     >
@@ -2071,7 +2071,7 @@ export const AdminDashboard = () => {
                         display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
                         padding: '0.55rem 1rem', borderRadius: '10px', fontSize: '0.8rem', fontWeight: 800,
                         background: 'linear-gradient(135deg, #d4af37, #f5b942)', border: 'none',
-                        color: '#0c0e14', cursor: 'pointer', fontFamily: 'Outfit',
+                        color: '#0c0e14', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans',
                         boxShadow: '0 4px 14px rgba(212,175,55,0.35)',
                       }}
                     >
@@ -2098,7 +2098,7 @@ export const AdminDashboard = () => {
                       backgroundColor: marketingFilter === f.id ? '#f5b942' : '#151822',
                       color: marketingFilter === f.id ? '#0c0e14' : '#94a3b8',
                       border: marketingFilter === f.id ? '1px solid #f5b942' : '1px solid rgba(255,255,255,0.08)',
-                      cursor: 'pointer', flexShrink: 0, fontFamily: 'Outfit', transition: 'all 0.15s ease',
+                      cursor: 'pointer', flexShrink: 0, fontFamily: 'Plus Jakarta Sans', transition: 'all 0.15s ease',
                       display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
                     }}
                   >
@@ -2153,7 +2153,7 @@ export const AdminDashboard = () => {
                     <div style={{ padding: '1.1rem 1.25rem', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
                         <div>
-                          <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#ffffff', fontFamily: 'Outfit' }}>1. Landscape Billboard</div>
+                          <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#ffffff', fontFamily: 'Plus Jakarta Sans' }}>1. Landscape Billboard</div>
                           <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>Outdoor billboard, salon screens & website hero</div>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', backgroundColor: 'rgba(245,185,66,0.12)', border: '1px solid rgba(245,185,66,0.3)', padding: '0.2rem 0.55rem', borderRadius: '50px' }}>
@@ -2175,7 +2175,7 @@ export const AdminDashboard = () => {
                             backgroundColor: copiedMarketingUrl === 'billboard' ? 'rgba(34,197,94,0.15)' : 'rgba(255,255,255,0.05)',
                             border: copiedMarketingUrl === 'billboard' ? '1px solid rgba(34,197,94,0.4)' : '1px solid rgba(255,255,255,0.1)',
                             color: copiedMarketingUrl === 'billboard' ? '#4ade80' : '#94a3b8',
-                            cursor: 'pointer', fontFamily: 'Outfit',
+                            cursor: 'pointer', fontFamily: 'Plus Jakarta Sans',
                           }}
                         >
                           {copiedMarketingUrl === 'billboard' ? <Check size={12} /> : <Copy size={12} />}
@@ -2188,7 +2188,7 @@ export const AdminDashboard = () => {
                             flex: 1.2, minWidth: '110px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem',
                             padding: '0.55rem', borderRadius: '8px', fontSize: '0.73rem', fontWeight: 800,
                             backgroundColor: 'rgba(245,185,66,0.15)', border: '1px solid rgba(245,185,66,0.4)',
-                            color: '#f5b942', cursor: 'pointer', fontFamily: 'Outfit',
+                            color: '#f5b942', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans',
                           }}
                         >
                           <Eye size={12} /> View Flyer &amp; QR
@@ -2200,7 +2200,7 @@ export const AdminDashboard = () => {
                             display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem',
                             padding: '0.55rem 0.8rem', borderRadius: '8px', fontSize: '0.73rem', fontWeight: 700,
                             backgroundColor: 'rgba(245,185,66,0.12)', border: '1px solid rgba(245,185,66,0.35)',
-                            color: '#f5b942', cursor: 'pointer', fontFamily: 'Outfit',
+                            color: '#f5b942', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans',
                           }}
                         >
                           <ImageIcon size={12} /> Save PNG
@@ -2244,7 +2244,7 @@ export const AdminDashboard = () => {
                     <div style={{ padding: '1.1rem 1.25rem', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
                         <div>
-                          <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#ffffff', fontFamily: 'Outfit' }}>2. Street Flyer</div>
+                          <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#ffffff', fontFamily: 'Plus Jakarta Sans' }}>2. Street Flyer</div>
                           <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>Salons, malls, street posters & Instagram stories</div>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', backgroundColor: 'rgba(168,85,247,0.12)', border: '1px solid rgba(168,85,247,0.3)', padding: '0.2rem 0.55rem', borderRadius: '50px' }}>
@@ -2266,7 +2266,7 @@ export const AdminDashboard = () => {
                             backgroundColor: copiedMarketingUrl === 'street' ? 'rgba(34,197,94,0.15)' : 'rgba(255,255,255,0.05)',
                             border: copiedMarketingUrl === 'street' ? '1px solid rgba(34,197,94,0.4)' : '1px solid rgba(255,255,255,0.1)',
                             color: copiedMarketingUrl === 'street' ? '#4ade80' : '#94a3b8',
-                            cursor: 'pointer', fontFamily: 'Outfit',
+                            cursor: 'pointer', fontFamily: 'Plus Jakarta Sans',
                           }}
                         >
                           {copiedMarketingUrl === 'street' ? <Check size={12} /> : <Copy size={12} />}
@@ -2279,7 +2279,7 @@ export const AdminDashboard = () => {
                             flex: 1.2, minWidth: '110px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem',
                             padding: '0.55rem', borderRadius: '8px', fontSize: '0.73rem', fontWeight: 800,
                             backgroundColor: 'rgba(168,85,247,0.15)', border: '1px solid rgba(168,85,247,0.4)',
-                            color: '#c084fc', cursor: 'pointer', fontFamily: 'Outfit',
+                            color: '#c084fc', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans',
                           }}
                         >
                           <Eye size={12} /> View Flyer &amp; QR
@@ -2291,7 +2291,7 @@ export const AdminDashboard = () => {
                             display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem',
                             padding: '0.55rem 0.8rem', borderRadius: '8px', fontSize: '0.73rem', fontWeight: 700,
                             backgroundColor: 'rgba(168,85,247,0.12)', border: '1px solid rgba(168,85,247,0.35)',
-                            color: '#c084fc', cursor: 'pointer', fontFamily: 'Outfit',
+                            color: '#c084fc', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans',
                           }}
                         >
                           <ImageIcon size={12} /> Save PNG
@@ -2335,7 +2335,7 @@ export const AdminDashboard = () => {
                     <div style={{ padding: '1.1rem 1.25rem', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
                         <div>
-                          <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#ffffff', fontFamily: 'Outfit' }}>3. Recruitment Poster</div>
+                          <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#ffffff', fontFamily: 'Plus Jakarta Sans' }}>3. Recruitment Poster</div>
                           <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>Barbers, braiders, lash techs &amp; nail artists signup</div>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', backgroundColor: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)', padding: '0.2rem 0.55rem', borderRadius: '50px' }}>
@@ -2357,7 +2357,7 @@ export const AdminDashboard = () => {
                             backgroundColor: copiedMarketingUrl === 'recruit' ? 'rgba(34,197,94,0.15)' : 'rgba(255,255,255,0.05)',
                             border: copiedMarketingUrl === 'recruit' ? '1px solid rgba(34,197,94,0.4)' : '1px solid rgba(255,255,255,0.1)',
                             color: copiedMarketingUrl === 'recruit' ? '#4ade80' : '#94a3b8',
-                            cursor: 'pointer', fontFamily: 'Outfit',
+                            cursor: 'pointer', fontFamily: 'Plus Jakarta Sans',
                           }}
                         >
                           {copiedMarketingUrl === 'recruit' ? <Check size={12} /> : <Copy size={12} />}
@@ -2370,7 +2370,7 @@ export const AdminDashboard = () => {
                             flex: 1.2, minWidth: '110px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem',
                             padding: '0.55rem', borderRadius: '8px', fontSize: '0.73rem', fontWeight: 800,
                             backgroundColor: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.4)',
-                            color: '#4ade80', cursor: 'pointer', fontFamily: 'Outfit',
+                            color: '#4ade80', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans',
                           }}
                         >
                           <Eye size={12} /> View Flyer &amp; QR
@@ -2382,7 +2382,7 @@ export const AdminDashboard = () => {
                             display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem',
                             padding: '0.55rem 0.8rem', borderRadius: '8px', fontSize: '0.73rem', fontWeight: 700,
                             backgroundColor: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.35)',
-                            color: '#4ade80', cursor: 'pointer', fontFamily: 'Outfit',
+                            color: '#4ade80', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans',
                           }}
                         >
                           <ImageIcon size={12} /> Save PNG
@@ -2437,7 +2437,7 @@ export const AdminDashboard = () => {
             {isMobile && <div style={{ width: '36px', height: '4px', borderRadius: '2px', backgroundColor: 'rgba(255,255,255,0.2)', margin: '0 auto 1rem' }} />}
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <h3 style={{ color: '#ffffff', fontFamily: 'Outfit', fontWeight: 800, margin: 0, fontSize: '1.1rem' }}>Order Details</h3>
+              <h3 style={{ color: '#ffffff', fontFamily: 'Plus Jakarta Sans', fontWeight: 800, margin: 0, fontSize: '1.1rem' }}>Order Details</h3>
               <button
                 onClick={() => setSelectedOrder(null)}
                 style={{ background: 'rgba(255,255,255,0.06)', border: 'none', color: '#94a3b8', cursor: 'pointer', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem' }}
@@ -2480,7 +2480,7 @@ export const AdminDashboard = () => {
               {selectedOrder.status !== 'shipped' && selectedOrder.status !== 'completed' && (
                 <button
                   onClick={(e) => handleUpdateOrderStatus(selectedOrder._id, 'shipped', e)}
-                  style={{ flex: 1, minHeight: '48px', borderRadius: '12px', backgroundColor: '#d4af37', color: '#0c0e14', fontWeight: 800, fontSize: '0.85rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit' }}
+                  style={{ flex: 1, minHeight: '48px', borderRadius: '12px', backgroundColor: '#d4af37', color: '#0c0e14', fontWeight: 800, fontSize: '0.85rem', border: 'none', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans' }}
                 >
                   Mark Shipped
                 </button>
@@ -2488,14 +2488,14 @@ export const AdminDashboard = () => {
               {selectedOrder.status === 'shipped' && (
                 <button
                   onClick={(e) => handleUpdateOrderStatus(selectedOrder._id, 'completed', e)}
-                  style={{ flex: 1, minHeight: '48px', borderRadius: '12px', backgroundColor: '#16a34a', color: '#fff', fontWeight: 800, fontSize: '0.85rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit' }}
+                  style={{ flex: 1, minHeight: '48px', borderRadius: '12px', backgroundColor: '#16a34a', color: '#fff', fontWeight: 800, fontSize: '0.85rem', border: 'none', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans' }}
                 >
                   Mark Completed
                 </button>
               )}
               <button
                 onClick={() => setSelectedOrder(null)}
-                style={{ minHeight: '48px', padding: '0.6rem 1rem', borderRadius: '12px', backgroundColor: 'rgba(255,255,255,0.06)', color: '#94a3b8', fontWeight: 600, fontSize: '0.85rem', border: '1px solid rgba(255,255,255,0.12)', cursor: 'pointer', fontFamily: 'Outfit' }}
+                style={{ minHeight: '48px', padding: '0.6rem 1rem', borderRadius: '12px', backgroundColor: 'rgba(255,255,255,0.06)', color: '#94a3b8', fontWeight: 600, fontSize: '0.85rem', border: '1px solid rgba(255,255,255,0.12)', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans' }}
               >
                 Close
               </button>
@@ -2526,7 +2526,7 @@ export const AdminDashboard = () => {
             {isMobile && <div style={{ width: '36px', height: '4px', borderRadius: '2px', backgroundColor: 'rgba(255,255,255,0.2)', margin: '0 auto 1rem' }} />}
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <h3 style={{ color: '#ffffff', fontFamily: 'Outfit', fontWeight: 800, margin: 0, fontSize: '1.1rem' }}>Booking Details</h3>
+              <h3 style={{ color: '#ffffff', fontFamily: 'Plus Jakarta Sans', fontWeight: 800, margin: 0, fontSize: '1.1rem' }}>Booking Details</h3>
               <button
                 onClick={() => setSelectedBooking(null)}
                 style={{ background: 'rgba(255,255,255,0.06)', border: 'none', color: '#94a3b8', cursor: 'pointer', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem' }}
@@ -2551,7 +2551,7 @@ export const AdminDashboard = () => {
               {selectedBooking.status !== 'confirmed' && selectedBooking.status !== 'completed' && selectedBooking.status !== 'cancelled' && (
                 <button
                   onClick={(e) => handleUpdateBookingStatus(selectedBooking._id, 'confirmed', e)}
-                  style={{ flex: 1, minHeight: '48px', borderRadius: '12px', backgroundColor: '#d4af37', color: '#0c0e14', fontWeight: 800, fontSize: '0.85rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit' }}
+                  style={{ flex: 1, minHeight: '48px', borderRadius: '12px', backgroundColor: '#d4af37', color: '#0c0e14', fontWeight: 800, fontSize: '0.85rem', border: 'none', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans' }}
                 >
                   Confirm Booking
                 </button>
@@ -2559,14 +2559,14 @@ export const AdminDashboard = () => {
               {selectedBooking.status === 'confirmed' && (
                 <button
                   onClick={(e) => handleUpdateBookingStatus(selectedBooking._id, 'completed', e)}
-                  style={{ flex: 1, minHeight: '48px', borderRadius: '12px', backgroundColor: '#16a34a', color: '#fff', fontWeight: 800, fontSize: '0.85rem', border: 'none', cursor: 'pointer', fontFamily: 'Outfit' }}
+                  style={{ flex: 1, minHeight: '48px', borderRadius: '12px', backgroundColor: '#16a34a', color: '#fff', fontWeight: 800, fontSize: '0.85rem', border: 'none', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans' }}
                 >
                   Complete Service
                 </button>
               )}
               <button
                 onClick={() => setSelectedBooking(null)}
-                style={{ minHeight: '48px', padding: '0.6rem 1rem', borderRadius: '12px', backgroundColor: 'rgba(255,255,255,0.06)', color: '#94a3b8', fontWeight: 600, fontSize: '0.85rem', border: '1px solid rgba(255,255,255,0.12)', cursor: 'pointer', fontFamily: 'Outfit' }}
+                style={{ minHeight: '48px', padding: '0.6rem 1rem', borderRadius: '12px', backgroundColor: 'rgba(255,255,255,0.06)', color: '#94a3b8', fontWeight: 600, fontSize: '0.85rem', border: '1px solid rgba(255,255,255,0.12)', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans' }}
               >
                 Close
               </button>
@@ -2598,7 +2598,7 @@ export const AdminDashboard = () => {
               <AlertTriangle size={28} />
             </div>
 
-            <h3 style={{ color: '#ffffff', fontFamily: 'Outfit', fontWeight: 800, margin: '0 0 0.5rem', fontSize: '1.15rem' }}>
+            <h3 style={{ color: '#ffffff', fontFamily: 'Plus Jakarta Sans', fontWeight: 800, margin: '0 0 0.5rem', fontSize: '1.15rem' }}>
               Delete User Account?
             </h3>
 
@@ -2609,14 +2609,14 @@ export const AdminDashboard = () => {
             <div style={{ display: 'flex', gap: '0.65rem' }}>
               <button
                 onClick={() => setUserToDelete(null)}
-                style={{ flex: 1, minHeight: '50px', borderRadius: '12px', backgroundColor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', color: '#94a3b8', fontWeight: 600, fontSize: '0.88rem', cursor: 'pointer', fontFamily: 'Outfit' }}
+                style={{ flex: 1, minHeight: '50px', borderRadius: '12px', backgroundColor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', color: '#94a3b8', fontWeight: 600, fontSize: '0.88rem', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans' }}
               >
                 Cancel
               </button>
               <button
                 disabled={updatingId === userToDelete._id}
                 onClick={() => handleDeleteUserAccount(userToDelete)}
-                style={{ flex: 1, minHeight: '50px', borderRadius: '12px', backgroundColor: '#ef4444', border: 'none', color: '#ffffff', fontWeight: 800, fontSize: '0.88rem', cursor: 'pointer', fontFamily: 'Outfit' }}
+                style={{ flex: 1, minHeight: '50px', borderRadius: '12px', backgroundColor: '#ef4444', border: 'none', color: '#ffffff', fontWeight: 800, fontSize: '0.88rem', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans' }}
               >
                 {updatingId === userToDelete._id ? 'Deleting...' : 'Delete Permanently'}
               </button>
@@ -2647,7 +2647,7 @@ export const AdminDashboard = () => {
             {isMobile && <div style={{ width: '36px', height: '4px', borderRadius: '2px', backgroundColor: 'rgba(255,255,255,0.2)', margin: '0 auto 1rem' }} />}
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <h3 style={{ color: '#ffffff', fontFamily: 'Outfit', fontWeight: 800, margin: 0, fontSize: '1.15rem' }}>
+              <h3 style={{ color: '#ffffff', fontFamily: 'Plus Jakarta Sans', fontWeight: 800, margin: 0, fontSize: '1.15rem' }}>
                 {editingProduct ? 'Edit Product' : 'Add New Product'}
               </h3>
               <button
@@ -2659,13 +2659,13 @@ export const AdminDashboard = () => {
             <form onSubmit={handleProductSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
               {/* Dual Product Photos Section */}
               <div style={{ background: '#10131b', padding: '0.85rem', borderRadius: '12px', border: '1px solid rgba(245,185,66,0.25)' }}>
-                <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#f5b942', marginBottom: '0.65rem', fontFamily: 'Outfit' }}>
+                <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#f5b942', marginBottom: '0.65rem', fontFamily: 'Plus Jakarta Sans' }}>
                   📸 Product Photos (Up to 2 Photos)
                 </div>
 
                 {/* Photo 1: Primary Image */}
                 <div style={{ marginBottom: '0.85rem' }}>
-                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '0.25rem', fontFamily: 'Outfit' }}>
+                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '0.25rem', fontFamily: 'Plus Jakarta Sans' }}>
                     Photo 1: Primary Main Image *
                   </label>
 
@@ -2681,7 +2681,7 @@ export const AdminDashboard = () => {
                       placeholder="Primary image URL..."
                       value={productForm.image}
                       onChange={e => setProductForm({ ...productForm, image: e.target.value })}
-                      style={{ flex: 1, padding: '0.6rem 0.75rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.12)', backgroundColor: '#151822', color: '#ffffff', fontSize: '16px', fontFamily: 'Outfit', outline: 'none', minHeight: '44px', boxSizing: 'border-box' }}
+                      style={{ flex: 1, padding: '0.6rem 0.75rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.12)', backgroundColor: '#151822', color: '#ffffff', fontSize: '16px', fontFamily: 'Plus Jakarta Sans', outline: 'none', minHeight: '44px', boxSizing: 'border-box' }}
                     />
                     <label
                       htmlFor="product-image-upload-1"
@@ -2689,7 +2689,7 @@ export const AdminDashboard = () => {
                         cursor: uploadingProductImage ? 'not-allowed' : 'pointer',
                         backgroundColor: 'rgba(245,185,66,0.15)', border: '1px solid rgba(245,185,66,0.35)',
                         color: '#f5b942', padding: '0.6rem 0.75rem', borderRadius: '8px', minHeight: '44px',
-                        fontSize: '0.75rem', fontWeight: 800, fontFamily: 'Outfit',
+                        fontSize: '0.75rem', fontWeight: 800, fontFamily: 'Plus Jakarta Sans',
                         display: 'inline-flex', alignItems: 'center', gap: '0.3rem', flexShrink: 0, boxSizing: 'border-box'
                       }}
                     >
@@ -2709,7 +2709,7 @@ export const AdminDashboard = () => {
 
                 {/* Photo 2: Secondary Image */}
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '0.25rem', fontFamily: 'Outfit' }}>
+                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '0.25rem', fontFamily: 'Plus Jakarta Sans' }}>
                     Photo 2: Secondary / Detail Image (Optional)
                   </label>
 
@@ -2725,7 +2725,7 @@ export const AdminDashboard = () => {
                       placeholder="Secondary image URL..."
                       value={productForm.secondaryImage}
                       onChange={e => setProductForm({ ...productForm, secondaryImage: e.target.value })}
-                      style={{ flex: 1, padding: '0.6rem 0.75rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.12)', backgroundColor: '#151822', color: '#ffffff', fontSize: '16px', fontFamily: 'Outfit', outline: 'none', minHeight: '44px', boxSizing: 'border-box' }}
+                      style={{ flex: 1, padding: '0.6rem 0.75rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.12)', backgroundColor: '#151822', color: '#ffffff', fontSize: '16px', fontFamily: 'Plus Jakarta Sans', outline: 'none', minHeight: '44px', boxSizing: 'border-box' }}
                     />
                     <label
                       htmlFor="product-image-upload-2"
@@ -2733,7 +2733,7 @@ export const AdminDashboard = () => {
                         cursor: uploadingSecondaryImage ? 'not-allowed' : 'pointer',
                         backgroundColor: 'rgba(59,130,246,0.15)', border: '1px solid rgba(59,130,246,0.35)',
                         color: '#60a5fa', padding: '0.6rem 0.75rem', borderRadius: '8px', minHeight: '44px',
-                        fontSize: '0.75rem', fontWeight: 800, fontFamily: 'Outfit',
+                        fontSize: '0.75rem', fontWeight: 800, fontFamily: 'Plus Jakarta Sans',
                         display: 'inline-flex', alignItems: 'center', gap: '0.3rem', flexShrink: 0, boxSizing: 'border-box'
                       }}
                     >
@@ -2753,20 +2753,20 @@ export const AdminDashboard = () => {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '0.3rem', fontFamily: 'Outfit' }}>Product Title *</label>
+                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '0.3rem', fontFamily: 'Plus Jakarta Sans' }}>Product Title *</label>
                 <input
                   type="text"
                   placeholder="e.g. Atelier Gold Pomade"
                   value={productForm.title}
                   onChange={e => setProductForm({ ...productForm, title: e.target.value })}
                   required
-                  style={{ width: '100%', padding: '0.7rem 0.85rem', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.12)', backgroundColor: '#10131b', color: '#ffffff', fontSize: '16px', fontFamily: 'Outfit', outline: 'none', boxSizing: 'border-box', minHeight: '48px' }}
+                  style={{ width: '100%', padding: '0.7rem 0.85rem', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.12)', backgroundColor: '#10131b', color: '#ffffff', fontSize: '16px', fontFamily: 'Plus Jakarta Sans', outline: 'none', boxSizing: 'border-box', minHeight: '48px' }}
                 />
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '0.3rem', fontFamily: 'Outfit' }}>Price (₦) *</label>
+                  <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '0.3rem', fontFamily: 'Plus Jakarta Sans' }}>Price (₦) *</label>
                   <input
                     type="number"
                     step="1"
@@ -2775,24 +2775,24 @@ export const AdminDashboard = () => {
                     value={productForm.price}
                     onChange={e => setProductForm({ ...productForm, price: e.target.value })}
                     required
-                    style={{ width: '100%', padding: '0.7rem 0.85rem', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.12)', backgroundColor: '#10131b', color: '#ffffff', fontSize: '16px', fontFamily: 'Outfit', outline: 'none', boxSizing: 'border-box', minHeight: '48px' }}
+                    style={{ width: '100%', padding: '0.7rem 0.85rem', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.12)', backgroundColor: '#10131b', color: '#ffffff', fontSize: '16px', fontFamily: 'Plus Jakarta Sans', outline: 'none', boxSizing: 'border-box', minHeight: '48px' }}
                   />
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '0.3rem', fontFamily: 'Outfit' }}>Badge</label>
+                  <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '0.3rem', fontFamily: 'Plus Jakarta Sans' }}>Badge</label>
                   <input
                     type="text"
                     placeholder="Bestseller / New"
                     value={productForm.badge}
                     onChange={e => setProductForm({ ...productForm, badge: e.target.value })}
-                    style={{ width: '100%', padding: '0.7rem 0.85rem', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.12)', backgroundColor: '#10131b', color: '#ffffff', fontSize: '16px', fontFamily: 'Outfit', outline: 'none', boxSizing: 'border-box', minHeight: '48px' }}
+                    style={{ width: '100%', padding: '0.7rem 0.85rem', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.12)', backgroundColor: '#10131b', color: '#ffffff', fontSize: '16px', fontFamily: 'Plus Jakarta Sans', outline: 'none', boxSizing: 'border-box', minHeight: '48px' }}
                   />
                 </div>
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '0.3rem', fontFamily: 'Outfit' }}>Rating (1.0 – 5.0)</label>
+                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '0.3rem', fontFamily: 'Plus Jakarta Sans' }}>Rating (1.0 – 5.0)</label>
                 <input
                   type="number"
                   step="0.1"
@@ -2800,18 +2800,18 @@ export const AdminDashboard = () => {
                   max="5"
                   value={productForm.rating}
                   onChange={e => setProductForm({ ...productForm, rating: e.target.value })}
-                  style={{ width: '100%', padding: '0.7rem 0.85rem', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.12)', backgroundColor: '#10131b', color: '#ffffff', fontSize: '16px', fontFamily: 'Outfit', outline: 'none', boxSizing: 'border-box', minHeight: '48px' }}
+                  style={{ width: '100%', padding: '0.7rem 0.85rem', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.12)', backgroundColor: '#10131b', color: '#ffffff', fontSize: '16px', fontFamily: 'Plus Jakarta Sans', outline: 'none', boxSizing: 'border-box', minHeight: '48px' }}
                 />
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '0.3rem', fontFamily: 'Outfit' }}>Description</label>
+                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '0.3rem', fontFamily: 'Plus Jakarta Sans' }}>Description</label>
                 <textarea
                   rows="3"
                   placeholder="Short product description..."
                   value={productForm.desc}
                   onChange={e => setProductForm({ ...productForm, desc: e.target.value })}
-                  style={{ width: '100%', padding: '0.7rem 0.85rem', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.12)', backgroundColor: '#10131b', color: '#ffffff', fontSize: '16px', fontFamily: 'Outfit', outline: 'none', boxSizing: 'border-box', resize: 'vertical' }}
+                  style={{ width: '100%', padding: '0.7rem 0.85rem', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.12)', backgroundColor: '#10131b', color: '#ffffff', fontSize: '16px', fontFamily: 'Plus Jakarta Sans', outline: 'none', boxSizing: 'border-box', resize: 'vertical' }}
                 />
               </div>
 
@@ -2819,14 +2819,14 @@ export const AdminDashboard = () => {
                 <button
                   type="button"
                   onClick={() => setShowProductModal(false)}
-                  style={{ flex: 1, minHeight: '50px', borderRadius: '12px', backgroundColor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', color: '#94a3b8', fontWeight: 600, fontSize: '0.88rem', cursor: 'pointer', fontFamily: 'Outfit' }}
+                  style={{ flex: 1, minHeight: '50px', borderRadius: '12px', backgroundColor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', color: '#94a3b8', fontWeight: 600, fontSize: '0.88rem', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans' }}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={updatingId === 'product_submit'}
-                  style={{ flex: 1, minHeight: '50px', borderRadius: '12px', backgroundColor: '#d4af37', border: 'none', color: '#0c0e14', fontWeight: 800, fontSize: '0.88rem', cursor: 'pointer', fontFamily: 'Outfit' }}
+                  style={{ flex: 1, minHeight: '50px', borderRadius: '12px', backgroundColor: '#d4af37', border: 'none', color: '#0c0e14', fontWeight: 800, fontSize: '0.88rem', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans' }}
                 >
                   {updatingId === 'product_submit' ? 'Saving...' : editingProduct ? 'Save Changes' : 'Upload Product'}
                 </button>
@@ -2859,7 +2859,7 @@ export const AdminDashboard = () => {
               <AlertTriangle size={28} />
             </div>
 
-            <h3 style={{ color: '#ffffff', fontFamily: 'Outfit', fontWeight: 800, margin: '0 0 0.5rem', fontSize: '1.15rem' }}>
+            <h3 style={{ color: '#ffffff', fontFamily: 'Plus Jakarta Sans', fontWeight: 800, margin: '0 0 0.5rem', fontSize: '1.15rem' }}>
               Delete Product?
             </h3>
 
@@ -2870,14 +2870,14 @@ export const AdminDashboard = () => {
             <div style={{ display: 'flex', gap: '0.65rem' }}>
               <button
                 onClick={() => setProductToDelete(null)}
-                style={{ flex: 1, minHeight: '50px', borderRadius: '12px', backgroundColor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', color: '#94a3b8', fontWeight: 600, fontSize: '0.88rem', cursor: 'pointer', fontFamily: 'Outfit' }}
+                style={{ flex: 1, minHeight: '50px', borderRadius: '12px', backgroundColor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', color: '#94a3b8', fontWeight: 600, fontSize: '0.88rem', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans' }}
               >
                 Cancel
               </button>
               <button
                 disabled={updatingId === productToDelete._id}
                 onClick={() => handleDeleteProduct(productToDelete)}
-                style={{ flex: 1, minHeight: '50px', borderRadius: '12px', backgroundColor: '#ef4444', border: 'none', color: '#ffffff', fontWeight: 800, fontSize: '0.88rem', cursor: 'pointer', fontFamily: 'Outfit' }}
+                style={{ flex: 1, minHeight: '50px', borderRadius: '12px', backgroundColor: '#ef4444', border: 'none', color: '#ffffff', fontWeight: 800, fontSize: '0.88rem', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans' }}
               >
                 {updatingId === productToDelete._id ? 'Deleting...' : 'Delete Permanently'}
               </button>
@@ -2927,7 +2927,7 @@ export const AdminDashboard = () => {
                 <div style={{ width: '36px', height: '36px', borderRadius: '10px', backgroundColor: 'rgba(239,68,68,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <AlertTriangle size={18} color="#f87171" />
                 </div>
-                <h3 style={{ color: '#ffffff', fontFamily: 'Outfit', fontWeight: 800, margin: 0, fontSize: '1.1rem' }}>Decline Payout Request</h3>
+                <h3 style={{ color: '#ffffff', fontFamily: 'Plus Jakarta Sans', fontWeight: 800, margin: 0, fontSize: '1.1rem' }}>Decline Payout Request</h3>
               </div>
               <button
                 onClick={() => setRejectionModalWithdrawal(null)}
@@ -2954,7 +2954,7 @@ export const AdminDashboard = () => {
               style={{
                 width: '100%', padding: '0.65rem 0.85rem', borderRadius: '10px',
                 border: '1px solid rgba(255,255,255,0.12)', backgroundColor: '#10131b', color: '#ffffff',
-                fontSize: '0.82rem', fontFamily: 'Outfit', outline: 'none', boxSizing: 'border-box', resize: 'vertical', marginBottom: '1.25rem'
+                fontSize: '0.82rem', fontFamily: 'Plus Jakarta Sans', outline: 'none', boxSizing: 'border-box', resize: 'vertical', marginBottom: '1.25rem'
               }}
             />
 
@@ -2964,7 +2964,7 @@ export const AdminDashboard = () => {
                 onClick={() => setRejectionModalWithdrawal(null)}
                 style={{
                   padding: '0.6rem 1.1rem', borderRadius: '10px', backgroundColor: 'rgba(255,255,255,0.06)',
-                  border: '1px solid rgba(255,255,255,0.12)', color: '#94a3b8', fontWeight: 700, fontSize: '0.82rem', cursor: 'pointer', fontFamily: 'Outfit'
+                  border: '1px solid rgba(255,255,255,0.12)', color: '#94a3b8', fontWeight: 700, fontSize: '0.82rem', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans'
                 }}
               >
                 Cancel
@@ -2975,7 +2975,7 @@ export const AdminDashboard = () => {
                 onClick={handleConfirmRejectPayout}
                 style={{
                   padding: '0.6rem 1.1rem', borderRadius: '10px', backgroundColor: '#ef4444',
-                  border: 'none', color: '#ffffff', fontWeight: 800, fontSize: '0.82rem', cursor: 'pointer', fontFamily: 'Outfit',
+                  border: 'none', color: '#ffffff', fontWeight: 800, fontSize: '0.82rem', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans',
                   boxShadow: '0 4px 12px rgba(239,68,68,0.3)'
                 }}
               >
@@ -3029,7 +3029,7 @@ export const AdminDashboard = () => {
                   style={{ width: isMobile ? '24px' : '28px', height: isMobile ? '24px' : '28px', borderRadius: '6px', objectFit: 'cover', flexShrink: 0 }}
                 />
                 <div style={{ minWidth: 0 }}>
-                  <div style={{ fontSize: isMobile ? '0.82rem' : '1rem', fontWeight: 800, color: '#ffffff', fontFamily: 'Outfit', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  <div style={{ fontSize: isMobile ? '0.82rem' : '1rem', fontWeight: 800, color: '#ffffff', fontFamily: 'Plus Jakarta Sans', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                     {activeBannerModal === 'billboard' && '1. Landscape Billboard (16:9 Format)'}
                     {activeBannerModal === 'street' && '2. Street Flyer (4:5 / 9:16 Portrait)'}
                     {activeBannerModal === 'recruit' && '3. Recruitment Poster (Pro Onboarding)'}
@@ -3074,7 +3074,7 @@ export const AdminDashboard = () => {
                       <img src="/pwa-icon-192.png" alt="SC" style={{ width: '16px', height: '16px', borderRadius: '4px', objectFit: 'cover' }} />
                       <span style={{ fontSize: '0.68rem', fontWeight: 800, color: '#F5B942', letterSpacing: '0.06em', textTransform: 'uppercase' }}>StyleCorner Nigeria · Lagos &amp; Ibadan</span>
                     </div>
-                    <h2 style={{ fontSize: isMobile ? '1.3rem' : '2rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.1, letterSpacing: '-0.03em', margin: '0 0 0.8rem', fontFamily: 'Outfit' }}>
+                    <h2 style={{ fontSize: isMobile ? '1.3rem' : '2rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.1, letterSpacing: '-0.03em', margin: '0 0 0.8rem', fontFamily: 'Plus Jakarta Sans' }}>
                       Book Verified Stylists,<br />Barbers &amp; Braiders.<br />
                       <span style={{ color: '#F5B942' }}>In Seconds.</span>
                     </h2>
@@ -3241,7 +3241,7 @@ export const AdminDashboard = () => {
                   display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
                   padding: '0.5rem 0.85rem', borderRadius: '10px', fontSize: '0.75rem', fontWeight: 700,
                   backgroundColor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)',
-                  color: '#cbd5e1', cursor: 'pointer', fontFamily: 'Outfit',
+                  color: '#cbd5e1', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans',
                 }}
               >
                 <Copy size={13} /> Copy Link
@@ -3259,7 +3259,7 @@ export const AdminDashboard = () => {
                   display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
                   padding: '0.5rem 0.85rem', borderRadius: '10px', fontSize: '0.75rem', fontWeight: 700,
                   backgroundColor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)',
-                  color: '#ffffff', cursor: 'pointer', fontFamily: 'Outfit',
+                  color: '#ffffff', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans',
                 }}
               >
                 <ExternalLink size={13} /> View Full Screen
@@ -3276,7 +3276,7 @@ export const AdminDashboard = () => {
                   background: 'linear-gradient(135deg, #d4af37, #f5b942)',
                   border: 'none',
                   color: '#08090C',
-                  cursor: 'pointer', fontFamily: 'Outfit',
+                  cursor: 'pointer', fontFamily: 'Plus Jakarta Sans',
                   boxShadow: '0 4px 14px rgba(245,185,66,0.35)',
                 }}
               >
@@ -3314,7 +3314,7 @@ export const AdminDashboard = () => {
             overflow: 'hidden',
             display: 'grid',
             gridTemplateColumns: '1.2fr 1fr',
-            fontFamily: "'Outfit', sans-serif",
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
             color: '#ffffff',
             boxSizing: 'border-box',
           }}
@@ -3369,7 +3369,7 @@ export const AdminDashboard = () => {
             border: '2px solid rgba(168,85,247,0.4)',
             borderRadius: '28px',
             overflow: 'hidden',
-            fontFamily: "'Outfit', sans-serif",
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
             color: '#ffffff',
             boxSizing: 'border-box',
           }}
@@ -3414,7 +3414,7 @@ export const AdminDashboard = () => {
             border: '2px solid rgba(16,185,129,0.4)',
             borderRadius: '28px',
             overflow: 'hidden',
-            fontFamily: "'Outfit', sans-serif",
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
             color: '#ffffff',
             boxSizing: 'border-box',
           }}

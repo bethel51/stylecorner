@@ -218,7 +218,7 @@ export const AppHeader = ({ title, showBack, onOpenAiMatcher, onOpenCart }) => {
             ) : (user?.firstname && typeof user.firstname === 'string') ? (
               <span
                 style={{
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontWeight: 800,
                   fontSize: '0.82rem',
                   color: '#f5b942',

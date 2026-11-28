@@ -317,7 +317,7 @@ export const MyBookings = () => {
               <div style={{ minWidth: 0, flex: 1 }}>
                 <h1
                   style={{
-                    fontFamily: 'Outfit',
+                    fontFamily: 'Plus Jakarta Sans',
                     fontSize: 'clamp(1.2rem, 4.4vw, 1.45rem)',
                     fontWeight: 900,
                     color: 'var(--color-text-primary, #ffffff)',
@@ -458,7 +458,7 @@ export const MyBookings = () => {
               minWidth: 0,
             }}
           >
-            <div style={{ fontFamily: 'Outfit', fontSize: 'clamp(1.15rem, 3.8vw, 1.35rem)', fontWeight: 900, color: '#10b981', lineHeight: 1 }}>
+            <div style={{ fontFamily: 'Plus Jakarta Sans', fontSize: 'clamp(1.15rem, 3.8vw, 1.35rem)', fontWeight: 900, color: '#10b981', lineHeight: 1 }}>
               {counts.upcoming}
             </div>
             <div style={{ fontSize: 'clamp(0.62rem, 1.9vw, 0.7rem)', fontWeight: 800, color: '#94a3b8', marginTop: '0.35rem', textTransform: 'uppercase', letterSpacing: '0.04em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
@@ -482,7 +482,7 @@ export const MyBookings = () => {
               minWidth: 0,
             }}
           >
-            <div style={{ fontFamily: 'Outfit', fontSize: 'clamp(1.15rem, 3.8vw, 1.35rem)', fontWeight: 900, color: '#f5b942', lineHeight: 1 }}>
+            <div style={{ fontFamily: 'Plus Jakarta Sans', fontSize: 'clamp(1.15rem, 3.8vw, 1.35rem)', fontWeight: 900, color: '#f5b942', lineHeight: 1 }}>
               {counts.completed}
             </div>
             <div style={{ fontSize: 'clamp(0.62rem, 1.9vw, 0.7rem)', fontWeight: 800, color: '#94a3b8', marginTop: '0.35rem', textTransform: 'uppercase', letterSpacing: '0.04em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
@@ -506,7 +506,7 @@ export const MyBookings = () => {
               minWidth: 0,
             }}
           >
-            <div style={{ fontFamily: 'Outfit', fontSize: 'clamp(1.15rem, 3.8vw, 1.35rem)', fontWeight: 900, color: '#ef4444', lineHeight: 1 }}>
+            <div style={{ fontFamily: 'Plus Jakarta Sans', fontSize: 'clamp(1.15rem, 3.8vw, 1.35rem)', fontWeight: 900, color: '#ef4444', lineHeight: 1 }}>
               {counts.cancelled}
             </div>
             <div style={{ fontSize: 'clamp(0.62rem, 1.9vw, 0.7rem)', fontWeight: 800, color: '#94a3b8', marginTop: '0.35rem', textTransform: 'uppercase', letterSpacing: '0.04em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
@@ -530,7 +530,7 @@ export const MyBookings = () => {
               minWidth: 0,
             }}
           >
-            <div style={{ fontFamily: 'Outfit', fontSize: 'clamp(1.15rem, 3.8vw, 1.35rem)', fontWeight: 900, color: 'var(--color-text-primary, #ffffff)', lineHeight: 1 }}>
+            <div style={{ fontFamily: 'Plus Jakarta Sans', fontSize: 'clamp(1.15rem, 3.8vw, 1.35rem)', fontWeight: 900, color: 'var(--color-text-primary, #ffffff)', lineHeight: 1 }}>
               {counts.total}
             </div>
             <div style={{ fontSize: 'clamp(0.62rem, 1.9vw, 0.7rem)', fontWeight: 800, color: '#94a3b8', marginTop: '0.35rem', textTransform: 'uppercase', letterSpacing: '0.04em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
@@ -577,7 +577,7 @@ export const MyBookings = () => {
                     border: 'none',
                     background: active ? '#f5b942' : 'transparent',
                     color: active ? '#0c0e14' : '#94a3b8',
-                    fontFamily: 'Outfit',
+                    fontFamily: 'Plus Jakarta Sans',
                     fontSize: '0.82rem',
                     fontWeight: active ? 800 : 700,
                     cursor: 'pointer',
@@ -710,7 +710,7 @@ export const MyBookings = () => {
                 fontSize: '16px', // 16px prevents iOS Safari auto-zoom
                 color: 'var(--color-text-primary, #ffffff)',
                 outline: 'none',
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 boxSizing: 'border-box',
               }}
             />
@@ -803,7 +803,7 @@ export const MyBookings = () => {
                   fontWeight: 700,
                   outline: 'none',
                   cursor: 'pointer',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                 }}
               >
                 <option value="newest">Newest First</option>
@@ -850,7 +850,7 @@ export const MyBookings = () => {
 
             <h3
               style={{
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontSize: '1.2rem',
                 fontWeight: 800,
                 color: 'var(--color-text-primary, #ffffff)',
@@ -995,7 +995,7 @@ export const MyBookings = () => {
 
                       <h3
                         style={{
-                          fontFamily: 'Outfit',
+                          fontFamily: 'Plus Jakarta Sans',
                           fontSize: '1.05rem',
                           fontWeight: 800,
                           color: 'var(--color-text-primary, #ffffff)',
@@ -1390,7 +1390,7 @@ export const MyBookings = () => {
               <div style={{ fontSize: '0.82rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 700 }}>
                 {reviewBooking.service}
               </div>
-              <h3 style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: '0.2rem 0' }}>
+              <h3 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.25rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: '0.2rem 0' }}>
                 With {reviewBooking.stylist}
               </h3>
               <p style={{ fontSize: '0.78rem', color: '#94a3b8' }}>

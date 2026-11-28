@@ -439,11 +439,11 @@ export function drawStyleCornerLogo(ctx, cx, cy, size, { hasHalo = true, withTex
   // 5. Optional brand typography beside or below logo
   if (withText) {
     ctx.textAlign = 'center';
-    ctx.font = `900 ${Math.round(size * 0.38)}px Outfit, sans-serif`;
+    ctx.font = `900 ${Math.round(size * 0.38)}px 'Plus Jakarta Sans', sans-serif`;
     ctx.fillStyle = textColor;
     ctx.fillText('Style Corner', cx, cy + size * 0.72);
 
-    ctx.font = `800 ${Math.round(size * 0.19)}px Outfit, sans-serif`;
+    ctx.font = `800 ${Math.round(size * 0.19)}px 'Plus Jakarta Sans', sans-serif`;
     ctx.fillStyle = subtextColor;
     ctx.fillText('ATELIER GROOMING & STYLING', cx, cy + size * 0.94);
   }
@@ -531,7 +531,7 @@ export function drawUniversalCommercialOutro(ctx, W, H, ad, t, isVertical, color
   ctx.fill();
   ctx.stroke();
 
-  ctx.font = `800 ${isVertical ? 12 : 11}px Outfit, sans-serif`;
+  ctx.font = `800 ${isVertical ? 12 : 11}px 'Plus Jakarta Sans', sans-serif`;
   ctx.fillStyle = '#F5B942';
   ctx.textAlign = 'center';
   ctx.fillText('✦ STYLECORNER NIGERIA · LAGOS & IBADAN ✦', cx, topPillY + 4);
@@ -554,13 +554,13 @@ export function drawUniversalCommercialOutro(ctx, W, H, ad, t, isVertical, color
   // 5. Brand Identity & Sub-brand Badge (Y: H * 0.325 to H * 0.365)
   const brandTitleY = isVertical ? H * 0.325 : H * 0.355;
   ctx.save();
-  ctx.font = `900 ${isVertical ? 34 : 28}px Outfit, sans-serif`;
+  ctx.font = `900 ${isVertical ? 34 : 28}px 'Plus Jakarta Sans', sans-serif`;
   ctx.fillStyle = '#ffffff';
   ctx.textAlign = 'center';
   ctx.fillText('STYLECORNER', cx, brandTitleY);
 
   const subBrandY = brandTitleY + (isVertical ? 26 : 22);
-  ctx.font = `800 ${isVertical ? 12 : 11}px Outfit, sans-serif`;
+  ctx.font = `800 ${isVertical ? 12 : 11}px 'Plus Jakarta Sans', sans-serif`;
   ctx.fillStyle = '#F5B942';
   ctx.fillText('ATELIER BEAUTY & GROOMING NETWORK', cx, subBrandY);
   ctx.restore();
@@ -580,13 +580,13 @@ export function drawUniversalCommercialOutro(ctx, W, H, ad, t, isVertical, color
     : "Lagos & Ibadan's Premier Verified Beauty Platform";
 
   ctx.save();
-  ctx.font = `900 ${isVertical ? 28 : 24}px Outfit, sans-serif`;
+  ctx.font = `900 ${isVertical ? 28 : 24}px 'Plus Jakarta Sans', sans-serif`;
   ctx.fillStyle = '#ffffff';
   ctx.textAlign = 'center';
   ctx.fillText(ad.headline || defaultHead, cx, headY);
 
   const subHeadY = headY + (isVertical ? 30 : 25);
-  ctx.font = `700 ${isVertical ? 15 : 13}px Outfit, sans-serif`;
+  ctx.font = `700 ${isVertical ? 15 : 13}px 'Plus Jakarta Sans', sans-serif`;
   ctx.fillStyle = '#e4e4e7';
   ctx.fillText(ad.subline || defaultSub, cx, subHeadY);
   ctx.restore();
@@ -612,7 +612,7 @@ export function drawUniversalCommercialOutro(ctx, W, H, ad, t, isVertical, color
     ctx.fill();
     ctx.stroke();
 
-    ctx.font = `700 ${isVertical ? 13 : 11}px Outfit, sans-serif`;
+    ctx.font = `700 ${isVertical ? 13 : 11}px 'Plus Jakarta Sans', sans-serif`;
     ctx.fillStyle = '#d4d4d8';
     ctx.textAlign = 'center';
     ctx.fillText(`${c.icon}  ${c.text}`, cx, cy + 4);
@@ -663,7 +663,7 @@ export function drawUniversalCommercialOutro(ctx, W, H, ad, t, isVertical, color
   ctx.stroke();
 
   ctx.shadowBlur = 0;
-  ctx.font = `900 ${isVertical ? 18 : 16}px Outfit, sans-serif`;
+  ctx.font = `900 ${isVertical ? 18 : 16}px 'Plus Jakarta Sans', sans-serif`;
   ctx.fillStyle = '#08090C';
   ctx.textAlign = 'center';
   ctx.fillText(ad.cta || 'BOOK YOUR APPOINTMENT NOW ➔', cx, btnY + btnH * 0.62);
@@ -673,7 +673,7 @@ export function drawUniversalCommercialOutro(ctx, W, H, ad, t, isVertical, color
   const footY = isVertical ? H * 0.925 : H * 0.945;
   ctx.save();
   const footText = 'www.stylecorner.world · Instant Mobile Booking';
-  ctx.font = `800 ${isVertical ? 13 : 11}px Outfit, sans-serif`;
+  ctx.font = `800 ${isVertical ? 13 : 11}px 'Plus Jakarta Sans', sans-serif`;
   ctx.fillStyle = '#94a3b8';
   ctx.textAlign = 'center';
   drawStyleCornerLogo(ctx, cx - 145, footY - 1, 16, { hasHalo: false });
@@ -705,7 +705,7 @@ function drawCartoonNailTechScene(ctx, W, H, ad, t, isVertical, color = '#f5b942
   ctx.fill();
   ctx.stroke();
 
-  ctx.font = '900 13px Outfit, sans-serif';
+  ctx.font = "900 13px 'Plus Jakarta Sans', sans-serif";
   ctx.fillStyle = '#F5B942';
   ctx.textAlign = 'center';
   ctx.fillText('💅 LIVE NAIL ART & GEL SCULPTING', cx, hudY + 23);
@@ -820,7 +820,7 @@ function drawCartoonNailTechScene(ctx, W, H, ad, t, isVertical, color = '#f5b942
   ctx.fillStyle = `rgba(56, 189, 248, ${0.25 * lampPulse})`;
   ctx.fillRect(lampX + 10, lampY + 35, 90, 20);
 
-  ctx.font = '800 11px Outfit, sans-serif';
+  ctx.font = "800 11px 'Plus Jakarta Sans', sans-serif";
   ctx.fillStyle = '#38bdf8';
   ctx.textAlign = 'center';
   ctx.fillText('UV GEL CURE', lampX + 55, lampY + 26);
@@ -841,7 +841,7 @@ function drawCartoonNailTechScene(ctx, W, H, ad, t, isVertical, color = '#f5b942
   ctx.textAlign = 'center';
   ctx.fillText('★★★★★', cx, reviewY + 22);
 
-  ctx.font = '800 13px Outfit, sans-serif';
+  ctx.font = "800 13px 'Plus Jakarta Sans', sans-serif";
   ctx.fillStyle = '#ffffff';
   ctx.fillText('"Flawless 3-Week Retention!" · Verified Tech', cx, reviewY + 44);
   ctx.restore();
@@ -871,7 +871,7 @@ function drawCartoonLashTechScene(ctx, W, H, ad, t, isVertical, color = '#e879f9
   ctx.fill();
   ctx.stroke();
 
-  ctx.font = '900 13px Outfit, sans-serif';
+  ctx.font = "900 13px 'Plus Jakarta Sans', sans-serif";
   ctx.fillStyle = '#e879f9';
   ctx.textAlign = 'center';
   ctx.fillText('👁️ PRECISION WISPY LASH EXTENSIONS', cx, hudY + 23);
@@ -975,7 +975,7 @@ function drawCartoonLashTechScene(ctx, W, H, ad, t, isVertical, color = '#e879f9
   ctx.textAlign = 'center';
   ctx.fillText('★★★★★', cx, reviewY + 22);
 
-  ctx.font = '800 13px Outfit, sans-serif';
+  ctx.font = "800 13px 'Plus Jakarta Sans', sans-serif";
   ctx.fillStyle = '#ffffff';
   ctx.fillText('Zero Eye Stinging · Lightweight Volume', cx, reviewY + 44);
   ctx.restore();
@@ -998,7 +998,7 @@ function drawCartoonCustomerBookingScene(ctx, W, H, ad, t, isVertical, color = '
   ctx.fill();
   ctx.stroke();
 
-  ctx.font = '900 13px Outfit, sans-serif';
+  ctx.font = "900 13px 'Plus Jakarta Sans', sans-serif";
   ctx.fillStyle = '#38bdf8';
   ctx.textAlign = 'center';
   ctx.fillText('⚡ 30-SECOND AI SPECIALIST MATCH', cx, hudY + 23);
@@ -1096,12 +1096,12 @@ function drawCartoonCustomerBookingScene(ctx, W, H, ad, t, isVertical, color = '
   ctx.fill();
   ctx.stroke();
 
-  ctx.font = '800 10px Outfit, sans-serif';
+  ctx.font = "800 10px 'Plus Jakarta Sans', sans-serif";
   ctx.fillStyle = '#ffffff';
   ctx.textAlign = 'center';
   ctx.fillText('Chioma Braids', phoneX, phoneY + 120);
 
-  ctx.font = '700 9px Outfit, sans-serif';
+  ctx.font = "700 9px 'Plus Jakarta Sans', sans-serif";
   ctx.fillStyle = '#F5B942';
   ctx.fillText('⭐ 5.0 · Lekki Phase 1', phoneX, phoneY + 134);
 
@@ -1113,7 +1113,7 @@ function drawCartoonCustomerBookingScene(ctx, W, H, ad, t, isVertical, color = '
   ctx.roundRect(phoneX - 55, phoneY + 172, 110, 28, 14);
   ctx.fill();
 
-  ctx.font = '900 10px Outfit, sans-serif';
+  ctx.font = "900 10px 'Plus Jakarta Sans', sans-serif";
   ctx.fillStyle = '#090a0f';
   ctx.fillText('BOOK IN 30S ➔', phoneX, phoneY + 190);
   ctx.restore();
@@ -1128,12 +1128,12 @@ function drawCartoonCustomerBookingScene(ctx, W, H, ad, t, isVertical, color = '
   ctx.fill();
   ctx.stroke();
 
-  ctx.font = '800 13px Outfit, sans-serif';
+  ctx.font = "800 13px 'Plus Jakarta Sans', sans-serif";
   ctx.fillStyle = '#ffffff';
   ctx.textAlign = 'center';
   ctx.fillText('🛡️ 100% Escrow Vault Protected', cx, vaultY + 24);
 
-  ctx.font = '700 11px Outfit, sans-serif';
+  ctx.font = "700 11px 'Plus Jakarta Sans', sans-serif";
   ctx.fillStyle = '#F5B942';
   ctx.fillText('Payment Released Only After Service is Done', cx, vaultY + 42);
   ctx.restore();
@@ -1156,7 +1156,7 @@ function drawCartoonProEarningsScene(ctx, W, H, ad, t, isVertical, color = '#f59
   ctx.fill();
   ctx.stroke();
 
-  ctx.font = '900 13px Outfit, sans-serif';
+  ctx.font = "900 13px 'Plus Jakarta Sans', sans-serif";
   ctx.fillStyle = '#f59e0b';
   ctx.textAlign = 'center';
   ctx.fillText('💰 DIRECT CLIENT BOOKINGS & DAILY PAYOUTS', cx, hudY + 23);
@@ -1207,13 +1207,13 @@ function drawCartoonProEarningsScene(ctx, W, H, ad, t, isVertical, color = '#f59
   ctx.fill();
   ctx.stroke();
 
-  ctx.font = '800 11px Outfit, sans-serif';
+  ctx.font = "800 11px 'Plus Jakarta Sans', sans-serif";
   ctx.fillStyle = '#94a3b8';
   ctx.textAlign = 'center';
   ctx.fillText('STYLECORNER WALLET', cardX, cardY + 26);
 
   const earnings = Math.floor(15000 + 170500 * Math.min(1, t * 1.6));
-  ctx.font = '900 24px Outfit, sans-serif';
+  ctx.font = "900 24px 'Plus Jakarta Sans', sans-serif";
   ctx.fillStyle = '#F5B942';
   ctx.fillText(`₦${earnings.toLocaleString()}`, cardX, cardY + 60);
 
@@ -1224,13 +1224,13 @@ function drawCartoonProEarningsScene(ctx, W, H, ad, t, isVertical, color = '#f59
     const bh = 15 + ((i * 7 + 10) % 35);
     ctx.fillStyle = i >= 4 ? '#22c55e' : 'rgba(245, 185, 66, 0.65)';
     ctx.fillRect(startBX + i * (barW + 4), cardY + 125 - bh, barW, bh);
-    ctx.font = '700 9px Outfit, sans-serif';
+    ctx.font = "700 9px 'Plus Jakarta Sans', sans-serif";
     ctx.fillStyle = '#a1a1aa';
     ctx.fillText(d, startBX + i * (barW + 4) + barW / 2, cardY + 140);
   });
 
   ctx.fillStyle = '#22c55e';
-  ctx.font = '900 10px Outfit, sans-serif';
+  ctx.font = "900 10px 'Plus Jakarta Sans', sans-serif";
   ctx.fillText('⚡ 5S DIRECT BANK WIRE ✓', cardX, cardY + 172);
   ctx.fillText('0% ONBOARDING FEE', cardX, cardY + 188);
   ctx.restore();
@@ -1246,7 +1246,7 @@ function drawCartoonProEarningsScene(ctx, W, H, ad, t, isVertical, color = '#f59
     ctx.arc(coinX, coinY, 7, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
-    ctx.font = '900 8px Outfit, sans-serif';
+    ctx.font = "900 8px 'Plus Jakarta Sans', sans-serif";
     ctx.fillStyle = '#090a0f';
     ctx.textAlign = 'center';
     ctx.fillText('₦', coinX, coinY + 3);
@@ -1271,7 +1271,7 @@ function drawCartoonVipHomeScene(ctx, W, H, ad, t, isVertical, color = '#e879f9'
   ctx.fill();
   ctx.stroke();
 
-  ctx.font = '900 13px Outfit, sans-serif';
+  ctx.font = "900 13px 'Plus Jakarta Sans', sans-serif";
   ctx.fillStyle = '#e879f9';
   ctx.textAlign = 'center';
   ctx.fillText('🏡 VIP AT-HOME MOBILE BEAUTY VISIT', cx, hudY + 23);
@@ -1378,12 +1378,12 @@ function drawCartoonVipHomeScene(ctx, W, H, ad, t, isVertical, color = '#e879f9'
   ctx.fill();
   ctx.stroke();
 
-  ctx.font = '800 13px Outfit, sans-serif';
+  ctx.font = "800 13px 'Plus Jakarta Sans', sans-serif";
   ctx.fillStyle = '#f87171';
   ctx.textAlign = 'center';
   ctx.fillText('❌ Skip 3 Hours in Lagos Traffic Jam', cx, compY + 22);
 
-  ctx.font = '900 13px Outfit, sans-serif';
+  ctx.font = "900 13px 'Plus Jakarta Sans', sans-serif";
   ctx.fillStyle = '#e879f9';
   ctx.fillText('✨ 100% Luxury Salon Service In Your AC Living Room', cx, compY + 44);
   ctx.restore();
@@ -1406,7 +1406,7 @@ function drawCartoonStoreScene(ctx, W, H, ad, t, isVertical, color = '#34d399') 
   ctx.fill();
   ctx.stroke();
 
-  ctx.font = '900 13px Outfit, sans-serif';
+  ctx.font = "900 13px 'Plus Jakarta Sans', sans-serif";
   ctx.fillStyle = '#34d399';
   ctx.textAlign = 'center';
   ctx.fillText('🛍️ AUTHENTIC ATELIER CARE & DISPATCH', cx, hudY + 23);
@@ -1440,11 +1440,11 @@ function drawCartoonStoreScene(ctx, W, H, ad, t, isVertical, color = '#34d399') 
     ctx.textAlign = 'center';
     ctx.fillText(p.icon, px + pedW / 2, py + 48);
 
-    ctx.font = '900 11px Outfit, sans-serif';
+    ctx.font = "900 11px 'Plus Jakarta Sans', sans-serif";
     ctx.fillStyle = '#ffffff';
     ctx.fillText(p.name, px + pedW / 2, py + 74);
 
-    ctx.font = '800 12px Outfit, sans-serif';
+    ctx.font = "800 12px 'Plus Jakarta Sans', sans-serif";
     ctx.fillStyle = p.color;
     ctx.fillText(p.price, px + pedW / 2, py + 94);
     ctx.restore();
@@ -1457,7 +1457,7 @@ function drawCartoonStoreScene(ctx, W, H, ad, t, isVertical, color = '#34d399') 
   ctx.font = '28px serif';
   ctx.fillText('🏍️📦', bikeX, bikeY);
 
-  ctx.font = '800 12px Outfit, sans-serif';
+  ctx.font = "800 12px 'Plus Jakarta Sans', sans-serif";
   ctx.fillStyle = '#34d399';
   ctx.fillText('⚡ FAST DISPATCH · LAGOS & IBADAN', cx, bikeY + 36);
   ctx.restore();
@@ -1716,7 +1716,7 @@ function drawAnimatedBarberScene(ctx, W, H, ad, t, isVertical, color) {
       ctx.fill();
       ctx.stroke();
 
-      ctx.font = '900 13px Outfit, sans-serif';
+      ctx.font = "900 13px 'Plus Jakarta Sans', sans-serif";
       ctx.fillStyle = '#F5B942';
       ctx.textAlign = 'center';
       ctx.fillText('⚡ LIVE MASTER BARBER SESSION', W / 2, hudY + 23);
@@ -1739,7 +1739,7 @@ function drawAnimatedBarberScene(ctx, W, H, ad, t, isVertical, color) {
       ctx.textAlign = 'center';
       ctx.fillText('★★★★★', W / 2, hudY + 28);
 
-      ctx.font = '800 14px Outfit, sans-serif';
+      ctx.font = "800 14px 'Plus Jakarta Sans', sans-serif";
       ctx.fillStyle = '#ffffff';
       ctx.fillText('"Freshest Fade in Lagos!" · Verified Client', W / 2, hudY + 52);
       ctx.restore();
@@ -1979,7 +1979,7 @@ function drawAnimatedBraiderScene(ctx, W, H, ad, t, isVertical, color) {
       ctx.fill();
       ctx.stroke();
 
-      ctx.font = '900 13px Outfit, sans-serif';
+      ctx.font = "900 13px 'Plus Jakarta Sans', sans-serif";
       ctx.fillStyle = '#e879f9';
       ctx.textAlign = 'center';
       ctx.fillText('✨ KNOTLESS GODDESS BRAIDS SESSION', W / 2, hudY + 23);
@@ -2001,7 +2001,7 @@ function drawAnimatedBraiderScene(ctx, W, H, ad, t, isVertical, color) {
       ctx.textAlign = 'center';
       ctx.fillText('★★★★★', W / 2, hudY + 28);
 
-      ctx.font = '800 14px Outfit, sans-serif';
+      ctx.font = "800 14px 'Plus Jakarta Sans', sans-serif";
       ctx.fillStyle = '#ffffff';
       ctx.fillText('"Done in 3 hrs · Zero Scalp Pain!" · Verified', W / 2, hudY + 52);
       ctx.restore();
@@ -2080,12 +2080,12 @@ function drawMasterCinematicCommercial(ctx, W, H, ad, t, isVertical, color) {
     ctx.fill();
     ctx.shadowBlur = 0;
     ctx.fillStyle = '#ffffff';
-    ctx.font = '700 9px Outfit, sans-serif';
+    ctx.font = "700 9px 'Plus Jakarta Sans', sans-serif";
     ctx.textAlign = 'left';
     ctx.fillText('REC', 30, barH - 10);
   }
 
-  ctx.font = '800 11px Outfit, sans-serif';
+  ctx.font = "800 11px 'Plus Jakarta Sans', sans-serif";
   ctx.fillStyle = '#F5B942';
   ctx.textAlign = 'left';
   ctx.fillText('✦ STYLECORNER CINEMATIC FILM', 58, barH - 12);
@@ -2164,7 +2164,7 @@ function drawMasterCinematicCommercial(ctx, W, H, ad, t, isVertical, color) {
     ctx.fill();
     ctx.stroke();
 
-    ctx.font = '800 11px Outfit, sans-serif';
+    ctx.font = "800 11px 'Plus Jakarta Sans', sans-serif";
     ctx.fillStyle = '#ef4444';
     ctx.textAlign = 'left';
     ctx.fillText('❌ "Sorry, fully booked!"', phoneX + 12, phoneY + 26);
@@ -2174,14 +2174,14 @@ function drawMasterCinematicCommercial(ctx, W, H, ad, t, isVertical, color) {
 
     // Dramatic statement overlay
     const textY = isVertical ? H * 0.68 : H * 0.74;
-    ctx.font = `900 ${isVertical ? '30px' : '28px'} Outfit, sans-serif`;
+    ctx.font = `900 ${isVertical ? '30px' : '28px'} 'Plus Jakarta Sans', sans-serif`;
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'center';
     ctx.fillText('Looking good shouldn’t be', cx, textY);
     ctx.fillStyle = '#F5B942';
     ctx.fillText('complicated.', cx, textY + 38);
 
-    ctx.font = '800 13px Outfit, sans-serif';
+    ctx.font = "800 13px 'Plus Jakarta Sans', sans-serif";
     ctx.fillStyle = '#71717a';
     ctx.fillText('LAGOS & IBADAN · FRIDAY 6:30 PM · EVENT IN 2 HOURS', cx, textY + 74);
     ctx.restore();
@@ -2234,12 +2234,12 @@ function drawMasterCinematicCommercial(ctx, W, H, ad, t, isVertical, color) {
     // App Header with Official Logo
     drawStyleCornerLogo(ctx, cx, screenY + 45, 42, { hasHalo: true });
 
-    ctx.font = '900 16px Outfit, sans-serif';
+    ctx.font = "900 16px 'Plus Jakarta Sans', sans-serif";
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'center';
     ctx.fillText('StyleCorner', cx, screenY + 85);
 
-    ctx.font = '800 11px Outfit, sans-serif';
+    ctx.font = "800 11px 'Plus Jakarta Sans', sans-serif";
     ctx.fillStyle = '#F5B942';
     ctx.fillText('TOP VERIFIED SPECIALISTS NEAR YOU', cx, screenY + 102);
 
@@ -2252,7 +2252,7 @@ function drawMasterCinematicCommercial(ctx, W, H, ad, t, isVertical, color) {
     ctx.fill();
     ctx.stroke();
 
-    ctx.font = '700 12px Outfit, sans-serif';
+    ctx.font = "700 12px 'Plus Jakarta Sans', sans-serif";
     ctx.fillStyle = '#38bdf8';
     ctx.textAlign = 'left';
     ctx.fillText('🔍 Braiders, Barbers & Lashes... ✓', screenX + 26, screenY + 137);
@@ -2271,12 +2271,12 @@ function drawMasterCinematicCommercial(ctx, W, H, ad, t, isVertical, color) {
       ctx.fill();
       ctx.stroke();
 
-      ctx.font = '900 12px Outfit, sans-serif';
+      ctx.font = "900 12px 'Plus Jakarta Sans', sans-serif";
       ctx.fillStyle = '#ffffff';
       ctx.textAlign = 'left';
       ctx.fillText(s.name, screenX + 24, cardY + 20);
 
-      ctx.font = '700 11px Outfit, sans-serif';
+      ctx.font = "700 11px 'Plus Jakarta Sans', sans-serif";
       ctx.fillStyle = '#F5B942';
       ctx.fillText(`${s.spec} · ${s.loc}`, screenX + 24, cardY + 38);
 
@@ -2289,12 +2289,12 @@ function drawMasterCinematicCommercial(ctx, W, H, ad, t, isVertical, color) {
     // Cinematic Discovery Text
     const discY = isVertical ? H * 0.73 : H * 0.77;
     ctx.save();
-    ctx.font = `900 ${isVertical ? '34px' : '30px'} Outfit, sans-serif`;
+    ctx.font = `900 ${isVertical ? '34px' : '30px'} 'Plus Jakarta Sans', sans-serif`;
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'center';
     ctx.fillText('Meet Stylecorner.', cx, discY);
 
-    ctx.font = `800 ${isVertical ? '18px' : '16px'} Outfit, sans-serif`;
+    ctx.font = `800 ${isVertical ? '18px' : '16px'} 'Plus Jakarta Sans', sans-serif`;
     ctx.fillStyle = '#F5B942';
     ctx.fillText('Your beauty. Your expert. Your convenience.', cx, discY + 36);
     ctx.restore();
@@ -2348,13 +2348,13 @@ function drawMasterCinematicCommercial(ctx, W, H, ad, t, isVertical, color) {
     ctx.fillText(current.icon, cx, boxY + (isVertical ? 95 : 85));
 
     // Service Title
-    ctx.font = `900 ${isVertical ? '26px' : '24px'} Outfit, sans-serif`;
+    ctx.font = `900 ${isVertical ? '26px' : '24px'} 'Plus Jakarta Sans', sans-serif`;
     ctx.fillStyle = '#ffffff';
     ctx.fillText(current.name, cx, boxY + (isVertical ? 150 : 135));
 
     // Role Badge
     ctx.fillStyle = '#F5B942';
-    ctx.font = '800 14px Outfit, sans-serif';
+    ctx.font = "800 14px 'Plus Jakarta Sans', sans-serif";
     ctx.fillText(`✦ ${current.role} ✦`, cx, boxY + (isVertical ? 180 : 162));
 
     // Detail Description Card
@@ -2366,7 +2366,7 @@ function drawMasterCinematicCommercial(ctx, W, H, ad, t, isVertical, color) {
     ctx.fill();
     ctx.stroke();
 
-    ctx.font = '700 13px Outfit, sans-serif';
+    ctx.font = "700 13px 'Plus Jakarta Sans', sans-serif";
     ctx.fillStyle = '#e4e4e7';
     ctx.fillText(current.detail, cx, boxY + (isVertical ? 238 : 217));
 
@@ -2380,12 +2380,12 @@ function drawMasterCinematicCommercial(ctx, W, H, ad, t, isVertical, color) {
     // Scene Header
     const expHeadY = isVertical ? H * 0.69 : H * 0.74;
     ctx.save();
-    ctx.font = `900 ${isVertical ? '24px' : '22px'} Outfit, sans-serif`;
+    ctx.font = `900 ${isVertical ? '24px' : '22px'} 'Plus Jakarta Sans', sans-serif`;
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'center';
     ctx.fillText(`EXPERIENCE ${serviceIndex + 1} OF 8`, cx, expHeadY);
     ctx.fillStyle = '#38bdf8';
-    ctx.font = '800 14px Outfit, sans-serif';
+    ctx.font = "800 14px 'Plus Jakarta Sans', sans-serif";
     ctx.fillText('100% Background-Checked Nigerian Specialists', cx, expHeadY + 28);
     ctx.restore();
 
@@ -2457,7 +2457,7 @@ function drawMasterCinematicCommercial(ctx, W, H, ad, t, isVertical, color) {
     ctx.fill();
     ctx.stroke();
 
-    ctx.font = '900 13px Outfit, sans-serif';
+    ctx.font = "900 13px 'Plus Jakarta Sans', sans-serif";
     ctx.fillStyle = '#F5B942';
     ctx.textAlign = 'center';
     ctx.fillText(`${curStep.num} OF 6`, cx, cardY + 43);
@@ -2467,11 +2467,11 @@ function drawMasterCinematicCommercial(ctx, W, H, ad, t, isVertical, color) {
     ctx.fillText(curStep.icon, cx, cardY + (isVertical ? 120 : 105));
 
     // Title & Description
-    ctx.font = `900 ${isVertical ? '24px' : '22px'} Outfit, sans-serif`;
+    ctx.font = `900 ${isVertical ? '24px' : '22px'} 'Plus Jakarta Sans', sans-serif`;
     ctx.fillStyle = '#ffffff';
     ctx.fillText(curStep.title, cx, cardY + (isVertical ? 175 : 155));
 
-    ctx.font = '700 14px Outfit, sans-serif';
+    ctx.font = "700 14px 'Plus Jakarta Sans', sans-serif";
     ctx.fillStyle = '#a1a1aa';
     ctx.fillText(curStep.desc, cx, cardY + (isVertical ? 210 : 188));
 
@@ -2484,7 +2484,7 @@ function drawMasterCinematicCommercial(ctx, W, H, ad, t, isVertical, color) {
     ctx.fill();
     ctx.stroke();
 
-    ctx.font = '800 12px Outfit, sans-serif';
+    ctx.font = "800 12px 'Plus Jakarta Sans', sans-serif";
     ctx.fillStyle = '#34d399';
     ctx.fillText('🔒 100% Escrow Protected · Payment Safe Until Complete', cx, cardY + cardH - 29);
     ctx.restore();
@@ -2492,12 +2492,12 @@ function drawMasterCinematicCommercial(ctx, W, H, ad, t, isVertical, color) {
     // Workflow Footer Header
     const workHeadY = isVertical ? H * 0.71 : H * 0.76;
     ctx.save();
-    ctx.font = `900 ${isVertical ? '24px' : '22px'} Outfit, sans-serif`;
+    ctx.font = `900 ${isVertical ? '24px' : '22px'} 'Plus Jakarta Sans', sans-serif`;
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'center';
     ctx.fillText('HOW STYLECORNER WORKS', cx, workHeadY);
     ctx.fillStyle = '#F5B942';
-    ctx.font = '800 14px Outfit, sans-serif';
+    ctx.font = "800 14px 'Plus Jakarta Sans', sans-serif";
     ctx.fillText('Smooth. Transparent. Fully Protected.', cx, workHeadY + 28);
     ctx.restore();
 
@@ -2559,7 +2559,7 @@ function drawMasterCinematicCommercial(ctx, W, H, ad, t, isVertical, color) {
     // Monumental Anthem Typography
     const tranY = isVertical ? H * 0.64 : H * 0.68;
     ctx.save();
-    ctx.font = `900 ${isVertical ? '32px' : '28px'} Outfit, sans-serif`;
+    ctx.font = `900 ${isVertical ? '32px' : '28px'} 'Plus Jakarta Sans', sans-serif`;
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'center';
     ctx.fillText('Find your expert.', cx, tranY);
@@ -2596,20 +2596,20 @@ function drawMasterCinematicCommercial(ctx, W, H, ad, t, isVertical, color) {
     // Brand Name & Slogan
     const brandY = logoY + (isVertical ? 90 : 80);
     ctx.save();
-    ctx.font = `900 ${isVertical ? '42px' : '36px'} Outfit, sans-serif`;
+    ctx.font = `900 ${isVertical ? '42px' : '36px'} 'Plus Jakarta Sans', sans-serif`;
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'center';
     ctx.fillText('STYLECORNER', cx, brandY);
 
-    ctx.font = `800 ${isVertical ? '18px' : '16px'} Outfit, sans-serif`;
+    ctx.font = `800 ${isVertical ? '18px' : '16px'} 'Plus Jakarta Sans', sans-serif`;
     ctx.fillStyle = '#F5B942';
     ctx.fillText('Beauty meets convenience.', cx, brandY + 34);
 
-    ctx.font = '700 14px Outfit, sans-serif';
+    ctx.font = "700 14px 'Plus Jakarta Sans', sans-serif";
     ctx.fillStyle = '#e4e4e7';
     ctx.fillText('Discover your expert. Book your experience.', cx, brandY + 64);
 
-    ctx.font = '600 13px Outfit, sans-serif';
+    ctx.font = "600 13px 'Plus Jakarta Sans', sans-serif";
     ctx.fillStyle = '#a1a1aa';
     ctx.fillText('Coming to transform the way you book beauty services.', cx, brandY + 92);
     ctx.restore();
@@ -2629,7 +2629,7 @@ function drawMasterCinematicCommercial(ctx, W, H, ad, t, isVertical, color) {
     ctx.roundRect(ctaX, ctaY, ctaW, ctaH, 18);
     ctx.fill();
 
-    ctx.font = `900 ${isVertical ? '18px' : '16px'} Outfit, sans-serif`;
+    ctx.font = `900 ${isVertical ? '18px' : '16px'} 'Plus Jakarta Sans', sans-serif`;
     ctx.fillStyle = '#08090c';
     ctx.textAlign = 'center';
     ctx.fillText('VISIT WWW.STYLECORNER.WORLD ➔', cx, ctaY + ctaH * 0.62);
@@ -2733,11 +2733,11 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
 
   // Brand Name & Region Text
   ctx.textAlign = 'left';
-  ctx.font = `900 ${isVertical ? 15 : 14}px Outfit, -apple-system, sans-serif`;
+  ctx.font = `900 ${isVertical ? 15 : 14}px Plus Jakarta Sans, -apple-system, sans-serif`;
   ctx.fillStyle = '#ffffff';
   ctx.fillText('STYLECORNER', pillLogoX + pillLogoSize * 0.68, pillY + pillH * 0.58);
 
-  ctx.font = `700 ${isVertical ? 12 : 11}px Outfit, -apple-system, sans-serif`;
+  ctx.font = `700 ${isVertical ? 12 : 11}px Plus Jakarta Sans, -apple-system, sans-serif`;
   ctx.fillStyle = '#F5B942';
   ctx.fillText('· NIGERIA (LAGOS & IBADAN)', pillLogoX + pillLogoSize * 0.68 + (isVertical ? 112 : 105), pillY + pillH * 0.58);
   ctx.restore();
@@ -2775,7 +2775,7 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
     ctx.roundRect((W - 260) / 2, stepBadgeY, 260, 34, 17);
     ctx.fill();
     ctx.stroke();
-    ctx.font = '900 13px Outfit, sans-serif';
+    ctx.font = "900 13px 'Plus Jakarta Sans', sans-serif";
     ctx.fillStyle = '#F5B942';
     ctx.textAlign = 'center';
     ctx.fillText(
@@ -2808,7 +2808,7 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
       // Typing effect
       const queryText = "Knotless Braids · Lagos 📍";
       const charCount = Math.floor(Math.min(queryText.length, (t / 0.25) * queryText.length));
-      ctx.font = `800 ${isVertical ? 20 : 18}px Outfit, sans-serif`;
+      ctx.font = `800 ${isVertical ? 20 : 18}px 'Plus Jakarta Sans', sans-serif`;
       ctx.fillStyle = '#ffffff';
       ctx.textAlign = 'left';
       ctx.fillText(queryText.slice(0, charCount) + (Math.floor(t * 20) % 2 === 0 ? '|' : ''), sX + 62, searchBoxY + 39);
@@ -2826,7 +2826,7 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
         ctx.roundRect(W * 0.12, chipY, W * 0.76, 40, 20);
         ctx.fill();
         ctx.stroke();
-        ctx.font = '700 15px Outfit, sans-serif';
+        ctx.font = "700 15px 'Plus Jakarta Sans', sans-serif";
         ctx.fillStyle = '#e4e4e7';
         ctx.textAlign = 'center';
         ctx.fillText(c, W / 2, chipY + 25);
@@ -2862,12 +2862,12 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
       ctx.fill();
       ctx.stroke();
 
-      ctx.font = '900 19px Outfit, sans-serif';
+      ctx.font = "900 19px 'Plus Jakarta Sans', sans-serif";
       ctx.fillStyle = '#ffffff';
       ctx.textAlign = 'center';
       ctx.fillText('Chioma Braids Atelier', W / 2, cardY + 38);
 
-      ctx.font = '700 15px Outfit, sans-serif';
+      ctx.font = "700 15px 'Plus Jakarta Sans', sans-serif";
       ctx.fillStyle = '#F5B942';
       ctx.fillText('⭐ 5.0 Rating · 142 Verified Bookings', W / 2, cardY + 68);
 
@@ -2876,7 +2876,7 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
 
       // Match badge
       ctx.fillStyle = '#22c55e';
-      ctx.font = '900 16px Outfit, sans-serif';
+      ctx.font = "900 16px 'Plus Jakarta Sans', sans-serif";
       ctx.fillText('99% AI MATCH LOCKED ✓', W / 2, cardY + 128);
       ctx.restore();
 
@@ -2891,14 +2891,14 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
 
       const vaultY = isVertical ? H * 0.38 : H * 0.48;
       ctx.save();
-      ctx.font = `900 ${isVertical ? 32 : 28}px Outfit, sans-serif`;
+      ctx.font = `900 ${isVertical ? 32 : 28}px 'Plus Jakarta Sans', sans-serif`;
       ctx.fillStyle = '#ffffff';
       ctx.textAlign = 'center';
       ctx.fillText('100% Escrow Protection', W / 2, vaultY);
       ctx.fillStyle = '#F5B942';
       ctx.fillText('Zero Client Risk.', W / 2, vaultY + 40);
 
-      ctx.font = '700 15px Outfit, sans-serif';
+      ctx.font = "700 15px 'Plus Jakarta Sans', sans-serif";
       ctx.fillStyle = '#a1a1aa';
       ctx.fillText('Your payment is securely held in vault.', W / 2, vaultY + 80);
       ctx.fillText('Released ONLY after service is completed.', W / 2, vaultY + 106);
@@ -2915,7 +2915,7 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
       // ── Stage 1: Weekly Calendar Filling Up ──
       const calHeadY = isVertical ? H * 0.16 : H * 0.20;
       ctx.save();
-      ctx.font = '900 14px Outfit, sans-serif';
+      ctx.font = "900 14px 'Plus Jakarta Sans', sans-serif";
       ctx.fillStyle = '#f59e0b';
       ctx.textAlign = 'center';
       ctx.fillText('YOUR WEEKLY AUTOMATED APPOINTMENTS', W / 2, calHeadY);
@@ -2939,13 +2939,13 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
         ctx.roundRect(bx, by, colW - 8, currentH, 6);
         ctx.fill();
 
-        ctx.font = '800 12px Outfit, sans-serif';
+        ctx.font = "800 12px 'Plus Jakarta Sans', sans-serif";
         ctx.fillStyle = '#ffffff';
         ctx.textAlign = 'center';
         ctx.fillText(day, bx + (colW - 8) / 2, barStartY + barH + 20);
 
         if (fillPercent >= 1) {
-          ctx.font = '900 11px Outfit, sans-serif';
+          ctx.font = "900 11px 'Plus Jakarta Sans', sans-serif";
           ctx.fillStyle = '#09090b';
           ctx.fillText(idx >= 4 ? 'FULL' : `${idx + 2}`, bx + (colW - 8) / 2, by + 18);
         }
@@ -2954,11 +2954,11 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
 
       const calFootY = isVertical ? H * 0.48 : H * 0.58;
       ctx.save();
-      ctx.font = '800 18px Outfit, sans-serif';
+      ctx.font = "800 18px 'Plus Jakarta Sans', sans-serif";
       ctx.fillStyle = '#ffffff';
       ctx.textAlign = 'center';
       ctx.fillText('Verified Paying Clients Book 24/7', W / 2, calFootY);
-      ctx.font = '700 14px Outfit, sans-serif';
+      ctx.font = "700 14px 'Plus Jakarta Sans', sans-serif";
       ctx.fillStyle = '#f59e0b';
       ctx.fillText('No more empty salon chairs.', W / 2, calFootY + 28);
       ctx.restore();
@@ -2967,7 +2967,7 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
       // ── Stage 2: Digital Revenue Counter & Bank Wire ──
       const revHeadY = isVertical ? H * 0.16 : H * 0.20;
       ctx.save();
-      ctx.font = '900 14px Outfit, sans-serif';
+      ctx.font = "900 14px 'Plus Jakarta Sans', sans-serif";
       ctx.fillStyle = '#f59e0b';
       ctx.textAlign = 'center';
       ctx.fillText('REAL-TIME REVENUE & WITHDRAWALS', W / 2, revHeadY);
@@ -2976,7 +2976,7 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
       const curNaira = Math.floor(Math.min(1, (t - 0.42) / 0.45) * 185500);
       const tickerY = isVertical ? H * 0.25 : H * 0.32;
       ctx.save();
-      ctx.font = `900 ${isVertical ? 52 : 44}px Outfit, sans-serif`;
+      ctx.font = `900 ${isVertical ? 52 : 44}px 'Plus Jakarta Sans', sans-serif`;
       ctx.fillStyle = '#F5B942';
       ctx.textAlign = 'center';
       ctx.shadowColor = 'rgba(245,158,11,0.5)';
@@ -2984,7 +2984,7 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
       ctx.fillText(`₦${curNaira.toLocaleString()}`, W / 2, tickerY);
       ctx.shadowBlur = 0;
 
-      ctx.font = '700 15px Outfit, sans-serif';
+      ctx.font = "700 15px 'Plus Jakarta Sans', sans-serif";
       ctx.fillStyle = '#94a3b8';
       ctx.fillText('Monthly Earnings Deposited Direct to Wallet', W / 2, tickerY + 34);
       ctx.restore();
@@ -3001,19 +3001,19 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
       ctx.fill();
       ctx.stroke();
 
-      ctx.font = '800 15px Outfit, sans-serif';
+      ctx.font = "800 15px 'Plus Jakarta Sans', sans-serif";
       ctx.fillStyle = '#ffffff';
       ctx.textAlign = 'center';
       ctx.fillText('StyleCorner Wallet  ➔  Your Nigerian Bank', W / 2, wireY + 36);
 
-      ctx.font = '900 14px Outfit, sans-serif';
+      ctx.font = "900 14px 'Plus Jakarta Sans', sans-serif";
       ctx.fillStyle = '#22c55e';
       ctx.fillText('⚡ Instant Payout Released in 5 Seconds ✓', W / 2, wireY + 66);
       ctx.restore();
 
       const feeY = isVertical ? H * 0.54 : H * 0.65;
       ctx.save();
-      ctx.font = '800 16px Outfit, sans-serif';
+      ctx.font = "800 16px 'Plus Jakarta Sans', sans-serif";
       ctx.fillStyle = '#f59e0b';
       ctx.textAlign = 'center';
       ctx.fillText('✓ 0% Platform Onboarding Fee', W / 2, feeY);
@@ -3054,14 +3054,14 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
 
       const homeHeadY = isVertical ? H * 0.44 : H * 0.54;
       ctx.save();
-      ctx.font = `900 ${isVertical ? 32 : 28}px Outfit, sans-serif`;
+      ctx.font = `900 ${isVertical ? 32 : 28}px 'Plus Jakarta Sans', sans-serif`;
       ctx.fillStyle = '#ffffff';
       ctx.textAlign = 'center';
       ctx.fillText('Your Living Room is the Salon.', W / 2, homeHeadY);
       ctx.fillStyle = '#e879f9';
       ctx.fillText('VIP Service At Your Door.', W / 2, homeHeadY + 40);
 
-      ctx.font = '700 15px Outfit, sans-serif';
+      ctx.font = "700 15px 'Plus Jakarta Sans', sans-serif";
       ctx.fillStyle = '#a1a1aa';
       ctx.fillText('Victoria Island · Lekki · Ikoyi · Ikeja · Bodija', W / 2, homeHeadY + 80);
       ctx.restore();
@@ -3083,11 +3083,11 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
       ctx.fill();
       ctx.stroke();
 
-      ctx.font = '900 17px Outfit, sans-serif';
+      ctx.font = "900 17px 'Plus Jakarta Sans', sans-serif";
       ctx.fillStyle = '#f87171';
       ctx.textAlign = 'center';
       ctx.fillText('3 Hours in Lagos Traffic Jam  ❌', W / 2, card1Y + 34);
-      ctx.font = '700 14px Outfit, sans-serif';
+      ctx.font = "700 14px 'Plus Jakarta Sans', sans-serif";
       ctx.fillStyle = '#a1a1aa';
       ctx.fillText('Hot sun, parking struggle & wasted weekend', W / 2, card1Y + 62);
       ctx.restore();
@@ -3102,18 +3102,18 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
       ctx.fill();
       ctx.stroke();
 
-      ctx.font = '900 18px Outfit, sans-serif';
+      ctx.font = "900 18px 'Plus Jakarta Sans', sans-serif";
       ctx.fillStyle = '#e879f9';
       ctx.textAlign = 'center';
       ctx.fillText('VIP Specialist In AC Comfort  ✨  ✅', W / 2, card2Y + 38);
-      ctx.font = '700 14px Outfit, sans-serif';
+      ctx.font = "700 14px 'Plus Jakarta Sans', sans-serif";
       ctx.fillStyle = '#ffffff';
       ctx.fillText('Top verified artist arrives with full luxury kit', W / 2, card2Y + 68);
       ctx.restore();
 
       const perksY = isVertical ? H * 0.54 : H * 0.65;
       ctx.save();
-      ctx.font = '800 15px Outfit, sans-serif';
+      ctx.font = "800 15px 'Plus Jakarta Sans', sans-serif";
       ctx.fillStyle = '#ffffff';
       ctx.textAlign = 'center';
       ctx.fillText('✦ Frontals · Braids · Fades · Soft Glam · Lashes', W / 2, perksY);
@@ -3140,7 +3140,7 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
 
     const headY = isVertical ? H * 0.37 : H * 0.46;
     ctx.save();
-    ctx.font = `900 ${isVertical ? '38px' : '34px'} Outfit, sans-serif`;
+    ctx.font = `900 ${isVertical ? '38px' : '34px'} 'Plus Jakarta Sans', sans-serif`;
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'center';
     ctx.fillText('Book Verified Stylists.', W / 2, headY);
@@ -3161,7 +3161,7 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
     ctx.fill();
     ctx.stroke();
 
-    ctx.font = `700 ${isVertical ? 17 : 15}px Outfit, sans-serif`;
+    ctx.font = `700 ${isVertical ? 17 : 15}px 'Plus Jakarta Sans', sans-serif`;
     ctx.fillStyle = '#e4e4e7';
     ctx.textAlign = 'center';
     ctx.fillText('✦ Braiders · Precision Barbers · Lash Techs', W / 2, boxY + 38);
@@ -3175,18 +3175,18 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
     const meterY = isVertical ? H * 0.22 : H * 0.28;
     const earnings = Math.floor(15000 + 50000 * Math.min(1, t * 1.5));
     ctx.save();
-    ctx.font = `900 ${isVertical ? '48px' : '42px'} Outfit, sans-serif`;
+    ctx.font = `900 ${isVertical ? '48px' : '42px'} 'Plus Jakarta Sans', sans-serif`;
     ctx.fillStyle = '#F5B942';
     ctx.textAlign = 'center';
     ctx.fillText(`₦${earnings.toLocaleString()}+`, W / 2, meterY);
-    ctx.font = `700 ${isVertical ? 17 : 15}px Outfit, sans-serif`;
+    ctx.font = `700 ${isVertical ? 17 : 15}px 'Plus Jakarta Sans', sans-serif`;
     ctx.fillStyle = '#94a3b8';
     ctx.fillText('Average Monthly Earnings for Top Stylists', W / 2, meterY + 32);
     ctx.restore();
 
     const headY = isVertical ? H * 0.38 : H * 0.48;
     ctx.save();
-    ctx.font = `900 ${isVertical ? '36px' : '32px'} Outfit, sans-serif`;
+    ctx.font = `900 ${isVertical ? '36px' : '32px'} 'Plus Jakarta Sans', sans-serif`;
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'center';
     ctx.fillText('Calling Barbers & Braiders!', W / 2, headY);
@@ -3207,7 +3207,7 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
     ctx.fill();
     ctx.stroke();
 
-    ctx.font = `700 ${isVertical ? 16 : 14}px Outfit, sans-serif`;
+    ctx.font = `700 ${isVertical ? 16 : 14}px 'Plus Jakarta Sans', sans-serif`;
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'center';
     ctx.fillText('✓ Zero Joining or Registration Fee', W / 2, perksY + 34);
@@ -3220,7 +3220,7 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
     // ── AD 7: Atelier Store Products ──
     const shelfY = isVertical ? H * 0.22 : H * 0.32;
     ctx.save();
-    ctx.font = `900 ${isVertical ? '36px' : '32px'} Outfit, sans-serif`;
+    ctx.font = `900 ${isVertical ? '36px' : '32px'} 'Plus Jakarta Sans', sans-serif`;
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'center';
     ctx.fillText('StyleCorner Atelier Store', W / 2, shelfY);
@@ -3247,7 +3247,7 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
       ctx.fill();
       ctx.stroke();
 
-      ctx.font = `700 ${isVertical ? 16 : 14}px Outfit, sans-serif`;
+      ctx.font = `700 ${isVertical ? 16 : 14}px 'Plus Jakarta Sans', sans-serif`;
       ctx.fillStyle = '#e4e4e7';
       ctx.textAlign = 'left';
       ctx.fillText(prod, W * 0.08 + 18, cy + (isVertical ? 30 : 26));
@@ -3281,7 +3281,7 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
 
     const matchHeadY = isVertical ? H * 0.42 : H * 0.54;
     ctx.save();
-    ctx.font = `900 ${isVertical ? '36px' : '32px'} Outfit, sans-serif`;
+    ctx.font = `900 ${isVertical ? '36px' : '32px'} 'Plus Jakarta Sans', sans-serif`;
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'center';
     ctx.fillText('Smart AI Stylist Matcher', W / 2, matchHeadY);
@@ -3299,7 +3299,7 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
     ctx.fill();
     ctx.stroke();
 
-    ctx.font = `700 ${isVertical ? 16 : 14}px Outfit, sans-serif`;
+    ctx.font = `700 ${isVertical ? 16 : 14}px 'Plus Jakarta Sans', sans-serif`;
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'left';
     ctx.fillText('📍 Ikeja · Fade & Beard Specialist', W * 0.08 + 16, locY + 32);
@@ -3326,7 +3326,7 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
 
     const luxHeadY = isVertical ? H * 0.42 : H * 0.52;
     ctx.save();
-    ctx.font = `900 ${isVertical ? '36px' : '32px'} Outfit, sans-serif`;
+    ctx.font = `900 ${isVertical ? '36px' : '32px'} 'Plus Jakarta Sans', sans-serif`;
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'center';
     ctx.fillText('Luxury Salon Booking', W / 2, luxHeadY);
@@ -3371,7 +3371,7 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
   ctx.roundRect(btnX, btnY, btnW, btnH, 20);
   ctx.fill();
 
-  ctx.font = `900 ${isVertical ? 22 : 18}px Outfit, sans-serif`;
+  ctx.font = `900 ${isVertical ? 22 : 18}px 'Plus Jakarta Sans', sans-serif`;
   ctx.fillStyle = '#08090C';
   ctx.textAlign = 'center';
   ctx.fillText(ad.cta || 'BOOK YOUR STYLIST NOW ➔', W / 2, btnY + btnH * 0.62);
@@ -3382,7 +3382,7 @@ function renderCommercialFrame(ctx, W, H, ad, progress) {
   const footY = H - (isVertical ? 32 : 18);
   const logoMarkSize = isVertical ? 20 : 16;
   const brandFootText = 'www.stylecorner.world · 100% Escrow Protected';
-  ctx.font = `700 ${isVertical ? 14 : 12}px Outfit, sans-serif`;
+  ctx.font = `700 ${isVertical ? 14 : 12}px 'Plus Jakarta Sans', sans-serif`;
   const footTextW = ctx.measureText(brandFootText).width;
   const footLogoX = (W - footTextW) / 2 - logoMarkSize * 0.85;
 
@@ -3788,7 +3788,7 @@ const VideoAdPlayerModal = ({ ad, onClose, onDownload, isDownloading }) => {
                   <Check size={10} /> 4K 60FPS
                 </span>
               </div>
-              <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#ffffff', fontFamily: 'Outfit', lineHeight: 1.2, marginTop: '2px' }}>
+              <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#ffffff', fontFamily: 'Plus Jakarta Sans', lineHeight: 1.2, marginTop: '2px' }}>
                 {ad.title}
               </div>
             </div>
@@ -3888,7 +3888,7 @@ const VideoAdPlayerModal = ({ ad, onClose, onDownload, isDownloading }) => {
               backgroundColor: 'rgba(18,20,28,0.85)', backdropFilter: 'blur(8px)',
               border: '1px solid rgba(245,185,66,0.4)', borderRadius: '50px',
               padding: '0.25rem 0.65rem', color: '#F5B942', fontSize: '0.68rem',
-              fontWeight: 800, fontFamily: 'Outfit', cursor: 'pointer',
+              fontWeight: 800, fontFamily: 'Plus Jakarta Sans', cursor: 'pointer',
               display: 'inline-flex', alignItems: 'center', gap: '0.3rem',
             }}
           >
@@ -3923,7 +3923,7 @@ const VideoAdPlayerModal = ({ ad, onClose, onDownload, isDownloading }) => {
                   flexShrink: 0,
                   fontSize: '0.70rem',
                   fontWeight: 800,
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   border: isCurrent ? '1.5px solid #F5B942' : '1px solid rgba(255,255,255,0.08)',
                   backgroundColor: isCurrent ? 'rgba(245,185,66,0.18)' : 'rgba(255,255,255,0.03)',
                   color: isCurrent ? '#F5B942' : '#94a3b8',
@@ -4065,7 +4065,7 @@ const VideoAdPlayerModal = ({ ad, onClose, onDownload, isDownloading }) => {
                 padding: '0.55rem 1.25rem',
                 fontSize: '0.82rem',
                 fontWeight: 900,
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 cursor: isDownloading ? 'wait' : 'pointer',
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -4180,12 +4180,12 @@ export const VideoAdsStudio = ({ adVideos, onAddCustomVideo, showToast, isMobile
             background: 'rgba(245,185,66,0.2)', border: '1px solid rgba(245,185,66,0.4)',
             borderRadius: '50px', padding: '0.3rem 0.85rem', marginBottom: '0.75rem',
             fontSize: '0.74rem', fontWeight: 800, color: '#f5b942',
-            textTransform: 'uppercase', fontFamily: 'Outfit', letterSpacing: '0.04em',
+            textTransform: 'uppercase', fontFamily: 'Plus Jakarta Sans', letterSpacing: '0.04em',
           }}>
             <Sparkles size={13} /> AI Video Commercials Studio
           </div>
 
-          <h2 style={{ fontSize: isMobile ? '1.3rem' : '1.75rem', fontWeight: 900, color: '#ffffff', margin: '0 0 0.5rem', fontFamily: 'Outfit' }}>
+          <h2 style={{ fontSize: isMobile ? '1.3rem' : '1.75rem', fontWeight: 900, color: '#ffffff', margin: '0 0 0.5rem', fontFamily: 'Plus Jakarta Sans' }}>
             11 StyleCorner Video Ads &amp; Cinematic Commercials
           </h2>
 
@@ -4224,7 +4224,7 @@ export const VideoAdsStudio = ({ adVideos, onAddCustomVideo, showToast, isMobile
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', marginBottom: '0.75rem' }}>
           <Video size={17} color="#f5b942" />
-          <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#ffffff', margin: 0, fontFamily: 'Outfit' }}>
+          <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#ffffff', margin: 0, fontFamily: 'Plus Jakarta Sans' }}>
             Generate Custom Ad From Your Prompt
           </h3>
         </div>
@@ -4257,7 +4257,7 @@ export const VideoAdsStudio = ({ adVideos, onAddCustomVideo, showToast, isMobile
                 flexShrink: 0,
                 fontSize: '0.72rem',
                 fontWeight: 700,
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 background: 'rgba(255,255,255,0.05)',
                 border: '1px solid rgba(255,255,255,0.1)',
                 color: '#e4e4e7',
@@ -4279,7 +4279,7 @@ export const VideoAdsStudio = ({ adVideos, onAddCustomVideo, showToast, isMobile
             style={{
               flex: 1, background: '#0c0e14', border: '1px solid rgba(255,255,255,0.1)',
               borderRadius: '12px', padding: '0.75rem 1rem', color: '#ffffff',
-              fontSize: '0.85rem', fontFamily: 'Outfit', outline: 'none', minHeight: '44px',
+              fontSize: '0.85rem', fontFamily: 'Plus Jakarta Sans', outline: 'none', minHeight: '44px',
             }}
           />
           <select
@@ -4288,7 +4288,7 @@ export const VideoAdsStudio = ({ adVideos, onAddCustomVideo, showToast, isMobile
             style={{
               background: '#0c0e14', border: '1px solid rgba(255,255,255,0.1)',
               borderRadius: '12px', padding: '0 0.85rem', color: '#ffffff',
-              fontSize: '0.82rem', fontFamily: 'Outfit', minHeight: '44px', minWidth: '160px',
+              fontSize: '0.82rem', fontFamily: 'Plus Jakarta Sans', minHeight: '44px', minWidth: '160px',
             }}
           >
             <option value="9:16">9:16 (TikTok / Reels / Story)</option>
@@ -4301,7 +4301,7 @@ export const VideoAdsStudio = ({ adVideos, onAddCustomVideo, showToast, isMobile
               minHeight: '44px', padding: '0 1.25rem',
               background: 'linear-gradient(135deg,#c8930a,#f5b942)',
               color: '#0c0e14', border: 'none', borderRadius: '12px',
-              fontWeight: 900, fontFamily: 'Outfit', fontSize: '0.84rem',
+              fontWeight: 900, fontFamily: 'Plus Jakarta Sans', fontSize: '0.84rem',
               cursor: creatingNew || !promptText.trim() ? 'not-allowed' : 'pointer',
               display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
               whiteSpace: 'nowrap', opacity: !promptText.trim() ? 0.5 : 1,
@@ -4338,7 +4338,7 @@ export const VideoAdsStudio = ({ adVideos, onAddCustomVideo, showToast, isMobile
               border: activeFilter === tab.id ? '1.5px solid #f5b942' : '1px solid rgba(255,255,255,0.08)',
               background: activeFilter === tab.id ? '#f5b942' : '#151822',
               color: activeFilter === tab.id ? '#0c0e14' : '#94a3b8',
-              fontSize: '0.78rem', fontWeight: 800, fontFamily: 'Outfit', cursor: 'pointer',
+              fontSize: '0.78rem', fontWeight: 800, fontFamily: 'Plus Jakarta Sans', cursor: 'pointer',
               transition: 'all 0.15s ease',
             }}
           >
@@ -4417,7 +4417,7 @@ export const VideoAdsStudio = ({ adVideos, onAddCustomVideo, showToast, isMobile
                   }}>
                     <Play size={22} fill={ad.themeColor} color={ad.themeColor} style={{ marginLeft: '2px' }} />
                   </div>
-                  <div style={{ fontSize: '0.92rem', fontWeight: 900, color: '#ffffff', fontFamily: 'Outfit', lineHeight: 1.3 }}>
+                  <div style={{ fontSize: '0.92rem', fontWeight: 900, color: '#ffffff', fontFamily: 'Plus Jakarta Sans', lineHeight: 1.3 }}>
                     {ad.title}
                   </div>
                   <div style={{ fontSize: '0.68rem', color: '#94a3b8', marginTop: '2px', fontWeight: 700 }}>
@@ -4478,7 +4478,7 @@ export const VideoAdsStudio = ({ adVideos, onAddCustomVideo, showToast, isMobile
                       minHeight: '44px', borderRadius: '12px',
                       backgroundColor: 'rgba(255,255,255,0.07)',
                       border: '1px solid rgba(255,255,255,0.15)',
-                      color: '#ffffff', fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.8rem',
+                      color: '#ffffff', fontFamily: 'Plus Jakarta Sans', fontWeight: 800, fontSize: '0.8rem',
                       cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
                     }}
                   >
@@ -4492,7 +4492,7 @@ export const VideoAdsStudio = ({ adVideos, onAddCustomVideo, showToast, isMobile
                     style={{
                       minHeight: '44px', borderRadius: '12px', border: 'none',
                       background: isRend ? 'rgba(245,185,66,0.25)' : `linear-gradient(135deg, #c8930a, ${ad.themeColor === '#38bdf8' ? '#38bdf8' : ad.themeColor === '#e879f9' ? '#e879f9' : '#f5b942'})`,
-                      color: '#0c0e14', fontFamily: 'Outfit', fontWeight: 900, fontSize: '0.8rem',
+                      color: '#0c0e14', fontFamily: 'Plus Jakarta Sans', fontWeight: 900, fontSize: '0.8rem',
                       cursor: isRend ? 'wait' : 'pointer',
                       display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
                     }}

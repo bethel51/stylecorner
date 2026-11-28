@@ -316,7 +316,7 @@ export const Profile = () => {
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />
               ) : (
-                <span style={{ fontFamily: 'Outfit', fontSize: '2.2rem', fontWeight: 900, color: '#f5b942' }}>
+                <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '2.2rem', fontWeight: 900, color: '#f5b942' }}>
                   {user?.firstname?.charAt(0) || 'B'}
                 </span>
               )}
@@ -352,12 +352,12 @@ export const Profile = () => {
           </div>
 
           {/* Name & Verified Badge */}
-          <h2 style={{ fontFamily: 'Outfit', fontSize: '1.3rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: '0 0 0.25rem' }}>
+          <h2 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.3rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: '0 0 0.25rem' }}>
             {user ? (`${user.firstname || ''} ${user.lastname || ''}`.trim() || user.email?.split('@')[0] || 'Valued Member') : 'Guest User'}
           </h2>
 
           {(user?.role === 'staff' || user?.isVerified) && (
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', color: '#f5b942', fontSize: '0.78rem', fontWeight: 700, fontFamily: 'Outfit' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', color: '#f5b942', fontSize: '0.78rem', fontWeight: 700, fontFamily: 'Plus Jakarta Sans' }}>
               <ShieldCheck size={14} />
               <span>Verified {user?.role === 'staff' ? 'Specialist' : 'Member'}</span>
             </div>
@@ -383,10 +383,10 @@ export const Profile = () => {
               style={{ cursor: 'pointer', textAlign: 'center' }}
               title="View all bookings & schedule history"
             >
-              <div style={{ fontFamily: 'Outfit', fontSize: '1.4rem', fontWeight: 900, color: 'var(--color-text-primary, #ffffff)', lineHeight: 1 }}>
+              <div style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.4rem', fontWeight: 900, color: 'var(--color-text-primary, #ffffff)', lineHeight: 1 }}>
                 {loadingStats ? '…' : stats.bookings}
               </div>
-              <div style={{ fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 700, color: '#94a3b8', marginTop: '0.35rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              <div style={{ fontSize: '0.72rem', fontFamily: 'Plus Jakarta Sans', fontWeight: 700, color: '#94a3b8', marginTop: '0.35rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                 Bookings
               </div>
             </div>
@@ -408,10 +408,10 @@ export const Profile = () => {
               }}
               title="View ratings & reviews"
             >
-              <div style={{ fontFamily: 'Outfit', fontSize: '1.4rem', fontWeight: 900, color: '#f5b942', lineHeight: 1 }}>
+              <div style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.4rem', fontWeight: 900, color: '#f5b942', lineHeight: 1 }}>
                 {loadingStats ? '…' : stats.reviews}
               </div>
-              <div style={{ fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 700, color: '#94a3b8', marginTop: '0.35rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              <div style={{ fontSize: '0.72rem', fontFamily: 'Plus Jakarta Sans', fontWeight: 700, color: '#94a3b8', marginTop: '0.35rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                 Reviews
               </div>
             </div>
@@ -422,10 +422,10 @@ export const Profile = () => {
               style={{ cursor: 'pointer', textAlign: 'center' }}
               title="View saved favorites in Boutique"
             >
-              <div style={{ fontFamily: 'Outfit', fontSize: '1.4rem', fontWeight: 900, color: 'var(--color-text-primary, #ffffff)', lineHeight: 1 }}>
+              <div style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.4rem', fontWeight: 900, color: 'var(--color-text-primary, #ffffff)', lineHeight: 1 }}>
                 {stats.favorites}
               </div>
-              <div style={{ fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 700, color: '#94a3b8', marginTop: '0.35rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              <div style={{ fontSize: '0.72rem', fontFamily: 'Plus Jakarta Sans', fontWeight: 700, color: '#94a3b8', marginTop: '0.35rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                 Favorites
               </div>
             </div>
@@ -468,7 +468,7 @@ export const Profile = () => {
                     <Icon size={19} />
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <span style={{ fontFamily: 'Outfit', fontSize: '0.94rem', fontWeight: 700, color: 'var(--color-text-primary, #ffffff)' }}>
+                    <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.94rem', fontWeight: 700, color: 'var(--color-text-primary, #ffffff)' }}>
                       {item.label}
                     </span>
                     {item.badge && (
@@ -521,7 +521,7 @@ export const Profile = () => {
               background: 'none',
               border: 'none',
               color: '#64748b',
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontSize: '0.78rem',
               fontWeight: 600,
               cursor: 'pointer',
@@ -799,7 +799,7 @@ export const Profile = () => {
           {reviewsList.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '2rem 1rem' }}>
               <Star size={36} color="#f5b942" style={{ margin: '0 auto 0.75rem', opacity: 0.8 }} />
-              <h4 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: '0 0 0.35rem' }}>
+              <h4 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.1rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: '0 0 0.35rem' }}>
                 No reviews yet
               </h4>
               <p style={{ fontSize: '0.8rem', color: '#94a3b8', lineHeight: 1.5, margin: 0 }}>

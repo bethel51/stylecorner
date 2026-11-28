@@ -526,9 +526,9 @@ export const ExpertDashboard = () => {
           </div>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(245,185,66,0.12)', border: '1px solid rgba(245,185,66,0.3)', borderRadius: '50px', padding: '0.3rem 1rem', marginBottom: '1rem' }}>
             <ShieldCheck size={13} color="#f5b942" />
-            <span style={{ fontFamily: 'Outfit', fontSize: '0.75rem', fontWeight: 700, color: '#f5b942' }}>One-Time Activation Required</span>
+            <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.75rem', fontWeight: 700, color: '#f5b942' }}>One-Time Activation Required</span>
           </div>
-          <h2 style={{ fontFamily: 'Outfit', fontSize: '1.55rem', fontWeight: 900, color: '#ffffff', marginBottom: '0.7rem', lineHeight: 1.25 }}>Unlock Your Expert Dashboard</h2>
+          <h2 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.55rem', fontWeight: 900, color: '#ffffff', marginBottom: '0.7rem', lineHeight: 1.25 }}>Unlock Your Expert Dashboard</h2>
           <p style={{ fontSize: '0.88rem', color: '#9ca3af', maxWidth: '340px', lineHeight: 1.65, marginBottom: '2rem' }}>
             Activate with a one-time fee of <span style={{ color: '#f5b942', fontWeight: 800 }}>₦3,000</span> to go live, receive bookings, and start earning from customers near you.
           </p>
@@ -542,30 +542,30 @@ export const ExpertDashboard = () => {
             ].map((item, i, arr) => (
               <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.5rem 0', borderBottom: i < arr.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
                 <span style={{ fontSize: '1rem' }}>{item.icon}</span>
-                <span style={{ fontFamily: 'Outfit', fontSize: '0.84rem', color: '#d1d5db', fontWeight: 600 }}>{item.text}</span>
+                <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.84rem', color: '#d1d5db', fontWeight: 600 }}>{item.text}</span>
               </div>
             ))}
           </div>
           <div style={{ background: 'linear-gradient(135deg, rgba(245,185,66,0.14) 0%, rgba(245,185,66,0.05) 100%)', border: '1.5px solid rgba(245,185,66,0.4)', borderRadius: '18px', padding: '1.1rem 1.25rem', width: '100%', maxWidth: '360px', marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div style={{ textAlign: 'left' }}>
-              <div style={{ fontFamily: 'Outfit', fontSize: '0.78rem', color: '#9ca3af', fontWeight: 600, marginBottom: '0.2rem' }}>Account Activation Fee</div>
-              <div style={{ fontFamily: 'Outfit', fontSize: '2rem', fontWeight: 900, color: '#f5b942', lineHeight: 1 }}>₦3,000</div>
-              <div style={{ fontFamily: 'Outfit', fontSize: '0.72rem', color: '#6b7280', marginTop: '0.3rem' }}>Secured by Paystack · Pay once, earn forever</div>
+              <div style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.78rem', color: '#9ca3af', fontWeight: 600, marginBottom: '0.2rem' }}>Account Activation Fee</div>
+              <div style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '2rem', fontWeight: 900, color: '#f5b942', lineHeight: 1 }}>₦3,000</div>
+              <div style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.72rem', color: '#6b7280', marginTop: '0.3rem' }}>Secured by Paystack · Pay once, earn forever</div>
             </div>
             <div style={{ background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)', borderRadius: '10px', padding: '0.4rem 0.75rem' }}>
-              <span style={{ fontFamily: 'Outfit', fontSize: '0.72rem', fontWeight: 800, color: '#10b981' }}>One-Time</span>
+              <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.72rem', fontWeight: 800, color: '#10b981' }}>One-Time</span>
             </div>
           </div>
-          <button id="expert-activate-btn" onClick={handleActivateAccount} disabled={activating} style={{ width: '100%', maxWidth: '360px', background: activating ? 'rgba(245,185,66,0.35)' : 'linear-gradient(135deg, #f5b942 0%, #e8a520 100%)', color: '#0c0e14', border: 'none', borderRadius: '16px', padding: '1rem 1.5rem', fontFamily: 'Outfit', fontWeight: 900, fontSize: '1rem', cursor: activating ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem', minHeight: '54px', boxShadow: activating ? 'none' : '0 8px 28px rgba(245,185,66,0.4)', touchAction: 'manipulation' }}>
+          <button id="expert-activate-btn" onClick={handleActivateAccount} disabled={activating} style={{ width: '100%', maxWidth: '360px', background: activating ? 'rgba(245,185,66,0.35)' : 'linear-gradient(135deg, #f5b942 0%, #e8a520 100%)', color: '#0c0e14', border: 'none', borderRadius: '16px', padding: '1rem 1.5rem', fontFamily: 'Plus Jakarta Sans', fontWeight: 900, fontSize: '1rem', cursor: activating ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem', minHeight: '54px', boxShadow: activating ? 'none' : '0 8px 28px rgba(245,185,66,0.4)', touchAction: 'manipulation' }}>
             {activating
               ? <><RefreshCw size={18} style={{ animation: 'spin 1s linear infinite' }} /> Connecting to Paystack...</>
               : <><ShieldCheck size={18} /> Activate My Account — ₦3,000</>
             }
           </button>
-          <p style={{ fontFamily: 'Outfit', fontSize: '0.74rem', color: '#4b5563', marginTop: '1.2rem' }}>
+          <p style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.74rem', color: '#4b5563', marginTop: '1.2rem' }}>
             Signed in as <strong style={{ color: '#6b7280' }}>{user?.firstname} {user?.lastname}</strong>
           </p>
-          <button onClick={logout} style={{ background: 'none', border: 'none', color: '#6b7280', cursor: 'pointer', fontFamily: 'Outfit', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.35rem', minHeight: '44px', touchAction: 'manipulation' }}>
+          <button onClick={logout} style={{ background: 'none', border: 'none', color: '#6b7280', cursor: 'pointer', fontFamily: 'Plus Jakarta Sans', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.35rem', minHeight: '44px', touchAction: 'manipulation' }}>
             <LogOut size={14} /> Sign out
           </button>
         </div>
@@ -603,7 +603,7 @@ export const ExpertDashboard = () => {
                   borderRadius: '50px',
                   padding: '0.25rem 0.75rem',
                   fontSize: '0.7rem',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontWeight: 800,
                   textTransform: 'uppercase',
                   letterSpacing: '0.05em',
@@ -628,7 +628,7 @@ export const ExpertDashboard = () => {
                   border: isAvailable ? '1px solid rgba(16, 185, 129, 0.35)' : '1px solid rgba(239, 68, 68, 0.35)',
                   color: isAvailable ? '#10b981' : '#f87171',
                   fontSize: '0.7rem',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontWeight: 800,
                   padding: '0.25rem 0.75rem',
                   borderRadius: '50px',
@@ -652,7 +652,7 @@ export const ExpertDashboard = () => {
                 borderRadius: '50px',
                 padding: '0.3rem 0.8rem',
                 fontSize: '0.72rem',
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontWeight: 700,
                 cursor: 'pointer',
                 display: 'inline-flex',
@@ -707,11 +707,11 @@ export const ExpertDashboard = () => {
 
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-                <h2 style={{ fontFamily: 'Outfit', fontSize: '1.35rem', fontWeight: 900, color: '#ffffff', margin: 0, lineHeight: 1.2 }}>
+                <h2 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.35rem', fontWeight: 900, color: '#ffffff', margin: 0, lineHeight: 1.2 }}>
                   {user?.firstname || 'Specialist'} {user?.lastname || ''}
                 </h2>
               </div>
-              <p style={{ color: '#f5b942', fontSize: '0.78rem', fontFamily: 'Outfit', fontWeight: 800, margin: '0.2rem 0 0.45rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              <p style={{ color: '#f5b942', fontSize: '0.78rem', fontFamily: 'Plus Jakarta Sans', fontWeight: 800, margin: '0.2rem 0 0.45rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                 {user?.title ? user.title : 'SALON & BEAUTY SPECIALIST'}
               </p>
 
@@ -725,7 +725,7 @@ export const ExpertDashboard = () => {
                     border: '1px solid rgba(245, 185, 66, 0.3)',
                     color: '#f5b942',
                     fontSize: '0.72rem',
-                    fontFamily: 'Outfit',
+                    fontFamily: 'Plus Jakarta Sans',
                     fontWeight: 800,
                     padding: '0.2rem 0.65rem',
                     borderRadius: '50px',
@@ -770,7 +770,7 @@ export const ExpertDashboard = () => {
                 padding: '0.65rem 0.85rem',
                 borderRadius: '14px',
                 fontSize: '0.78rem',
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontWeight: 800,
                 cursor: 'pointer',
                 display: 'flex',
@@ -793,7 +793,7 @@ export const ExpertDashboard = () => {
                 padding: '0.65rem 0.85rem',
                 borderRadius: '14px',
                 fontSize: '0.78rem',
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontWeight: 700,
                 cursor: 'pointer',
                 display: 'flex',
@@ -815,7 +815,7 @@ export const ExpertDashboard = () => {
                 padding: '0.65rem 0.85rem',
                 borderRadius: '14px',
                 fontSize: '0.78rem',
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontWeight: 700,
                 cursor: 'pointer',
                 display: 'flex',
@@ -837,7 +837,7 @@ export const ExpertDashboard = () => {
                 padding: '0.65rem 0.85rem',
                 borderRadius: '14px',
                 fontSize: '0.78rem',
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontWeight: 700,
                 cursor: 'pointer',
                 display: 'flex',
@@ -859,7 +859,7 @@ export const ExpertDashboard = () => {
                 padding: '0.65rem 0.85rem',
                 borderRadius: '14px',
                 fontSize: '0.78rem',
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontWeight: 700,
                 cursor: 'pointer',
                 display: 'flex',
@@ -894,7 +894,7 @@ export const ExpertDashboard = () => {
                 <Wallet size={16} />
               </div>
               <div>
-                <span style={{ color: '#94a3b8', fontSize: '0.74rem', fontFamily: 'Outfit', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                <span style={{ color: '#94a3b8', fontSize: '0.74rem', fontFamily: 'Plus Jakarta Sans', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                   Available Balance
                 </span>
                 <div style={{ fontSize: '0.68rem', color: '#10b981', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
@@ -909,7 +909,7 @@ export const ExpertDashboard = () => {
                 background: 'rgba(245, 185, 66, 0.1)',
                 border: '1px solid rgba(245, 185, 66, 0.25)',
                 color: '#f5b942',
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontSize: '0.74rem',
                 fontWeight: 800,
                 cursor: 'pointer',
@@ -925,7 +925,7 @@ export const ExpertDashboard = () => {
             </button>
           </div>
 
-          <div style={{ fontFamily: 'Outfit', fontSize: '2.2rem', fontWeight: 900, color: '#f5b942', margin: '0.4rem 0 1.15rem', letterSpacing: '-0.02em', display: 'flex', alignItems: 'baseline', gap: '0.35rem' }}>
+          <div style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '2.2rem', fontWeight: 900, color: '#f5b942', margin: '0.4rem 0 1.15rem', letterSpacing: '-0.02em', display: 'flex', alignItems: 'baseline', gap: '0.35rem' }}>
             <span>₦{Number(walletBalance || 0).toLocaleString()}</span>
             <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>NGN</span>
           </div>
@@ -939,7 +939,7 @@ export const ExpertDashboard = () => {
                 border: 'none',
                 borderRadius: '14px',
                 height: '46px',
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontWeight: 900,
                 fontSize: '0.84rem',
                 cursor: 'pointer',
@@ -962,7 +962,7 @@ export const ExpertDashboard = () => {
                 border: '1px solid rgba(255, 255, 255, 0.12)',
                 borderRadius: '14px',
                 height: '46px',
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontWeight: 700,
                 fontSize: '0.84rem',
                 cursor: 'pointer',
@@ -982,7 +982,7 @@ export const ExpertDashboard = () => {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', marginBottom: '0.85rem' }}>
             <Activity size={15} color="#f5b942" />
-            <span style={{ fontFamily: 'Outfit', fontSize: '0.82rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+            <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.82rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
               Performance Overview
             </span>
           </div>
@@ -1006,14 +1006,14 @@ export const ExpertDashboard = () => {
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                <span style={{ fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                <span style={{ fontSize: '0.72rem', fontFamily: 'Plus Jakarta Sans', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                   Pending
                 </span>
                 <div style={{ width: '30px', height: '30px', borderRadius: '10px', background: 'rgba(245, 185, 66, 0.14)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#f5b942' }}>
                   <Clock size={15} />
                 </div>
               </div>
-              <div style={{ fontFamily: 'Outfit', fontSize: '1.95rem', fontWeight: 900, color: '#f5b942', lineHeight: 1 }}>
+              <div style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.95rem', fontWeight: 900, color: '#f5b942', lineHeight: 1 }}>
                 {pendingBookings.length}
               </div>
               <div style={{ fontSize: '0.7rem', color: '#64748b', marginTop: '0.4rem', fontWeight: 600 }}>
@@ -1039,14 +1039,14 @@ export const ExpertDashboard = () => {
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                <span style={{ fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                <span style={{ fontSize: '0.72rem', fontFamily: 'Plus Jakarta Sans', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                   Confirmed
                 </span>
                 <div style={{ width: '30px', height: '30px', borderRadius: '10px', background: 'rgba(16, 185, 129, 0.14)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#10b981' }}>
                   <CheckCircle size={15} />
                 </div>
               </div>
-              <div style={{ fontFamily: 'Outfit', fontSize: '1.95rem', fontWeight: 900, color: '#10b981', lineHeight: 1 }}>
+              <div style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.95rem', fontWeight: 900, color: '#10b981', lineHeight: 1 }}>
                 {acceptedBookings.length}
               </div>
               <div style={{ fontSize: '0.7rem', color: '#64748b', marginTop: '0.4rem', fontWeight: 600 }}>
@@ -1072,14 +1072,14 @@ export const ExpertDashboard = () => {
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                <span style={{ fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                <span style={{ fontSize: '0.72rem', fontFamily: 'Plus Jakarta Sans', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                   Completed
                 </span>
                 <div style={{ width: '30px', height: '30px', borderRadius: '10px', background: 'rgba(96, 165, 250, 0.14)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#60a5fa' }}>
                   <Sparkles size={15} />
                 </div>
               </div>
-              <div style={{ fontFamily: 'Outfit', fontSize: '1.95rem', fontWeight: 900, color: '#60a5fa', lineHeight: 1 }}>
+              <div style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.95rem', fontWeight: 900, color: '#60a5fa', lineHeight: 1 }}>
                 {completedBookings.length}
               </div>
               <div style={{ fontSize: '0.7rem', color: '#64748b', marginTop: '0.4rem', fontWeight: 600 }}>
@@ -1103,14 +1103,14 @@ export const ExpertDashboard = () => {
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                <span style={{ fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                <span style={{ fontSize: '0.72rem', fontFamily: 'Plus Jakarta Sans', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                   Total Revenue
                 </span>
                 <div style={{ width: '30px', height: '30px', borderRadius: '10px', background: 'rgba(245, 185, 66, 0.14)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#f5b942' }}>
                   <TrendingUp size={15} />
                 </div>
               </div>
-              <div style={{ fontFamily: 'Outfit', fontSize: '1.45rem', fontWeight: 900, color: '#f5b942', lineHeight: 1.1 }}>
+              <div style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.45rem', fontWeight: 900, color: '#f5b942', lineHeight: 1.1 }}>
                 ₦{Number(totalRevenue).toLocaleString()}
               </div>
               <div style={{ fontSize: '0.7rem', color: '#64748b', marginTop: '0.4rem', fontWeight: 600 }}>
@@ -1151,7 +1151,7 @@ export const ExpertDashboard = () => {
               </div>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-                  <h3 className="keep-white" style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+                  <h3 className="keep-white" style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.15rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
                     Appointments & Schedule
                   </h3>
                   {pendingBookings.length > 0 && (
@@ -1162,7 +1162,7 @@ export const ExpertDashboard = () => {
                       padding: '0.1rem 0.5rem',
                       fontSize: '0.68rem',
                       fontWeight: 800,
-                      fontFamily: 'Outfit',
+                      fontFamily: 'Plus Jakarta Sans',
                       animation: 'pulse 1.8s infinite',
                     }}>
                       {pendingBookings.length} Action Needed
@@ -1190,7 +1190,7 @@ export const ExpertDashboard = () => {
                   alignItems: 'center',
                   gap: '0.4rem',
                   fontSize: '0.78rem',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontWeight: 800,
                 }}
               >
@@ -1211,7 +1211,7 @@ export const ExpertDashboard = () => {
                   alignItems: 'center',
                   gap: '0.4rem',
                   fontSize: '0.8rem',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontWeight: 800,
                   boxShadow: '0 4px 14px rgba(245, 185, 66, 0.3)',
                 }}
@@ -1235,10 +1235,10 @@ export const ExpertDashboard = () => {
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
-                <span style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 700, fontFamily: 'Outfit' }}>TODAY</span>
+                <span style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 700, fontFamily: 'Plus Jakarta Sans' }}>TODAY</span>
                 <Clock size={13} color="#f5b942" />
               </div>
-              <div style={{ fontFamily: 'Outfit', fontSize: '1.4rem', fontWeight: 900, color: '#f5b942' }}>
+              <div style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.4rem', fontWeight: 900, color: '#f5b942' }}>
                 {bookings.filter((b) => isToday(b.date || b.createdAt)).length}
               </div>
             </div>
@@ -1254,10 +1254,10 @@ export const ExpertDashboard = () => {
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
-                <span style={{ fontSize: '0.7rem', color: pendingBookings.length > 0 ? '#f87171' : '#94a3b8', fontWeight: 700, fontFamily: 'Outfit' }}>PENDING</span>
+                <span style={{ fontSize: '0.7rem', color: pendingBookings.length > 0 ? '#f87171' : '#94a3b8', fontWeight: 700, fontFamily: 'Plus Jakarta Sans' }}>PENDING</span>
                 <AlertCircle size={13} color={pendingBookings.length > 0 ? '#ef4444' : '#94a3b8'} />
               </div>
-              <div style={{ fontFamily: 'Outfit', fontSize: '1.4rem', fontWeight: 900, color: pendingBookings.length > 0 ? '#ef4444' : '#ffffff' }}>
+              <div style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.4rem', fontWeight: 900, color: pendingBookings.length > 0 ? '#ef4444' : '#ffffff' }}>
                 {pendingBookings.length}
               </div>
             </div>
@@ -1273,10 +1273,10 @@ export const ExpertDashboard = () => {
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
-                <span style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 700, fontFamily: 'Outfit' }}>CONFIRMED</span>
+                <span style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 700, fontFamily: 'Plus Jakarta Sans' }}>CONFIRMED</span>
                 <CheckCircle size={13} color="#10b981" />
               </div>
-              <div style={{ fontFamily: 'Outfit', fontSize: '1.4rem', fontWeight: 900, color: '#10b981' }}>
+              <div style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.4rem', fontWeight: 900, color: '#10b981' }}>
                 {acceptedBookings.length}
               </div>
             </div>
@@ -1292,10 +1292,10 @@ export const ExpertDashboard = () => {
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
-                <span style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 700, fontFamily: 'Outfit' }}>COMPLETED</span>
+                <span style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 700, fontFamily: 'Plus Jakarta Sans' }}>COMPLETED</span>
                 <Sparkles size={13} color="#60a5fa" />
               </div>
-              <div style={{ fontFamily: 'Outfit', fontSize: '1.4rem', fontWeight: 900, color: '#60a5fa' }}>
+              <div style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.4rem', fontWeight: 900, color: '#60a5fa' }}>
                 {completedBookings.length}
               </div>
             </div>
@@ -1321,15 +1321,15 @@ export const ExpertDashboard = () => {
                     padding: '0.15rem 0.55rem',
                     fontSize: '0.7rem',
                     fontWeight: 800,
-                    fontFamily: 'Outfit',
+                    fontFamily: 'Plus Jakarta Sans',
                   }}>
                     Action Required
                   </span>
-                  <span className="keep-white" style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 800, color: '#ffffff' }}>
+                  <span className="keep-white" style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.92rem', fontWeight: 800, color: '#ffffff' }}>
                     {pendingBookings[0].clientName || 'New Client Booking'}
                   </span>
                 </div>
-                <span style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 900, color: '#f5b942' }}>
+                <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.05rem', fontWeight: 900, color: '#f5b942' }}>
                   ₦{Number(pendingBookings[0].price || 0).toLocaleString()}
                 </span>
               </div>
@@ -1355,7 +1355,7 @@ export const ExpertDashboard = () => {
                     color: '#ffffff',
                     borderRadius: '10px',
                     padding: '0.55rem',
-                    fontFamily: 'Outfit',
+                    fontFamily: 'Plus Jakarta Sans',
                     fontSize: '0.78rem',
                     fontWeight: 800,
                     cursor: 'pointer',
@@ -1373,7 +1373,7 @@ export const ExpertDashboard = () => {
                     color: '#f87171',
                     borderRadius: '10px',
                     padding: '0.55rem 0.95rem',
-                    fontFamily: 'Outfit',
+                    fontFamily: 'Plus Jakarta Sans',
                     fontSize: '0.78rem',
                     fontWeight: 700,
                     cursor: 'pointer',
@@ -1400,10 +1400,10 @@ export const ExpertDashboard = () => {
               }}
             >
               <div>
-                <span style={{ fontSize: '0.68rem', fontWeight: 800, color: '#10b981', textTransform: 'uppercase', letterSpacing: '0.06em', fontFamily: 'Outfit' }}>
+                <span style={{ fontSize: '0.68rem', fontWeight: 800, color: '#10b981', textTransform: 'uppercase', letterSpacing: '0.06em', fontFamily: 'Plus Jakarta Sans' }}>
                   Next Upcoming Client
                 </span>
-                <h4 className="keep-white" style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 800, color: '#ffffff', margin: '0.2rem 0 0.25rem' }}>
+                <h4 className="keep-white" style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1rem', fontWeight: 800, color: '#ffffff', margin: '0.2rem 0 0.25rem' }}>
                   {acceptedBookings[0].clientName || 'Confirmed Client'}
                 </h4>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', fontSize: '0.76rem', color: '#94a3b8', flexWrap: 'wrap' }}>
@@ -1428,7 +1428,7 @@ export const ExpertDashboard = () => {
                       borderRadius: '10px',
                       padding: '0.45rem 0.8rem',
                       fontSize: '0.76rem',
-                      fontFamily: 'Outfit',
+                      fontFamily: 'Plus Jakarta Sans',
                       fontWeight: 800,
                       cursor: 'pointer',
                       display: 'inline-flex',
@@ -1449,7 +1449,7 @@ export const ExpertDashboard = () => {
                     borderRadius: '10px',
                     padding: '0.45rem 0.85rem',
                     fontSize: '0.76rem',
-                    fontFamily: 'Outfit',
+                    fontFamily: 'Plus Jakarta Sans',
                     fontWeight: 700,
                     cursor: 'pointer',
                   }}
@@ -1481,7 +1481,7 @@ export const ExpertDashboard = () => {
                   color: '#f5b942',
                   fontSize: '0.78rem',
                   fontWeight: 800,
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   cursor: 'pointer',
                   textDecoration: 'underline',
                 }}
@@ -1505,7 +1505,7 @@ export const ExpertDashboard = () => {
                 color: '#f5b942',
                 fontSize: '0.78rem',
                 fontWeight: 800,
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 cursor: 'pointer',
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -1527,7 +1527,7 @@ export const ExpertDashboard = () => {
           <BookOpen size={16} />
         </div>
         <div>
-          <h3 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', margin: 0, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+          <h3 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', margin: 0, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
             Portfolio Work & Logbook
           </h3>
           <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
@@ -1545,7 +1545,7 @@ export const ExpertDashboard = () => {
           borderRadius: '50px',
           padding: '0.45rem 0.95rem',
           fontSize: '0.78rem',
-          fontFamily: 'Outfit',
+          fontFamily: 'Plus Jakarta Sans',
           fontWeight: 800,
           cursor: 'pointer',
           display: 'flex',
@@ -1585,7 +1585,7 @@ export const ExpertDashboard = () => {
               border: 'none',
               borderRadius: '9px',
               padding: '0.35rem 0.85rem',
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontSize: '0.76rem',
               fontWeight: portfolioView === 'lookbook' ? 800 : 600,
               cursor: 'pointer',
@@ -1606,7 +1606,7 @@ export const ExpertDashboard = () => {
               border: 'none',
               borderRadius: '9px',
               padding: '0.35rem 0.85rem',
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontSize: '0.76rem',
               fontWeight: portfolioView === 'logbook' ? 800 : 600,
               cursor: 'pointer',
@@ -1653,7 +1653,7 @@ export const ExpertDashboard = () => {
                   border: `1px solid ${isActive ? '#f5b942' : 'rgba(255,255,255,0.08)'}`,
                   borderRadius: '50px',
                   padding: '0.3rem 0.85rem',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontSize: '0.74rem',
                   fontWeight: isActive ? 800 : 600,
                   cursor: 'pointer',
@@ -1705,7 +1705,7 @@ export const ExpertDashboard = () => {
             <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'rgba(245, 185, 66, 0.12)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: '#f5b942', marginBottom: '1rem' }}>
               <BookOpen size={28} />
             </div>
-            <h4 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.4rem' }}>
+            <h4 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.4rem' }}>
               No Work Logged {activePortfolioService !== 'All' ? `for "${activePortfolioService}"` : 'Yet'}
             </h4>
             <p style={{ fontSize: '0.84rem', color: '#64748b', maxWidth: '380px', margin: '0 auto 1.5rem', lineHeight: 1.4 }}>
@@ -1720,7 +1720,7 @@ export const ExpertDashboard = () => {
                 border: 'none',
                 borderRadius: '50px',
                 padding: '0.65rem 1.4rem',
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontSize: '0.84rem',
                 fontWeight: 800,
                 cursor: 'pointer',
@@ -1766,7 +1766,7 @@ export const ExpertDashboard = () => {
               <div style={{ width: '34px', height: '34px', borderRadius: '50%', background: 'rgba(245, 185, 66, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#f5b942' }}>
                 <Plus size={18} />
               </div>
-              <span style={{ fontSize: '0.72rem', color: '#f5b942', fontFamily: 'Outfit', fontWeight: 800 }}>
+              <span style={{ fontSize: '0.72rem', color: '#f5b942', fontFamily: 'Plus Jakarta Sans', fontWeight: 800 }}>
                 Log Work
               </span>
             </div>
@@ -1816,7 +1816,7 @@ export const ExpertDashboard = () => {
                       fontWeight: 800,
                       padding: '0.15rem 0.45rem',
                       borderRadius: '50px',
-                      fontFamily: 'Outfit',
+                      fontFamily: 'Plus Jakarta Sans',
                       maxWidth: '75%',
                       whiteSpace: 'nowrap',
                       overflow: 'hidden',
@@ -1878,7 +1878,7 @@ export const ExpertDashboard = () => {
                       style={{
                         color: '#ffffff',
                         fontSize: '0.72rem',
-                        fontFamily: 'Outfit',
+                        fontFamily: 'Plus Jakarta Sans',
                         fontWeight: 800,
                         whiteSpace: 'nowrap',
                         overflow: 'hidden',
@@ -1978,7 +1978,7 @@ export const ExpertDashboard = () => {
                         borderRadius: '50px',
                         padding: '0.1rem 0.45rem',
                         fontSize: '0.65rem',
-                        fontFamily: 'Outfit',
+                        fontFamily: 'Plus Jakarta Sans',
                         fontWeight: 800,
                       }}
                     >
@@ -1992,7 +1992,7 @@ export const ExpertDashboard = () => {
                   <h4
                     onClick={() => setSelectedLogDetail(item)}
                     style={{
-                      fontFamily: 'Outfit',
+                      fontFamily: 'Plus Jakarta Sans',
                       fontSize: '0.88rem',
                       fontWeight: 800,
                       color: '#ffffff',
@@ -2163,7 +2163,7 @@ export const ExpertDashboard = () => {
                   padding: '0.3rem 0.65rem',
                   borderRadius: '50px',
                   fontSize: '0.72rem',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontWeight: 700,
                   cursor: 'pointer',
                   display: 'flex',
@@ -2201,7 +2201,7 @@ export const ExpertDashboard = () => {
               <div style={{ width: '38px', height: '38px', borderRadius: '50%', background: 'rgba(245, 185, 66, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#f5b942' }}>
                 <Camera size={20} />
               </div>
-              <span style={{ fontFamily: 'Outfit', fontSize: '0.82rem', fontWeight: 800, color: '#f5b942' }}>
+              <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.82rem', fontWeight: 800, color: '#f5b942' }}>
                 Select / Take Work Photo
               </span>
               <span style={{ fontSize: '0.68rem', color: '#64748b' }}>
@@ -2237,7 +2237,7 @@ export const ExpertDashboard = () => {
               minHeight: '46px',
               boxSizing: 'border-box',
               color: '#ffffff',
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontSize: '16px',
               outline: 'none',
             }}
@@ -2288,7 +2288,7 @@ export const ExpertDashboard = () => {
               minHeight: '46px',
               boxSizing: 'border-box',
               color: '#ffffff',
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontSize: '16px',
               outline: 'none',
             }}
@@ -2324,7 +2324,7 @@ export const ExpertDashboard = () => {
                 minHeight: '46px',
                 boxSizing: 'border-box',
                 color: '#ffffff',
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontSize: '16px',
                 outline: 'none',
               }}
@@ -2349,7 +2349,7 @@ export const ExpertDashboard = () => {
                 minHeight: '46px',
                 boxSizing: 'border-box',
                 color: '#ffffff',
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontSize: '16px',
                 outline: 'none',
               }}
@@ -2374,7 +2374,7 @@ export const ExpertDashboard = () => {
               borderRadius: '12px',
               padding: '0.75rem 0.85rem',
               color: '#ffffff',
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontSize: '16px',
               boxSizing: 'border-box',
               outline: 'none',
@@ -2395,7 +2395,7 @@ export const ExpertDashboard = () => {
             borderRadius: '14px',
             padding: '0.85rem',
             minHeight: '48px',
-            fontFamily: 'Outfit',
+            fontFamily: 'Plus Jakarta Sans',
             fontSize: '0.94rem',
             fontWeight: 800,
             cursor: uploadingPortfolio ? 'not-allowed' : 'pointer',
@@ -2463,7 +2463,7 @@ export const ExpertDashboard = () => {
                 borderRadius: '50px',
                 padding: '0.15rem 0.6rem',
                 fontSize: '0.72rem',
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontWeight: 800,
               }}
             >
@@ -2474,7 +2474,7 @@ export const ExpertDashboard = () => {
             </span>
           </div>
 
-          <h3 style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+          <h3 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.15rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
             {selectedLogDetail.title || 'Client Transformation'}
           </h3>
         </div>
@@ -2485,13 +2485,13 @@ export const ExpertDashboard = () => {
             {selectedLogDetail.duration && (
               <div>
                 <div style={{ fontSize: '0.66rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Duration</div>
-                <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#ffffff', fontFamily: 'Outfit' }}>{selectedLogDetail.duration}</div>
+                <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#ffffff', fontFamily: 'Plus Jakarta Sans' }}>{selectedLogDetail.duration}</div>
               </div>
             )}
             {selectedLogDetail.price && (
               <div style={{ marginLeft: selectedLogDetail.duration ? 'auto' : 0 }}>
                 <div style={{ fontSize: '0.66rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Fee / Price</div>
-                <div style={{ fontSize: '0.92rem', fontWeight: 900, color: '#f5b942', fontFamily: 'Outfit' }}>
+                <div style={{ fontSize: '0.92rem', fontWeight: 900, color: '#f5b942', fontFamily: 'Plus Jakarta Sans' }}>
                   {selectedLogDetail.price.startsWith('₦') ? selectedLogDetail.price : `₦${selectedLogDetail.price}`}
                 </div>
               </div>
@@ -2523,7 +2523,7 @@ export const ExpertDashboard = () => {
               border: '1px solid rgba(239, 68, 68, 0.3)',
               borderRadius: '12px',
               padding: '0.65rem 1rem',
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontSize: '0.82rem',
               fontWeight: 700,
               cursor: deletingPortfolioId === selectedLogDetail._id ? 'not-allowed' : 'pointer',
@@ -2544,7 +2544,7 @@ export const ExpertDashboard = () => {
               border: '1px solid rgba(255, 255, 255, 0.12)',
               borderRadius: '12px',
               padding: '0.65rem 1.25rem',
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontSize: '0.82rem',
               fontWeight: 700,
               cursor: 'pointer',

@@ -87,7 +87,7 @@ export const Login = () => {
 
           <h2
             style={{
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontSize: '1.75rem',
               fontWeight: 800,
               color: 'var(--color-text-primary, #FFFFFF)',
@@ -120,7 +120,7 @@ export const Login = () => {
               padding: '0.7rem 0.4rem',
               borderRadius: '12px',
               border: 'none',
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontWeight: 700,
               fontSize: '0.85rem',
               cursor: 'pointer',
@@ -147,7 +147,7 @@ export const Login = () => {
               padding: '0.7rem 0.4rem',
               borderRadius: '12px',
               border: 'none',
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontWeight: 700,
               fontSize: '0.85rem',
               cursor: 'pointer',
@@ -171,7 +171,7 @@ export const Login = () => {
         <div style={{ background: 'var(--color-surface, #151822)', borderRadius: '24px', padding: '1.5rem', border: '1px solid var(--color-border, rgba(255,255,255,0.06))', marginBottom: '1.5rem' }}>
           <form onSubmit={handleSubmit}>
             <div style={{ marginBottom: '1rem' }}>
-              <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: 'var(--color-text-secondary, #9AA2B3)', marginBottom: '0.5rem', fontFamily: 'Outfit' }}>Email Address</label>
+              <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: 'var(--color-text-secondary, #9AA2B3)', marginBottom: '0.5rem', fontFamily: 'Plus Jakarta Sans' }}>Email Address</label>
               <input
                 type="email"
                 value={email}
@@ -181,14 +181,14 @@ export const Login = () => {
                 style={{
                   width: '100%', padding: '0.85rem 1rem', borderRadius: '14px',
                   background: 'var(--color-bg, #0C0E14)', border: '1px solid var(--color-border, rgba(255,255,255,0.1))',
-                  color: 'var(--color-text-primary, #FFFFFF)', fontFamily: 'Outfit', fontSize: '0.92rem', outline: 'none'
+                  color: 'var(--color-text-primary, #FFFFFF)', fontFamily: 'Plus Jakarta Sans', fontSize: '0.92rem', outline: 'none'
                 }}
               />
             </div>
 
             <div style={{ marginBottom: '1.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                <label style={{ fontSize: '0.8rem', fontWeight: 700, color: '#9AA2B3', fontFamily: 'Outfit' }}>Password</label>
+                <label style={{ fontSize: '0.8rem', fontWeight: 700, color: '#9AA2B3', fontFamily: 'Plus Jakarta Sans' }}>Password</label>
                 <button
                   type="button"
                   onClick={() => navigate('/forgot-password')}
@@ -203,7 +203,7 @@ export const Login = () => {
                     minHeight: '44px',
                     display: 'inline-flex',
                     alignItems: 'center',
-                    fontFamily: 'Outfit',
+                    fontFamily: 'Plus Jakarta Sans',
                     touchAction: 'manipulation',
                     WebkitTapHighlightColor: 'transparent',
                   }}
@@ -220,7 +220,7 @@ export const Login = () => {
                 style={{
                   width: '100%', padding: '0.85rem 1rem', borderRadius: '14px',
                   background: 'var(--color-bg, #0C0E14)', border: '1px solid var(--color-border, rgba(255,255,255,0.1))',
-                  color: 'var(--color-text-primary, #FFFFFF)', fontFamily: 'Outfit', fontSize: '0.92rem', outline: 'none'
+                  color: 'var(--color-text-primary, #FFFFFF)', fontFamily: 'Plus Jakarta Sans', fontSize: '0.92rem', outline: 'none'
                 }}
               />
             </div>
@@ -231,7 +231,7 @@ export const Login = () => {
               style={{
                 width: '100%', padding: '1rem', borderRadius: '16px',
                 background: submitting ? 'rgba(245,185,66,0.6)' : '#F5B942',
-                color: '#0C0E14', fontFamily: 'Outfit', fontWeight: 800,
+                color: '#0C0E14', fontFamily: 'Plus Jakarta Sans', fontWeight: 800,
                 fontSize: '0.95rem', border: 'none', cursor: 'pointer',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
                 minHeight: '54px',
@@ -260,7 +260,7 @@ export const Login = () => {
               style={{
                 background: 'none', border: 'none',
                 color: '#F5B942', fontWeight: 700, cursor: 'pointer',
-                fontSize: '0.88rem', fontFamily: 'Outfit',
+                fontSize: '0.88rem', fontFamily: 'Plus Jakarta Sans',
                 padding: '0.25rem 0.1rem',
                 touchAction: 'manipulation',
                 WebkitTapHighlightColor: 'transparent',

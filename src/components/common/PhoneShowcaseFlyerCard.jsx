@@ -341,7 +341,7 @@ export const PhoneShowcaseFlyerCard = React.forwardRef(({
         padding: '0 0 1.5rem 0',
         boxSizing: 'border-box',
         color: '#ffffff',
-        fontFamily: "'Outfit', -apple-system, BlinkMacSystemFont, sans-serif",
+        fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
       }}
     >
       {/* ── Keyframe styles injected once ── */}
@@ -582,7 +582,7 @@ export const PhoneShowcaseFlyerCard = React.forwardRef(({
           }}>
             <svg width="86" height="44" viewBox="0 0 86 44">
               <ellipse cx="43" cy="22" rx="40" ry="18" stroke={accentColor} strokeWidth="1.6" strokeDasharray="4 3" fill="rgba(245,185,66,0.08)"/>
-              <text x="43" y="26" textAnchor="middle" fill={accentColor} fontSize="8" fontWeight="700" fontFamily="Outfit,sans-serif">
+              <text x="43" y="26" textAnchor="middle" fill={accentColor} fontSize="8" fontWeight="700" fontFamily="'Plus Jakarta Sans', sans-serif">
                 {flyer.calloutText || 'Join Us Now!!'}
               </text>
             </svg>

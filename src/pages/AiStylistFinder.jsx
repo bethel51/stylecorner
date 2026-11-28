@@ -393,7 +393,7 @@ export const AiStylistFinder = () => {
               borderRadius: '50px',
               padding: '0.35rem 0.9rem',
               color: '#f5b942',
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontSize: '0.74rem',
               fontWeight: 800,
               letterSpacing: '0.06em',
@@ -408,7 +408,7 @@ export const AiStylistFinder = () => {
 
           <h1
             style={{
-              fontFamily: 'Outfit, sans-serif',
+              fontFamily: 'Plus Jakarta Sans, sans-serif',
               fontSize: 'clamp(1.5rem, 5vw, 2.1rem)',
               fontWeight: 900,
               color: '#ffffff',
@@ -443,13 +443,13 @@ export const AiStylistFinder = () => {
               borderTop: '1px solid rgba(255,255,255,0.06)',
             }}
           >
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', color: '#10b981', fontSize: '0.75rem', fontFamily: 'Outfit', fontWeight: 700 }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', color: '#10b981', fontSize: '0.75rem', fontFamily: 'Plus Jakarta Sans', fontWeight: 700 }}>
               <ShieldCheck size={14} /> 100% Escrow Protected
             </div>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', color: '#f5b942', fontSize: '0.75rem', fontFamily: 'Outfit', fontWeight: 700 }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', color: '#f5b942', fontSize: '0.75rem', fontFamily: 'Plus Jakarta Sans', fontWeight: 700 }}>
               <Award size={14} /> Registered Craft Only
             </div>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', color: '#38bdf8', fontSize: '0.75rem', fontFamily: 'Outfit', fontWeight: 700 }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', color: '#38bdf8', fontSize: '0.75rem', fontFamily: 'Plus Jakarta Sans', fontWeight: 700 }}>
               <Check size={14} /> ₦3,000 Activated Accounts
             </div>
           </div>
@@ -468,7 +468,7 @@ export const AiStylistFinder = () => {
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
             <div>
-              <span style={{ fontFamily: 'Outfit', fontSize: '0.9rem', fontWeight: 900, color: '#ffffff', display: 'block' }}>
+              <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.9rem', fontWeight: 900, color: '#ffffff', display: 'block' }}>
                 1. Select Desired Craft
               </span>
               <span style={{ fontSize: '0.74rem', color: '#64748b' }}>
@@ -480,7 +480,7 @@ export const AiStylistFinder = () => {
                 fontSize: '0.7rem',
                 color: selectedCraft.accent,
                 fontWeight: 800,
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 background: 'rgba(255,255,255,0.05)',
                 padding: '0.2rem 0.6rem',
                 borderRadius: '50px',
@@ -557,7 +557,7 @@ export const AiStylistFinder = () => {
                     )}
                   </div>
 
-                  <span style={{ fontFamily: 'Outfit', fontSize: '0.84rem', fontWeight: 800, color: '#ffffff', display: 'block', lineHeight: 1.25 }}>
+                  <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.84rem', fontWeight: 800, color: '#ffffff', display: 'block', lineHeight: 1.25 }}>
                     {craft.label}
                   </span>
                   <span style={{ fontSize: '0.7rem', color: '#64748b', marginTop: '0.2rem', lineHeight: 1.35, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
@@ -583,7 +583,7 @@ export const AiStylistFinder = () => {
           <label
             style={{
               display: 'block',
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontSize: '0.9rem',
               fontWeight: 900,
               color: '#ffffff',
@@ -608,7 +608,7 @@ export const AiStylistFinder = () => {
               borderRadius: '16px',
               padding: '0.85rem 1rem',
               color: '#ffffff',
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontSize: '16px', // Prevents iOS Safari auto-zoom
               lineHeight: 1.5,
               outline: 'none',
@@ -645,7 +645,7 @@ export const AiStylistFinder = () => {
                     borderRadius: '50px',
                     padding: '0.35rem 0.85rem',
                     fontSize: '0.74rem',
-                    fontFamily: 'Outfit',
+                    fontFamily: 'Plus Jakarta Sans',
                     fontWeight: 600,
                     cursor: 'pointer',
                     whiteSpace: 'nowrap',
@@ -672,7 +672,7 @@ export const AiStylistFinder = () => {
             boxSizing: 'border-box',
           }}
         >
-          <span style={{ fontFamily: 'Outfit', fontSize: '0.9rem', fontWeight: 900, color: '#ffffff', display: 'block', marginBottom: '0.75rem' }}>
+          <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.9rem', fontWeight: 900, color: '#ffffff', display: 'block', marginBottom: '0.75rem' }}>
             3. Style Aesthetic & Location
           </span>
 
@@ -698,7 +698,7 @@ export const AiStylistFinder = () => {
                       background: isSelected ? 'rgba(245,185,66,0.14)' : '#0e111a',
                       border: isSelected ? '1.5px solid #f5b942' : '1px solid rgba(255,255,255,0.07)',
                       color: isSelected ? '#f5b942' : '#d1d5db',
-                      fontFamily: 'Outfit',
+                      fontFamily: 'Plus Jakarta Sans',
                       fontSize: '0.78rem',
                       fontWeight: 800,
                       cursor: 'pointer',
@@ -732,7 +732,7 @@ export const AiStylistFinder = () => {
                   background: serviceMode === 'salon' ? '#f5b942' : '#0e111a',
                   color: serviceMode === 'salon' ? '#0c0e14' : '#94a3b8',
                   border: serviceMode === 'salon' ? '1.5px solid #f5b942' : '1px solid rgba(255,255,255,0.07)',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontSize: '0.82rem',
                   fontWeight: 900,
                   cursor: 'pointer',
@@ -754,7 +754,7 @@ export const AiStylistFinder = () => {
                   background: serviceMode === 'home' ? '#f5b942' : '#0e111a',
                   color: serviceMode === 'home' ? '#0c0e14' : '#94a3b8',
                   border: serviceMode === 'home' ? '1.5px solid #f5b942' : '1px solid rgba(255,255,255,0.07)',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontSize: '0.82rem',
                   fontWeight: 900,
                   cursor: 'pointer',
@@ -783,7 +783,7 @@ export const AiStylistFinder = () => {
                   borderRadius: '14px',
                   padding: '0.75rem 1rem 0.75rem 2.6rem',
                   color: '#ffffff',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontSize: '16px',
                   outline: 'none',
                   boxSizing: 'border-box',
@@ -812,7 +812,7 @@ export const AiStylistFinder = () => {
               ? 'rgba(245,185,66,0.35)'
               : 'linear-gradient(135deg, #f5b942 0%, #d89617 100%)',
             color: '#0c0e14',
-            fontFamily: 'Outfit',
+            fontFamily: 'Plus Jakarta Sans',
             fontSize: '1.02rem',
             fontWeight: 900,
             border: 'none',
@@ -887,10 +887,10 @@ export const AiStylistFinder = () => {
               <Zap size={20} color="#f5b942" />
             </div>
 
-            <p style={{ margin: '0 0 0.35rem', fontSize: '0.92rem', color: '#f5b942', fontFamily: 'Outfit', fontWeight: 800 }}>
+            <p style={{ margin: '0 0 0.35rem', fontSize: '0.92rem', color: '#f5b942', fontFamily: 'Plus Jakarta Sans', fontWeight: 800 }}>
               {radarSteps[matchingStep]}
             </p>
-            <span style={{ fontSize: '0.72rem', color: '#64748b', fontFamily: 'Outfit' }}>
+            <span style={{ fontSize: '0.72rem', color: '#64748b', fontFamily: 'Plus Jakarta Sans' }}>
               Filtering strictly for ₦3,000-activated artisans · Zero customer fallbacks
             </span>
           </div>
@@ -904,7 +904,7 @@ export const AiStylistFinder = () => {
           <div style={{ marginTop: '1rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.85rem' }}>
               <Sparkles size={18} color="#f5b942" />
-              <h2 style={{ fontFamily: 'Outfit', fontSize: '1.3rem', fontWeight: 900, color: '#ffffff', margin: 0 }}>
+              <h2 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.3rem', fontWeight: 900, color: '#ffffff', margin: 0 }}>
                 Top Matched Specialist
               </h2>
             </div>
@@ -944,7 +944,7 @@ export const AiStylistFinder = () => {
                     padding: '0.3rem 0.85rem',
                     color: '#10b981',
                     fontSize: '0.75rem',
-                    fontFamily: 'Outfit',
+                    fontFamily: 'Plus Jakarta Sans',
                     fontWeight: 800,
                   }}
                 >
@@ -962,7 +962,7 @@ export const AiStylistFinder = () => {
                     borderRadius: '50px',
                     padding: '0.3rem 0.85rem',
                     fontSize: '0.78rem',
-                    fontFamily: 'Outfit',
+                    fontFamily: 'Plus Jakarta Sans',
                     fontWeight: 900,
                   }}
                 >
@@ -981,7 +981,7 @@ export const AiStylistFinder = () => {
                 <div style={{ minWidth: 0, flex: 1 }}>
                   <h3
                     style={{
-                      fontFamily: 'Outfit',
+                      fontFamily: 'Plus Jakarta Sans',
                       fontSize: '1.25rem',
                       fontWeight: 900,
                       color: '#ffffff',
@@ -994,7 +994,7 @@ export const AiStylistFinder = () => {
                     style={{
                       fontSize: '0.82rem',
                       color: '#f5b942',
-                      fontFamily: 'Outfit',
+                      fontFamily: 'Plus Jakarta Sans',
                       fontWeight: 700,
                       marginBottom: '0.35rem',
                     }}
@@ -1022,10 +1022,10 @@ export const AiStylistFinder = () => {
                   marginBottom: '1rem',
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#f5b942', fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.25rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#f5b942', fontSize: '0.72rem', fontFamily: 'Plus Jakarta Sans', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.25rem' }}>
                   <Sparkles size={12} /> AI Craft Match Reason
                 </div>
-                <p style={{ margin: 0, fontSize: '0.8rem', color: '#d1d5db', lineHeight: 1.5, fontFamily: 'Outfit' }}>
+                <p style={{ margin: 0, fontSize: '0.8rem', color: '#d1d5db', lineHeight: 1.5, fontFamily: 'Plus Jakarta Sans' }}>
                   {matchResult.primary.rationale}
                 </p>
               </div>
@@ -1034,7 +1034,7 @@ export const AiStylistFinder = () => {
               {Array.isArray(matchResult.primary.portfolio) && matchResult.primary.portfolio.length > 0 && (
                 <div style={{ marginBottom: '1.15rem' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                    <span style={{ fontSize: '0.74rem', color: '#94a3b8', fontWeight: 800, fontFamily: 'Outfit', textTransform: 'uppercase' }}>
+                    <span style={{ fontSize: '0.74rem', color: '#94a3b8', fontWeight: 800, fontFamily: 'Plus Jakarta Sans', textTransform: 'uppercase' }}>
                       Verified Client Work Uploads
                     </span>
                     <span style={{ fontSize: '0.7rem', color: '#f5b942', fontWeight: 700 }}>
@@ -1091,7 +1091,7 @@ export const AiStylistFinder = () => {
                   <span style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase', fontWeight: 800, display: 'block' }}>
                     Starting Rate
                   </span>
-                  <span style={{ fontFamily: 'Outfit', fontSize: '1.35rem', fontWeight: 900, color: '#f5b942' }}>
+                  <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.35rem', fontWeight: 900, color: '#f5b942' }}>
                     ₦{selectedCraft.price.toLocaleString()}
                   </span>
                 </div>
@@ -1107,7 +1107,7 @@ export const AiStylistFinder = () => {
                         color: '#4ade80',
                         borderRadius: '12px',
                         padding: '0.65rem 0.85rem',
-                        fontFamily: 'Outfit',
+                        fontFamily: 'Plus Jakarta Sans',
                         fontWeight: 800,
                         fontSize: '0.8rem',
                         cursor: 'pointer',
@@ -1129,7 +1129,7 @@ export const AiStylistFinder = () => {
                       color: '#0c0e14',
                       borderRadius: '12px',
                       padding: '0.75rem 1.35rem',
-                      fontFamily: 'Outfit',
+                      fontFamily: 'Plus Jakarta Sans',
                       fontWeight: 900,
                       fontSize: '0.88rem',
                       cursor: 'pointer',
@@ -1149,7 +1149,7 @@ export const AiStylistFinder = () => {
             {/* Alternates Section */}
             {matchResult.alternates && matchResult.alternates.length > 0 && (
               <div>
-                <h4 style={{ fontFamily: 'Outfit', fontSize: '0.95rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.75rem' }}>
+                <h4 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.95rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.75rem' }}>
                   Other Activated Specialists in {selectedCraft.label}
                 </h4>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
@@ -1170,7 +1170,7 @@ export const AiStylistFinder = () => {
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', minWidth: 0 }}>
                         <Avatar src={alt.avatarUrl} name={alt.name} size={42} borderRadius="12px" />
                         <div style={{ minWidth: 0 }}>
-                          <h5 style={{ margin: 0, fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 800, color: '#ffffff' }}>
+                          <h5 style={{ margin: 0, fontFamily: 'Plus Jakarta Sans', fontSize: '0.92rem', fontWeight: 800, color: '#ffffff' }}>
                             {alt.name}
                           </h5>
                           <span style={{ fontSize: '0.74rem', color: '#64748b', display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -1188,7 +1188,7 @@ export const AiStylistFinder = () => {
                           color: '#f5b942',
                           borderRadius: '10px',
                           padding: '0.45rem 0.85rem',
-                          fontFamily: 'Outfit',
+                          fontFamily: 'Plus Jakarta Sans',
                           fontSize: '0.78rem',
                           fontWeight: 800,
                           cursor: 'pointer',
@@ -1235,11 +1235,11 @@ export const AiStylistFinder = () => {
               <Compass size={28} />
             </div>
 
-            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 900, color: '#ffffff', margin: '0 0 0.45rem' }}>
+            <h3 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.25rem', fontWeight: 900, color: '#ffffff', margin: '0 0 0.45rem' }}>
               Specialists Onboarding in Progress
             </h3>
 
-            <p style={{ fontSize: '0.86rem', color: '#94a3b8', lineHeight: 1.6, maxWidth: '440px', margin: '0 auto 1.25rem', fontFamily: 'Outfit' }}>
+            <p style={{ fontSize: '0.86rem', color: '#94a3b8', lineHeight: 1.6, maxWidth: '440px', margin: '0 auto 1.25rem', fontFamily: 'Plus Jakarta Sans' }}>
               We could not find an activated specialist for <strong style={{ color: '#f5b942' }}>{selectedCraft.label}</strong> in {selectedLocation} yet.
               <br /><br />
               StyleCorner enforces strict quality standards: <strong>only certified experts who have completed the ₦3,000 account activation and portfolio vetting are displayed</strong>. Customer accounts are strictly excluded.
@@ -1255,7 +1255,7 @@ export const AiStylistFinder = () => {
                   color: '#0c0e14',
                   borderRadius: '12px',
                   padding: '0.75rem 1.25rem',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontWeight: 900,
                   fontSize: '0.85rem',
                   cursor: 'pointer',
@@ -1272,7 +1272,7 @@ export const AiStylistFinder = () => {
                   color: '#ffffff',
                   borderRadius: '12px',
                   padding: '0.75rem 1.25rem',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontWeight: 700,
                   fontSize: '0.85rem',
                   cursor: 'pointer',

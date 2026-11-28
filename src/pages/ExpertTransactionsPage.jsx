@@ -151,7 +151,7 @@ export const ExpertTransactionsPage = () => {
               borderRadius: '12px',
               padding: '0.55rem 0.95rem',
               color: '#e2e8f0',
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontSize: '0.84rem',
               fontWeight: 700,
               cursor: 'pointer',
@@ -173,7 +173,7 @@ export const ExpertTransactionsPage = () => {
                 borderRadius: '12px',
                 padding: '0.55rem 0.95rem',
                 color: '#e2e8f0',
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontSize: '0.82rem',
                 fontWeight: 700,
                 cursor: 'pointer',
@@ -206,10 +206,10 @@ export const ExpertTransactionsPage = () => {
 
         {/* Page Title */}
         <div style={{ marginBottom: '1.5rem' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: '#f5b942', fontSize: '0.76rem', fontWeight: 800, fontFamily: 'Outfit', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.35rem' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: '#f5b942', fontSize: '0.76rem', fontWeight: 800, fontFamily: 'Plus Jakarta Sans', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.35rem' }}>
             <Wallet size={13} /> Financial Ledger & Payout Statements
           </div>
-          <h1 style={{ fontFamily: 'Outfit', fontSize: '1.9rem', fontWeight: 900, color: '#ffffff', margin: 0, lineHeight: 1.2 }}>
+          <h1 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.9rem', fontWeight: 900, color: '#ffffff', margin: 0, lineHeight: 1.2 }}>
             Wallet Transaction History
           </h1>
           <p style={{ color: '#94a3b8', fontSize: '0.86rem', marginTop: '0.35rem', marginBottom: 0 }}>
@@ -230,10 +230,10 @@ export const ExpertTransactionsPage = () => {
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.25rem' }}>
             <div>
-              <span style={{ color: '#94a3b8', fontSize: '0.74rem', fontFamily: 'Outfit', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+              <span style={{ color: '#94a3b8', fontSize: '0.74rem', fontFamily: 'Plus Jakarta Sans', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                 Available Balance
               </span>
-              <div style={{ fontFamily: 'Outfit', fontSize: '2.3rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.1, marginTop: '0.2rem' }}>
+              <div style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '2.3rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.1, marginTop: '0.2rem' }}>
                 ₦{Number(walletBalance || 0).toLocaleString()}
               </div>
               <div style={{ fontSize: '0.72rem', color: '#10b981', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '0.25rem', marginTop: '0.35rem' }}>
@@ -261,7 +261,7 @@ export const ExpertTransactionsPage = () => {
                   borderRadius: '12px',
                   padding: '0.65rem 1rem',
                   fontSize: '0.82rem',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontWeight: 800,
                   cursor: 'pointer',
                   display: 'inline-flex',
@@ -282,7 +282,7 @@ export const ExpertTransactionsPage = () => {
                   borderRadius: '12px',
                   padding: '0.65rem 1rem',
                   fontSize: '0.82rem',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontWeight: 800,
                   cursor: 'pointer',
                   display: 'inline-flex',
@@ -306,19 +306,19 @@ export const ExpertTransactionsPage = () => {
             }}
           >
             <div style={{ background: 'rgba(16, 185, 129, 0.08)', border: '1px solid rgba(16, 185, 129, 0.2)', borderRadius: '16px', padding: '0.85rem 1rem' }}>
-              <div style={{ fontSize: '0.72rem', color: '#10b981', fontWeight: 800, fontFamily: 'Outfit', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              <div style={{ fontSize: '0.72rem', color: '#10b981', fontWeight: 800, fontFamily: 'Plus Jakarta Sans', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                 Total Inflow / Earnings
               </div>
-              <div style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 900, color: '#10b981', marginTop: '0.2rem' }}>
+              <div style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.25rem', fontWeight: 900, color: '#10b981', marginTop: '0.2rem' }}>
                 +₦{totalInflow.toLocaleString()}
               </div>
             </div>
 
             <div style={{ background: 'rgba(239, 68, 68, 0.08)', border: '1px solid rgba(239, 68, 68, 0.2)', borderRadius: '16px', padding: '0.85rem 1rem' }}>
-              <div style={{ fontSize: '0.72rem', color: '#f87171', fontWeight: 800, fontFamily: 'Outfit', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              <div style={{ fontSize: '0.72rem', color: '#f87171', fontWeight: 800, fontFamily: 'Plus Jakarta Sans', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                 Total Outflow / Payouts
               </div>
-              <div style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 900, color: '#f87171', marginTop: '0.2rem' }}>
+              <div style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.25rem', fontWeight: 900, color: '#f87171', marginTop: '0.2rem' }}>
                 -₦{totalOutflow.toLocaleString()}
               </div>
             </div>
@@ -342,7 +342,7 @@ export const ExpertTransactionsPage = () => {
                 borderRadius: '14px',
                 padding: '0.75rem 1rem 0.75rem 2.6rem',
                 color: '#ffffff',
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontSize: '0.88rem',
                 outline: 'none',
                 boxSizing: 'border-box',
@@ -368,7 +368,7 @@ export const ExpertTransactionsPage = () => {
                     border: active ? '1px solid #f5b942' : '1px solid rgba(255, 255, 255, 0.08)',
                     borderRadius: '50px',
                     padding: '0.4rem 0.95rem',
-                    fontFamily: 'Outfit',
+                    fontFamily: 'Plus Jakarta Sans',
                     fontSize: '0.76rem',
                     fontWeight: 800,
                     cursor: 'pointer',
@@ -414,7 +414,7 @@ export const ExpertTransactionsPage = () => {
             <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(245, 185, 66, 0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem', color: '#f5b942' }}>
               <Wallet size={32} />
             </div>
-            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.2rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.35rem' }}>
+            <h3 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.2rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.35rem' }}>
               {searchQuery || filterType !== 'all' ? 'No matching transactions' : 'No transaction history recorded yet'}
             </h3>
             <p style={{ color: '#94a3b8', fontSize: '0.85rem', maxWidth: '400px', margin: '0 auto 1.5rem', lineHeight: 1.5 }}>
@@ -434,7 +434,7 @@ export const ExpertTransactionsPage = () => {
                   border: '1px solid rgba(245, 185, 66, 0.35)',
                   padding: '0.55rem 1.25rem',
                   borderRadius: '50px',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontSize: '0.82rem',
                   fontWeight: 800,
                   cursor: 'pointer',
@@ -493,7 +493,7 @@ export const ExpertTransactionsPage = () => {
                     <div style={{ minWidth: 0 }}>
                       <div
                         style={{
-                          fontFamily: 'Outfit',
+                          fontFamily: 'Plus Jakarta Sans',
                           fontSize: '0.92rem',
                           fontWeight: 800,
                           color: '#ffffff',
@@ -528,7 +528,7 @@ export const ExpertTransactionsPage = () => {
                   {/* Amount */}
                   <div
                     style={{
-                      fontFamily: 'Outfit',
+                      fontFamily: 'Plus Jakarta Sans',
                       fontSize: '1.08rem',
                       fontWeight: 900,
                       color: isCredit ? '#10b981' : '#f87171',

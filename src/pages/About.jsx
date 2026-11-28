@@ -49,7 +49,7 @@ export const About = () => {
             <Sparkles size={32} />
           </div>
 
-          <h2 style={{ fontFamily: 'Outfit', fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 900, marginBottom: '0.65rem' }}>
+          <h2 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 900, marginBottom: '0.65rem' }}>
             STYLE<span style={{ color: 'var(--color-accent)' }}>CORNER</span> ATELIER
           </h2>
 
@@ -71,7 +71,7 @@ export const About = () => {
                 border: 'none',
                 borderRadius: '50px',
                 padding: '0.6rem 1.4rem',
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontWeight: 900,
                 fontSize: '0.88rem',
                 cursor: 'pointer',
@@ -94,7 +94,7 @@ export const About = () => {
                 color: '#ffffff',
                 borderRadius: '50px',
                 padding: '0.6rem 1.4rem',
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontWeight: 700,
                 fontSize: '0.88rem',
                 cursor: 'pointer',
@@ -109,7 +109,7 @@ export const About = () => {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
           <div className="app-card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             <div>
-              <h3 style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 800, color: 'var(--color-text-primary)', marginBottom: '0.75rem' }}>
+              <h3 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.25rem', fontWeight: 800, color: 'var(--color-text-primary)', marginBottom: '0.75rem' }}>
                 Our Atelier Promise
               </h3>
               <p style={{ color: 'var(--color-text-muted)', fontSize: '0.88rem', lineHeight: 1.6, marginBottom: '1.5rem' }}>
@@ -136,7 +136,7 @@ export const About = () => {
 
           <div className="app-card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             <div>
-              <h3 style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 800, color: 'var(--color-text-primary)', marginBottom: '0.75rem' }}>
+              <h3 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.25rem', fontWeight: 800, color: 'var(--color-text-primary)', marginBottom: '0.75rem' }}>
                 Atelier Service Regions
               </h3>
               <p style={{ color: 'var(--color-text-muted)', fontSize: '0.88rem', lineHeight: 1.6, marginBottom: '1.5rem' }}>

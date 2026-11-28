@@ -163,7 +163,7 @@ export const PushNotificationManager = ({ showLabel = false, className = '' }) =
         {showLabel && (
           <span
             style={{
-              fontFamily: 'Outfit, sans-serif',
+              fontFamily: 'Plus Jakarta Sans, sans-serif',
               fontSize: '0.82rem',
               fontWeight: 800,
               color: iconColor,

@@ -84,7 +84,7 @@ export const Wallet = () => {
         
         {/* Screen 10: Header */}
         <div style={{ marginBottom: '1.25rem' }}>
-          <h1 style={{ fontFamily: 'Outfit', fontSize: '1.65rem', fontWeight: 800, color: 'var(--color-text-primary)', margin: 0 }}>
+          <h1 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.65rem', fontWeight: 800, color: 'var(--color-text-primary)', margin: 0 }}>
             Wallet & Payments
           </h1>
         </div>
@@ -101,7 +101,7 @@ export const Wallet = () => {
           }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.45rem' }}>
-            <span style={{ fontSize: '0.82rem', color: 'var(--color-text-secondary)', fontFamily: 'Outfit', fontWeight: 600 }}>
+            <span style={{ fontSize: '0.82rem', color: 'var(--color-text-secondary)', fontFamily: 'Plus Jakarta Sans', fontWeight: 600 }}>
               Wallet Balance
             </span>
             <button
@@ -130,7 +130,7 @@ export const Wallet = () => {
 
           <div
             style={{
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontSize: '2.1rem',
               fontWeight: 900,
               color: 'var(--color-text-primary)',
@@ -182,7 +182,7 @@ export const Wallet = () => {
 
         {/* Payment Methods Section */}
         <div style={{ marginBottom: '1.5rem' }}>
-          <h2 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: 'var(--color-text-primary)', marginBottom: '0.85rem' }}>
+          <h2 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.05rem', fontWeight: 800, color: 'var(--color-text-primary)', marginBottom: '0.85rem' }}>
             Payment Methods
           </h2>
 
@@ -215,7 +215,7 @@ export const Wallet = () => {
                 <CreditCard size={20} />
               </div>
               <div>
-                <h4 style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 800, color: 'var(--color-text-primary)', margin: 0 }}>
+                <h4 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.92rem', fontWeight: 800, color: 'var(--color-text-primary)', margin: 0 }}>
                   Paystack Secured Gateway
                 </h4>
                 <span style={{ fontSize: '0.76rem', color: 'var(--color-text-secondary)' }}>Cards, Bank Transfer & USSD</span>
@@ -251,7 +251,7 @@ export const Wallet = () => {
               alignItems: 'center',
               gap: '0.65rem',
               color: '#f5b942',
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontSize: '0.88rem',
               fontWeight: 700,
               cursor: 'pointer',
@@ -288,7 +288,7 @@ export const Wallet = () => {
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
               <History size={18} color="var(--color-text-secondary)" />
-              <span style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>
+              <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.92rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>
                 Transaction History
               </span>
             </div>
@@ -316,7 +316,7 @@ export const Wallet = () => {
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
               <Gift size={18} color="#f5b942" />
-              <span style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>
+              <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.92rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>
                 Referral & Rewards
               </span>
             </div>
@@ -360,7 +360,7 @@ export const Wallet = () => {
                   color: fundAmount === String(amt) ? '#0c0e14' : '#ffffff',
                   border: '1px solid rgba(255, 255, 255, 0.08)',
                   fontSize: '0.75rem',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontWeight: 700,
                   cursor: 'pointer',
                 }}
@@ -388,16 +388,16 @@ export const Wallet = () => {
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
           {loadingTx ? (
-            <div style={{ textAlign: 'center', padding: '2rem', color: '#64748b', fontFamily: 'Outfit', fontSize: '0.85rem' }}>
+            <div style={{ textAlign: 'center', padding: '2rem', color: '#64748b', fontFamily: 'Plus Jakarta Sans', fontSize: '0.85rem' }}>
               Loading transactions...
             </div>
           ) : transactions.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '2rem' }}>
               <History size={32} color="#64748b" style={{ marginBottom: '0.65rem', opacity: 0.6 }} />
-              <p style={{ fontFamily: 'Outfit', fontSize: '0.88rem', color: '#64748b', margin: 0 }}>
+              <p style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.88rem', color: '#64748b', margin: 0 }}>
                 No transactions yet
               </p>
-              <p style={{ fontFamily: 'Outfit', fontSize: '0.78rem', color: '#475569', marginTop: '0.25rem' }}>
+              <p style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.78rem', color: '#475569', marginTop: '0.25rem' }}>
                 Fund your wallet or book a service to get started
               </p>
             </div>
@@ -416,7 +416,7 @@ export const Wallet = () => {
                 }}
               >
                 <div>
-                  <h4 style={{ fontFamily: 'Outfit', fontSize: '0.88rem', fontWeight: 800, color: 'var(--color-text-primary)', margin: '0 0 0.15rem' }}>
+                  <h4 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.88rem', fontWeight: 800, color: 'var(--color-text-primary)', margin: '0 0 0.15rem' }}>
                     {tx.type || tx.description || 'Transaction'}
                   </h4>
                   <span style={{ fontSize: '0.72rem', color: 'var(--color-text-secondary)' }}>
@@ -425,7 +425,7 @@ export const Wallet = () => {
                 </div>
                 <span
                   style={{
-                    fontFamily: 'Outfit',
+                    fontFamily: 'Plus Jakarta Sans',
                     fontSize: '0.92rem',
                     fontWeight: 800,
                     color: tx.amount > 0 ? '#10b981' : 'var(--color-text-primary)',
@@ -461,7 +461,7 @@ export const Wallet = () => {
           >
             <Gift size={26} />
           </div>
-          <h3 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', marginBottom: '0.35rem' }}>
+          <h3 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.1rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', marginBottom: '0.35rem' }}>
             Earn ₦2,000 on Every Referral
           </h3>
           <p style={{ fontSize: '0.82rem', color: '#94a3b8', lineHeight: 1.45, marginBottom: '1.25rem' }}>
@@ -473,7 +473,7 @@ export const Wallet = () => {
               borderRadius: '12px',
               padding: '0.75rem',
               border: '1px dashed #f5b942',
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontWeight: 800,
               fontSize: '1rem',
               color: '#f5b942',

@@ -144,7 +144,7 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
             <Sparkles size={20} />
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <h4 style={{ fontFamily: 'Outfit', fontSize: '0.9rem', fontWeight: 800, margin: 0, color: '#ffffff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <h4 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.9rem', fontWeight: 800, margin: 0, color: '#ffffff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               AI Specialist Matcher
             </h4>
             <p style={{ fontSize: '0.72rem', color: '#a1a1aa', margin: '0.1rem 0 0', lineHeight: 1.3 }}>
@@ -167,7 +167,7 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
                   style={{
                     padding: '0.4rem 0.75rem',
                     borderRadius: '50px',
-                    fontFamily: 'Outfit',
+                    fontFamily: 'Plus Jakarta Sans',
                     fontWeight: 800,
                     fontSize: '0.72rem',
                     cursor: 'pointer',
@@ -197,7 +197,7 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
                   style={{
                     padding: '0.4rem 0.75rem',
                     borderRadius: '50px',
-                    fontFamily: 'Outfit',
+                    fontFamily: 'Plus Jakarta Sans',
                     fontWeight: 700,
                     fontSize: '0.72rem',
                     cursor: 'pointer',
@@ -275,7 +275,7 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
               <span
                 style={{
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontSize: '0.68rem',
                   fontWeight: 900,
                   color: '#f5b942',
@@ -293,7 +293,7 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
                 background: 'rgba(16, 185, 129, 0.2)',
                 color: '#10b981',
                 border: '1px solid rgba(16, 185, 129, 0.4)',
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontWeight: 900,
                 fontSize: '0.7rem',
                 padding: '0.18rem 0.55rem',
@@ -316,12 +316,12 @@ export const AISpecialistMatcherSheet = ({ isOpen, onClose, onApplyMatch }) => {
 
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                  <h3 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 900, color: '#ffffff', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <h3 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.05rem', fontWeight: 900, color: '#ffffff', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {matchResult.name}
                   </h3>
                   <ShieldCheck size={15} color="#f5b942" style={{ flexShrink: 0 }} />
                 </div>
-                <p style={{ color: '#f5b942', fontSize: '0.78rem', fontFamily: 'Outfit', fontWeight: 700, margin: '0.1rem 0 0.2rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <p style={{ color: '#f5b942', fontSize: '0.78rem', fontFamily: 'Plus Jakarta Sans', fontWeight: 700, margin: '0.1rem 0 0.2rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {matchResult.role || 'Certified Atelier Specialist'}
                 </p>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.72rem', color: '#94a3b8' }}>

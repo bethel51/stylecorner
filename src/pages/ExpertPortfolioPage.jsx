@@ -150,7 +150,7 @@ export const ExpertPortfolioPage = () => {
               borderRadius: '12px',
               padding: '0.55rem 0.95rem',
               color: '#e2e8f0',
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontSize: '0.84rem',
               fontWeight: 700,
               cursor: 'pointer',
@@ -171,7 +171,7 @@ export const ExpertPortfolioPage = () => {
               border: 'none',
               borderRadius: '12px',
               padding: '0.55rem 1rem',
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontSize: '0.84rem',
               fontWeight: 800,
               cursor: 'pointer',
@@ -185,10 +185,10 @@ export const ExpertPortfolioPage = () => {
 
         {/* Page Title */}
         <div style={{ marginBottom: '1.5rem' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: '#f5b942', fontSize: '0.76rem', fontWeight: 800, fontFamily: 'Outfit', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.35rem' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: '#f5b942', fontSize: '0.76rem', fontWeight: 800, fontFamily: 'Plus Jakarta Sans', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.35rem' }}>
             <BookOpen size={13} /> Visual Proof & Lookbook Showcase
           </div>
-          <h1 style={{ fontFamily: 'Outfit', fontSize: '1.9rem', fontWeight: 900, color: '#ffffff', margin: 0, lineHeight: 1.2 }}>
+          <h1 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.9rem', fontWeight: 900, color: '#ffffff', margin: 0, lineHeight: 1.2 }}>
             Portfolio Work & Logbook
           </h1>
           <p style={{ color: '#94a3b8', fontSize: '0.86rem', marginTop: '0.35rem', marginBottom: 0 }}>
@@ -211,11 +211,11 @@ export const ExpertPortfolioPage = () => {
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <Sparkles size={16} color="#f5b942" />
-                <h3 style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+                <h3 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.15rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
                   Log Client Transformation
                 </h3>
               </div>
-              <span style={{ fontSize: '0.74rem', color: '#f5b942', fontWeight: 700, fontFamily: 'Outfit' }}>
+              <span style={{ fontSize: '0.74rem', color: '#f5b942', fontWeight: 700, fontFamily: 'Plus Jakarta Sans' }}>
                 Publishes to Public Lookbook
               </span>
             </div>
@@ -246,7 +246,7 @@ export const ExpertPortfolioPage = () => {
                         padding: '0.4rem 0.8rem',
                         borderRadius: '50px',
                         fontSize: '0.76rem',
-                        fontFamily: 'Outfit',
+                        fontFamily: 'Plus Jakarta Sans',
                         fontWeight: 700,
                         cursor: 'pointer',
                         display: 'flex',
@@ -284,7 +284,7 @@ export const ExpertPortfolioPage = () => {
                     <div style={{ width: '44px', height: '44px', borderRadius: '50%', background: 'rgba(245, 185, 66, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#f5b942' }}>
                       <Camera size={22} />
                     </div>
-                    <span style={{ fontFamily: 'Outfit', fontSize: '0.88rem', fontWeight: 800, color: '#f5b942' }}>
+                    <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.88rem', fontWeight: 800, color: '#f5b942' }}>
                       Upload Client Result Photo
                     </span>
                     <span style={{ fontSize: '0.72rem', color: '#64748b' }}>
@@ -318,7 +318,7 @@ export const ExpertPortfolioPage = () => {
                     borderRadius: '12px',
                     padding: '0.8rem 1rem',
                     color: '#ffffff',
-                    fontFamily: 'Outfit',
+                    fontFamily: 'Plus Jakarta Sans',
                     fontSize: '16px',
                     outline: 'none',
                     boxSizing: 'border-box',
@@ -365,7 +365,7 @@ export const ExpertPortfolioPage = () => {
                     borderRadius: '12px',
                     padding: '0.8rem 1rem',
                     color: '#ffffff',
-                    fontFamily: 'Outfit',
+                    fontFamily: 'Plus Jakarta Sans',
                     fontSize: '16px',
                     outline: 'none',
                     boxSizing: 'border-box',
@@ -400,7 +400,7 @@ export const ExpertPortfolioPage = () => {
                       borderRadius: '12px',
                       padding: '0.8rem 1rem',
                       color: '#ffffff',
-                      fontFamily: 'Outfit',
+                      fontFamily: 'Plus Jakarta Sans',
                       fontSize: '16px',
                       outline: 'none',
                       boxSizing: 'border-box',
@@ -424,7 +424,7 @@ export const ExpertPortfolioPage = () => {
                       borderRadius: '12px',
                       padding: '0.8rem 1rem',
                       color: '#ffffff',
-                      fontFamily: 'Outfit',
+                      fontFamily: 'Plus Jakarta Sans',
                       fontSize: '16px',
                       outline: 'none',
                       boxSizing: 'border-box',
@@ -450,7 +450,7 @@ export const ExpertPortfolioPage = () => {
                     borderRadius: '12px',
                     padding: '0.8rem 1rem',
                     color: '#ffffff',
-                    fontFamily: 'Outfit',
+                    fontFamily: 'Plus Jakarta Sans',
                     fontSize: '16px',
                     outline: 'none',
                     boxSizing: 'border-box',
@@ -470,7 +470,7 @@ export const ExpertPortfolioPage = () => {
                   border: 'none',
                   borderRadius: '14px',
                   padding: '0.9rem',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontSize: '0.95rem',
                   fontWeight: 800,
                   cursor: uploadingPortfolio ? 'not-allowed' : 'pointer',
@@ -511,7 +511,7 @@ export const ExpertPortfolioPage = () => {
                   border: active ? '1px solid #f5b942' : '1px solid rgba(255, 255, 255, 0.08)',
                   borderRadius: '50px',
                   padding: '0.4rem 0.95rem',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontSize: '0.76rem',
                   fontWeight: 800,
                   cursor: 'pointer',
@@ -539,7 +539,7 @@ export const ExpertPortfolioPage = () => {
             <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(245, 185, 66, 0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem', color: '#f5b942' }}>
               <BookOpen size={32} />
             </div>
-            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.2rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.35rem' }}>
+            <h3 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.2rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.35rem' }}>
               No lookbook transformations logged
             </h3>
             <p style={{ color: '#94a3b8', fontSize: '0.85rem', maxWidth: '400px', margin: '0 auto 1.5rem', lineHeight: 1.5 }}>
@@ -553,7 +553,7 @@ export const ExpertPortfolioPage = () => {
                 border: 'none',
                 padding: '0.65rem 1.4rem',
                 borderRadius: '50px',
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontSize: '0.84rem',
                 fontWeight: 800,
                 cursor: 'pointer',
@@ -608,7 +608,7 @@ export const ExpertPortfolioPage = () => {
                         padding: '0.2rem 0.55rem',
                         borderRadius: '50px',
                         fontSize: '0.68rem',
-                        fontFamily: 'Outfit',
+                        fontFamily: 'Plus Jakarta Sans',
                         fontWeight: 800,
                         color: '#f5b942',
                         border: '1px solid rgba(245, 185, 66, 0.3)',
@@ -643,7 +643,7 @@ export const ExpertPortfolioPage = () => {
 
                   {/* Body Content */}
                   <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', flex: 1, gap: '0.45rem' }}>
-                    <h4 style={{ fontFamily: 'Outfit', fontSize: '0.98rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+                    <h4 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.98rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
                       {item.title || 'Client Work'}
                     </h4>
 
@@ -655,7 +655,7 @@ export const ExpertPortfolioPage = () => {
                           </span>
                         )}
                         {item.price && (
-                          <span style={{ fontFamily: 'Outfit', fontWeight: 900, color: '#f5b942', fontSize: '0.88rem' }}>
+                          <span style={{ fontFamily: 'Plus Jakarta Sans', fontWeight: 900, color: '#f5b942', fontSize: '0.88rem' }}>
                             {item.price.startsWith('₦') ? item.price : `₦${item.price}`}
                           </span>
                         )}

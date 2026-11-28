@@ -81,7 +81,7 @@ export const Avatar = ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        fontFamily: 'Outfit, sans-serif',
+        fontFamily: 'Plus Jakarta Sans, sans-serif',
         fontWeight: 800,
         fontSize: calculatedFontSize,
         letterSpacing: '0.02em',

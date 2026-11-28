@@ -114,7 +114,7 @@ export const ForgotPassword = () => {
                   justifyContent: 'center',
                   fontWeight: 800,
                   fontSize: '0.85rem',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   backgroundColor: step >= s ? '#d4af37' : 'rgba(255,255,255,0.08)',
                   color: step >= s ? '#000000' : '#6b7280',
                   border: step === s ? '2px solid #ffffff' : 'none',
@@ -167,7 +167,7 @@ export const ForgotPassword = () => {
               >
                 <Mail size={26} />
               </div>
-              <h2 style={{ fontFamily: 'Outfit', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: 0, fontSize: '1.4rem' }}>
+              <h2 style={{ fontFamily: 'Plus Jakarta Sans', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: 0, fontSize: '1.4rem' }}>
                 Forgot Password?
               </h2>
               <p style={{ color: '#9ca3af', fontSize: '0.85rem', marginTop: '0.35rem', lineHeight: '1.4' }}>
@@ -267,7 +267,7 @@ export const ForgotPassword = () => {
               >
                 <KeyRound size={26} />
               </div>
-              <h2 style={{ fontFamily: 'Outfit', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: 0, fontSize: '1.4rem' }}>
+              <h2 style={{ fontFamily: 'Plus Jakarta Sans', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: 0, fontSize: '1.4rem' }}>
                 Enter Reset Code
               </h2>
               <p style={{ color: '#9ca3af', fontSize: '0.85rem', marginTop: '0.35rem', lineHeight: '1.4' }}>
@@ -291,7 +291,7 @@ export const ForgotPassword = () => {
                     fontSize: '1.35rem',
                     letterSpacing: '0.4rem',
                     fontWeight: 800,
-                    fontFamily: 'Outfit',
+                    fontFamily: 'Plus Jakarta Sans',
                   }}
                 />
               </div>
@@ -379,7 +379,7 @@ export const ForgotPassword = () => {
               >
                 <Lock size={26} />
               </div>
-              <h2 style={{ fontFamily: 'Outfit', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: 0, fontSize: '1.4rem' }}>
+              <h2 style={{ fontFamily: 'Plus Jakarta Sans', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: 0, fontSize: '1.4rem' }}>
                 Set New Password
               </h2>
               <p style={{ color: '#9ca3af', fontSize: '0.85rem', marginTop: '0.35rem', lineHeight: '1.4' }}>

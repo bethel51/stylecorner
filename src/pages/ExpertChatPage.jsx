@@ -230,7 +230,7 @@ export const ExpertChatPage = () => {
             </button>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <h1 style={{ fontFamily: 'Outfit', fontSize: '1.35rem', fontWeight: 900, color: textPrimary, margin: 0 }}>
+                <h1 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.35rem', fontWeight: 900, color: textPrimary, margin: 0 }}>
                   Client Messages & Chat
                 </h1>
                 <span
@@ -242,7 +242,7 @@ export const ExpertChatPage = () => {
                     padding: '0.1rem 0.5rem',
                     fontSize: '0.7rem',
                     fontWeight: 800,
-                    fontFamily: 'Outfit',
+                    fontFamily: 'Plus Jakarta Sans',
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '0.25rem',
@@ -271,7 +271,7 @@ export const ExpertChatPage = () => {
               padding: '0.5rem 0.85rem',
               fontSize: '0.78rem',
               fontWeight: 800,
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               cursor: 'pointer',
             }}
           >
@@ -385,7 +385,7 @@ export const ExpertChatPage = () => {
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.15rem' }}>
                           <h4
                             style={{
-                              fontFamily: 'Outfit',
+                              fontFamily: 'Plus Jakarta Sans',
                               fontSize: '0.88rem',
                               fontWeight: isSelected ? 800 : 700,
                               color: isSelected ? (isDark ? '#f5b942' : '#b45309') : textPrimary,
@@ -492,7 +492,7 @@ export const ExpertChatPage = () => {
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
                         <h3
                           style={{
-                            fontFamily: 'Outfit',
+                            fontFamily: 'Plus Jakarta Sans',
                             fontSize: '0.98rem',
                             fontWeight: 800,
                             color: textPrimary,
@@ -545,7 +545,7 @@ export const ExpertChatPage = () => {
                           padding: '0.38rem 0.75rem',
                           fontSize: '0.74rem',
                           fontWeight: 700,
-                          fontFamily: 'Outfit',
+                          fontFamily: 'Plus Jakarta Sans',
                           cursor: 'pointer',
                         }}
                       >
@@ -566,7 +566,7 @@ export const ExpertChatPage = () => {
                           padding: '0.38rem 0.75rem',
                           fontSize: '0.74rem',
                           fontWeight: 700,
-                          fontFamily: 'Outfit',
+                          fontFamily: 'Plus Jakarta Sans',
                           textDecoration: 'none',
                         }}
                       >
@@ -612,7 +612,7 @@ export const ExpertChatPage = () => {
                       >
                         <MessageSquare size={22} />
                       </div>
-                      <h4 style={{ fontFamily: 'Outfit', fontSize: '0.96rem', fontWeight: 800, color: textPrimary, margin: '0 0 0.25rem' }}>
+                      <h4 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.96rem', fontWeight: 800, color: textPrimary, margin: '0 0 0.25rem' }}>
                         Start Chatting with {selectedBooking.clientName || 'Client'}
                       </h4>
                       <p style={{ color: textSecondary, fontSize: '0.78rem', margin: 0 }}>
@@ -779,7 +779,7 @@ export const ExpertChatPage = () => {
                 >
                   <MessageSquare size={28} />
                 </div>
-                <h3 style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 800, color: textPrimary, margin: '0 0 0.4rem' }}>
+                <h3 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.15rem', fontWeight: 800, color: textPrimary, margin: '0 0 0.4rem' }}>
                   Select a Client Conversation
                 </h3>
                 <p style={{ color: textSecondary, fontSize: '0.82rem', margin: 0, maxWidth: '320px' }}>

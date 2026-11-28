@@ -206,7 +206,7 @@ export const Store = () => {
         {/* Screen 4: Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
-            <h1 style={{ fontFamily: 'Outfit', fontSize: '1.65rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: '0 0 0.2rem' }}>
+            <h1 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.65rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: '0 0 0.2rem' }}>
               Style Store
             </h1>
             <p style={{ color: '#94a3b8', fontSize: '0.82rem', margin: 0 }}>
@@ -342,7 +342,7 @@ export const Store = () => {
                 </div>
                 <span
                   style={{
-                    fontFamily: 'Outfit',
+                    fontFamily: 'Plus Jakarta Sans',
                     fontSize: '0.74rem',
                     fontWeight: isSelected ? 700 : 500,
                     color: isSelected ? '#f5b942' : '#94a3b8',
@@ -373,7 +373,7 @@ export const Store = () => {
           <div style={{ maxWidth: '64%', zIndex: 2 }}>
             <h3
               style={{
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontSize: '1.18rem',
                 fontWeight: 800,
                 lineHeight: 1.15,
@@ -404,7 +404,7 @@ export const Store = () => {
                 border: 'none',
                 borderRadius: '50px',
                 padding: '0.45rem 1rem',
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontWeight: 700,
                 fontSize: '0.76rem',
                 cursor: 'pointer',
@@ -434,7 +434,7 @@ export const Store = () => {
         {/* Section Header with dynamic count */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.25rem' }}>
           <div>
-            <h2 style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: 0 }}>
+            <h2 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.15rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: 0 }}>
               {activeCategory === 'All' ? 'Featured Products' : `${activeCategory} Collection`}
             </h2>
             <span style={{ fontSize: '0.76rem', color: '#64748b' }}>
@@ -449,7 +449,7 @@ export const Store = () => {
                 background: 'none',
                 border: 'none',
                 color: '#f5b942',
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontWeight: 700,
                 fontSize: '0.8rem',
                 cursor: 'pointer',
@@ -523,7 +523,7 @@ export const Store = () => {
                         borderRadius: '6px',
                         fontSize: '0.65rem',
                         fontWeight: 800,
-                        fontFamily: 'Outfit',
+                        fontFamily: 'Plus Jakarta Sans',
                         textTransform: 'uppercase',
                         letterSpacing: '0.5px',
                       }}
@@ -565,7 +565,7 @@ export const Store = () => {
                   style={{
                     fontSize: '0.68rem',
                     color: '#f5b942',
-                    fontFamily: 'Outfit',
+                    fontFamily: 'Plus Jakarta Sans',
                     fontWeight: 700,
                     textTransform: 'uppercase',
                     letterSpacing: '0.4px',
@@ -578,7 +578,7 @@ export const Store = () => {
                 {/* Title */}
                 <h3
                   style={{
-                    fontFamily: 'Outfit',
+                    fontFamily: 'Plus Jakarta Sans',
                     fontSize: '0.88rem',
                     fontWeight: 700,
                     color: 'var(--color-text-primary, #ffffff)',
@@ -606,7 +606,7 @@ export const Store = () => {
                 >
                   <span
                     style={{
-                      fontFamily: 'Outfit',
+                      fontFamily: 'Plus Jakarta Sans',
                       fontSize: '0.94rem',
                       fontWeight: 800,
                       color: '#f5b942',
@@ -655,7 +655,7 @@ export const Store = () => {
             }}
           >
             <ShoppingBag size={44} color="#f5b942" style={{ marginBottom: '0.75rem', opacity: 0.85 }} />
-            <h3 style={{ fontFamily: 'Outfit', color: '#ffffff', fontSize: '1.15rem', fontWeight: 700, margin: '0 0 0.35rem' }}>
+            <h3 style={{ fontFamily: 'Plus Jakarta Sans', color: '#ffffff', fontSize: '1.15rem', fontWeight: 700, margin: '0 0 0.35rem' }}>
               {searchQuery.trim()
                 ? `No products matching "${searchQuery.trim()}"`
                 : `No products in ${activeCategory}`}
@@ -674,7 +674,7 @@ export const Store = () => {
                 border: 'none',
                 borderRadius: '50px',
                 padding: '0.55rem 1.35rem',
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontWeight: 700,
                 fontSize: '0.84rem',
                 cursor: 'pointer',

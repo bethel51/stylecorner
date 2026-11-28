@@ -338,7 +338,7 @@ export const CustomerDashboard = () => {
     marginBottom: '0.85rem',
   };
   const sectionTitle = {
-    fontFamily: 'var(--font-heading)', fontSize: '0.78rem', fontWeight: 700,
+    fontFamily: 'var(--font-heading)', fontSize: '0.76rem', fontWeight: 800,
     color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.08em',
   };
   const sectionIcon = (bg, color) => ({
@@ -350,10 +350,10 @@ export const CustomerDashboard = () => {
     <PageContainer title="Style Corner" onOpenAiMatcher={() => navigate('/ai-matcher')}>
       <div style={{ maxWidth: '480px', margin: '0 auto', paddingBottom: '3rem' }}>
 
-        {/* ── Greeting Header with Theme Switcher ── */}
+        {/* ── Greeting Header with Theme Switcher (Ademola-style editorial typography) ── */}
         <div style={{ marginBottom: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
           <div>
-            <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', fontWeight: 700, color: 'var(--color-text-primary)', margin: '0 0 0.2rem', letterSpacing: '-0.02em' }}>
+            <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.55rem', fontWeight: 800, color: 'var(--color-text-primary)', margin: '0 0 0.25rem', letterSpacing: '-0.025em', lineHeight: 1.2 }}>
               {(() => {
                 const hour = new Date().getHours();
                 const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
@@ -361,7 +361,7 @@ export const CustomerDashboard = () => {
                 return `${greeting}, ${name} 👋`;
               })()}
             </h1>
-            <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.82rem', margin: 0 }}>
+            <p style={{ fontFamily: 'var(--font-body)', color: 'var(--color-text-secondary)', fontSize: '0.84rem', margin: 0, fontWeight: 400, lineHeight: 1.55 }}>
               Here's what's happening with your Style Corner.
             </p>
           </div>
@@ -429,7 +429,7 @@ export const CustomerDashboard = () => {
                       borderRadius: '50px',
                       fontSize: '0.72rem',
                       fontWeight: 800,
-                      fontFamily: 'Outfit',
+                      fontFamily: 'Plus Jakarta Sans',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '0.3rem',
@@ -751,7 +751,7 @@ export const CustomerDashboard = () => {
                     <Icon size={13} />
                   </div>
                   <div style={{
-                    fontFamily: 'var(--font-heading)', fontSize: '1.6rem', fontWeight: 800, color: stat.color, lineHeight: 1,
+                    fontFamily: 'var(--font-mono, var(--font-heading))', fontSize: '1.65rem', fontWeight: 800, color: stat.color, lineHeight: 1, letterSpacing: '-0.025em',
                   }}>
                     {stat.value}
                   </div>
@@ -1079,7 +1079,7 @@ export const CustomerDashboard = () => {
             </div>
             <button
               onClick={() => navigate('/experts')}
-              style={{ background: 'none', border: 'none', display: 'flex', alignItems: 'center', gap: '0.2rem', color: 'var(--color-accent)', fontFamily: 'Outfit', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer', padding: '0.25rem', touchAction: 'manipulation' }}
+              style={{ background: 'none', border: 'none', display: 'flex', alignItems: 'center', gap: '0.2rem', color: 'var(--color-accent)', fontFamily: 'Plus Jakarta Sans', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer', padding: '0.25rem', touchAction: 'manipulation' }}
             >
               See All <ArrowRight size={13} />
             </button>
@@ -1096,7 +1096,7 @@ export const CustomerDashboard = () => {
               ))}
             </div>
           ) : localExperts.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '1.5rem 1rem', color: 'var(--color-text-muted)', fontFamily: 'Outfit', fontSize: '0.84rem' }}>
+            <div style={{ textAlign: 'center', padding: '1.5rem 1rem', color: 'var(--color-text-muted)', fontFamily: 'Plus Jakarta Sans', fontSize: '0.84rem' }}>
               <ShieldCheck size={32} style={{ opacity: 0.3, marginBottom: '0.5rem' }} />
               <p style={{ margin: 0 }}>No verified experts in your area yet.<br />Check back soon!</p>
             </div>
@@ -1127,30 +1127,30 @@ export const CustomerDashboard = () => {
                   {/* Verified badge */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', background: 'rgba(245,185,66,0.12)', border: '1px solid rgba(245,185,66,0.25)', borderRadius: '50px', padding: '0.1rem 0.4rem' }}>
                     <ShieldCheck size={9} color="#f5b942" />
-                    <span style={{ fontFamily: 'Outfit', fontSize: '0.6rem', fontWeight: 700, color: '#f5b942' }}>Verified</span>
+                    <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.6rem', fontWeight: 700, color: '#f5b942' }}>Verified</span>
                   </div>
                   {/* Name */}
-                  <span style={{ fontFamily: 'Outfit', fontSize: '0.8rem', fontWeight: 700, color: 'var(--color-text-primary)', lineHeight: 1.2, wordBreak: 'break-word' }}>
+                  <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.8rem', fontWeight: 700, color: 'var(--color-text-primary)', lineHeight: 1.2, wordBreak: 'break-word' }}>
                     {expert.name.split(' ')[0]}
                   </span>
                   {/* Title */}
-                  <span style={{ fontFamily: 'Outfit', fontSize: '0.68rem', color: 'var(--color-text-muted)', lineHeight: 1.3, wordBreak: 'break-word' }}>
+                  <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.68rem', color: 'var(--color-text-muted)', lineHeight: 1.3, wordBreak: 'break-word' }}>
                     {expert.title}
                   </span>
                   {/* Rating */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
                     <Star size={9} color="#f5b942" fill="#f5b942" />
-                    <span style={{ fontFamily: 'Outfit', fontSize: '0.68rem', fontWeight: 700, color: 'var(--color-text-secondary)' }}>{Number(expert.rating).toFixed(1)}</span>
+                    <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.68rem', fontWeight: 700, color: 'var(--color-text-secondary)' }}>{Number(expert.rating).toFixed(1)}</span>
                   </div>
                   {/* Location */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
                     <MapPin size={9} color="var(--color-text-muted)" />
-                    <span style={{ fontFamily: 'Outfit', fontSize: '0.63rem', color: 'var(--color-text-muted)', maxWidth: '90px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.63rem', color: 'var(--color-text-muted)', maxWidth: '90px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {expert.location}
                     </span>
                   </div>
                   {/* Book CTA */}
-                  <div style={{ marginTop: '0.2rem', background: 'var(--color-accent)', color: '#0c0e14', borderRadius: '8px', padding: '0.3rem 0.6rem', fontFamily: 'Outfit', fontSize: '0.67rem', fontWeight: 800 }}>
+                  <div style={{ marginTop: '0.2rem', background: 'var(--color-accent)', color: '#0c0e14', borderRadius: '8px', padding: '0.3rem 0.6rem', fontFamily: 'Plus Jakarta Sans', fontSize: '0.67rem', fontWeight: 800 }}>
                     Book Now
                   </div>
                 </button>
@@ -1214,7 +1214,7 @@ export const CustomerDashboard = () => {
               style={{
                 flex: '1 1 auto', minWidth: '120px', background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.35)',
                 color: '#b5952f', padding: '0.6rem 0.5rem', borderRadius: '12px',
-                fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.78rem',
+                fontFamily: 'Plus Jakarta Sans', fontWeight: 800, fontSize: '0.78rem',
                 cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
                 minHeight: '44px',
                 touchAction: 'manipulation',
@@ -1228,7 +1228,7 @@ export const CustomerDashboard = () => {
               style={{
                 flex: '1 1 auto', minWidth: '120px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)',
                 color: '#ef4444', padding: '0.6rem 0.5rem', borderRadius: '12px',
-                fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.78rem',
+                fontFamily: 'Plus Jakarta Sans', fontWeight: 800, fontSize: '0.78rem',
                 cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
                 minHeight: '44px',
                 touchAction: 'manipulation',
@@ -1254,7 +1254,7 @@ export const CustomerDashboard = () => {
                 onClick={() => setActiveTab(tab.id)}
                 style={{
                   flex: 1, padding: '0.6rem', borderRadius: '11px', border: 'none',
-                  fontFamily: 'Outfit', fontWeight: 800, fontSize: '0.84rem',
+                  fontFamily: 'Plus Jakarta Sans', fontWeight: 800, fontSize: '0.84rem',
                   cursor: 'pointer', transition: 'all 0.2s ease',
                   background: activeTab === tab.id ? '#151822' : 'transparent',
                   color: activeTab === tab.id ? '#ffffff' : '#64748b',
@@ -1286,7 +1286,7 @@ export const CustomerDashboard = () => {
               ) : bookings.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '2.5rem 1rem' }}>
                   <Calendar size={40} color="#e5e7eb" style={{ marginBottom: '0.75rem' }} />
-                  <h4 style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.4rem' }}>
+                  <h4 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.4rem' }}>
                     No Bookings Yet
                   </h4>
                   <p style={{ color: '#9ca3af', fontSize: '0.82rem', marginBottom: '1.25rem' }}>
@@ -1306,7 +1306,7 @@ export const CustomerDashboard = () => {
                     }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.55rem', gap: '0.4rem', flexWrap: 'wrap' }}>
                         <div style={{ flex: '1 1 0%', minWidth: 0 }}>
-                          <h4 style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 800, color: '#ffffff', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          <h4 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.92rem', fontWeight: 800, color: '#ffffff', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                             {b.service}
                           </h4>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', marginTop: '0.2rem', fontSize: '0.72rem', color: '#64748b', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -1322,7 +1322,7 @@ export const CustomerDashboard = () => {
                               display: 'inline-flex', alignItems: 'center', gap: '0.25rem',
                               background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)',
                               color: '#10b981', borderRadius: '6px', padding: '0.12rem 0.45rem',
-                              fontSize: '0.64rem', fontFamily: 'Outfit', fontWeight: 800,
+                              fontSize: '0.64rem', fontFamily: 'Plus Jakarta Sans', fontWeight: 800,
                             }}>
                               🛡️ ESCROW RELEASED
                             </span>
@@ -1331,7 +1331,7 @@ export const CustomerDashboard = () => {
                               display: 'inline-flex', alignItems: 'center', gap: '0.25rem',
                               background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)',
                               color: '#f87171', borderRadius: '6px', padding: '0.12rem 0.45rem',
-                              fontSize: '0.64rem', fontFamily: 'Outfit', fontWeight: 800,
+                              fontSize: '0.64rem', fontFamily: 'Plus Jakarta Sans', fontWeight: 800,
                             }}>
                               ↩️ ESCROW REFUNDED
                             </span>
@@ -1340,7 +1340,7 @@ export const CustomerDashboard = () => {
                               display: 'inline-flex', alignItems: 'center', gap: '0.25rem',
                               background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)',
                               color: '#10b981', borderRadius: '6px', padding: '0.12rem 0.45rem',
-                              fontSize: '0.64rem', fontFamily: 'Outfit', fontWeight: 800,
+                              fontSize: '0.64rem', fontFamily: 'Plus Jakarta Sans', fontWeight: 800,
                             }}>
                               🛡️ ESCROW HELD
                             </span>
@@ -1349,12 +1349,12 @@ export const CustomerDashboard = () => {
                               display: 'inline-flex', alignItems: 'center', gap: '0.25rem',
                               background: 'rgba(245,185,66,0.1)', border: '1px solid rgba(245,185,66,0.25)',
                               color: '#f5b942', borderRadius: '6px', padding: '0.12rem 0.45rem',
-                              fontSize: '0.64rem', fontFamily: 'Outfit', fontWeight: 800,
+                              fontSize: '0.64rem', fontFamily: 'Plus Jakarta Sans', fontWeight: 800,
                             }}>
                               ⏳ AWAITING PAY
                             </span>
                           ) : null}
-                          <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '0.92rem', color: '#b5952f', whiteSpace: 'nowrap' }}>
+                          <span style={{ fontFamily: 'Plus Jakarta Sans', fontWeight: 900, fontSize: '0.92rem', color: '#b5952f', whiteSpace: 'nowrap' }}>
                             ₦{Number(b.price).toLocaleString()}
                           </span>
                         </div>
@@ -1395,7 +1395,7 @@ export const CustomerDashboard = () => {
                                 border: '1px solid rgba(212,175,55,0.4)',
                                 color: '#b5952f',
                                 minHeight: '44px', width: 'auto', fontSize: '0.78rem', padding: '0.45rem 0.95rem', borderRadius: '12px',
-                                fontFamily: 'Outfit', fontWeight: 800, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
+                                fontFamily: 'Plus Jakarta Sans', fontWeight: 800, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
                                 touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent',
                               }}
                             >
@@ -1410,7 +1410,7 @@ export const CustomerDashboard = () => {
                                 border: '1px solid rgba(167,139,250,0.35)',
                                 color: '#c4b5fd',
                                 minHeight: '44px', width: 'auto', fontSize: '0.78rem', padding: '0.45rem 0.95rem', borderRadius: '12px',
-                                fontFamily: 'Outfit', fontWeight: 800, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
+                                fontFamily: 'Plus Jakarta Sans', fontWeight: 800, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
                                 touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent',
                               }}
                             >
@@ -1424,7 +1424,7 @@ export const CustomerDashboard = () => {
                               border: '1px solid rgba(245,185,66,0.35)',
                               color: '#f5b942',
                               minHeight: '44px', width: 'auto', fontSize: '0.78rem', padding: '0.45rem 0.95rem', borderRadius: '12px',
-                              fontFamily: 'Outfit', fontWeight: 800, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
+                              fontFamily: 'Plus Jakarta Sans', fontWeight: 800, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
                               touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent',
                             }}
                           >
@@ -1455,7 +1455,7 @@ export const CustomerDashboard = () => {
               ) : orders.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '2.5rem 1rem' }}>
                   <ShoppingBag size={40} color="#e5e7eb" style={{ marginBottom: '0.75rem' }} />
-                  <h4 style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.4rem' }}>
+                  <h4 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.4rem' }}>
                     No Orders Yet
                   </h4>
                   <p style={{ color: '#9ca3af', fontSize: '0.82rem', marginBottom: '1.25rem' }}>
@@ -1475,7 +1475,7 @@ export const CustomerDashboard = () => {
                     }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.55rem', gap: '0.4rem', flexWrap: 'wrap' }}>
                         <div style={{ flex: '1 1 0%', minWidth: 0 }}>
-                          <h4 style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 800, color: '#ffffff', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          <h4 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.92rem', fontWeight: 800, color: '#ffffff', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                             {o.item || 'Grooming Product'}
                           </h4>
                           <p style={{ color: '#64748b', fontSize: '0.7rem', margin: '0.15rem 0 0' }}>
@@ -1489,7 +1489,7 @@ export const CustomerDashboard = () => {
                         </div>
                         <div style={{ textAlign: 'right', flexShrink: 0 }}>
                           <StatusBadge status={o.trackingStatus || o.status || 'processing'} />
-                          <div style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: '0.95rem', color: '#f5b942', marginTop: '0.25rem', whiteSpace: 'nowrap' }}>
+                          <div style={{ fontFamily: 'Plus Jakarta Sans', fontWeight: 900, fontSize: '0.95rem', color: '#f5b942', marginTop: '0.25rem', whiteSpace: 'nowrap' }}>
                             ₦{Number(o.totalPrice || o.price || 0).toLocaleString()}
                           </div>
                         </div>
@@ -1584,7 +1584,7 @@ export const CustomerDashboard = () => {
                       </div>
                       <div style={{ minWidth: 0, overflow: 'hidden' }}>
                         <div style={{
-                          fontFamily: 'Outfit', fontSize: '0.82rem', fontWeight: 800, color: '#ffffff',
+                          fontFamily: 'Plus Jakarta Sans', fontSize: '0.82rem', fontWeight: 800, color: '#ffffff',
                           overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                         }}>{item.title}</div>
                         <div style={{ fontSize: '0.68rem', color: '#64748b', marginTop: '0.1rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.sub}</div>
@@ -1610,14 +1610,14 @@ export const CustomerDashboard = () => {
                 width: '94px', height: '94px', borderRadius: '50%',
                 background: profileForm.avatarUrl ? `url(${profileForm.avatarUrl}) center/cover no-repeat` : 'linear-gradient(135deg, #d4af37, #b5952f)',
                 border: '3px solid #d4af37', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: '2.2rem', fontFamily: 'Outfit', fontWeight: 900, color: '#fff',
+                fontSize: '2.2rem', fontFamily: 'Plus Jakarta Sans', fontWeight: 900, color: '#fff',
                 boxShadow: '0 6px 20px rgba(212,175,55,0.3)', position: 'relative', overflow: 'hidden',
               }}>
                 {!profileForm.avatarUrl && (profileForm.firstname?.[0]?.toUpperCase() || 'C')}
                 {uploadingPhoto ? (
                   <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(2px)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '0.2rem' }}>
                     <RefreshCw size={18} color="#d4af37" style={{ animation: 'spin 1s linear infinite' }} />
-                    <span style={{ color: '#d4af37', fontSize: '0.65rem', fontFamily: 'Outfit', fontWeight: 800 }}>Saving...</span>
+                    <span style={{ color: '#d4af37', fontSize: '0.65rem', fontFamily: 'Plus Jakarta Sans', fontWeight: 800 }}>Saving...</span>
                   </div>
                 ) : (
                   <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'rgba(0,0,0,0.45)', padding: '2px 0', display: 'flex', justifyContent: 'center' }}>
@@ -1631,7 +1631,7 @@ export const CustomerDashboard = () => {
               background: uploadingPhoto ? 'rgba(212,175,55,0.3)' : 'rgba(212,175,55,0.15)',
               border: '1px solid rgba(212,175,55,0.4)', color: '#d4af37',
               padding: '0.45rem 1.1rem', borderRadius: '50px',
-              fontSize: '0.8rem', fontFamily: 'Outfit', fontWeight: 800,
+              fontSize: '0.8rem', fontFamily: 'Plus Jakarta Sans', fontWeight: 800,
               display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
             }}>
               <Edit size={13} />
@@ -1673,7 +1673,7 @@ export const CustomerDashboard = () => {
           <div style={{ width: '54px', height: '54px', borderRadius: '50%', background: 'rgba(239,68,68,0.12)', color: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
             <AlertTriangle size={28} />
           </div>
-          <h4 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: '#171717', marginBottom: '0.5rem' }}>
+          <h4 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.1rem', fontWeight: 800, color: '#171717', marginBottom: '0.5rem' }}>
             Permanent Account Deletion
           </h4>
           <p style={{ color: '#6b7280', fontSize: '0.85rem', lineHeight: 1.5, marginBottom: '1.5rem' }}>
@@ -1704,10 +1704,10 @@ export const CustomerDashboard = () => {
         {reviewModalBooking && (
           <form onSubmit={handleSubmitReview} style={{ paddingBottom: '1rem' }}>
             <div style={{ textAlign: 'center', marginBottom: '1.25rem' }}>
-              <span style={{ fontSize: '0.78rem', fontFamily: 'Outfit', fontWeight: 800, color: '#d4af37', textTransform: 'uppercase' }}>
+              <span style={{ fontSize: '0.78rem', fontFamily: 'Plus Jakarta Sans', fontWeight: 800, color: '#d4af37', textTransform: 'uppercase' }}>
                 {reviewModalBooking.service}
               </span>
-              <h3 style={{ fontFamily: 'Outfit', fontSize: '1.15rem', fontWeight: 900, color: '#171717', margin: '0.2rem 0' }}>
+              <h3 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.15rem', fontWeight: 900, color: '#171717', margin: '0.2rem 0' }}>
                 How was your session with {reviewModalBooking.stylist}?
               </h3>
               <p style={{ color: '#6b7280', fontSize: '0.8rem', margin: 0 }}>
@@ -1749,7 +1749,7 @@ export const CustomerDashboard = () => {
                 value={reviewComment}
                 onChange={(e) => setReviewComment(e.target.value)}
                 className="app-textarea"
-                style={{ width: '100%', padding: '0.75rem', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.12)', fontFamily: 'Outfit', fontSize: '16px', boxSizing: 'border-box' }}
+                style={{ width: '100%', padding: '0.75rem', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.12)', fontFamily: 'Plus Jakarta Sans', fontSize: '16px', boxSizing: 'border-box' }}
               />
             </div>
 
@@ -1764,7 +1764,7 @@ export const CustomerDashboard = () => {
                   color: '#9ca3af',
                   borderRadius: '14px',
                   minHeight: '48px',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontSize: '0.85rem',
                   fontWeight: 700,
                   cursor: 'pointer',

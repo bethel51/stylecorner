@@ -211,7 +211,7 @@ export const WithdrawFundsModal = ({
               style={{
                 fontSize: '0.78rem',
                 fontWeight: 800,
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 color: windowInfo.isOpen ? '#10b981' : '#f5b942',
               }}
             >
@@ -251,7 +251,7 @@ export const WithdrawFundsModal = ({
             <div style={{ fontSize: '0.68rem', color: '#94a3b8', fontWeight: 800, textTransform: 'uppercase' }}>
               Withdrawable Balance
             </div>
-            <div style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 900, color: '#ffffff' }}>
+            <div style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.25rem', fontWeight: 900, color: '#ffffff' }}>
               ₦{Number(walletBalance).toLocaleString()}
             </div>
           </div>
@@ -265,7 +265,7 @@ export const WithdrawFundsModal = ({
               padding: '0.35rem 0.65rem',
               borderRadius: '50px',
               fontSize: '0.72rem',
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontWeight: 800,
               cursor: 'pointer',
             }}
@@ -286,7 +286,7 @@ export const WithdrawFundsModal = ({
             onChange={(e) => setWithdrawAmount(e.target.value)}
             placeholder="Minimum ₦1,000"
             className="app-input"
-            style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 700 }}
+            style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1rem', fontWeight: 700 }}
           />
         </div>
 
@@ -298,7 +298,7 @@ export const WithdrawFundsModal = ({
             onChange={handleBankChange}
             required
             className="app-input"
-            style={{ fontFamily: 'Outfit', fontSize: '0.85rem', fontWeight: 700 }}
+            style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.85rem', fontWeight: 700 }}
           >
             <option value="">Select a Nigerian Bank...</option>
             {banksList.map((b, idx) => (
@@ -363,7 +363,7 @@ export const WithdrawFundsModal = ({
               <div style={{ fontSize: '0.65rem', color: '#10b981', fontWeight: 800, textTransform: 'uppercase' }}>
                 Verified Account Name
               </div>
-              <div style={{ fontFamily: 'Outfit', fontWeight: 900, color: '#ffffff', fontSize: '0.95rem' }}>
+              <div style={{ fontFamily: 'Plus Jakarta Sans', fontWeight: 900, color: '#ffffff', fontSize: '0.95rem' }}>
                 {accountName}
               </div>
             </div>
@@ -411,7 +411,7 @@ export const WithdrawFundsModal = ({
             fontSize: '0.9rem',
             border: 'none',
             cursor: isWindowClosed ? 'not-allowed' : 'pointer',
-            fontFamily: 'Outfit',
+            fontFamily: 'Plus Jakarta Sans',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',

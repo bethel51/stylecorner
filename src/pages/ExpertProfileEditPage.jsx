@@ -132,7 +132,7 @@ export const ExpertProfileEditPage = () => {
               borderRadius: '12px',
               padding: '0.55rem 0.95rem',
               color: '#e2e8f0',
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontSize: '0.84rem',
               fontWeight: 700,
               cursor: 'pointer',
@@ -145,10 +145,10 @@ export const ExpertProfileEditPage = () => {
 
         {/* Page Title */}
         <div style={{ marginBottom: '1.5rem' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: '#f5b942', fontSize: '0.76rem', fontWeight: 800, fontFamily: 'Outfit', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.35rem' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: '#f5b942', fontSize: '0.76rem', fontWeight: 800, fontFamily: 'Plus Jakarta Sans', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.35rem' }}>
             <Sparkles size={13} /> Specialist Identity & Studio Info
           </div>
-          <h1 style={{ fontFamily: 'Outfit', fontSize: '1.9rem', fontWeight: 900, color: '#ffffff', margin: 0, lineHeight: 1.2 }}>
+          <h1 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.9rem', fontWeight: 900, color: '#ffffff', margin: 0, lineHeight: 1.2 }}>
             Edit Profile & Studio Location
           </h1>
           <p style={{ color: '#94a3b8', fontSize: '0.86rem', marginTop: '0.35rem', marginBottom: 0 }}>
@@ -167,7 +167,7 @@ export const ExpertProfileEditPage = () => {
             boxShadow: '0 8px 24px -10px rgba(0, 0, 0, 0.5)',
           }}
         >
-          <h3 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: '#ffffff', margin: '0 0 1rem' }}>
+          <h3 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.05rem', fontWeight: 800, color: '#ffffff', margin: '0 0 1rem' }}>
             Profile & Banner Visuals
           </h3>
 
@@ -185,7 +185,7 @@ export const ExpertProfileEditPage = () => {
                   alignItems: 'center',
                   justifyContent: 'center',
                   color: '#0c0e14',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontSize: '1.8rem',
                   fontWeight: 900,
                   overflow: 'hidden',
@@ -224,7 +224,7 @@ export const ExpertProfileEditPage = () => {
             </div>
 
             <div style={{ flex: 1, minWidth: '180px' }}>
-              <div style={{ fontFamily: 'Outfit', fontSize: '0.94rem', fontWeight: 800, color: '#ffffff' }}>
+              <div style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.94rem', fontWeight: 800, color: '#ffffff' }}>
                 {uploadingAvatar ? 'Uploading avatar…' : 'Specialist Avatar Photo'}
               </div>
               <p style={{ fontSize: '0.76rem', color: '#94a3b8', margin: '0.2rem 0 0.5rem', lineHeight: 1.4 }}>
@@ -241,7 +241,7 @@ export const ExpertProfileEditPage = () => {
                   padding: '0.35rem 0.75rem',
                   borderRadius: '50px',
                   fontSize: '0.74rem',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontWeight: 700,
                   cursor: uploadingAvatar ? 'wait' : 'pointer',
                 }}
@@ -273,7 +273,7 @@ export const ExpertProfileEditPage = () => {
               gap: '1rem',
             }}
           >
-            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+            <h3 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.05rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
               Specialist Information
             </h3>
 
@@ -357,9 +357,9 @@ export const ExpertProfileEditPage = () => {
               gap: '1rem',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#f5b942', fontWeight: 800, fontFamily: 'Outfit' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#f5b942', fontWeight: 800, fontFamily: 'Plus Jakarta Sans' }}>
               <MapPin size={16} />
-              <h3 style={{ fontFamily: 'Outfit', fontSize: '1.05rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+              <h3 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.05rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
                 Business Location & Operating Area
               </h3>
             </div>
@@ -394,7 +394,7 @@ export const ExpertProfileEditPage = () => {
               borderRadius: '16px',
               padding: '0.95rem',
               minHeight: '52px',
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontSize: '1rem',
               fontWeight: 800,
               cursor: savingProfile ? 'not-allowed' : 'pointer',

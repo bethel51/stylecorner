@@ -388,7 +388,7 @@ export const ExpertProfile = () => {
     return (
       <PageContainer hideHeader={true} noPadding={true}>
         <div style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <p style={{ color: '#94a3b8', fontFamily: 'Outfit' }}>Loading specialist profile...</p>
+          <p style={{ color: '#94a3b8', fontFamily: 'Plus Jakarta Sans' }}>Loading specialist profile...</p>
         </div>
       </PageContainer>
     );
@@ -398,7 +398,7 @@ export const ExpertProfile = () => {
     return (
       <PageContainer title="Specialist Not Found">
         <div style={{ textAlign: 'center', padding: '3rem 1.5rem', background: '#151822', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.08)', margin: '1.5rem 0' }}>
-          <h3 style={{ fontFamily: 'Outfit', fontWeight: 800, color: '#ffffff', marginBottom: '0.5rem' }}>Specialist Not Found</h3>
+          <h3 style={{ fontFamily: 'Plus Jakarta Sans', fontWeight: 800, color: '#ffffff', marginBottom: '0.5rem' }}>Specialist Not Found</h3>
           <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginBottom: '1.5rem' }}>
             The requested specialist is not available or does not exist.
           </p>
@@ -468,7 +468,7 @@ export const ExpertProfile = () => {
           </button>
 
           <h3 style={{
-            fontFamily: 'Outfit',
+            fontFamily: 'Plus Jakarta Sans',
             fontSize: '1.05rem',
             fontWeight: 800,
             color: '#ffffff',
@@ -488,7 +488,7 @@ export const ExpertProfile = () => {
               color: '#f5b942',
               padding: '0.4rem 0.75rem',
               borderRadius: '50px',
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontWeight: 800,
               fontSize: '0.78rem',
               cursor: 'pointer',
@@ -532,7 +532,7 @@ export const ExpertProfile = () => {
                 borderRadius: '50px',
                 padding: '0.3rem 0.65rem',
                 fontSize: '0.68rem',
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontWeight: 800,
                 cursor: 'pointer',
                 display: 'flex',
@@ -566,7 +566,7 @@ export const ExpertProfile = () => {
               alignItems: 'center',
               justifyContent: 'center',
               color: '#0c0e14',
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontWeight: 800,
               fontSize: '1.65rem',
             }}
@@ -598,7 +598,7 @@ export const ExpertProfile = () => {
         <div style={{ padding: '0 1rem', marginBottom: '1.25rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.2rem', flexWrap: 'wrap' }}>
             <h1 style={{
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontSize: 'clamp(1.2rem, 5vw, 1.5rem)',
               fontWeight: 900,
               color: '#ffffff',
@@ -629,7 +629,7 @@ export const ExpertProfile = () => {
           <p style={{
             color: '#94a3b8',
             fontSize: '0.85rem',
-            fontFamily: 'Outfit',
+            fontFamily: 'Plus Jakarta Sans',
             fontWeight: 600,
             margin: '0 0 0.55rem 0',
             overflow: 'hidden',
@@ -669,7 +669,7 @@ export const ExpertProfile = () => {
             border: '1px solid rgba(255, 255, 255, 0.08)',
           }}>
             <h3 style={{
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontSize: '1rem',
               fontWeight: 800,
               color: '#ffffff',
@@ -692,7 +692,7 @@ export const ExpertProfile = () => {
         <div style={{ padding: '0 1rem', marginBottom: '1.5rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
             <h3 style={{
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontSize: '1rem',
               fontWeight: 800,
               color: '#ffffff',
@@ -710,7 +710,7 @@ export const ExpertProfile = () => {
                 border: 'none',
                 color: '#f5b942',
                 fontSize: '0.78rem',
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontWeight: 800,
                 cursor: 'pointer',
                 display: 'flex',
@@ -760,7 +760,7 @@ export const ExpertProfile = () => {
                       transition: 'all 0.2s ease',
                     }} />
                     <span style={{
-                      fontFamily: 'Outfit',
+                      fontFamily: 'Plus Jakarta Sans',
                       fontSize: 'clamp(0.78rem, 2.5vw, 0.88rem)',
                       fontWeight: 700,
                       color: '#ffffff',
@@ -774,7 +774,7 @@ export const ExpertProfile = () => {
 
                   <div style={{ textAlign: 'right', flexShrink: 0 }}>
                     <span style={{ fontSize: '0.68rem', color: '#94a3b8', fontWeight: 600, marginRight: '0.2rem' }}>From</span>
-                    <span style={{ fontFamily: 'Outfit', fontSize: 'clamp(0.82rem, 2.5vw, 0.95rem)', fontWeight: 900, color: '#f5b942', whiteSpace: 'nowrap' }}>
+                    <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: 'clamp(0.82rem, 2.5vw, 0.95rem)', fontWeight: 900, color: '#f5b942', whiteSpace: 'nowrap' }}>
                       {service.price}
                     </span>
                   </div>
@@ -796,7 +796,7 @@ export const ExpertProfile = () => {
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.85rem', flexWrap: 'wrap', gap: '0.4rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                 <Sparkles size={16} color="#f5b942" />
-                <h3 style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+                <h3 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
                   Portfolio Work & Lookbook
                 </h3>
                 {expert?.portfolio && Array.isArray(expert.portfolio) && expert.portfolio.length > 0 && (
@@ -817,7 +817,7 @@ export const ExpertProfile = () => {
                     borderRadius: '50px',
                     padding: '0.25rem 0.65rem',
                     fontSize: '0.72rem',
-                    fontFamily: 'Outfit',
+                    fontFamily: 'Plus Jakarta Sans',
                     fontWeight: 700,
                     cursor: 'pointer',
                     display: 'flex',
@@ -837,7 +837,7 @@ export const ExpertProfile = () => {
                 return (
                   <div style={{ textAlign: 'center', padding: '2rem 1rem', background: '#10131b', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.06)' }}>
                     <BookOpen size={34} color="#f5b942" style={{ marginBottom: '0.5rem', opacity: 0.6 }} />
-                    <p style={{ color: '#ffffff', fontSize: '0.86rem', fontWeight: 700, margin: '0 0 0.3rem', fontFamily: 'Outfit' }}>
+                    <p style={{ color: '#ffffff', fontSize: '0.86rem', fontWeight: 700, margin: '0 0 0.3rem', fontFamily: 'Plus Jakarta Sans' }}>
                       {isViewingMyself ? 'Your Lookbook is Currently Empty' : 'No Portfolio Samples Uploaded Yet'}
                     </p>
                     <p style={{ color: '#64748b', fontSize: '0.78rem', margin: '0 0 1rem', lineHeight: 1.4 }}>
@@ -855,7 +855,7 @@ export const ExpertProfile = () => {
                           border: 'none',
                           borderRadius: '50px',
                           padding: '0.45rem 1rem',
-                          fontFamily: 'Outfit',
+                          fontFamily: 'Plus Jakarta Sans',
                           fontSize: '0.78rem',
                           fontWeight: 800,
                           cursor: 'pointer',
@@ -895,7 +895,7 @@ export const ExpertProfile = () => {
                               borderRadius: '50px',
                               padding: '0.2rem 0.65rem',
                               fontSize: '0.7rem',
-                              fontFamily: 'Outfit',
+                              fontFamily: 'Plus Jakarta Sans',
                               fontWeight: active ? 800 : 600,
                               cursor: 'pointer',
                               whiteSpace: 'nowrap',
@@ -977,7 +977,7 @@ export const ExpertProfile = () => {
                               style={{
                                 color: '#ffffff',
                                 fontSize: '0.68rem',
-                                fontFamily: 'Outfit',
+                                fontFamily: 'Plus Jakarta Sans',
                                 fontWeight: 700,
                                 display: 'block',
                                 whiteSpace: 'nowrap',
@@ -1008,10 +1008,10 @@ export const ExpertProfile = () => {
             boxShadow: '0 4px 20px rgba(0,0,0,0.25)',
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
-              <h3 style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 800, color: '#ffffff', margin: 0, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <h3 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1rem', fontWeight: 800, color: '#ffffff', margin: 0, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                 <Star size={16} fill="#f5b942" color="#f5b942" /> Verified Customer Reviews
               </h3>
-              <span style={{ fontFamily: 'Outfit', fontSize: '0.78rem', fontWeight: 800, color: '#f5b942', background: 'rgba(245,185,66,0.15)', padding: '0.2rem 0.6rem', borderRadius: '50px', border: '1px solid rgba(245,185,66,0.3)' }}>
+              <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.78rem', fontWeight: 800, color: '#f5b942', background: 'rgba(245,185,66,0.15)', padding: '0.2rem 0.6rem', borderRadius: '50px', border: '1px solid rgba(245,185,66,0.3)' }}>
                 ★ {expert?.rating || '5.0'} ({reviewsList.length} {reviewsList.length === 1 ? 'review' : 'reviews'})
               </span>
             </div>
@@ -1021,7 +1021,7 @@ export const ExpertProfile = () => {
                 {reviewsList.map((rev) => (
                   <div key={rev._id} style={{ background: '#10131b', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '14px', padding: '0.75rem 0.85rem' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.3rem' }}>
-                      <span style={{ fontFamily: 'Outfit', fontSize: '0.82rem', fontWeight: 800, color: '#ffffff' }}>
+                      <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.82rem', fontWeight: 800, color: '#ffffff' }}>
                         {rev.customerName}
                       </span>
                       <div style={{ display: 'flex', gap: '2px' }}>
@@ -1105,7 +1105,7 @@ export const ExpertProfile = () => {
               background: '#F5B942',
               color: '#0C0E14',
               border: 'none',
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontSize: 'clamp(0.85rem, 3vw, 1rem)',
               fontWeight: 800,
               cursor: 'pointer',
@@ -1207,7 +1207,7 @@ export const ExpertProfile = () => {
                       borderRadius: '50px',
                       padding: '0.15rem 0.6rem',
                       fontSize: '0.72rem',
-                      fontFamily: 'Outfit',
+                      fontFamily: 'Plus Jakarta Sans',
                       fontWeight: 800,
                     }}
                   >
@@ -1219,7 +1219,7 @@ export const ExpertProfile = () => {
                 </span>
               </div>
 
-              <h3 style={{ fontFamily: 'Outfit', fontSize: '1.2rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+              <h3 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.2rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
                 {activePortfolioModal.title || 'Client Transformation'}
               </h3>
             </div>
@@ -1230,13 +1230,13 @@ export const ExpertProfile = () => {
                 {activePortfolioModal.duration && (
                   <div>
                     <div style={{ fontSize: '0.66rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Duration</div>
-                    <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#ffffff', fontFamily: 'Outfit' }}>{activePortfolioModal.duration}</div>
+                    <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#ffffff', fontFamily: 'Plus Jakarta Sans' }}>{activePortfolioModal.duration}</div>
                   </div>
                 )}
                 {activePortfolioModal.price && (
                   <div style={{ marginLeft: activePortfolioModal.duration ? 'auto' : 0 }}>
                     <div style={{ fontSize: '0.66rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Estimated Fee</div>
-                    <div style={{ fontSize: '0.92rem', fontWeight: 900, color: '#f5b942', fontFamily: 'Outfit' }}>
+                    <div style={{ fontSize: '0.92rem', fontWeight: 900, color: '#f5b942', fontFamily: 'Plus Jakarta Sans' }}>
                       {activePortfolioModal.price.startsWith('₦') ? activePortfolioModal.price : `₦${activePortfolioModal.price}`}
                     </div>
                   </div>
@@ -1272,7 +1272,7 @@ export const ExpertProfile = () => {
                   border: 'none',
                   borderRadius: '12px',
                   padding: '0.75rem',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontSize: '0.88rem',
                   fontWeight: 800,
                   cursor: 'pointer',
@@ -1295,7 +1295,7 @@ export const ExpertProfile = () => {
                   border: '1px solid rgba(255, 255, 255, 0.12)',
                   borderRadius: '12px',
                   padding: '0.75rem 1.25rem',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontSize: '0.82rem',
                   fontWeight: 700,
                   cursor: 'pointer',

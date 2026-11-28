@@ -42,7 +42,7 @@ export const SplashScreen = () => {
 
       <h1
         style={{
-          fontFamily: 'Outfit',
+          fontFamily: 'Plus Jakarta Sans',
           fontSize: '2rem',
           fontWeight: 900,
           letterSpacing: '0.05em',

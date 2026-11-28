@@ -115,7 +115,7 @@ export const CheckInScannerModal = ({ isOpen, onClose, onCheckInComplete }) => {
                 style={{
                   margin: 0,
                   fontSize: '0.98rem',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontWeight: 800,
                   color: '#ffffff',
                 }}
@@ -155,7 +155,7 @@ export const CheckInScannerModal = ({ isOpen, onClose, onCheckInComplete }) => {
                 style={{
                   fontSize: '0.78rem',
                   color: '#cbd5e1',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontWeight: 700,
                   display: 'block',
                   marginBottom: '0.5rem',
@@ -188,7 +188,7 @@ export const CheckInScannerModal = ({ isOpen, onClose, onCheckInComplete }) => {
                   style={{
                     borderRadius: '14px',
                     padding: '0 1.25rem',
-                    fontFamily: 'Outfit',
+                    fontFamily: 'Plus Jakarta Sans',
                     fontWeight: 800,
                   }}
                 >
@@ -255,7 +255,7 @@ export const CheckInScannerModal = ({ isOpen, onClose, onCheckInComplete }) => {
                       margin: 0,
                       color: '#10b981',
                       fontSize: '0.92rem',
-                      fontFamily: 'Outfit',
+                      fontFamily: 'Plus Jakarta Sans',
                       fontWeight: 800,
                     }}
                   >
@@ -282,14 +282,14 @@ export const CheckInScannerModal = ({ isOpen, onClose, onCheckInComplete }) => {
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <span style={{ fontSize: '0.78rem', color: '#94a3b8' }}>Client</span>
-                  <strong style={{ fontSize: '0.88rem', color: '#ffffff', fontFamily: 'Outfit' }}>
+                  <strong style={{ fontSize: '0.88rem', color: '#ffffff', fontFamily: 'Plus Jakarta Sans' }}>
                     {verifiedBooking.clientName}
                   </strong>
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <span style={{ fontSize: '0.78rem', color: '#94a3b8' }}>Service</span>
-                  <strong style={{ fontSize: '0.88rem', color: '#f5b942', fontFamily: 'Outfit' }}>
+                  <strong style={{ fontSize: '0.88rem', color: '#f5b942', fontFamily: 'Plus Jakarta Sans' }}>
                     {verifiedBooking.service}
                   </strong>
                 </div>

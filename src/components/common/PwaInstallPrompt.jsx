@@ -100,7 +100,7 @@ export const PwaInstallPrompt = () => {
 
         <div style={{ minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-            <span style={{ fontFamily: 'Outfit', fontSize: '0.88rem', fontWeight: 900, color: '#ffffff' }}>
+            <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.88rem', fontWeight: 900, color: '#ffffff' }}>
               Style Corner App
             </span>
             <Sparkles size={12} color="#d4af37" />
@@ -120,7 +120,7 @@ export const PwaInstallPrompt = () => {
             border: 'none',
             borderRadius: '12px',
             padding: '0.55rem 0.85rem',
-            fontFamily: 'Outfit',
+            fontFamily: 'Plus Jakarta Sans',
             fontWeight: 900,
             fontSize: '0.78rem',
             cursor: 'pointer',

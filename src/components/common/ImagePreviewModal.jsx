@@ -96,7 +96,7 @@ export const ImagePreviewModal = ({ isOpen, onClose, imageUrl, title = "Profile 
 
         {/* Caption & Navigation Button if provided */}
         <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
-          <span style={{ color: '#e0e0e0', fontFamily: 'Outfit', fontWeight: 600, fontSize: '1rem', letterSpacing: '0.5px' }}>
+          <span style={{ color: '#e0e0e0', fontFamily: 'Plus Jakarta Sans', fontWeight: 600, fontSize: '1rem', letterSpacing: '0.5px' }}>
             {title}
           </span>
           {onNavigateDashboard && (

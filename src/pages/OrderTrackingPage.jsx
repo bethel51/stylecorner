@@ -217,7 +217,7 @@ export const OrderTrackingPage = () => {
           <h2
             style={{
               color: textPrimary,
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontWeight: 800,
               fontSize: '1.25rem',
               marginBottom: '0.5rem',
@@ -240,7 +240,7 @@ export const OrderTrackingPage = () => {
                 borderRadius: '14px',
                 padding: '0.75rem 1.75rem',
                 fontWeight: 800,
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontSize: '0.85rem',
                 cursor: 'pointer',
               }}
@@ -256,7 +256,7 @@ export const OrderTrackingPage = () => {
                 borderRadius: '14px',
                 padding: '0.75rem 1.25rem',
                 fontWeight: 700,
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontSize: '0.85rem',
                 cursor: 'pointer',
               }}
@@ -275,7 +275,7 @@ export const OrderTrackingPage = () => {
       style={{
         minHeight: '100vh',
         background: 'var(--color-bg, #0c0e14)',
-        fontFamily: 'Outfit, sans-serif',
+        fontFamily: 'Plus Jakarta Sans, sans-serif',
       }}
     >
       {/* ─── Top Navigation Bar ─── */}
@@ -403,7 +403,7 @@ export const OrderTrackingPage = () => {
                       background: isCur ? 'rgba(245, 185, 66, 0.18)' : surface,
                       border: isCur ? `1.5px solid ${accent}` : `1px solid ${border}`,
                       color: isCur ? accent : textSecondary,
-                      fontFamily: 'Outfit',
+                      fontFamily: 'Plus Jakarta Sans',
                       fontSize: '0.78rem',
                       fontWeight: isCur ? 800 : 600,
                       cursor: 'pointer',
@@ -891,7 +891,7 @@ export const OrderTrackingPage = () => {
                   borderRadius: '12px',
                   padding: '0.65rem 0.85rem',
                   color: textPrimary,
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontSize: '0.85rem',
                   fontWeight: 600,
                   appearance: 'auto',
@@ -932,7 +932,7 @@ export const OrderTrackingPage = () => {
                     borderRadius: '12px',
                     padding: '0.65rem 0.85rem',
                     color: textPrimary,
-                    fontFamily: 'Outfit',
+                    fontFamily: 'Plus Jakarta Sans',
                     fontSize: '0.82rem',
                     boxSizing: 'border-box',
                   }}
@@ -964,7 +964,7 @@ export const OrderTrackingPage = () => {
                     borderRadius: '12px',
                     padding: '0.65rem 0.85rem',
                     color: textPrimary,
-                    fontFamily: 'Outfit',
+                    fontFamily: 'Plus Jakarta Sans',
                     fontSize: '0.82rem',
                     boxSizing: 'border-box',
                   }}
@@ -983,7 +983,7 @@ export const OrderTrackingPage = () => {
                 borderRadius: '14px',
                 padding: '0.75rem',
                 fontWeight: 800,
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontSize: '0.85rem',
                 cursor: updatingTracking ? 'not-allowed' : 'pointer',
                 opacity: updatingTracking ? 0.7 : 1,
@@ -1121,7 +1121,7 @@ export const OrderTrackingPage = () => {
                 borderRadius: '14px',
                 padding: '0.65rem 0.85rem',
                 color: textPrimary,
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontSize: '0.82rem',
                 minHeight: '44px',
                 boxSizing: 'border-box',

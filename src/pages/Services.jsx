@@ -171,7 +171,7 @@ export const Services = () => {
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.75rem' }}>
           <div>
-            <h1 style={{ fontFamily: 'Outfit', fontSize: '1.65rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: '0 0 0.25rem' }}>
+            <h1 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.65rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: '0 0 0.25rem' }}>
               Atelier Services
             </h1>
             <p style={{ color: '#94a3b8', fontSize: '0.84rem', margin: 0 }}>
@@ -185,7 +185,7 @@ export const Services = () => {
               display: 'flex', alignItems: 'center', gap: '0.4rem',
               background: 'linear-gradient(135deg, rgba(245,185,66,0.18), rgba(245,185,66,0.06))',
               border: '1.5px solid rgba(245,185,66,0.45)', borderRadius: '50px',
-              padding: '0.5rem 0.95rem', color: '#f5b942', fontFamily: 'Outfit',
+              padding: '0.5rem 0.95rem', color: '#f5b942', fontFamily: 'Plus Jakarta Sans',
               fontSize: '0.78rem', fontWeight: 800, cursor: 'pointer', minHeight: '44px', touchAction: 'manipulation',
             }}
           >
@@ -210,7 +210,7 @@ export const Services = () => {
               <Sparkles size={22} />
             </div>
             <div>
-              <h4 style={{ fontFamily: 'Outfit', fontSize: '0.94rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.2rem' }}>
+              <h4 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.94rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.2rem' }}>
                 Need Personalized Recommendations?
               </h4>
               <p style={{ color: '#94a3b8', fontSize: '0.76rem', margin: 0 }}>
@@ -218,17 +218,17 @@ export const Services = () => {
               </p>
             </div>
           </div>
-          <span style={{ color: '#f5b942', fontSize: '0.82rem', fontWeight: 800, fontFamily: 'Outfit', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '0.3rem', flexShrink: 0 }}>
+          <span style={{ color: '#f5b942', fontSize: '0.82rem', fontWeight: 800, fontFamily: 'Plus Jakarta Sans', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '0.3rem', flexShrink: 0 }}>
             Match Now <ArrowRight size={14} />
           </span>
         </div>
 
         {/* Section Label */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ fontSize: '0.72rem', fontFamily: 'Outfit', fontWeight: 800, color: '#F5B942', textTransform: 'uppercase', letterSpacing: '0.12em' }}>
+          <span style={{ fontSize: '0.72rem', fontFamily: 'Plus Jakarta Sans', fontWeight: 800, color: '#F5B942', textTransform: 'uppercase', letterSpacing: '0.12em' }}>
             Select Service Category
           </span>
-          <span style={{ fontSize: '0.72rem', color: '#64748b', fontFamily: 'Outfit' }}>
+          <span style={{ fontSize: '0.72rem', color: '#64748b', fontFamily: 'Plus Jakarta Sans' }}>
             6 Specialized Fields
           </span>
         </div>
@@ -276,10 +276,10 @@ export const Services = () => {
                     <IconComponent />
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <h3 style={{ fontFamily: 'Outfit', fontSize: '1rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: '0 0 0.2rem' }}>
+                    <h3 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1rem', fontWeight: 800, color: 'var(--color-text-primary, #ffffff)', margin: '0 0 0.2rem' }}>
                       {service.title}
                     </h3>
-                    <p style={{ fontSize: '0.78rem', color: service.color, fontWeight: 800, fontFamily: 'Outfit', margin: 0 }}>
+                    <p style={{ fontSize: '0.78rem', color: service.color, fontWeight: 800, fontFamily: 'Plus Jakarta Sans', margin: 0 }}>
                       {service.price}
                     </p>
                   </div>
@@ -292,10 +292,10 @@ export const Services = () => {
 
                 {/* Action Footer */}
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto', paddingTop: '0.5rem', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-                  <span style={{ fontSize: '0.7rem', color: '#64748b', fontFamily: 'Outfit', background: 'rgba(255,255,255,0.04)', padding: '0.2rem 0.55rem', borderRadius: '6px' }}>
+                  <span style={{ fontSize: '0.7rem', color: '#64748b', fontFamily: 'Plus Jakarta Sans', background: 'rgba(255,255,255,0.04)', padding: '0.2rem 0.55rem', borderRadius: '6px' }}>
                     ⏱ {service.duration}
                   </span>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: service.color, fontSize: '0.76rem', fontWeight: 800, fontFamily: 'Outfit' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: service.color, fontSize: '0.76rem', fontWeight: 800, fontFamily: 'Plus Jakarta Sans' }}>
                     <span>Find Specialists</span>
                     <div style={{ width: '24px', height: '24px', borderRadius: '8px', background: service.bg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <ChevronRight size={14} color={service.color} />

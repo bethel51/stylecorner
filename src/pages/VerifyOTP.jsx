@@ -77,7 +77,7 @@ export const VerifyOTP = () => {
 
         <h2
           style={{
-            fontFamily: 'Outfit',
+            fontFamily: 'Plus Jakarta Sans',
             fontSize: '1.6rem',
             fontWeight: 800,
             color: '#171717',
@@ -117,7 +117,7 @@ export const VerifyOTP = () => {
                 letterSpacing: '0.4em',
                 fontSize: '1.4rem',
                 textAlign: 'center',
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontWeight: 800,
               }}
               required
@@ -150,7 +150,7 @@ export const VerifyOTP = () => {
               background: 'none',
               border: 'none',
               color: '#d4af37',
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontWeight: 700,
               fontSize: '0.9rem',
               cursor: 'pointer',

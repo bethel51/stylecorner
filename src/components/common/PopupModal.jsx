@@ -98,7 +98,7 @@ export const PopupModal = ({ isOpen, onClose, title, children, maxWidth = '480px
         }}>
           {title && (
             <h3 style={{
-              fontFamily: 'Outfit',
+              fontFamily: 'Plus Jakarta Sans',
               fontSize: '1.12rem',
               fontWeight: 800,
               color: 'var(--color-text-primary)',

@@ -43,7 +43,7 @@ export const Contact = () => {
                 <span>Concierge Desk</span>
               </div>
 
-              <h2 style={{ fontFamily: 'Outfit', fontSize: '1.8rem', fontWeight: 900, color: 'var(--color-text-primary)', margin: '0 0 0.75rem', lineHeight: 1.2 }}>
+              <h2 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.8rem', fontWeight: 900, color: 'var(--color-text-primary)', margin: '0 0 0.75rem', lineHeight: 1.2 }}>
                 We’re Here to Perfect Your Atelier Experience
               </h2>
 
@@ -96,7 +96,7 @@ export const Contact = () => {
           {/* Right Column: Contact Form */}
           <div>
             <form onSubmit={handleSubmit} className="app-card" style={{ padding: '2rem' }}>
-              <h3 style={{ fontFamily: 'Outfit', fontSize: '1.35rem', fontWeight: 800, color: 'var(--color-text-primary)', margin: '0 0 0.5rem' }}>
+              <h3 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.35rem', fontWeight: 800, color: 'var(--color-text-primary)', margin: '0 0 0.5rem' }}>
                 Send Us a Message
               </h3>
               <p style={{ color: 'var(--color-text-muted)', fontSize: '0.84rem', margin: '0 0 1.5rem' }}>
@@ -150,7 +150,7 @@ export const Contact = () => {
                   color: '#08090C',
                   border: 'none',
                   borderRadius: '50px',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontWeight: 900,
                   fontSize: '0.94rem',
                   cursor: 'pointer',

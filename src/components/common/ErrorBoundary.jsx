@@ -80,7 +80,7 @@ export class ErrorBoundary extends React.Component {
             justifyContent: 'center',
             padding: '2rem 1.5rem',
             textAlign: 'center',
-            fontFamily: 'Outfit, sans-serif',
+            fontFamily: 'Plus Jakarta Sans, sans-serif',
           }}
         >
           <div
@@ -165,7 +165,7 @@ export class ErrorBoundary extends React.Component {
                 border: 'none',
                 color: '#64748b',
                 fontSize: '0.72rem',
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 cursor: 'pointer',
                 display: 'inline-flex',
                 alignItems: 'center',

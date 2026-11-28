@@ -21,9 +21,9 @@ export const printOrderInvoice = (order) => {
       <head>
         <title>Style Corner — Official Order Invoice #${orderNum}</title>
         <style>
-          @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&display=swap');
+          @import url('https://fonts.googleapis.com/css2?family=Plus Jakarta Sans:wght@400;600;800;900&display=swap');
           body {
-            font-family: 'Outfit', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             margin: 0;
             padding: 40px;
             color: #171717;

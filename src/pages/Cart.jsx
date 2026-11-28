@@ -101,7 +101,7 @@ export const Cart = () => {
         
         {/* Screen 7: Header with Trash Icon on Right */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
-          <h1 style={{ fontFamily: 'Outfit', fontSize: '1.65rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+          <h1 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.65rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
             Your Cart
           </h1>
 
@@ -146,7 +146,7 @@ export const Cart = () => {
             >
               <ShoppingBag size={26} />
             </div>
-            <h3 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.35rem' }}>
+            <h3 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.35rem' }}>
               Your cart is empty
             </h3>
             <p style={{ fontSize: '0.84rem', color: '#64748b', marginBottom: '1.5rem' }}>
@@ -196,7 +196,7 @@ export const Cart = () => {
 
                   {/* Title & Price & Quantity Stepper */}
                   <div>
-                    <h3 style={{ fontFamily: 'Outfit', fontSize: '0.92rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.2rem' }}>
+                    <h3 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.92rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.2rem' }}>
                       {item.title}
                     </h3>
                     <span style={{ fontSize: '0.88rem', color: '#ffffff', fontWeight: 800, display: 'block', marginBottom: '0.4rem' }}>
@@ -227,7 +227,7 @@ export const Cart = () => {
                         <Minus size={12} />
                       </button>
 
-                      <span style={{ fontFamily: 'Outfit', fontSize: '0.85rem', fontWeight: 800, color: '#ffffff', minWidth: '16px', textAlign: 'center' }}>
+                      <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.85rem', fontWeight: 800, color: '#ffffff', minWidth: '16px', textAlign: 'center' }}>
                         {item.quantity}
                       </span>
 
@@ -324,7 +324,7 @@ export const Cart = () => {
                   border: 'none',
                   outline: 'none',
                   color: '#ffffff',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontSize: '0.88rem',
                   flex: 1,
                 }}
@@ -337,7 +337,7 @@ export const Cart = () => {
                   border: 'none',
                   borderRadius: '12px',
                   padding: '0.65rem 1.15rem',
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   fontWeight: 700,
                   fontSize: '0.82rem',
                   cursor: 'pointer',

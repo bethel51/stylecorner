@@ -106,15 +106,15 @@ export const OrderTrackingSheet = ({ isOpen, onClose, order, onOrderUpdated, isA
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div>
-              <span style={{ fontSize: '0.7rem', color: '#d4af37', fontFamily: 'Outfit', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              <span style={{ fontSize: '0.7rem', color: '#d4af37', fontFamily: 'Plus Jakarta Sans', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                 PAID ORDER
               </span>
-              <h3 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', fontWeight: 800, marginTop: '0.2rem' }}>
+              <h3 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.1rem', fontWeight: 800, marginTop: '0.2rem' }}>
                 {order.item || 'Grooming Products'}
               </h3>
             </div>
             <div style={{ textAlign: 'right' }}>
-              <span style={{ fontFamily: 'Outfit', fontSize: '1.25rem', fontWeight: 900, color: '#d4af37' }}>
+              <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '1.25rem', fontWeight: 900, color: '#d4af37' }}>
                 ₦{Number(order.totalPrice || order.price || 0).toLocaleString()}
               </span>
             </div>
@@ -135,7 +135,7 @@ export const OrderTrackingSheet = ({ isOpen, onClose, order, onOrderUpdated, isA
                 padding: '0.35rem 0.75rem',
                 borderRadius: '50px',
                 fontSize: '0.72rem',
-                fontFamily: 'Outfit',
+                fontFamily: 'Plus Jakarta Sans',
                 fontWeight: 800,
                 cursor: 'pointer',
                 display: 'flex',
@@ -150,7 +150,7 @@ export const OrderTrackingSheet = ({ isOpen, onClose, order, onOrderUpdated, isA
 
         {/* Visual Tracking Progress Bar */}
         <div className="app-card" style={{ marginBottom: '1.25rem', padding: '1.1rem' }}>
-          <h4 style={{ fontFamily: 'Outfit', fontSize: '0.95rem', fontWeight: 800, color: '#171717', marginBottom: '1rem' }}>
+          <h4 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.95rem', fontWeight: 800, color: '#171717', marginBottom: '1rem' }}>
             Delivery Progress
           </h4>
 
@@ -216,7 +216,7 @@ export const OrderTrackingSheet = ({ isOpen, onClose, order, onOrderUpdated, isA
                   <span
                     style={{
                       fontSize: '0.65rem',
-                      fontFamily: 'Outfit',
+                      fontFamily: 'Plus Jakarta Sans',
                       fontWeight: isCurrent ? 800 : 600,
                       color: isCurrent ? '#171717' : isCompleted ? '#4b5563' : '#9ca3af',
                       marginTop: '0.35rem',
@@ -233,35 +233,35 @@ export const OrderTrackingSheet = ({ isOpen, onClose, order, onOrderUpdated, isA
 
         {/* Delivery Location Breakdown */}
         <div className="app-card" style={{ marginBottom: '1.25rem', padding: '1.1rem' }}>
-          <h4 style={{ fontFamily: 'Outfit', fontSize: '0.95rem', fontWeight: 800, color: '#171717', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+          <h4 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.95rem', fontWeight: 800, color: '#171717', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
             <MapPin size={16} color="#d4af37" /> Delivery Location Details
           </h4>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem', background: '#faf9f5', padding: '0.85rem', borderRadius: '12px', border: '1px solid rgba(212,175,55,0.2)' }}>
             <div>
               <span style={{ fontSize: '0.72rem', color: '#6b7280', display: 'block' }}>State</span>
-              <strong style={{ fontSize: '0.85rem', color: '#171717', fontFamily: 'Outfit' }}>
+              <strong style={{ fontSize: '0.85rem', color: '#171717', fontFamily: 'Plus Jakarta Sans' }}>
                 {order.state || 'N/A'}
               </strong>
             </div>
 
             <div>
               <span style={{ fontSize: '0.72rem', color: '#6b7280', display: 'block' }}>LGA / District</span>
-              <strong style={{ fontSize: '0.85rem', color: '#171717', fontFamily: 'Outfit' }}>
+              <strong style={{ fontSize: '0.85rem', color: '#171717', fontFamily: 'Plus Jakarta Sans' }}>
                 {order.lga || 'N/A'}
               </strong>
             </div>
 
             <div>
               <span style={{ fontSize: '0.72rem', color: '#6b7280', display: 'block' }}>Street Name</span>
-              <strong style={{ fontSize: '0.85rem', color: '#171717', fontFamily: 'Outfit' }}>
+              <strong style={{ fontSize: '0.85rem', color: '#171717', fontFamily: 'Plus Jakarta Sans' }}>
                 {order.street || 'N/A'}
               </strong>
             </div>
 
             <div>
               <span style={{ fontSize: '0.72rem', color: '#6b7280', display: 'block' }}>House / Flat #</span>
-              <strong style={{ fontSize: '0.85rem', color: '#171717', fontFamily: 'Outfit' }}>
+              <strong style={{ fontSize: '0.85rem', color: '#171717', fontFamily: 'Plus Jakarta Sans' }}>
                 {order.houseNumber || 'N/A'}
               </strong>
             </div>
@@ -287,7 +287,7 @@ export const OrderTrackingSheet = ({ isOpen, onClose, order, onOrderUpdated, isA
                   padding: '0.35rem 0.75rem',
                   fontSize: '0.74rem',
                   fontWeight: 800,
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Plus Jakarta Sans',
                   textDecoration: 'none',
                   display: 'flex',
                   alignItems: 'center',
@@ -303,7 +303,7 @@ export const OrderTrackingSheet = ({ isOpen, onClose, order, onOrderUpdated, isA
         {/* Admin Tracking Controls (Visible to Admin only) */}
         {isAdmin && (
           <form onSubmit={handleUpdateTracking} className="app-card" style={{ marginBottom: '1.25rem', padding: '1.1rem', background: 'rgba(212,175,55,0.06)', border: '1.5px solid rgba(212,175,55,0.4)' }}>
-            <h4 style={{ fontFamily: 'Outfit', fontSize: '0.95rem', fontWeight: 800, color: '#171717', marginBottom: '0.75rem' }}>
+            <h4 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.95rem', fontWeight: 800, color: '#171717', marginBottom: '0.75rem' }}>
               🛠️ Admin Tracking Controls
             </h4>
 
@@ -353,7 +353,7 @@ export const OrderTrackingSheet = ({ isOpen, onClose, order, onOrderUpdated, isA
 
         {/* Live Admin <-> Customer Communication Thread */}
         <div className="app-card" style={{ marginBottom: 0, padding: '1.1rem' }}>
-          <h4 style={{ fontFamily: 'Outfit', fontSize: '0.95rem', fontWeight: 800, color: '#171717', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+          <h4 style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '0.95rem', fontWeight: 800, color: '#171717', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
             <MessageSquare size={16} color="#d4af37" /> Order Communication & Support
           </h4>
 
