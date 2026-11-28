@@ -50,10 +50,10 @@ export const Home = () => {
 
     setIsSplitting(true);
 
-    // After the top & bottom halves slide apart, transition phase to 'onboarding'
+    // Slide doors apart, then navigate directly to the role selector page
     setTimeout(() => {
-      setPhase("onboarding");
-    }, 750);
+      navigate("/role-selection");
+    }, 700);
   };
 
   const handleProceedRegistration = () => {
@@ -144,7 +144,7 @@ export const Home = () => {
       `}</style>
 
       {/* ══════════════════════════════════════════════════════════════════
-          LAYER 1: SPLIT HORIZONTAL LANDING PAGE (Artwork in Two Halves)
+          LAYER 1: SPLIT HORIZONTAL LANDING PAGE (Artwork in Two Equal Halves)
          ══════════════════════════════════════════════════════════════════ */}
       {phase === "landing" && (
         <div
@@ -170,16 +170,16 @@ export const Home = () => {
               height: "50dvh",
               overflow: "hidden",
               transform: isSplitting ? "translate3d(0, -100%, 0)" : "translate3d(0, 0, 0)",
-              transition: "transform 0.82s cubic-bezier(0.77, 0, 0.175, 1)",
+              transition: "transform 0.75s cubic-bezier(0.77, 0, 0.175, 1)",
               zIndex: 20,
-              borderBottom: "1.5px solid rgba(245, 185, 66, 0.75)",
-              boxShadow: "0 4px 25px rgba(245, 185, 66, 0.4)",
+              borderBottom: "2px solid #F5B942",
+              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.08)",
               backgroundColor: "#FFFFFF",
               cursor: "pointer",
               WebkitTapHighlightColor: "transparent",
             }}
           >
-            {/* Top Half Artwork - Positioned relative to full 100vh viewport */}
+            {/* Top Half Artwork - Top 50% of the single 100dvh image */}
             <div
               style={{
                 position: "absolute",
@@ -190,16 +190,7 @@ export const Home = () => {
                 backgroundImage: "url('/images/landing-art.jpg')",
                 backgroundSize: "cover",
                 backgroundPosition: "center center",
-                /* Gold branches only: white BG stays white (no chroma to amplify) */
-                filter: "sepia(1) saturate(3.5) hue-rotate(5deg) brightness(1.18)",
-              }}
-            />
-            {/* Golden Vignette & Atmosphere for Top Half */}
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                background: "linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.0) 50%, rgba(245,185,66,0.08) 100%)",
+                backgroundRepeat: "no-repeat",
               }}
             />
             {/* Top Header Branding Badge */}
@@ -220,12 +211,12 @@ export const Home = () => {
                   display: "inline-flex",
                   alignItems: "center",
                   gap: "0.45rem",
-                  padding: "0.3rem 0.95rem",
+                  padding: "0.32rem 0.95rem",
                   borderRadius: "50px",
-                  background: "rgba(8, 9, 12, 0.82)",
-                  border: "1px solid rgba(245, 185, 66, 0.4)",
-                  backdropFilter: "blur(10px)",
-                  boxShadow: "0 4px 18px rgba(0, 0, 0, 0.5)",
+                  background: "rgba(255, 255, 255, 0.94)",
+                  border: "1.5px solid rgba(245, 185, 66, 0.65)",
+                  backdropFilter: "blur(12px)",
+                  boxShadow: "0 4px 18px rgba(0, 0, 0, 0.08)",
                 }}
               >
                 <Sparkles size={13} color="#F5B942" />
@@ -233,7 +224,7 @@ export const Home = () => {
                   style={{
                     fontSize: "0.74rem",
                     fontWeight: 800,
-                    color: "#F5B942",
+                    color: "#B47806",
                     letterSpacing: "0.08em",
                     textTransform: "uppercase",
                     fontFamily: "'Plus Jakarta Sans', sans-serif",
@@ -250,42 +241,33 @@ export const Home = () => {
             onClick={handleTriggerSplit}
             style={{
               position: "absolute",
-              bottom: 0,
+              top: "50dvh",
               left: 0,
               width: "100%",
               height: "50dvh",
               overflow: "hidden",
               transform: isSplitting ? "translate3d(0, 100%, 0)" : "translate3d(0, 0, 0)",
-              transition: "transform 0.82s cubic-bezier(0.77, 0, 0.175, 1)",
+              transition: "transform 0.75s cubic-bezier(0.77, 0, 0.175, 1)",
               zIndex: 20,
-              borderTop: "1.5px solid rgba(245, 185, 66, 0.75)",
-              boxShadow: "0 -4px 25px rgba(245, 185, 66, 0.4)",
+              borderTop: "2px solid #F5B942",
+              boxShadow: "0 -4px 20px rgba(0, 0, 0, 0.08)",
               backgroundColor: "#FFFFFF",
               cursor: "pointer",
               WebkitTapHighlightColor: "transparent",
             }}
           >
-            {/* Bottom Half Artwork - Positioned relative to full 100vh viewport */}
+            {/* Bottom Half Artwork - Bottom 50% of the same 100dvh image (shifted up by 50dvh) */}
             <div
               style={{
                 position: "absolute",
-                top: "-100dvh",
+                top: "-50dvh",
                 left: 0,
                 width: "100vw",
-                height: "200dvh",
+                height: "100dvh",
                 backgroundImage: "url('/images/landing-art.jpg')",
                 backgroundSize: "cover",
                 backgroundPosition: "center center",
-                /* Gold branches only: white BG stays white */
-                filter: "sepia(1) saturate(3.5) hue-rotate(5deg) brightness(1.18)",
-              }}
-            />
-            {/* Golden Vignette & Atmosphere for Bottom Half */}
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                background: "linear-gradient(0deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.0) 50%, rgba(245,185,66,0.08) 100%)",
+                backgroundRepeat: "no-repeat",
               }}
             />
             {/* Bottom Tagline */}
@@ -305,32 +287,47 @@ export const Home = () => {
                 padding: "0 1rem",
               }}
             >
-              <span
+              <div
                 style={{
-                  fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  fontSize: "0.82rem",
-                  fontWeight: 600,
-                  color: "#1e293b",
-                  letterSpacing: "0.04em",
+                  background: "rgba(255, 255, 255, 0.92)",
+                  padding: "0.35rem 1rem",
+                  borderRadius: "50px",
+                  border: "1px solid rgba(0, 0, 0, 0.08)",
+                  backdropFilter: "blur(10px)",
+                  boxShadow: "0 4px 14px rgba(0, 0, 0, 0.06)",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
                 }}
               >
-                Luxury Grooming &amp; Verified Artistry
-              </span>
-              <span
-                style={{
-                  fontFamily: "'Space Grotesk', monospace",
-                  fontSize: "0.68rem",
-                  color: "#F5B942",
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                }}
-              >
-                Lagos &bull; Ibadan
-              </span>
+                <span
+                  style={{
+                    fontFamily: "'Plus Jakarta Sans', sans-serif",
+                    fontSize: "0.82rem",
+                    fontWeight: 700,
+                    color: "#0F172A",
+                    letterSpacing: "0.02em",
+                  }}
+                >
+                  Luxury Grooming &amp; Verified Artistry
+                </span>
+                <span
+                  style={{
+                    fontFamily: "'Space Grotesk', monospace",
+                    fontSize: "0.68rem",
+                    color: "#B47806",
+                    fontWeight: 700,
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Lagos &bull; Ibadan
+                </span>
+              </div>
             </div>
           </div>
 
-          {/* ── Exact Center Seam: Square Gold & Black Logo ── */}
+          {/* ── Exact Center Seam: Squared Style Corner Logo ── */}
           <div
             onClick={handleTriggerSplit}
             style={{
@@ -338,7 +335,7 @@ export const Home = () => {
               top: "50%",
               left: "50%",
               transform: isSplitting
-                ? "translate(-50%, -50%) scale(1.28)"
+                ? "translate(-50%, -50%) scale(1.2)"
                 : "translate(-50%, -50%) scale(1)",
               opacity: isSplitting ? 0 : 1,
               transition: "transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.45s ease",
@@ -347,15 +344,16 @@ export const Home = () => {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              gap: "0.85rem",
+              gap: "0.75rem",
+              WebkitTapHighlightColor: "transparent",
             }}
           >
-            {/* Outer Radiant Gold Squircle Logo Container */}
+            {/* Squared Gold & Black Logo Emblem */}
             <div
               style={{
                 width: "82px",
                 height: "82px",
-                borderRadius: "22px",
+                borderRadius: "20px",
                 background: "#08090C",
                 border: "2.5px solid #F5B942",
                 display: "flex",
@@ -363,6 +361,7 @@ export const Home = () => {
                 justifyContent: "center",
                 overflow: "hidden",
                 padding: "4px",
+                boxShadow: "0 8px 30px rgba(0, 0, 0, 0.4), 0 0 25px rgba(245, 185, 66, 0.4)",
                 animation: isSplitting ? "none" : "emblemBreath 2.6s ease-in-out infinite",
               }}
             >
@@ -373,7 +372,7 @@ export const Home = () => {
                   width: "100%",
                   height: "100%",
                   objectFit: "cover",
-                  borderRadius: "16px",
+                  borderRadius: "14px",
                   display: "block",
                 }}
               />
@@ -388,9 +387,9 @@ export const Home = () => {
                 padding: "0.38rem 0.95rem",
                 borderRadius: "50px",
                 background: "rgba(8, 9, 12, 0.88)",
-                border: "1.5px solid rgba(245, 185, 66, 0.55)",
+                border: "1.5px solid rgba(245, 185, 66, 0.65)",
                 backdropFilter: "blur(14px)",
-                boxShadow: "0 8px 24px rgba(0, 0, 0, 0.65)",
+                boxShadow: "0 8px 24px rgba(0, 0, 0, 0.35)",
                 color: "#F5B942",
                 fontSize: "0.75rem",
                 fontWeight: 800,
