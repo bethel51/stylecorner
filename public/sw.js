@@ -1,4 +1,4 @@
-const CACHE_NAME = 'style-corner-v18';
+const CACHE_NAME = 'style-corner-v19';
 const PRECACHE_ASSETS = [
   '/',
   '/index.html',
