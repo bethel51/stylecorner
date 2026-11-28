@@ -9,13 +9,14 @@ import {
   Sparkles,
   Check,
   Compass,
+  Sun,
+  Moon,
 } from 'lucide-react';
-import { PageContainer } from '../components/common/PageContainer';
 import { useTheme } from '../context/ThemeContext';
 
 export const RoleSelection = () => {
   const navigate = useNavigate();
-  const { isDark } = useTheme();
+  const { isDark, toggleTheme } = useTheme();
   const [selectedRole, setSelectedRole] = useState('customer');
 
   const handleProceed = () => {
@@ -26,74 +27,107 @@ export const RoleSelection = () => {
   const isSpecialist = selectedRole === 'staff';
 
   return (
-    <PageContainer title="Select Role | Style Corner">
+    <div
+      style={{
+        minHeight: '100dvh',
+        width: '100%',
+        backgroundColor: isDark ? '#08090C' : '#FFFFFF',
+        color: isDark ? '#FFFFFF' : '#0F172A',
+        fontFamily: "'Plus Jakarta Sans', sans-serif",
+        display: 'flex',
+        flexDirection: 'column',
+        overflowX: 'hidden',
+        boxSizing: 'border-box',
+      }}
+    >
       <style>{`
-        .role-editorial-item {
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap');
+
+        .rs-role-row {
           cursor: pointer;
           position: relative;
-          padding: 1.35rem 1.15rem;
-          border-radius: 16px;
-          border: 1.5px solid transparent;
-          transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1);
-          user-select: none;
+          display: flex;
+          align-items: flex-start;
+          gap: 1rem;
+          padding: 1.4rem 1.1rem;
+          border-bottom: 1px solid ${isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.08)'};
+          transition: background 0.22s ease;
           -webkit-tap-highlight-color: transparent;
+          touch-action: manipulation;
+          user-select: none;
+          min-height: 56px;
         }
 
-        .role-editorial-item:hover {
-          transform: translate3d(0, -2px, 0);
+        .rs-role-row:first-of-type {
+          border-top: 1px solid ${isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.08)'};
         }
 
-        .role-editorial-item:active {
-          transform: scale(0.99);
+        .rs-role-row:active {
+          background: ${isDark ? 'rgba(245,185,66,0.06)' : 'rgba(245,185,66,0.05)'};
         }
 
-        .cta-gold-btn {
+        .rs-cta-btn {
           background: linear-gradient(135deg, #F5B942 0%, #E8912D 100%);
-          box-shadow: 0 10px 28px -4px rgba(245, 185, 66, 0.45);
+          box-shadow: 0 10px 28px -4px rgba(245, 185, 66, 0.42);
           transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.18s ease;
+          -webkit-tap-highlight-color: transparent;
+          touch-action: manipulation;
         }
 
-        .cta-gold-btn:hover {
-          transform: translate3d(0, -2px, 0);
-          box-shadow: 0 14px 34px -4px rgba(245, 185, 66, 0.65);
+        .rs-cta-btn:active {
+          transform: scale(0.98);
         }
 
-        .feature-tag {
-          display: inline-flex;
-          align-items: center;
-          gap: 0.35rem;
-          font-size: 0.74rem;
-          font-weight: 600;
-          font-family: 'Plus Jakarta Sans', sans-serif;
-          color: ${isDark ? '#cbd5e1' : '#475569'};
+        .rs-guest-btn {
+          transition: background 0.18s ease;
+          -webkit-tap-highlight-color: transparent;
+          touch-action: manipulation;
+        }
+
+        .rs-guest-btn:active {
+          background: ${isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)'} !important;
+        }
+
+        .rs-left-accent {
+          position: absolute;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          width: 3px;
+          border-radius: 0 2px 2px 0;
+          transition: background 0.22s ease, opacity 0.22s ease;
         }
       `}</style>
 
-      <div
+      {/* ── Minimal Header ── */}
+      <header
         style={{
-          maxWidth: '460px',
-          margin: '0 auto',
-          padding: '1.25rem 0.75rem 3.5rem',
-          boxSizing: 'border-box',
           width: '100%',
+          maxWidth: '480px',
+          margin: '0 auto',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: 'calc(env(safe-area-inset-top, 0px) + 1rem) 1.25rem 0.85rem',
+          boxSizing: 'border-box',
+          borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.07)'}`,
         }}
       >
-        {/* Top Header Mark */}
-        <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
-          {/* Logo Emblem */}
+        {/* Logo + Brand */}
+        <div
+          onClick={() => navigate('/')}
+          style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', cursor: 'pointer' }}
+        >
           <div
             style={{
-              width: '58px',
-              height: '58px',
-              borderRadius: '18px',
+              width: '36px',
+              height: '36px',
+              borderRadius: '11px',
               overflow: 'hidden',
-              margin: '0 auto 1.1rem',
-              border: '2px solid rgba(245, 185, 66, 0.55)',
-              boxShadow: '0 8px 24px rgba(245, 185, 66, 0.28)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+              border: '1.5px solid rgba(245, 185, 66, 0.5)',
+              boxShadow: '0 3px 12px rgba(245,185,66,0.2)',
               background: '#08090C',
+              flexShrink: 0,
             }}
           >
             <img
@@ -102,407 +136,579 @@ export const RoleSelection = () => {
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
           </div>
+          <div>
+            <div
+              style={{
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                fontSize: '0.95rem',
+                fontWeight: 800,
+                letterSpacing: '-0.02em',
+                color: isDark ? '#FFFFFF' : '#0F172A',
+                lineHeight: 1.1,
+              }}
+            >
+              Style<span style={{ color: '#F5B942' }}>Corner</span>
+            </div>
+            <div
+              style={{
+                fontSize: '0.6rem',
+                fontWeight: 700,
+                color: '#F5B942',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                fontFamily: "'Space Grotesk', sans-serif",
+              }}
+            >
+              Atelier
+            </div>
+          </div>
+        </div>
 
-          {/* Micro Pill Badge */}
+        {/* Right: theme toggle + login */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+          <button
+            onClick={toggleTheme}
+            style={{
+              width: '36px',
+              height: '36px',
+              borderRadius: '10px',
+              border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.09)'}`,
+              background: 'transparent',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              color: isDark ? '#94a3b8' : '#64748b',
+              WebkitTapHighlightColor: 'transparent',
+            }}
+          >
+            {isDark ? <Sun size={16} /> : <Moon size={16} />}
+          </button>
+          <button
+            onClick={() => navigate('/login')}
+            style={{
+              height: '36px',
+              padding: '0 0.9rem',
+              borderRadius: '10px',
+              border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
+              background: 'transparent',
+              color: isDark ? '#e2e8f0' : '#334155',
+              fontFamily: "'Plus Jakarta Sans', sans-serif",
+              fontSize: '0.8rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+              WebkitTapHighlightColor: 'transparent',
+            }}
+          >
+            Sign In
+          </button>
+        </div>
+      </header>
+
+      {/* ── Scrollable Body ── */}
+      <div
+        style={{
+          flex: 1,
+          width: '100%',
+          maxWidth: '480px',
+          margin: '0 auto',
+          padding: '0 1.25rem',
+          boxSizing: 'border-box',
+          paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 2.5rem)',
+        }}
+      >
+        {/* Title Section */}
+        <div style={{ paddingTop: '2rem', paddingBottom: '1.75rem' }}>
+          {/* Pill */}
           <div
             style={{
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.4rem',
-              background: isDark ? 'rgba(245, 185, 66, 0.12)' : 'rgba(245, 185, 66, 0.14)',
-              border: '1px solid rgba(245, 185, 66, 0.35)',
+              background: isDark ? 'rgba(245,185,66,0.1)' : 'rgba(245,185,66,0.12)',
+              border: '1px solid rgba(245,185,66,0.3)',
               borderRadius: '50px',
-              padding: '0.28rem 0.85rem',
-              fontSize: '0.72rem',
-              fontWeight: 800,
-              color: isDark ? '#F5B942' : '#B47806',
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              marginBottom: '0.65rem',
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
+              padding: '0.26rem 0.8rem',
+              marginBottom: '1rem',
             }}
           >
             <Sparkles size={12} color="#F5B942" />
-            Style Corner Atelier
+            <span
+              style={{
+                fontSize: '0.68rem',
+                fontWeight: 800,
+                color: isDark ? '#F5B942' : '#B47806',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+              }}
+            >
+              Welcome to Style Corner
+            </span>
           </div>
 
-          {/* Clean Editorial Title (Inspired by Image 2) */}
+          {/* Large editorial heading */}
           <h1
             style={{
               fontFamily: "'Plus Jakarta Sans', sans-serif",
-              fontSize: 'clamp(1.75rem, 5.5vw, 2.15rem)',
+              fontSize: 'clamp(2rem, 7vw, 2.5rem)',
               fontWeight: 800,
               color: isDark ? '#FFFFFF' : '#0F172A',
-              marginBottom: '0.45rem',
-              letterSpacing: '-0.025em',
-              lineHeight: 1.2,
+              margin: '0 0 0.5rem',
+              letterSpacing: '-0.03em',
+              lineHeight: 1.15,
             }}
           >
-            Select Your Role
+            Select Your<br />
+            <span style={{ color: '#F5B942' }}>Role.</span>
           </h1>
 
           <p
             style={{
               color: isDark ? '#94a3b8' : '#64748b',
-              fontSize: '0.88rem',
-              lineHeight: 1.55,
-              margin: '0 auto',
-              maxWidth: '380px',
+              fontSize: '0.875rem',
+              lineHeight: 1.6,
+              margin: 0,
               fontFamily: "'Plus Jakarta Sans', sans-serif",
               fontWeight: 400,
+              maxWidth: '340px',
             }}
           >
-            Choose how you will experience Style Corner to set up your personalized atelier account.
+            Choose how you will experience Style Corner and set up your personalized atelier account.
           </p>
         </div>
 
-        {/* ── Editorial Selection List (Inspired by Image 2 - Ademola Commerciale) ── */}
+        {/* ── Ademola-style Editorial Role List ── */}
         <div
           style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '0.75rem',
             marginBottom: '1.75rem',
+            borderRadius: '16px',
+            overflow: 'hidden',
+            border: `1px solid ${isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.08)'}`,
+            background: isDark ? '#0D1017' : '#FAFAFA',
           }}
         >
-          {/* Option 01: Client / Customer */}
+          {/* Row 01 — Client / Customer */}
           <div
             role="button"
             tabIndex={0}
             onClick={() => setSelectedRole('customer')}
             onKeyDown={(e) => e.key === 'Enter' && setSelectedRole('customer')}
-            className="role-editorial-item"
+            className="rs-role-row"
             style={{
               background: isCustomer
-                ? isDark
-                  ? 'rgba(245, 185, 66, 0.08)'
-                  : 'rgba(245, 185, 66, 0.06)'
-                : isDark
-                ? '#12151E'
-                : '#FFFFFF',
-              borderColor: isCustomer
-                ? '#F5B942'
-                : isDark
-                ? 'rgba(255, 255, 255, 0.08)'
-                : 'rgba(0, 0, 0, 0.08)',
-              borderLeft: isCustomer
-                ? '4px solid #F5B942'
-                : `1.5px solid ${isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)'}`,
-              boxShadow: isCustomer
-                ? '0 10px 28px -4px rgba(245, 185, 66, 0.22)'
-                : isDark
-                ? '0 4px 18px rgba(0, 0, 0, 0.2)'
-                : '0 4px 18px rgba(0, 0, 0, 0.04)',
+                ? isDark ? 'rgba(245,185,66,0.08)' : 'rgba(245,185,66,0.05)'
+                : 'transparent',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
-              {/* Number Index (01) */}
+            {/* Gold left accent bar */}
+            <div
+              className="rs-left-accent"
+              style={{
+                background: '#F5B942',
+                opacity: isCustomer ? 1 : 0,
+              }}
+            />
+
+            {/* Number index */}
+            <div
+              style={{
+                fontFamily: "'Space Grotesk', monospace",
+                fontSize: '0.9rem',
+                fontWeight: 700,
+                color: isCustomer ? '#F5B942' : isDark ? '#475569' : '#94a3b8',
+                lineHeight: 1.3,
+                paddingTop: '3px',
+                flexShrink: 0,
+                minWidth: '28px',
+                transition: 'color 0.2s ease',
+              }}
+            >
+              01
+            </div>
+
+            {/* Content */}
+            <div style={{ flex: 1 }}>
               <div
                 style={{
-                  fontFamily: "'Space Grotesk', 'Plus Jakarta Sans', monospace",
-                  fontSize: '0.95rem',
-                  fontWeight: 700,
-                  color: isCustomer ? '#F5B942' : isDark ? '#64748b' : '#94a3b8',
-                  lineHeight: 1.3,
-                  paddingTop: '2px',
-                  flexShrink: 0,
-                  transition: 'color 0.2s ease',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  marginBottom: '0.3rem',
+                  flexWrap: 'wrap',
                 }}
               >
-                01
-              </div>
-
-              {/* Main Content */}
-              <div style={{ flex: 1, textAlign: 'left' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem', flexWrap: 'wrap' }}>
-                  <h3
-                    style={{
-                      fontFamily: "'Plus Jakarta Sans', sans-serif",
-                      fontSize: '1.1rem',
-                      fontWeight: 700,
-                      color: isDark ? '#FFFFFF' : '#0F172A',
-                      margin: 0,
-                      letterSpacing: '-0.015em',
-                    }}
-                  >
-                    Client / Customer
-                  </h3>
-                  <span
-                    style={{
-                      fontSize: '0.66rem',
-                      fontWeight: 700,
-                      padding: '0.16rem 0.55rem',
-                      borderRadius: '50px',
-                      background: 'rgba(16, 185, 129, 0.14)',
-                      color: '#10b981',
-                      border: '1px solid rgba(16, 185, 129, 0.3)',
-                      fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    }}
-                  >
-                    Book Sessions
-                  </span>
-                </div>
-
-                <p
+                <span
                   style={{
                     fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    fontSize: '0.84rem',
-                    color: isDark ? '#94a3b8' : '#64748b',
-                    lineHeight: 1.5,
-                    margin: '0 0 0.65rem',
-                    fontWeight: 400,
+                    fontSize: '1.05rem',
+                    fontWeight: 700,
+                    color: isDark ? '#FFFFFF' : '#0F172A',
+                    letterSpacing: '-0.015em',
                   }}
                 >
-                  Book verified barbers, lash techs, nail artists, braiders &amp; wig stylists across Lagos &amp; Ibadan.
-                </p>
-
-                {/* Feature Tags */}
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
-                  <span className="feature-tag">
-                    <ShieldCheck size={14} color="#10b981" />
-                    <span>100% Escrow Protected</span>
-                  </span>
-                  <span className="feature-tag">
-                    <QrCode size={13} color="#F5B942" />
-                    <span>Digital Pass Check-In</span>
-                  </span>
-                </div>
+                  Client / Customer
+                </span>
+                <span
+                  style={{
+                    fontSize: '0.65rem',
+                    fontWeight: 700,
+                    padding: '0.15rem 0.5rem',
+                    borderRadius: '50px',
+                    background: 'rgba(16,185,129,0.14)',
+                    color: '#10b981',
+                    border: '1px solid rgba(16,185,129,0.3)',
+                    fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  }}
+                >
+                  Book Sessions
+                </span>
               </div>
 
-              {/* Selection Indicator & Sleek Arrow */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0, paddingTop: '3px' }}>
-                <div
+              <p
+                style={{
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  fontSize: '0.83rem',
+                  color: isDark ? '#94a3b8' : '#64748b',
+                  lineHeight: 1.55,
+                  margin: '0 0 0.65rem',
+                  fontWeight: 400,
+                }}
+              >
+                Book verified barbers, lash techs, nail artists, braiders &amp; wig stylists.
+              </p>
+
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.65rem' }}>
+                <span
                   style={{
-                    width: '22px',
-                    height: '22px',
-                    borderRadius: '50%',
-                    border: `1.5px solid ${isCustomer ? '#F5B942' : isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'}`,
-                    background: isCustomer ? '#F5B942' : 'transparent',
-                    display: 'flex',
+                    display: 'inline-flex',
                     alignItems: 'center',
-                    justifyContent: 'center',
-                    transition: 'all 0.2s ease',
+                    gap: '0.3rem',
+                    fontSize: '0.73rem',
+                    fontWeight: 600,
+                    color: isDark ? '#94a3b8' : '#475569',
+                    fontFamily: "'Plus Jakarta Sans', sans-serif",
                   }}
                 >
-                  {isCustomer && <Check size={13} color="#08090C" strokeWidth={3} />}
-                </div>
-                <ArrowRight
-                  size={18}
+                  <ShieldCheck size={13} color="#10b981" />
+                  Escrow Protected
+                </span>
+                <span
                   style={{
-                    color: isCustomer ? '#F5B942' : isDark ? '#475569' : '#94a3b8',
-                    transform: isCustomer ? 'translateX(3px)' : 'translateX(0)',
-                    transition: 'transform 0.2s ease, color 0.2s ease',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.3rem',
+                    fontSize: '0.73rem',
+                    fontWeight: 600,
+                    color: isDark ? '#94a3b8' : '#475569',
+                    fontFamily: "'Plus Jakarta Sans', sans-serif",
                   }}
-                />
+                >
+                  <QrCode size={12} color="#F5B942" />
+                  Digital Pass Check-In
+                </span>
               </div>
+            </div>
+
+            {/* Right: radio + arrow */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.45rem',
+                flexShrink: 0,
+                paddingTop: '2px',
+              }}
+            >
+              <div
+                style={{
+                  width: '22px',
+                  height: '22px',
+                  borderRadius: '50%',
+                  border: `1.5px solid ${isCustomer ? '#F5B942' : isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)'}`,
+                  background: isCustomer ? '#F5B942' : 'transparent',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'all 0.2s ease',
+                  flexShrink: 0,
+                }}
+              >
+                {isCustomer && <Check size={12} color="#08090C" strokeWidth={3} />}
+              </div>
+              <ArrowRight
+                size={17}
+                style={{
+                  color: isCustomer ? '#F5B942' : isDark ? '#475569' : '#94a3b8',
+                  transform: isCustomer ? 'translateX(2px)' : 'translateX(0)',
+                  transition: 'transform 0.2s ease, color 0.2s ease',
+                }}
+              />
             </div>
           </div>
 
-          {/* Option 02: Specialist / Expert */}
+          {/* Row 02 — Specialist / Expert */}
           <div
             role="button"
             tabIndex={0}
             onClick={() => setSelectedRole('staff')}
             onKeyDown={(e) => e.key === 'Enter' && setSelectedRole('staff')}
-            className="role-editorial-item"
+            className="rs-role-row"
             style={{
               background: isSpecialist
-                ? isDark
-                  ? 'rgba(245, 185, 66, 0.08)'
-                  : 'rgba(245, 185, 66, 0.06)'
-                : isDark
-                ? '#12151E'
-                : '#FFFFFF',
-              borderColor: isSpecialist
-                ? '#F5B942'
-                : isDark
-                ? 'rgba(255, 255, 255, 0.08)'
-                : 'rgba(0, 0, 0, 0.08)',
-              borderLeft: isSpecialist
-                ? '4px solid #F5B942'
-                : `1.5px solid ${isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)'}`,
-              boxShadow: isSpecialist
-                ? '0 10px 28px -4px rgba(245, 185, 66, 0.22)'
-                : isDark
-                ? '0 4px 18px rgba(0, 0, 0, 0.2)'
-                : '0 4px 18px rgba(0, 0, 0, 0.04)',
+                ? isDark ? 'rgba(245,185,66,0.08)' : 'rgba(245,185,66,0.05)'
+                : 'transparent',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
-              {/* Number Index (02) */}
+            {/* Gold left accent bar */}
+            <div
+              className="rs-left-accent"
+              style={{
+                background: '#F5B942',
+                opacity: isSpecialist ? 1 : 0,
+              }}
+            />
+
+            {/* Number index */}
+            <div
+              style={{
+                fontFamily: "'Space Grotesk', monospace",
+                fontSize: '0.9rem',
+                fontWeight: 700,
+                color: isSpecialist ? '#F5B942' : isDark ? '#475569' : '#94a3b8',
+                lineHeight: 1.3,
+                paddingTop: '3px',
+                flexShrink: 0,
+                minWidth: '28px',
+                transition: 'color 0.2s ease',
+              }}
+            >
+              02
+            </div>
+
+            {/* Content */}
+            <div style={{ flex: 1 }}>
               <div
                 style={{
-                  fontFamily: "'Space Grotesk', 'Plus Jakarta Sans', monospace",
-                  fontSize: '0.95rem',
-                  fontWeight: 700,
-                  color: isSpecialist ? '#F5B942' : isDark ? '#64748b' : '#94a3b8',
-                  lineHeight: 1.3,
-                  paddingTop: '2px',
-                  flexShrink: 0,
-                  transition: 'color 0.2s ease',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  marginBottom: '0.3rem',
+                  flexWrap: 'wrap',
                 }}
               >
-                02
-              </div>
-
-              {/* Main Content */}
-              <div style={{ flex: 1, textAlign: 'left' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem', flexWrap: 'wrap' }}>
-                  <h3
-                    style={{
-                      fontFamily: "'Plus Jakarta Sans', sans-serif",
-                      fontSize: '1.1rem',
-                      fontWeight: 700,
-                      color: isDark ? '#FFFFFF' : '#0F172A',
-                      margin: 0,
-                      letterSpacing: '-0.015em',
-                    }}
-                  >
-                    Specialist / Expert
-                  </h3>
-                  <span
-                    style={{
-                      fontSize: '0.66rem',
-                      fontWeight: 700,
-                      padding: '0.16rem 0.55rem',
-                      borderRadius: '50px',
-                      background: 'rgba(245, 185, 66, 0.15)',
-                      color: '#F5B942',
-                      border: '1px solid rgba(245, 185, 66, 0.35)',
-                      fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    }}
-                  >
-                    Earn &amp; Grow
-                  </span>
-                </div>
-
-                <p
+                <span
                   style={{
                     fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    fontSize: '0.84rem',
-                    color: isDark ? '#94a3b8' : '#64748b',
-                    lineHeight: 1.5,
-                    margin: '0 0 0.65rem',
-                    fontWeight: 400,
+                    fontSize: '1.05rem',
+                    fontWeight: 700,
+                    color: isDark ? '#FFFFFF' : '#0F172A',
+                    letterSpacing: '-0.015em',
                   }}
                 >
-                  Showcase your portfolio, receive client appointments &amp; get paid directly to your wallet.
-                </p>
-
-                {/* Feature Tags */}
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
-                  <span className="feature-tag">
-                    <Layers size={13} color="#a855f7" />
-                    <span>Lookbook Showcase</span>
-                  </span>
-                  <span className="feature-tag">
-                    <Wallet size={13} color="#10b981" />
-                    <span>Direct Wallet Payout</span>
-                  </span>
-                </div>
+                  Specialist / Expert
+                </span>
+                <span
+                  style={{
+                    fontSize: '0.65rem',
+                    fontWeight: 700,
+                    padding: '0.15rem 0.5rem',
+                    borderRadius: '50px',
+                    background: 'rgba(245,185,66,0.14)',
+                    color: '#F5B942',
+                    border: '1px solid rgba(245,185,66,0.3)',
+                    fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  }}
+                >
+                  Earn &amp; Grow
+                </span>
               </div>
 
-              {/* Selection Indicator & Sleek Arrow */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0, paddingTop: '3px' }}>
-                <div
+              <p
+                style={{
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  fontSize: '0.83rem',
+                  color: isDark ? '#94a3b8' : '#64748b',
+                  lineHeight: 1.55,
+                  margin: '0 0 0.65rem',
+                  fontWeight: 400,
+                }}
+              >
+                Showcase your portfolio, receive client appointments &amp; get paid directly to your wallet.
+              </p>
+
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.65rem' }}>
+                <span
                   style={{
-                    width: '22px',
-                    height: '22px',
-                    borderRadius: '50%',
-                    border: `1.5px solid ${isSpecialist ? '#F5B942' : isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'}`,
-                    background: isSpecialist ? '#F5B942' : 'transparent',
-                    display: 'flex',
+                    display: 'inline-flex',
                     alignItems: 'center',
-                    justifyContent: 'center',
-                    transition: 'all 0.2s ease',
+                    gap: '0.3rem',
+                    fontSize: '0.73rem',
+                    fontWeight: 600,
+                    color: isDark ? '#94a3b8' : '#475569',
+                    fontFamily: "'Plus Jakarta Sans', sans-serif",
                   }}
                 >
-                  {isSpecialist && <Check size={13} color="#08090C" strokeWidth={3} />}
-                </div>
-                <ArrowRight
-                  size={18}
+                  <Layers size={12} color="#a855f7" />
+                  Lookbook Showcase
+                </span>
+                <span
                   style={{
-                    color: isSpecialist ? '#F5B942' : isDark ? '#475569' : '#94a3b8',
-                    transform: isSpecialist ? 'translateX(3px)' : 'translateX(0)',
-                    transition: 'transform 0.2s ease, color 0.2s ease',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.3rem',
+                    fontSize: '0.73rem',
+                    fontWeight: 600,
+                    color: isDark ? '#94a3b8' : '#475569',
+                    fontFamily: "'Plus Jakarta Sans', sans-serif",
                   }}
-                />
+                >
+                  <Wallet size={12} color="#10b981" />
+                  Direct Wallet Payout
+                </span>
               </div>
+            </div>
+
+            {/* Right: radio + arrow */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.45rem',
+                flexShrink: 0,
+                paddingTop: '2px',
+              }}
+            >
+              <div
+                style={{
+                  width: '22px',
+                  height: '22px',
+                  borderRadius: '50%',
+                  border: `1.5px solid ${isSpecialist ? '#F5B942' : isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)'}`,
+                  background: isSpecialist ? '#F5B942' : 'transparent',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'all 0.2s ease',
+                  flexShrink: 0,
+                }}
+              >
+                {isSpecialist && <Check size={12} color="#08090C" strokeWidth={3} />}
+              </div>
+              <ArrowRight
+                size={17}
+                style={{
+                  color: isSpecialist ? '#F5B942' : isDark ? '#475569' : '#94a3b8',
+                  transform: isSpecialist ? 'translateX(2px)' : 'translateX(0)',
+                  transition: 'transform 0.2s ease, color 0.2s ease',
+                }}
+              />
             </div>
           </div>
         </div>
 
-        {/* ── Primary Action CTA Button ── */}
+        {/* ── Activation note for experts ── */}
+        {isSpecialist && (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: '0.65rem',
+              padding: '0.85rem 1rem',
+              borderRadius: '12px',
+              background: isDark ? 'rgba(245,185,66,0.08)' : 'rgba(245,185,66,0.07)',
+              border: '1px solid rgba(245,185,66,0.25)',
+              marginBottom: '1.25rem',
+            }}
+          >
+            <Sparkles size={15} color="#F5B942" style={{ flexShrink: 0, marginTop: '1px' }} />
+            <p
+              style={{
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                fontSize: '0.78rem',
+                color: isDark ? '#e2c97e' : '#92680a',
+                lineHeight: 1.5,
+                margin: 0,
+                fontWeight: 500,
+              }}
+            >
+              Expert accounts require a one-time <strong>₦3,000 activation</strong> to go live and receive bookings. Payment is processed after registration.
+            </p>
+          </div>
+        )}
+
+        {/* ── CTA Button ── */}
         <button
           type="button"
           onClick={handleProceed}
-          className="cta-gold-btn"
+          className="rs-cta-btn"
           style={{
             width: '100%',
-            minHeight: '52px',
+            minHeight: '54px',
             border: 'none',
             borderRadius: '14px',
             color: '#08090C',
             fontFamily: "'Plus Jakarta Sans', sans-serif",
-            fontSize: '0.98rem',
+            fontSize: '1rem',
             fontWeight: 800,
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             gap: '0.55rem',
-            marginBottom: '1.25rem',
+            marginBottom: '1rem',
+            boxSizing: 'border-box',
           }}
         >
           <span>{isCustomer ? 'Continue as Client' : 'Continue as Specialist'}</span>
           <ArrowRight size={18} strokeWidth={2.8} />
         </button>
 
-        {/* Sign In Link */}
-        <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-          <p
+        {/* Sign In link */}
+        <p
+          style={{
+            textAlign: 'center',
+            color: isDark ? '#94a3b8' : '#64748b',
+            fontSize: '0.86rem',
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+            marginBottom: '1.5rem',
+          }}
+        >
+          Already have an account?{' '}
+          <span
+            onClick={() => navigate('/login')}
             style={{
-              color: isDark ? '#94a3b8' : '#64748b',
-              fontSize: '0.86rem',
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
+              color: '#F5B942',
+              fontWeight: 700,
+              cursor: 'pointer',
+              textDecoration: 'underline',
+              textUnderlineOffset: '3px',
             }}
           >
-            Already have an account?{' '}
-            <span
-              onClick={() => navigate('/login')}
-              style={{
-                color: '#F5B942',
-                fontWeight: 700,
-                cursor: 'pointer',
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
-                textDecoration: 'underline',
-                textUnderlineOffset: '3px',
-              }}
-            >
-              Sign In
-            </span>
-          </p>
-        </div>
+            Sign In
+          </span>
+        </p>
 
-        {/* ── Divider ── */}
+        {/* Divider */}
         <div
           style={{
             width: '100%',
             display: 'flex',
             alignItems: 'center',
             gap: '0.85rem',
-            marginBottom: '1.25rem',
+            marginBottom: '1rem',
           }}
         >
           <div style={{ flex: 1, height: '1px', background: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)' }} />
           <span
             style={{
-              fontSize: '0.7rem',
+              fontSize: '0.68rem',
               fontWeight: 700,
               color: isDark ? '#64748b' : '#94a3b8',
               textTransform: 'uppercase',
               letterSpacing: '0.08em',
               fontFamily: "'Plus Jakarta Sans', sans-serif",
+              whiteSpace: 'nowrap',
             }}
           >
             Or Continue As Guest
@@ -510,15 +716,16 @@ export const RoleSelection = () => {
           <div style={{ flex: 1, height: '1px', background: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)' }} />
         </div>
 
-        {/* ── Explore as Guest Button ── */}
+        {/* Guest explore button */}
         <button
           type="button"
           onClick={() => navigate('/services')}
+          className="rs-guest-btn"
           style={{
             width: '100%',
-            minHeight: '48px',
-            background: isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.03)',
-            border: `1.5px solid ${isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)'}`,
+            minHeight: '50px',
+            background: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.03)',
+            border: `1.5px solid ${isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'}`,
             borderRadius: '14px',
             color: isDark ? '#FFFFFF' : '#0F172A',
             fontFamily: "'Plus Jakarta Sans', sans-serif",
@@ -528,18 +735,19 @@ export const RoleSelection = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '0 1.15rem',
+            padding: '0 1.1rem',
             boxSizing: 'border-box',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-            <Compass size={18} color="#F5B942" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+            <Compass size={17} color="#F5B942" />
             <span>Explore Atelier Services as Guest</span>
           </div>
-          <ArrowRight size={16} color={isDark ? '#94a3b8' : '#64748b'} />
+          <ArrowRight size={15} color={isDark ? '#94a3b8' : '#64748b'} />
         </button>
       </div>
-    </PageContainer>
+    </div>
   );
 };
+
 export default RoleSelection;

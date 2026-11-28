@@ -153,8 +153,10 @@ export const Home = () => {
             inset: 0,
             zIndex: 1000,
             overflow: "hidden",
-            backgroundColor: "#08090C",
+            backgroundColor: "#FFFFFF",
             userSelect: "none",
+            overscrollBehavior: "none",
+            touchAction: "none",
           }}
         >
           {/* Top Half (Slides UP when clicked) */}
@@ -165,15 +167,16 @@ export const Home = () => {
               top: 0,
               left: 0,
               width: "100%",
-              height: "50%",
+              height: "50dvh",
               overflow: "hidden",
               transform: isSplitting ? "translate3d(0, -100%, 0)" : "translate3d(0, 0, 0)",
               transition: "transform 0.82s cubic-bezier(0.77, 0, 0.175, 1)",
               zIndex: 20,
               borderBottom: "1.5px solid rgba(245, 185, 66, 0.75)",
               boxShadow: "0 4px 25px rgba(245, 185, 66, 0.4)",
-              backgroundColor: "#08090C",
+              backgroundColor: "#FFFFFF",
               cursor: "pointer",
+              WebkitTapHighlightColor: "transparent",
             }}
           >
             {/* Top Half Artwork - Positioned relative to full 100vh viewport */}
@@ -183,12 +186,12 @@ export const Home = () => {
                 top: 0,
                 left: 0,
                 width: "100vw",
-                height: "100vh",
+                height: "100dvh",
                 backgroundImage: "url('/images/landing-art.jpg')",
                 backgroundSize: "cover",
                 backgroundPosition: "center center",
-                /* Rich Golden Color Transformation (turning natural brown wood to StyleCorner gold) */
-                filter: "sepia(0.92) saturate(3.2) hue-rotate(5deg) brightness(0.96) contrast(1.2)",
+                /* Gold branches only: white BG stays white (no chroma to amplify) */
+                filter: "sepia(1) saturate(3.5) hue-rotate(5deg) brightness(1.18)",
               }}
             />
             {/* Golden Vignette & Atmosphere for Top Half */}
@@ -196,7 +199,7 @@ export const Home = () => {
               style={{
                 position: "absolute",
                 inset: 0,
-                background: "linear-gradient(180deg, rgba(8, 9, 12, 0.8) 0%, rgba(245, 185, 66, 0.18) 70%, rgba(8, 9, 12, 0.75) 100%)",
+                background: "linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.0) 50%, rgba(245,185,66,0.08) 100%)",
               }}
             />
             {/* Top Header Branding Badge */}
@@ -250,30 +253,31 @@ export const Home = () => {
               bottom: 0,
               left: 0,
               width: "100%",
-              height: "50%",
+              height: "50dvh",
               overflow: "hidden",
               transform: isSplitting ? "translate3d(0, 100%, 0)" : "translate3d(0, 0, 0)",
               transition: "transform 0.82s cubic-bezier(0.77, 0, 0.175, 1)",
               zIndex: 20,
               borderTop: "1.5px solid rgba(245, 185, 66, 0.75)",
               boxShadow: "0 -4px 25px rgba(245, 185, 66, 0.4)",
-              backgroundColor: "#08090C",
+              backgroundColor: "#FFFFFF",
               cursor: "pointer",
+              WebkitTapHighlightColor: "transparent",
             }}
           >
             {/* Bottom Half Artwork - Positioned relative to full 100vh viewport */}
             <div
               style={{
                 position: "absolute",
-                bottom: 0,
+                top: "-100dvh",
                 left: 0,
                 width: "100vw",
-                height: "100vh",
+                height: "200dvh",
                 backgroundImage: "url('/images/landing-art.jpg')",
                 backgroundSize: "cover",
                 backgroundPosition: "center center",
-                /* Rich Golden Color Transformation */
-                filter: "sepia(0.92) saturate(3.2) hue-rotate(5deg) brightness(0.96) contrast(1.2)",
+                /* Gold branches only: white BG stays white */
+                filter: "sepia(1) saturate(3.5) hue-rotate(5deg) brightness(1.18)",
               }}
             />
             {/* Golden Vignette & Atmosphere for Bottom Half */}
@@ -281,7 +285,7 @@ export const Home = () => {
               style={{
                 position: "absolute",
                 inset: 0,
-                background: "linear-gradient(0deg, rgba(8, 9, 12, 0.85) 0%, rgba(245, 185, 66, 0.18) 70%, rgba(8, 9, 12, 0.75) 100%)",
+                background: "linear-gradient(0deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.0) 50%, rgba(245,185,66,0.08) 100%)",
               }}
             />
             {/* Bottom Tagline */}
@@ -306,7 +310,7 @@ export const Home = () => {
                   fontFamily: "'Plus Jakarta Sans', sans-serif",
                   fontSize: "0.82rem",
                   fontWeight: 600,
-                  color: "#cbd5e1",
+                  color: "#1e293b",
                   letterSpacing: "0.04em",
                 }}
               >
@@ -1122,3 +1126,9 @@ export const Home = () => {
   );
 };
 export default Home;
+
+
+
+
+
+
