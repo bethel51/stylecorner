@@ -348,7 +348,7 @@ export const CustomerDashboard = () => {
 
   return (
     <PageContainer title="Style Corner" onOpenAiMatcher={() => navigate('/ai-matcher')}>
-      <div style={{ maxWidth: '480px', margin: '0 auto', paddingBottom: '3rem' }}>
+      <div className="customer-dashboard-container">
 
         {/* ── Greeting Header with Theme Switcher (Ademola-style editorial typography) ── */}
         <div style={{ marginBottom: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>

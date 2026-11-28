@@ -97,22 +97,73 @@ export const RoleSelection = () => {
           border-radius: 0 2px 2px 0;
           transition: background 0.22s ease, opacity 0.22s ease;
         }
+
+        /* ── Desktop View Upgrade (>= 1024px) ── */
+        .rs-header-wrap {
+          width: 100%;
+          max-width: 480px;
+          margin: 0 auto;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: calc(env(safe-area-inset-top, 0px) + 1rem) 1.25rem 0.85rem;
+          box-sizing: border-box;
+          border-bottom: 1px solid ${isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.07)'};
+        }
+
+        .rs-main-wrap {
+          flex: 1;
+          width: 100%;
+          max-width: 480px;
+          margin: 0 auto;
+          padding: 0 1.25rem;
+          box-sizing: border-box;
+          padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 2.5rem);
+        }
+
+        .rs-desktop-perks {
+          display: none;
+        }
+
+        @media (min-width: 1024px) {
+          .rs-header-wrap {
+            max-width: 1120px !important;
+            padding: 1.25rem 2.5rem !important;
+          }
+
+          .rs-main-wrap {
+            max-width: 1120px !important;
+            padding: 3.5rem 2.5rem 5rem !important;
+            display: grid !important;
+            grid-template-columns: 1fr 1.2fr !important;
+            gap: 4.5rem !important;
+            align-items: start !important;
+          }
+
+          .rs-title-section {
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            position: sticky;
+            top: 6rem;
+          }
+
+          .rs-desktop-perks {
+            display: flex !important;
+            flex-direction: column;
+            gap: 1.25rem;
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid ${isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'};
+          }
+
+          .rs-role-list-wrap {
+            padding-top: 0 !important;
+          }
+        }
       `}</style>
 
       {/* ── Minimal Header ── */}
-      <header
-        style={{
-          width: '100%',
-          maxWidth: '480px',
-          margin: '0 auto',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: 'calc(env(safe-area-inset-top, 0px) + 1rem) 1.25rem 0.85rem',
-          boxSizing: 'border-box',
-          borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.07)'}`,
-        }}
-      >
+      <header className="rs-header-wrap">
         {/* Logo + Brand */}
         <div
           onClick={() => navigate('/')}
@@ -205,20 +256,10 @@ export const RoleSelection = () => {
         </div>
       </header>
 
-      {/* ── Scrollable Body ── */}
-      <div
-        style={{
-          flex: 1,
-          width: '100%',
-          maxWidth: '480px',
-          margin: '0 auto',
-          padding: '0 1.25rem',
-          boxSizing: 'border-box',
-          paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 2.5rem)',
-        }}
-      >
-        {/* Title Section */}
-        <div style={{ paddingTop: '2rem', paddingBottom: '1.75rem' }}>
+      {/* ── Scrollable Body / Responsive Desktop Grid ── */}
+      <div className="rs-main-wrap">
+        {/* Left Column (Editorial Title & Perks) */}
+        <div className="rs-title-section" style={{ paddingTop: '2rem', paddingBottom: '1.75rem' }}>
           {/* Pill */}
           <div
             style={{
@@ -251,10 +292,10 @@ export const RoleSelection = () => {
           <h1
             style={{
               fontFamily: "'Plus Jakarta Sans', sans-serif",
-              fontSize: 'clamp(2rem, 7vw, 2.5rem)',
+              fontSize: 'clamp(2rem, 5vw, 3rem)',
               fontWeight: 800,
               color: isDark ? '#FFFFFF' : '#0F172A',
-              margin: '0 0 0.5rem',
+              margin: '0 0 0.75rem',
               letterSpacing: '-0.03em',
               lineHeight: 1.15,
             }}
@@ -266,17 +307,80 @@ export const RoleSelection = () => {
           <p
             style={{
               color: isDark ? '#94a3b8' : '#64748b',
-              fontSize: '0.875rem',
-              lineHeight: 1.6,
+              fontSize: '0.92rem',
+              lineHeight: 1.65,
               margin: 0,
               fontFamily: "'Plus Jakarta Sans', sans-serif",
               fontWeight: 400,
-              maxWidth: '340px',
+              maxWidth: '380px',
             }}
           >
             Choose how you will experience Style Corner and set up your personalized atelier account.
           </p>
+
+          {/* Desktop Only Editorial Perks Card */}
+          <div className="rs-desktop-perks">
+            {[
+              {
+                num: '01',
+                title: 'Verified Specialists & Artists',
+                desc: 'Handpicked barbers, lash technicians, braiders and wig artisans across Lagos & Ibadan.',
+              },
+              {
+                num: '02',
+                title: '100% Escrow Protection',
+                desc: 'Client funds are held in secure escrow and released only after your appointment check-in is complete.',
+              },
+              {
+                num: '03',
+                title: 'Instant Pass & Atelier Wallet',
+                desc: 'Seamless digital check-in passes, real-time appointments, and direct instant wallet withdrawals.',
+              },
+            ].map((perk) => (
+              <div key={perk.num} style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+                <span
+                  style={{
+                    fontFamily: "'Space Grotesk', monospace",
+                    fontSize: '0.85rem',
+                    fontWeight: 700,
+                    color: '#F5B942',
+                    paddingTop: '2px',
+                    minWidth: '24px',
+                  }}
+                >
+                  {perk.num}
+                </span>
+                <div>
+                  <h4
+                    style={{
+                      fontFamily: "'Plus Jakarta Sans', sans-serif",
+                      fontSize: '0.9rem',
+                      fontWeight: 700,
+                      color: isDark ? '#FFFFFF' : '#0F172A',
+                      margin: '0 0 0.25rem',
+                    }}
+                  >
+                    {perk.title}
+                  </h4>
+                  <p
+                    style={{
+                      fontFamily: "'Plus Jakarta Sans', sans-serif",
+                      fontSize: '0.8rem',
+                      color: isDark ? '#94a3b8' : '#64748b',
+                      lineHeight: 1.5,
+                      margin: 0,
+                    }}
+                  >
+                    {perk.desc}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
+
+        {/* Right Column (Role Selection Rows & Actions) */}
+        <div className="rs-role-list-wrap">
 
         {/* ── Ademola-style Editorial Role List ── */}
         <div
@@ -745,6 +849,7 @@ export const RoleSelection = () => {
           </div>
           <ArrowRight size={15} color={isDark ? '#94a3b8' : '#64748b'} />
         </button>
+        </div>
       </div>
     </div>
   );

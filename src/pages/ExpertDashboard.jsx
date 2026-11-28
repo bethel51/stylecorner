@@ -575,7 +575,7 @@ export const ExpertDashboard = () => {
 
   return (
     <PageContainer title="Expert Dashboard">
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', paddingBottom: '2.5rem' }}>
+      <div className="expert-dashboard-container" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', paddingBottom: '2.5rem' }}>
 
         {/* ── 1. Hero Atelier Specialist Profile Banner ── */}
 

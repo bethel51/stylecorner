@@ -2400,6 +2400,52 @@ textarea:focus-visible {
     grid-template-columns: repeat(4, 1fr) !important;
     gap: 1.5rem !important;
   }
+
+  /* Desktop Dashboard Upgrades (>= 1024px) */
+  .customer-dashboard-container {
+    max-width: 1240px !important;
+    margin: 0 auto !important;
+    padding-bottom: 4rem !important;
+  }
+
+  .expert-dashboard-container {
+    max-width: 1240px !important;
+    margin: 0 auto !important;
+    padding-bottom: 4rem !important;
+  }
+
+  .ai-concierge-container {
+    max-width: 960px !important;
+    margin: 0 auto !important;
+  }
+
+  .dashboard-quick-actions {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 1.25rem !important;
+  }
+
+  .dashboard-stats-grid {
+    gap: 1.25rem !important;
+  }
+
+  /* Desktop Scrollbar Styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(245, 185, 66, 0.28);
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(245, 185, 66, 0.55);
+  }
 }
 
 /* Light Theme Adaptations for Desktop Footer */

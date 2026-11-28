@@ -372,6 +372,7 @@ export const AiStylistFinder = () => {
       />
 
       <div
+        className="ai-concierge-container"
         style={{
           maxWidth: '680px',
           width: '100%',

@@ -114,6 +114,44 @@ export const Home = () => {
             0%, 100% { opacity: 0.92; transform: translateX(-50%) translateY(0); }
             50% { opacity: 1; transform: translateX(-50%) translateY(-2px); }
           }
+
+          /* Desktop View Upgrade (>= 1024px) */
+          @media (min-width: 1024px) {
+            .landing-door-art-top,
+            .landing-door-art-bottom {
+              background-size: contain !important;
+              background-position: center top !important;
+            }
+            .landing-center-logo {
+              width: 96px !important;
+              height: 96px !important;
+              border-radius: 24px !important;
+              border-width: 3px !important;
+            }
+            .landing-prompt-pill {
+              top: calc(50% + 64px) !important;
+              padding: 0.45rem 1.25rem !important;
+              font-size: 0.82rem !important;
+            }
+            .landing-header-badge {
+              top: 2rem !important;
+            }
+            .landing-header-badge > div {
+              padding: 0.45rem 1.25rem !important;
+            }
+            .landing-header-badge span {
+              font-size: 0.82rem !important;
+            }
+            .landing-bottom-badge {
+              bottom: 2rem !important;
+            }
+            .landing-bottom-badge > div {
+              padding: 0.5rem 1.4rem !important;
+            }
+            .landing-bottom-badge span:first-child {
+              font-size: 0.95rem !important;
+            }
+          }
         `}</style>
 
         {/* Top Half (Slides UP when clicked) */}
@@ -138,6 +176,7 @@ export const Home = () => {
         >
           {/* Top Half Artwork - Top 50% of the single image */}
           <div
+            className="landing-door-art-top"
             style={{
               position: "absolute",
               top: 0,
@@ -152,6 +191,7 @@ export const Home = () => {
           />
           {/* Top Header Branding Badge */}
           <div
+            className="landing-header-badge"
             style={{
               position: "absolute",
               top: "calc(env(safe-area-inset-top, 0px) + 1.15rem)",
@@ -215,6 +255,7 @@ export const Home = () => {
         >
           {/* Bottom Half Artwork - Bottom 50% of the single image */}
           <div
+            className="landing-door-art-bottom"
             style={{
               position: "absolute",
               top: "-100%",
@@ -229,6 +270,7 @@ export const Home = () => {
           />
           {/* Bottom Tagline */}
           <div
+            className="landing-bottom-badge"
             style={{
               position: "absolute",
               bottom: "calc(env(safe-area-inset-bottom, 0px) + 1.25rem)",
@@ -284,6 +326,7 @@ export const Home = () => {
         {/* ── Exact Center Seam: Squared Style Corner Logo ── */}
         <div
           onClick={handleTriggerSplit}
+          className="landing-center-logo"
           style={{
             position: "absolute",
             top: "50%",
@@ -324,6 +367,7 @@ export const Home = () => {
         {/* ── Tap to Enter Interactive Prompt (Positioned cleanly below the centered logo) ── */}
         <div
           onClick={handleTriggerSplit}
+          className="landing-prompt-pill"
           style={{
             position: "absolute",
             top: "calc(50% + 54px)",
